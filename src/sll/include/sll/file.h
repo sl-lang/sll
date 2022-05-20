@@ -318,7 +318,7 @@ typedef union _SLL_FILE_WRITE_DATA{
  * \group file
  * \desc Docs!
  * \arg sll_sha256_data_t h
- * \arg sll_char_t* bf
+ * \arg sll_char_t[64] bf
  * \arg __SLL_U8 bfl
  */
 typedef struct _SLL_FILE_HASH{

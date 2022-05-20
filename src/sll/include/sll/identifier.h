@@ -214,7 +214,7 @@ typedef struct _SLL_IDENTIFIER_LIST{
  * \name sll_identifier_table_t
  * \group identifier
  * \desc Docs!
- * \arg sll_identifier_list_t* s
+ * \arg sll_identifier_list_t[SLL_MAX_SHORT_IDENTIFIER_LENGTH] s
  * \arg sll_identifier_t* il
  * \arg sll_identifier_list_length_t ill
  */

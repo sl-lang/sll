@@ -267,7 +267,7 @@ typedef union _SLL_CLI_LOOKUP_DATA_RETURN{
  * \name sll_cli_lookup_data_t
  * \group cli
  * \desc Docs!
- * \arg sll_char_t* path
+ * \arg sll_char_t[SLL_API_MAX_FILE_PATH_LENGTH] path
  * \arg sll_cli_lookup_data_return_t data
  */
 typedef struct _SLL_CLI_LOOKUP_DATA{

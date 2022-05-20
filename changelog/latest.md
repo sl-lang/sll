@@ -19,6 +19,7 @@
 
 - Fixed `sll_map_remove`
 - Fixed `sll_string_compare`, `sll_string_includes`, `sll_string_split` and `sll_string_replace`
+- Fixed `sll_string_select`
 - Fixed assembly stack frames
 - Fixed incorrect assembly jump generation
 - *\[Linux only\]* Fixed permission bits for directory creation in `sll_platform_create_directory`

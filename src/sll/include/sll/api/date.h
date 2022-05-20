@@ -85,7 +85,7 @@ typedef __SLL_F64 sll_second_t;
  * \name sll_time_zone_t
  * \group date-api
  * \desc Docs!
- * \arg sll_char_t* nm
+ * \arg sll_char_t[32] nm
  * \arg sll_time_t off
  */
 typedef struct _SLL_TIME_ZONE{

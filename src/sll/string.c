@@ -1775,7 +1775,7 @@ __SLL_EXTERNAL void sll_string_select(const sll_string_t* s,sll_integer_t a,sll_
 			o->l=1;
 			o->c=s->v[a];
 			o->v=sll_allocator_init(SLL_STRING_ALIGN_LENGTH(1)*sizeof(sll_char_t));
-			*((wide_data_t*)(o->v))=s->c;
+			*((wide_data_t*)(o->v))=o->c;
 			return;
 		}
 		if (c==1){
@@ -1803,7 +1803,7 @@ __SLL_EXTERNAL void sll_string_select(const sll_string_t* s,sll_integer_t a,sll_
 			o->l=1;
 			o->c=s->v[a];
 			o->v=sll_allocator_init(SLL_STRING_ALIGN_LENGTH(1)*sizeof(sll_char_t));
-			*((wide_data_t*)(o->v))=s->c;
+			*((wide_data_t*)(o->v))=o->c;
 			return;
 		}
 		o->l=(sll_string_length_t)((a-b-1)/c+1);

@@ -1292,7 +1292,7 @@ typedef struct _SLL_EXPORT_TABLE{
  * \arg sll_string_index_t nm
  * \arg sll_string_index_t desc
  * \arg sll_arg_count_t al
- * \arg sll_identifier_index_t* a
+ * \arg sll_identifier_index_t[] a
  */
 typedef struct _SLL_FUNCTION{
 	sll_node_offset_t off;
@@ -1326,7 +1326,7 @@ typedef struct _SLL_FUNCTION_TABLE{
  * \desc Docs!
  * \arg sll_source_file_index_t sfi
  * \arg sll_identifier_list_length_t l
- * \arg sll_identifier_index_t* dt
+ * \arg sll_identifier_index_t[] dt
  */
 typedef struct _SLL_IMPORT_FILE{
 	sll_source_file_index_t sfi;

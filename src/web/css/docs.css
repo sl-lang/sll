@@ -73,6 +73,9 @@ a {
 	color: #75715e;
 	font-style: italic;
 }
+.code-number {
+	color: #ae81ff;
+}
 .api-format {
 	color: #1b84e3;
 }

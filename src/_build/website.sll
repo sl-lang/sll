@@ -26,6 +26,10 @@
 
 
 
+(= IDENTIFIER_CHARACTERS "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_")
+
+
+
 (= _format_type (,,, type
 	(= replace (:: config$WEBSITE_TYPE_REPLACEMENTS array_type))
 	(-> (= i 0) (< i ($ replace))
@@ -46,6 +50,46 @@
 		"const"
 		`<span class="code-keyword">const</span>`
 	))
+))
+
+(= _format_type_with_name (,,, type name
+	(= bracked_idx (<- string$index type '['))
+	(? (=== bracked_idx -1) (@@ (+ (<- _format_type type) ' ' name)))
+	(= out (+
+		(<- _format_type (: type 0 bracked_idx))
+		' '
+		name
+		'['
+	))
+	(= expr (: type (+ bracked_idx 1) -1))
+	(-> (= i 0) (< i ($ expr))
+		(= idx (<- string$index_list (>> expr i) IDENTIFIER_CHARACTERS true))
+		(? (! idx) {
+			(= idx (<- string$index_list (>> expr i) IDENTIFIER_CHARACTERS false))
+			(? (=== idx -1)
+				(= idx ($ expr))
+				(= idx (+ i idx))
+			)
+			(= out (+ out (: expr i idx)))
+		} {
+			(? (=== idx -1)
+				(= idx ($ expr))
+				(= idx (+ i idx))
+			)
+			(= token (: expr i idx))
+			(? (=== (<- string$index_list token string$DIGITS true) -1) {
+				(= out (+ out
+					`<span class="code-number">`
+					token
+					`</span>`
+				))
+			} {
+				(= out (+ out token))
+			})
+		})
+		(= i idx)
+	)
+	(@@ (+ out ']'))
 ))
 
 (= _format_args (,,, symbol no_void
@@ -88,10 +132,10 @@
 			(= out (+ out `<span class="code-keyword-typedef">typedef</span> ` (<- _format_type symbol$type$type) ` <span class="code-name">` symbol$name `</span>;`))
 		} {
 			(= arg_str "Fields")
-			(= out (+ out `<span class="code-keyword-typedef">typedef ` (?: (& symbol$flags documentation$FLAG_UNION) "union" "structu") `</span> <span class="code-name">_` (<- string$upper_case (: symbol$name 0 -2)) `</span>{<br>`))
+			(= out (+ out `<span class="code-keyword-typedef">typedef ` (?: (& symbol$flags documentation$FLAG_UNION) "union" "struct") `</span> <span class="code-name">_` (<- string$upper_case (: symbol$name 0 -2)) `</span>{<br>`))
 			(-> (= i 0) (< i ($ symbol$args))
 				(= arg (: symbol$args i))
-				(= out (+ out "    " (<- _format_type arg$type) " " arg$name ";\n"))
+				(= out (+ out "    " (<- _format_type_with_name arg$type arg$name) ";\n"))
 				(++ i)
 			)
 			(= out (+ out `} <span class="code-name">` symbol$name `</span>;`))
