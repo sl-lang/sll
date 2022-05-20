@@ -239,7 +239,7 @@
 	<
 		"darwin" (. platform_command_list_type
 			["gcc" "-fno-exceptions" "-fno-stack-protector" "-fdiagnostics-color=always" "-fPIC" "-c" "-fvisibility=hidden" "-Wall" "-g" "-O0" "-Werror" "-I" "src/sll/include" "-o" COMMAND_MARKER_OUTPUT COMMAND_MARKER_INPUT]
-			["nasm" "-I" "src/sll/include" "-D__SLL_BUILD_LINUX" "-DDEBUG_BUILD" "-o" COMMAND_MARKER_OUTPUT "-O0" "-Wall" "-Werror" "-gdwarf" "-f" "macho64" COMMAND_MARKER_INPUT]
+			["nasm" "-I" "src/sll/include" "-D__SLL_BUILD_DARWIN" "-DDEBUG_BUILD" "-o" COMMAND_MARKER_OUTPUT "-O0" "-Wall" "-Werror" "-gdwarf" "-f" "macho64" COMMAND_MARKER_INPUT]
 			nil
 			["gcc" "-fno-exceptions" "-fno-stack-protector" "-fdiagnostics-color=always" "-shared" "-fPIC" "-fvisibility=hidden" "-Wall" "-Werror" "-g" "-O0" "-o" output_library COMMAND_MARKER_INPUT "-lm" "-ldl" "-pthread"]
 			nil

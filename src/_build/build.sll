@@ -110,7 +110,7 @@
 	)
 	(= command_list (: config$COMMANDS (+
 		sys$PLATFORM
-		(* "_release" config$RELEASE)
+		(* "_release" config$OPTIONS$RELEASE)
 	)))
 	(= output_files [])
 	(<- log$log "  Compiling files...")
