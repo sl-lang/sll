@@ -51,7 +51,7 @@
 (= init (,,,
 	(? _hash_map {
 		(:> "Function 'hashlist$init` called twice!\n")
-		(@@ nil)
+		(<- util$fail_and_exit)
 	})
 	(<- log$log "Initializing hash list...")
 	(<- log$log "  Loading previous hash list...")
@@ -80,6 +80,7 @@
 		(? (!== (: _hash_map file_path) new_hash) (<- array$push _changed_file_list file_path))
 		(= (: _hash_map file_path) new_hash)
 	)
+	(<- _write_hash_list)
 ))
 
 

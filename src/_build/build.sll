@@ -114,6 +114,7 @@
 	)))
 	(= output_files [])
 	(<- log$log "  Compiling files...")
+	(= err false)
 	(-> (= i 0) (< i ($ files))
 		(= file_path (: files i))
 		(++ i)
@@ -121,13 +122,18 @@
 		(<- array$push output_files output_file_path)
 		(? (! (<- hashlist$check output_file_path)) (<<<))
 		(<- log$log "    " file_path)
-		(? (=== (>> file_path (<- string$index_reverse file_path '.')) ".asm") {
-			(<- _execute_command command_list$NASM_COMPILATION_COMMAND file_path output_file_path)
-			(<- _execute_command command_list$NASM_POST_COMPILATION_COMMAND file_path output_file_path)
-		} {
+		(? (?: (=== (>> file_path (<- string$index_reverse file_path '.')) ".asm")
+			(||
+				(<- _execute_command command_list$NASM_COMPILATION_COMMAND file_path output_file_path)
+				(<- _execute_command command_list$NASM_POST_COMPILATION_COMMAND file_path output_file_path)
+			)
 			(<- _execute_command command_list$COMPILATION_COMMAND file_path (+ command_list$OUTPUT_PREFIX output_file_path) options)
+		) {
+			(<- hashlist$fail output_file_path)
+			(= err true)
 		})
 	)
+	(? err (<- util$fail_and_exit))
 	(<- log$log "  Linking files...")
 	(<- _execute_command command_list$LINK_COMMAND output_files nil)
 	(<- log$log "  Executing post-link command...")
