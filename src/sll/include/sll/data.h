@@ -51,10 +51,10 @@
  * \name SLL_COPY_STRING_NULL
  * \group data
  * \desc Docs!
- * \arg const sll_char_t* s
- * \arg void* d
+ * \arg const sll_char_t* src
+ * \arg void* dst
  */
-#define SLL_COPY_STRING_NULL(s,d) (*((sll_char_t*)sll_copy_string((s),(d)))=0)
+#define SLL_COPY_STRING_NULL(src,dst) (*((sll_char_t*)sll_copy_string((src),(dst)))=0)
 
 
 

@@ -28,10 +28,10 @@ void _init_platform_env(void){
 		l++;
 		kv=sll_reallocate(kv,l*sizeof(sll_environment_variable_t*));
 		sll_environment_variable_t* n=sll_allocate(sizeof(sll_environment_variable_t));
-		sll_string_from_pointer_length(e,(sll_string_length_t)(p-e),(sll_string_t*)(&(n->k)));
+		sll_string_from_pointer_length(e,(sll_string_length_t)(p-e),(sll_string_t*)(&(n->key)));
 		p++;
 		sll_string_length_t i=sll_string_length(p);
-		sll_string_from_pointer_length(p,i,(sll_string_t*)(&(n->v)));
+		sll_string_from_pointer_length(p,i,(sll_string_t*)(&(n->value)));
 		p+=i+1;
 		*(kv+l-1)=n;
 	}
@@ -43,8 +43,8 @@ void _init_platform_env(void){
 	else{
 		kv=sll_memory_move(kv,SLL_MEMORY_MOVE_DIRECTION_FROM_STACK);
 	}
-	*((void**)(&(sll_environment->dt)))=kv;
-	*((sll_environment_length_t*)(&(sll_environment->l)))=l;
+	*((void**)(&(sll_environment->data)))=kv;
+	*((sll_environment_length_t*)(&(sll_environment->length)))=l;
 }
 
 

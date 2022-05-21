@@ -98,11 +98,11 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_sys_get_env(sll_map_t* out){
 		SLL_INIT_MAP(out);
 		return;
 	}
-	sll_map_create(sll_environment->l,out);
-	for (sll_environment_length_t i=0;i<sll_environment->l;i++){
-		const sll_environment_variable_t* kv=*(sll_environment->dt+i);
-		out->data[i<<1]=STRING_TO_OBJECT(&(kv->k));
-		out->data[(i<<1)+1]=STRING_TO_OBJECT(&(kv->v));
+	sll_map_create(sll_environment->length,out);
+	for (sll_environment_length_t i=0;i<sll_environment->length;i++){
+		const sll_environment_variable_t* kv=*(sll_environment->data+i);
+		out->data[i<<1]=STRING_TO_OBJECT(&(kv->key));
+		out->data[(i<<1)+1]=STRING_TO_OBJECT(&(kv->value));
 	}
 }
 

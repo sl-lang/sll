@@ -54,7 +54,7 @@ static sll_bool_t _import_file(const sll_string_t* path,sll_compilation_data_t* 
 	sll_cli_lookup_data_t res_data;
 	sll_cli_lookup_result_t res=sll_cli_lookup_file(path,1,&res_data);
 	if (res==SLL_LOOKUP_RESULT_ASSEMBLY){
-		sll_free_assembly_data(&(res_data.data.assembly));
+		sll_free_assembly_data(&(res_data.data.assembly_data));
 		SLL_WARN(SLL_CHAR("Importing assembly into compiled programs is not allowed"));
 		return 0;
 	}
@@ -62,7 +62,7 @@ static sll_bool_t _import_file(const sll_string_t* path,sll_compilation_data_t* 
 		SLL_WARN("Unable to find file '%s'",path->data);
 		return 0;
 	}
-	*out=res_data.data.compiled_object;
+	*out=res_data.data.compiled_object_data;
 	return 1;
 }
 
@@ -177,7 +177,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_cli_lookup_result_t sll_cli_lookup_file(co
 			i--;
 			cli_bundle_source_t* b_dt=*(_cli_bundle_list+i);
 			SLL_LOG("Trying to open file '%s/%s'...",b_dt->nm,path->data);
-			if (sll_bundle_fetch(&(b_dt->b),path,&(out->data.compiled_object))){
+			if (sll_bundle_fetch(&(b_dt->b),path,&(out->data.compiled_object_data))){
 				SLL_LOG("File successfully read.");
 				return SLL_LOOKUP_RESULT_COMPILED_OBJECT;
 			}
@@ -198,7 +198,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_cli_lookup_result_t sll_cli_lookup_file(co
 			sll_file_open(bf,SLL_FILE_FLAG_READ,&f);
 			sll_cli_expand_path(bf,out->path);
 			SLL_LOG("Found file '%s'",out->path);
-			if (sll_load_compiled_node(&f,&(out->data.compiled_object))){
+			if (sll_load_compiled_node(&f,&(out->data.compiled_object_data))){
 				sll_file_close(&f);
 				SLL_LOG("File successfully read.");
 				return SLL_LOOKUP_RESULT_COMPILED_OBJECT;
@@ -214,20 +214,20 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_cli_lookup_result_t sll_cli_lookup_file(co
 		sll_file_open(bf,SLL_FILE_FLAG_READ,&f);
 		sll_cli_expand_path(bf,out->path);
 		SLL_LOG("Found file '%s'",out->path);
-		if (sll_load_assembly(&f,&(out->data.assembly))){
+		if (sll_load_assembly(&f,&(out->data.assembly_data))){
 			sll_file_close(&f);
 			SLL_LOG("File successfully read.");
 			return SLL_LOOKUP_RESULT_ASSEMBLY;
 		}
 		sll_file_reset(&f);
-		if (sll_load_compiled_node(&f,&(out->data.compiled_object))){
+		if (sll_load_compiled_node(&f,&(out->data.compiled_object_data))){
 			sll_file_close(&f);
 			SLL_LOG("File successfully read.");
 			return SLL_LOOKUP_RESULT_COMPILED_OBJECT;
 		}
 		sll_file_reset(&f);
-		sll_init_compilation_data(out->path,&(out->data.compiled_object));
-		sll_parse_nodes(&f,&(out->data.compiled_object),&_cli_ift,_import_file);
+		sll_init_compilation_data(out->path,&(out->data.compiled_object_data));
+		sll_parse_nodes(&f,&(out->data.compiled_object_data),&_cli_ift,_import_file);
 		sll_file_close(&f);
 		SLL_LOG("File successfully read.");
 		return SLL_LOOKUP_RESULT_COMPILED_OBJECT;
@@ -241,7 +241,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_cli_lookup_result_t sll_cli_lookup_file(co
 			sll_file_open(_cli_lib_path,SLL_FILE_FLAG_READ,&f);
 			sll_cli_expand_path(_cli_lib_path,out->path);
 			SLL_LOG("Found file '%s'",out->path);
-			if (sll_load_compiled_node(&f,&(out->data.compiled_object))){
+			if (sll_load_compiled_node(&f,&(out->data.compiled_object_data))){
 				sll_file_close(&f);
 				SLL_LOG("File successfully read.");
 				return SLL_LOOKUP_RESULT_COMPILED_OBJECT;
@@ -706,10 +706,10 @@ _read_file_argument:
 			sll_cli_lookup_data_t res_data;
 			generated_type=sll_cli_lookup_file(&tmp,1,&res_data);
 			if (generated_type==SLL_LOOKUP_RESULT_COMPILED_OBJECT){
-				c_dt=res_data.data.compiled_object;
+				c_dt=res_data.data.compiled_object_data;
 			}
 			else if (generated_type==SLL_LOOKUP_RESULT_ASSEMBLY){
-				a_dt=res_data.data.assembly;
+				a_dt=res_data.data.assembly_data;
 			}
 			else{
 				SLL_WARN("Unable to find file '%s'",tmp.data);
@@ -866,11 +866,11 @@ _read_file_argument:
 			bf[l]=0;
 		}
 		else{
-			sll_string_length_t l=bundle.nm.length;
+			sll_string_length_t l=bundle.name.length;
 			if (l>SLL_API_MAX_FILE_PATH_LENGTH-1){
 				l=SLL_API_MAX_FILE_PATH_LENGTH-1;
 			}
-			sll_copy_data(bundle.nm.data,l,bf);
+			sll_copy_data(bundle.name.data,l,bf);
 			bf[l]=0;
 		}
 		if (!bf[0]){

@@ -252,12 +252,12 @@ typedef __SLL_U8 sll_cli_lookup_result_t;
  * \name sll_cli_lookup_data_return_t
  * \group cli
  * \desc Docs!
- * \arg sll_assembly_data_t assembly
- * \arg sll_compilation_data_t compiled_object
+ * \arg sll_assembly_data_t assembly_data
+ * \arg sll_compilation_data_t compiled_object_data
  */
 typedef union _SLL_CLI_LOOKUP_DATA_RETURN{
-	sll_assembly_data_t assembly;
-	sll_compilation_data_t compiled_object;
+	sll_assembly_data_t assembly_data;
+	sll_compilation_data_t compiled_object_data;
 } sll_cli_lookup_data_return_t;
 
 

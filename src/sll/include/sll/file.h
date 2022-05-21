@@ -155,10 +155,10 @@
  * \name SLL_FILE_GET_LINE_NUMBER
  * \group file
  * \desc Docs!
- * \arg sll_file_t* f
+ * \arg sll_file_t* file
  * \ret sll_file_offset_t
  */
-#define SLL_FILE_GET_LINE_NUMBER(f) ((f)->_l_num)
+#define SLL_FILE_GET_LINE_NUMBER(file) ((file)->_l_num)
 
 
 
@@ -167,10 +167,10 @@
  * \name SLL_FILE_GET_OFFSET
  * \group file
  * \desc Docs!
- * \arg sll_file_t* f
+ * \arg sll_file_t* file
  * \ret sll_file_offset_t
  */
-#define SLL_FILE_GET_OFFSET(f) ((f)->_off)
+#define SLL_FILE_GET_OFFSET(file) ((file)->_off)
 
 
 

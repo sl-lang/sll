@@ -410,15 +410,15 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_load_assembly(sll_file_t* rf,sl
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_load_bundle(sll_file_t* rf,sll_bundle_t* b){
 	magic_number_t n;
 	sll_version_t v;
-	if (sll_file_read(rf,&n,sizeof(magic_number_t),NULL)!=sizeof(magic_number_t)||n!=BUNDLE_FILE_MAGIC_NUMBER||sll_file_read(rf,&v,sizeof(sll_version_t),NULL)!=sizeof(sll_version_t)||v!=SLL_VERSION||!sll_decode_string(rf,&(b->nm))){
+	if (sll_file_read(rf,&n,sizeof(magic_number_t),NULL)!=sizeof(magic_number_t)||n!=BUNDLE_FILE_MAGIC_NUMBER||sll_file_read(rf,&v,sizeof(sll_version_t),NULL)!=sizeof(sll_version_t)||v!=SLL_VERSION||!sll_decode_string(rf,&(b->name))){
 		return 0;
 	}
-	CHECK_ERROR(rf,b->l,sll_source_file_index_t);
-	b->dt=sll_allocate(b->l*sizeof(sll_bundle_source_file_t*));
-	for (sll_source_file_index_t i=0;i<b->l;i++){
+	CHECK_ERROR(rf,b->length,sll_source_file_index_t);
+	b->data=sll_allocate(b->length*sizeof(sll_bundle_source_file_t*));
+	for (sll_source_file_index_t i=0;i<b->length;i++){
 		sll_bundle_source_file_t* bsf=sll_allocate(sizeof(sll_bundle_source_file_t));
-		*(b->dt+i)=bsf;
-		if (!sll_decode_string(rf,&(bsf->nm))||!_read_source_file(rf,&(bsf->dt))){
+		*(b->data+i)=bsf;
+		if (!sll_decode_string(rf,&(bsf->name))||!_read_source_file(rf,&(bsf->data))){
 			return 0;
 		}
 	}

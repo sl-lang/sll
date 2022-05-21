@@ -19,7 +19,7 @@
 static sll_source_file_index_t _add_source_file(const sll_bundle_t* b,const sll_bundle_source_file_t* bsf,source_file_list_t* sfl){
 	for (sll_source_file_index_t i=0;i<sfl->l;i++){
 		sll_source_file_t* sf=(sfl->dt+i)->dt;
-		if (bsf->dt.sz==sf->sz&&sll_compare_data(&(bsf->dt.h),&(sf->h),sizeof(sll_sha256_data_t))==SLL_COMPARE_RESULT_EQUAL){
+		if (bsf->data.sz==sf->sz&&sll_compare_data(&(bsf->data.h),&(sf->h),sizeof(sll_sha256_data_t))==SLL_COMPARE_RESULT_EQUAL){
 			return i;
 		}
 	}
@@ -29,7 +29,7 @@ static sll_source_file_index_t _add_source_file(const sll_bundle_t* b,const sll_
 	sll_source_file_t* sf=sll_allocate(sizeof(sll_source_file_t));
 	(sfl->dt+out)->dt=sf;
 	(sfl->dt+out)->idx=out;
-	sll_source_file_t bsf_sf=bsf->dt;
+	sll_source_file_t bsf_sf=bsf->data;
 	sf->tm=bsf_sf.tm;
 	sf->sz=bsf_sf.sz;
 	sf->h=bsf_sf.h;
@@ -63,7 +63,7 @@ static sll_source_file_index_t _add_source_file(const sll_bundle_t* b,const sll_
 		const sll_import_file_t* bsf_if=*(bsf_sf.it.dt+i);
 		sll_import_file_t* if_=sll_allocate(sizeof(sll_import_file_t)+bsf_if->l*sizeof(sll_identifier_index_t));
 		sll_copy_data(bsf_if,sizeof(sll_import_file_t)+bsf_if->l*sizeof(sll_identifier_index_t),if_);
-		if_->sfi=_add_source_file(b,*(b->dt+bsf_if->sfi),sfl);
+		if_->sfi=_add_source_file(b,*(b->data+bsf_if->sfi),sfl);
 		*(sf->it.dt+i)=if_;
 	}
 	sf->fp_nm=bsf_sf.fp_nm;
@@ -79,45 +79,45 @@ __SLL_EXTERNAL void sll_bundle_add_file(const sll_char_t* nm,sll_compilation_dat
 	for (sll_source_file_index_t idx=0;idx<c_dt->l;idx++){
 		sll_source_file_t* sf=*(c_dt->dt+idx);
 		sll_source_file_index_t bsf_i=0;
-		while (bsf_i<o->l){
-			sll_bundle_source_file_t* bsf=*(o->dt+bsf_i);
-			if (bsf->dt.sz==sf->sz&&sll_compare_data(&(bsf->dt.h),&(sf->h),sizeof(sll_sha256_data_t))==SLL_COMPARE_RESULT_EQUAL){
+		while (bsf_i<o->length){
+			sll_bundle_source_file_t* bsf=*(o->data+bsf_i);
+			if (bsf->data.sz==sf->sz&&sll_compare_data(&(bsf->data.h),&(sf->h),sizeof(sll_sha256_data_t))==SLL_COMPARE_RESULT_EQUAL){
 				break;
 			}
 			bsf_i++;
 		}
 		*(idx_m+idx)=bsf_i;
-		if (bsf_i<o->l){
+		if (bsf_i<o->length){
 			sll_free_source_file(sf);
 			if (!idx){
-				sll_bundle_source_file_t* bsf=*(o->dt+bsf_i);
-				if (!bsf->nm.length){
-					sll_string_from_pointer(nm,&(bsf->nm));
+				sll_bundle_source_file_t* bsf=*(o->data+bsf_i);
+				if (!bsf->name.length){
+					sll_string_from_pointer(nm,&(bsf->name));
 				}
 			}
 			(*(idx_m+idx))|=BUNDLE_DO_NOT_REMAP_IMPORT;
 			continue;
 		}
-		o->l++;
-		o->dt=sll_reallocate(o->dt,o->l*sizeof(sll_bundle_source_file_t));
+		o->length++;
+		o->data=sll_reallocate(o->data,o->length*sizeof(sll_bundle_source_file_t));
 		sll_bundle_source_file_t* bsf=sll_allocate(sizeof(sll_bundle_source_file_t));
 		if (!idx){
-			sll_string_from_pointer(nm,&(bsf->nm));
+			sll_string_from_pointer(nm,&(bsf->name));
 		}
 		else{
-			SLL_INIT_STRING(&(bsf->nm));
+			SLL_INIT_STRING(&(bsf->name));
 		}
-		bsf->dt=*sf;
-		*(o->dt+o->l-1)=bsf;
+		bsf->data=*sf;
+		*(o->data+o->length-1)=bsf;
 	}
 	for (sll_source_file_index_t i=0;i<c_dt->l;i++){
 		sll_deallocate(*(c_dt->dt+i));
 		if ((*(idx_m+i))&BUNDLE_DO_NOT_REMAP_IMPORT){
 			continue;
 		}
-		sll_bundle_source_file_t* bsf=*(o->dt+(*(idx_m+i)));
-		for (sll_import_index_t j=0;j<bsf->dt.it.l;j++){
-			sll_import_file_t* bsf_if=*(bsf->dt.it.dt+j);
+		sll_bundle_source_file_t* bsf=*(o->data+(*(idx_m+i)));
+		for (sll_import_index_t j=0;j<bsf->data.it.l;j++){
+			sll_import_file_t* bsf_if=*(bsf->data.it.dt+j);
 			bsf_if->sfi=BUNDLE_GET_INDEX(idx_m+bsf_if->sfi);
 		}
 	}
@@ -130,24 +130,24 @@ __SLL_EXTERNAL void sll_bundle_add_file(const sll_char_t* nm,sll_compilation_dat
 
 
 __SLL_EXTERNAL void sll_bundle_create(const sll_char_t* nm,sll_bundle_t* o){
-	o->tm=sll_platform_get_current_time();
-	sll_string_from_pointer(nm,&(o->nm));
-	o->dt=NULL;
-	o->l=0;
+	o->time=sll_platform_get_current_time();
+	sll_string_from_pointer(nm,&(o->name));
+	o->data=NULL;
+	o->length=0;
 }
 
 
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_bundle_fetch(const sll_bundle_t* b,const sll_string_t* nm,sll_compilation_data_t* c_dt){
-	if (!sll_string_starts(nm,&(b->nm))){
+	if (!sll_string_starts(nm,&(b->name))){
 		return 0;
 	}
 	sll_string_t f_nm_str;
-	sll_string_resize(nm,-((sll_integer_t)(b->nm.length)),&f_nm_str);
+	sll_string_resize(nm,-((sll_integer_t)(b->name.length)),&f_nm_str);
 	const sll_bundle_source_file_t* bsf=NULL;
-	for (sll_source_file_index_t i=0;i<b->l;i++){
-		bsf=*(b->dt+i);
-		if (STRING_EQUAL(&(bsf->nm),&f_nm_str)){
+	for (sll_source_file_index_t i=0;i<b->length;i++){
+		bsf=*(b->data+i);
+		if (STRING_EQUAL(&(bsf->name),&f_nm_str)){
 			break;
 		}
 		bsf=NULL;
@@ -205,15 +205,15 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_bundle_fetch(const sll_bundle_t
 
 
 __SLL_EXTERNAL void sll_free_bundle(sll_bundle_t* b){
-	b->tm=0;
-	sll_free_string(&(b->nm));
-	while (b->l){
-		b->l--;
-		sll_bundle_source_file_t* bsf=*(b->dt+b->l);
-		sll_free_string(&(bsf->nm));
-		sll_free_source_file(&(bsf->dt));
+	b->time=0;
+	sll_free_string(&(b->name));
+	while (b->length){
+		b->length--;
+		sll_bundle_source_file_t* bsf=*(b->data+b->length);
+		sll_free_string(&(bsf->name));
+		sll_free_source_file(&(bsf->data));
 		sll_deallocate(bsf);
 	}
-	sll_deallocate(b->dt);
-	b->dt=NULL;
+	sll_deallocate(b->data);
+	b->data=NULL;
 }

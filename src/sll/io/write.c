@@ -347,12 +347,12 @@ __SLL_EXTERNAL void sll_write_bundle(sll_file_t* wf,const sll_bundle_t* b){
 	sll_file_write(wf,&n,sizeof(magic_number_t),NULL);
 	sll_version_t v=SLL_VERSION;
 	sll_file_write(wf,&v,sizeof(sll_version_t),NULL);
-	CHECK_ERROR(sll_encode_string(wf,&(b->nm)));
-	CHECK_ERROR(sll_encode_integer(wf,b->l));
-	for (sll_source_file_index_t i=0;i<b->l;i++){
-		const sll_bundle_source_file_t* bsf=*(b->dt+i);
-		CHECK_ERROR(sll_encode_string(wf,&(bsf->nm)));
-		_write_source_file(wf,&(bsf->dt));
+	CHECK_ERROR(sll_encode_string(wf,&(b->name)));
+	CHECK_ERROR(sll_encode_integer(wf,b->length));
+	for (sll_source_file_index_t i=0;i<b->length;i++){
+		const sll_bundle_source_file_t* bsf=*(b->data+i);
+		CHECK_ERROR(sll_encode_string(wf,&(bsf->name)));
+		_write_source_file(wf,&(bsf->data));
 	}
 }
 

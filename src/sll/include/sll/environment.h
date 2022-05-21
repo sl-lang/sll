@@ -30,12 +30,12 @@ typedef __SLL_U32 sll_environment_length_t;
  * \name sll_environment_variable_t
  * \group environment
  * \desc Docs!
- * \arg const sll_string_t k
- * \arg const sll_string_t v
+ * \arg const sll_string_t key
+ * \arg const sll_string_t value
  */
 typedef struct _SLL_ENVIRONMENT_VARIABLE{
-	const sll_string_t k;
-	const sll_string_t v;
+	const sll_string_t key;
+	const sll_string_t value;
 } sll_environment_variable_t;
 
 
@@ -45,12 +45,12 @@ typedef struct _SLL_ENVIRONMENT_VARIABLE{
  * \name sll_environment_t
  * \group environment
  * \desc Docs!
- * \arg const sll_environment_variable_t*const* dt
- * \arg const sll_environment_length_t l
+ * \arg const sll_environment_variable_t*const* data
+ * \arg const sll_environment_length_t length
  */
 typedef struct _SLL_ENVIRONMENT{
-	const sll_environment_variable_t*const* dt;
-	const sll_environment_length_t l;
+	const sll_environment_variable_t*const* data;
+	const sll_environment_length_t length;
 } sll_environment_t;
 
 

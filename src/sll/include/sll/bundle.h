@@ -19,12 +19,12 @@
  * \name sll_bundle_source_file_t
  * \group bundle
  * \desc Docs!
- * \arg sll_string_t nm
- * \arg sll_source_file_t dt
+ * \arg sll_string_t name
+ * \arg sll_source_file_t data
  */
 typedef struct _SLL_BUNDLE_SOURCE_FILE{
-	sll_string_t nm;
-	sll_source_file_t dt;
+	sll_string_t name;
+	sll_source_file_t data;
 } sll_bundle_source_file_t;
 
 
@@ -34,16 +34,16 @@ typedef struct _SLL_BUNDLE_SOURCE_FILE{
  * \name sll_bundle_t
  * \group bundle
  * \desc Docs!
- * \arg sll_time_t tm
- * \arg sll_string_t nm
- * \arg sll_bundle_source_file_t** dt
- * \arg sll_source_file_index_t l
+ * \arg sll_time_t time
+ * \arg sll_string_t names
+ * \arg sll_bundle_source_file_t** data
+ * \arg sll_source_file_index_t length
  */
 typedef struct _SLL_BUNDLE{
-	sll_time_t tm;
-	sll_string_t nm;
-	sll_bundle_source_file_t** dt;
-	sll_source_file_index_t l;
+	sll_time_t time;
+	sll_string_t name;
+	sll_bundle_source_file_t** data;
+	sll_source_file_index_t length;
 } sll_bundle_t;
 
 

@@ -19,7 +19,7 @@ void _init_platform_env(void){
 		l++;
 		dt++;
 	}
-	*((void**)(&(sll_environment->dt)))=sll_allocate(l*sizeof(sll_environment_variable_t*));
+	*((void**)(&(sll_environment->data)))=sll_allocate(l*sizeof(sll_environment_variable_t*));
 	sll_environment_length_t i=0;
 	dt=environ;
 	while (*dt){
@@ -37,16 +37,16 @@ void _init_platform_env(void){
 			continue;
 		}
 		sll_environment_variable_t* n=sll_allocate(sizeof(sll_environment_variable_t));
-		sll_string_from_pointer_length(e-j,j,(sll_string_t*)(&(n->k)));
-		sll_string_from_pointer(e+1,(sll_string_t*)(&(n->v)));
-		*(((const sll_environment_variable_t**)(sll_environment->dt))+i)=n;
+		sll_string_from_pointer_length(e-j,j,(sll_string_t*)(&(n->key)));
+		sll_string_from_pointer(e+1,(sll_string_t*)(&(n->value)));
+		*(((const sll_environment_variable_t**)(sll_environment->data))+i)=n;
 		i++;
 	}
 	if (i!=l){
 		l=i;
-		*((void**)(&(sll_environment->dt)))=sll_reallocate((const sll_environment_variable_t**)(sll_environment->dt),l*sizeof(sll_environment_variable_t*));
+		*((void**)(&(sll_environment->data)))=sll_reallocate((const sll_environment_variable_t**)(sll_environment->data),l*sizeof(sll_environment_variable_t*));
 	}
-	*((sll_environment_length_t*)(&(sll_environment->l)))=l;
+	*((sll_environment_length_t*)(&(sll_environment->length)))=l;
 }
 
 
