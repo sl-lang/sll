@@ -90,7 +90,6 @@ static const sll_char_t ` name `_START[]={
 
 
 
-
 static const sll_char_t ` name `_END[]={
 	`)
 			(<- _write_byte_array fh (: data 1))
