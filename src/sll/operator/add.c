@@ -24,8 +24,8 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_add(sll_object_t* a
 		case COMBINED_TYPE_ID:
 			{
 				sll_complex_t n={
-					a->dt.int_value+b->dt.complex.real,
-					b->dt.complex.imag
+					a->dt.int_value+b->dt.complex_value.real,
+					b->dt.complex_value.imag
 				};
 				return sll_complex_to_object(&n);
 			}
@@ -90,14 +90,14 @@ _add_to_string:
 		case COMBINED_TYPE_CD:
 			{
 				sll_complex_t n={
-					a->dt.char_value+b->dt.complex.real,
-					b->dt.complex.imag
+					a->dt.char_value+b->dt.complex_value.real,
+					b->dt.complex_value.imag
 				};
 				return sll_complex_to_object(&n);
 			}
 		case COMBINED_TYPE_DD:
 			{
-				sll_complex_t n=COMPLEX_ADD(a->dt.complex,b->dt.complex);
+				sll_complex_t n=COMPLEX_ADD(a->dt.complex_value,b->dt.complex_value);
 				return sll_complex_to_object(&n);
 			}
 		case COMBINED_TYPE_SS:

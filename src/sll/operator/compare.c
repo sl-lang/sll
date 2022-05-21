@@ -26,7 +26,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_compare_result_t sll_operator_compare(sll_
 		case COMBINED_TYPE_IC:
 			return COMPARE_RESULT(a->dt.int_value,b->dt.char_value);
 		case COMBINED_TYPE_ID:
-			return COMPARE_RESULT(a->dt.int_value,COMPLEX_ABS(b->dt.complex));
+			return COMPARE_RESULT(a->dt.int_value,COMPLEX_ABS(b->dt.complex_value));
 		case COMBINED_TYPE_IS:
 			return COMPARE_RESULT(a->dt.int_value,b->dt.s.l);
 		case COMBINED_TYPE_IA:
@@ -40,7 +40,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_compare_result_t sll_operator_compare(sll_
 		case COMBINED_TYPE_FC:
 			return COMPARE_RESULT(a->dt.float_value,b->dt.char_value);
 		case COMBINED_TYPE_FD:
-			return COMPARE_RESULT(a->dt.float_value,COMPLEX_ABS(b->dt.complex));
+			return COMPARE_RESULT(a->dt.float_value,COMPLEX_ABS(b->dt.complex_value));
 		case COMBINED_TYPE_FS:
 			return COMPARE_RESULT(a->dt.float_value,b->dt.s.l);
 		case COMBINED_TYPE_FA:
@@ -54,7 +54,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_compare_result_t sll_operator_compare(sll_
 		case COMBINED_TYPE_CC:
 			return COMPARE_RESULT(a->dt.char_value,b->dt.char_value);
 		case COMBINED_TYPE_CD:
-			return COMPARE_RESULT(a->dt.char_value,COMPLEX_ABS(b->dt.complex));
+			return COMPARE_RESULT(a->dt.char_value,COMPLEX_ABS(b->dt.complex_value));
 		case COMBINED_TYPE_CS:
 			if (!b->dt.s.l){
 				return SLL_COMPARE_RESULT_ABOVE;
@@ -64,19 +64,19 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_compare_result_t sll_operator_compare(sll_
 			}
 			return (b->dt.s.l==1?SLL_COMPARE_RESULT_EQUAL:SLL_COMPARE_RESULT_BELOW);
 		case COMBINED_TYPE_DI:
-			return COMPARE_RESULT(COMPLEX_ABS(a->dt.complex),b->dt.int_value);
+			return COMPARE_RESULT(COMPLEX_ABS(a->dt.complex_value),b->dt.int_value);
 		case COMBINED_TYPE_DF:
-			return COMPARE_RESULT(COMPLEX_ABS(a->dt.complex),b->dt.float_value);
+			return COMPARE_RESULT(COMPLEX_ABS(a->dt.complex_value),b->dt.float_value);
 		case COMBINED_TYPE_DC:
-			return COMPARE_RESULT(COMPLEX_ABS(a->dt.complex),b->dt.char_value);
+			return COMPARE_RESULT(COMPLEX_ABS(a->dt.complex_value),b->dt.char_value);
 		case COMBINED_TYPE_DD:
-			return COMPARE_RESULT(COMPLEX_ABS(a->dt.complex),COMPLEX_ABS(b->dt.complex));
+			return COMPARE_RESULT(COMPLEX_ABS(a->dt.complex_value),COMPLEX_ABS(b->dt.complex_value));
 		case COMBINED_TYPE_DS:
-			return COMPARE_RESULT(COMPLEX_ABS(a->dt.complex),b->dt.s.l);
+			return COMPARE_RESULT(COMPLEX_ABS(a->dt.complex_value),b->dt.s.l);
 		case COMBINED_TYPE_DA:
-			return COMPARE_RESULT(COMPLEX_ABS(a->dt.complex),b->dt.a.length);
+			return COMPARE_RESULT(COMPLEX_ABS(a->dt.complex_value),b->dt.a.length);
 		case COMBINED_TYPE_DM:
-			return COMPARE_RESULT(COMPLEX_ABS(a->dt.complex),b->dt.m.length);
+			return COMPARE_RESULT(COMPLEX_ABS(a->dt.complex_value),b->dt.m.length);
 		case COMBINED_TYPE_CA:
 			return COMPARE_RESULT(a->dt.char_value,b->dt.a.length);
 		case COMBINED_TYPE_CM:
@@ -94,7 +94,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_compare_result_t sll_operator_compare(sll_
 			}
 			return (a->dt.s.l==1?SLL_COMPARE_RESULT_EQUAL:SLL_COMPARE_RESULT_ABOVE);
 		case COMBINED_TYPE_SD:
-			return COMPARE_RESULT(a->dt.s.l,COMPLEX_ABS(b->dt.complex));
+			return COMPARE_RESULT(a->dt.s.l,COMPLEX_ABS(b->dt.complex_value));
 		case COMBINED_TYPE_SS:
 			return sll_string_compare(&(a->dt.s),&(b->dt.s));
 		case COMBINED_TYPE_SA:
@@ -108,7 +108,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_compare_result_t sll_operator_compare(sll_
 		case COMBINED_TYPE_AC:
 			return COMPARE_RESULT(a->dt.a.length,b->dt.char_value);
 		case COMBINED_TYPE_AD:
-			return COMPARE_RESULT(a->dt.a.length,COMPLEX_ABS(b->dt.complex));
+			return COMPARE_RESULT(a->dt.a.length,COMPLEX_ABS(b->dt.complex_value));
 		case COMBINED_TYPE_AS:
 			return sll_string_compare_array(&(b->dt.s),&(a->dt.a),1);
 		case COMBINED_TYPE_AA:
@@ -122,7 +122,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_compare_result_t sll_operator_compare(sll_
 		case COMBINED_TYPE_MC:
 			return COMPARE_RESULT(a->dt.m.length,b->dt.char_value);
 		case COMBINED_TYPE_MD:
-			return COMPARE_RESULT(a->dt.m.length,COMPLEX_ABS(b->dt.complex));
+			return COMPARE_RESULT(a->dt.m.length,COMPLEX_ABS(b->dt.complex_value));
 		case COMBINED_TYPE_MS:
 			return sll_string_compare_map(&(b->dt.s),&(a->dt.m),1);
 		case COMBINED_TYPE_MA:

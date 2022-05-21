@@ -132,13 +132,13 @@ static void _object_to_string(sll_object_t* a,sll_string_t* o){
 		case SLL_OBJECT_TYPE_COMPLEX:
 			{
 				sll_char_t bf[256];
-				if (a->dt.complex.real){
-					sll_string_length_t bfl=snprintf((char*)bf,256,"%.16lf",a->dt.complex.real);
+				if (a->dt.complex_value.real){
+					sll_string_length_t bfl=snprintf((char*)bf,256,"%.16lf",a->dt.complex_value.real);
 					sll_string_increase(o,bfl);
 					sll_copy_data(bf,bfl,o->v+o->l);
 					o->l+=bfl;
-					if (a->dt.complex.imag){
-						sll_float_t v=a->dt.complex.imag;
+					if (a->dt.complex_value.imag){
+						sll_float_t v=a->dt.complex_value.imag;
 						sll_string_increase(o,1);
 						if (v<0){
 							o->v[o->l]='-';
@@ -154,8 +154,8 @@ static void _object_to_string(sll_object_t* a,sll_string_t* o){
 						o->l+=bfl;
 					}
 				}
-				else if (a->dt.complex.imag){
-					sll_string_length_t bfl=snprintf((char*)bf,256,"%.16lfi",a->dt.complex.imag);
+				else if (a->dt.complex_value.imag){
+					sll_string_length_t bfl=snprintf((char*)bf,256,"%.16lfi",a->dt.complex_value.imag);
 					sll_string_increase(o,bfl);
 					sll_copy_data(bf,bfl,o->v+o->l);
 					o->l+=bfl;

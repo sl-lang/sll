@@ -114,7 +114,7 @@ __SLL_EXTERNAL void sll_var_arg_get_complex(sll_var_arg_list_t* va,sll_complex_t
 	}
 	else{
 		sll_object_t* n=sll_operator_cast((sll_object_t*)(*(va->dt.sll.p)),sll_static_int[SLL_OBJECT_TYPE_COMPLEX]);
-		*o=n->dt.complex;
+		*o=n->dt.complex_value;
 		SLL_RELEASE(n);
 		va->dt.sll.p++;
 		va->dt.sll.l--;

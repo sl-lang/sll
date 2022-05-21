@@ -21,7 +21,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_operator_equal(sll_object_t* a,
 		case COMBINED_TYPE_IC:
 			return a->dt.int_value==b->dt.char_value;
 		case COMBINED_TYPE_ID:
-			return (!b->dt.complex.imag&&a->dt.int_value==b->dt.complex.real);
+			return (!b->dt.complex_value.imag&&a->dt.int_value==b->dt.complex_value.real);
 		case COMBINED_TYPE_IS:
 			return a->dt.int_value==b->dt.s.l;
 		case COMBINED_TYPE_IA:
@@ -35,7 +35,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_operator_equal(sll_object_t* a,
 		case COMBINED_TYPE_FC:
 			return a->dt.float_value==b->dt.char_value;
 		case COMBINED_TYPE_FD:
-			return (!b->dt.complex.imag&&a->dt.float_value==b->dt.complex.real);
+			return (!b->dt.complex_value.imag&&a->dt.float_value==b->dt.complex_value.real);
 		case COMBINED_TYPE_FS:
 			return a->dt.float_value==b->dt.s.l;
 		case COMBINED_TYPE_FA:
@@ -49,7 +49,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_operator_equal(sll_object_t* a,
 		case COMBINED_TYPE_CC:
 			return a->dt.char_value==b->dt.char_value;
 		case COMBINED_TYPE_CD:
-			return (!b->dt.complex.imag&&a->dt.char_value==b->dt.complex.real);
+			return (!b->dt.complex_value.imag&&a->dt.char_value==b->dt.complex_value.real);
 		case COMBINED_TYPE_CS:
 			return (b->dt.s.l==1&&b->dt.s.v[0]==a->dt.char_value);
 		case COMBINED_TYPE_CA:
@@ -57,19 +57,19 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_operator_equal(sll_object_t* a,
 		case COMBINED_TYPE_CM:
 			return a->dt.char_value==b->dt.m.length;
 		case COMBINED_TYPE_DI:
-			return (!a->dt.complex.imag&&a->dt.complex.real==b->dt.int_value);
+			return (!a->dt.complex_value.imag&&a->dt.complex_value.real==b->dt.int_value);
 		case COMBINED_TYPE_DF:
-			return (!a->dt.complex.imag&&a->dt.complex.real==b->dt.float_value);
+			return (!a->dt.complex_value.imag&&a->dt.complex_value.real==b->dt.float_value);
 		case COMBINED_TYPE_DC:
-			return (!a->dt.complex.imag&&a->dt.complex.real==b->dt.char_value);
+			return (!a->dt.complex_value.imag&&a->dt.complex_value.real==b->dt.char_value);
 		case COMBINED_TYPE_DD:
-			return (a->dt.complex.real==b->dt.complex.real&&a->dt.complex.imag==b->dt.complex.imag);
+			return (a->dt.complex_value.real==b->dt.complex_value.real&&a->dt.complex_value.imag==b->dt.complex_value.imag);
 		case COMBINED_TYPE_DS:
-			return (!a->dt.complex.imag&&a->dt.complex.real==b->dt.s.l);
+			return (!a->dt.complex_value.imag&&a->dt.complex_value.real==b->dt.s.l);
 		case COMBINED_TYPE_DA:
-			return (!a->dt.complex.imag&&a->dt.complex.real==b->dt.a.length);
+			return (!a->dt.complex_value.imag&&a->dt.complex_value.real==b->dt.a.length);
 		case COMBINED_TYPE_DM:
-			return (!a->dt.complex.imag&&a->dt.complex.real==b->dt.m.length);
+			return (!a->dt.complex_value.imag&&a->dt.complex_value.real==b->dt.m.length);
 		case COMBINED_TYPE_SI:
 			return a->dt.s.l==b->dt.int_value;
 		case COMBINED_TYPE_SF:
@@ -77,7 +77,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_operator_equal(sll_object_t* a,
 		case COMBINED_TYPE_SC:
 			return (a->dt.s.l==1&&a->dt.s.v[0]==b->dt.char_value);
 		case COMBINED_TYPE_SD:
-			return (!b->dt.complex.imag&&a->dt.s.l==b->dt.complex.real);
+			return (!b->dt.complex_value.imag&&a->dt.s.l==b->dt.complex_value.real);
 		case COMBINED_TYPE_SS:
 			return STRING_EQUAL(&(a->dt.s),&(b->dt.s));
 		case COMBINED_TYPE_SA:
@@ -91,7 +91,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_operator_equal(sll_object_t* a,
 		case COMBINED_TYPE_AC:
 			return a->dt.a.length==b->dt.char_value;
 		case COMBINED_TYPE_AD:
-			return (!b->dt.complex.imag&&a->dt.a.length==b->dt.complex.real);
+			return (!b->dt.complex_value.imag&&a->dt.a.length==b->dt.complex_value.real);
 		case COMBINED_TYPE_AS:
 			return sll_string_equal_array(&(b->dt.s),&(a->dt.a));
 		case COMBINED_TYPE_AA:
@@ -105,7 +105,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_operator_equal(sll_object_t* a,
 		case COMBINED_TYPE_MC:
 			return a->dt.m.length==b->dt.char_value;
 		case COMBINED_TYPE_MD:
-			return (!b->dt.complex.imag&&a->dt.m.length==b->dt.complex.real);
+			return (!b->dt.complex_value.imag&&a->dt.m.length==b->dt.complex_value.real);
 		case COMBINED_TYPE_MS:
 			return sll_string_equal_map(&(b->dt.s),&(a->dt.m));
 		case COMBINED_TYPE_MA:

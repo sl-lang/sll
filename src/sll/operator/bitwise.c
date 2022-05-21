@@ -138,8 +138,8 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_inv(sll_object_t* a
 		case SLL_OBJECT_TYPE_COMPLEX:
 			{
 				sll_complex_t n={
-					-a->dt.complex.real-1,
-					-a->dt.complex.imag-1
+					-a->dt.complex_value.real-1,
+					-a->dt.complex_value.imag-1
 				};
 				return sll_complex_to_object(&n);
 			}

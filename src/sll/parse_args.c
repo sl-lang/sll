@@ -234,7 +234,7 @@ static void _parse_char(sll_object_t* arg,arg_parse_flags_t flags,arg_state_t** 
 
 
 static void _parse_complex(sll_object_t* arg,arg_parse_flags_t flags,arg_state_t** st,arg_output_t* o){
-	PARSE_TYPE(sll_complex_t,COMPLEX,complex,SLL_INIT_COMPLEX);
+	PARSE_TYPE(sll_complex_t,COMPLEX,complex_value,SLL_INIT_COMPLEX);
 }
 
 
@@ -256,7 +256,7 @@ static void _parse_float_or_complex(sll_object_t* arg,arg_parse_flags_t flags,ar
 	}
 	else if (arg->t==SLL_OBJECT_TYPE_COMPLEX){
 		var->t=SLL_PARSE_ARGS_TYPE_COMPLEX;
-		var->dt.d=arg->dt.complex;
+		var->dt.d=arg->dt.complex_value;
 	}
 	else{
 		sll_object_t* obj=sll_operator_cast(arg,sll_static_int[SLL_OBJECT_TYPE_FLOAT]);
@@ -288,7 +288,7 @@ static void _parse_int_or_float_or_complex(sll_object_t* arg,arg_parse_flags_t f
 	}
 	else if (arg->t==SLL_OBJECT_TYPE_COMPLEX){
 		var->t=SLL_PARSE_ARGS_TYPE_COMPLEX;
-		var->dt.d=arg->dt.complex;
+		var->dt.d=arg->dt.complex_value;
 	}
 	else{
 		sll_object_t* obj=sll_operator_cast(arg,sll_static_int[SLL_OBJECT_TYPE_FLOAT]);

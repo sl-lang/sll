@@ -666,7 +666,7 @@ __SLL_EXTERNAL sll_object_t* sll_static_char[256]={
 
 
 
-STATIC_OBJECT(complex_zero,SLL_OBJECT_TYPE_COMPLEX,complex,SLL_INIT_COMPLEX_STRUCT);
+STATIC_OBJECT(complex_zero,SLL_OBJECT_TYPE_COMPLEX,complex_value,SLL_INIT_COMPLEX_STRUCT);
 
 
 
@@ -721,7 +721,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_complex_to_object(const sll_
 		return sll_static_complex_zero;
 	}
 	sll_object_t* o=sll_create_object(SLL_OBJECT_TYPE_COMPLEX);
-	o->dt.complex=*v;
+	o->dt.complex_value=*v;
 	return o;
 }
 

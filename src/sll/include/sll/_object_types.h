@@ -126,7 +126,7 @@ typedef struct _SLL_OBJECT_PTR{
  * \arg sll_integer_t int_value
  * \arg sll_float_t float_value
  * \arg sll_char_t char_value
- * \arg sll_complex_t complex
+ * \arg sll_complex_t complex_value
  * \arg sll_string_t s
  * \arg sll_array_t a
  * \arg sll_map_t m
@@ -138,7 +138,7 @@ typedef union _SLL_OBJECT_DATA{
 	sll_integer_t int_value;
 	sll_float_t float_value;
 	sll_char_t char_value;
-	sll_complex_t complex;
+	sll_complex_t complex_value;
 	sll_string_t s;
 	sll_array_t a;
 	sll_map_t m;

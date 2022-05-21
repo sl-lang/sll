@@ -17,7 +17,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_len(sll_object_t* a
 		case SLL_OBJECT_TYPE_CHAR:
 			return sll_int_to_object(a->dt.char_value);
 		case SLL_OBJECT_TYPE_COMPLEX:
-			return sll_float_to_object(COMPLEX_ABS(a->dt.complex));
+			return sll_float_to_object(COMPLEX_ABS(a->dt.complex_value));
 		case SLL_OBJECT_TYPE_STRING:
 			return sll_int_to_object(a->dt.s.l);
 		case SLL_OBJECT_TYPE_ARRAY:
