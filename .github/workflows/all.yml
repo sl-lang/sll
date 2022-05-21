@@ -212,10 +212,10 @@ jobs:
         uses: ilammy/msvc-dev-cmd@v1
       - name: Build
         run: ${{env.BUILD_COMMAND_WINDOWS}}
+        shell: cmd
       - name: Create bundle
         run: src\_build\bundle.ps1
         shell: powershell
-        shell: cmd
       - name: Store assets
         uses: actions/upload-artifact@v3
         with:
@@ -238,10 +238,10 @@ jobs:
         uses: ilammy/msvc-dev-cmd@v1
       - name: Build
         run: ${{env.BUILD_COMMAND_WINDOWS}} --release
+        shell: cmd
       - name: Create bundle
         run: src\_build\bundle.ps1
         shell: powershell
-        shell: cmd
       - name: Store assets
         uses: actions/upload-artifact@v3
         with:
