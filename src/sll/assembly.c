@@ -717,8 +717,8 @@ static const sll_node_t* _generate_assign(const sll_node_t* o,assembly_generator
 		}
 		sll_assembly_instruction_t* ai=_acquire_next_instruction(g_dt->a_dt);
 		ai->type=SLL_ASSEMBLY_INSTRUCTION_TYPE_ASSIGN_VAR_ACCESS;
-		ai->data.va.v=vi;
-		ai->data.va.l=vl;
+		ai->data.va.variable=vi;
+		ai->data.va.arg_count=vl;
 		POP_N(vl+1);
 		l-=2;
 		while (l){
@@ -932,7 +932,7 @@ static const sll_node_t* _generate_on_stack(const sll_node_t* o,assembly_generat
 			{
 				sll_assembly_instruction_t* ai=_acquire_next_instruction(g_dt->a_dt);
 				ai->type=SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_INT;
-				ai->data.i=o->dt.i;
+				ai->data.int_=o->dt.i;
 				PUSH;
 				return o+1;
 			}
@@ -940,7 +940,7 @@ static const sll_node_t* _generate_on_stack(const sll_node_t* o,assembly_generat
 			{
 				sll_assembly_instruction_t* ai=_acquire_next_instruction(g_dt->a_dt);
 				ai->type=SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_FLOAT;
-				ai->data.f=o->dt.f;
+				ai->data.float_=o->dt.f;
 				PUSH;
 				return o+1;
 			}
@@ -948,7 +948,7 @@ static const sll_node_t* _generate_on_stack(const sll_node_t* o,assembly_generat
 			{
 				sll_assembly_instruction_t* ai=_acquire_next_instruction(g_dt->a_dt);
 				ai->type=SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_CHAR;
-				ai->data.c=o->dt.c;
+				ai->data.char_=o->dt.c;
 				PUSH;
 				return o+1;
 			}
@@ -956,7 +956,7 @@ static const sll_node_t* _generate_on_stack(const sll_node_t* o,assembly_generat
 			{
 				sll_assembly_instruction_t* ai=_acquire_next_instruction(g_dt->a_dt);
 				ai->type=SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_COMPLEX;
-				ai->data.d=o->dt.d;
+				ai->data.complex_=o->dt.d;
 				PUSH;
 				return o+1;
 			}
@@ -1019,7 +1019,7 @@ static const sll_node_t* _generate_on_stack(const sll_node_t* o,assembly_generat
 			{
 				sll_assembly_instruction_t* ai=_acquire_next_instruction(g_dt->a_dt);
 				ai->type=SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_INT;
-				ai->data.i=o->dt.fn_id+1;
+				ai->data.int_=o->dt.fn_id+1;
 				PUSH;
 				return o+1;
 			}
@@ -1111,7 +1111,7 @@ static const sll_node_t* _generate_on_stack(const sll_node_t* o,assembly_generat
 			{
 				sll_assembly_instruction_t* ai=_acquire_next_instruction(g_dt->a_dt);
 				ai->type=SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_INT;
-				ai->data.i=(o->t==SLL_NODE_TYPE_FUNC?o->dt.fn.id+1:~((sll_integer_t)o->dt.fn.id));
+				ai->data.int_=(o->t==SLL_NODE_TYPE_FUNC?o->dt.fn.id+1:~((sll_integer_t)o->dt.fn.id));
 				PUSH;
 				return _skip_with_dbg(o,g_dt);
 			}
@@ -1319,8 +1319,8 @@ static const sll_node_t* _generate_on_stack(const sll_node_t* o,assembly_generat
 				} while (l);
 				sll_assembly_instruction_t* ai=_acquire_next_instruction(g_dt->a_dt);
 				ai->type=SLL_ASSEMBLY_INSTRUCTION_TYPE_ACCESS_VAR;
-				ai->data.va.v=vi;
-				ai->data.va.l=vl;
+				ai->data.va.variable=vi;
+				ai->data.va.arg_count=vl;
 				PUSH;
 				return o;
 			}
@@ -2386,18 +2386,18 @@ _remove_nop:
 				*(lbl+lbl_i)=j;
 				lbl_i=n;
 			}
-			ai->data.j._p=_get_instruction_at_offset(o,j);
+			ai->data.j._instruction=_get_instruction_at_offset(o,j);
 			if (j<128){
-				ai->data.j.t.abs=j;
+				ai->data.j.target.abs=j;
 			}
 			else{
 				sll_relative_instruction_index_t off=((sll_relative_instruction_index_t)j)-i;
 				if (GET_SIGN_ENCODED_INTEGER((sll_integer_t)off)<(sll_integer_t)j){
 					ai->type|=SLL_ASSEMBLY_INSTRUCTION_FLAG_RELATIVE;
-					ai->data.j.t.rel=off;
+					ai->data.j.target.rel=off;
 				}
 				else{
-					ai->data.j.t.abs=j;
+					ai->data.j.target.abs=j;
 				}
 			}
 		}

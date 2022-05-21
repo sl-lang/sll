@@ -9,22 +9,22 @@
 static __SLL_FORCE_INLINE void _optimize_assembly(sll_assembly_instruction_t** st,sll_assembly_instruction_t* nop){
 	if (SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(st[0])!=SLL_ASSEMBLY_INSTRUCTION_TYPE_CALL&&SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(st[0])!=SLL_ASSEMBLY_INSTRUCTION_TYPE_PRINT&&SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(st[0])!=SLL_ASSEMBLY_INSTRUCTION_TYPE_RET){
 		if (SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(st[1])==SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_INT){
-			if (st[1]->data.i==-1){
+			if (st[1]->data.int_==-1){
 				st[1]->type=SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_MINUS_ONE;
 			}
-			else if (st[1]->data.i==0){
+			else if (st[1]->data.int_==0){
 				st[1]->type=SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_ZERO;
 			}
-			else if (st[1]->data.i==1){
+			else if (st[1]->data.int_==1){
 				st[1]->type=SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_ONE;
 			}
-			else if (st[1]->data.i==2){
+			else if (st[1]->data.int_==2){
 				st[1]->type=SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_TWO;
 			}
-			else if (st[1]->data.i==3){
+			else if (st[1]->data.int_==3){
 				st[1]->type=SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_THREE;
 			}
-			else if (st[1]->data.i==4){
+			else if (st[1]->data.int_==4){
 				st[1]->type=SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_FOUR;
 			}
 			else{
@@ -177,7 +177,7 @@ static __SLL_FORCE_INLINE void _optimize_assembly(sll_assembly_instruction_t** s
 		}
 	}
 	else if (SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(st[0])==SLL_ASSEMBLY_INSTRUCTION_TYPE_RET_INT){
-		if (st[0]->data.i==0){
+		if (st[0]->data.int_==0){
 			st[0]->type=SLL_ASSEMBLY_INSTRUCTION_TYPE_RET_ZERO;
 		}
 	}

@@ -1704,12 +1704,12 @@ typedef union _SLL_ASSEMBLY_INSTRUCTION_DATA_JUMP_TARGET{
  * \name sll_assembly_instruction_data_jump_t
  * \group assembly
  * \desc Docs!
- * \arg sll_assembly_instruction_data_jump_target_t t
- * \arg void* _p
+ * \arg sll_assembly_instruction_data_jump_target_t target
+ * \arg void* _instruction
  */
 typedef struct _SLL_ASSEMBLY_INSTRUCTION_DATA_JUMP{
-	sll_assembly_instruction_data_jump_target_t t;
-	void* _p;
+	sll_assembly_instruction_data_jump_target_t target;
+	void* _instruction;
 } sll_assembly_instruction_data_jump_t;
 
 
@@ -1719,12 +1719,12 @@ typedef struct _SLL_ASSEMBLY_INSTRUCTION_DATA_JUMP{
  * \name sll_assembly_instruction_data_var_access_t
  * \group assembly
  * \desc Docs!
- * \arg sll_variable_index_t v
- * \arg sll_arg_count_t l
+ * \arg sll_variable_index_t variable
+ * \arg sll_arg_count_t arg_count
  */
 typedef struct _SLL_ASSEMBLY_INSTRUCTION_DATA_VAR_ACCESS{
-	sll_variable_index_t v;
-	sll_arg_count_t l;
+	sll_variable_index_t variable;
+	sll_arg_count_t arg_count;
 } sll_assembly_instruction_data_var_access_t;
 
 
@@ -1734,11 +1734,11 @@ typedef struct _SLL_ASSEMBLY_INSTRUCTION_DATA_VAR_ACCESS{
  * \name sll_assembly_instruction_data_t
  * \group assembly
  * \desc Docs!
- * \arg sll_integer_t i
- * \arg sll_compressed_integer_t ci
- * \arg sll_float_t f
- * \arg sll_complex_t d
- * \arg sll_char_t c
+ * \arg sll_integer_t int_
+ * \arg sll_compressed_integer_t compressed_int
+ * \arg sll_float_t float_
+ * \arg sll_char_t char_
+ * \arg sll_complex_t complex_
  * \arg sll_string_index_t s
  * \arg sll_variable_index_t v
  * \arg sll_assembly_instruction_data_jump_t j
@@ -1751,11 +1751,11 @@ typedef struct _SLL_ASSEMBLY_INSTRUCTION_DATA_VAR_ACCESS{
  * \arg void* _p
  */
 typedef union _SLL_ASSEMBLY_INSTRUCTION_DATA{
-	sll_integer_t i;
-	sll_compressed_integer_t ci;
-	sll_float_t f;
-	sll_complex_t d;
-	sll_char_t c;
+	sll_integer_t int_;
+	sll_compressed_integer_t compressed_int;
+	sll_float_t float_;
+	sll_char_t char_;
+	sll_complex_t complex_;
 	sll_string_index_t s;
 	sll_variable_index_t v;
 	sll_assembly_instruction_data_jump_t j;

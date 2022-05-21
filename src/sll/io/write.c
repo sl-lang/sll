@@ -229,22 +229,22 @@ __SLL_EXTERNAL void sll_write_assembly(sll_file_t* wf,const sll_assembly_data_t*
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_CALL_ZERO:
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_CALL_ONE:
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_RET_INT:
-				CHECK_ERROR(sll_encode_signed_integer(wf,ai->data.i));
+				CHECK_ERROR(sll_encode_signed_integer(wf,ai->data.int_));
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_INT_COMPRESSED:
-				CHECK_ERROR(sll_encode_integer(wf,ai->data.ci));
+				CHECK_ERROR(sll_encode_integer(wf,ai->data.compressed_int));
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_FLOAT:
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_RET_FLOAT:
-				WRITE_FIELD(ai->data.f,wf);
+				WRITE_FIELD(ai->data.float_,wf);
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_COMPLEX:
-				WRITE_FIELD(ai->data.d,wf);
+				WRITE_FIELD(ai->data.complex_,wf);
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_CHAR:
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PRINT_CHAR:
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_RET_CHAR:
-				sll_file_write_char(wf,ai->data.c,NULL);
+				sll_file_write_char(wf,ai->data.char_,NULL);
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_LABEL:
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_JMP:
@@ -261,10 +261,10 @@ __SLL_EXTERNAL void sll_write_assembly(sll_file_t* wf,const sll_assembly_data_t*
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_JI:
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_JNI:
 				if (SLL_ASSEMBLY_INSTRUCTION_FLAG_IS_RELATIVE(ai)){
-					CHECK_ERROR(sll_encode_signed_integer(wf,ai->data.j.t.rel));
+					CHECK_ERROR(sll_encode_signed_integer(wf,ai->data.j.target.rel));
 				}
 				else{
-					CHECK_ERROR(sll_encode_integer(wf,ai->data.j.t.abs));
+					CHECK_ERROR(sll_encode_integer(wf,ai->data.j.target.abs));
 				}
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_STACK:
@@ -320,8 +320,8 @@ __SLL_EXTERNAL void sll_write_assembly(sll_file_t* wf,const sll_assembly_data_t*
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_ACCESS_VAR:
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_ASSIGN_VAR_ACCESS:
-				CHECK_ERROR(sll_encode_integer(wf,ai->data.va.v));
-				CHECK_ERROR(sll_encode_integer(wf,ai->data.va.l));
+				CHECK_ERROR(sll_encode_integer(wf,ai->data.va.variable));
+				CHECK_ERROR(sll_encode_integer(wf,ai->data.va.arg_count));
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_CAST_TYPE:
 				CHECK_ERROR(sll_encode_integer(wf,ai->data.t));

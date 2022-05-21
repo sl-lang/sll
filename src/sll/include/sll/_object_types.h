@@ -131,8 +131,8 @@ typedef struct _SLL_OBJECT_PTR{
  * \arg sll_array_t array
  * \arg sll_map_t map
  * \arg sll_object_field_t* fields
- * \arg sll_object_ptr_t _ptr
- * \arg sll_array_length_t _idx
+ * \arg sll_object_ptr_t _next_object
+ * \arg sll_array_length_t _pool_index
  */
 typedef union _SLL_OBJECT_DATA{
 	sll_integer_t int_;
@@ -143,8 +143,8 @@ typedef union _SLL_OBJECT_DATA{
 	sll_array_t array;
 	sll_map_t map;
 	sll_object_field_t* fields;
-	sll_object_ptr_t _ptr;
-    sll_array_length_t _idx;
+	sll_object_ptr_t _next_object;
+    sll_array_length_t _pool_index;
 } sll_object_data_t;
 
 

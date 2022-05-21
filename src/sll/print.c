@@ -630,12 +630,12 @@ __SLL_EXTERNAL void sll_print_assembly(const sll_assembly_data_t* a_dt,sll_file_
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_INT:
 				PRINT_STATIC_STRING("PUSH ",wf);
-				_print_int(ai->data.i,wf);
+				_print_int(ai->data.int_,wf);
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_INT_COMPRESSED:
 				{
 					PRINT_STATIC_STRING("PUSH ",wf);
-					sll_size_t dec=sll_decompress_integer(ai->data.ci);
+					sll_size_t dec=sll_decompress_integer(ai->data.compressed_int);
 					_print_int(SLL_DECODE_SIGNED_INTEGER(dec),wf);
 					break;
 				}
@@ -659,24 +659,24 @@ __SLL_EXTERNAL void sll_print_assembly(const sll_assembly_data_t* a_dt,sll_file_
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_FLOAT:
 				PRINT_STATIC_STRING("PUSH ",wf);
-				_print_float(ai->data.f,wf);
+				_print_float(ai->data.float_,wf);
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_COMPLEX:
 				PRINT_STATIC_STRING("PUSH ",wf);
-				_print_complex(&(ai->data.d),wf);
+				_print_complex(&(ai->data.complex_),wf);
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_CHAR:
 				PRINT_STATIC_STRING("PUSH c",wf);
-				_print_int(ai->data.c,wf);
+				_print_int(ai->data.char_,wf);
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_LABEL:
 				PRINT_STATIC_STRING("PUSH .",wf);
 _print_jump:
 				if (SLL_ASSEMBLY_INSTRUCTION_FLAG_IS_RELATIVE(ai)){
-					PRINT_INT_SIGN(ai->data.j.t.rel,wf);
+					PRINT_INT_SIGN(ai->data.j.target.rel,wf);
 				}
 				else{
-					_print_int(ai->data.j.t.abs,wf);
+					_print_int(ai->data.j.target.abs,wf);
 				}
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_STACK:
@@ -789,7 +789,7 @@ _print_jump:
 				goto _print_jump;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_JT:
 				PRINT_STATIC_STRING("JT ",wf);
-				_print_int(ai->data.i,wf);
+				_print_int(ai->data.int_,wf);
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_NOT:
 				PRINT_STATIC_STRING("NOT",wf);
@@ -864,9 +864,9 @@ _print_inplace:
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_ACCESS_VAR:
 				PRINT_STATIC_STRING("PUSH ",wf);
-				_print_int(ai->data.va.l,wf);
+				_print_int(ai->data.va.arg_count,wf);
 				PRINT_STATIC_STRING(" & ACCESS_VAR $",wf);
-				_print_assembly_identifier(ai->data.va.v,wf);
+				_print_assembly_identifier(ai->data.va.variable,wf);
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_ASSIGN:
 				PRINT_STATIC_STRING("ASSIGN",wf);
@@ -879,9 +879,9 @@ _print_inplace:
 				goto _print_inplace;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_ASSIGN_VAR_ACCESS:
 				PRINT_STATIC_STRING("PUSH ",wf);
-				_print_int(ai->data.va.l,wf);
+				_print_int(ai->data.va.arg_count,wf);
 				PRINT_STATIC_STRING(" & ASSIGN_VAR_ACCESS $",wf);
-				_print_assembly_identifier(ai->data.va.v,wf);
+				_print_assembly_identifier(ai->data.va.variable,wf);
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_CAST:
 				PRINT_STATIC_STRING("CAST",wf);
@@ -924,7 +924,7 @@ _print_inplace:
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PRINT_CHAR:
 				PRINT_STATIC_STRING("PRINT c",wf);
-				_print_int(ai->data.c,wf);
+				_print_int(ai->data.char_,wf);
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PRINT_STR:
 				PRINT_STATIC_STRING("PRINT #",wf);
@@ -945,12 +945,12 @@ _print_inplace:
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_CALL_ZERO:
 				PRINT_STATIC_STRING("PUSH ",wf);
-				_print_int(ai->data.i,wf);
+				_print_int(ai->data.int_,wf);
 				PRINT_STATIC_STRING(" & CALL 0",wf);
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_CALL_ONE:
 				PRINT_STATIC_STRING("PUSH ",wf);
-				_print_int(ai->data.i,wf);
+				_print_int(ai->data.int_,wf);
 				PRINT_STATIC_STRING(" & CALL 1",wf);
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_CALL_ARRAY:
@@ -964,18 +964,18 @@ _print_inplace:
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_RET_INT:
 				PRINT_STATIC_STRING("RET ",wf);
-				_print_int(ai->data.i,wf);
+				_print_int(ai->data.int_,wf);
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_RET_ZERO:
 				PRINT_STATIC_STRING("RET 0",wf);
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_RET_FLOAT:
 				PRINT_STATIC_STRING("RET ",wf);
-				_print_float(ai->data.f,wf);
+				_print_float(ai->data.float_,wf);
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_RET_CHAR:
 				PRINT_STATIC_STRING("RET c",wf);
-				_print_int(ai->data.c,wf);
+				_print_int(ai->data.char_,wf);
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_RET_STR:
 				PRINT_STATIC_STRING("RET #",wf);

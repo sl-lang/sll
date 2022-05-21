@@ -1,9 +1,9 @@
-0=!call|print|ret, 1=push_int, 1.i=-1 -> 1=push_minus_one
-0=!call|print|ret, 1=push_int, 1.i=+0 -> 1=push_zero
-0=!call|print|ret, 1=push_int, 1.i=+1 -> 1=push_one
-0=!call|print|ret, 1=push_int, 1.i=+2 -> 1=push_two
-0=!call|print|ret, 1=push_int, 1.i=+3 -> 1=push_three
-0=!call|print|ret, 1=push_int, 1.i=+4 -> 1=push_four
+0=!call|print|ret, 1=push_int, 1.int_=-1 -> 1=push_minus_one
+0=!call|print|ret, 1=push_int, 1.int_=+0 -> 1=push_zero
+0=!call|print|ret, 1=push_int, 1.int_=+1 -> 1=push_one
+0=!call|print|ret, 1=push_int, 1.int_=+2 -> 1=push_two
+0=!call|print|ret, 1=push_int, 1.int_=+3 -> 1=push_three
+0=!call|print|ret, 1=push_int, 1.int_=+4 -> 1=push_four
 0=!call|print|ret, 1=push_int -> 1=#_assembly_optimize_int
 
 0=pop, 1=rot -> 1=rot_pop, $1
@@ -41,7 +41,7 @@
 0=ret, 1=loads -> 1=ret_str, $1
 0=ret, 1=load -> 1=ret_var, $1
 
-0=ret_int, 0.i=+0 -> 0=ret_zero
+0=ret_int, 0.int_=+0 -> 0=ret_zero
 
 0=del, 1=store_pop, 0.v=1.v -> 0=del, 1=pop
 0=pop, 1=new_decl -> $2
