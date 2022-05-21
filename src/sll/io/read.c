@@ -275,21 +275,21 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_load_assembly(sll_file_t* rf,sl
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_RET_INT:
 				{
 					sll_error_t err=0;
-					ai->dt.i=sll_decode_signed_integer(rf,&err);
+					ai->data.i=sll_decode_signed_integer(rf,&err);
 					if (err!=SLL_NO_ERROR){
 						return 0;
 					}
 					break;
 				}
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_INT_COMPRESSED:
-				CHECK_ERROR(rf,ai->dt.ci,sll_compressed_integer_t);
+				CHECK_ERROR(rf,ai->data.ci,sll_compressed_integer_t);
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_FLOAT:
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_RET_FLOAT:
-				READ_FIELD(ai->dt.f,rf);
+				READ_FIELD(ai->data.f,rf);
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_COMPLEX:
-				READ_FIELD(ai->dt.d,rf);
+				READ_FIELD(ai->data.d,rf);
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_CHAR:
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PRINT_CHAR:
@@ -298,7 +298,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_load_assembly(sll_file_t* rf,sl
 				if (c==SLL_END_OF_DATA){
 					return 0;
 				}
-				ai->dt.c=(sll_char_t)c;
+				ai->data.c=(sll_char_t)c;
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_LABEL:
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_JMP:
@@ -316,17 +316,17 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_load_assembly(sll_file_t* rf,sl
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_JNI:
 				if (SLL_ASSEMBLY_INSTRUCTION_FLAG_IS_RELATIVE(ai)){
 					sll_error_t err=0;
-					ai->dt.j.t.rel=(sll_relative_instruction_index_t)sll_decode_signed_integer(rf,&err);
+					ai->data.j.t.rel=(sll_relative_instruction_index_t)sll_decode_signed_integer(rf,&err);
 					if (err!=SLL_NO_ERROR){
 						return 0;
 					}
 				}
 				else{
-					CHECK_ERROR(rf,ai->dt.j.t.abs,sll_instruction_index_t);
+					CHECK_ERROR(rf,ai->data.j.t.abs,sll_instruction_index_t);
 				}
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_STACK:
-				CHECK_ERROR(rf,ai->dt.so,sll_stack_offset_t);
+				CHECK_ERROR(rf,ai->data.so,sll_stack_offset_t);
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_LOAD:
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_STORE:
@@ -341,20 +341,20 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_load_assembly(sll_file_t* rf,sl
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_RET_VAR:
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_DEL:
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_LOAD_DEL:
-				CHECK_ERROR(rf,ai->dt.v,sll_variable_index_t);
+				CHECK_ERROR(rf,ai->data.v,sll_variable_index_t);
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_LOADS:
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_LOOKUP_STR:
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PRINT_STR:
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_RET_STR:
-				CHECK_ERROR(rf,ai->dt.s,sll_string_index_t);
+				CHECK_ERROR(rf,ai->data.s,sll_string_index_t);
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PACK:
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_JT:
-				CHECK_ERROR(rf,ai->dt.al,sll_array_length_t);
+				CHECK_ERROR(rf,ai->data.al,sll_array_length_t);
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_MAP:
-				CHECK_ERROR(rf,ai->dt.ml,sll_map_length_t);
+				CHECK_ERROR(rf,ai->data.ml,sll_map_length_t);
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_NOT:
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_INC:
@@ -373,33 +373,33 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_load_assembly(sll_file_t* rf,sl
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_ASSIGN_TWO:
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_ASSIGN_THREE:
 				if (SLL_ASSEMBLY_INSTRUCTION_FLAG_IS_INPLACE(ai)){
-					CHECK_ERROR(rf,ai->dt.v,sll_variable_index_t);
+					CHECK_ERROR(rf,ai->data.v,sll_variable_index_t);
 				}
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_ACCESS_VAR:
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_ASSIGN_VAR_ACCESS:
-				CHECK_ERROR(rf,ai->dt.va.v,sll_variable_index_t);
-				CHECK_ERROR(rf,ai->dt.va.l,sll_arg_count_t);
+				CHECK_ERROR(rf,ai->data.va.v,sll_variable_index_t);
+				CHECK_ERROR(rf,ai->data.va.l,sll_arg_count_t);
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_CAST_TYPE:
-				CHECK_ERROR(rf,ai->dt.t,sll_object_type_t);
+				CHECK_ERROR(rf,ai->data.t,sll_object_type_t);
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_CALL:
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_CALL_POP:
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_DECL:
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_NEW:
-				CHECK_ERROR(rf,ai->dt.ac,sll_arg_count_t);
+				CHECK_ERROR(rf,ai->data.ac,sll_arg_count_t);
 				break;
 		}
 	}
 	sll_assembly_instruction_t* ai=a_dt->h;
 	for (i=0;i<a_dt->ic;i++){
 		if (SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(ai)==SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_LABEL||(SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(ai)>=SLL_ASSEMBLY_INSTRUCTION_TYPE_JMP&&SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(ai)<=SLL_ASSEMBLY_INSTRUCTION_TYPE_JNI)){
-			ai->dt.j._p=_get_instruction_at_offset(a_dt,(SLL_ASSEMBLY_INSTRUCTION_FLAG_IS_RELATIVE(ai)?i+ai->dt.j.t.rel:ai->dt.j.t.abs));
+			ai->data.j._p=_get_instruction_at_offset(a_dt,(SLL_ASSEMBLY_INSTRUCTION_FLAG_IS_RELATIVE(ai)?i+ai->data.j.t.rel:ai->data.j.t.abs));
 		}
 		ai++;
 		if (SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(ai)==SLL_ASSEMBLY_INSTRUCTION_TYPE_CHANGE_STACK){
-			ai=ai->dt._p;
+			ai=ai->data._p;
 		}
 	}
 	return 1;

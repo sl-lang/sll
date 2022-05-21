@@ -25,7 +25,7 @@
 	(= str (<- string$split (<- string$lower_case str) '.'))
 	(@@ (?: (=== ($ str) 1)
 		(+ "SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(st[" (: str 0) "])")
-		(+ "st[" (: str 0) "]->dt." (<- string$trim (: str 1)))
+		(+ "st[" (: str 0) "]->data." (<- string$trim (: str 1)))
 	))
 ))
 
@@ -64,7 +64,7 @@
 			(= obj (<- string$split (<- string$lower_case (: expr 0)) '.'))
 			(? (=== ($ obj) 1)
 				(<- file$write fh "st[" (: obj 0) "]->type=")
-				(<- file$write fh "st[" (: obj 0) "]->dt." (<- string$trim (: obj 1)) "=")
+				(<- file$write fh "st[" (: obj 0) "]->data." (<- string$trim (: obj 1)) "=")
 			)
 			(<- file$write fh (<- _parse_value (: expr 1)) ";\n")
 		})

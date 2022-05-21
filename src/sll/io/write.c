@@ -229,22 +229,22 @@ __SLL_EXTERNAL void sll_write_assembly(sll_file_t* wf,const sll_assembly_data_t*
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_CALL_ZERO:
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_CALL_ONE:
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_RET_INT:
-				CHECK_ERROR(sll_encode_signed_integer(wf,ai->dt.i));
+				CHECK_ERROR(sll_encode_signed_integer(wf,ai->data.i));
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_INT_COMPRESSED:
-				CHECK_ERROR(sll_encode_integer(wf,ai->dt.ci));
+				CHECK_ERROR(sll_encode_integer(wf,ai->data.ci));
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_FLOAT:
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_RET_FLOAT:
-				WRITE_FIELD(ai->dt.f,wf);
+				WRITE_FIELD(ai->data.f,wf);
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_COMPLEX:
-				WRITE_FIELD(ai->dt.d,wf);
+				WRITE_FIELD(ai->data.d,wf);
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_CHAR:
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PRINT_CHAR:
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_RET_CHAR:
-				sll_file_write_char(wf,ai->dt.c,NULL);
+				sll_file_write_char(wf,ai->data.c,NULL);
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_LABEL:
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_JMP:
@@ -261,14 +261,14 @@ __SLL_EXTERNAL void sll_write_assembly(sll_file_t* wf,const sll_assembly_data_t*
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_JI:
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_JNI:
 				if (SLL_ASSEMBLY_INSTRUCTION_FLAG_IS_RELATIVE(ai)){
-					CHECK_ERROR(sll_encode_signed_integer(wf,ai->dt.j.t.rel));
+					CHECK_ERROR(sll_encode_signed_integer(wf,ai->data.j.t.rel));
 				}
 				else{
-					CHECK_ERROR(sll_encode_integer(wf,ai->dt.j.t.abs));
+					CHECK_ERROR(sll_encode_integer(wf,ai->data.j.t.abs));
 				}
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_STACK:
-				CHECK_ERROR(sll_encode_integer(wf,ai->dt.so));
+				CHECK_ERROR(sll_encode_integer(wf,ai->data.so));
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_LOAD:
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_STORE:
@@ -283,20 +283,20 @@ __SLL_EXTERNAL void sll_write_assembly(sll_file_t* wf,const sll_assembly_data_t*
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_RET_VAR:
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_DEL:
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_LOAD_DEL:
-				CHECK_ERROR(sll_encode_integer(wf,ai->dt.v));
+				CHECK_ERROR(sll_encode_integer(wf,ai->data.v));
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_LOADS:
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_LOOKUP_STR:
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PRINT_STR:
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_RET_STR:
-				CHECK_ERROR(sll_encode_integer(wf,ai->dt.s));
+				CHECK_ERROR(sll_encode_integer(wf,ai->data.s));
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PACK:
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_JT:
-				CHECK_ERROR(sll_encode_integer(wf,ai->dt.al));
+				CHECK_ERROR(sll_encode_integer(wf,ai->data.al));
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_MAP:
-				CHECK_ERROR(sll_encode_integer(wf,ai->dt.ml));
+				CHECK_ERROR(sll_encode_integer(wf,ai->data.ml));
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_NOT:
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_INC:
@@ -315,27 +315,27 @@ __SLL_EXTERNAL void sll_write_assembly(sll_file_t* wf,const sll_assembly_data_t*
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_ASSIGN_TWO:
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_ASSIGN_THREE:
 				if (SLL_ASSEMBLY_INSTRUCTION_FLAG_IS_INPLACE(ai)){
-					CHECK_ERROR(sll_encode_integer(wf,ai->dt.v));
+					CHECK_ERROR(sll_encode_integer(wf,ai->data.v));
 				}
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_ACCESS_VAR:
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_ASSIGN_VAR_ACCESS:
-				CHECK_ERROR(sll_encode_integer(wf,ai->dt.va.v));
-				CHECK_ERROR(sll_encode_integer(wf,ai->dt.va.l));
+				CHECK_ERROR(sll_encode_integer(wf,ai->data.va.v));
+				CHECK_ERROR(sll_encode_integer(wf,ai->data.va.l));
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_CAST_TYPE:
-				CHECK_ERROR(sll_encode_integer(wf,ai->dt.t));
+				CHECK_ERROR(sll_encode_integer(wf,ai->data.t));
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_CALL:
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_CALL_POP:
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_DECL:
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_NEW:
-				CHECK_ERROR(sll_encode_integer(wf,ai->dt.ac));
+				CHECK_ERROR(sll_encode_integer(wf,ai->data.ac));
 				break;
 		}
 		ai++;
 		if (SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(ai)==SLL_ASSEMBLY_INSTRUCTION_TYPE_CHANGE_STACK){
-			ai=ai->dt._p;
+			ai=ai->data._p;
 		}
 	}
 }

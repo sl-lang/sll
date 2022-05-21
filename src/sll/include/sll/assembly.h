@@ -1776,11 +1776,11 @@ typedef union _SLL_ASSEMBLY_INSTRUCTION_DATA{
  * \group assembly
  * \desc Docs!
  * \arg sll_assembly_instruction_type_t type
- * \arg sll_assembly_instruction_data_t dt
+ * \arg sll_assembly_instruction_data_t data
  */
 typedef struct _SLL_ASSEMBLY_INSTRUCTION{
 	sll_assembly_instruction_type_t type;
-	sll_assembly_instruction_data_t dt;
+	sll_assembly_instruction_data_t data;
 } sll_assembly_instruction_t;
 
 

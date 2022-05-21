@@ -18,8 +18,8 @@
 #define ASSEMBLY_INSTRUCTION_TYPE_LABEL_TARGET SLL_ASSEMBLY_INSTRUCTION_TYPE_RESERVED3
 #define ASSEMBLY_INSTRUCTION_TYPE_NOP SLL_ASSEMBLY_INSTRUCTION_TYPE_RESERVED4
 #define ASSEMBLY_INSTRUCTION_FLAG_LABEL 128
-#define ASSEMBLY_INSTRUCTION_MISC_FIELD_GET(ai) ADDR((ai)->dt._p)
-#define ASSEMBLY_INSTRUCTION_MISC_FIELD_SET(ai,v) ((ai)->dt._p=PTR(v))
+#define ASSEMBLY_INSTRUCTION_MISC_FIELD_GET(ai) ADDR((ai)->data._p)
+#define ASSEMBLY_INSTRUCTION_MISC_FIELD_SET(ai,v) ((ai)->data._p=PTR(v))
 #define ASSEMBLY_INSTRUCTION_GET_LABEL_DATA(lbl) ((lbl)&0x7fffffff)
 #define ASSEMBLY_INSTRUCTION_FLAG_LABEL_REF 0x80000000
 
@@ -110,11 +110,11 @@ typedef struct _FILE_LINE{
 
 static __SLL_FORCE_INLINE void _assembly_optimize_int(sll_assembly_instruction_t* ai){
 	SLL_ASSERT(SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(ai)==SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_INT);
-	sll_size_t enc=SLL_ENCODE_SIGNED_INTEGER(ai->dt.i);
+	sll_size_t enc=SLL_ENCODE_SIGNED_INTEGER(ai->data.i);
 	sll_size_t ci=sll_compress_integer(enc);
 	if (ci!=enc){
 		ai->type=SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_INT_COMPRESSED;
-		ai->dt.ci=(sll_compressed_integer_t)ci;
+		ai->data.ci=(sll_compressed_integer_t)ci;
 	}
 }
 
