@@ -38,9 +38,6 @@
 (? config$OPTIONS$TEST
 	(<- util$execute [output_executable "tests/_runner.sll"])
 )
-(? config$OPTIONS$BUNDLE
-	(<- util$generate_bundle)
-)
 (? config$OPTIONS$RUN {
 	(? (||
 		(<- util$execute [output_executable "-h"])

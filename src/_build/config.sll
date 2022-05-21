@@ -14,7 +14,6 @@
 (= COMMAND_MARKER_OUTPUT (. (&:)))
 
 (= cli_options_types (&:
-	(~ int_type) BUNDLE
 	(~ int_type) COVERAGE
 	(~ int_type) DEBUG
 	(~ int_type) RELEASE
@@ -51,7 +50,6 @@
 	(~ int_type) BUILD_TIME
 	(~ string_type) BUILTIN_LIBRARY_ROOT_FILE_PATH
 	(~ array_type) BUILTIN_TYPES
-	(~ map_type) BUNDLE_FILE_LIST
 	(~ int_type) BYTE_ARRAY_WRAP_SIZE
 	(~ map_type) CLI_COMMANDS
 	(~ (:? COMMAND_MARKER_INPUT)) COMMAND_MARKER_INPUT
@@ -121,7 +119,6 @@
 
 
 (= options (. cli_options_types
-	(|: sys$ARGV "--bundle")
 	(|: sys$ARGV "--coverage")
 	(|: sys$ARGV "--debug")
 	(|: sys$ARGV "--release")
@@ -218,11 +215,6 @@
 	build_time
 	"src/sll/lib/"
 	["void" "va_list" "__SLL_S1" "__SLL_U1" "__SLL_S8" "__SLL_U8" "__SLL_S16" "__SLL_U16" "__SLL_S32" "__SLL_U32" "__SLL_S64" "__SLL_U64" "__SLL_F32" "__SLL_F64"]
-	<
-		"darwin" ["build/sll" output_library "build/lib/stdlib.slb" "build/lib_debug/stdlib.slb" "build/sll.h"]
-		"linux" ["build/sll" output_library "build/lib/stdlib.slb" "build/lib_debug/stdlib.slb" "build/sll.h"]
-		"windows" ["build/sll.exe" "build/sllw.exe" output_library "build/lib/stdlib.slb" "build/lib_debug/stdlib.slb" "build/sll.h"]
-	>
 	16
 	<
 		"darwin" (. platform_cli_command_list_type
