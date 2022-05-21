@@ -197,7 +197,7 @@
 (= output_library (+ "build/sll-" version sys$LIBRARY_EXTENSION))
 
 (= output_executable_args (+
-	[(+ "build/sll" (?: (=== sys$PLATFORM "windows") ".exe" ""))]
+	[(+ "build/sll" sys$EXECUTABLE_EXTENSION)]
 	(* ["-v"] options$VERBOSE)
 ))
 
