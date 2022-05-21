@@ -38,6 +38,7 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_bool_t sll_api_log_log(sll_
  * \arg sll_string_t* func
  * \arg sll_logger_flags_t flags
  * \arg sll_bool_t state
+ * \ret sll_bool_t
  */
 __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_bool_t sll_api_log_set(const sll_string_t* file,const sll_string_t* func,sll_logger_flags_t flags,sll_bool_t state);
 

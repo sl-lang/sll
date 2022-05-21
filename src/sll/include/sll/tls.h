@@ -98,7 +98,7 @@ __SLL_EXTERNAL void sll_free_tls(sll_tls_object_t* tls);
  * \group tls
  * \desc Docs!
  * \arg sll_tls_object_t* tls
- * \arg sll_object_t* out*
+ * \ret sll_object_t**
  */
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t** sll_tls_get(sll_tls_object_t* tls);
 

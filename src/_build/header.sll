@@ -47,7 +47,7 @@
 	)
 ))
 
-(= _format_type (,,, type
+(= _format_type (,,, type name
 	(= replace (:: config$TYPE_REPLACEMENTS array_type))
 	(-> (= i 0) (< i ($ replace))
 		(= type (<- string$replace
@@ -57,7 +57,23 @@
 		))
 		(= i (+ i 2))
 	)
-	(@@ type)
+	(? (=== name nil) (@@ type))
+	(= bracked_idx (<- string$index type '['))
+	(@@ (?: (=== bracked_idx -1)
+		(+
+			type
+			' '
+			name
+		)
+		(+
+			(: type 0 bracked_idx)
+			' '
+			name
+			'['
+			(: type (+ bracked_idx 1) -1)
+			']'
+		)
+	))
 ))
 
 (= _parse_requirements (,,, symbol struct_decl_list
@@ -69,6 +85,7 @@
 			arg$type
 		)
 	))
+	(? (& symbol$flags documentation$FLAG_FUNC) (<- array$push type_list symbol$return$type))
 	(= out [])
 	(-> (= i 0) (< i ($ type_list))
 		(= type (<- string$replace
@@ -87,8 +104,7 @@
 			(? (! (|: struct_decl_list type)) (<- array$push struct_decl_list type))
 		} {
 			(? (&&
-				(!== type "void")
-				(! (|: config$TYPE_REPLACEMENTS type))
+				(! (|: config$BUILTIN_TYPES type))
 				(! (|: out type))
 			) (<- array$push out type))
 		})
@@ -98,7 +114,7 @@
 ))
 
 (= _add_type (,,, out name types
-	(? (|: out$names type_names) (@@))
+	(? (|: out$type_names name) (@@))
 	(= type (: types name))
 	(? (! type) {
 		(:> "Unknown type: " name '\n')
@@ -108,7 +124,7 @@
 		(<- _add_type out (: type$requirements i) types)
 		(++ i)
 	)
-	(<- array$push out$types type)
+	(<- array$push out$types type$symbol)
 	(<- array$push out$type_names name)
 ))
 
@@ -205,7 +221,6 @@ static const sll_char_t ` name `_END[]={
 ))
 
 (= generate_library_header (,,, docs
-	(<- util$execute [(?: (=== sys$PLATFORM "windows") "python.exe" "python3") "src/_build/header.py" config$BUILD_TIME config$OPTIONS$VERBOSE])(@@)
 	(<- log$log "Generating library header...")
 	(<- log$log "  Listing symbols...")
 	(= define_code_map <>)
@@ -270,6 +285,13 @@ static const sll_char_t ` name `_END[]={
 	(<- file$write fh
 `#ifndef __SLL_H__
 #define __SLL_H__ 1
+#include <stdarg.h>
+#include <stddef.h>
+`)
+	(? (=== sys$PLATFORM "windows") (<- file$write fh "#include <sal.h>\n"))
+	(<- file$write fh
+`#define __VERSION_STR_(x) #x
+#define __VERSION_STR(x) __VERSION_STR_(x)
 `)
 	(= define_macros (:: define_code_map map_value_type))
 	(<- log$log "    Generating preprocessor definitions...")
@@ -284,7 +306,51 @@ static const sll_char_t ` name `_END[]={
 	)
 	(-> (= i 0) (< i ($ types))
 		(= symbol (: types i))
-		(<- file$write fh symbol$name ";\n")
+		(= str "")
+		(?
+			(& symbol$flags documentation$FLAG_VAR) (= str (<- _format_type symbol$type$type symbol$name))
+			(& symbol$flags documentation$FLAG_FUNC) {
+				(= str (+
+					(<- _format_type symbol$return$type nil)
+					" (*"
+					symbol$name
+					")("
+				))
+				(? symbol$args {
+					(-> (= j 0) (< j ($ symbol$args))
+						(= arg (: symbol$args j))
+						(? j (= str (+ str ',')))
+						(= str (+ str (<- _format_type arg$type arg$name)))
+						(++ j)
+					)
+					(? (& symbol$flags documentation$FLAG_VAR_ARG) (= str (+ str ",...")))
+				} {
+					(= str (+ str "void"))
+				})
+				(= str (+ str ')'))
+			}
+			{
+				(= str (+
+					(?: (& symbol$flags documentation$FLAG_UNION) "union" "struct")
+					" _"
+					(: (<- string$upper_case symbol$name) 0 -2)
+					'{'
+				))
+				(-> (= j 0) (< j ($ symbol$args))
+					(= arg (: symbol$args j))
+					(= str (+ str
+						(<- _format_type arg$type arg$name)
+						';'
+					))
+					(++ j)
+				)
+				(= str (+ str
+					"} "
+					symbol$name
+				))
+			}
+		)
+		(<- file$write fh "typedef "str ";\n")
 		(++ i)
 	)
 	(<- log$log "    Generating variables...")
@@ -301,20 +367,14 @@ static const sll_char_t ` name `_END[]={
 		(? (& symbol$flags documentation$FLAG_CHECK_OUTPUT) (= str (+ str (: config$LIBRARY_HEADER_CHECK_OUTPUT sys$PLATFORM))))
 		(= str (+ str
 			(: config$LIBRARY_HEADER_EXTERNAL sys$PLATFORM)
-			(<- _format_type symbol$return$type)
-			' '
-			symbol$name
+			(<- _format_type symbol$return$type symbol$name)
 			'('
 		))
 		(? symbol$args {
 			(-> (= j 0) (< j ($ symbol$args))
 				(= arg (: symbol$args j))
 				(? j (= str (+ str ',')))
-				(= str (+ str
-					(<- _format_type arg$type)
-					' '
-					arg$name
-				))
+				(= str (+ str (<- _format_type arg$type arg$name)))
 				(++ j)
 			)
 		} {
@@ -327,7 +387,6 @@ static const sll_char_t ` name `_END[]={
 `#endif
 `)
 	(<- file$close fh)
-	(<- util$fail_and_exit)
 ))
 
 

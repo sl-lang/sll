@@ -292,7 +292,7 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_size_t sll_api_math_factori
 
 
 /**
- * \flags check_output func
+ * \flags func
  * \name sll_api_math_factors
  * \group math-api
  * \desc Docs!

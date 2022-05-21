@@ -97,6 +97,7 @@ __SLL_EXTERNAL void sll_acquire_object(sll_object_t* o);
  * \desc Docs!
  * \arg sll_object_type_t t
  * \arg sll_object_t* out
+ * \ret sll_object_t*
  */
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_create_object(sll_object_type_t t);
 

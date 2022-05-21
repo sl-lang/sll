@@ -1907,7 +1907,7 @@ __SLL_EXTERNAL void sll_free_assembly_data(sll_assembly_data_t* a_dt);
 
 
 /**
- * \flags check_output func
+ * \flags func
  * \name sll_generate_assembly
  * \group assembly
  * \desc Docs!

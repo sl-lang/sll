@@ -187,7 +187,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_char_t sll_var_arg_get_char(sll_var_arg_li
 
 
 /**
- * \flags check_output func
+ * \flags func
  * \name sll_var_arg_get_complex
  * \group var-arg
  * \desc Docs!
@@ -229,6 +229,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_integer_t sll_var_arg_get_int(sll_var_arg_
  * \desc Docs!
  * \arg sll_var_arg_list_t* va
  * \arg sll_object_t* out
+ * \ret sll_object_t*
  */
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_var_arg_get_object(sll_var_arg_list_t* va);
 

@@ -81,6 +81,7 @@ __SLL_EXTERNAL void sll_bundle_create(const sll_char_t* nm,sll_bundle_t* o);
  * \arg const sll_bundle_t* b
  * \arg const sll_string_t* nm
  * \arg sll_compilation_data_t* c_dt
+ * \ret sll_bool_t
  */
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_bundle_fetch(const sll_bundle_t* b,const sll_string_t* nm,sll_compilation_data_t* c_dt);
 

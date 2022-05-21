@@ -50,7 +50,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_float_t sll_complex_abs(const sll_complex_
 
 
 /**
- * \flags check_output func
+ * \flags func
  * \name sll_complex_add
  * \group complex
  * \desc Docs!
@@ -63,7 +63,7 @@ __SLL_EXTERNAL void sll_complex_add(const sll_complex_t* a,const sll_complex_t* 
 
 
 /**
- * \flags check_output func
+ * \flags func
  * \name sll_complex_conjugate
  * \group complex
  * \desc Docs!
@@ -75,7 +75,7 @@ __SLL_EXTERNAL void sll_complex_conjugate(const sll_complex_t* a,sll_complex_t* 
 
 
 /**
- * \flags check_output func
+ * \flags func
  * \name sll_complex_div
  * \group complex
  * \desc Docs!
@@ -88,7 +88,7 @@ __SLL_EXTERNAL void sll_complex_div(const sll_complex_t* a,const sll_complex_t* 
 
 
 /**
- * \flags check_output func
+ * \flags func
  * \name sll_complex_div_float
  * \group complex
  * \desc Docs!
@@ -101,7 +101,7 @@ __SLL_EXTERNAL void sll_complex_div_float(const sll_complex_t* a,sll_float_t b,s
 
 
 /**
- * \flags check_output func
+ * \flags func
  * \name sll_complex_exp
  * \group complex
  * \desc Docs!
@@ -113,7 +113,7 @@ __SLL_EXTERNAL void sll_complex_exp(const sll_complex_t* a,sll_complex_t* out);
 
 
 /**
- * \flags check_output func
+ * \flags func
  * \name sll_complex_log
  * \group complex
  * \desc Docs!
@@ -125,7 +125,7 @@ __SLL_EXTERNAL void sll_complex_log(const sll_complex_t* a,sll_complex_t* out);
 
 
 /**
- * \flags check_output func
+ * \flags func
  * \name sll_complex_mult
  * \group complex
  * \desc Docs!
@@ -138,7 +138,7 @@ __SLL_EXTERNAL void sll_complex_mult(const sll_complex_t* a,const sll_complex_t*
 
 
 /**
- * \flags check_output func
+ * \flags func
  * \name sll_complex_mult_float
  * \group complex
  * \desc Docs!
@@ -151,7 +151,7 @@ __SLL_EXTERNAL void sll_complex_mult_float(const sll_complex_t* a,sll_float_t b,
 
 
 /**
- * \flags check_output func
+ * \flags func
  * \name sll_complex_neg
  * \group complex
  * \desc Docs!
@@ -163,7 +163,7 @@ __SLL_EXTERNAL void sll_complex_neg(const sll_complex_t* a,sll_complex_t* out);
 
 
 /**
- * \flags check_output func
+ * \flags func
  * \name sll_complex_pow
  * \group complex
  * \desc Docs!
@@ -176,7 +176,7 @@ __SLL_EXTERNAL void sll_complex_pow(const sll_complex_t* a,const sll_complex_t* 
 
 
 /**
- * \flags check_output func
+ * \flags func
  * \name sll_complex_pow_float
  * \group complex
  * \desc Docs!
@@ -189,7 +189,7 @@ __SLL_EXTERNAL void sll_complex_pow_float(const sll_complex_t* a,sll_float_t b,s
 
 
 /**
- * \flags check_output func
+ * \flags func
  * \name sll_complex_pow_int
  * \group complex
  * \desc Docs!
@@ -202,7 +202,7 @@ __SLL_EXTERNAL void sll_complex_pow_int(const sll_complex_t* a,sll_integer_t b,s
 
 
 /**
- * \flags check_output func
+ * \flags func
  * \name sll_complex_reciprocal
  * \group complex
  * \desc Docs!
@@ -214,7 +214,7 @@ __SLL_EXTERNAL void sll_complex_reciprocal(const sll_complex_t* a,sll_complex_t*
 
 
 /**
- * \flags check_output func
+ * \flags func
  * \name sll_complex_sub
  * \group complex
  * \desc Docs!

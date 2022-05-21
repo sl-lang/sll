@@ -50,6 +50,7 @@
 	(~ array_type) BUILD_CREATE_FOLDERS
 	(~ int_type) BUILD_TIME
 	(~ string_type) BUILTIN_LIBRARY_ROOT_FILE_PATH
+	(~ array_type) BUILTIN_TYPES
 	(~ map_type) BUNDLE_FILE_LIST
 	(~ int_type) BYTE_ARRAY_WRAP_SIZE
 	(~ map_type) CLI_COMMANDS
@@ -216,6 +217,7 @@
 	["build/lib/" "build/lib_debug/" "build/objects/"]
 	build_time
 	"src/sll/lib/"
+	["void" "va_list" "__SLL_S1" "__SLL_U1" "__SLL_S8" "__SLL_U8" "__SLL_S16" "__SLL_U16" "__SLL_S32" "__SLL_U32" "__SLL_S64" "__SLL_U64" "__SLL_F32" "__SLL_F64"]
 	<
 		"darwin" ["build/sll" output_library "build/lib/stdlib.slb" "build/lib_debug/stdlib.slb" "build/sll.h"]
 		"linux" ["build/sll" output_library "build/lib/stdlib.slb" "build/lib_debug/stdlib.slb" "build/sll.h"]

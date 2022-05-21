@@ -49,7 +49,7 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_instruction_index_t sll_api
 
 
 /**
- * \flags check_output func
+ * \flags func
  * \name sll_api_vm_get_location
  * \group vm-api
  * \desc Docs!

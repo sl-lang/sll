@@ -79,6 +79,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_weakref_delete(sll_weak_referen
  * \desc Docs!
  * \arg sll_weak_reference_t wr
  * \arg sll_object_t* out
+ * \ret sll_object_t*
  */
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_weakref_get(sll_weak_reference_t wr);
 

@@ -1506,7 +1506,7 @@ __SLL_EXTERNAL void sll_optimize_metadata(sll_compilation_data_t* c_dt);
 
 
 /**
- * \flags check_output func
+ * \flags func
  * \name sll_parse_nodes
  * \group node
  * \desc Docs!

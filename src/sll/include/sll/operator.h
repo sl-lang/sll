@@ -33,7 +33,7 @@ typedef sll_object_t* (*sll_binary_operator_t)(sll_object_t* a,sll_object_t* b);
  * \desc Docs!
  * \arg sll_object_t* a
  * \arg sll_object_t* b
- * \arg sll_object_t* out
+ * \ret sll_object_t*
  */
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_access(sll_object_t* a,sll_object_t* b);
 
@@ -47,7 +47,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_access(sll_object_t
  * \arg sll_object_t* a
  * \arg sll_object_t* b
  * \arg sll_object_t* c
- * \arg sll_object_t* out
+ * \ret sll_object_t*
  */
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_access_range(sll_object_t* a,sll_object_t* b,sll_object_t* c);
 
@@ -62,7 +62,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_access_range(sll_ob
  * \arg sll_object_t* b
  * \arg sll_object_t* c
  * \arg sll_object_t* d
- * \arg sll_object_t* out
+ * \ret sll_object_t*
  */
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_access_range_step(sll_object_t* a,sll_object_t* b,sll_object_t* c,sll_object_t* d);
 
@@ -75,7 +75,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_access_range_step(s
  * \desc Docs!
  * \arg sll_object_t* a
  * \arg sll_object_t* b
- * \arg sll_object_t* out
+ * \ret sll_object_t*
  */
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_add(sll_object_t* a,sll_object_t* b);
 
@@ -88,7 +88,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_add(sll_object_t* a
  * \desc Docs!
  * \arg sll_object_t* a
  * \arg sll_object_t* b
- * \arg sll_object_t* out
+ * \ret sll_object_t*
  */
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_and(sll_object_t* a,sll_object_t* b);
 
@@ -155,7 +155,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_operator_bool(sll_object_t* a);
  * \desc Docs!
  * \arg sll_object_t* a
  * \arg sll_object_t* b
- * \arg sll_object_t* out
+ * \ret sll_object_t*
  */
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_cast(sll_object_t* a,sll_object_t* b);
 
@@ -180,7 +180,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_compare_result_t sll_operator_compare(sll_
  * \group operator
  * \desc Docs!
  * \arg sll_object_t* a
- * \arg sll_object_t* out
+ * \ret sll_object_t*
  */
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_dec(sll_object_t* a);
 
@@ -193,7 +193,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_dec(sll_object_t* a
  * \desc Docs!
  * \arg sll_object_t* a
  * \arg sll_object_t* b
- * \arg sll_object_t* out
+ * \ret sll_object_t*
  */
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_div(sll_object_t* a,sll_object_t* b);
 
@@ -206,7 +206,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_div(sll_object_t* a
  * \desc Docs!
  * \arg sll_object_t* a
  * \arg sll_bool_t d
- * \arg sll_object_t* out
+ * \ret sll_object_t*
  */
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_copy(sll_object_t* a,sll_bool_t d);
 
@@ -232,7 +232,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_operator_equal(sll_object_t* a,
  * \desc Docs!
  * \arg sll_object_t* a
  * \arg sll_object_t* b
- * \arg sll_object_t* out
+ * \ret sll_object_t*
  */
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_floor_div(sll_object_t* a,sll_object_t* b);
 
@@ -244,7 +244,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_floor_div(sll_objec
  * \group operator
  * \desc Docs!
  * \arg sll_object_t* a
- * \arg sll_object_t* out
+ * \ret sll_object_t*
  */
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_inc(sll_object_t* a);
 
@@ -269,7 +269,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_operator_includes(sll_object_t*
  * \group operator
  * \desc Docs!
  * \arg sll_object_t* a
- * \arg sll_object_t* out
+ * \ret sll_object_t*
  */
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_inv(sll_object_t* a);
 
@@ -281,7 +281,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_inv(sll_object_t* a
  * \group operator
  * \desc Docs!
  * \arg sll_object_t* a
- * \arg sll_object_t* out
+ * \ret sll_object_t*
  */
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_len(sll_object_t* a);
 
@@ -294,7 +294,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_len(sll_object_t* a
  * \desc Docs!
  * \arg sll_object_t* a
  * \arg sll_object_t* b
- * \arg sll_object_t* out
+ * \ret sll_object_t*
  */
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_mod(sll_object_t* a,sll_object_t* b);
 
@@ -307,7 +307,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_mod(sll_object_t* a
  * \desc Docs!
  * \arg sll_object_t* a
  * \arg sll_object_t* b
- * \arg sll_object_t* out
+ * \ret sll_object_t*
  */
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_mult(sll_object_t* a,sll_object_t* b);
 
@@ -320,7 +320,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_mult(sll_object_t* 
  * \desc Docs!
  * \arg sll_object_t* a
  * \arg sll_object_t* b
- * \arg sll_object_t* out
+ * \ret sll_object_t*
  */
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_or(sll_object_t* a,sll_object_t* b);
 
@@ -333,7 +333,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_or(sll_object_t* a,
  * \desc Docs!
  * \arg sll_object_t* a
  * \arg sll_object_t* b
- * \arg sll_object_t* out
+ * \ret sll_object_t*
  */
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_shl(sll_object_t* a,sll_object_t* b);
 
@@ -346,7 +346,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_shl(sll_object_t* a
  * \desc Docs!
  * \arg sll_object_t* a
  * \arg sll_object_t* b
- * \arg sll_object_t* out
+ * \ret sll_object_t*
  */
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_shr(sll_object_t* a,sll_object_t* b);
 
@@ -372,7 +372,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_operator_strict_equal(sll_objec
  * \desc Docs!
  * \arg sll_object_t* a
  * \arg sll_object_t* b
- * \arg sll_object_t* out
+ * \ret sll_object_t*
  */
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_sub(sll_object_t* a,sll_object_t* b);
 
@@ -385,7 +385,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_sub(sll_object_t* a
  * \desc Docs!
  * \arg sll_object_t* a
  * \arg sll_object_t* b
- * \arg sll_object_t* out
+ * \ret sll_object_t*
  */
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_xor(sll_object_t* a,sll_object_t* b);
 

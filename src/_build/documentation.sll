@@ -221,15 +221,7 @@
 					)
 				)
 			))
-			(& state$flags FLAG_TYPE) (<- array$push out$data (. structure_type
-				state$flags
-				state$group
-				state$subgroup
-				state$name
-				state$description
-				args
-			))
-			(<- array$push out$data (. function_type
+			(& state$flags FLAG_FUNC) (<- array$push out$data (. function_type
 				state$flags
 				state$group
 				state$subgroup
@@ -250,7 +242,16 @@
 						)
 					))
 				)
-			)))
+			))
+			(<- array$push out$data (. structure_type
+				state$flags
+				state$group
+				state$subgroup
+				state$name
+				state$description
+				args
+			))
+			)
 		)
 		(++ i)
 	)

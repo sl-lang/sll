@@ -15,7 +15,7 @@
 
 
 /**
- * \flags check_output func
+ * \flags func
  * \name sll_debug_print_assembly
  * \group debug
  * \desc Docs!
@@ -26,7 +26,7 @@ __SLL_EXTERNAL void sll_debug_print_assembly(const sll_assembly_data_t* a_dt);
 
 
 /**
- * \flags check_output func
+ * \flags func
  * \name sll_debug_print_node
  * \group debug
  * \desc Docs!
@@ -38,7 +38,7 @@ __SLL_EXTERNAL void sll_debug_print_node(const sll_node_t* o,const sll_source_fi
 
 
 /**
- * \flags check_output func
+ * \flags func
  * \name sll_debug_print_object
  * \group debug
  * \desc Docs!
