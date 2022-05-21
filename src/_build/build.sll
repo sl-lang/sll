@@ -48,7 +48,7 @@
 		config$COMMAND_MARKER_OUTPUT
 		output
 	) (|| options [])))
-	(? (<- util$execute args) (<- util$fail_and_exit))
+	(@@ (<- util$execute args))
 ))
 
 (= build_modules (,,,
@@ -57,7 +57,7 @@
 	(= module_files (<- path$list_dir config$BUILTIN_LIBRARY_ROOT_FILE_PATH false))
 	(<- log$log "    Found " ($ module_files) " files")
 	(<- log$log "  Compiling files...")
-	(<- _execute_command config$MODULE_COMPILATION_COMMAND module_files nil)
+	(? (<- _execute_command config$MODULE_COMPILATION_COMMAND module_files nil) (<- util$fail_and_exit))
 	(= output_files ([> (= i 0) (< i ($ module_files))
 		(= name (: module_files i))
 		(++ i)
@@ -65,9 +65,9 @@
 		(+ "build/lib/" name ".slc")
 	))
 	(<- log$log "  Generating bundle...")
-	(<- _execute_command config$MODULE_BUNDLE_GENERATION_COMMAND output_files nil)
+	(? (<- _execute_command config$MODULE_BUNDLE_GENERATION_COMMAND output_files nil) (<- util$fail_and_exit))
 	(<- log$log "  Generating debug bundle...")
-	(<- _execute_command config$MODULE_DEBUG_BUNDLE_GENERATION_COMMAND output_files nil)
+	(? (<- _execute_command config$MODULE_DEBUG_BUNDLE_GENERATION_COMMAND output_files nil) (<- util$fail_and_exit))
 	(<- log$log "  Removing compilation files...")
 	(-> (= i 0) (< i ($ module_files))
 		(= file_path (+ "build/lib/" (: module_files i) ".slc"))
@@ -133,23 +133,23 @@
 	)
 	(? err (<- util$fail_and_exit))
 	(<- log$log "  Linking files...")
-	(<- _execute_command command_list$LINK_COMMAND output_files nil)
+	(? (<- _execute_command command_list$LINK_COMMAND output_files nil) (<- util$fail_and_exit))
 	(<- log$log "  Executing post-link command...")
-	(<- _execute_command command_list$POST_LINK_COMMAND nil nil)
+	(? (<- _execute_command command_list$POST_LINK_COMMAND nil nil) (<- util$fail_and_exit))
 ))
 
 (= build_sll_cli (,,,
 	(<- log$log "Compiling CLI...")
 	(= command_list (: config$CLI_COMMANDS sys$PLATFORM))
 	(<- log$log "  Executing pre-compilation command...")
-	(<- _execute_command command_list$PRE_COMPILATION_COMMAND nil nil)
+	(? (<- _execute_command command_list$PRE_COMPILATION_COMMAND nil nil) (<- util$fail_and_exit))
 	(<- log$log "  Compiling files...")
-	(<- _execute_command command_list$COMPILATION_COMMAND nil nil)
+	(? (<- _execute_command command_list$COMPILATION_COMMAND nil nil) (<- util$fail_and_exit))
 	(<- log$log "  Linking files...")
-	(<- _execute_command command_list$LINK_COMMAND nil nil)
-	(<- _execute_command command_list$LINK_HEADLESS_COMMAND nil nil)
+	(? (<- _execute_command command_list$LINK_COMMAND nil nil) (<- util$fail_and_exit))
+	(? (<- _execute_command command_list$LINK_HEADLESS_COMMAND nil nil) (<- util$fail_and_exit))
 	(<- log$log "  Executing post-link command...")
-	(<- _execute_command command_list$POST_LINK_COMMAND nil nil)
+	(? (<- _execute_command command_list$POST_LINK_COMMAND nil nil) (<- util$fail_and_exit))
 ))
 
 
