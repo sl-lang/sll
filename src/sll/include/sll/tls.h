@@ -36,7 +36,7 @@
  * \desc Docs!
  * \type sll_tls_object_t
  */
-#define SLL_INIT_ARRAY_STRUCT {0,NULL}
+#define SLL_INIT_TLS_STRUCT {0,NULL}
 
 
 

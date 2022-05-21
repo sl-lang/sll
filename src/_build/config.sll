@@ -64,6 +64,7 @@
 	(~ array_type) HASHLIST_FILE_EXTENSIONS
 	(~ string_type) HASHLIST_FILE_PATH
 	(~ string_type) INCLUDE_ROOT_DIRECTORY_PATH
+	(~ string_type) LIBRARY_HEADER_FILE_PATH
 	(~ array_type) MODULE_BUNDLE_GENERATION_COMMAND
 	(~ array_type) MODULE_DEBUG_BUNDLE_GENERATION_COMMAND
 	(~ array_type) MODULE_COMPILATION_COMMAND
@@ -310,6 +311,7 @@
 	[".asm" ".c" ".h" ".inc"]
 	"build/.files"
 	"src/sll/include/"
+	"build/sll.h"
 	(+ output_executable_args ["-b" "-d" "-D" "-n" "-N" "/" "-R" "-O" "build/lib/stdlib.slb" COMMAND_MARKER_INPUT])
 	(+ output_executable_args ["-b" "-n" "-N" "/" "-R" "-O" "build/lib_debug/stdlib.slb" COMMAND_MARKER_INPUT])
 	(+ output_executable_args ["-c" "-R" "-I" "build/lib" "-I" "src/sll/lib" "-o" "build/lib/" COMMAND_MARKER_INPUT])

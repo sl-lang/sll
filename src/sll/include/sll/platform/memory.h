@@ -53,7 +53,7 @@
 
 /**
  * \flags func macro
- * \name SLL_ROUND_PAGE_LARGE
+ * \name SLL_ROUND_LARGE_PAGE
  * \group platform
  * \subgroup platform-memory
  * \desc Docs!

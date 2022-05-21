@@ -1,8 +1,11 @@
 (---
 	"@build-script/config.sll"
+	"@build-script/documentation.sll"
+	"@build-script/util.sll"
 	"array.sll"
 	"file.sll"
 	"log.sll"
+	"path.sll"
 	"string.sll"
 	"types.sll"
 )
@@ -11,7 +14,12 @@
 
 (= header_module_type (&:
 	(~ func_type) generate_error_headers
+	(~ func_type) generate_library_header
 ))
+
+
+
+(= IDENTIFIER_CHARACTERS "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_")
 
 
 
@@ -28,7 +36,7 @@
 ))
 
 (= generate_error_headers (,,,
-	(<- log$log "Generating " ($ config$ERROR_HEADERS) " error header...")
+	(<- log$log "Generating " ($ config$ERROR_HEADERS) " error headers...")
 	(-> (= i 0) (< i ($ config$ERROR_HEADERS))
 		(= name (: config$ERROR_HEADERS i))
 		(= src (+ config$ERROR_HEADER_SOURCE_DIRECTORY_PATH name))
@@ -41,10 +49,7 @@
 		(= data (<- string$split
 			(<- string$replace
 				(<- file$read
-					(<- file$open
-						src
-						"r"
-					)
+					(<- file$open src "r")
 				)
 				"\r\n"
 				'\n'
@@ -107,9 +112,82 @@ static const sll_char_t ` name `_END[]={
 	)
 ))
 
+(= generate_library_header (,,, docs
+	(<- log$log "Generating library header...")
+	(<- log$log "  Listing symbols...")
+	(= define_code_map <>)
+	(= types [])
+	(= variables [])
+	(= functions [])
+	(-> (= i 0) (< i ($ docs$data))
+		(= symbol (: docs$data i))
+		(?
+			(& symbol$flags documentation$FLAG_MACRO) (= (: define_code_map symbol$name) nil)
+			(& symbol$flags documentation$FLAG_TYPE) (<- array$push types symbol)
+			(& symbol$flags documentation$FLAG_VAR) (<- array$push variables symbol)
+			(<- array$push functions symbol)
+		)
+		(++ i)
+	)
+	(<- log$log "    Found " ($ define_code_map) " preprocessor definitions, " ($ types) " types, " ($ variables) " variables and " ($ functions) " functions")
+	(<- log$log "  Finding preprocessor definitions...")
+	(<- log$log "    Listing header files...")
+	(= header_files (<- path$list_dir config$INCLUDE_ROOT_DIRECTORY_PATH true))
+	(<- log$log "      Found " ($ header_files) " files")
+	(<- log$log "    Parsing header files...")
+	(-> (= i 0) (< i ($ header_files))
+		(= data (<- string$split
+			(<- string$replace
+				(<- file$read
+					(<- file$open (: header_files i) "r")
+				)
+				"\r\n"
+				'\n'
+			)
+			'\n'
+		))
+		(-> (= j 0) (< j ($ data))
+			(= line (<- string$trim (: data j)))
+			(++ j)
+			(? (! (<- string$starts line "#define")) (<<<))
+			(= name (<- string$trim (>> line 7)))
+			(= name (: name 0 (<- string$index_list name IDENTIFIER_CHARACTERS true)))
+			(? (! (|: define_code_map name)) (<<<))
+			(= code line)
+			(-> nil (=== (: code -1) '\\')
+				(= code (+
+					(<- string$trim (: code 0 -1))
+					(<- string$trim (: data j))
+				))
+				(++ j)
+			)
+			(= (: define_code_map name) code)
+		)
+		(++ i)
+	)
+	(<- log$log "  Generating code in '" config$LIBRARY_HEADER_FILE_PATH "'...")
+	(= fh (<- file$open config$LIBRARY_HEADER_FILE_PATH "w"))
+	(<- file$write fh
+`#ifndef __SLL_H__
+#define __SLL_H__ 1
+`)
+	(= define_macros (:: define_code_map map_value_type))
+	(<- log$log "    Generating " ($ define_macros) " preprocessor definitions...")
+	(-> (= i 0) (< i ($ define_macros))
+		(<- file$write fh (: define_macros i) '\n')
+		(++ i)
+	)
+	(<- file$write fh
+`#endif
+`)
+	(<- file$close fh)
+	(<- util$execute [(?: (=== sys$PLATFORM "windows") "python.exe" "python3") "src/_build/header.py" config$BUILD_TIME config$OPTIONS$VERBOSE])
+))
+
 
 
 (= header (. header_module_type
 	generate_error_headers
+	generate_library_header
 ))
 (## header)

@@ -1476,7 +1476,7 @@
 
 /**
  * \flags macro var
- * \name SLL_ASSEMBLY_INSTRUCTION_TYPE_RESERVED5
+ * \name SLL_ASSEMBLY_INSTRUCTION_TYPE_RESERVED4
  * \group assembly
  * \subgroup assembly-instruction
  * \desc Internally used as `ASSEMBLY_INSTRUCTION_TYPE_NOP`
