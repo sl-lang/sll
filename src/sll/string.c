@@ -689,7 +689,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_string_equal_array(const sll_st
 	}
 	for (sll_string_length_t i=0;i<s->l;i++){
 		sll_object_t* e=a->data[i];
-		if ((e->t==SLL_OBJECT_TYPE_CHAR&&e->dt.char_==s->v[i])||(e->t==SLL_OBJECT_TYPE_INT&&e->dt.int_==s->v[i])||(e->t==SLL_OBJECT_TYPE_STRING&&e->dt.string.l==1&&e->dt.string.v[0]==s->v[i])){
+		if ((e->type==SLL_OBJECT_TYPE_CHAR&&e->data.char_==s->v[i])||(e->type==SLL_OBJECT_TYPE_INT&&e->data.int_==s->v[i])||(e->type==SLL_OBJECT_TYPE_STRING&&e->data.string.l==1&&e->data.string.v[0]==s->v[i])){
 			continue;
 		}
 		return 0;
@@ -705,12 +705,12 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_string_equal_map(const sll_stri
 	}
 	for (sll_map_length_t i=0;i<(m->length<<1);i+=2){
 		sll_object_t* e=m->data[i];
-		if (e->t!=SLL_OBJECT_TYPE_INT||e->dt.int_<0||e->dt.int_>=s->l){
+		if (e->type!=SLL_OBJECT_TYPE_INT||e->data.int_<0||e->data.int_>=s->l){
 			return 0;
 		}
-		sll_char_t c=s->v[e->dt.int_];
+		sll_char_t c=s->v[e->data.int_];
 		e=m->data[i+1];
-		if ((e->t==SLL_OBJECT_TYPE_CHAR&&e->dt.char_==c)||(e->t==SLL_OBJECT_TYPE_INT&&e->dt.int_==c)||(e->t==SLL_OBJECT_TYPE_STRING&&e->dt.string.l==1&&e->dt.string.v[0]==c)){
+		if ((e->type==SLL_OBJECT_TYPE_CHAR&&e->data.char_==c)||(e->type==SLL_OBJECT_TYPE_INT&&e->data.int_==c)||(e->type==SLL_OBJECT_TYPE_STRING&&e->data.string.l==1&&e->data.string.v[0]==c)){
 			continue;
 		}
 		return 0;
@@ -755,9 +755,9 @@ __SLL_EXTERNAL void sll_string_from_data(sll_object_t** v,sll_string_length_t vl
 	INIT_PADDING(o->v,vl);
 	for (sll_string_length_t i=0;i<vl;i++){
 		sll_object_t* n=sll_operator_cast(*(v+i),sll_static_int[SLL_OBJECT_TYPE_CHAR]);
-		SLL_ASSERT(n->t==SLL_OBJECT_TYPE_CHAR);
-		o->v[i]=n->dt.char_;
-		o->c^=ROTATE_BITS(n->dt.char_,(i&3)<<3);
+		SLL_ASSERT(n->type==SLL_OBJECT_TYPE_CHAR);
+		o->v[i]=n->data.char_;
+		o->c^=ROTATE_BITS(n->data.char_,(i&3)<<3);
 		SLL_RELEASE(n);
 	}
 }
@@ -1273,9 +1273,9 @@ __SLL_EXTERNAL void sll_string_join(const sll_string_t* s,sll_object_t*const* a,
 			o->l+=s->l;
 		}
 		sll_object_t* n=sll_operator_cast(*(a+i),sll_static_int[SLL_OBJECT_TYPE_STRING]);
-		sll_string_increase(o,n->dt.string.l);
-		sll_copy_data(n->dt.string.v,n->dt.string.l,o->v+o->l);
-		o->l+=n->dt.string.l;
+		sll_string_increase(o,n->data.string.l);
+		sll_copy_data(n->data.string.v,n->data.string.l,o->v+o->l);
+		o->l+=n->data.string.l;
 		SLL_RELEASE(n);
 	}
 	sll_allocator_move((void**)(&(o->v)),SLL_MEMORY_MOVE_DIRECTION_FROM_STACK);
@@ -1293,9 +1293,9 @@ __SLL_EXTERNAL void sll_string_join_char(sll_char_t c,sll_object_t*const* a,sll_
 			o->l++;
 		}
 		sll_object_t* n=sll_operator_cast(*(a+i),sll_static_int[SLL_OBJECT_TYPE_STRING]);
-		sll_string_increase(o,n->dt.string.l);
-		sll_copy_data(n->dt.string.v,n->dt.string.l,o->v+o->l);
-		o->l+=n->dt.string.l;
+		sll_string_increase(o,n->data.string.l);
+		sll_copy_data(n->data.string.v,n->data.string.l,o->v+o->l);
+		o->l+=n->data.string.l;
 		SLL_RELEASE(n);
 	}
 	sll_allocator_move((void**)(&(o->v)),SLL_MEMORY_MOVE_DIRECTION_FROM_STACK);
@@ -1344,8 +1344,8 @@ __SLL_EXTERNAL void sll_string_op(const sll_string_t* a,const sll_string_t* b,sl
 		sll_object_t* v=f(sll_static_char[a->v[i]],sll_static_char[b->v[i]]);
 		sll_object_t* c=sll_operator_cast(v,sll_static_int[SLL_OBJECT_TYPE_CHAR]);
 		SLL_RELEASE(v);
-		SLL_ASSERT(c->t==SLL_OBJECT_TYPE_CHAR);
-		o->v[i]=c->dt.char_;
+		SLL_ASSERT(c->type==SLL_OBJECT_TYPE_CHAR);
+		o->v[i]=c->data.char_;
 		SLL_RELEASE(c);
 	}
 	if (a->l==b->l){
@@ -1400,8 +1400,8 @@ __SLL_EXTERNAL void sll_string_op_map(const sll_string_t* s,const sll_map_t* m,s
 	for (sll_map_length_t j=0;j<m->length;j++){
 		SLL_ACQUIRE(m->data[j<<1]);
 		o->data[i]=m->data[j<<1];
-		sll_integer_t idx=m->data[j<<1]->dt.int_;
-		if (m->data[j<<1]->t==SLL_OBJECT_TYPE_INT&&idx>=0&&idx<s->l){
+		sll_integer_t idx=m->data[j<<1]->data.int_;
+		if (m->data[j<<1]->type==SLL_OBJECT_TYPE_INT&&idx>=0&&idx<s->l){
 			*(sm+(idx>>6))|=1ull<<(idx&63);
 			o->data[i+1]=(inv?f(m->data[(j<<1)+1],sll_static_char[s->v[idx]]):f(sll_static_char[s->v[idx]],m->data[(j<<1)+1]));
 		}

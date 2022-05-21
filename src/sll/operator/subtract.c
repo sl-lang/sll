@@ -13,36 +13,36 @@
 
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_sub(sll_object_t* a,sll_object_t* b){
-	if (a->t==SLL_OBJECT_TYPE_ARRAY){
+	if (a->type==SLL_OBJECT_TYPE_ARRAY){
 		sll_object_t* o=sll_create_object(SLL_OBJECT_TYPE_ARRAY);
-		if (b->t==SLL_OBJECT_TYPE_ARRAY){
-			sll_array_remove_multiple(&(a->dt.array),b->dt.array.data,b->dt.array.length,&(o->dt.array));
+		if (b->type==SLL_OBJECT_TYPE_ARRAY){
+			sll_array_remove_multiple(&(a->data.array),b->data.array.data,b->data.array.length,&(o->data.array));
 		}
 		else{
-			sll_array_remove(&(a->dt.array),b,&(o->dt.array));
+			sll_array_remove(&(a->data.array),b,&(o->data.array));
 		}
 		return o;
 	}
-	if (a->t==SLL_OBJECT_TYPE_MAP){
+	if (a->type==SLL_OBJECT_TYPE_MAP){
 		sll_object_t* o=sll_create_object(SLL_OBJECT_TYPE_MAP);
-		SLL_RELEASE(sll_map_remove(&(a->dt.map),b,&(o->dt.map)));
+		SLL_RELEASE(sll_map_remove(&(a->data.map),b,&(o->data.map)));
 		return o;
 	}
 	switch (COMBINED_ARGS){
 		case COMBINED_TYPE_II:
-			return sll_int_to_object(a->dt.int_-b->dt.int_);
+			return sll_int_to_object(a->data.int_-b->data.int_);
 		case COMBINED_TYPE_IF:
-			return sll_float_to_object(a->dt.int_-b->dt.float_);
+			return sll_float_to_object(a->data.int_-b->data.float_);
 		case COMBINED_TYPE_IC:
-			return sll_int_to_object(a->dt.int_-b->dt.char_);
+			return sll_int_to_object(a->data.int_-b->data.char_);
 		case COMBINED_TYPE_IS:
 		case COMBINED_TYPE_FS:
 		case COMBINED_TYPE_CS:
 			{
-				sll_object_t* o=sll_array_length_to_object(b->dt.string.l);
-				sll_array_create(b->dt.string.l,&(o->dt.array));
-				for (sll_array_length_t i=0;i<b->dt.string.l;i++){
-					o->dt.array.data[i]=sll_operator_sub(a,sll_static_char[b->dt.string.v[i]]);
+				sll_object_t* o=sll_array_length_to_object(b->data.string.l);
+				sll_array_create(b->data.string.l,&(o->data.array));
+				for (sll_array_length_t i=0;i<b->data.string.l;i++){
+					o->data.array.data[i]=sll_operator_sub(a,sll_static_char[b->data.string.v[i]]);
 				}
 				return o;
 			}
@@ -50,9 +50,9 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_sub(sll_object_t* a
 		case COMBINED_TYPE_FA:
 		case COMBINED_TYPE_CA:
 			{
-				sll_object_t* o=sll_array_length_to_object(b->dt.array.length);
-				for (sll_array_length_t i=0;i<b->dt.array.length;i++){
-					o->dt.array.data[i]=sll_operator_sub(a,b->dt.array.data[i]);
+				sll_object_t* o=sll_array_length_to_object(b->data.array.length);
+				for (sll_array_length_t i=0;i<b->data.array.length;i++){
+					o->data.array.data[i]=sll_operator_sub(a,b->data.array.data[i]);
 				}
 				return o;
 			}
@@ -60,53 +60,53 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_sub(sll_object_t* a
 		case COMBINED_TYPE_FM:
 		case COMBINED_TYPE_CM:
 			{
-				sll_map_t m=b->dt.map;
+				sll_map_t m=b->data.map;
 				sll_object_t* o=sll_map_length_to_object(m.length);
 				for (sll_array_length_t i=0;i<(m.length<<1);i+=2){
 					SLL_ACQUIRE(m.data[i]);
-					o->dt.map.data[i]=m.data[i];
-					o->dt.map.data[i+1]=sll_operator_sub(a,m.data[i+1]);
+					o->data.map.data[i]=m.data[i];
+					o->data.map.data[i+1]=sll_operator_sub(a,m.data[i+1]);
 				}
 				return o;
 			}
 		case COMBINED_TYPE_FI:
-			return sll_float_to_object(a->dt.float_-b->dt.int_);
+			return sll_float_to_object(a->data.float_-b->data.int_);
 		case COMBINED_TYPE_FF:
-			return sll_float_to_object(a->dt.float_-b->dt.float_);
+			return sll_float_to_object(a->data.float_-b->data.float_);
 		case COMBINED_TYPE_FC:
-			return sll_float_to_object(a->dt.float_-b->dt.char_);
+			return sll_float_to_object(a->data.float_-b->data.char_);
 		case COMBINED_TYPE_CI:
-			return sll_int_to_object(a->dt.char_-b->dt.int_);
+			return sll_int_to_object(a->data.char_-b->data.int_);
 		case COMBINED_TYPE_CF:
-			return sll_float_to_object(a->dt.char_-b->dt.float_);
+			return sll_float_to_object(a->data.char_-b->data.float_);
 		case COMBINED_TYPE_CC:
-			return SLL_FROM_CHAR(a->dt.char_-b->dt.char_);
+			return SLL_FROM_CHAR(a->data.char_-b->data.char_);
 		case COMBINED_TYPE_SI:
 		case COMBINED_TYPE_SF:
 		case COMBINED_TYPE_SC:
 			{
-				sll_object_t* o=sll_array_length_to_object(a->dt.string.l);
-				for (sll_string_length_t i=0;i<a->dt.string.l;i++){
-					o->dt.array.data[i]=sll_operator_sub(sll_static_char[a->dt.string.v[i]],b);
+				sll_object_t* o=sll_array_length_to_object(a->data.string.l);
+				for (sll_string_length_t i=0;i<a->data.string.l;i++){
+					o->data.array.data[i]=sll_operator_sub(sll_static_char[a->data.string.v[i]],b);
 				}
 				return o;
 			}
 		case COMBINED_TYPE_SS:
 			{
 				sll_object_t* o=sll_create_object(SLL_OBJECT_TYPE_STRING);
-				sll_string_remove(&(a->dt.string),&(b->dt.string),&(o->dt.string));
+				sll_string_remove(&(a->data.string),&(b->data.string),&(o->data.string));
 				return o;
 			}
 		case COMBINED_TYPE_SA:
 			{
 				sll_object_t* o=sll_create_object(SLL_OBJECT_TYPE_ARRAY);
-				sll_string_op_array(&(a->dt.string),&(b->dt.array),sll_operator_sub,0,&(o->dt.array));
+				sll_string_op_array(&(a->data.string),&(b->data.array),sll_operator_sub,0,&(o->data.array));
 				return o;
 			}
 		case COMBINED_TYPE_SM:
 			{
 				sll_object_t* o=sll_create_object(SLL_OBJECT_TYPE_MAP);
-				sll_string_op_map(&(a->dt.string),&(b->dt.map),sll_operator_sub,0,&(o->dt.map));
+				sll_string_op_map(&(a->data.string),&(b->data.map),sll_operator_sub,0,&(o->data.map));
 				return o;
 			}
 		default:

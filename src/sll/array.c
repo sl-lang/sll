@@ -256,7 +256,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_array_equal_map(const sll_array
 	}
 	for (sll_map_length_t i=0;i<(m->length<<1);i+=2){
 		sll_object_t* e=m->data[i];
-		sll_bool_t st=(e->t!=SLL_OBJECT_TYPE_INT||e->dt.int_<0||e->dt.int_>=a->length||!sll_operator_strict_equal(m->data[i+1],a->data[e->dt.int_]));
+		sll_bool_t st=(e->type!=SLL_OBJECT_TYPE_INT||e->data.int_<0||e->data.int_>=a->length||!sll_operator_strict_equal(m->data[i+1],a->data[e->data.int_]));
 		if (st){
 			return 0;
 		}
@@ -721,27 +721,27 @@ __SLL_EXTERNAL void sll_array_split(const sll_array_t* a,sll_object_t* e,sll_arr
 	sll_object_t** ptr=sll_allocate_stack(sizeof(sll_object_t*));
 	sll_object_t** arr_ptr=sll_allocate_stack(1);
 	sll_object_t* oa=sll_create_object(SLL_OBJECT_TYPE_ARRAY);
-	oa->dt.array.length=0;
+	oa->data.array.length=0;
 	*ptr=oa;
 	for (sll_array_length_t i=0;i<a->length;i++){
 		if (sll_operator_strict_equal(a->data[i],e)){
-			oa->dt.array.data=(oa->dt.array.length?sll_allocator_from_memory(arr_ptr,oa->dt.array.length*sizeof(sll_object_t*)):NULL);
+			oa->data.array.data=(oa->data.array.length?sll_allocator_from_memory(arr_ptr,oa->data.array.length*sizeof(sll_object_t*)):NULL);
 			sll_deallocate(arr_ptr);
 			arr_ptr=sll_allocate_stack(1);
 			oa=sll_create_object(SLL_OBJECT_TYPE_ARRAY);
-			oa->dt.array.length=0;
+			oa->data.array.length=0;
 			o->length++;
 			ptr=sll_reallocate(ptr,o->length*sizeof(sll_object_t*));
 			*(ptr+o->length-1)=oa;
 		}
 		else{
-			oa->dt.array.length++;
-			arr_ptr=sll_reallocate(arr_ptr,oa->dt.array.length*sizeof(sll_object_t*));
-			*(arr_ptr+oa->dt.array.length-1)=a->data[i];
+			oa->data.array.length++;
+			arr_ptr=sll_reallocate(arr_ptr,oa->data.array.length*sizeof(sll_object_t*));
+			*(arr_ptr+oa->data.array.length-1)=a->data[i];
 			SLL_ACQUIRE(a->data[i]);
 		}
 	}
-	oa->dt.array.data=(oa->dt.array.length?sll_allocator_from_memory(arr_ptr,oa->dt.array.length*sizeof(sll_object_t*)):NULL);
+	oa->data.array.data=(oa->data.array.length?sll_allocator_from_memory(arr_ptr,oa->data.array.length*sizeof(sll_object_t*)):NULL);
 	sll_deallocate(arr_ptr);
 	o->data=sll_allocator_from_memory(ptr,o->length*sizeof(sll_object_t*));
 	sll_deallocate(ptr);

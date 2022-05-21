@@ -294,7 +294,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_decode_object(sll_file_t* f,
 				}
 				sll_object_t* o=sll_array_length_to_object(l);
 				for (sll_array_length_t i=0;i<l;i++){
-					o->dt.array.data[i]=sll_decode_object(f,err);
+					o->data.array.data[i]=sll_decode_object(f,err);
 					if (err&&*err!=SLL_NO_ERROR){
 						SLL_UNIMPLEMENTED();
 					}
@@ -314,7 +314,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_decode_object(sll_file_t* f,
 				}
 				sll_object_t* o=sll_map_length_to_object(l);
 				for (sll_map_length_t i=0;i<(l<<1);i++){
-					o->dt.map.data[i]=sll_decode_object(f,err);
+					o->data.map.data[i]=sll_decode_object(f,err);
 					if (err&&*err!=SLL_NO_ERROR){
 						SLL_UNIMPLEMENTED();
 					}
@@ -434,11 +434,11 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_error_t sll_encode_object(sll_file_t* f,sl
 		sll_object_t* k=*a;
 		a++;
 		ac--;
-		if (k->t>sll_current_runtime_data->tt->l+SLL_MAX_OBJECT_TYPE){
+		if (k->type>sll_current_runtime_data->tt->l+SLL_MAX_OBJECT_TYPE){
 			k=sll_static_int[0];
 		}
-		else if (k->t>SLL_MAX_OBJECT_TYPE){
-			const sll_object_type_data_t* dt=*(sll_current_runtime_data->tt->dt+k->t-SLL_MAX_OBJECT_TYPE-1);
+		else if (k->type>SLL_MAX_OBJECT_TYPE){
+			const sll_object_type_data_t* dt=*(sll_current_runtime_data->tt->dt+k->type-SLL_MAX_OBJECT_TYPE-1);
 			sll_error_t err;
 			sll_file_write_char(f,SLL_OBJECT_TYPE_MAP,&err);
 			if (err!=SLL_NO_ERROR){
@@ -464,7 +464,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_error_t sll_encode_object(sll_file_t* f,sl
 			if (err!=SLL_NO_ERROR){
 				return err;
 			}
-			sll_object_field_t* p=k->dt.fields;
+			sll_object_field_t* p=k->data.fields;
 			for (sll_arg_count_t i=0;i<dt->l;i++){
 				sll_file_write_char(f,SLL_OBJECT_TYPE_STRING,&err);
 				if (err!=SLL_NO_ERROR){
@@ -503,40 +503,40 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_error_t sll_encode_object(sll_file_t* f,sl
 			continue;
 		}
 		sll_error_t err;
-		sll_file_write_char(f,k->t,&err);
+		sll_file_write_char(f,k->type,&err);
 		if (err!=SLL_NO_ERROR){
 			return err;
 		}
-		switch (k->t){
+		switch (k->type){
 			case SLL_OBJECT_TYPE_INT:
-				err=sll_encode_signed_integer(f,k->dt.int_);
+				err=sll_encode_signed_integer(f,k->data.int_);
 				break;
 			case SLL_OBJECT_TYPE_FLOAT:
-				sll_file_write(f,&(k->dt.float_),sizeof(sll_float_t),&err);
+				sll_file_write(f,&(k->data.float_),sizeof(sll_float_t),&err);
 				break;
 			case SLL_OBJECT_TYPE_CHAR:
-				sll_file_write_char(f,k->dt.char_,&err);
+				sll_file_write_char(f,k->data.char_,&err);
 				break;
 			case SLL_OBJECT_TYPE_COMPLEX:
 				SLL_UNIMPLEMENTED();
 			case SLL_OBJECT_TYPE_STRING:
-				err=sll_encode_string(f,&(k->dt.string));
+				err=sll_encode_string(f,&(k->data.string));
 				break;
 			case SLL_OBJECT_TYPE_ARRAY:
 			case SLL_OBJECT_TYPE_MAP_KEYS:
 			case SLL_OBJECT_TYPE_MAP_VALUES:
-				err=sll_encode_integer(f,k->dt.array.length);
+				err=sll_encode_integer(f,k->data.array.length);
 				if (err!=SLL_NO_ERROR){
 					return err;
 				}
-				err=sll_encode_object(f,k->dt.array.data,k->dt.array.length);
+				err=sll_encode_object(f,k->data.array.data,k->data.array.length);
 				break;
 			case SLL_OBJECT_TYPE_MAP:
-				err=sll_encode_integer(f,k->dt.map.length);
+				err=sll_encode_integer(f,k->data.map.length);
 				if (err!=SLL_NO_ERROR){
 					return err;
 				}
-				err=sll_encode_object(f,k->dt.map.data,k->dt.map.length<<1);
+				err=sll_encode_object(f,k->data.map.data,k->data.map.length<<1);
 				break;
 			default:
 				SLL_UNIMPLEMENTED();

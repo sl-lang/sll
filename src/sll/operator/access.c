@@ -12,37 +12,37 @@
 
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_access(sll_object_t* a,sll_object_t* b){
-	if (a->t==SLL_OBJECT_TYPE_STRING){
-		if (b->t==SLL_OBJECT_TYPE_INT){
-			if (!a->dt.string.l){
+	if (a->type==SLL_OBJECT_TYPE_STRING){
+		if (b->type==SLL_OBJECT_TYPE_INT){
+			if (!a->data.string.l){
 				return SLL_ACQUIRE_STATIC_INT(0);
 			}
-			WRAP_ARRAY_INDEX(b->dt.int_,a->dt.array.length,idx);
-			if (idx<0||idx>=a->dt.array.length){
+			WRAP_ARRAY_INDEX(b->data.int_,a->data.array.length,idx);
+			if (idx<0||idx>=a->data.array.length){
 				return SLL_ACQUIRE_STATIC_INT(0);
 			}
-			return SLL_FROM_CHAR(a->dt.string.v[idx]);
+			return SLL_FROM_CHAR(a->data.string.v[idx]);
 		}
 	}
-	else if (a->t==SLL_OBJECT_TYPE_ARRAY){
-		if (b->t==SLL_OBJECT_TYPE_INT){
-			if (!a->dt.array.length){
+	else if (a->type==SLL_OBJECT_TYPE_ARRAY){
+		if (b->type==SLL_OBJECT_TYPE_INT){
+			if (!a->data.array.length){
 				return SLL_ACQUIRE_STATIC_INT(0);
 			}
-			WRAP_ARRAY_INDEX(b->dt.int_,a->dt.array.length,idx);
-			if (idx<0||idx>=a->dt.array.length){
+			WRAP_ARRAY_INDEX(b->data.int_,a->data.array.length,idx);
+			if (idx<0||idx>=a->data.array.length){
 				return SLL_ACQUIRE_STATIC_INT(0);
 			}
-			sll_object_t* o=a->dt.array.data[idx];
+			sll_object_t* o=a->data.array.data[idx];
 			SLL_ACQUIRE(o);
 			return o;
 		}
 	}
-	else if (a->t==SLL_OBJECT_TYPE_MAP){
-		return sll_map_get(&(a->dt.map),b);
+	else if (a->type==SLL_OBJECT_TYPE_MAP){
+		return sll_map_get(&(a->data.map),b);
 	}
-	else if (sll_current_runtime_data&&b->t==SLL_OBJECT_TYPE_STRING&&a->t>SLL_MAX_OBJECT_TYPE&&a->t<=sll_current_runtime_data->tt->l+SLL_MAX_OBJECT_TYPE){
-		return sll_object_get_field(sll_current_runtime_data->tt,a,&(b->dt.string));
+	else if (sll_current_runtime_data&&b->type==SLL_OBJECT_TYPE_STRING&&a->type>SLL_MAX_OBJECT_TYPE&&a->type<=sll_current_runtime_data->tt->l+SLL_MAX_OBJECT_TYPE){
+		return sll_object_get_field(sll_current_runtime_data->tt,a,&(b->data.string));
 	}
 	SLL_ACQUIRE(a);
 	return a;
@@ -51,28 +51,28 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_access(sll_object_t
 
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_access_range(sll_object_t* a,sll_object_t* b,sll_object_t* c){
-	if (a->t==SLL_OBJECT_TYPE_STRING){
-		if (b->t==SLL_OBJECT_TYPE_INT&&c->t==SLL_OBJECT_TYPE_INT){
+	if (a->type==SLL_OBJECT_TYPE_STRING){
+		if (b->type==SLL_OBJECT_TYPE_INT&&c->type==SLL_OBJECT_TYPE_INT){
 			sll_object_t* o=sll_create_object(SLL_OBJECT_TYPE_STRING);
-			sll_string_select(&(a->dt.string),b->dt.int_,c->dt.int_,1,&(o->dt.string));
+			sll_string_select(&(a->data.string),b->data.int_,c->data.int_,1,&(o->data.string));
 			return o;
 		}
 	}
-	else if (a->t==SLL_OBJECT_TYPE_ARRAY){
-		if (b->t==SLL_OBJECT_TYPE_INT&&c->t==SLL_OBJECT_TYPE_INT){
+	else if (a->type==SLL_OBJECT_TYPE_ARRAY){
+		if (b->type==SLL_OBJECT_TYPE_INT&&c->type==SLL_OBJECT_TYPE_INT){
 			sll_object_t* o=sll_create_object(SLL_OBJECT_TYPE_ARRAY);
-			sll_array_select(&(a->dt.array),b->dt.int_,c->dt.int_,1,&(o->dt.array));
+			sll_array_select(&(a->data.array),b->data.int_,c->data.int_,1,&(o->data.array));
 			return o;
 		}
 	}
-	else if (a->t==SLL_OBJECT_TYPE_MAP){
+	else if (a->type==SLL_OBJECT_TYPE_MAP){
 		sll_object_t* o=sll_create_object(SLL_OBJECT_TYPE_MAP);
 		sll_object_t* l[2]={b,c};
 		sll_array_t arr={
 			2,
 			l
 		};
-		sll_map_and_array(&(a->dt.map),&arr,&(o->dt.map));
+		sll_map_and_array(&(a->data.map),&arr,&(o->data.map));
 		return o;
 	}
 	SLL_ACQUIRE(a);
@@ -82,28 +82,28 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_access_range(sll_ob
 
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_access_range_step(sll_object_t* a,sll_object_t* b,sll_object_t* c,sll_object_t* d){
-	if (a->t==SLL_OBJECT_TYPE_STRING){
-		if (b->t==SLL_OBJECT_TYPE_INT&&c->t==SLL_OBJECT_TYPE_INT&&d->t==SLL_OBJECT_TYPE_INT){
+	if (a->type==SLL_OBJECT_TYPE_STRING){
+		if (b->type==SLL_OBJECT_TYPE_INT&&c->type==SLL_OBJECT_TYPE_INT&&d->type==SLL_OBJECT_TYPE_INT){
 			sll_object_t* o=sll_create_object(SLL_OBJECT_TYPE_STRING);
-			sll_string_select(&(a->dt.string),b->dt.int_,c->dt.int_,d->dt.int_,&(o->dt.string));
+			sll_string_select(&(a->data.string),b->data.int_,c->data.int_,d->data.int_,&(o->data.string));
 			return o;
 		}
 	}
-	else if (a->t==SLL_OBJECT_TYPE_ARRAY){
-		if (b->t==SLL_OBJECT_TYPE_INT&&c->t==SLL_OBJECT_TYPE_INT&&d->t==SLL_OBJECT_TYPE_INT){
+	else if (a->type==SLL_OBJECT_TYPE_ARRAY){
+		if (b->type==SLL_OBJECT_TYPE_INT&&c->type==SLL_OBJECT_TYPE_INT&&d->type==SLL_OBJECT_TYPE_INT){
 			sll_object_t* o=sll_create_object(SLL_OBJECT_TYPE_ARRAY);
-			sll_array_select(&(a->dt.array),b->dt.int_,c->dt.int_,d->dt.int_,&(o->dt.array));
+			sll_array_select(&(a->data.array),b->data.int_,c->data.int_,d->data.int_,&(o->data.array));
 			return o;
 		}
 	}
-	else if (a->t==SLL_OBJECT_TYPE_MAP){
+	else if (a->type==SLL_OBJECT_TYPE_MAP){
 		sll_object_t* o=sll_create_object(SLL_OBJECT_TYPE_MAP);
 		sll_object_t* l[3]={b,c,d};
 		sll_array_t arr={
 			3,
 			l
 		};
-		sll_map_and_array(&(a->dt.map),&arr,&(o->dt.map));
+		sll_map_and_array(&(a->data.map),&arr,&(o->data.map));
 		return o;
 	}
 	SLL_ACQUIRE(a);

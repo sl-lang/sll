@@ -46,7 +46,7 @@ void _weakref_cleanup_data(void){
 
 
 void _weakref_delete(sll_object_t* o){
-	SLL_ASSERT(o->_f&GC_FLAG_HAS_WEAKREF);
+	SLL_ASSERT(o->_flags&GC_FLAG_HAS_WEAKREF);
 	sll_array_length_t i=0;
 	weakref_key_pair_t** kp=_weakref_data;
 	for (sll_array_length_t j=0;j<_weakref_data_len;j++){
@@ -84,7 +84,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_weak_reference_t sll_weakref_clone(sll_wea
 
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_weak_reference_t sll_weakref_create(sll_object_t* o){
-	o->_f|=GC_FLAG_HAS_WEAKREF;
+	o->_flags|=GC_FLAG_HAS_WEAKREF;
 	return _create_new(ADDR(o));
 }
 

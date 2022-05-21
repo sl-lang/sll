@@ -88,7 +88,7 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_process_start(const sll_array_t* args
 	sll_audit(SLL_CHAR("sll.process.start"),SLL_CHAR("ass"),args,cwd,stdin);
 	sll_object_t* n=sll_operator_cast(args->data[0],sll_static_int[SLL_OBJECT_TYPE_STRING]);
 	sll_string_t exe_fp;
-	if (!sll_search_path_find(sll_environment_path,&(n->dt.string),SLL_SEARCH_PATH_FLAG_AFTER,&exe_fp)){
+	if (!sll_search_path_find(sll_environment_path,&(n->data.string),SLL_SEARCH_PATH_FLAG_AFTER,&exe_fp)){
 		SLL_UNIMPLEMENTED();
 	}
 	SLL_RELEASE(n);
@@ -98,8 +98,8 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_process_start(const sll_array_t* args
 	sll_free_string(&exe_fp);
 	for (sll_array_length_t i=1;i<args->length;i++){
 		n=sll_operator_cast(args->data[i],sll_static_int[SLL_OBJECT_TYPE_STRING]);
-		*(raw_args+i)=sll_allocate((n->dt.string.l+1)*sizeof(sll_char_t));
-		sll_copy_data(n->dt.string.v,n->dt.string.l+1,*(raw_args+i));
+		*(raw_args+i)=sll_allocate((n->data.string.l+1)*sizeof(sll_char_t));
+		sll_copy_data(n->data.string.v,n->data.string.l+1,*(raw_args+i));
 		SLL_RELEASE(n);
 	}
 	*(raw_args+args->length)=NULL;

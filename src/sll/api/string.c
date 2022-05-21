@@ -98,10 +98,10 @@ static void _object_to_string(sll_object_t* a,sll_string_t* o){
 		o->l+=17;
 		return;
 	}
-	switch (a->t){
+	switch (a->type){
 		case SLL_OBJECT_TYPE_INT:
 			{
-				sll_integer_t v=a->dt.int_;
+				sll_integer_t v=a->data.int_;
 				if (v<0){
 					sll_string_increase(o,1);
 					o->v[o->l]='-';
@@ -114,7 +114,7 @@ static void _object_to_string(sll_object_t* a,sll_string_t* o){
 		case SLL_OBJECT_TYPE_FLOAT:
 			{
 				sll_char_t bf[256];
-				sll_string_length_t bfl=snprintf((char*)bf,256,"%.16lf",a->dt.float_);
+				sll_string_length_t bfl=snprintf((char*)bf,256,"%.16lf",a->data.float_);
 				sll_string_increase(o,bfl);
 				sll_copy_data(bf,bfl,o->v+o->l);
 				o->l+=bfl;
@@ -124,7 +124,7 @@ static void _object_to_string(sll_object_t* a,sll_string_t* o){
 			sll_string_increase(o,1);
 			o->v[o->l]='\'';
 			o->l++;
-			_write_char(a->dt.char_,o);
+			_write_char(a->data.char_,o);
 			sll_string_increase(o,1);
 			o->v[o->l]='\'';
 			o->l++;
@@ -132,13 +132,13 @@ static void _object_to_string(sll_object_t* a,sll_string_t* o){
 		case SLL_OBJECT_TYPE_COMPLEX:
 			{
 				sll_char_t bf[256];
-				if (a->dt.complex_.real){
-					sll_string_length_t bfl=snprintf((char*)bf,256,"%.16lf",a->dt.complex_.real);
+				if (a->data.complex_.real){
+					sll_string_length_t bfl=snprintf((char*)bf,256,"%.16lf",a->data.complex_.real);
 					sll_string_increase(o,bfl);
 					sll_copy_data(bf,bfl,o->v+o->l);
 					o->l+=bfl;
-					if (a->dt.complex_.imag){
-						sll_float_t v=a->dt.complex_.imag;
+					if (a->data.complex_.imag){
+						sll_float_t v=a->data.complex_.imag;
 						sll_string_increase(o,1);
 						if (v<0){
 							o->v[o->l]='-';
@@ -154,8 +154,8 @@ static void _object_to_string(sll_object_t* a,sll_string_t* o){
 						o->l+=bfl;
 					}
 				}
-				else if (a->dt.complex_.imag){
-					sll_string_length_t bfl=snprintf((char*)bf,256,"%.16lfi",a->dt.complex_.imag);
+				else if (a->data.complex_.imag){
+					sll_string_length_t bfl=snprintf((char*)bf,256,"%.16lfi",a->data.complex_.imag);
 					sll_string_increase(o,bfl);
 					sll_copy_data(bf,bfl,o->v+o->l);
 					o->l+=bfl;
@@ -171,8 +171,8 @@ static void _object_to_string(sll_object_t* a,sll_string_t* o){
 			sll_string_increase(o,1);
 			o->v[o->l]='\"';
 			o->l++;
-			for (sll_string_length_t i=0;i<a->dt.string.l;i++){
-				_write_char(a->dt.string.v[i],o);
+			for (sll_string_length_t i=0;i<a->data.string.l;i++){
+				_write_char(a->data.string.v[i],o);
 			}
 			sll_string_increase(o,1);
 			o->v[o->l]='\"';
@@ -182,13 +182,13 @@ static void _object_to_string(sll_object_t* a,sll_string_t* o){
 			sll_string_increase(o,1);
 			o->v[o->l]='[';
 			o->l++;
-			for (sll_array_length_t i=0;i<a->dt.array.length;i++){
+			for (sll_array_length_t i=0;i<a->data.array.length;i++){
 				if (i){
 					sll_string_increase(o,1);
 					o->v[o->l]=' ';
 					o->l++;
 				}
-				_object_to_string(*(a->dt.array.data+i),o);
+				_object_to_string(*(a->data.array.data+i),o);
 			}
 			sll_string_increase(o,1);
 			o->v[o->l]=']';
@@ -198,13 +198,13 @@ static void _object_to_string(sll_object_t* a,sll_string_t* o){
 			sll_string_increase(o,1);
 			o->v[o->l]='<';
 			o->l++;
-			for (sll_array_length_t i=0;i<(a->dt.map.length<<1);i++){
+			for (sll_array_length_t i=0;i<(a->data.map.length<<1);i++){
 				if (i){
 					sll_string_increase(o,1);
 					o->v[o->l]=' ';
 					o->l++;
 				}
-				_object_to_string(*(a->dt.map.data+i),o);
+				_object_to_string(*(a->data.map.data+i),o);
 			}
 			sll_string_increase(o,1);
 			o->v[o->l]='>';
@@ -212,20 +212,20 @@ static void _object_to_string(sll_object_t* a,sll_string_t* o){
 			return;
 		default:
 			{
-				if (!sll_current_runtime_data||a->t>sll_current_runtime_data->tt->l+SLL_MAX_OBJECT_TYPE){
+				if (!sll_current_runtime_data||a->type>sll_current_runtime_data->tt->l+SLL_MAX_OBJECT_TYPE){
 					sll_string_increase(o,13);
 					sll_copy_string(SLL_CHAR("<custom-type>"),o->v+o->l);
 					o->l+=13;
 					return;
 				}
-				const sll_object_type_data_t* dt=*(sll_current_runtime_data->tt->dt+a->t-SLL_MAX_OBJECT_TYPE-1);
+				const sll_object_type_data_t* dt=*(sll_current_runtime_data->tt->dt+a->type-SLL_MAX_OBJECT_TYPE-1);
 				if (dt->fn[SLL_OBJECT_FUNC_STRING]){
 					sll_object_t* v=sll_execute_function(dt->fn[SLL_OBJECT_FUNC_STRING],&a,1,0);
 					sll_object_t* str=sll_operator_cast(v,sll_static_int[SLL_OBJECT_TYPE_STRING]);
 					SLL_RELEASE(v);
-					sll_string_increase(o,str->dt.string.l);
-					sll_copy_data(str->dt.string.v,str->dt.string.l,o->v+o->l);
-					o->l+=str->dt.string.l;
+					sll_string_increase(o,str->data.string.l);
+					sll_copy_data(str->data.string.v,str->data.string.l,o->v+o->l);
+					o->l+=str->data.string.l;
 					SLL_RELEASE(str);
 					return;
 				}
@@ -233,14 +233,14 @@ static void _object_to_string(sll_object_t* a,sll_string_t* o){
 				sll_copy_string(SLL_CHAR("<&:"),o->v+o->l);
 				o->l+=3;
 				if (!dt->nm.l){
-					_write_int(a->t,o);
+					_write_int(a->type,o);
 				}
 				else{
 					sll_string_increase(o,dt->nm.l);
 					sll_copy_data(dt->nm.v,dt->nm.l,o->v+o->l);
 					o->l+=dt->nm.l;
 				}
-				sll_object_field_t* p=a->dt.fields;
+				sll_object_field_t* p=a->data.fields;
 				for (sll_arg_count_t i=0;i<dt->l;i++){
 					sll_string_t s=dt->dt[i].nm;
 					sll_string_increase(o,1);
@@ -293,15 +293,15 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_string_convert(sll_object_t*const* ar
 	STRING_INIT_STACK(out);
 	for (sll_array_length_t i=0;i<len;i++){
 		sll_object_t* v=*(args+i);
-		if (v->t==SLL_OBJECT_TYPE_CHAR){
+		if (v->type==SLL_OBJECT_TYPE_CHAR){
 			sll_string_increase(out,1);
-			out->v[out->l]=v->dt.char_;
+			out->v[out->l]=v->data.char_;
 			out->l++;
 		}
-		else if (v->t==SLL_OBJECT_TYPE_STRING){
-			sll_string_increase(out,v->dt.string.l);
-			sll_copy_data(v->dt.string.v,v->dt.string.l,out->v+out->l);
-			out->l+=v->dt.string.l;
+		else if (v->type==SLL_OBJECT_TYPE_STRING){
+			sll_string_increase(out,v->data.string.l);
+			sll_copy_data(v->data.string.v,v->data.string.l,out->v+out->l);
+			out->l+=v->data.string.l;
 		}
 		else{
 			_object_to_string(*(args+i),out);

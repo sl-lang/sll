@@ -71,10 +71,10 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_object_t* sll_api_sort_quic
 		SLL_ACQUIRE(arr);
 	}
 	else{
-		arr=sll_array_to_object(&(arr->dt.array));
+		arr=sll_array_to_object(&(arr->data.array));
 	}
-	if (arr->dt.array.length>1){
-		sll_quicksort(arr->dt.array.data,arr->dt.array.length,(reverse?SLL_COMPARE_RESULT_ABOVE:SLL_COMPARE_RESULT_BELOW),key_fn);
+	if (arr->data.array.length>1){
+		sll_quicksort(arr->data.array.data,arr->data.array.length,(reverse?SLL_COMPARE_RESULT_ABOVE:SLL_COMPARE_RESULT_BELOW),key_fn);
 	}
 	return arr;
 }

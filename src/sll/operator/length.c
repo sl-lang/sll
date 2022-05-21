@@ -9,21 +9,21 @@
 
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_len(sll_object_t* a){
-	switch (a->t){
+	switch (a->type){
 		case SLL_OBJECT_TYPE_INT:
-			return sll_int_to_object(a->dt.int_);
+			return sll_int_to_object(a->data.int_);
 		case SLL_OBJECT_TYPE_FLOAT:
-			return sll_float_to_object(a->dt.float_);
+			return sll_float_to_object(a->data.float_);
 		case SLL_OBJECT_TYPE_CHAR:
-			return sll_int_to_object(a->dt.char_);
+			return sll_int_to_object(a->data.char_);
 		case SLL_OBJECT_TYPE_COMPLEX:
-			return sll_float_to_object(COMPLEX_ABS(a->dt.complex_));
+			return sll_float_to_object(COMPLEX_ABS(a->data.complex_));
 		case SLL_OBJECT_TYPE_STRING:
-			return sll_int_to_object(a->dt.string.l);
+			return sll_int_to_object(a->data.string.l);
 		case SLL_OBJECT_TYPE_ARRAY:
-			return sll_int_to_object(a->dt.array.length);
+			return sll_int_to_object(a->data.array.length);
 		case SLL_OBJECT_TYPE_MAP:
-			return sll_int_to_object(a->dt.map.length);
+			return sll_int_to_object(a->data.map.length);
 		default:
 			SLL_UNREACHABLE();
 	}

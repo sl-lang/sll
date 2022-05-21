@@ -9,7 +9,7 @@
 
 
 #define COMBINE_TYPES(a,b) (((__SLL_U32)(a)<<8)|(b))
-#define COMBINED_ARGS COMBINE_TYPES(a->t,b->t)
+#define COMBINED_ARGS COMBINE_TYPES(a->type,b->type)
 #define COMBINED_TYPE_II COMBINE_TYPES(SLL_OBJECT_TYPE_INT,SLL_OBJECT_TYPE_INT)
 #define COMBINED_TYPE_IF COMBINE_TYPES(SLL_OBJECT_TYPE_INT,SLL_OBJECT_TYPE_FLOAT)
 #define COMBINED_TYPE_IC COMBINE_TYPES(SLL_OBJECT_TYPE_INT,SLL_OBJECT_TYPE_CHAR)
@@ -62,14 +62,14 @@
 
 #define COMMUTATIVE_OPERATOR \
 	sll_bool_t inv=0; \
-	if (a->t>b->t){ \
+	if (a->type>b->type){ \
 		sll_object_t* __tmp=a; \
 		a=b; \
 		b=__tmp; \
 		inv=1; \
 	} \
 
-#define TO_FLOAT_BITS(n) ((n)->dt.int_)
+#define TO_FLOAT_BITS(n) ((n)->data.int_)
 
 
 

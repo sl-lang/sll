@@ -155,15 +155,15 @@ typedef union _SLL_OBJECT_DATA{
  * \group gc
  * \desc Docs!
  * \arg sll_reference_count_t rc
- * \arg const sll_object_type_t t
- * \arg __SLL_U32 _f
- * \arg sll_object_data_t dt
+ * \arg const sll_object_type_t type
+ * \arg __SLL_U32 _flags
+ * \arg sll_object_data_t data
  */
 typedef struct _SLL_OBJECT{
 	sll_reference_count_t rc;
-	const sll_object_type_t t;
-	__SLL_U32 _f;
-	sll_object_data_t dt;
+	const sll_object_type_t type;
+	__SLL_U32 _flags;
+	sll_object_data_t data;
 } sll_object_t;
 
 
