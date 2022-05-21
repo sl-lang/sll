@@ -183,9 +183,9 @@ void _call_function(thread_data_t* thr,sll_function_index_t fn,sll_arg_count_t a
 		}
 		else{
 			tos=sll_array_length_to_object(ac-SLL_ASSEMBLY_FUNCTION_GET_ARGUMENT_COUNT(af)+1);
-			thr->si-=tos->dt.a.l;
-			for (sll_array_length_t i=0;i<tos->dt.a.l;i++){
-				tos->dt.a.v[i]=*(thr->stack+thr->si+i);
+			thr->si-=tos->dt.a.length;
+			for (sll_array_length_t i=0;i<tos->dt.a.length;i++){
+				tos->dt.a.data[i]=*(thr->stack+thr->si+i);
 			}
 		}
 		*(thr->stack+thr->si)=tos;
@@ -431,7 +431,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_wait_thread(sll_thread_index
 				{
 					sll_object_t* tos=sll_array_length_to_object(ai->dt.al);
 					thr->si-=ai->dt.al;
-					sll_copy_data(thr->stack+thr->si,ai->dt.al*sizeof(sll_object_t*),tos->dt.a.v);
+					sll_copy_data(thr->stack+thr->si,ai->dt.al*sizeof(sll_object_t*),tos->dt.a.data);
 					*(thr->stack+thr->si)=tos;
 					thr->si++;
 					break;
@@ -443,7 +443,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_wait_thread(sll_thread_index
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PACK_ONE:
 				{
 					sll_object_t* tos=sll_array_length_to_object(1);
-					tos->dt.a.v[0]=*(thr->stack+thr->si-1);
+					tos->dt.a.data[0]=*(thr->stack+thr->si-1);
 					*(thr->stack+thr->si-1)=tos;
 					break;
 				}
@@ -453,10 +453,10 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_wait_thread(sll_thread_index
 					sll_map_t* m=&(tos->dt.m);
 					thr->si-=ai->dt.ml;
 					for (sll_map_length_t i=0;i<ai->dt.ml;i++){
-						m->v[i]=*(thr->stack+thr->si+i);
+						m->data[i]=*(thr->stack+thr->si+i);
 					}
 					if (ai->dt.ml&1){
-						m->v[ai->dt.ml]=SLL_ACQUIRE_STATIC_INT(0);
+						m->data[ai->dt.ml]=SLL_ACQUIRE_STATIC_INT(0);
 					}
 					*(thr->stack+thr->si)=tos;
 					thr->si++;
@@ -928,7 +928,7 @@ _cleanup_jump_table:;
 							sll_function_index_t j=(sll_function_index_t)(~i);
 							if (j<sll_current_runtime_data->ift->l){
 								SLL_RELEASE(*(thr->stack+thr->si-1));
-								sll_object_t* n=_call_api_func(j,tos->dt.a.v,tos->dt.a.l);
+								sll_object_t* n=_call_api_func(j,tos->dt.a.data,tos->dt.a.length);
 								SLL_RELEASE(tos);
 								*(thr->stack+thr->si-1)=n;
 								break;
@@ -937,10 +937,10 @@ _cleanup_jump_table:;
 						else if (i&&i<=sll_current_runtime_data->a_dt->ft.l){
 							thr->si--;
 							SLL_RELEASE(*(thr->stack+thr->si));
-							for (sll_array_length_t j=0;j<tos->dt.a.l;j++){
-								*(thr->stack+thr->si)=tos->dt.a.v[j];
+							for (sll_array_length_t j=0;j<tos->dt.a.length;j++){
+								*(thr->stack+thr->si)=tos->dt.a.data[j];
 								thr->si++;
-								SLL_ACQUIRE(tos->dt.a.v[j]);
+								SLL_ACQUIRE(tos->dt.a.data[j]);
 							}
 							SLL_RELEASE(tos);
 							_call_function(thr,(sll_function_index_t)(i-1),ai->dt.ac,1);

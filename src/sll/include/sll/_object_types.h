@@ -59,12 +59,12 @@ typedef __SLL_U64 sll_reference_count_t;
  * \name sll_array_t
  * \group array
  * \desc Docs!
- * \arg sll_array_length_t l
- * \arg struct _SLL_OBJECT** v
+ * \arg sll_array_length_t length
+ * \arg struct _SLL_OBJECT** data
  */
 typedef struct _SLL_ARRAY{
-	sll_array_length_t l;
-	struct _SLL_OBJECT** v;
+	sll_array_length_t length;
+	struct _SLL_OBJECT** data;
 } sll_array_t;
 
 
@@ -74,12 +74,12 @@ typedef struct _SLL_ARRAY{
  * \name sll_map_t
  * \group map
  * \desc Docs!
- * \arg sll_map_length_t l
- * \arg struct _SLL_OBJECT** v
+ * \arg sll_map_length_t length
+ * \arg struct _SLL_OBJECT** data
  */
 typedef struct _SLL_MAP{
-	sll_map_length_t l;
-	struct _SLL_OBJECT** v;
+	sll_map_length_t length;
+	struct _SLL_OBJECT** data;
 } sll_map_t;
 
 
@@ -89,16 +89,16 @@ typedef struct _SLL_MAP{
  * \name sll_object_field_t
  * \group gc
  * \desc Docs!
- * \arg sll_integer_t i
- * \arg sll_float_t f
- * \arg sll_char_t c
- * \arg struct _SLL_OBJECT* o
+ * \arg sll_integer_t int_
+ * \arg sll_float_t float_
+ * \arg sll_char_t char_
+ * \arg struct _SLL_OBJECT* any
  */
 typedef union _SLL_OBJECT_FIELD{
-	sll_integer_t i;
-	sll_float_t f;
-	sll_char_t c;
-	struct _SLL_OBJECT* o;
+	sll_integer_t int_;
+	sll_float_t float_;
+	sll_char_t char_;
+	struct _SLL_OBJECT* any;
 } sll_object_field_t;
 
 
@@ -108,12 +108,12 @@ typedef union _SLL_OBJECT_FIELD{
  * \name sll_object_ptr_t
  * \group gc
  * \desc Docs!
- * \arg struct _SLL_OBJECT* p
- * \arg struct _SLL_OBJECT* n
+ * \arg struct _SLL_OBJECT* prev
+ * \arg struct _SLL_OBJECT* next
  */
 typedef struct _SLL_OBJECT_PTR{
-	struct _SLL_OBJECT* p;
-	struct _SLL_OBJECT* n;
+	struct _SLL_OBJECT* prev;
+	struct _SLL_OBJECT* next;
 } sll_object_ptr_t;
 
 

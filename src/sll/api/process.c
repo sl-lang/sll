@@ -81,28 +81,28 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_process_split(const sll_string_t* arg
 
 
 __SLL_EXTERNAL __SLL_API_CALL void sll_api_process_start(const sll_array_t* args,const sll_string_t* cwd,sll_process_creation_flags_t flags,const sll_string_t* stdin,sll_array_t* out){
-	if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_PROCESS_API)||!args->l){
+	if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_PROCESS_API)||!args->length){
 		sll_new_object_array(SLL_CHAR("a(sh)0(sZZ)"),out,args,cwd,flags,stdin);
 		return;
 	}
 	sll_audit(SLL_CHAR("sll.process.start"),SLL_CHAR("ass"),args,cwd,stdin);
-	sll_object_t* n=sll_operator_cast(args->v[0],sll_static_int[SLL_OBJECT_TYPE_STRING]);
+	sll_object_t* n=sll_operator_cast(args->data[0],sll_static_int[SLL_OBJECT_TYPE_STRING]);
 	sll_string_t exe_fp;
 	if (!sll_search_path_find(sll_environment_path,&(n->dt.s),SLL_SEARCH_PATH_FLAG_AFTER,&exe_fp)){
 		SLL_UNIMPLEMENTED();
 	}
 	SLL_RELEASE(n);
-	sll_char_t** raw_args=sll_allocate((args->l+1)*sizeof(sll_char_t*));
+	sll_char_t** raw_args=sll_allocate((args->length+1)*sizeof(sll_char_t*));
 	*raw_args=sll_allocate((exe_fp.l+1)*sizeof(sll_char_t));
 	sll_copy_data(exe_fp.v,exe_fp.l+1,*raw_args);
 	sll_free_string(&exe_fp);
-	for (sll_array_length_t i=1;i<args->l;i++){
-		n=sll_operator_cast(args->v[i],sll_static_int[SLL_OBJECT_TYPE_STRING]);
+	for (sll_array_length_t i=1;i<args->length;i++){
+		n=sll_operator_cast(args->data[i],sll_static_int[SLL_OBJECT_TYPE_STRING]);
 		*(raw_args+i)=sll_allocate((n->dt.s.l+1)*sizeof(sll_char_t));
 		sll_copy_data(n->dt.s.v,n->dt.s.l+1,*(raw_args+i));
 		SLL_RELEASE(n);
 	}
-	*(raw_args+args->l)=NULL;
+	*(raw_args+args->length)=NULL;
 	sll_error_t err;
 	sll_process_handle_t ph=sll_platform_start_process((const sll_char_t*const*)raw_args,NULL,&err);
 	if (!ph){
@@ -119,7 +119,7 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_process_start(const sll_array_t* args
 		SLL_UNIMPLEMENTED();
 	}
 	SLL_CRITICAL(sll_platform_close_process_handle(ph)==SLL_NO_ERROR);
-	for (sll_array_length_t i=0;i<args->l;i++){
+	for (sll_array_length_t i=0;i<args->length;i++){
 		sll_deallocate(*(raw_args+i));
 	}
 	sll_deallocate(raw_args);

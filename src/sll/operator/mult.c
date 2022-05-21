@@ -40,11 +40,11 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_mult(sll_object_t* 
 		case COMBINED_TYPE_AM:
 			{
 				sll_map_t m=b->dt.m;
-				sll_object_t* o=sll_map_length_to_object(m.l);
-				for (sll_map_length_t i=0;i<(m.l<<1);i+=2){
-					SLL_ACQUIRE(m.v[i]);
-					o->dt.m.v[i]=m.v[i];
-					o->dt.m.v[i+1]=sll_operator_mult(a,m.v[i+1]);
+				sll_object_t* o=sll_map_length_to_object(m.length);
+				for (sll_map_length_t i=0;i<(m.length<<1);i+=2){
+					SLL_ACQUIRE(m.data[i]);
+					o->dt.m.data[i]=m.data[i];
+					o->dt.m.data[i+1]=sll_operator_mult(a,m.data[i+1]);
 				}
 				return o;
 			}
@@ -63,7 +63,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_mult(sll_object_t* 
 			{
 				sll_object_t* o=sll_create_object(SLL_OBJECT_TYPE_ARRAY);
 				sll_integer_t n=(sll_integer_t)a->dt.f;
-				sll_array_duplicate(&(b->dt.a),n,(sll_array_length_t)round(sll_math_abs(a->dt.f-n)*b->dt.a.l),&(o->dt.a));
+				sll_array_duplicate(&(b->dt.a),n,(sll_array_length_t)round(sll_math_abs(a->dt.f-n)*b->dt.a.length),&(o->dt.a));
 				return o;
 			}
 		case COMBINED_TYPE_CC:

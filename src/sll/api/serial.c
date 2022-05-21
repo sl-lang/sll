@@ -145,7 +145,7 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_serial_enco
 	if (!f){
 		return SLL_ERROR_UNKNOWN_FD;
 	}
-	return sll_encode_object(f,args->v,args->l);
+	return sll_encode_object(f,args->data,args->length);
 }
 
 
@@ -294,7 +294,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_decode_object(sll_file_t* f,
 				}
 				sll_object_t* o=sll_array_length_to_object(l);
 				for (sll_array_length_t i=0;i<l;i++){
-					o->dt.a.v[i]=sll_decode_object(f,err);
+					o->dt.a.data[i]=sll_decode_object(f,err);
 					if (err&&*err!=SLL_NO_ERROR){
 						SLL_UNIMPLEMENTED();
 					}
@@ -314,7 +314,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_decode_object(sll_file_t* f,
 				}
 				sll_object_t* o=sll_map_length_to_object(l);
 				for (sll_map_length_t i=0;i<(l<<1);i++){
-					o->dt.m.v[i]=sll_decode_object(f,err);
+					o->dt.m.data[i]=sll_decode_object(f,err);
 					if (err&&*err!=SLL_NO_ERROR){
 						SLL_UNIMPLEMENTED();
 					}
@@ -475,7 +475,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_error_t sll_encode_object(sll_file_t* f,sl
 					return err;
 				}
 				if (dt->dt[i].t>SLL_OBJECT_TYPE_CHAR){
-					err=sll_encode_object(f,&(p->o),1);
+					err=sll_encode_object(f,&(p->any),1);
 					if (err!=SLL_NO_ERROR){
 						return err;
 					}
@@ -486,13 +486,13 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_error_t sll_encode_object(sll_file_t* f,sl
 						return err;
 					}
 					if (dt->dt[i].t==SLL_OBJECT_TYPE_INT){
-						err=sll_encode_signed_integer(f,p->i);
+						err=sll_encode_signed_integer(f,p->int_);
 					}
 					else if (dt->dt[i].t==SLL_OBJECT_TYPE_FLOAT){
-						sll_file_write(f,&(p->f),sizeof(sll_float_t),&err);
+						sll_file_write(f,&(p->float_),sizeof(sll_float_t),&err);
 					}
 					else{
-						sll_file_write_char(f,p->c,&err);
+						sll_file_write_char(f,p->char_,&err);
 					}
 					if (err!=SLL_NO_ERROR){
 						return err;
@@ -525,18 +525,18 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_error_t sll_encode_object(sll_file_t* f,sl
 			case SLL_OBJECT_TYPE_ARRAY:
 			case SLL_OBJECT_TYPE_MAP_KEYS:
 			case SLL_OBJECT_TYPE_MAP_VALUES:
-				err=sll_encode_integer(f,k->dt.a.l);
+				err=sll_encode_integer(f,k->dt.a.length);
 				if (err!=SLL_NO_ERROR){
 					return err;
 				}
-				err=sll_encode_object(f,k->dt.a.v,k->dt.a.l);
+				err=sll_encode_object(f,k->dt.a.data,k->dt.a.length);
 				break;
 			case SLL_OBJECT_TYPE_MAP:
-				err=sll_encode_integer(f,k->dt.m.l);
+				err=sll_encode_integer(f,k->dt.m.length);
 				if (err!=SLL_NO_ERROR){
 					return err;
 				}
-				err=sll_encode_object(f,k->dt.m.v,k->dt.m.l<<1);
+				err=sll_encode_object(f,k->dt.m.data,k->dt.m.length<<1);
 				break;
 			default:
 				SLL_UNIMPLEMENTED();

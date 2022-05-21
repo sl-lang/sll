@@ -138,7 +138,7 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_path_list_d
 	sll_array_create(len,out);
 	SLL_ASSERT(!len||dt);
 	for (sll_array_length_t i=0;i<len;i++){
-		out->v[i]=STRING_TO_OBJECT_NOCOPY(dt+i);
+		out->data[i]=STRING_TO_OBJECT_NOCOPY(dt+i);
 	}
 	sll_deallocate(dt);
 	return SLL_NO_ERROR;

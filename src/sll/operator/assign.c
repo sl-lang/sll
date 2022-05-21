@@ -26,9 +26,9 @@ __SLL_EXTERNAL void sll_operator_assign(sll_object_t* a,sll_object_t* b,sll_obje
 	}
 	else if (a->t==SLL_OBJECT_TYPE_ARRAY){
 		if (b->t==SLL_OBJECT_TYPE_INT){
-			sll_integer_t idx=b->dt.i-b->dt.i/a->dt.a.l*a->dt.a.l;
+			sll_integer_t idx=b->dt.i-b->dt.i/a->dt.a.length*a->dt.a.length;
 			if (idx<0){
-				idx+=a->dt.a.l;
+				idx+=a->dt.a.length;
 			}
 			sll_array_set(&(a->dt.a),(sll_array_length_t)idx,v);
 		}

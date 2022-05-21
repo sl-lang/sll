@@ -73,8 +73,8 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_object_t* sll_api_sort_quic
 	else{
 		arr=sll_array_to_object(&(arr->dt.a));
 	}
-	if (arr->dt.a.l>1){
-		sll_quicksort(arr->dt.a.v,arr->dt.a.l,(reverse?SLL_COMPARE_RESULT_ABOVE:SLL_COMPARE_RESULT_BELOW),key_fn);
+	if (arr->dt.a.length>1){
+		sll_quicksort(arr->dt.a.data,arr->dt.a.length,(reverse?SLL_COMPARE_RESULT_ABOVE:SLL_COMPARE_RESULT_BELOW),key_fn);
 	}
 	return arr;
 }

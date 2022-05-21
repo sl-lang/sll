@@ -112,7 +112,7 @@ __SLL_EXTERNAL void sll__release_object_internal(sll_object_t* o){
 			sll_object_field_t* p=o->dt.p;
 			for (sll_arg_count_t i=0;i<dt->l;i++){
 				if (dt->dt[i].t>SLL_OBJECT_TYPE_CHAR){
-					SLL_RELEASE(p->o);
+					SLL_RELEASE(p->any);
 				}
 				p++;
 			}
@@ -136,18 +136,18 @@ __SLL_EXTERNAL void sll__release_object_internal(sll_object_t* o){
 			_gc_object_pool_len++;
 			return;
 		}
-		o->dt._ptr.n=_gc_next_object;
-		o->dt._ptr.p=NULL;
+		o->dt._ptr.next=_gc_next_object;
+		o->dt._ptr.prev=NULL;
 		if (_gc_next_object){
-			_gc_next_object->dt._ptr.p=o;
+			_gc_next_object->dt._ptr.prev=o;
 		}
 		_gc_next_object=o;
 		return;
 	}
-	o->dt._ptr.n=NULL;
-	o->dt._ptr.p=NULL;
+	o->dt._ptr.next=NULL;
+	o->dt._ptr.prev=NULL;
 	while (GC_MEMORY_PAGE_HEADER(_gc_next_object)==pg){
-		_gc_next_object=_gc_next_object->dt._ptr.n;
+		_gc_next_object=_gc_next_object->dt._ptr.next;
 	}
 	sll_object_t* c=(sll_object_t*)(ADDR(pg)+sizeof(gc_page_header_t));
 	addr_t e=ADDR(pg)+sizeof(gc_page_header_t)+(GC_MEMORY_PAGE_SIZE-sizeof(gc_page_header_t))/sizeof(sll_object_t)*sizeof(sll_object_t);
@@ -159,11 +159,11 @@ __SLL_EXTERNAL void sll__release_object_internal(sll_object_t* o){
 			pool_shift=1;
 		}
 		else{
-			if (c->dt._ptr.p){
-				c->dt._ptr.p->dt._ptr.n=c->dt._ptr.n;
+			if (c->dt._ptr.prev){
+				c->dt._ptr.prev->dt._ptr.next=c->dt._ptr.next;
 			}
-			if (c->dt._ptr.n){
-				c->dt._ptr.n->dt._ptr.p=c->dt._ptr.p;
+			if (c->dt._ptr.next){
+				c->dt._ptr.next->dt._ptr.prev=c->dt._ptr.prev;
 			}
 		}
 		c++;
@@ -226,9 +226,9 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_create_object(sll_object_typ
 		}
 		else if (_gc_next_object){
 			o=_gc_next_object;
-			_gc_next_object=o->dt._ptr.n;
+			_gc_next_object=o->dt._ptr.next;
 			if (_gc_next_object){
-				_gc_next_object->dt._ptr.p=NULL;
+				_gc_next_object->dt._ptr.prev=NULL;
 			}
 		}
 		else{

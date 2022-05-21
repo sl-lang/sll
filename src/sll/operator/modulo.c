@@ -24,7 +24,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_mod(sll_object_t* a
 			{
 				sll_object_t* o=sll_array_length_to_object(b->dt.s.l);
 				for (sll_string_length_t i=0;i<b->dt.s.l;i++){
-					o->dt.a.v[i]=sll_operator_mod(a,sll_static_char[b->dt.s.v[i]]);
+					o->dt.a.data[i]=sll_operator_mod(a,sll_static_char[b->dt.s.v[i]]);
 				}
 				return o;
 			}
@@ -32,9 +32,9 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_mod(sll_object_t* a
 		case COMBINED_TYPE_FA:
 		case COMBINED_TYPE_CA:
 			{
-				sll_object_t* o=sll_array_length_to_object(b->dt.a.l);
-				for (sll_array_length_t i=0;i<b->dt.a.l;i++){
-					o->dt.a.v[i]=sll_operator_mod(a,b->dt.a.v[i]);
+				sll_object_t* o=sll_array_length_to_object(b->dt.a.length);
+				for (sll_array_length_t i=0;i<b->dt.a.length;i++){
+					o->dt.a.data[i]=sll_operator_mod(a,b->dt.a.data[i]);
 				}
 				return o;
 			}
@@ -42,11 +42,11 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_mod(sll_object_t* a
 		case COMBINED_TYPE_FM:
 		case COMBINED_TYPE_CM:
 			{
-				sll_object_t* o=sll_map_length_to_object(b->dt.m.l);
-				for (sll_map_length_t i=0;i<(b->dt.m.l<<1);i+=2){
-					o->dt.m.v[i]=b->dt.m.v[i];
-					SLL_ACQUIRE(o->dt.m.v[i]);
-					o->dt.m.v[i+1]=sll_operator_mod(a,b->dt.m.v[i+1]);
+				sll_object_t* o=sll_map_length_to_object(b->dt.m.length);
+				for (sll_map_length_t i=0;i<(b->dt.m.length<<1);i+=2){
+					o->dt.m.data[i]=b->dt.m.data[i];
+					SLL_ACQUIRE(o->dt.m.data[i]);
+					o->dt.m.data[i+1]=sll_operator_mod(a,b->dt.m.data[i+1]);
 				}
 				return o;
 			}
@@ -73,7 +73,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_mod(sll_object_t* a
 			{
 				sll_object_t* o=sll_array_length_to_object(a->dt.s.l);
 				for (sll_string_length_t i=0;i<a->dt.s.l;i++){
-					o->dt.a.v[i]=sll_operator_mod(sll_static_char[a->dt.s.v[i]],b);
+					o->dt.a.data[i]=sll_operator_mod(sll_static_char[a->dt.s.v[i]],b);
 				}
 				return o;
 			}
@@ -105,9 +105,9 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_mod(sll_object_t* a
 		case COMBINED_TYPE_AF:
 		case COMBINED_TYPE_AC:
 			{
-				sll_object_t* o=sll_array_length_to_object(a->dt.a.l);
-				for (sll_array_length_t i=0;i<a->dt.a.l;i++){
-					o->dt.a.v[i]=sll_operator_mod(a->dt.a.v[i],b);
+				sll_object_t* o=sll_array_length_to_object(a->dt.a.length);
+				for (sll_array_length_t i=0;i<a->dt.a.length;i++){
+					o->dt.a.data[i]=sll_operator_mod(a->dt.a.data[i],b);
 				}
 				return o;
 			}
@@ -133,11 +133,11 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_mod(sll_object_t* a
 		case COMBINED_TYPE_MF:
 		case COMBINED_TYPE_MC:
 			{
-				sll_object_t* o=sll_map_length_to_object(a->dt.m.l);
-				for (sll_map_length_t i=0;i<(a->dt.m.l<<1);i+=2){
-					o->dt.m.v[i]=a->dt.m.v[i];
-					SLL_ACQUIRE(o->dt.m.v[i]);
-					o->dt.m.v[i+1]=sll_operator_mod(a->dt.m.v[i+1],b);
+				sll_object_t* o=sll_map_length_to_object(a->dt.m.length);
+				for (sll_map_length_t i=0;i<(a->dt.m.length<<1);i+=2){
+					o->dt.m.data[i]=a->dt.m.data[i];
+					SLL_ACQUIRE(o->dt.m.data[i]);
+					o->dt.m.data[i+1]=sll_operator_mod(a->dt.m.data[i+1],b);
 				}
 				return o;
 			}

@@ -182,13 +182,13 @@ static void _object_to_string(sll_object_t* a,sll_string_t* o){
 			sll_string_increase(o,1);
 			o->v[o->l]='[';
 			o->l++;
-			for (sll_array_length_t i=0;i<a->dt.a.l;i++){
+			for (sll_array_length_t i=0;i<a->dt.a.length;i++){
 				if (i){
 					sll_string_increase(o,1);
 					o->v[o->l]=' ';
 					o->l++;
 				}
-				_object_to_string(*(a->dt.a.v+i),o);
+				_object_to_string(*(a->dt.a.data+i),o);
 			}
 			sll_string_increase(o,1);
 			o->v[o->l]=']';
@@ -198,13 +198,13 @@ static void _object_to_string(sll_object_t* a,sll_string_t* o){
 			sll_string_increase(o,1);
 			o->v[o->l]='<';
 			o->l++;
-			for (sll_array_length_t i=0;i<(a->dt.m.l<<1);i++){
+			for (sll_array_length_t i=0;i<(a->dt.m.length<<1);i++){
 				if (i){
 					sll_string_increase(o,1);
 					o->v[o->l]=' ';
 					o->l++;
 				}
-				_object_to_string(*(a->dt.m.v+i),o);
+				_object_to_string(*(a->dt.m.data+i),o);
 			}
 			sll_string_increase(o,1);
 			o->v[o->l]='>';
@@ -255,16 +255,16 @@ static void _object_to_string(sll_object_t* a,sll_string_t* o){
 					sll_object_t* tmp;
 					switch (dt->dt[i].t){
 						case SLL_OBJECT_TYPE_INT:
-							tmp=sll_int_to_object(p->i);
+							tmp=sll_int_to_object(p->int_);
 							break;
 						case SLL_OBJECT_TYPE_FLOAT:
-							tmp=sll_float_to_object(p->f);
+							tmp=sll_float_to_object(p->float_);
 							break;
 						case SLL_OBJECT_TYPE_CHAR:
-							tmp=SLL_FROM_CHAR(p->c);
+							tmp=SLL_FROM_CHAR(p->char_);
 							break;
 						default:
-							tmp=p->o;
+							tmp=p->any;
 							SLL_ACQUIRE(tmp);
 							break;
 					}
@@ -384,10 +384,10 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_string_in
 
 __SLL_EXTERNAL __SLL_API_CALL void sll_api_string_join(const sll_char_string_t* infix,const sll_array_t* arr,sll_string_t* out){
 	if (infix->t==SLL_PARSE_ARGS_TYPE_CHAR){
-		sll_string_join_char(infix->dt.c,arr->v,arr->l,out);
+		sll_string_join_char(infix->dt.c,arr->data,arr->length,out);
 	}
 	else{
-		sll_string_join(infix->dt.s,arr->v,arr->l,out);
+		sll_string_join(infix->dt.s,arr->data,arr->length,out);
 	}
 }
 

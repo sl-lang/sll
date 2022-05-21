@@ -83,11 +83,11 @@
 			SLL_UNIMPLEMENTED(); \
 		} \
 		sll_object_t* obj=sll_operator_cast(arg,sll_static_int[SLL_OBJECT_TYPE_ARRAY]); \
-		type** dt=sll_allocate(obj->dt.a.l*sizeof(type*)); \
+		type** dt=sll_allocate(obj->dt.a.length*sizeof(type*)); \
 		*GET_PTR(type**)=dt; \
-		*GET_PTR(sll_arg_count_t)=obj->dt.a.l; \
-		for (sll_arg_count_t i=0;i<obj->dt.a.l;i++){ \
-			sll_object_t* k=obj->dt.a.v[i]; \
+		*GET_PTR(sll_arg_count_t)=obj->dt.a.length; \
+		for (sll_arg_count_t i=0;i<obj->dt.a.length;i++){ \
+			sll_object_t* k=obj->dt.a.data[i]; \
 			ENSURE_TYPE(k,name); \
 			*(dt+i)=&(k->dt.field); \
 		} \

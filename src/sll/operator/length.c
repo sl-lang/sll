@@ -21,9 +21,9 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_len(sll_object_t* a
 		case SLL_OBJECT_TYPE_STRING:
 			return sll_int_to_object(a->dt.s.l);
 		case SLL_OBJECT_TYPE_ARRAY:
-			return sll_int_to_object(a->dt.a.l);
+			return sll_int_to_object(a->dt.a.length);
 		case SLL_OBJECT_TYPE_MAP:
-			return sll_int_to_object(a->dt.m.l);
+			return sll_int_to_object(a->dt.m.length);
 		default:
 			SLL_UNREACHABLE();
 	}

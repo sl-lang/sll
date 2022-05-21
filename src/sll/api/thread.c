@@ -18,7 +18,7 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_thread_cr
 	if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_THREADS)){
 		return -1;
 	}
-	sll_thread_index_t o=sll_thread_create(fn,args->v,args->l);
+	sll_thread_index_t o=sll_thread_create(fn,args->data,args->length);
 	return (!sll_thread_start(o)?-1:o);
 }
 
