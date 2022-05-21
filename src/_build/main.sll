@@ -9,11 +9,16 @@
 	"@build-script/operator_parser.sll"
 	"@build-script/util.sll"
 	"@build-script/website.sll"
+	"file.sll"
 	"sys.sll"
 )
 
 
 
+(<- file$write
+	(<- file$open "build/version" "w")
+	config$VERSION
+)
 (<- util$create_output_dir)
 (<- hashlist$init)
 (<- assembly$generate_assembly_optimizer)
