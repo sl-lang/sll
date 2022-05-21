@@ -307,7 +307,7 @@
 		"help_text.txt"
 		"memory_fail.txt"
 	]
-	[".asm" ".c" ".h"]
+	[".asm" ".c" ".h" ".inc"]
 	"build/.files"
 	"src/sll/include/"
 	(+ output_executable_args ["-b" "-d" "-D" "-n" "-N" "/" "-R" "-O" "build/lib/stdlib.slb" COMMAND_MARKER_INPUT])

@@ -38,19 +38,24 @@
 	(= state (: _hash_map file_path))
 	(? (! state) (@@ STATE_NO_UPDATE))
 	(? (!== state$state STATE_UNKNOWN) (@@ state$state))
+	(= src (<- util$get_source_file_path file_path))
 	(= data (<- string$split
 		(<- string$replace
 			(<- file$read
-				(<- file$open (<- util$get_source_file_path file_path) "r")
+				(<- file$open src "r")
 			)
 			"\r\n"
 			'\n'
 		)
 		'\n'
 	))
+	(= include_prefix (?: (=== (>> src (<- string$index_reverse src '.')) ".asm")
+		"%include"
+		"#include"
+	))
 	(-> (= i 0) (< i ($ data))
 		(= line (<- string$trim (: data i)))
-		(? (<- string$starts line "#include") {
+		(? (<- string$starts line include_prefix) {
 			(= include_file_path (+
 				config$INCLUDE_ROOT_DIRECTORY_PATH
 				(>>
