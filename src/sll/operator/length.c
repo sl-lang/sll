@@ -11,13 +11,13 @@
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_len(sll_object_t* a){
 	switch (a->t){
 		case SLL_OBJECT_TYPE_INT:
-			return sll_int_to_object(a->dt.int_value);
+			return sll_int_to_object(a->dt.int_);
 		case SLL_OBJECT_TYPE_FLOAT:
-			return sll_float_to_object(a->dt.float_value);
+			return sll_float_to_object(a->dt.float_);
 		case SLL_OBJECT_TYPE_CHAR:
-			return sll_int_to_object(a->dt.char_value);
+			return sll_int_to_object(a->dt.char_);
 		case SLL_OBJECT_TYPE_COMPLEX:
-			return sll_float_to_object(COMPLEX_ABS(a->dt.complex_value));
+			return sll_float_to_object(COMPLEX_ABS(a->dt.complex_));
 		case SLL_OBJECT_TYPE_STRING:
 			return sll_int_to_object(a->dt.string.l);
 		case SLL_OBJECT_TYPE_ARRAY:

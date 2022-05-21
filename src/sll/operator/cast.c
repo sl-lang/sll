@@ -80,14 +80,14 @@ static sll_object_t* _array_from_length(sll_integer_t len){
 
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_cast(sll_object_t* a,sll_object_t* b){
-	if (b->t!=SLL_OBJECT_TYPE_INT||b->dt.int_value<0||b->dt.int_value==a->t||b->dt.int_value==SLL_OBJECT_TYPE_OBJECT){
+	if (b->t!=SLL_OBJECT_TYPE_INT||b->dt.int_<0||b->dt.int_==a->t||b->dt.int_==SLL_OBJECT_TYPE_OBJECT){
 		SLL_ACQUIRE(a);
 		return a;
 	}
 	if (a->t>SLL_MAX_OBJECT_TYPE){
 		if (sll_current_runtime_data&&a->t<=sll_current_runtime_data->tt->l+SLL_MAX_OBJECT_TYPE){
 			const sll_object_type_data_t* dt=*(sll_current_runtime_data->tt->dt+a->t-SLL_MAX_OBJECT_TYPE-1);
-			switch (b->dt.int_value){
+			switch (b->dt.int_){
 				case SLL_OBJECT_TYPE_INT:
 					return sll_int_to_object(dt->l);
 				case SLL_OBJECT_TYPE_FLOAT:
@@ -125,21 +125,21 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_cast(sll_object_t* 
 			return a;
 		}
 	}
-	if (b->dt.int_value>SLL_MAX_OBJECT_TYPE){
-		if (sll_current_runtime_data&&b->dt.int_value<=sll_current_runtime_data->tt->l+SLL_MAX_OBJECT_TYPE){
+	if (b->dt.int_>SLL_MAX_OBJECT_TYPE){
+		if (sll_current_runtime_data&&b->dt.int_<=sll_current_runtime_data->tt->l+SLL_MAX_OBJECT_TYPE){
 			sll_object_t* src=sll_operator_cast(a,sll_static_int[SLL_OBJECT_TYPE_ARRAY]);
-			sll_object_t* o=sll_create_object_type(sll_current_runtime_data->tt,(sll_object_type_t)(b->dt.int_value),src->dt.array.data,src->dt.array.length);
+			sll_object_t* o=sll_create_object_type(sll_current_runtime_data->tt,(sll_object_type_t)(b->dt.int_),src->dt.array.data,src->dt.array.length);
 			SLL_RELEASE(src);
 			return o;
 		}
 		SLL_ACQUIRE(a);
 		return a;
 	}
-	switch (COMBINE_TYPES(a->t,b->dt.int_value)){
+	switch (COMBINE_TYPES(a->t,b->dt.int_)){
 		case COMBINED_TYPE_IF:
-			return sll_float_to_object((sll_float_t)(a->dt.int_value));
+			return sll_float_to_object((sll_float_t)(a->dt.int_));
 		case COMBINED_TYPE_IC:
-			return SLL_FROM_CHAR((a->dt.int_value)&0xff);
+			return SLL_FROM_CHAR((a->dt.int_)&0xff);
 		case COMBINED_TYPE_IS:
 		case COMBINED_TYPE_FS:
 		case COMBINED_TYPE_MS:
@@ -149,7 +149,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_cast(sll_object_t* 
 				return o;
 			}
 		case COMBINED_TYPE_IA:
-			return _array_from_length(a->dt.int_value);
+			return _array_from_length(a->dt.int_);
 		case COMBINED_TYPE_IM:
 		case COMBINED_TYPE_FM:
 		case COMBINED_TYPE_CM:
@@ -179,17 +179,17 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_cast(sll_object_t* 
 				return o;
 			}
 		case COMBINED_TYPE_FI:
-			return sll_int_to_object((sll_integer_t)(a->dt.float_value));
+			return sll_int_to_object((sll_integer_t)(a->dt.float_));
 		case COMBINED_TYPE_FC:
-			return SLL_FROM_CHAR((sll_char_t)(a->dt.float_value));
+			return SLL_FROM_CHAR((sll_char_t)(a->dt.float_));
 		case COMBINED_TYPE_FA:
-			return _array_from_length((sll_integer_t)round(a->dt.float_value));
+			return _array_from_length((sll_integer_t)round(a->dt.float_));
 		case COMBINED_TYPE_CI:
-			return sll_int_to_object(a->dt.char_value);
+			return sll_int_to_object(a->dt.char_);
 		case COMBINED_TYPE_CF:
-			return sll_float_to_object(a->dt.char_value);
+			return sll_float_to_object(a->dt.char_);
 		case COMBINED_TYPE_CS:
-			return sll_char_to_string_object(a->dt.char_value);
+			return sll_char_to_string_object(a->dt.char_);
 		case COMBINED_TYPE_SI:
 			return sll_int_to_object(sll_string_parse_int(&(a->dt.string)));
 		case COMBINED_TYPE_SF:

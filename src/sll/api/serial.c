@@ -486,13 +486,13 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_error_t sll_encode_object(sll_file_t* f,sl
 						return err;
 					}
 					if (dt->dt[i].t==SLL_OBJECT_TYPE_INT){
-						err=sll_encode_signed_integer(f,p->int_value);
+						err=sll_encode_signed_integer(f,p->int_);
 					}
 					else if (dt->dt[i].t==SLL_OBJECT_TYPE_FLOAT){
-						sll_file_write(f,&(p->float_value),sizeof(sll_float_t),&err);
+						sll_file_write(f,&(p->float_),sizeof(sll_float_t),&err);
 					}
 					else{
-						sll_file_write_char(f,p->char_value,&err);
+						sll_file_write_char(f,p->char_,&err);
 					}
 					if (err!=SLL_NO_ERROR){
 						return err;
@@ -509,13 +509,13 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_error_t sll_encode_object(sll_file_t* f,sl
 		}
 		switch (k->t){
 			case SLL_OBJECT_TYPE_INT:
-				err=sll_encode_signed_integer(f,k->dt.int_value);
+				err=sll_encode_signed_integer(f,k->dt.int_);
 				break;
 			case SLL_OBJECT_TYPE_FLOAT:
-				sll_file_write(f,&(k->dt.float_value),sizeof(sll_float_t),&err);
+				sll_file_write(f,&(k->dt.float_),sizeof(sll_float_t),&err);
 				break;
 			case SLL_OBJECT_TYPE_CHAR:
-				sll_file_write_char(f,k->dt.char_value,&err);
+				sll_file_write_char(f,k->dt.char_,&err);
 				break;
 			case SLL_OBJECT_TYPE_COMPLEX:
 				SLL_UNIMPLEMENTED();

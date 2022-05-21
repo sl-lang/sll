@@ -46,14 +46,14 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_file_offset_t sll_get_location(const sll_a
 __SLL_EXTERNAL void sll_get_name(sll_object_t* v,sll_string_t* o){
 	SLL_INIT_STRING(o);
 	if (v->t==SLL_OBJECT_TYPE_INT){
-		if (v->dt.int_value<0){
-			sll_function_index_t i=(sll_function_index_t)(~v->dt.int_value);
+		if (v->dt.int_<0){
+			sll_function_index_t i=(sll_function_index_t)(~v->dt.int_);
 			if (i<sll_current_runtime_data->ift->l){
 				sll_string_clone(&((sll_current_runtime_data->ift->dt+i)->nm),o);
 			}
 		}
-		else if (v->dt.int_value&&v->dt.int_value<=sll_current_runtime_data->a_dt->ft.l){
-			sll_string_clone(sll_current_runtime_data->a_dt->st.dt+(sll_current_runtime_data->a_dt->ft.dt+v->dt.int_value-1)->nm,o);
+		else if (v->dt.int_&&v->dt.int_<=sll_current_runtime_data->a_dt->ft.l){
+			sll_string_clone(sll_current_runtime_data->a_dt->st.dt+(sll_current_runtime_data->a_dt->ft.dt+v->dt.int_-1)->nm,o);
 		}
 	}
 	else{

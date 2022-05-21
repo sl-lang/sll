@@ -256,7 +256,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_array_equal_map(const sll_array
 	}
 	for (sll_map_length_t i=0;i<(m->length<<1);i+=2){
 		sll_object_t* e=m->data[i];
-		sll_bool_t st=(e->t!=SLL_OBJECT_TYPE_INT||e->dt.int_value<0||e->dt.int_value>=a->length||!sll_operator_strict_equal(m->data[i+1],a->data[e->dt.int_value]));
+		sll_bool_t st=(e->t!=SLL_OBJECT_TYPE_INT||e->dt.int_<0||e->dt.int_>=a->length||!sll_operator_strict_equal(m->data[i+1],a->data[e->dt.int_]));
 		if (st){
 			return 0;
 		}

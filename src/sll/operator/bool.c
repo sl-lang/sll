@@ -8,13 +8,13 @@
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_operator_bool(sll_object_t* a){
 	switch (a->t){
 		case SLL_OBJECT_TYPE_INT:
-			return !!a->dt.int_value;
+			return !!a->dt.int_;
 		case SLL_OBJECT_TYPE_FLOAT:
-			return !!a->dt.float_value;
+			return !!a->dt.float_;
 		case SLL_OBJECT_TYPE_CHAR:
-			return !!a->dt.char_value;
+			return !!a->dt.char_;
 		case SLL_OBJECT_TYPE_COMPLEX:
-			return (!!a->dt.complex_value.real)|(!!a->dt.complex_value.imag);
+			return (!!a->dt.complex_.real)|(!!a->dt.complex_.imag);
 		case SLL_OBJECT_TYPE_STRING:
 			return !!a->dt.string.l;
 		case SLL_OBJECT_TYPE_ARRAY:

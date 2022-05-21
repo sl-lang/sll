@@ -14,11 +14,11 @@
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_mod(sll_object_t* a,sll_object_t* b){
 	switch (COMBINED_ARGS){
 		case COMBINED_TYPE_II:
-			return sll_int_to_object(a->dt.int_value%b->dt.int_value);
+			return sll_int_to_object(a->dt.int_%b->dt.int_);
 		case COMBINED_TYPE_IF:
-			return sll_float_to_object(sll_math_mod((sll_float_t)(a->dt.int_value),b->dt.float_value));
+			return sll_float_to_object(sll_math_mod((sll_float_t)(a->dt.int_),b->dt.float_));
 		case COMBINED_TYPE_IC:
-			return sll_int_to_object(a->dt.int_value%b->dt.char_value);
+			return sll_int_to_object(a->dt.int_%b->dt.char_);
 		case COMBINED_TYPE_IS:
 		case COMBINED_TYPE_FS:
 			{
@@ -51,21 +51,21 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_mod(sll_object_t* a
 				return o;
 			}
 		case COMBINED_TYPE_FI:
-			return sll_float_to_object(sll_math_mod(a->dt.float_value,(sll_float_t)(b->dt.int_value)));
+			return sll_float_to_object(sll_math_mod(a->dt.float_,(sll_float_t)(b->dt.int_)));
 		case COMBINED_TYPE_FF:
-			return sll_float_to_object(sll_math_mod(a->dt.float_value,b->dt.float_value));
+			return sll_float_to_object(sll_math_mod(a->dt.float_,b->dt.float_));
 		case COMBINED_TYPE_FC:
-			return sll_float_to_object(sll_math_mod(a->dt.float_value,b->dt.char_value));
+			return sll_float_to_object(sll_math_mod(a->dt.float_,b->dt.char_));
 		case COMBINED_TYPE_CI:
-			return SLL_FROM_CHAR(a->dt.char_value%b->dt.int_value);
+			return SLL_FROM_CHAR(a->dt.char_%b->dt.int_);
 		case COMBINED_TYPE_CF:
-			return sll_float_to_object(sll_math_mod(a->dt.char_value,b->dt.float_value));
+			return sll_float_to_object(sll_math_mod(a->dt.char_,b->dt.float_));
 		case COMBINED_TYPE_CC:
-			return SLL_FROM_CHAR(a->dt.char_value%b->dt.char_value);
+			return SLL_FROM_CHAR(a->dt.char_%b->dt.char_);
 		case COMBINED_TYPE_CS:
 			{
 				sll_object_t* o=sll_create_object(SLL_OBJECT_TYPE_ARRAY);
-				sll_string_split_char(&(b->dt.string),a->dt.char_value,&(o->dt.array));
+				sll_string_split_char(&(b->dt.string),a->dt.char_,&(o->dt.array));
 				return o;
 			}
 		case COMBINED_TYPE_SI:
@@ -80,7 +80,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_mod(sll_object_t* a
 		case COMBINED_TYPE_SC:
 			{
 				sll_object_t* o=sll_create_object(SLL_OBJECT_TYPE_ARRAY);
-				sll_string_split_char(&(a->dt.string),b->dt.char_value,&(o->dt.array));
+				sll_string_split_char(&(a->dt.string),b->dt.char_,&(o->dt.array));
 				return o;
 			}
 		case COMBINED_TYPE_SS:

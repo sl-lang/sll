@@ -89,15 +89,15 @@ typedef struct _SLL_MAP{
  * \name sll_object_field_t
  * \group gc
  * \desc Docs!
- * \arg sll_integer_t int_value
- * \arg sll_float_t float_value
- * \arg sll_char_t char_value
+ * \arg sll_integer_t int_
+ * \arg sll_float_t float_
+ * \arg sll_char_t char_
  * \arg struct _SLL_OBJECT* any
  */
 typedef union _SLL_OBJECT_FIELD{
-	sll_integer_t int_value;
-	sll_float_t float_value;
-	sll_char_t char_value;
+	sll_integer_t int_;
+	sll_float_t float_;
+	sll_char_t char_;
 	struct _SLL_OBJECT* any;
 } sll_object_field_t;
 
@@ -123,22 +123,22 @@ typedef struct _SLL_OBJECT_PTR{
  * \name sll_object_data_t
  * \group gc
  * \desc Docs!
- * \arg sll_integer_t int_value
- * \arg sll_float_t float_value
- * \arg sll_char_t char_value
- * \arg sll_complex_t complex_value
- * \arg sll_string_t s
- * \arg sll_array_t a
- * \arg sll_map_t m
- * \arg sll_object_field_t* p
+ * \arg sll_integer_t int_
+ * \arg sll_float_t float_
+ * \arg sll_char_t char_
+ * \arg sll_complex_t complex_
+ * \arg sll_string_t string
+ * \arg sll_array_t array
+ * \arg sll_map_t map
+ * \arg sll_object_field_t* fields
  * \arg sll_object_ptr_t _ptr
  * \arg sll_array_length_t _idx
  */
 typedef union _SLL_OBJECT_DATA{
-	sll_integer_t int_value;
-	sll_float_t float_value;
-	sll_char_t char_value;
-	sll_complex_t complex_value;
+	sll_integer_t int_;
+	sll_float_t float_;
+	sll_char_t char_;
+	sll_complex_t complex_;
 	sll_string_t string;
 	sll_array_t array;
 	sll_map_t map;

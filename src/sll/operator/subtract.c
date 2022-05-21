@@ -30,11 +30,11 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_sub(sll_object_t* a
 	}
 	switch (COMBINED_ARGS){
 		case COMBINED_TYPE_II:
-			return sll_int_to_object(a->dt.int_value-b->dt.int_value);
+			return sll_int_to_object(a->dt.int_-b->dt.int_);
 		case COMBINED_TYPE_IF:
-			return sll_float_to_object(a->dt.int_value-b->dt.float_value);
+			return sll_float_to_object(a->dt.int_-b->dt.float_);
 		case COMBINED_TYPE_IC:
-			return sll_int_to_object(a->dt.int_value-b->dt.char_value);
+			return sll_int_to_object(a->dt.int_-b->dt.char_);
 		case COMBINED_TYPE_IS:
 		case COMBINED_TYPE_FS:
 		case COMBINED_TYPE_CS:
@@ -70,17 +70,17 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_sub(sll_object_t* a
 				return o;
 			}
 		case COMBINED_TYPE_FI:
-			return sll_float_to_object(a->dt.float_value-b->dt.int_value);
+			return sll_float_to_object(a->dt.float_-b->dt.int_);
 		case COMBINED_TYPE_FF:
-			return sll_float_to_object(a->dt.float_value-b->dt.float_value);
+			return sll_float_to_object(a->dt.float_-b->dt.float_);
 		case COMBINED_TYPE_FC:
-			return sll_float_to_object(a->dt.float_value-b->dt.char_value);
+			return sll_float_to_object(a->dt.float_-b->dt.char_);
 		case COMBINED_TYPE_CI:
-			return sll_int_to_object(a->dt.char_value-b->dt.int_value);
+			return sll_int_to_object(a->dt.char_-b->dt.int_);
 		case COMBINED_TYPE_CF:
-			return sll_float_to_object(a->dt.char_value-b->dt.float_value);
+			return sll_float_to_object(a->dt.char_-b->dt.float_);
 		case COMBINED_TYPE_CC:
-			return SLL_FROM_CHAR(a->dt.char_value-b->dt.char_value);
+			return SLL_FROM_CHAR(a->dt.char_-b->dt.char_);
 		case COMBINED_TYPE_SI:
 		case COMBINED_TYPE_SF:
 		case COMBINED_TYPE_SC:

@@ -60,7 +60,7 @@
 		return; \
 	} \
 	sll_object_t* obj=sll_operator_cast(arg,sll_static_int[SLL_OBJECT_TYPE_INT]); \
-	*var=(obj->dt.int_value<0?0:(obj->dt.int_value>__SLL_U##sz##_MAX?__SLL_U##sz##_MAX:(__SLL_U##sz)(obj->dt.int_value))); \
+	*var=(obj->dt.int_<0?0:(obj->dt.int_>__SLL_U##sz##_MAX?__SLL_U##sz##_MAX:(__SLL_U##sz)(obj->dt.int_))); \
 	SLL_RELEASE(obj);
 #define PARSE_TYPE(type,name,field,init) \
 	if (flags&PARSE_ARGS_FLAG_ARRAY){ \
@@ -106,7 +106,7 @@
 		return; \
 	} \
 	type** var=GET_PTR(type*); \
-	if ((flags&PARSE_ARGS_FLAG_NULL)&&(!arg||(arg->t==SLL_OBJECT_TYPE_INT&&!arg->dt.int_value))){ \
+	if ((flags&PARSE_ARGS_FLAG_NULL)&&(!arg||(arg->t==SLL_OBJECT_TYPE_INT&&!arg->dt.int_))){ \
 		*var=NULL; \
 	} \
 	else if (!arg){ \
@@ -189,13 +189,13 @@ static void _parse_uint32(sll_object_t* arg,arg_parse_flags_t flags,arg_state_t*
 
 
 static void _parse_int(sll_object_t* arg,arg_parse_flags_t flags,arg_state_t** st,arg_output_t* o){
-	PARSE_TYPE(sll_integer_t,INT,int_value,INIT_ZERO);
+	PARSE_TYPE(sll_integer_t,INT,int_,INIT_ZERO);
 }
 
 
 
 static void _parse_float(sll_object_t* arg,arg_parse_flags_t flags,arg_state_t** st,arg_output_t* o){
-	PARSE_TYPE(sll_float_t,FLOAT,float_value,INIT_ZERO);
+	PARSE_TYPE(sll_float_t,FLOAT,float_,INIT_ZERO);
 }
 
 
@@ -214,11 +214,11 @@ static void _parse_int_or_float(sll_object_t* arg,arg_parse_flags_t flags,arg_st
 	}
 	else if (arg->t==SLL_OBJECT_TYPE_INT){
 		var->t=SLL_PARSE_ARGS_TYPE_INT;
-		var->dt.i=arg->dt.int_value;
+		var->dt.i=arg->dt.int_;
 	}
 	else if (arg->t==SLL_OBJECT_TYPE_FLOAT){
 		var->t=SLL_PARSE_ARGS_TYPE_FLOAT;
-		var->dt.f=arg->dt.float_value;
+		var->dt.f=arg->dt.float_;
 	}
 	else{
 		SLL_UNIMPLEMENTED();
@@ -228,13 +228,13 @@ static void _parse_int_or_float(sll_object_t* arg,arg_parse_flags_t flags,arg_st
 
 
 static void _parse_char(sll_object_t* arg,arg_parse_flags_t flags,arg_state_t** st,arg_output_t* o){
-	PARSE_TYPE(sll_char_t,CHAR,char_value,INIT_ZERO);
+	PARSE_TYPE(sll_char_t,CHAR,char_,INIT_ZERO);
 }
 
 
 
 static void _parse_complex(sll_object_t* arg,arg_parse_flags_t flags,arg_state_t** st,arg_output_t* o){
-	PARSE_TYPE(sll_complex_t,COMPLEX,complex_value,SLL_INIT_COMPLEX);
+	PARSE_TYPE(sll_complex_t,COMPLEX,complex_,SLL_INIT_COMPLEX);
 }
 
 
@@ -252,15 +252,15 @@ static void _parse_float_or_complex(sll_object_t* arg,arg_parse_flags_t flags,ar
 		var->dt.f=0;
 	}
 	else if (arg->t==SLL_OBJECT_TYPE_FLOAT){
-		var->dt.f=arg->dt.float_value;
+		var->dt.f=arg->dt.float_;
 	}
 	else if (arg->t==SLL_OBJECT_TYPE_COMPLEX){
 		var->t=SLL_PARSE_ARGS_TYPE_COMPLEX;
-		var->dt.d=arg->dt.complex_value;
+		var->dt.d=arg->dt.complex_;
 	}
 	else{
 		sll_object_t* obj=sll_operator_cast(arg,sll_static_int[SLL_OBJECT_TYPE_FLOAT]);
-		var->dt.f=obj->dt.float_value;
+		var->dt.f=obj->dt.float_;
 		SLL_RELEASE(obj);
 	}
 }
@@ -281,18 +281,18 @@ static void _parse_int_or_float_or_complex(sll_object_t* arg,arg_parse_flags_t f
 	}
 	else if (arg->t==SLL_OBJECT_TYPE_INT){
 		var->t=SLL_PARSE_ARGS_TYPE_INT;
-		var->dt.i=arg->dt.int_value;
+		var->dt.i=arg->dt.int_;
 	}
 	else if (arg->t==SLL_OBJECT_TYPE_FLOAT){
-		var->dt.f=arg->dt.float_value;
+		var->dt.f=arg->dt.float_;
 	}
 	else if (arg->t==SLL_OBJECT_TYPE_COMPLEX){
 		var->t=SLL_PARSE_ARGS_TYPE_COMPLEX;
-		var->dt.d=arg->dt.complex_value;
+		var->dt.d=arg->dt.complex_;
 	}
 	else{
 		sll_object_t* obj=sll_operator_cast(arg,sll_static_int[SLL_OBJECT_TYPE_FLOAT]);
-		var->dt.f=obj->dt.float_value;
+		var->dt.f=obj->dt.float_;
 		SLL_RELEASE(obj);
 	}
 }
@@ -321,7 +321,7 @@ static void _parse_char_or_string(sll_object_t* arg,arg_parse_flags_t flags,arg_
 	}
 	else if (arg->t==SLL_OBJECT_TYPE_CHAR){
 		var->t=SLL_PARSE_ARGS_TYPE_CHAR;
-		var->dt.c=arg->dt.char_value;
+		var->dt.c=arg->dt.char_;
 	}
 	else if (arg->t==SLL_OBJECT_TYPE_STRING){
 		var->t=SLL_PARSE_ARGS_TYPE_STRING;

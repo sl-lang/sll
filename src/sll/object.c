@@ -51,13 +51,13 @@ static void _zero_struct(const sll_object_type_table_t* tt,const sll_object_type
 	while (i<dt->l){
 		switch (dt->dt[i].t){
 			case SLL_OBJECT_TYPE_INT:
-				p->int_value=0;
+				p->int_=0;
 				break;
 			case SLL_OBJECT_TYPE_FLOAT:
-				p->float_value=0;
+				p->float_=0;
 				break;
 			case SLL_OBJECT_TYPE_CHAR:
-				p->char_value=0;
+				p->char_=0;
 				break;
 			case SLL_OBJECT_TYPE_COMPLEX:
 				p->any=SLL_ACQUIRE_STATIC(complex_zero);
@@ -105,13 +105,13 @@ static void _set_field(const sll_object_type_table_t* tt,sll_object_field_t* o,s
 	v=sll_operator_cast(v,sll_static_int[(t<=SLL_MAX_OBJECT_TYPE?t:SLL_OBJECT_TYPE_ARRAY)]);
 	switch (t){
 		case SLL_OBJECT_TYPE_INT:
-			o->int_value=v->dt.int_value;
+			o->int_=v->dt.int_;
 			break;
 		case SLL_OBJECT_TYPE_FLOAT:
-			o->float_value=v->dt.float_value;
+			o->float_=v->dt.float_;
 			break;
 		case SLL_OBJECT_TYPE_CHAR:
-			o->char_value=v->dt.char_value;
+			o->char_=v->dt.char_;
 			break;
 		case SLL_OBJECT_TYPE_COMPLEX:
 		case SLL_OBJECT_TYPE_STRING:
@@ -196,7 +196,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_type_t sll_add_type(sll_object_type
 	sll_arg_count_t i=0;
 	while (i<l){
 		sll_object_t* v=sll_operator_cast((sll_object_t*)(*p),sll_static_int[SLL_OBJECT_TYPE_INT]);
-		sll_integer_t vv=v->dt.int_value;
+		sll_integer_t vv=v->dt.int_;
 		SLL_RELEASE(v);
 		n->dt[i].c=0;
 		if (vv<0){
@@ -397,10 +397,10 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_object_clone(const sll_objec
 		switch (dt->dt[i].t){
 			case SLL_OBJECT_TYPE_INT:
 			case SLL_OBJECT_TYPE_CHAR:
-				dst->int_value=src->int_value;
+				dst->int_=src->int_;
 				break;
 			case SLL_OBJECT_TYPE_FLOAT:
-				dst->float_value=src->float_value;
+				dst->float_=src->float_;
 				break;
 			case SLL_OBJECT_TYPE_COMPLEX:
 				SLL_ACQUIRE(src->any);
@@ -430,11 +430,11 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_object_get_field(const sll_o
 	sll_object_field_t* v=o->dt.fields+off;
 	switch (dt->dt[off].t){
 		case SLL_OBJECT_TYPE_INT:
-			return sll_int_to_object(v->int_value);
+			return sll_int_to_object(v->int_);
 		case SLL_OBJECT_TYPE_FLOAT:
-			return sll_float_to_object(v->float_value);
+			return sll_float_to_object(v->float_);
 		case SLL_OBJECT_TYPE_CHAR:
-			return SLL_FROM_CHAR(v->char_value);
+			return SLL_FROM_CHAR(v->char_);
 	}
 	SLL_ACQUIRE(v->any);
 	return v->any;
@@ -468,13 +468,13 @@ __SLL_EXTERNAL void sll_object_to_array(const sll_object_type_table_t* tt,sll_ob
 	for (sll_arg_count_t i=0;i<dt->l;i++){
 		switch (dt->dt[i].t){
 			case SLL_OBJECT_TYPE_INT:
-				out->data[i]=sll_int_to_object(v->int_value);
+				out->data[i]=sll_int_to_object(v->int_);
 				break;
 			case SLL_OBJECT_TYPE_FLOAT:
-				out->data[i]=sll_float_to_object(v->float_value);
+				out->data[i]=sll_float_to_object(v->float_);
 				break;
 			case SLL_OBJECT_TYPE_CHAR:
-				out->data[i]=SLL_FROM_CHAR(v->char_value);
+				out->data[i]=SLL_FROM_CHAR(v->char_);
 				break;
 			default:
 				SLL_ACQUIRE(v->any);
@@ -496,13 +496,13 @@ __SLL_EXTERNAL void sll_object_to_map(const sll_object_type_table_t* tt,sll_obje
 	for (sll_arg_count_t i=0;i<dt->l;i++){
 		out->data[i<<1]=sll_string_to_object(&(dt->dt[i].nm));
 		if (dt->dt[i].t==SLL_OBJECT_TYPE_INT){
-			out->data[(i<<1)+1]=sll_int_to_object(p->int_value);
+			out->data[(i<<1)+1]=sll_int_to_object(p->int_);
 		}
 		else if (dt->dt[i].t==SLL_OBJECT_TYPE_FLOAT){
-			out->data[(i<<1)+1]=sll_float_to_object(p->float_value);
+			out->data[(i<<1)+1]=sll_float_to_object(p->float_);
 		}
 		else if (dt->dt[i].t==SLL_OBJECT_TYPE_CHAR){
-			out->data[(i<<1)+1]=SLL_FROM_CHAR(p->char_value);
+			out->data[(i<<1)+1]=SLL_FROM_CHAR(p->char_);
 		}
 		else{
 			SLL_ACQUIRE(p->any);
