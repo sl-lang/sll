@@ -8,7 +8,6 @@ import sys
 COMMENT_REGEX=re.compile(r"\/\*.*?\*\/|\/\/.*?$",re.DOTALL|re.MULTILINE)
 INCLUDE_REGEX=re.compile(r"""^\s*#\s*include\s*(<[^>]*>|\"[^\"]*\")\s*$""",re.MULTILINE)
 INTERNAL_SLL_HEADERS=["_dispatcher.h"]
-PREPROCESSOR_DEFINE_LINE_CONTINUE_REGEX=re.compile(r"\s*\\\n[ \t\r]*")
 PREPROCESSOR_DEFINE_REGEX=re.compile(r"^[ \t\r]*(#define [a-zA-Z0-9_]+\([^\)]*\))[ \t\r]*(\\\n(?:[ \t\r]*.*\\\n)+[ \t\r]*.*\n?)",re.MULTILINE)
 STACK_ADD=0
 STACK_SKIP=1
@@ -36,13 +35,13 @@ def _add_source_file(b_fp,fp,file_list,include_list,cycle):
 
 
 
-def generate_header(src_fp,out_fp,time,verbose):
-	log=(print if verbose else lambda _:None)
-	log(f"Combining header files from '{src_fp}' to '{out_fp}'...\n  Listing files...")
+if (__name__=="__main__"):
+	log=(print if sys.argv[2]=="1" else lambda _:None)
+	log(f"Combining header files from 'src/sll/include' to 'build/sll.h'...\n  Listing files...")
 	src=""
 	file_list=[]
 	include_list=[]
-	src_fp=src_fp.replace("\\","/").rstrip("/")+"/"
+	src_fp="src/sll/include/"
 	for r,_,fl in os.walk(src_fp):
 		if ("internal" in r or "generated" in r):
 			continue
@@ -51,13 +50,13 @@ def generate_header(src_fp,out_fp,time,verbose):
 				include_name=os.path.join(r,f)[len(src_fp):].replace("\\","/")
 				src+=_add_source_file(src_fp,include_name,file_list,include_list,[])
 	log(f"    Found {len(file_list)} files\n  Preprocessing combined header files...")
-	defines={"__SLL_TIME_RAW__":time,f"__SLL_BUILD_{platform.system().upper()}":"1","NULL":"((void*)0)"}
+	defines={"__SLL_TIME_RAW__":sys.argv[1],f"__SLL_BUILD_{platform.system().upper()}":"1","NULL":"((void*)0)"}
 	if (os.getenv("GITHUB_SHA") is not None):
 		defines["__SLL_SHA__"]="\""+os.getenv("GITHUB_SHA")[:7]+"\""
 		defines["__SLL_FULL_SHA__"]="\""+os.getenv("GITHUB_SHA")+"\""
 	stack=[STACK_ADD]
 	o=[]
-	for e in PREPROCESSOR_DEFINE_REGEX.sub(lambda g:g.group(1)+" "+PREPROCESSOR_DEFINE_LINE_CONTINUE_REGEX.sub(r"",g.group(2)),COMMENT_REGEX.sub(r"",src).strip().replace("\r\n","\n")).split("\n"):
+	for e in PREPROCESSOR_DEFINE_REGEX.sub(lambda g:g.group(1)+" "+g.group(2).replace("\\\n","").replace("\t","").replace(" ",""),COMMENT_REGEX.sub(r"",src).strip().replace("\r\n","\n")).split("\n"):
 		if (not e):
 			continue
 		if (e[0]=="#"):
@@ -100,7 +99,6 @@ def generate_header(src_fp,out_fp,time,verbose):
 				continue
 		if (stack[-1] not in [STACK_SKIP,STACK_SKIP_INNER]):
 			o.append(e)
-	log(f"  Writing header file to '{out_fp}...")
 	regex_defines=[]
 	for k,v in defines.items():
 		i=0
@@ -114,15 +112,11 @@ def generate_header(src_fp,out_fp,time,verbose):
 					break
 			i+=1
 		regex_defines.append((re.compile(fr"\b{k}\b"),v))
-	with open(out_fp,"w") as wf:
+	log(f"  Writing header file to 'build/sll.h'...")
+	with open("build/sll.h","w") as wf:
 		wf.write("#ifndef __SLL_H__\n#define __SLL_H__ 1")
 		for k in o:
 			for nm,v in regex_defines:
 				k=nm.sub(v,k)
 			wf.write("\n"+k)
 		wf.write("\n#endif\n")
-
-
-
-if (__name__=="__main__"):
-	generate_header("src/sll/include","build/sll.h",sys.argv[1],sys.argv[2]=="1")
