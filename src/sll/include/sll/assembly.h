@@ -1530,7 +1530,7 @@
  * \arg sll_assembly_instruction_type_t ai
  * \ret sll_assembly_instruction_type_t
  */
-#define SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(ai) ((ai)->t&0x7f)
+#define SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(ai) ((ai)->type&0x7f)
 
 
 
@@ -1542,7 +1542,7 @@
  * \arg sll_assembly_instruction_type_t ai
  * \ret sll_bool_t
  */
-#define SLL_ASSEMBLY_INSTRUCTION_FLAG_IS_ANONYMOUS(ai) ((ai)->t>>7)
+#define SLL_ASSEMBLY_INSTRUCTION_FLAG_IS_ANONYMOUS(ai) ((ai)->type>>7)
 
 
 
@@ -1554,7 +1554,7 @@
  * \arg sll_assembly_instruction_type_t ai
  * \ret sll_bool_t
  */
-#define SLL_ASSEMBLY_INSTRUCTION_FLAG_IS_INPLACE(ai) ((ai)->t>>7)
+#define SLL_ASSEMBLY_INSTRUCTION_FLAG_IS_INPLACE(ai) ((ai)->type>>7)
 
 
 
@@ -1566,7 +1566,7 @@
  * \arg sll_assembly_instruction_type_t ai
  * \ret sll_bool_t
  */
-#define SLL_ASSEMBLY_INSTRUCTION_FLAG_IS_RELATIVE(ai) ((ai)->t>>7)
+#define SLL_ASSEMBLY_INSTRUCTION_FLAG_IS_RELATIVE(ai) ((ai)->type>>7)
 
 
 
@@ -1775,11 +1775,11 @@ typedef union _SLL_ASSEMBLY_INSTRUCTION_DATA{
  * \name sll_assembly_instruction_t
  * \group assembly
  * \desc Docs!
- * \arg sll_assembly_instruction_type_t t
+ * \arg sll_assembly_instruction_type_t type
  * \arg sll_assembly_instruction_data_t dt
  */
 typedef struct _SLL_ASSEMBLY_INSTRUCTION{
-	sll_assembly_instruction_type_t t;
+	sll_assembly_instruction_type_t type;
 	sll_assembly_instruction_data_t dt;
 } sll_assembly_instruction_t;
 

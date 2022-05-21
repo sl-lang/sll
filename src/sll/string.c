@@ -1010,7 +1010,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_length_t sll_string_index_multiple(
 		*(ml+i)=0x101010101010101ull*(*(cl+i));
 	}
 	wide_data_t n=0x8080808080808080ull*inv;
-	for (sll_string_length_t i=0;i<((s->l+7)>>3);i++){
+	for (sll_string_length_t i=0;i<((s->length+7)>>3);i++){
 		wide_data_t k=*p;
 		wide_data_t v=0;
 		for (sll_string_length_t j=0;j<cll;j++){
@@ -1021,7 +1021,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_length_t sll_string_index_multiple(
 		if (v){
 			sll_deallocate(ml);
 			sll_string_length_t o=(i<<3)+(FIND_FIRST_SET_BIT(v)>>3);
-			return (o>=s->l?SLL_MAX_STRING_LENGTH:o);
+			return (o>=s->length?SLL_MAX_STRING_LENGTH:o);
 		}
 		p++;
 	}
@@ -1131,15 +1131,15 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_length_t sll_string_index_reverse_m
 		}
 		v=(v&0x8080808080808080ull)^n;
 		if (v){
-			if (!i&&(s->l&7)){
-				v&=0xffffffffffffffffull>>((8-s->l)<<3);
+			if (!i&&(s->length&7)){
+				v&=0xffffffffffffffffull>>((8-s->length)<<3);
 				if (!v){
 					continue;
 				}
 			}
 			sll_deallocate(ml);
 			sll_string_length_t o=((l-i-1)<<3)+(FIND_LAST_SET_BIT(v)>>3);
-			return (o>=s->l?SLL_MAX_STRING_LENGTH:o);
+			return (o>=s->length?SLL_MAX_STRING_LENGTH:o);
 		}
 	}
 	sll_deallocate(ml);

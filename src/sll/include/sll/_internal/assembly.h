@@ -113,7 +113,7 @@ static __SLL_FORCE_INLINE void _assembly_optimize_int(sll_assembly_instruction_t
 	sll_size_t enc=SLL_ENCODE_SIGNED_INTEGER(ai->dt.i);
 	sll_size_t ci=sll_compress_integer(enc);
 	if (ci!=enc){
-		ai->t=SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_INT_COMPRESSED;
+		ai->type=SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_INT_COMPRESSED;
 		ai->dt.ci=(sll_compressed_integer_t)ci;
 	}
 }

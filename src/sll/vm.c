@@ -126,7 +126,7 @@
 #define NEXT_INSTRUCTION \
 	do{ \
 		ai++; \
-		if (ai->t==SLL_ASSEMBLY_INSTRUCTION_TYPE_CHANGE_STACK){ \
+		if (ai->type==SLL_ASSEMBLY_INSTRUCTION_TYPE_CHANGE_STACK){ \
 			ai=ai->dt._p; \
 		} \
 	} while (0)

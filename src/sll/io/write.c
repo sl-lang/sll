@@ -223,7 +223,7 @@ __SLL_EXTERNAL void sll_write_assembly(sll_file_t* wf,const sll_assembly_data_t*
 	}
 	const sll_assembly_instruction_t* ai=a_dt->h;
 	for (sll_instruction_index_t i=0;i<a_dt->ic;i++){
-		sll_file_write_char(wf,ai->t,NULL);
+		sll_file_write_char(wf,ai->type,NULL);
 		switch (SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(ai)){
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_INT:
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_CALL_ZERO:

@@ -38,14 +38,14 @@ sll_assembly_instruction_t* _acquire_next_instruction(sll_assembly_data_t* a_dt)
 		((assembly_stack_page_t*)(a_dt->_s.e))->nxt=n;
 		n->nxt=NULL;
 		sll_assembly_instruction_t* s=PTR(ADDR(n)+sizeof(assembly_stack_page_t));
-		s->t=SLL_ASSEMBLY_INSTRUCTION_TYPE_CHANGE_STACK;
+		s->type=SLL_ASSEMBLY_INSTRUCTION_TYPE_CHANGE_STACK;
 		s->dt._p=a_dt->_s.p-1;
-		SLL_ASSERT(a_dt->_s.p->t==SLL_ASSEMBLY_INSTRUCTION_TYPE_CHANGE_STACK);
+		SLL_ASSERT(a_dt->_s.p->type==SLL_ASSEMBLY_INSTRUCTION_TYPE_CHANGE_STACK);
 		a_dt->_s.p->dt._p=s+1;
 		a_dt->_s.c=((SLL_ROUND_PAGE(ASSEMBLY_INSTRUCTION_STACK_ALLOC_SIZE)-sizeof(assembly_stack_page_t)-sizeof(sll_assembly_instruction_t)*2)/sizeof(sll_assembly_instruction_t));
 		a_dt->_s.p=s+1;
 		s+=a_dt->_s.c+1;
-		s->t=SLL_ASSEMBLY_INSTRUCTION_TYPE_CHANGE_STACK;
+		s->type=SLL_ASSEMBLY_INSTRUCTION_TYPE_CHANGE_STACK;
 		s->dt._p=NULL;
 		a_dt->_s.e=n;
 	}
@@ -122,12 +122,12 @@ void _init_assembly_stack(sll_assembly_data_t* a_dt){
 	a_dt->_s.e=a_dt->_s.s;
 	((assembly_stack_page_t*)(a_dt->_s.s))->nxt=NULL;
 	sll_assembly_instruction_t* s=PTR(ADDR(a_dt->_s.s)+sizeof(assembly_stack_page_t));
-	s->t=SLL_ASSEMBLY_INSTRUCTION_TYPE_CHANGE_STACK;
+	s->type=SLL_ASSEMBLY_INSTRUCTION_TYPE_CHANGE_STACK;
 	s->dt._p=NULL;
 	a_dt->_s.c=((SLL_ROUND_PAGE(ASSEMBLY_INSTRUCTION_STACK_ALLOC_SIZE)-sizeof(assembly_stack_page_t)-sizeof(sll_assembly_instruction_t)*2)/sizeof(sll_assembly_instruction_t));
 	a_dt->_s.p=s+1;
 	s+=a_dt->_s.c+1;
-	s->t=SLL_ASSEMBLY_INSTRUCTION_TYPE_CHANGE_STACK;
+	s->type=SLL_ASSEMBLY_INSTRUCTION_TYPE_CHANGE_STACK;
 	s->dt._p=NULL;
 }
 

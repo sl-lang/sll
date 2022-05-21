@@ -267,7 +267,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_load_assembly(sll_file_t* rf,sl
 		if (c==SLL_END_OF_DATA){
 			return 0;
 		}
-		ai->t=(sll_assembly_instruction_type_t)c;
+		ai->type=(sll_assembly_instruction_type_t)c;
 		switch (SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(ai)){
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_INT:
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_CALL_ZERO:
