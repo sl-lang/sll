@@ -1577,7 +1577,7 @@
  * \desc Docs!
  * \type sll_assembly_data_t
  */
-#define SLL_INIT_ASSEMBLY_DATA_STRUCT {0,NULL,0,0,0,{0,NULL},{NULL,0},{NULL,0},{NULL,NULL,NULL,0}}
+#define SLL_INIT_ASSEMBLY_DATA_STRUCT {0,NULL,0,0,0,{NULL,0},{NULL,0},{NULL,0},{NULL,NULL,NULL,0}}
 
 
 
@@ -1589,7 +1589,7 @@
  * \arg const sll_assembly_function_t* f
  * \ret sll_arg_count_t
  */
-#define SLL_ASSEMBLY_FUNCTION_GET_ARGUMENT_COUNT(f) ((f)->ac>>1)
+#define SLL_ASSEMBLY_FUNCTION_GET_ARGUMENT_COUNT(f) ((f)->arg_count>>1)
 
 
 
@@ -1601,7 +1601,7 @@
  * \arg const sll_assembly_function_t* f
  * \ret sll_bool_t
  */
-#define SLL_ASSEMBLY_FUNCTION_IS_VAR_ARG(f) ((f)->ac&1)
+#define SLL_ASSEMBLY_FUNCTION_IS_VAR_ARG(f) ((f)->arg_count&1)
 
 
 
@@ -1790,14 +1790,14 @@ typedef struct _SLL_ASSEMBLY_INSTRUCTION{
  * \name sll_assembly_function_t
  * \group assembly
  * \desc Docs!
- * \arg sll_instruction_index_t i
- * \arg sll_arg_count_t ac
- * \arg sll_string_index_t nm
+ * \arg sll_instruction_index_t instruction_index
+ * \arg sll_arg_count_t arg_count
+ * \arg sll_string_index_t name_string_index
  */
 typedef struct _SLL_ASSEMBLY_FUNCTION{
-	sll_instruction_index_t i;
-	sll_arg_count_t ac;
-	sll_string_index_t nm;
+	sll_instruction_index_t instruction_index;
+	sll_arg_count_t arg_count;
+	sll_string_index_t name_string_index;
 } sll_assembly_function_t;
 
 
@@ -1807,12 +1807,12 @@ typedef struct _SLL_ASSEMBLY_FUNCTION{
  * \name sll_assembly_function_table_t
  * \group assembly
  * \desc Docs!
- * \arg sll_function_index_t l
- * \arg sll_assembly_function_t* dt
+ * \arg sll_assembly_function_t* data
+ * \arg sll_function_index_t length
  */
 typedef struct _SLL_ASSEMBLY_FUNCTION_TABLE{
-	sll_function_index_t l;
-	sll_assembly_function_t* dt;
+	sll_assembly_function_t* data;
+	sll_function_index_t length;
 } sll_assembly_function_table_t;
 
 
@@ -1822,12 +1822,12 @@ typedef struct _SLL_ASSEMBLY_FUNCTION_TABLE{
  * \name sll_debug_line_data_t
  * \group assembly
  * \desc Docs!
- * \arg sll_instruction_index_t ii
- * \arg sll_file_offset_t ln
+ * \arg sll_instruction_index_t delta_instruction_index
+ * \arg sll_file_offset_t line
  */
 typedef struct _SLL_DEBUG_LINE_DATA{
-	sll_instruction_index_t ii;
-	sll_file_offset_t ln;
+	sll_instruction_index_t delta_instruction_index;
+	sll_file_offset_t line;
 } sll_debug_line_data_t;
 
 
@@ -1837,12 +1837,12 @@ typedef struct _SLL_DEBUG_LINE_DATA{
  * \name sll_debug_data_t
  * \group assembly
  * \desc Docs!
- * \arg sll_debug_line_data_t* dt
- * \arg sll_debug_data_length_t l
+ * \arg sll_debug_line_data_t* data
+ * \arg sll_debug_data_length_t length
  */
 typedef struct _SLL_DEBUG_DATA{
-	sll_debug_line_data_t* dt;
-	sll_debug_data_length_t l;
+	sll_debug_line_data_t* data;
+	sll_debug_data_length_t length;
 } sll_debug_data_t;
 
 
@@ -1852,16 +1852,16 @@ typedef struct _SLL_DEBUG_DATA{
  * \name sll_assembly_stack_data_t
  * \group assembly
  * \desc Docs!
- * \arg void* s
- * \arg void* e
- * \arg sll_assembly_instruction_t* p
- * \arg sll_size_t c
+ * \arg void* start
+ * \arg void* end
+ * \arg sll_assembly_instruction_t* next_instruction
+ * \arg sll_size_t count
  */
 typedef struct _SLL_ASSEMBLY_STACK_DATA{
-	void* s;
-	void* e;
-	sll_assembly_instruction_t* p;
-	sll_size_t c;
+	void* start;
+	void* end;
+	sll_assembly_instruction_t* next_instruction;
+	sll_size_t count;
 } sll_assembly_stack_data_t;
 
 

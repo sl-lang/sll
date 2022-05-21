@@ -170,7 +170,7 @@ __SLL_EXTERNAL const sll_vm_config_t* sll_current_vm_config=NULL;
 
 
 void _call_function(thread_data_t* thr,sll_function_index_t fn,sll_arg_count_t ac,sll_bool_t fr){
-	sll_assembly_function_t* af=sll_current_runtime_data->a_dt->ft.dt+fn;
+	sll_assembly_function_t* af=sll_current_runtime_data->a_dt->ft.data+fn;
 	if (SLL_ASSEMBLY_FUNCTION_IS_VAR_ARG(af)){
 		sll_object_t* tos;
 		if (SLL_ASSEMBLY_FUNCTION_GET_ARGUMENT_COUNT(af)>ac){
@@ -210,13 +210,13 @@ void _call_function(thread_data_t* thr,sll_function_index_t fn,sll_arg_count_t a
 	}
 	if (fr){
 		SLL_ASSERT(thr->c_st.l<=sll_current_vm_config->c_st_sz);
-		(thr->c_st.dt+thr->c_st.l)->nm=(sll_current_runtime_data->a_dt->st.dt+af->nm)->data;
+		(thr->c_st.dt+thr->c_st.l)->nm=(sll_current_runtime_data->a_dt->st.dt+af->name_string_index)->data;
 		(thr->c_st.dt+thr->c_st.l)->_ii=thr->ii;
 		(thr->c_st.dt+thr->c_st.l)->_s=thr->si-SLL_ASSEMBLY_FUNCTION_GET_ARGUMENT_COUNT(af);
 		(thr->c_st.dt+thr->c_st.l)->_var_mem_off=PTR(ADDR(thr->stack+(thr->c_st.dt+thr->c_st.l)->_s)-ADDR(_vm_var_data+sll_current_runtime_data->a_dt->vc));
 		(*((sll_call_stack_size_t*)(&(thr->c_st.l))))++;
 	}
-	thr->ii=af->i;
+	thr->ii=af->instruction_index;
 }
 
 
@@ -861,7 +861,7 @@ _cleanup_jump_table:;
 								break;
 							}
 						}
-						else if (i&&i<=sll_current_runtime_data->a_dt->ft.l){
+						else if (i&&i<=sll_current_runtime_data->a_dt->ft.length){
 							_call_function(thr,(sll_function_index_t)(i-1),ai->data.arg_count,1);
 							RELOAD_THREAD_DATA;
 							continue;
@@ -890,7 +890,7 @@ _cleanup_jump_table:;
 						break;
 					}
 				}
-				else if (ai->data.int_&&ai->data.int_<=sll_current_runtime_data->a_dt->ft.l){
+				else if (ai->data.int_&&ai->data.int_<=sll_current_runtime_data->a_dt->ft.length){
 					_call_function(thr,(sll_function_index_t)(ai->data.int_-1),0,1);
 					RELOAD_THREAD_DATA;
 					continue;
@@ -908,7 +908,7 @@ _cleanup_jump_table:;
 						break;
 					}
 				}
-				else if (ai->data.int_&&ai->data.int_<=sll_current_runtime_data->a_dt->ft.l){
+				else if (ai->data.int_&&ai->data.int_<=sll_current_runtime_data->a_dt->ft.length){
 					_call_function(thr,(sll_function_index_t)(ai->data.int_-1),1,1);
 					RELOAD_THREAD_DATA;
 					continue;
@@ -934,7 +934,7 @@ _cleanup_jump_table:;
 								break;
 							}
 						}
-						else if (i&&i<=sll_current_runtime_data->a_dt->ft.l){
+						else if (i&&i<=sll_current_runtime_data->a_dt->ft.length){
 							thr->si--;
 							SLL_RELEASE(*(thr->stack+thr->si));
 							for (sll_array_length_t j=0;j<tos->data.array.length;j++){

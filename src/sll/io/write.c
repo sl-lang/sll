@@ -206,20 +206,20 @@ __SLL_EXTERNAL void sll_write_assembly(sll_file_t* wf,const sll_assembly_data_t*
 	CHECK_ERROR(sll_encode_integer(wf,a_dt->ic));
 	CHECK_ERROR(sll_encode_integer(wf,a_dt->vc));
 	CHECK_ERROR(sll_encode_integer(wf,a_dt->tls_vc));
-	CHECK_ERROR(sll_encode_integer(wf,a_dt->ft.l));
-	for (sll_function_index_t i=0;i<a_dt->ft.l;i++){
-		CHECK_ERROR(sll_encode_integer(wf,(a_dt->ft.dt+i)->i));
-		CHECK_ERROR(sll_encode_integer(wf,(a_dt->ft.dt+i)->ac));
-		CHECK_ERROR(sll_encode_integer(wf,(a_dt->ft.dt+i)->nm));
+	CHECK_ERROR(sll_encode_integer(wf,a_dt->ft.length));
+	for (sll_function_index_t i=0;i<a_dt->ft.length;i++){
+		CHECK_ERROR(sll_encode_integer(wf,(a_dt->ft.data+i)->instruction_index));
+		CHECK_ERROR(sll_encode_integer(wf,(a_dt->ft.data+i)->arg_count));
+		CHECK_ERROR(sll_encode_integer(wf,(a_dt->ft.data+i)->name_string_index));
 	}
 	CHECK_ERROR(sll_encode_integer(wf,a_dt->st.l));
 	for (sll_string_index_t i=0;i<a_dt->st.l;i++){
 		CHECK_ERROR(sll_encode_string(wf,a_dt->st.dt+i));
 	}
-	CHECK_ERROR(sll_encode_integer(wf,a_dt->dbg.l));
-	for (sll_debug_data_length_t i=0;i<a_dt->dbg.l;i++){
-		CHECK_ERROR(sll_encode_integer(wf,(a_dt->dbg.dt+i)->ii));
-		CHECK_ERROR(sll_encode_integer(wf,(a_dt->dbg.dt+i)->ln));
+	CHECK_ERROR(sll_encode_integer(wf,a_dt->dbg.length));
+	for (sll_debug_data_length_t i=0;i<a_dt->dbg.length;i++){
+		CHECK_ERROR(sll_encode_integer(wf,(a_dt->dbg.data+i)->delta_instruction_index));
+		CHECK_ERROR(sll_encode_integer(wf,(a_dt->dbg.data+i)->line));
 	}
 	const sll_assembly_instruction_t* ai=a_dt->h;
 	for (sll_instruction_index_t i=0;i<a_dt->ic;i++){

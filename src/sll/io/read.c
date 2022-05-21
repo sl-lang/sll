@@ -236,12 +236,12 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_load_assembly(sll_file_t* rf,sl
 	CHECK_ERROR(rf,a_dt->ic,sll_instruction_index_t);
 	CHECK_ERROR(rf,a_dt->vc,sll_variable_index_t);
 	CHECK_ERROR(rf,a_dt->tls_vc,sll_variable_index_t);
-	CHECK_ERROR(rf,a_dt->ft.l,sll_function_index_t);
-	a_dt->ft.dt=sll_allocate(a_dt->ft.l*sizeof(sll_assembly_function_t));
-	for (sll_function_index_t i=0;i<a_dt->ft.l;i++){
-		CHECK_ERROR(rf,(a_dt->ft.dt+i)->i,sll_instruction_index_t);
-		CHECK_ERROR(rf,(a_dt->ft.dt+i)->ac,sll_arg_count_t);
-		CHECK_ERROR(rf,(a_dt->ft.dt+i)->nm,sll_string_index_t);
+	CHECK_ERROR(rf,a_dt->ft.length,sll_function_index_t);
+	a_dt->ft.data=sll_allocate(a_dt->ft.length*sizeof(sll_assembly_function_t));
+	for (sll_function_index_t i=0;i<a_dt->ft.length;i++){
+		CHECK_ERROR(rf,(a_dt->ft.data+i)->instruction_index,sll_instruction_index_t);
+		CHECK_ERROR(rf,(a_dt->ft.data+i)->arg_count,sll_arg_count_t);
+		CHECK_ERROR(rf,(a_dt->ft.data+i)->name_string_index,sll_string_index_t);
 	}
 	CHECK_ERROR(rf,a_dt->st.l,sll_string_index_t);
 	a_dt->st.dt=sll_allocate(a_dt->st.l*sizeof(sll_string_t));
@@ -250,14 +250,14 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_load_assembly(sll_file_t* rf,sl
 			return 0;
 		}
 	}
-	CHECK_ERROR(rf,a_dt->dbg.l,sll_instruction_index_t);
-	a_dt->dbg.dt=sll_allocate(a_dt->dbg.l*sizeof(sll_debug_line_data_t));
-	for (sll_debug_data_length_t i=0;i<a_dt->dbg.l;i++){
-		CHECK_ERROR(rf,(a_dt->dbg.dt+i)->ii,sll_instruction_index_t);
-		CHECK_ERROR(rf,(a_dt->dbg.dt+i)->ln,sll_file_offset_t);
+	CHECK_ERROR(rf,a_dt->dbg.length,sll_instruction_index_t);
+	a_dt->dbg.data=sll_allocate(a_dt->dbg.length*sizeof(sll_debug_line_data_t));
+	for (sll_debug_data_length_t i=0;i<a_dt->dbg.length;i++){
+		CHECK_ERROR(rf,(a_dt->dbg.data+i)->delta_instruction_index,sll_instruction_index_t);
+		CHECK_ERROR(rf,(a_dt->dbg.data+i)->line,sll_file_offset_t);
 	}
 	_init_assembly_stack(a_dt);
-	a_dt->h=a_dt->_s.p;
+	a_dt->h=a_dt->_s.next_instruction;
 	sll_instruction_index_t i=a_dt->ic;
 	a_dt->ic=0;
 	while (i){

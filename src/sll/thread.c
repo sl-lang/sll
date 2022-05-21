@@ -172,7 +172,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_thread_index_t sll_thread_create(sll_integ
 	if (fn<0){
 		SLL_UNIMPLEMENTED();
 	}
-	if (fn&&fn<=sll_current_runtime_data->a_dt->ft.l){
+	if (fn&&fn<=sll_current_runtime_data->a_dt->ft.length){
 		sll_thread_index_t o=_thread_new();
 		thread_data_t* thr=*(_thread_data+o);
 		for (;thr->si<all;thr->si++){

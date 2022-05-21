@@ -45,7 +45,7 @@
  * \arg const sll_debug_line_data_t* dbg
  * \ret sll_file_offset_t
  */
-#define SLL_DEBUG_LINE_DATA_GET_DATA(dbg) ((dbg)->ln>>2)
+#define SLL_DEBUG_LINE_DATA_GET_DATA(dbg) ((dbg)->line>>2)
 
 
 
@@ -58,7 +58,7 @@
  * \arg sll_file_offset_t idx
  * \arg sll_file_offset_t fl
  */
-#define SLL_DEBUG_LINE_DATA_SET_DATA(dbg,idx,fl) (dbg)->ln=((idx)<<2)|(fl)
+#define SLL_DEBUG_LINE_DATA_SET_DATA(dbg,idx,fl) (dbg)->line=((idx)<<2)|(fl)
 
 
 
