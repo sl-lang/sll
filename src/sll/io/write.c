@@ -261,14 +261,14 @@ __SLL_EXTERNAL void sll_write_assembly(sll_file_t* wf,const sll_assembly_data_t*
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_JI:
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_JNI:
 				if (SLL_ASSEMBLY_INSTRUCTION_FLAG_IS_RELATIVE(ai)){
-					CHECK_ERROR(sll_encode_signed_integer(wf,ai->data.j.target.rel));
+					CHECK_ERROR(sll_encode_signed_integer(wf,ai->data.jump.target.rel));
 				}
 				else{
-					CHECK_ERROR(sll_encode_integer(wf,ai->data.j.target.abs));
+					CHECK_ERROR(sll_encode_integer(wf,ai->data.jump.target.abs));
 				}
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_STACK:
-				CHECK_ERROR(sll_encode_integer(wf,ai->data.so));
+				CHECK_ERROR(sll_encode_integer(wf,ai->data.stack_offset));
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_LOAD:
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_STORE:
@@ -283,20 +283,20 @@ __SLL_EXTERNAL void sll_write_assembly(sll_file_t* wf,const sll_assembly_data_t*
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_RET_VAR:
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_DEL:
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_LOAD_DEL:
-				CHECK_ERROR(sll_encode_integer(wf,ai->data.v));
+				CHECK_ERROR(sll_encode_integer(wf,ai->data.variable));
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_LOADS:
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_LOOKUP_STR:
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PRINT_STR:
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_RET_STR:
-				CHECK_ERROR(sll_encode_integer(wf,ai->data.s));
+				CHECK_ERROR(sll_encode_integer(wf,ai->data.string_index));
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PACK:
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_JT:
-				CHECK_ERROR(sll_encode_integer(wf,ai->data.al));
+				CHECK_ERROR(sll_encode_integer(wf,ai->data.array_length));
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_MAP:
-				CHECK_ERROR(sll_encode_integer(wf,ai->data.ml));
+				CHECK_ERROR(sll_encode_integer(wf,ai->data.map_length));
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_NOT:
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_INC:
@@ -315,27 +315,27 @@ __SLL_EXTERNAL void sll_write_assembly(sll_file_t* wf,const sll_assembly_data_t*
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_ASSIGN_TWO:
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_ASSIGN_THREE:
 				if (SLL_ASSEMBLY_INSTRUCTION_FLAG_IS_INPLACE(ai)){
-					CHECK_ERROR(sll_encode_integer(wf,ai->data.v));
+					CHECK_ERROR(sll_encode_integer(wf,ai->data.variable));
 				}
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_ACCESS_VAR:
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_ASSIGN_VAR_ACCESS:
-				CHECK_ERROR(sll_encode_integer(wf,ai->data.va.variable));
-				CHECK_ERROR(sll_encode_integer(wf,ai->data.va.arg_count));
+				CHECK_ERROR(sll_encode_integer(wf,ai->data.variable_access.variable));
+				CHECK_ERROR(sll_encode_integer(wf,ai->data.variable_access.arg_count));
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_CAST_TYPE:
-				CHECK_ERROR(sll_encode_integer(wf,ai->data.t));
+				CHECK_ERROR(sll_encode_integer(wf,ai->data.type));
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_CALL:
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_CALL_POP:
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_DECL:
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_NEW:
-				CHECK_ERROR(sll_encode_integer(wf,ai->data.ac));
+				CHECK_ERROR(sll_encode_integer(wf,ai->data.arg_count));
 				break;
 		}
 		ai++;
 		if (SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(ai)==SLL_ASSEMBLY_INSTRUCTION_TYPE_CHANGE_STACK){
-			ai=ai->data._p;
+			ai=ai->data._next_instruction;
 		}
 	}
 }

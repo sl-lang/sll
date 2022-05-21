@@ -9,31 +9,31 @@
 0=pop, 1=rot -> 1=rot_pop, $1
 0=pop, 1=call -> 1=call_pop, $1
 
-0=load, 1=store_pop, 0.v=1.v -> 1=store, $1
-0=load_del, 1=store_pop, 0.v=1.v -> $2
+0=load, 1=store_pop, 0.variable=1.variable -> 1=store, $1
+0=load_del, 1=store_pop, 0.variable=1.variable -> $2
 
-0=store_pop, 1=push_minus_one -> 1=store_minus_one, 1.v=0.v, $1
-0=store_pop, 1=push_zero -> 1=store_zero, 1.v=0.v, $1
-0=store_pop, 1=push_one -> 1=store_one, 1.v=0.v, $1
-0=store_pop, 1=push_two -> 1=store_two, 1.v=0.v, $1
-0=store_pop, 1=push_three -> 1=store_three, 1.v=0.v, $1
-0=store_pop, 1=push_four -> 1=store_four, 1.v=0.v, $1
+0=store_pop, 1=push_minus_one -> 1=store_minus_one, 1.variable=0.variable, $1
+0=store_pop, 1=push_zero -> 1=store_zero, 1.variable=0.variable, $1
+0=store_pop, 1=push_one -> 1=store_one, 1.variable=0.variable, $1
+0=store_pop, 1=push_two -> 1=store_two, 1.variable=0.variable, $1
+0=store_pop, 1=push_three -> 1=store_three, 1.variable=0.variable, $1
+0=store_pop, 1=push_four -> 1=store_four, 1.variable=0.variable, $1
 
-0=store_pop, 1=not|bool|inv|length|copy|deep_copy, 2=load, 0.v=2.v -> 2=1|flag_inplace, $2
+0=store_pop, 1=not|bool|inv|length|copy|deep_copy, 2=load, 0.variable=2.variable -> 2=1|flag_inplace, $2
 
 0=print, 1=push_char -> 1=print_char, $1
 0=print, 1=load -> 1=print_var, $1
 0=print, 1=loads -> 1=print_str, $1
 
-0=call, 1=push_int, 0.ac=+0 -> 1=call_zero, $1
-0=call, 1=push_int, 0.ac=+1 -> 1=call_one, $1
+0=call, 1=push_int, 0.arg_count=+0 -> 1=call_zero, $1
+0=call, 1=push_int, 0.arg_count=+1 -> 1=call_one, $1
 
 0=add, 1=push_minus_one -> 1=dec, $1
 0=add, 1=push_one -> 1=inc, $1
 0=sub, 1=push_minus_one -> 1=inc, $1
 0=sub, 1=push_one -> 1=dec, $1
 
-0=new, 1=decl_zero, 0.ac=+0 -> 1=new_decl, $1
+0=new, 1=decl_zero, 0.arg_count=+0 -> 1=new_decl, $1
 
 0=ret, 1=push_int -> 1=ret_int, $1
 0=ret, 1=push_float -> 1=ret_float, $1
@@ -43,5 +43,5 @@
 
 0=ret_int, 0.int_=+0 -> 0=ret_zero
 
-0=del, 1=store_pop, 0.v=1.v -> 0=del, 1=pop
+0=del, 1=store_pop, 0.variable=1.variable -> 0=del, 1=pop
 0=pop, 1=new_decl -> $2

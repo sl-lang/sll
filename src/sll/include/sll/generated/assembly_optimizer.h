@@ -47,7 +47,7 @@ static __SLL_FORCE_INLINE void _optimize_assembly(sll_assembly_instruction_t** s
 	}
 	else if (SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(st[0])==SLL_ASSEMBLY_INSTRUCTION_TYPE_LOAD){
 		if (SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(st[1])==SLL_ASSEMBLY_INSTRUCTION_TYPE_STORE_POP){
-			if (st[0]->data.v==st[1]->data.v){
+			if (st[0]->data.variable==st[1]->data.variable){
 				st[1]->type=SLL_ASSEMBLY_INSTRUCTION_TYPE_STORE;
 				goto _shift_1;
 			}
@@ -55,7 +55,7 @@ static __SLL_FORCE_INLINE void _optimize_assembly(sll_assembly_instruction_t** s
 	}
 	else if (SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(st[0])==SLL_ASSEMBLY_INSTRUCTION_TYPE_LOAD_DEL){
 		if (SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(st[1])==SLL_ASSEMBLY_INSTRUCTION_TYPE_STORE_POP){
-			if (st[0]->data.v==st[1]->data.v){
+			if (st[0]->data.variable==st[1]->data.variable){
 				goto _shift_2;
 			}
 		}
@@ -63,37 +63,37 @@ static __SLL_FORCE_INLINE void _optimize_assembly(sll_assembly_instruction_t** s
 	else if (SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(st[0])==SLL_ASSEMBLY_INSTRUCTION_TYPE_STORE_POP){
 		if (SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(st[1])==SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_MINUS_ONE){
 			st[1]->type=SLL_ASSEMBLY_INSTRUCTION_TYPE_STORE_MINUS_ONE;
-			st[1]->data.v=st[0]->data.v;
+			st[1]->data.variable=st[0]->data.variable;
 			goto _shift_1;
 		}
 		else if (SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(st[1])==SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_ZERO){
 			st[1]->type=SLL_ASSEMBLY_INSTRUCTION_TYPE_STORE_ZERO;
-			st[1]->data.v=st[0]->data.v;
+			st[1]->data.variable=st[0]->data.variable;
 			goto _shift_1;
 		}
 		else if (SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(st[1])==SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_ONE){
 			st[1]->type=SLL_ASSEMBLY_INSTRUCTION_TYPE_STORE_ONE;
-			st[1]->data.v=st[0]->data.v;
+			st[1]->data.variable=st[0]->data.variable;
 			goto _shift_1;
 		}
 		else if (SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(st[1])==SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_TWO){
 			st[1]->type=SLL_ASSEMBLY_INSTRUCTION_TYPE_STORE_TWO;
-			st[1]->data.v=st[0]->data.v;
+			st[1]->data.variable=st[0]->data.variable;
 			goto _shift_1;
 		}
 		else if (SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(st[1])==SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_THREE){
 			st[1]->type=SLL_ASSEMBLY_INSTRUCTION_TYPE_STORE_THREE;
-			st[1]->data.v=st[0]->data.v;
+			st[1]->data.variable=st[0]->data.variable;
 			goto _shift_1;
 		}
 		else if (SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(st[1])==SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_FOUR){
 			st[1]->type=SLL_ASSEMBLY_INSTRUCTION_TYPE_STORE_FOUR;
-			st[1]->data.v=st[0]->data.v;
+			st[1]->data.variable=st[0]->data.variable;
 			goto _shift_1;
 		}
 		else if (SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(st[1])==SLL_ASSEMBLY_INSTRUCTION_TYPE_NOT||SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(st[1])==SLL_ASSEMBLY_INSTRUCTION_TYPE_BOOL||SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(st[1])==SLL_ASSEMBLY_INSTRUCTION_TYPE_INV||SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(st[1])==SLL_ASSEMBLY_INSTRUCTION_TYPE_LENGTH||SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(st[1])==SLL_ASSEMBLY_INSTRUCTION_TYPE_COPY||SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(st[1])==SLL_ASSEMBLY_INSTRUCTION_TYPE_DEEP_COPY){
 			if (SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(st[2])==SLL_ASSEMBLY_INSTRUCTION_TYPE_LOAD){
-				if (st[0]->data.v==st[2]->data.v){
+				if (st[0]->data.variable==st[2]->data.variable){
 					st[2]->type=SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(st[1])|SLL_ASSEMBLY_INSTRUCTION_FLAG_INPLACE;
 					goto _shift_2;
 				}
@@ -116,11 +116,11 @@ static __SLL_FORCE_INLINE void _optimize_assembly(sll_assembly_instruction_t** s
 	}
 	else if (SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(st[0])==SLL_ASSEMBLY_INSTRUCTION_TYPE_CALL){
 		if (SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(st[1])==SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_INT){
-			if (st[0]->data.ac==0){
+			if (st[0]->data.arg_count==0){
 				st[1]->type=SLL_ASSEMBLY_INSTRUCTION_TYPE_CALL_ZERO;
 				goto _shift_1;
 			}
-			else if (st[0]->data.ac==1){
+			else if (st[0]->data.arg_count==1){
 				st[1]->type=SLL_ASSEMBLY_INSTRUCTION_TYPE_CALL_ONE;
 				goto _shift_1;
 			}
@@ -148,7 +148,7 @@ static __SLL_FORCE_INLINE void _optimize_assembly(sll_assembly_instruction_t** s
 	}
 	else if (SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(st[0])==SLL_ASSEMBLY_INSTRUCTION_TYPE_NEW){
 		if (SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(st[1])==SLL_ASSEMBLY_INSTRUCTION_TYPE_DECL_ZERO){
-			if (st[0]->data.ac==0){
+			if (st[0]->data.arg_count==0){
 				st[1]->type=SLL_ASSEMBLY_INSTRUCTION_TYPE_NEW_DECL;
 				goto _shift_1;
 			}
@@ -183,7 +183,7 @@ static __SLL_FORCE_INLINE void _optimize_assembly(sll_assembly_instruction_t** s
 	}
 	else if (SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(st[0])==SLL_ASSEMBLY_INSTRUCTION_TYPE_DEL){
 		if (SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(st[1])==SLL_ASSEMBLY_INSTRUCTION_TYPE_STORE_POP){
-			if (st[0]->data.v==st[1]->data.v){
+			if (st[0]->data.variable==st[1]->data.variable){
 				st[0]->type=SLL_ASSEMBLY_INSTRUCTION_TYPE_DEL;
 				st[1]->type=SLL_ASSEMBLY_INSTRUCTION_TYPE_POP;
 			}

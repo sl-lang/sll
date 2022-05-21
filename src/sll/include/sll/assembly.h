@@ -1739,16 +1739,16 @@ typedef struct _SLL_ASSEMBLY_INSTRUCTION_DATA_VAR_ACCESS{
  * \arg sll_float_t float_
  * \arg sll_char_t char_
  * \arg sll_complex_t complex_
- * \arg sll_string_index_t s
- * \arg sll_variable_index_t v
- * \arg sll_assembly_instruction_data_jump_t j
- * \arg sll_arg_count_t ac
- * \arg sll_array_length_t al
- * \arg sll_map_length_t ml
- * \arg sll_object_type_t t
- * \arg sll_assembly_instruction_data_var_access_t va
- * \arg sll_stack_offset_t so
- * \arg void* _p
+ * \arg sll_string_index_t string_index
+ * \arg sll_variable_index_t variable
+ * \arg sll_assembly_instruction_data_jump_t jump
+ * \arg sll_arg_count_t arg_count
+ * \arg sll_array_length_t array_length
+ * \arg sll_map_length_t map_length
+ * \arg sll_object_type_t type
+ * \arg sll_assembly_instruction_data_var_access_t variable_access
+ * \arg sll_stack_offset_t stack_offset
+ * \arg void* _next_instruction
  */
 typedef union _SLL_ASSEMBLY_INSTRUCTION_DATA{
 	sll_integer_t int_;
@@ -1756,16 +1756,16 @@ typedef union _SLL_ASSEMBLY_INSTRUCTION_DATA{
 	sll_float_t float_;
 	sll_char_t char_;
 	sll_complex_t complex_;
-	sll_string_index_t s;
-	sll_variable_index_t v;
-	sll_assembly_instruction_data_jump_t j;
-	sll_arg_count_t ac;
-	sll_array_length_t al;
-	sll_map_length_t ml;
-	sll_object_type_t t;
-	sll_assembly_instruction_data_var_access_t va;
-	sll_stack_offset_t so;
-	void* _p;
+	sll_string_index_t string_index;
+	sll_variable_index_t variable;
+	sll_assembly_instruction_data_jump_t jump;
+	sll_arg_count_t arg_count;
+	sll_array_length_t array_length;
+	sll_map_length_t map_length;
+	sll_object_type_t type;
+	sll_assembly_instruction_data_var_access_t variable_access;
+	sll_stack_offset_t stack_offset;
+	void* _next_instruction;
 } sll_assembly_instruction_data_t;
 
 

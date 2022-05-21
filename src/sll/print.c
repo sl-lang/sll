@@ -673,27 +673,27 @@ __SLL_EXTERNAL void sll_print_assembly(const sll_assembly_data_t* a_dt,sll_file_
 				PRINT_STATIC_STRING("PUSH .",wf);
 _print_jump:
 				if (SLL_ASSEMBLY_INSTRUCTION_FLAG_IS_RELATIVE(ai)){
-					PRINT_INT_SIGN(ai->data.j.target.rel,wf);
+					PRINT_INT_SIGN(ai->data.jump.target.rel,wf);
 				}
 				else{
-					_print_int(ai->data.j.target.abs,wf);
+					_print_int(ai->data.jump.target.abs,wf);
 				}
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_STACK:
 				PRINT_STATIC_STRING("PUSH 0 x ",wf);
-				_print_int(ai->data.so,wf);
+				_print_int(ai->data.stack_offset,wf);
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_LOAD:
 				PRINT_STATIC_STRING("LOAD $",wf);
-				_print_assembly_identifier(ai->data.v,wf);
+				_print_assembly_identifier(ai->data.variable,wf);
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_LOADS:
 				PRINT_STATIC_STRING("LOADS #",wf);
-				_print_int(ai->data.s,wf);
+				_print_int(ai->data.string_index,wf);
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PACK:
 				PRINT_STATIC_STRING("PACK ",wf);
-				_print_int(ai->data.al,wf);
+				_print_int(ai->data.array_length,wf);
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PACK_ZERO:
 				PRINT_STATIC_STRING("PACK 0",wf);
@@ -703,50 +703,50 @@ _print_jump:
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_MAP:
 				PRINT_STATIC_STRING("MAP ",wf);
-				_print_int(ai->data.ml,wf);
+				_print_int(ai->data.map_length,wf);
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_MAP_ZERO:
 				PRINT_STATIC_STRING("MAP 0",wf);
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_STORE:
 				PRINT_STATIC_STRING("STORE $",wf);
-				_print_assembly_identifier(ai->data.v,wf);
+				_print_assembly_identifier(ai->data.variable,wf);
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_STORE_POP:
 				PRINT_STATIC_STRING("STORE $",wf);
-				_print_assembly_identifier(ai->data.v,wf);
+				_print_assembly_identifier(ai->data.variable,wf);
 				PRINT_STATIC_STRING(" & POP",wf);
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_STORE_MINUS_ONE:
 				PRINT_STATIC_STRING("PUSH -1 & STORE $",wf);
-				_print_assembly_identifier(ai->data.v,wf);
+				_print_assembly_identifier(ai->data.variable,wf);
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_STORE_ZERO:
 				PRINT_STATIC_STRING("PUSH 0 & STORE $",wf);
-				_print_assembly_identifier(ai->data.v,wf);
+				_print_assembly_identifier(ai->data.variable,wf);
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_STORE_ONE:
 				PRINT_STATIC_STRING("PUSH 1 & STORE $",wf);
-				_print_assembly_identifier(ai->data.v,wf);
+				_print_assembly_identifier(ai->data.variable,wf);
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_STORE_TWO:
 				PRINT_STATIC_STRING("PUSH 2 & STORE $",wf);
-				_print_assembly_identifier(ai->data.v,wf);
+				_print_assembly_identifier(ai->data.variable,wf);
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_STORE_THREE:
 				PRINT_STATIC_STRING("PUSH 3 & STORE $",wf);
-				_print_assembly_identifier(ai->data.v,wf);
+				_print_assembly_identifier(ai->data.variable,wf);
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_STORE_FOUR:
 				PRINT_STATIC_STRING("PUSH 4 & STORE $",wf);
-				_print_assembly_identifier(ai->data.v,wf);
+				_print_assembly_identifier(ai->data.variable,wf);
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_LOOKUP:
 				PRINT_STATIC_STRING("LOOKUP",wf);
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_LOOKUP_STR:
 				PRINT_STATIC_STRING("LOOKUP #",wf);
-				_print_int(ai->data.s,wf);
+				_print_int(ai->data.string_index,wf);
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_JMP:
 				PRINT_STATIC_STRING("JMP .",wf);
@@ -796,7 +796,7 @@ _print_jump:
 _print_inplace:
 				if (SLL_ASSEMBLY_INSTRUCTION_FLAG_IS_INPLACE(ai)){
 					PRINT_STATIC_STRING(" $",wf);
-					_print_assembly_identifier(ai->data.v,wf);
+					_print_assembly_identifier(ai->data.variable,wf);
 				}
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_BOOL:
@@ -864,9 +864,9 @@ _print_inplace:
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_ACCESS_VAR:
 				PRINT_STATIC_STRING("PUSH ",wf);
-				_print_int(ai->data.va.arg_count,wf);
+				_print_int(ai->data.variable_access.arg_count,wf);
 				PRINT_STATIC_STRING(" & ACCESS_VAR $",wf);
-				_print_assembly_identifier(ai->data.va.variable,wf);
+				_print_assembly_identifier(ai->data.variable_access.variable,wf);
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_ASSIGN:
 				PRINT_STATIC_STRING("ASSIGN",wf);
@@ -879,16 +879,16 @@ _print_inplace:
 				goto _print_inplace;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_ASSIGN_VAR_ACCESS:
 				PRINT_STATIC_STRING("PUSH ",wf);
-				_print_int(ai->data.va.arg_count,wf);
+				_print_int(ai->data.variable_access.arg_count,wf);
 				PRINT_STATIC_STRING(" & ASSIGN_VAR_ACCESS $",wf);
-				_print_assembly_identifier(ai->data.va.variable,wf);
+				_print_assembly_identifier(ai->data.variable_access.variable,wf);
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_CAST:
 				PRINT_STATIC_STRING("CAST",wf);
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_CAST_TYPE:
 				PRINT_STATIC_STRING("CAST ",wf);
-				_print_int(ai->data.t,wf);
+				_print_int(ai->data.type,wf);
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_TYPEOF:
 				PRINT_STATIC_STRING("TYPEOF",wf);
@@ -901,7 +901,7 @@ _print_inplace:
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_DECL:
 				PRINT_STATIC_STRING("DECL ",wf);
-				_print_int(ai->data.ac,wf);
+				_print_int(ai->data.arg_count,wf);
 				if (SLL_ASSEMBLY_INSTRUCTION_FLAG_IS_ANONYMOUS(ai)){
 					PRINT_STATIC_STRING(" (anonymous)",wf);
 				}
@@ -914,7 +914,7 @@ _print_inplace:
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_NEW:
 				PRINT_STATIC_STRING("NEW ",wf);
-				_print_int(ai->data.ac,wf);
+				_print_int(ai->data.arg_count,wf);
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_NEW_DECL:
 				PRINT_STATIC_STRING("DECL 0 & NEW 0",wf);
@@ -928,19 +928,19 @@ _print_inplace:
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PRINT_STR:
 				PRINT_STATIC_STRING("PRINT #",wf);
-				_print_int(ai->data.s,wf);
+				_print_int(ai->data.string_index,wf);
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PRINT_VAR:
 				PRINT_STATIC_STRING("PRINT $",wf);
-				_print_assembly_identifier(ai->data.v,wf);
+				_print_assembly_identifier(ai->data.variable,wf);
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_CALL:
 				PRINT_STATIC_STRING("CALL ",wf);
-				_print_int(ai->data.ac,wf);
+				_print_int(ai->data.arg_count,wf);
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_CALL_POP:
 				PRINT_STATIC_STRING("CALL ",wf);
-				_print_int(ai->data.ac,wf);
+				_print_int(ai->data.arg_count,wf);
 				PRINT_STATIC_STRING(" & POP",wf);
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_CALL_ZERO:
@@ -979,19 +979,19 @@ _print_inplace:
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_RET_STR:
 				PRINT_STATIC_STRING("RET #",wf);
-				_print_int(ai->data.s,wf);
+				_print_int(ai->data.string_index,wf);
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_RET_VAR:
 				PRINT_STATIC_STRING("RET $",wf);
-				_print_assembly_identifier(ai->data.v,wf);
+				_print_assembly_identifier(ai->data.variable,wf);
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_DEL:
 				PRINT_STATIC_STRING("DEL $",wf);
-				_print_assembly_identifier(ai->data.v,wf);
+				_print_assembly_identifier(ai->data.variable,wf);
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_LOAD_DEL:
 				PRINT_STATIC_STRING("LOAD $",wf);
-				_print_assembly_identifier(ai->data.v,wf);
+				_print_assembly_identifier(ai->data.variable,wf);
 				PRINT_STATIC_STRING(" & DEL",wf);
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_THREAD_WAIT:
@@ -1026,7 +1026,7 @@ _print_inplace:
 		}
 		ai++;
 		if (SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(ai)==SLL_ASSEMBLY_INSTRUCTION_TYPE_CHANGE_STACK){
-			ai=ai->data._p;
+			ai=ai->data._next_instruction;
 		}
 	}
 }
