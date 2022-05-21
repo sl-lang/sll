@@ -181,7 +181,7 @@ static const sll_char_t ` name `_END[]={
 `#endif
 `)
 	(<- file$close fh)
-	(<- util$execute [(?: (=== sys$PLATFORM "windows") "python.exe" "python3") "src/_build/header.py" config$BUILD_TIME config$OPTIONS$VERBOSE])
+	(--- "sys.sll")(<- util$execute [(?: (=== sys$PLATFORM "windows") "python.exe" "python3") "src/_build/header.py" config$BUILD_TIME config$OPTIONS$VERBOSE])
 ))
 
 
