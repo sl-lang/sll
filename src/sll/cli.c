@@ -59,7 +59,7 @@ static sll_bool_t _import_file(const sll_string_t* path,sll_compilation_data_t* 
 		return 0;
 	}
 	if (res==SLL_LOOKUP_RESULT_EMPTY){
-		SLL_WARN("Unable to find file '%s'",path->v);
+		SLL_WARN("Unable to find file '%s'",path->data);
 		return 0;
 	}
 	*out=res_data.data.compiled_object;
@@ -121,9 +121,9 @@ static cli_include_dir_t* _alloc_include_dir(void){
 static void _ensure_path_separator(const sll_char_t* str,sll_string_length_t len,sll_string_t* out){
 	sll_bool_t add=(*(str+len-1)!='\\'&&*(str+len-1)!='/');
 	sll_string_create(len+add,out);
-	sll_copy_data(str,len,out->v);
+	sll_copy_data(str,len,out->data);
 	if (add){
-		out->v[len]=SLL_API_FILE_PATH_SEPARATOR;
+		out->data[len]=SLL_API_FILE_PATH_SEPARATOR;
 	}
 	sll_string_calculate_checksum(out);
 }
@@ -131,12 +131,12 @@ static void _ensure_path_separator(const sll_char_t* str,sll_string_length_t len
 
 
 static sll_bool_t _starts_with_path_prefix(const sll_string_t* path,const sll_string_t* pfx){
-	if (pfx->l>path->l){
+	if (pfx->length>path->length){
 		return 0;
 	}
-	for (sll_string_length_t i=0;i<pfx->l;i++){
-		sll_char_t a=path->v[i];
-		sll_char_t b=pfx->v[i];
+	for (sll_string_length_t i=0;i<pfx->length;i++){
+		sll_char_t a=path->data[i];
+		sll_char_t b=pfx->data[i];
 		if ((a=='\\'?'/':a)!=(b=='\\'?'/':b)){
 			return 0;
 		}
@@ -176,7 +176,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_cli_lookup_result_t sll_cli_lookup_file(co
 		do{
 			i--;
 			cli_bundle_source_t* b_dt=*(_cli_bundle_list+i);
-			SLL_LOG("Trying to open file '%s/%s'...",b_dt->nm,path->v);
+			SLL_LOG("Trying to open file '%s/%s'...",b_dt->nm,path->data);
 			if (sll_bundle_fetch(&(b_dt->b),path,&(out->data.compiled_object))){
 				SLL_LOG("File successfully read.");
 				return SLL_LOOKUP_RESULT_COMPILED_OBJECT;
@@ -188,10 +188,10 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_cli_lookup_result_t sll_cli_lookup_file(co
 		if (!_starts_with_path_prefix(path,&(inc->name))){
 			continue;
 		}
-		sll_copy_data(inc->path.v,inc->path.l,bf);
-		sll_copy_data(path->v+inc->name.l,path->l-inc->name.l,bf+inc->path.l);
-		sll_string_length_t j=inc->path.l+path->l-inc->name.l;
-		sll_copy_data(_cli_slc_suffix.v,_cli_slc_suffix.l+1,bf+j);
+		sll_copy_data(inc->path.data,inc->path.length,bf);
+		sll_copy_data(path->data+inc->name.length,path->length-inc->name.length,bf+inc->path.length);
+		sll_string_length_t j=inc->path.length+path->length-inc->name.length;
+		sll_copy_data(_cli_slc_suffix.data,_cli_slc_suffix.length+1,bf+j);
 		SLL_LOG("Trying to open file '%s'...",bf);
 		sll_file_t f;
 		if (sll_platform_path_exists(bf)){
@@ -233,8 +233,8 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_cli_lookup_result_t sll_cli_lookup_file(co
 		return SLL_LOOKUP_RESULT_COMPILED_OBJECT;
 	}
 	if (_cli_lib_path_len){
-		sll_copy_data(path->v,path->l,_cli_lib_path+_cli_lib_path_len);
-		sll_copy_data(_cli_slc_suffix.v,_cli_slc_suffix.l+1,_cli_lib_path+_cli_lib_path_len+path->l);
+		sll_copy_data(path->data,path->length,_cli_lib_path+_cli_lib_path_len);
+		sll_copy_data(_cli_slc_suffix.data,_cli_slc_suffix.length+1,_cli_lib_path+_cli_lib_path_len+path->length);
 		SLL_LOG("Trying to open file '%s'...",_cli_lib_path);
 		sll_file_t f;
 		if (sll_platform_path_exists(_cli_lib_path)){
@@ -268,16 +268,16 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_code_t sll_cli_main(sll_array_lengt
 	cli_include_dir_t* inc=_alloc_include_dir();
 	SLL_INIT_STRING(&(inc->name));
 	SLL_INIT_STRING(&(inc->path));
-	SLL_ASSERT(sll_library_file_path->l<SLL_API_MAX_FILE_PATH_LENGTH);
-	_cli_lib_path_len=sll_library_file_path->l;
-	while (sll_library_file_path->v[_cli_lib_path_len]!='/'&&sll_library_file_path->v[_cli_lib_path_len]!='\\'){
+	SLL_ASSERT(sll_library_file_path->length<SLL_API_MAX_FILE_PATH_LENGTH);
+	_cli_lib_path_len=sll_library_file_path->length;
+	while (sll_library_file_path->data[_cli_lib_path_len]!='/'&&sll_library_file_path->data[_cli_lib_path_len]!='\\'){
 		if (!_cli_lib_path_len){
 			break;
 		}
 		_cli_lib_path_len--;
 	}
 	_cli_lib_path_len++;
-	sll_copy_data(sll_library_file_path->v,_cli_lib_path_len,_cli_lib_path);
+	sll_copy_data(sll_library_file_path->data,_cli_lib_path_len,_cli_lib_path);
 	if (_cli_flags&SLL_CLI_FLAG_RELEASE_MODE){
 		SLL_COPY_STRING_NULL(SLL_CHAR("lib/"),_cli_lib_path+_cli_lib_path_len);
 		_cli_lib_path_len+=4;
@@ -291,7 +291,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_code_t sll_cli_main(sll_array_lengt
 	while (b_fll){
 		b_fll--;
 		sll_string_t* str=b_fl+b_fll;
-		sll_copy_data(str->v,str->l+1,_cli_lib_path+_cli_lib_path_len);
+		sll_copy_data(str->data,str->length+1,_cli_lib_path+_cli_lib_path_len);
 		sll_free_string(str);
 		if (!sll_platform_path_is_directory(_cli_lib_path)){
 			sll_file_t bundle_fh;
@@ -404,20 +404,20 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_code_t sll_cli_main(sll_array_lengt
 				}
 			}
 			if (src){
-				sll_string_length_t sz=(src->l>=SLL_API_MAX_FILE_PATH_LENGTH?SLL_API_MAX_FILE_PATH_LENGTH-1:src->l);
-				sll_copy_data(src->v,sz,out);
+				sll_string_length_t sz=(src->length>=SLL_API_MAX_FILE_PATH_LENGTH?SLL_API_MAX_FILE_PATH_LENGTH-1:src->length);
+				sll_copy_data(src->data,sz,out);
 				out[sz]=0;
 			}
 			else{
-				sll_string_length_t pfx_sz=sll_library_file_path->l;
-				while (pfx_sz&&sll_library_file_path->v[pfx_sz]!='/'&&sll_library_file_path->v[pfx_sz]!='\\'){
+				sll_string_length_t pfx_sz=sll_library_file_path->length;
+				while (pfx_sz&&sll_library_file_path->data[pfx_sz]!='/'&&sll_library_file_path->data[pfx_sz]!='\\'){
 					pfx_sz--;
 				}
 				pfx_sz++;
 				sll_string_length_t sz=sll_string_length(out);
 				SLL_ASSERT(sz+pfx_sz<SLL_API_MAX_FILE_PATH_LENGTH);
 				sll_char_t tmp[SLL_API_MAX_FILE_PATH_LENGTH];
-				sll_copy_data(sll_library_file_path->v,pfx_sz,tmp);
+				sll_copy_data(sll_library_file_path->data,pfx_sz,tmp);
 				sll_copy_data(out,sz,tmp+pfx_sz);
 				tmp[pfx_sz+sz]=0;
 				sz=sll_platform_absolute_path(tmp,out,SLL_API_MAX_FILE_PATH_LENGTH);
@@ -437,20 +437,20 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_code_t sll_cli_main(sll_array_lengt
 			e=argv[i];
 			sll_string_t tmp;
 			sll_string_from_pointer(e,&tmp);
-			if (tmp.l){
+			if (tmp.length){
 				sll_string_length_t split=sll_string_index_char(&tmp,'|',0,0);
 				if (split&&split!=SLL_MAX_STRING_LENGTH){
-					if (!sll_platform_path_is_directory(tmp.v+split+1)){
+					if (!sll_platform_path_is_directory(tmp.data+split+1)){
 						SLL_UNIMPLEMENTED();
 					}
 					inc=_alloc_include_dir();
-					_ensure_path_separator(tmp.v,split,&(inc->name));
-					_ensure_path_separator(tmp.v+split+1,tmp.l-split-1,&(inc->path));
+					_ensure_path_separator(tmp.data,split,&(inc->name));
+					_ensure_path_separator(tmp.data+split+1,tmp.length-split-1,&(inc->path));
 				}
 				else if (sll_platform_path_is_directory(e)){
 					inc=_alloc_include_dir();
 					SLL_INIT_STRING(&(inc->name));
-					_ensure_path_separator(tmp.v,tmp.l,&(inc->path));
+					_ensure_path_separator(tmp.data,tmp.length,&(inc->path));
 				}
 				else{
 					sll_file_t bundle_fh;
@@ -670,11 +670,11 @@ _read_file_argument:
 		}
 		for (sll_string_length_t j=0;j<_cli_include_list_len;j++){
 			inc=*(_cli_include_list+j);
-			if (inc->name.l){
-				SLL_LOG("  '%s' -> '%s'",inc->name.v,inc->path.v);
+			if (inc->name.length){
+				SLL_LOG("  '%s' -> '%s'",inc->name.data,inc->path.data);
 			}
 			else{
-				SLL_LOG("  '%s'",inc->path.v);
+				SLL_LOG("  '%s'",inc->path.data);
 			}
 		}
 		SLL_LOG("Library path: '%s'",_cli_lib_path);
@@ -712,8 +712,8 @@ _read_file_argument:
 				a_dt=res_data.data.assembly;
 			}
 			else{
-				SLL_WARN("Unable to find file '%s'",tmp.v);
-				sll_init_compilation_data(tmp.v,&c_dt);
+				SLL_WARN("Unable to find file '%s'",tmp.data);
+				sll_init_compilation_data(tmp.data,&c_dt);
 			}
 			sll_free_string(&tmp);
 			sll_copy_data(res_data.path,SLL_API_FILE_PATH_SEPARATOR,f_fp);
@@ -845,10 +845,10 @@ _read_file_argument:
 			sll_string_from_pointer(argv[*(fp+j)],&b_f_nm);
 			sll_string_length_t off=((_cli_flags&SLL_CLI_FLAG_NO_PATHS)?sll_path_split(&b_f_nm):0);
 			if (sll_string_ends(&b_f_nm,&_cli_slc_suffix)){
-				sll_string_set_char(0,b_f_nm.l-_cli_slc_suffix.l,&b_f_nm);
+				sll_string_set_char(0,b_f_nm.length-_cli_slc_suffix.length,&b_f_nm);
 			}
-			SLL_LOG("Adding file '%s' as '%s' to bundle...",f_fp,b_f_nm.v+off);
-			sll_bundle_add_file(b_f_nm.v+off,&c_dt,&bundle);
+			SLL_LOG("Adding file '%s' as '%s' to bundle...",f_fp,b_f_nm.data+off);
+			sll_bundle_add_file(b_f_nm.data+off,&c_dt,&bundle);
 			sll_free_string(&b_f_nm);
 		}
 		else{
@@ -866,11 +866,11 @@ _read_file_argument:
 			bf[l]=0;
 		}
 		else{
-			sll_string_length_t l=bundle.nm.l;
+			sll_string_length_t l=bundle.nm.length;
 			if (l>SLL_API_MAX_FILE_PATH_LENGTH-1){
 				l=SLL_API_MAX_FILE_PATH_LENGTH-1;
 			}
-			sll_copy_data(bundle.nm.v,l,bf);
+			sll_copy_data(bundle.nm.data,l,bf);
 			bf[l]=0;
 		}
 		if (!bf[0]){

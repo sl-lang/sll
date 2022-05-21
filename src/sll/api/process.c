@@ -39,7 +39,7 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_process_e
 	}
 	sll_audit(SLL_CHAR("sll.process.start.shell"),SLL_CHAR("s"),cmd);
 	sll_error_t err;
-	return (sll_platform_execute_shell(cmd->v,&err)?SLL_NO_ERROR:err);
+	return (sll_platform_execute_shell(cmd->data,&err)?SLL_NO_ERROR:err);
 }
 
 
@@ -61,8 +61,8 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_process_join(const sll_string_t*const
 	sll_char_t** dt=sll_allocate_stack(len*sizeof(sll_char_t*));
 	for (sll_array_length_t i=0;i<len;i++){
 		const sll_string_t* str=*(args+i);
-		sll_char_t* p=sll_allocate_stack(str->l);
-		sll_copy_data(str->v,str->l,p);
+		sll_char_t* p=sll_allocate_stack(str->length);
+		sll_copy_data(str->data,str->length,p);
 		*(dt+i)=p;
 	}
 	sll_process_join_args((const sll_char_t*const*)dt,out);
@@ -93,13 +93,13 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_process_start(const sll_array_t* args
 	}
 	SLL_RELEASE(n);
 	sll_char_t** raw_args=sll_allocate((args->length+1)*sizeof(sll_char_t*));
-	*raw_args=sll_allocate((exe_fp.l+1)*sizeof(sll_char_t));
-	sll_copy_data(exe_fp.v,exe_fp.l+1,*raw_args);
+	*raw_args=sll_allocate((exe_fp.length+1)*sizeof(sll_char_t));
+	sll_copy_data(exe_fp.data,exe_fp.length+1,*raw_args);
 	sll_free_string(&exe_fp);
 	for (sll_array_length_t i=1;i<args->length;i++){
 		n=sll_operator_cast(args->data[i],sll_static_int[SLL_OBJECT_TYPE_STRING]);
-		*(raw_args+i)=sll_allocate((n->data.string.l+1)*sizeof(sll_char_t));
-		sll_copy_data(n->data.string.v,n->data.string.l+1,*(raw_args+i));
+		*(raw_args+i)=sll_allocate((n->data.string.length+1)*sizeof(sll_char_t));
+		sll_copy_data(n->data.string.data,n->data.string.length+1,*(raw_args+i));
 		SLL_RELEASE(n);
 	}
 	*(raw_args+args->length)=NULL;
@@ -132,53 +132,53 @@ __SLL_EXTERNAL void sll_process_join_args(const sll_char_t*const* a,sll_string_t
 	STRING_INIT_STACK(o);
 	SLL_ASSERT(*a);
 	do{
-		if (o->l){
+		if (o->length){
 			sll_string_increase(o,1);
-			o->v[o->l]=' ';
-			o->l++;
+			o->data[o->length]=' ';
+			o->length++;
 		}
 		sll_string_t tmp;
 		sll_string_from_pointer(*a,&tmp);
 		a++;
-		if (!tmp.l){
+		if (!tmp.length){
 			sll_string_increase(o,2);
-			o->v[o->l]='"';
-			o->v[o->l+1]='"';
-			o->l+=2;
+			o->data[o->length]='"';
+			o->data[o->length+1]='"';
+			o->length+=2;
 			goto _continue;
 		}
-		for (sll_string_length_t i=0;i<tmp.l;i++){
-			if (_process_quote_chars[tmp.v[i]>>6]&(1ull<<(tmp.v[i]&63))){
+		for (sll_string_length_t i=0;i<tmp.length;i++){
+			if (_process_quote_chars[tmp.data[i]>>6]&(1ull<<(tmp.data[i]&63))){
 				goto _quote;
 			}
 		}
-		sll_string_increase(o,tmp.l);
-		sll_copy_data(tmp.v,tmp.l,o->v+o->l);
-		o->l+=tmp.l;
+		sll_string_increase(o,tmp.length);
+		sll_copy_data(tmp.data,tmp.length,o->data+o->length);
+		o->length+=tmp.length;
 		goto _continue;
 _quote:
 		sll_string_increase(o,1);
-		o->v[o->l]='"';
-		o->l++;
-		for (sll_string_length_t i=0;i<tmp.l;i++){
-			if (tmp.v[i]=='"'){
+		o->data[o->length]='"';
+		o->length++;
+		for (sll_string_length_t i=0;i<tmp.length;i++){
+			if (tmp.data[i]=='"'){
 				sll_string_increase(o,3);
-				o->v[o->l]='"';
-				o->v[o->l+1]='"';
-				o->v[o->l+2]='"';
-				o->l+=3;
+				o->data[o->length]='"';
+				o->data[o->length+1]='"';
+				o->data[o->length+2]='"';
+				o->length+=3;
 			}
 			else{
 				sll_string_increase(o,1);
-				o->v[o->l]=tmp.v[i];
-				o->l++;
+				o->data[o->length]=tmp.data[i];
+				o->length++;
 			}
 		}
 		sll_string_increase(o,1);
-		o->v[o->l]='"';
-		o->l++;
+		o->data[o->length]='"';
+		o->length++;
 _continue:
 		sll_free_string(&tmp);
 	} while (*a);
-	sll_allocator_move((void**)(&(o->v)),SLL_MEMORY_MOVE_DIRECTION_FROM_STACK);
+	sll_allocator_move((void**)(&(o->data)),SLL_MEMORY_MOVE_DIRECTION_FROM_STACK);
 }

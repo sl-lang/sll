@@ -52,7 +52,7 @@ void _gc_release_data(void){
 					sll_file_write_format(sll_stderr,SLL_CHAR("[%p]: "),NULL,c);
 					sll_string_t str;
 					sll_api_string_convert(&c,1,&str);
-					sll_file_write(sll_stderr,str.v,str.l*sizeof(sll_char_t),NULL);
+					sll_file_write(sll_stderr,str.data,str.length*sizeof(sll_char_t),NULL);
 					sll_free_string(&str);
 					sll_file_write_char(sll_stderr,'\n',NULL);
 				}

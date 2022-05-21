@@ -25,7 +25,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_platform_execute_shell(const sl
 	si.cb=sizeof(STARTUPINFOA);
 	si.dwFlags=0;
 	PROCESS_INFORMATION pi;
-	if (!CreateProcessA("C:\\Windows\\System32\\cmd.exe",s.v,NULL,NULL,TRUE,CREATE_NEW_PROCESS_GROUP,NULL,NULL,&si,&pi)){
+	if (!CreateProcessA("C:\\Windows\\System32\\cmd.exe",s.data,NULL,NULL,TRUE,CREATE_NEW_PROCESS_GROUP,NULL,NULL,&si,&pi)){
 		ERROR_PTR_SYSTEM;
 		sll_free_string(&s);
 		return 0;
@@ -60,7 +60,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_process_handle_t sll_platform_start_proces
 	si.cb=sizeof(STARTUPINFOA);
 	si.dwFlags=0;
 	PROCESS_INFORMATION pi;
-	if (!CreateProcessA((char*)(*a),s.v,NULL,NULL,TRUE,CREATE_NEW_PROCESS_GROUP,PTR(env),NULL,&si,&pi)){
+	if (!CreateProcessA((char*)(*a),s.data,NULL,NULL,TRUE,CREATE_NEW_PROCESS_GROUP,PTR(env),NULL,&si,&pi)){
 		ERROR_PTR_SYSTEM;
 		sll_free_string(&s);
 		return 0;

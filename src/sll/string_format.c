@@ -22,8 +22,8 @@
 	sll_string_increase(o,p); \
 	p-=sz; \
 	if (p&&!(f&STRING_FORMAT_FLAG_JUSTIFY_LEFT)){ \
-		sll_set_memory(o->v+o->l,p,'0'); \
-		o->l+=p; \
+		sll_set_memory(o->data+o->length,p,'0'); \
+		o->length+=p; \
 	}
 
 
@@ -33,22 +33,22 @@ static const sll_size_t _string_pow_10[]={1ull,10ull,100ull,1000ull,10000ull,100
 
 
 static void _format_string(unsigned int f,unsigned int w,unsigned int p,sll_string_t* s,sll_string_t* o){
-	sll_string_length_t l=s->l;
+	sll_string_length_t l=s->length;
 	if (f&STRING_FORMAT_FLAG_PERCISION){
 		l=p;
 	}
 	sll_string_increase(o,(l>w?l:w));
 	w=(w<l?0:w-l);
 	if (w&&!(f&STRING_FORMAT_FLAG_JUSTIFY_LEFT)){
-		sll_set_memory(o->v+o->l,w,' ');
-		o->l+=w;
+		sll_set_memory(o->data+o->length,w,' ');
+		o->length+=w;
 	}
-	sll_copy_data(s->v,l,o->v+o->l);
+	sll_copy_data(s->data,l,o->data+o->length);
 	sll_free_string(s);
-	o->l+=l;
+	o->length+=l;
 	if (w&&(f&STRING_FORMAT_FLAG_JUSTIFY_LEFT)){
-		sll_set_memory(o->v+o->l,w,' ');
-		o->l+=w;
+		sll_set_memory(o->data+o->length,w,' ');
+		o->length+=w;
 	}
 }
 
@@ -75,8 +75,8 @@ __SLL_EXTERNAL void sll_string_format_list(const sll_char_t* t,sll_string_length
 	while (i){
 		if (*t!='%'){
 			sll_string_increase(o,1);
-			o->v[o->l]=*t;
-			o->l++;
+			o->data[o->length]=*t;
+			o->length++;
 			i--;
 			t++;
 			continue;
@@ -87,8 +87,8 @@ __SLL_EXTERNAL void sll_string_format_list(const sll_char_t* t,sll_string_length
 		sll_string_length_t bi=i;
 		if (!i){
 			sll_string_increase(o,1);
-			o->v[o->l]='%';
-			o->l++;
+			o->data[o->length]='%';
+			o->length++;
 			break;
 		}
 		unsigned int f=0;
@@ -182,8 +182,8 @@ __SLL_EXTERNAL void sll_string_format_list(const sll_char_t* t,sll_string_length
 		}
 		if (*t=='%'){
 			sll_string_increase(o,1);
-			o->v[o->l]='%';
-			o->l++;
+			o->data[o->length]='%';
+			o->length++;
 		}
 		else if (*t=='c'){
 			if (!w){
@@ -192,14 +192,14 @@ __SLL_EXTERNAL void sll_string_format_list(const sll_char_t* t,sll_string_length
 			sll_string_increase(o,w);
 			w--;
 			if (w&&!(f&STRING_FORMAT_FLAG_JUSTIFY_LEFT)){
-				sll_set_memory(o->v+o->l,w,' ');
-				o->l+=w;
+				sll_set_memory(o->data+o->length,w,' ');
+				o->length+=w;
 			}
-			o->v[o->l]=sll_var_arg_get_char(va);
-			o->l++;
+			o->data[o->length]=sll_var_arg_get_char(va);
+			o->length++;
 			if (w&&(f&STRING_FORMAT_FLAG_JUSTIFY_LEFT)){
-				sll_set_memory(o->v+o->l,w,' ');
-				o->l+=w;
+				sll_set_memory(o->data+o->length,w,' ');
+				o->length+=w;
 			}
 		}
 		else if (*t=='f'){
@@ -270,8 +270,8 @@ __SLL_EXTERNAL void sll_string_format_list(const sll_char_t* t,sll_string_length
 				}
 				if ((f&(STRING_FORMAT_FLAG_SIGN|STRING_FORMAT_FLAG_SPACE_SIGN))||sn<0){
 					sll_string_increase(o,1);
-					o->v[o->l]=43+((sn<0)<<1);
-					o->l++;
+					o->data[o->length]=43+((sn<0)<<1);
+					o->length++;
 				}
 				n=(sll_size_t)(sn<0?-sn:sn);
 			}
@@ -296,8 +296,8 @@ __SLL_EXTERNAL void sll_string_format_list(const sll_char_t* t,sll_string_length
 				}
 				if (f&(STRING_FORMAT_FLAG_SIGN|STRING_FORMAT_FLAG_SPACE_SIGN)){
 					sll_string_increase(o,1);
-					o->v[o->l]='+';
-					o->l++;
+					o->data[o->length]='+';
+					o->length++;
 				}
 			}
 			if (!(f&STRING_FORMAT_FLAG_PERCISION)){
@@ -308,23 +308,23 @@ __SLL_EXTERNAL void sll_string_format_list(const sll_char_t* t,sll_string_length
 					p=1;
 				}
 				sll_string_increase(o,p);
-				sll_set_memory(o->v+o->l,p,'0');
-				o->l+=p;
+				sll_set_memory(o->data+o->length,p,'0');
+				o->length+=p;
 			}
 			else{
 				if ((f&STRING_FORMAT_FLAG_ALTERNATIVE_FORM)&&*t=='o'){
 					sll_string_increase(o,1);
-					o->v[o->l]='0';
-					o->l++;
+					o->data[o->length]='0';
+					o->length++;
 					if (p>0){
 						p--;
 					}
 				}
 				else if ((f&STRING_FORMAT_FLAG_ALTERNATIVE_FORM)&&(*t=='x'||*t=='X')){
 					sll_string_increase(o,2);
-					o->v[o->l]='0';
-					o->v[o->l+1]=(f&STRING_FORMAT_FLAG_UPPERCASE?'X':'x');
-					o->l+=2;
+					o->data[o->length]='0';
+					o->data[o->length+1]=(f&STRING_FORMAT_FLAG_UPPERCASE?'X':'x');
+					o->length+=2;
 					if (p>1){
 						p-=2;
 					}
@@ -337,22 +337,22 @@ __SLL_EXTERNAL void sll_string_format_list(const sll_char_t* t,sll_string_length
 						p=1;
 					}
 					sll_string_increase(o,p);
-					sll_set_memory(o->v+o->l,p,'0');
-					o->l+=p;
+					sll_set_memory(o->data+o->length,p,'0');
+					o->length+=p;
 				}
 				else if (*t=='o'){
 					sll_string_length_t sz=FIND_LAST_SET_BIT(n)/3+1;
 					SETUP_AND_JUSTIFT_RIGHT;
-					sll_string_length_t j=o->l+sz;
+					sll_string_length_t j=o->length+sz;
 					do{
 						j--;
-						o->v[j]=(n&7)+48;
+						o->data[j]=(n&7)+48;
 						n>>=3;
 					} while (n);
-					o->l+=sz;
+					o->length+=sz;
 					if (p&&(f&STRING_FORMAT_FLAG_JUSTIFY_LEFT)){
-						sll_set_memory(o->v+o->l,p,'0');
-						o->l+=p;
+						sll_set_memory(o->data+o->length,p,'0');
+						o->length+=p;
 					}
 				}
 				else if (*t!='x'&&*t!='X'){
@@ -361,32 +361,32 @@ __SLL_EXTERNAL void sll_string_format_list(const sll_char_t* t,sll_string_length
 						sz++;
 					}
 					SETUP_AND_JUSTIFT_RIGHT;
-					sll_string_length_t j=o->l+sz;
+					sll_string_length_t j=o->length+sz;
 					do{
 						j--;
-						o->v[j]=(n%10)+48;
+						o->data[j]=(n%10)+48;
 						n/=10;
 					} while (n);
-					o->l+=sz;
+					o->length+=sz;
 					if (p&&(f&STRING_FORMAT_FLAG_JUSTIFY_LEFT)){
-						sll_set_memory(o->v+o->l,p,'0');
-						o->l+=p;
+						sll_set_memory(o->data+o->length,p,'0');
+						o->length+=p;
 					}
 				}
 				else{
 					sll_string_length_t sz=(FIND_LAST_SET_BIT(n)>>2)+1;
 					SETUP_AND_JUSTIFT_RIGHT;
-					sll_string_length_t j=o->l+sz;
+					sll_string_length_t j=o->length+sz;
 					sll_char_t e=((f&STRING_FORMAT_FLAG_UPPERCASE)?55:87);
 					do{
 						j--;
-						o->v[j]=(n&15)+((n&15)>9?e:48);
+						o->data[j]=(n&15)+((n&15)>9?e:48);
 						n>>=4;
 					} while (n);
-					o->l+=sz;
+					o->length+=sz;
 					if (p&&(f&STRING_FORMAT_FLAG_JUSTIFY_LEFT)){
-						sll_set_memory(o->v+o->l,p,'0');
-						o->l+=p;
+						sll_set_memory(o->data+o->length,p,'0');
+						o->length+=p;
 					}
 				}
 			}
@@ -398,14 +398,14 @@ __SLL_EXTERNAL void sll_string_format_list(const sll_char_t* t,sll_string_length
 			do{
 				j-=4;
 				sll_char_t c=(ptr>>j)&15;
-				o->v[o->l]=c+(c>9?87:48);
-				o->l++;
+				o->data[o->length]=c+(c>9?87:48);
+				o->length++;
 			} while (j);
 		}
 		else{
 			sll_string_increase(o,1);
-			o->v[o->l]='%';
-			o->l++;
+			o->data[o->length]='%';
+			o->length++;
 			i=bi;
 			t=b;
 			continue;
@@ -413,6 +413,6 @@ __SLL_EXTERNAL void sll_string_format_list(const sll_char_t* t,sll_string_length
 		i--;
 		t++;
 	}
-	sll_allocator_move((void**)(&(o->v)),SLL_MEMORY_MOVE_DIRECTION_FROM_STACK);
+	sll_allocator_move((void**)(&(o->data)),SLL_MEMORY_MOVE_DIRECTION_FROM_STACK);
 	sll_string_calculate_checksum(o);
 }

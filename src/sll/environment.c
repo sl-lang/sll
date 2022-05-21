@@ -77,7 +77,7 @@ __SLL_EXTERNAL sll_bool_t sll_expand_environment_variable(const sll_string_t* k,
 	if (!sll_get_environment_variable(k,o)){
 		return 0;
 	}
-	if (!o->l){
+	if (!o->length){
 		return 1;
 	}
 	sll_string_length_t i=0;
@@ -128,7 +128,7 @@ __SLL_EXTERNAL void sll_remove_environment_variable(const sll_string_t* k){
 	while (i<sll_environment->l){
 		sll_environment_variable_t* kv=(sll_environment_variable_t*)(*(sll_environment->dt+i));
 		if (STRING_EQUAL(&k_low,&(kv->k))){
-			sll_platform_remove_environment_variable(k->v);
+			sll_platform_remove_environment_variable(k->data);
 			sll_free_string((sll_string_t*)(&(kv->k)));
 			sll_free_string((sll_string_t*)(&(kv->v)));
 			sll_deallocate(kv);
@@ -158,7 +158,7 @@ __SLL_EXTERNAL void sll_set_environment_variable(const sll_string_t* k,const sll
 	sll_string_t k_low;
 	sll_string_upper_case(k,&k_low);
 	LOCK_ENV;
-	sll_platform_set_environment_variable(k->v,v->v);
+	sll_platform_set_environment_variable(k->data,v->data);
 	for (sll_environment_length_t i=0;i<sll_environment->l;i++){
 		sll_environment_variable_t* kv=(sll_environment_variable_t*)(*(sll_environment->dt+i));
 		if (STRING_EQUAL(&k_low,&(kv->k))){

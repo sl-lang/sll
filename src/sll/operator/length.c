@@ -19,7 +19,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_len(sll_object_t* a
 		case SLL_OBJECT_TYPE_COMPLEX:
 			return sll_float_to_object(COMPLEX_ABS(a->data.complex_));
 		case SLL_OBJECT_TYPE_STRING:
-			return sll_int_to_object(a->data.string.l);
+			return sll_int_to_object(a->data.string.length);
 		case SLL_OBJECT_TYPE_ARRAY:
 			return sll_int_to_object(a->data.array.length);
 		case SLL_OBJECT_TYPE_MAP:

@@ -99,32 +99,32 @@ __SLL_EXTERNAL void sll_map_add_array(const sll_map_t* m,const sll_array_t* a,sl
 
 
 __SLL_EXTERNAL void sll_map_add_string(const sll_map_t* m,const sll_string_t* s,sll_map_t* o){
-	o->length=m->length+s->l;
+	o->length=m->length+s->length;
 	o->data=sll_allocate((o->length<<1)*sizeof(sll_object_t*));
 	sll_map_length_t i=m->length<<1;
-	bitmap_t* sm=sll_zero_allocate(((s->l+63)>>6)*sizeof(bitmap_t));
+	bitmap_t* sm=sll_zero_allocate(((s->length+63)>>6)*sizeof(bitmap_t));
 	for (sll_map_length_t j=0;j<i;j+=2){
 		sll_object_t* e=m->data[j];
 		SLL_ACQUIRE(e);
 		o->data[j]=e;
 		sll_integer_t n=e->data.int_;
-		if (e->type==SLL_OBJECT_TYPE_INT&&n>=0&&n<s->l){
-			o->data[j+1]=SLL_FROM_CHAR(s->v[n]);
+		if (e->type==SLL_OBJECT_TYPE_INT&&n>=0&&n<s->length){
+			o->data[j+1]=SLL_FROM_CHAR(s->data[n]);
 			(*(sm+(n>>6)))|=1ull<<(n&63);
 			continue;
 		}
 		o->data[j+1]=m->data[j+1];
 		SLL_ACQUIRE(o->data[j+1]);
 	}
-	for (sll_string_length_t j=0;j<((s->l+63)>>6);j++){
+	for (sll_string_length_t j=0;j<((s->length+63)>>6);j++){
 		bitmap_t v=~(*(sm+j));
 		while (v){
 			sll_string_length_t k=(j<<6)|FIND_FIRST_SET_BIT(v);
-			if (k>=s->l){
+			if (k>=s->length){
 				break;
 			}
 			o->data[i]=sll_int_to_object(k);
-			o->data[i+1]=SLL_FROM_CHAR(s->v[k]);
+			o->data[i+1]=SLL_FROM_CHAR(s->data[k]);
 			i+=2;
 			v&=v-1;
 		}
@@ -197,7 +197,7 @@ __SLL_EXTERNAL void sll_map_and_array(const sll_map_t* m,const sll_array_t* a,sl
 
 
 __SLL_EXTERNAL void sll_map_and_string(const sll_map_t* m,const sll_string_t* s,sll_map_t* o){
-	o->length=(m->length<s->l?m->length:s->l);
+	o->length=(m->length<s->length?m->length:s->length);
 	if (!o->length){
 		o->data=NULL;
 		return;
@@ -206,10 +206,10 @@ __SLL_EXTERNAL void sll_map_and_string(const sll_map_t* m,const sll_string_t* s,
 	sll_map_length_t i=0;
 	for (sll_map_length_t j=0;j<(m->length<<1);j+=2){
 		sll_object_t* e=m->data[j];
-		if (e->type==SLL_OBJECT_TYPE_INT&&e->data.int_>=0&&e->data.int_<s->l){
+		if (e->type==SLL_OBJECT_TYPE_INT&&e->data.int_>=0&&e->data.int_<s->length){
 			o->data[i]=e;
 			SLL_ACQUIRE(e);
-			o->data[i+1]=sll_operator_add(m->data[i+1],sll_static_char[s->v[e->data.int_]]);
+			o->data[i+1]=sll_operator_add(m->data[i+1],sll_static_char[s->data[e->data.int_]]);
 			i+=2;
 		}
 	}

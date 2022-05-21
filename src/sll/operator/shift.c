@@ -25,9 +25,9 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_shl(sll_object_t* a
 		case COMBINED_TYPE_FS:
 		case COMBINED_TYPE_CS:
 			{
-				sll_object_t* o=sll_array_length_to_object(b->data.string.l);
-				for (sll_string_length_t i=0;i<b->data.string.l;i++){
-					o->data.array.data[i]=sll_operator_shl(a,sll_static_char[b->data.string.v[i]]);
+				sll_object_t* o=sll_array_length_to_object(b->data.string.length);
+				for (sll_string_length_t i=0;i<b->data.string.length;i++){
+					o->data.array.data[i]=sll_operator_shl(a,sll_static_char[b->data.string.data[i]]);
 				}
 				return o;
 			}
@@ -187,9 +187,9 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_shr(sll_object_t* a
 		case COMBINED_TYPE_FS:
 		case COMBINED_TYPE_CS:
 			{
-				sll_object_t* o=sll_array_length_to_object(b->data.string.l);
-				for (sll_string_length_t i=0;i<b->data.string.l;i++){
-					o->data.array.data[i]=sll_operator_shr(a,sll_static_char[b->data.string.v[i]]);
+				sll_object_t* o=sll_array_length_to_object(b->data.string.length);
+				for (sll_string_length_t i=0;i<b->data.string.length;i++){
+					o->data.array.data[i]=sll_operator_shr(a,sll_static_char[b->data.string.data[i]]);
 				}
 				return o;
 			}

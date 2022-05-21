@@ -114,16 +114,16 @@ __SLL_EXTERNAL void sll_array_combinations(const sll_array_t* a,const sll_array_
 
 
 __SLL_EXTERNAL void sll_array_combinations_string(const sll_array_t* a,const sll_string_t* s,sll_array_t* o){
-	if (!a->length||!s->l){
+	if (!a->length||!s->length){
 		SLL_INIT_ARRAY(o);
 		return;
 	}
-	o->length=a->length*s->l;
+	o->length=a->length*s->length;
 	o->data=sll_allocator_init(o->length*sizeof(sll_object_t*));
 	sll_array_length_t i=0;
 	for (sll_string_length_t j=0;j<a->length;j++){
-		for (sll_array_length_t k=0;k<s->l;k++){
-			o->data[i]=sll_operator_add(a->data[j],sll_static_char[s->v[k]]);
+		for (sll_array_length_t k=0;k<s->length;k++){
+			o->data[i]=sll_operator_add(a->data[j],sll_static_char[s->data[k]]);
 			i++;
 		}
 	}

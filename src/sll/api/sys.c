@@ -143,13 +143,13 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_sys_get_version(sll_array_t* out){
 
 
 __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_bool_t sll_api_sys_load_library(const sll_string_t* path,sll_size_t sz,__SLL_U64 h0,__SLL_U64 h1,__SLL_U64 h2,__SLL_U64 h3){
-	if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_LOAD_LIBRARY)||path->l>=SLL_API_MAX_FILE_PATH_LENGTH){
+	if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_LOAD_LIBRARY)||path->length>=SLL_API_MAX_FILE_PATH_LENGTH){
 		return 0;
 	}
 	sll_string_t lib_name;
-	sll_string_from_pointer(path->v+sll_path_split(path),&lib_name);
+	sll_string_from_pointer(path->data+sll_path_split(path),&lib_name);
 	sll_audit(SLL_CHAR("sll.sys.library.load"),SLL_CHAR("ss"),path,&lib_name);
-	if (!sll_platform_path_exists(path->v)){
+	if (!sll_platform_path_exists(path->data)){
 		sll_free_string(&lib_name);
 		return 0;
 	}
@@ -160,7 +160,7 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_bool_t sll_api_sys_load_lib
 		}
 	}
 	if (sz){
-		sll_file_descriptor_t fd=sll_platform_file_open(path->v,SLL_FILE_FLAG_READ,NULL);
+		sll_file_descriptor_t fd=sll_platform_file_open(path->data,SLL_FILE_FLAG_READ,NULL);
 		if (fd==SLL_UNKNOWN_FILE_DESCRIPTOR){
 			sll_free_string(&lib_name);
 			return 0;
@@ -204,7 +204,7 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_bool_t sll_api_sys_load_lib
 			return 0;
 		}
 	}
-	sll_library_handle_t h=sll_platform_load_library(path->v,NULL);
+	sll_library_handle_t h=sll_platform_load_library(path->data,NULL);
 	if (!h){
 		sll_free_string(&lib_name);
 		return 0;

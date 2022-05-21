@@ -17,17 +17,17 @@
 
 
 static __SLL_FORCE_INLINE sll_bool_t STRING_EQUAL(const sll_string_t* a,const sll_string_t* b){
-	if (a->l!=b->l||a->c!=b->c){
+	if (a->length!=b->length||a->checksum!=b->checksum){
 		return 0;
 	}
-	if (!a->l){
+	if (!a->length){
 		return 1;
 	}
-	const wide_data_t* ap=(const wide_data_t*)(a->v);
-	const wide_data_t* bp=(const wide_data_t*)(b->v);
+	const wide_data_t* ap=(const wide_data_t*)(a->data);
+	const wide_data_t* bp=(const wide_data_t*)(b->data);
 	STRING_DATA_PTR(ap);
 	STRING_DATA_PTR(bp);
-	sll_string_length_t l=(a->l+7)>>3;
+	sll_string_length_t l=(a->length+7)>>3;
 #ifdef __SLL_BUILD_DARWIN
 	while (l){
 		if (*ap!=*bp){
@@ -62,11 +62,11 @@ static __SLL_FORCE_INLINE sll_bool_t STRING_EQUAL(const sll_string_t* a,const sl
 
 
 static __SLL_FORCE_INLINE void STRING_INIT_STACK(sll_string_t* o){
-	o->l=0;
-	o->c=0;
-	o->v=sll_allocator_init(SLL_STRING_ALIGN_LENGTH(0)*sizeof(sll_char_t));
-	INIT_PADDING(o->v,0);
-	sll_allocator_move((void**)(&(o->v)),SLL_MEMORY_MOVE_DIRECTION_TO_STACK);
+	o->length=0;
+	o->checksum=0;
+	o->data=sll_allocator_init(SLL_STRING_ALIGN_LENGTH(0)*sizeof(sll_char_t));
+	INIT_PADDING(o->data,0);
+	sll_allocator_move((void**)(&(o->data)),SLL_MEMORY_MOVE_DIRECTION_TO_STACK);
 }
 
 

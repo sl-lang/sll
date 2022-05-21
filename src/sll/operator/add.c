@@ -43,7 +43,7 @@ _add_to_string:
 				sll_string_t sb;
 				sll_api_string_convert(&b,1,&sb);
 				sll_object_t* o=sll_create_object(SLL_OBJECT_TYPE_STRING);
-				if (!sa.l){
+				if (!sa.length){
 					o->data.string=sb;
 					return o;
 				}

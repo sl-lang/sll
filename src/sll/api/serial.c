@@ -334,13 +334,13 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_error_t sll_decode_string(sll_file_t* f,sl
 		return SLL_ERROR_UNKNOWN_FD;
 	}
 	sll_error_t err;
-	o->l=(sll_string_length_t)sll_decode_integer(f,&err);
+	o->length=(sll_string_length_t)sll_decode_integer(f,&err);
 	if (err!=SLL_NO_ERROR){
 		return err;
 	}
-	sll_string_create(o->l,o);
-	if (o->l<STRING_COMPRESSION_MIN_LENGTH){
-		if (sll_file_read(f,o->v,o->l*sizeof(sll_char_t),&err)!=o->l*sizeof(sll_char_t)){
+	sll_string_create(o->length,o);
+	if (o->length<STRING_COMPRESSION_MIN_LENGTH){
+		if (sll_file_read(f,o->data,o->length*sizeof(sll_char_t),&err)!=o->length*sizeof(sll_char_t)){
 			goto _error;
 		}
 	}
@@ -377,7 +377,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_error_t sll_decode_string(sll_file_t* f,sl
 				e=(v>>bc)&((1ull<<el)-1);
 			}
 			if (el==8){
-				o->v[i]=(sll_char_t)e;
+				o->data[i]=(sll_char_t)e;
 				bf[r]=(sll_char_t)e;
 				i++;
 				r=(r+1)&((1<<STRING_COMPRESSION_OFFSET_BIT_COUNT)-1);
@@ -387,13 +387,13 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_error_t sll_decode_string(sll_file_t* f,sl
 				unsigned int l=k+(e&((1<<STRING_COMPRESSION_LENGTH_BIT_COUNT)-1))+2;
 				do{
 					bf[r]=bf[k&((1<<STRING_COMPRESSION_OFFSET_BIT_COUNT)-1)];
-					o->v[i]=bf[r];
+					o->data[i]=bf[r];
 					i++;
 					r=(r+1)&((1<<STRING_COMPRESSION_OFFSET_BIT_COUNT)-1);
 					k++;
 				} while (k<l);
 			}
-		} while (i<o->l);
+		} while (i<o->length);
 	}
 	sll_string_calculate_checksum(o);
 	return SLL_NO_ERROR;
@@ -554,12 +554,12 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_error_t sll_encode_string(sll_file_t* f,co
 	if (!f){
 		return SLL_ERROR_UNKNOWN_FD;
 	}
-	sll_error_t err=sll_encode_integer(f,s->l);
+	sll_error_t err=sll_encode_integer(f,s->length);
 	if (err!=SLL_NO_ERROR){
 		return err;
 	}
-	if (s->l<STRING_COMPRESSION_MIN_LENGTH){
-		sll_file_write(f,s->v,s->l*sizeof(sll_char_t),&err);
+	if (s->length<STRING_COMPRESSION_MIN_LENGTH){
+		sll_file_write(f,s->data,s->length*sizeof(sll_char_t),&err);
 		return err;
 	}
 	wide_data_t v=0;
@@ -569,10 +569,10 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_error_t sll_encode_string(sll_file_t* f,co
 	sll_string_length_t si=0;
 	unsigned int i=((1<<STRING_COMPRESSION_OFFSET_BIT_COUNT)-(1<<STRING_COMPRESSION_LENGTH_BIT_COUNT)-1);
 	do{
-		bf[i]=s->v[si];
+		bf[i]=s->data[si];
 		i++;
 		si++;
-	} while (si<s->l&&i<(1<<(STRING_COMPRESSION_OFFSET_BIT_COUNT+1)));
+	} while (si<s->length&&i<(1<<(STRING_COMPRESSION_OFFSET_BIT_COUNT+1)));
 	unsigned int r=((1<<STRING_COMPRESSION_OFFSET_BIT_COUNT)-(1<<STRING_COMPRESSION_LENGTH_BIT_COUNT)-1);
 	do{
 		unsigned int st=0;
@@ -625,8 +625,8 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_error_t sll_encode_string(sll_file_t* f,co
 			}
 			i-=1<<STRING_COMPRESSION_OFFSET_BIT_COUNT;
 			r-=1<<STRING_COMPRESSION_OFFSET_BIT_COUNT;
-			while (i<(1<<(STRING_COMPRESSION_OFFSET_BIT_COUNT+1))&&si<s->l){
-				bf[i]=s->v[si];
+			while (i<(1<<(STRING_COMPRESSION_OFFSET_BIT_COUNT+1))&&si<s->length){
+				bf[i]=s->data[si];
 				i++;
 				si++;
 			}

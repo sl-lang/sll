@@ -44,7 +44,7 @@ static sll_thread_index_t _restart_thread(event_list_length_t idx){
 		sll_string_t bf;
 		sll_string_create(evt->sz,&bf);
 		sll_error_t err;
-		sll_size_t sz=sll_file_read(evt->f,bf.v,evt->sz,&err);
+		sll_size_t sz=sll_file_read(evt->f,bf.data,evt->sz,&err);
 		if (!sz&&err!=SLL_NO_ERROR){
 			sll_free_string(&bf);
 			o=sll_int_to_object(err);

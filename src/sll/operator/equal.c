@@ -23,7 +23,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_operator_equal(sll_object_t* a,
 		case COMBINED_TYPE_ID:
 			return (!b->data.complex_.imag&&a->data.int_==b->data.complex_.real);
 		case COMBINED_TYPE_IS:
-			return a->data.int_==b->data.string.l;
+			return a->data.int_==b->data.string.length;
 		case COMBINED_TYPE_IA:
 			return a->data.int_==b->data.array.length;
 		case COMBINED_TYPE_IM:
@@ -37,7 +37,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_operator_equal(sll_object_t* a,
 		case COMBINED_TYPE_FD:
 			return (!b->data.complex_.imag&&a->data.float_==b->data.complex_.real);
 		case COMBINED_TYPE_FS:
-			return a->data.float_==b->data.string.l;
+			return a->data.float_==b->data.string.length;
 		case COMBINED_TYPE_FA:
 			return a->data.float_==b->data.array.length;
 		case COMBINED_TYPE_FM:
@@ -51,7 +51,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_operator_equal(sll_object_t* a,
 		case COMBINED_TYPE_CD:
 			return (!b->data.complex_.imag&&a->data.char_==b->data.complex_.real);
 		case COMBINED_TYPE_CS:
-			return (b->data.string.l==1&&b->data.string.v[0]==a->data.char_);
+			return (b->data.string.length==1&&b->data.string.data[0]==a->data.char_);
 		case COMBINED_TYPE_CA:
 			return a->data.char_==b->data.array.length;
 		case COMBINED_TYPE_CM:
@@ -65,19 +65,19 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_operator_equal(sll_object_t* a,
 		case COMBINED_TYPE_DD:
 			return (a->data.complex_.real==b->data.complex_.real&&a->data.complex_.imag==b->data.complex_.imag);
 		case COMBINED_TYPE_DS:
-			return (!a->data.complex_.imag&&a->data.complex_.real==b->data.string.l);
+			return (!a->data.complex_.imag&&a->data.complex_.real==b->data.string.length);
 		case COMBINED_TYPE_DA:
 			return (!a->data.complex_.imag&&a->data.complex_.real==b->data.array.length);
 		case COMBINED_TYPE_DM:
 			return (!a->data.complex_.imag&&a->data.complex_.real==b->data.map.length);
 		case COMBINED_TYPE_SI:
-			return a->data.string.l==b->data.int_;
+			return a->data.string.length==b->data.int_;
 		case COMBINED_TYPE_SF:
-			return a->data.string.l==b->data.float_;
+			return a->data.string.length==b->data.float_;
 		case COMBINED_TYPE_SC:
-			return (a->data.string.l==1&&a->data.string.v[0]==b->data.char_);
+			return (a->data.string.length==1&&a->data.string.data[0]==b->data.char_);
 		case COMBINED_TYPE_SD:
-			return (!b->data.complex_.imag&&a->data.string.l==b->data.complex_.real);
+			return (!b->data.complex_.imag&&a->data.string.length==b->data.complex_.real);
 		case COMBINED_TYPE_SS:
 			return STRING_EQUAL(&(a->data.string),&(b->data.string));
 		case COMBINED_TYPE_SA:

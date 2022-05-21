@@ -63,10 +63,10 @@ static __STATIC_STRING(_parse_false_str,"false");
 
 
 static sll_identifier_index_t _get_var_index(sll_source_file_t* sf,const extra_compilation_data_t* e_c_dt,const scope_data_t* l_sc,sll_string_t* str,void* arg,unsigned int fl){
-	SLL_ASSERT(str->l);
+	SLL_ASSERT(str->length);
 	sll_identifier_index_t o=SLL_MAX_IDENTIFIER_INDEX;
-	if (str->l<=SLL_MAX_SHORT_IDENTIFIER_LENGTH){
-		sll_identifier_list_t* k=sf->idt.s+str->l-1;
+	if (str->length<=SLL_MAX_SHORT_IDENTIFIER_LENGTH){
+		sll_identifier_list_t* k=sf->idt.s+str->length-1;
 		sll_scope_t mx_sc=SLL_MAX_SCOPE;
 		sll_identifier_index_t mx_i=0;
 		if (!(fl&GET_VAR_INDEX_FLAG_FUNC)){
@@ -76,12 +76,12 @@ static sll_identifier_index_t _get_var_index(sll_source_file_t* sf,const extra_c
 					continue;
 				}
 				if (si->sc==l_sc->l_sc){
-					o=SLL_CREATE_IDENTIFIER(i,str->l-1);
+					o=SLL_CREATE_IDENTIFIER(i,str->length-1);
 					goto _check_new_var;
 				}
 				else if ((mx_sc==SLL_MAX_SCOPE||si->sc>mx_sc)&&(l_sc->m[si->sc>>6]&(1ull<<(si->sc&0x3f)))){
 					mx_sc=si->sc;
-					mx_i=SLL_CREATE_IDENTIFIER(i,str->l-1);
+					mx_i=SLL_CREATE_IDENTIFIER(i,str->length-1);
 				}
 			}
 			if (mx_sc!=SLL_MAX_SCOPE){
@@ -96,7 +96,7 @@ static sll_identifier_index_t _get_var_index(sll_source_file_t* sf,const extra_c
 		k->l++;
 		k->dt=sll_reallocate(k->dt,k->l*sizeof(sll_identifier_t));
 		(k->dt+k->l-1)->sc=l_sc->l_sc;
-		o=SLL_CREATE_IDENTIFIER(k->l-1,str->l-1);
+		o=SLL_CREATE_IDENTIFIER(k->l-1,str->length-1);
 		SLL_IDENTIFIER_SET_STRING_INDEX(k->dt+k->l-1,sll_add_string(&(sf->st),str,1),fl&GET_VAR_INDEX_FLAG_TLS);
 		if ((fl&GET_VAR_INDEX_FLAG_ASSIGN)&&arg){
 			e_c_dt->nv_dt->sz++;
@@ -229,7 +229,7 @@ static unsigned int _read_single_char(sll_file_t* rf,sll_char_t* o){
 static sll_read_char_t _read_identifier(sll_string_t* str,sll_string_length_t sz,sll_file_t* rf,sll_read_char_t c){
 	do{
 		if (sz<255){
-			str->v[sz]=(sll_char_t)c;
+			str->data[sz]=(sll_char_t)c;
 			sz++;
 		}
 		c=sll_file_read_char(rf,NULL);
@@ -399,14 +399,14 @@ static void _read_object_internal(sll_file_t* rf,sll_source_file_t* sf,sll_read_
 				STRING_INIT_STACK(&s);
 				while (1){
 					sll_string_increase(&s,1);
-					unsigned int err=_read_single_char(rf,s.v+s.l);
-					if (err==1||(!err&&s.v[s.l]=='"')){
+					unsigned int err=_read_single_char(rf,s.data+s.length);
+					if (err==1||(!err&&s.data[s.length]=='"')){
 						break;
 					}
-					s.l++;
+					s.length++;
 				}
-				SLL_STRING_FORMAT_PADDING(s.v,s.l);
-				sll_allocator_move((void**)(&(s.v)),SLL_MEMORY_MOVE_DIRECTION_FROM_STACK);
+				SLL_STRING_FORMAT_PADDING(s.data,s.length);
+				sll_allocator_move((void**)(&(s.data)),SLL_MEMORY_MOVE_DIRECTION_FROM_STACK);
 				sll_string_calculate_checksum(&s);
 				arg->dt.s=sll_add_string(&(sf->st),&s,1);
 				if (e_c_dt->fn){
@@ -430,11 +430,11 @@ static void _read_object_internal(sll_file_t* rf,sll_source_file_t* sf,sll_read_
 						c=sll_file_read_char(rf,NULL);
 					}
 					sll_string_increase(&s,1);
-					s.v[s.l]=(sll_char_t)c;
-					s.l++;
+					s.data[s.length]=(sll_char_t)c;
+					s.length++;
 				}
-				SLL_STRING_FORMAT_PADDING(s.v,s.l);
-				sll_allocator_move((void**)(&(s.v)),SLL_MEMORY_MOVE_DIRECTION_FROM_STACK);
+				SLL_STRING_FORMAT_PADDING(s.data,s.length);
+				sll_allocator_move((void**)(&(s.data)),SLL_MEMORY_MOVE_DIRECTION_FROM_STACK);
 				sll_string_calculate_checksum(&s);
 				arg->dt.s=sll_add_string(&(sf->st),&s,1);
 				c=sll_file_read_char(rf,NULL);
@@ -718,7 +718,7 @@ _parse_identifier:
 				sll_string_t str;
 				sll_string_create(255,&str);
 				if (rewind_bf_l){
-					sll_copy_data(rewind_bf,rewind_bf_l,str.v);
+					sll_copy_data(rewind_bf,rewind_bf_l,str.data);
 				}
 				c=_read_identifier(&str,rewind_bf_l,rf,c);
 				if (o&&o->t==SLL_NODE_TYPE_DECL&&(ac&1)){
@@ -790,15 +790,15 @@ _parse_identifier:
 				else{
 _normal_identifier:;
 					unsigned int var_fl=((!o||o->t!=SLL_NODE_TYPE_ASSIGN||ac)&&!(fl&EXTRA_COMPILATION_DATA_VARIABLE_DEFINITION)?GET_VAR_INDEX_FLAG_UNKNOWN:0)|(o&&o->t==SLL_NODE_TYPE_ASSIGN?GET_VAR_INDEX_FLAG_ASSIGN:(o&&o->t==SLL_NODE_TYPE_FUNC?GET_VAR_INDEX_FLAG_FUNC:0));
-					if (str.l&&str.v[0]=='!'){
+					if (str.length&&str.data[0]=='!'){
 						var_fl|=GET_VAR_INDEX_FLAG_TLS*(!e_c_dt->fn);
-						for (sll_string_length_t i=0;i<str.l-1;i++){
-							str.v[i]=str.v[i+1];
+						for (sll_string_length_t i=0;i<str.length-1;i++){
+							str.data[i]=str.data[i+1];
 						}
-						sll_string_decrease(&str,str.l-1);
+						sll_string_decrease(&str,str.length-1);
 						sll_string_calculate_checksum(&str);
 					}
-					if (str.l){
+					if (str.length){
 						arg->t=SLL_NODE_TYPE_IDENTIFIER;
 						arg->dt.id=_get_var_index(sf,e_c_dt,l_sc,&str,arg,var_fl);
 						if (arg->dt.id==SLL_MAX_IDENTIFIER_INDEX){
@@ -969,8 +969,8 @@ _return_node:;
 			}
 			if (SLL_IDENTIFIER_GET_ARRAY_ID(arg->dt.id)>3){
 				sll_string_t* nm=sf->st.dt+SLL_IDENTIFIER_GET_STRING_INDEX((SLL_IDENTIFIER_GET_ARRAY_ID(arg->dt.id)==SLL_MAX_SHORT_IDENTIFIER_LENGTH?sf->idt.il:sf->idt.s[SLL_IDENTIFIER_GET_ARRAY_ID(arg->dt.id)].dt)+SLL_IDENTIFIER_GET_ARRAY_INDEX(arg->dt.id));
-				SLL_ASSERT(nm->l>4);
-				if (nm->v[0]=='@'&&nm->v[1]=='@'&&nm->v[nm->l-2]=='@'&&nm->v[nm->l-1]=='@'){
+				SLL_ASSERT(nm->length>4);
+				if (nm->data[0]=='@'&&nm->data[1]=='@'&&nm->data[nm->length-2]=='@'&&nm->data[nm->length-1]=='@'){
 					i++;
 					va=1;
 					break;
@@ -1014,7 +1014,7 @@ _return_node:;
 				o->dt.ac=ac;
 			}
 			else{
-				o->dt.fn.id=sll_lookup_internal_function(e_c_dt->i_ft,(sf->st.dt+n->dt.s)->v);
+				o->dt.fn.id=sll_lookup_internal_function(e_c_dt->i_ft,(sf->st.dt+n->dt.s)->data);
 				if (o->dt.fn.id==SLL_UNKNOWN_INTERNAL_FUNCTION_INDEX){
 					o->t=SLL_NODE_TYPE_INTERNAL_FUNC_LOAD;
 					o->dt.ac=ac;

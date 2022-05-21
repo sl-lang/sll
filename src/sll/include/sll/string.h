@@ -74,9 +74,9 @@
  */
 #define SLL_INIT_STRING(o) \
 	do{ \
-		(o)->l=0; \
-		(o)->c=0; \
-		(o)->v=NULL; \
+		(o)->length=0; \
+		(o)->checksum=0; \
+		(o)->data=NULL; \
 	} while (0)
 
 

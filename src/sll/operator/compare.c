@@ -28,7 +28,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_compare_result_t sll_operator_compare(sll_
 		case COMBINED_TYPE_ID:
 			return COMPARE_RESULT(a->data.int_,COMPLEX_ABS(b->data.complex_));
 		case COMBINED_TYPE_IS:
-			return COMPARE_RESULT(a->data.int_,b->data.string.l);
+			return COMPARE_RESULT(a->data.int_,b->data.string.length);
 		case COMBINED_TYPE_IA:
 			return COMPARE_RESULT(a->data.int_,b->data.array.length);
 		case COMBINED_TYPE_IM:
@@ -42,7 +42,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_compare_result_t sll_operator_compare(sll_
 		case COMBINED_TYPE_FD:
 			return COMPARE_RESULT(a->data.float_,COMPLEX_ABS(b->data.complex_));
 		case COMBINED_TYPE_FS:
-			return COMPARE_RESULT(a->data.float_,b->data.string.l);
+			return COMPARE_RESULT(a->data.float_,b->data.string.length);
 		case COMBINED_TYPE_FA:
 			return COMPARE_RESULT(a->data.float_,b->data.array.length);
 		case COMBINED_TYPE_FM:
@@ -56,13 +56,13 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_compare_result_t sll_operator_compare(sll_
 		case COMBINED_TYPE_CD:
 			return COMPARE_RESULT(a->data.char_,COMPLEX_ABS(b->data.complex_));
 		case COMBINED_TYPE_CS:
-			if (!b->data.string.l){
+			if (!b->data.string.length){
 				return SLL_COMPARE_RESULT_ABOVE;
 			}
-			if (b->data.string.v[0]!=a->data.char_){
-				return COMPARE_RESULT(a->data.char_,b->data.string.v[0]);
+			if (b->data.string.data[0]!=a->data.char_){
+				return COMPARE_RESULT(a->data.char_,b->data.string.data[0]);
 			}
-			return (b->data.string.l==1?SLL_COMPARE_RESULT_EQUAL:SLL_COMPARE_RESULT_BELOW);
+			return (b->data.string.length==1?SLL_COMPARE_RESULT_EQUAL:SLL_COMPARE_RESULT_BELOW);
 		case COMBINED_TYPE_DI:
 			return COMPARE_RESULT(COMPLEX_ABS(a->data.complex_),b->data.int_);
 		case COMBINED_TYPE_DF:
@@ -72,7 +72,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_compare_result_t sll_operator_compare(sll_
 		case COMBINED_TYPE_DD:
 			return COMPARE_RESULT(COMPLEX_ABS(a->data.complex_),COMPLEX_ABS(b->data.complex_));
 		case COMBINED_TYPE_DS:
-			return COMPARE_RESULT(COMPLEX_ABS(a->data.complex_),b->data.string.l);
+			return COMPARE_RESULT(COMPLEX_ABS(a->data.complex_),b->data.string.length);
 		case COMBINED_TYPE_DA:
 			return COMPARE_RESULT(COMPLEX_ABS(a->data.complex_),b->data.array.length);
 		case COMBINED_TYPE_DM:
@@ -82,19 +82,19 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_compare_result_t sll_operator_compare(sll_
 		case COMBINED_TYPE_CM:
 			return COMPARE_RESULT(a->data.char_,b->data.map.length);
 		case COMBINED_TYPE_SI:
-			return COMPARE_RESULT(a->data.string.l,b->data.int_);
+			return COMPARE_RESULT(a->data.string.length,b->data.int_);
 		case COMBINED_TYPE_SF:
-			return COMPARE_RESULT(a->data.string.l,b->data.float_);
+			return COMPARE_RESULT(a->data.string.length,b->data.float_);
 		case COMBINED_TYPE_SC:
-			if (!a->data.string.l){
+			if (!a->data.string.length){
 				return SLL_COMPARE_RESULT_BELOW;
 			}
-			if (a->data.string.v[0]!=b->data.char_){
-				return COMPARE_RESULT(b->data.char_,a->data.string.v[0]);
+			if (a->data.string.data[0]!=b->data.char_){
+				return COMPARE_RESULT(b->data.char_,a->data.string.data[0]);
 			}
-			return (a->data.string.l==1?SLL_COMPARE_RESULT_EQUAL:SLL_COMPARE_RESULT_ABOVE);
+			return (a->data.string.length==1?SLL_COMPARE_RESULT_EQUAL:SLL_COMPARE_RESULT_ABOVE);
 		case COMBINED_TYPE_SD:
-			return COMPARE_RESULT(a->data.string.l,COMPLEX_ABS(b->data.complex_));
+			return COMPARE_RESULT(a->data.string.length,COMPLEX_ABS(b->data.complex_));
 		case COMBINED_TYPE_SS:
 			return sll_string_compare(&(a->data.string),&(b->data.string));
 		case COMBINED_TYPE_SA:

@@ -27,8 +27,8 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_div(sll_object_t* a
 		case COMBINED_TYPE_FS:
 			{
 				sll_object_t* o=sll_array_length_to_object(b->data.array.length);
-				for (sll_string_length_t i=0;i<b->data.string.l;i++){
-					o->data.array.data[i]=sll_operator_div(a,sll_static_char[b->data.string.v[i]]);
+				for (sll_string_length_t i=0;i<b->data.string.length;i++){
+					o->data.array.data[i]=sll_operator_div(a,sll_static_char[b->data.string.data[i]]);
 				}
 				return o;
 			}
@@ -71,9 +71,9 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_div(sll_object_t* a
 		case COMBINED_TYPE_SI:
 		case COMBINED_TYPE_SF:
 			{
-				sll_object_t* o=sll_array_length_to_object(a->data.string.l);
-				for (sll_string_length_t i=0;i<a->data.string.l;i++){
-					o->data.array.data[i]=sll_operator_div(sll_static_char[a->data.string.v[i]],b);
+				sll_object_t* o=sll_array_length_to_object(a->data.string.length);
+				for (sll_string_length_t i=0;i<a->data.string.length;i++){
+					o->data.array.data[i]=sll_operator_div(sll_static_char[a->data.string.data[i]],b);
 				}
 				return o;
 			}
@@ -145,9 +145,9 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_floor_div(sll_objec
 		case COMBINED_TYPE_IS:
 		case COMBINED_TYPE_FS:
 			{
-				sll_object_t* o=sll_array_length_to_object(b->data.string.l);
-				for (sll_string_length_t i=0;i<b->data.string.l;i++){
-					o->data.array.data[i]=sll_operator_floor_div(a,sll_static_char[b->data.string.v[i]]);
+				sll_object_t* o=sll_array_length_to_object(b->data.string.length);
+				for (sll_string_length_t i=0;i<b->data.string.length;i++){
+					o->data.array.data[i]=sll_operator_floor_div(a,sll_static_char[b->data.string.data[i]]);
 				}
 				return o;
 			}
@@ -190,9 +190,9 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_floor_div(sll_objec
 		case COMBINED_TYPE_SI:
 		case COMBINED_TYPE_SF:
 			{
-				sll_object_t* o=sll_array_length_to_object(a->data.string.l);
-				for (sll_string_length_t i=0;i<a->data.string.l;i++){
-					o->data.array.data[i]=sll_operator_floor_div(sll_static_char[a->data.string.v[i]],b);
+				sll_object_t* o=sll_array_length_to_object(a->data.string.length);
+				for (sll_string_length_t i=0;i<a->data.string.length;i++){
+					o->data.array.data[i]=sll_operator_floor_div(sll_static_char[a->data.string.data[i]],b);
 				}
 				return o;
 			}

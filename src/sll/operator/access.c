@@ -14,14 +14,14 @@
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_access(sll_object_t* a,sll_object_t* b){
 	if (a->type==SLL_OBJECT_TYPE_STRING){
 		if (b->type==SLL_OBJECT_TYPE_INT){
-			if (!a->data.string.l){
+			if (!a->data.string.length){
 				return SLL_ACQUIRE_STATIC_INT(0);
 			}
 			WRAP_ARRAY_INDEX(b->data.int_,a->data.array.length,idx);
 			if (idx<0||idx>=a->data.array.length){
 				return SLL_ACQUIRE_STATIC_INT(0);
 			}
-			return SLL_FROM_CHAR(a->data.string.v[idx]);
+			return SLL_FROM_CHAR(a->data.string.data[idx]);
 		}
 	}
 	else if (a->type==SLL_OBJECT_TYPE_ARRAY){

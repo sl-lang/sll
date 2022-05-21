@@ -215,7 +215,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_cast(sll_object_t* 
 		case COMBINED_TYPE_SK:
 			{
 				sll_object_t* o=sll_create_object(SLL_OBJECT_TYPE_ARRAY);
-				sll_array_range(0,a->data.string.l,1,&(o->data.array));
+				sll_array_range(0,a->data.string.length,1,&(o->data.array));
 				return o;
 			}
 		case COMBINED_TYPE_AI:

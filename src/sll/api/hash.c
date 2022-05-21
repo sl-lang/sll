@@ -50,7 +50,7 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_hash_md5(__SLL_U32 a,__SLL_U32 b,__SL
 		c,
 		d
 	};
-	sll_hash_md5(&dt,str->v,str->l);
+	sll_hash_md5(&dt,str->data,str->length);
 	sll_new_object_array(SLL_CHAR("hhhh"),out,dt.a,dt.b,dt.c,dt.d);
 }
 
@@ -64,7 +64,7 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_hash_sha1(__SLL_U32 a,__SLL_U32 b,__S
 		d,
 		e
 	};
-	sll_hash_sha1(&dt,str->v,str->l);
+	sll_hash_sha1(&dt,str->data,str->length);
 	sll_new_object_array(SLL_CHAR("hhhhh"),out,dt.a,dt.b,dt.c,dt.d,dt.e);
 }
 
@@ -81,7 +81,7 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_hash_sha256(__SLL_U32 a,__SLL_U32 b,_
 		g,
 		h
 	};
-	sll_hash_sha256(&dt,str->v,str->l);
+	sll_hash_sha256(&dt,str->data,str->length);
 	sll_new_object_array(SLL_CHAR("hhhhhhhh"),out,dt.a,dt.b,dt.c,dt.d,dt.e,dt.f,dt.g,dt.h);
 }
 
@@ -98,7 +98,7 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_hash_sha512(__SLL_U64 a,__SLL_U64 b,_
 		g,
 		h
 	};
-	sll_hash_sha512(&dt,str->v,str->l);
+	sll_hash_sha512(&dt,str->data,str->length);
 	sll_new_object_array(SLL_CHAR("iiiiiiii"),out,dt.a,dt.b,dt.c,dt.d,dt.e,dt.f,dt.g,dt.h);
 }
 

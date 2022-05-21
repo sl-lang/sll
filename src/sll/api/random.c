@@ -49,13 +49,13 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_random_get_string(sll_string_length_t
 	}
 	SLL_ASSERT(min<max);
 	sll_string_create(len,out);
-	sll_platform_random(out->v,len);
+	sll_platform_random(out->data,len);
 	if (!min&&max==255){
 		return;
 	}
 	for (sll_string_length_t i=0;i<len;i++){
-		while (out->v[i]<min||out->v[i]>max){
-			sll_platform_random(out->v+i,sizeof(sll_char_t));
+		while (out->data[i]<min||out->data[i]>max){
+			sll_platform_random(out->data+i,sizeof(sll_char_t));
 		}
 	}
 	sll_string_calculate_checksum(out);

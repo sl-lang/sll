@@ -100,27 +100,27 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_bool_t sll_api_file_close(s
 
 
 __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_file_copy(const sll_string_t* src,const sll_string_t* dst){
-	if (src->l>SLL_API_MAX_FILE_PATH_LENGTH||dst->l>SLL_API_MAX_FILE_PATH_LENGTH){
+	if (src->length>SLL_API_MAX_FILE_PATH_LENGTH||dst->length>SLL_API_MAX_FILE_PATH_LENGTH){
 		return SLL_ERROR_TOO_LONG;
 	}
 	if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_PATH_API)&&!sll_get_sandbox_flag(SLL_SANDBOX_FLAG_ENABLE_FILE_COPY)){
 		return SLL_ERROR_FROM_SANDBOX(SLL_SANDBOX_FLAG_DISABLE_PATH_API);
 	}
 	sll_audit(SLL_CHAR("sll.file.copy"),SLL_CHAR("ss"),src,dst);
-	return sll_platform_path_copy(src->v,dst->v);
+	return sll_platform_path_copy(src->data,dst->data);
 }
 
 
 
 __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_file_delete(const sll_string_t* path){
-	if (path->l>SLL_API_MAX_FILE_PATH_LENGTH){
+	if (path->length>SLL_API_MAX_FILE_PATH_LENGTH){
 		return SLL_ERROR_TOO_LONG;
 	}
 	if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_PATH_API)&&!sll_get_sandbox_flag(SLL_SANDBOX_FLAG_ENABLE_FILE_DELETE)){
 		return SLL_ERROR_FROM_SANDBOX(SLL_SANDBOX_FLAG_DISABLE_PATH_API);
 	}
 	sll_audit(SLL_CHAR("sll.file.delete"),SLL_CHAR("s"),path);
-	return sll_platform_path_delete(path->v);
+	return sll_platform_path_delete(path->data);
 }
 
 
@@ -140,10 +140,10 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_file_from
 	if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_FILE_IO)&&!sll_get_sandbox_flag(SLL_SANDBOX_FLAG_ENABLE_BUFFER_FILES)){
 		return ~SLL_ERROR_FROM_SANDBOX(SLL_SANDBOX_FLAG_DISABLE_FILE_IO);
 	}
-	void* ptr=sll_allocate(data->l);
-	sll_copy_data(data->v,data->l,ptr);
+	void* ptr=sll_allocate(data->length);
+	sll_copy_data(data->data,data->length,ptr);
 	sll_file_t f;
-	sll_file_from_data(ptr,data->l,(sll_file_flags_t)(flags&(SLL_FILE_FLAG_READ|SLL_FILE_FLAG_WRITE|SLL_FILE_FLAG_APPEND|SLL_FILE_FLAG_NO_BUFFER)),&f);
+	sll_file_from_data(ptr,data->length,(sll_file_flags_t)(flags&(SLL_FILE_FLAG_READ|SLL_FILE_FLAG_WRITE|SLL_FILE_FLAG_APPEND|SLL_FILE_FLAG_NO_BUFFER)),&f);
 	sll_integer_t h=_alloc_file();
 	sll_copy_data(&f,sizeof(sll_file_t),&((*(_file_fl+h))->dt.f));
 	(*(_file_fl+h))->p=0;
@@ -180,7 +180,7 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_file_inc_handle(sll_file_handle_t fh)
 
 
 __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_file_open(const sll_string_t* path,sll_file_flags_t flags){
-	if (path->l>SLL_API_MAX_FILE_PATH_LENGTH){
+	if (path->length>SLL_API_MAX_FILE_PATH_LENGTH){
 		return ~SLL_ERROR_TOO_LONG;
 	}
 	if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_FILE_IO)){
@@ -189,7 +189,7 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_file_open
 	flags&=SLL_FILE_FLAG_READ|SLL_FILE_FLAG_WRITE|SLL_FILE_FLAG_APPEND|SLL_FILE_FLAG_NO_BUFFER|SLL_FILE_FLUSH_ON_NEWLINE;
 	sll_audit(SLL_CHAR("sll.file.open"),SLL_CHAR("sh"),path,flags);
 	sll_file_t f;
-	sll_error_t err=sll_file_open(path->v,flags,&f);
+	sll_error_t err=sll_file_open(path->data,flags,&f);
 	if (err!=SLL_NO_ERROR){
 		return ~err;
 	}
@@ -228,7 +228,7 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_file_read(s
 	}
 	sll_string_create(size,out);
 	sll_error_t err;
-	sll_size_t sz=sll_file_read(f,out->v,size,&err);
+	sll_size_t sz=sll_file_read(f,out->data,size,&err);
 	if (!sz&&err!=SLL_NO_ERROR){
 		sll_free_string(out);
 		return err;
@@ -257,14 +257,14 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_file_read_c
 
 
 __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_file_rename(const sll_string_t* src,const sll_string_t* dst){
-	if (src->l>SLL_API_MAX_FILE_PATH_LENGTH||dst->l>SLL_API_MAX_FILE_PATH_LENGTH){
+	if (src->length>SLL_API_MAX_FILE_PATH_LENGTH||dst->length>SLL_API_MAX_FILE_PATH_LENGTH){
 		return SLL_ERROR_TOO_LONG;
 	}
 	if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_PATH_API)&&!sll_get_sandbox_flag(SLL_SANDBOX_FLAG_ENABLE_FILE_RENAME)){
 		return SLL_ERROR_FROM_SANDBOX(SLL_SANDBOX_FLAG_DISABLE_PATH_API);
 	}
 	sll_audit(SLL_CHAR("sll.file.rename"),SLL_CHAR("ss"),src,dst);
-	return sll_platform_path_rename(src->v,dst->v);
+	return sll_platform_path_rename(src->data,dst->data);
 }
 
 
@@ -307,7 +307,7 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_file_writ
 	}
 	extended_file_t* ef=*(_file_fl+fh);
 	sll_error_t err;
-	sll_size_t o=sll_file_write((ef->p?ef->dt.p:&(ef->dt.f)),data->v,data->l*sizeof(sll_char_t),&err);
+	sll_size_t o=sll_file_write((ef->p?ef->dt.p:&(ef->dt.f)),data->data,data->length*sizeof(sll_char_t),&err);
 	return (!o&&err!=SLL_NO_ERROR?~err:o*sizeof(sll_char_t));
 }
 

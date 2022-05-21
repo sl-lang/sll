@@ -28,12 +28,12 @@ __SLL_EXTERNAL void sll_search_path_create(const sll_string_t* src,sll_search_pa
 	while (1){
 		sll_string_length_t e=sll_string_index_char(src,SLL_SEARCH_PATH_SPLIT_CHAR,0,i);
 		if (e==SLL_MAX_STRING_LENGTH){
-			e=src->l;
+			e=src->length;
 		}
 		o->l++;
 		o->dt=sll_reallocate(o->dt,o->l*sizeof(sll_string_t));
-		sll_string_from_pointer_length(src->v+i,e-i,o->dt+o->l-1);
-		if (e==src->l){
+		sll_string_from_pointer_length(src->data+i,e-i,o->dt+o->l-1);
+		if (e==src->length){
 			break;
 		}
 		i=e+1;
@@ -44,27 +44,27 @@ __SLL_EXTERNAL void sll_search_path_create(const sll_string_t* src,sll_search_pa
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_search_path_find(const sll_search_path_t* sp,const sll_string_t* nm,sll_search_flags_t fl,sll_string_t* o){
 	SLL_INIT_STRING(o);
-	if (nm->l>=SLL_API_MAX_FILE_PATH_LENGTH){
+	if (nm->length>=SLL_API_MAX_FILE_PATH_LENGTH){
 		return 0;
 	}
-	if ((fl&SLL_SEARCH_PATH_FLAG_BEFORE)&&sll_platform_path_exists(nm->v)){
+	if ((fl&SLL_SEARCH_PATH_FLAG_BEFORE)&&sll_platform_path_exists(nm->data)){
 		sll_string_clone(nm,o);
 		return 1;
 	}
-	if (nm->l==SLL_API_MAX_FILE_PATH_LENGTH-1){
+	if (nm->length==SLL_API_MAX_FILE_PATH_LENGTH-1){
 		return 0;
 	}
 	sll_char_t bf[SLL_API_MAX_FILE_PATH_LENGTH];
-	sll_copy_data(nm->v,nm->l+1,bf+SLL_API_MAX_FILE_PATH_LENGTH-nm->l-1);
-	sll_string_length_t sz=SLL_API_MAX_FILE_PATH_LENGTH-nm->l-2;
+	sll_copy_data(nm->data,nm->length+1,bf+SLL_API_MAX_FILE_PATH_LENGTH-nm->length-1);
+	sll_string_length_t sz=SLL_API_MAX_FILE_PATH_LENGTH-nm->length-2;
 	if (!sz){
 		return 0;
 	}
 	bf[sz]=SLL_API_FILE_PATH_SEPARATOR;
 	for (sll_search_path_length_t i=0;i<sp->l;i++){
-		if ((sp->dt+i)->l<=sz){
-			sll_copy_data((sp->dt+i)->v,(sp->dt+i)->l,bf+sz-(sp->dt+i)->l);
-			if (sll_platform_path_exists(bf+sz-(sp->dt+i)->l)){
+		if ((sp->dt+i)->length<=sz){
+			sll_copy_data((sp->dt+i)->data,(sp->dt+i)->length,bf+sz-(sp->dt+i)->length);
+			if (sll_platform_path_exists(bf+sz-(sp->dt+i)->length)){
 				const sll_string_t* dt[2]={
 					sp->dt+i,
 					nm
@@ -74,7 +74,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_search_path_find(const sll_sear
 			}
 		}
 	}
-	if ((fl&SLL_SEARCH_PATH_FLAG_AFTER)&&sll_platform_path_exists(nm->v)){
+	if ((fl&SLL_SEARCH_PATH_FLAG_AFTER)&&sll_platform_path_exists(nm->data)){
 		sll_string_clone(nm,o);
 		return 1;
 	}

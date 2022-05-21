@@ -18,12 +18,12 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_int_to_bin(sll_integer_t n,sll_string
 	sll_size_t v=(neg?-n:n);
 	sll_string_create(FIND_LAST_SET_BIT(v)+neg+1,out);
 	if (neg){
-		out->v[0]='-';
+		out->data[0]='-';
 	}
-	sll_string_length_t i=out->l;
+	sll_string_length_t i=out->length;
 	do{
 		i--;
-		out->v[i]=(v&1)+48;
+		out->data[i]=(v&1)+48;
 		v>>=1;
 	} while (v);
 	sll_string_calculate_checksum(out);
@@ -45,11 +45,11 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_int_to_dec(sll_integer_t n,sll_string
 	l+=neg+1;
 	sll_string_create(l,out);
 	if (neg){
-		out->v[0]='-';
+		out->data[0]='-';
 	}
 	do{
 		l--;
-		out->v[l]=(v%10)+48;
+		out->data[l]=(v%10)+48;
 		v/=10;
 	} while (v);
 	sll_string_calculate_checksum(out);
@@ -66,12 +66,12 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_int_to_hex(sll_integer_t n,sll_string
 	sll_size_t v=(neg?-n:n);
 	sll_string_create((FIND_LAST_SET_BIT(v)>>2)+neg+1,out);
 	if (neg){
-		out->v[0]='-';
+		out->data[0]='-';
 	}
-	sll_string_length_t i=out->l;
+	sll_string_length_t i=out->length;
 	do{
 		i--;
-		out->v[i]=(v&15)+((v&15)>9?87:48);
+		out->data[i]=(v&15)+((v&15)>9?87:48);
 		v>>=4;
 	} while (v);
 	sll_string_calculate_checksum(out);
@@ -88,12 +88,12 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_int_to_oct(sll_integer_t n,sll_string
 	sll_size_t v=(neg?-n:n);
 	sll_string_create(FIND_LAST_SET_BIT(v)/3+neg+1,out);
 	if (neg){
-		out->v[0]='-';
+		out->data[0]='-';
 	}
-	sll_string_length_t i=out->l;
+	sll_string_length_t i=out->length;
 	do{
 		i--;
-		out->v[i]=(v&7)+48;
+		out->data[i]=(v&7)+48;
 		v>>=3;
 	} while (v);
 	sll_string_calculate_checksum(out);

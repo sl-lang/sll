@@ -16,9 +16,9 @@ __SLL_EXTERNAL void sll_operator_assign(sll_object_t* a,sll_object_t* b,sll_obje
 		if (b->type==SLL_OBJECT_TYPE_INT){
 			sll_object_t* tmp=sll_operator_cast(v,sll_static_int[SLL_OBJECT_TYPE_CHAR]);
 			SLL_ASSERT(tmp->type==SLL_OBJECT_TYPE_CHAR);
-			sll_integer_t idx=b->data.int_-b->data.int_/a->data.string.l*a->data.string.l;
+			sll_integer_t idx=b->data.int_-b->data.int_/a->data.string.length*a->data.string.length;
 			if (idx<0){
-				idx+=a->data.string.l;
+				idx+=a->data.string.length;
 			}
 			sll_string_set_char(tmp->data.char_,(sll_string_length_t)idx,&(a->data.string));
 			SLL_RELEASE(tmp);

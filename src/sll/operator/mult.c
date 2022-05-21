@@ -56,7 +56,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_mult(sll_object_t* 
 			{
 				sll_object_t* o=sll_create_object(SLL_OBJECT_TYPE_STRING);
 				sll_integer_t n=(sll_integer_t)a->data.float_;
-				sll_string_duplicate(&(b->data.string),n,(sll_string_length_t)round(sll_math_abs(a->data.float_-n)*b->data.string.l),&(o->data.string));
+				sll_string_duplicate(&(b->data.string),n,(sll_string_length_t)round(sll_math_abs(a->data.float_-n)*b->data.string.length),&(o->data.string));
 				return o;
 			}
 		case COMBINED_TYPE_FA:

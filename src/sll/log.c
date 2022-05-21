@@ -30,7 +30,7 @@ static file_log_data_t* _get_file_index(const sll_char_t* fp){
 	sll_string_from_pointer(fp,&fp_s);
 	sll_string_length_t i=sll_path_split(&fp_s);
 	sll_string_t s;
-	sll_string_from_pointer_length(fp+i,fp_s.l-i,&s);
+	sll_string_from_pointer_length(fp+i,fp_s.length-i,&s);
 	sll_free_string(&fp_s);
 	sll_array_length_t j=0;
 	for (;j<_log_file_data_len;j++){
@@ -77,7 +77,7 @@ static function_log_data_t* _get_func_index(file_log_data_t* f_dt,const sll_char
 
 static void _log_location(const sll_string_t* fp,const sll_string_t* fn,sll_file_offset_t ln,sll_file_t* wf){
 	sll_file_write_char(sll_stdout,'[',NULL);
-	sll_file_write(sll_stdout,fp->v,fp->l,NULL);
+	sll_file_write(sll_stdout,fp->data,fp->length,NULL);
 	sll_file_write_char(sll_stdout,':',NULL);
 	SLL_ASSERT(ln);
 	sll_char_t bf[20];
@@ -92,7 +92,7 @@ static void _log_location(const sll_string_t* fp,const sll_string_t* fn,sll_file
 		sll_file_write_char(wf,bf[i]+48,NULL);
 	}
 	sll_file_write_char(sll_stdout,'(',NULL);
-	sll_file_write(sll_stdout,fn->v,fn->l,NULL);
+	sll_file_write(sll_stdout,fn->data,fn->length,NULL);
 	PRINT_STATIC_STRING(")] ",sll_stdout);
 }
 
@@ -133,7 +133,7 @@ __SLL_EXTERNAL sll_bool_t sll_log(const sll_char_t* fp,const sll_char_t* fn,sll_
 	if (!(fn_dt->fl&SLL_LOG_FLAG_NO_HEADER)){
 		_log_location(&(f_dt->nm),&(fn_dt->nm),ln,sll_stdout);
 	}
-	sll_file_write(sll_stdout,s.v,s.l,NULL);
+	sll_file_write(sll_stdout,s.data,s.length,NULL);
 	sll_file_write_char(sll_stdout,'\n',NULL);
 	sll_free_string(&s);
 	return 1;
@@ -153,7 +153,7 @@ __SLL_EXTERNAL sll_bool_t sll_log_raw(const sll_char_t* fp,const sll_char_t* fn,
 	if (!(fn_dt->fl&SLL_LOG_FLAG_NO_HEADER)){
 		_log_location(&(f_dt->nm),&(fn_dt->nm),ln,sll_stdout);
 	}
-	sll_file_write(sll_stdout,s->v,s->l,NULL);
+	sll_file_write(sll_stdout,s->data,s->length,NULL);
 	sll_file_write_char(sll_stdout,'\n',NULL);
 	return 1;
 }

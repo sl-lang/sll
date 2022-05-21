@@ -54,14 +54,14 @@ typedef __SLL_U32 sll_wide_char_t;
  * \name sll_string_t
  * \group string
  * \desc Docs!
- * \arg sll_string_length_t l
- * \arg sll_string_checksum_t c
- * \arg sll_char_t* v
+ * \arg sll_string_length_t length
+ * \arg sll_string_checksum_t checksum
+ * \arg sll_char_t* data
  */
 typedef struct _SLL_STRING{
-	sll_string_length_t l;
-	sll_string_checksum_t c;
-	sll_char_t* v;
+	sll_string_length_t length;
+	sll_string_checksum_t checksum;
+	sll_char_t* data;
 } sll_string_t;
 
 

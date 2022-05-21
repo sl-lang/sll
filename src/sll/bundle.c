@@ -91,7 +91,7 @@ __SLL_EXTERNAL void sll_bundle_add_file(const sll_char_t* nm,sll_compilation_dat
 			sll_free_source_file(sf);
 			if (!idx){
 				sll_bundle_source_file_t* bsf=*(o->dt+bsf_i);
-				if (!bsf->nm.l){
+				if (!bsf->nm.length){
 					sll_string_from_pointer(nm,&(bsf->nm));
 				}
 			}
@@ -143,7 +143,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_bundle_fetch(const sll_bundle_t
 		return 0;
 	}
 	sll_string_t f_nm_str;
-	sll_string_resize(nm,-((sll_integer_t)(b->nm.l)),&f_nm_str);
+	sll_string_resize(nm,-((sll_integer_t)(b->nm.length)),&f_nm_str);
 	const sll_bundle_source_file_t* bsf=NULL;
 	for (sll_source_file_index_t i=0;i<b->l;i++){
 		bsf=*(b->dt+i);

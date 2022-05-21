@@ -206,8 +206,8 @@ __SLL_EXTERNAL void sll_file_get_buffer(sll_file_t* f,sll_string_t* o){
 	}
 	sll_string_create((sll_string_length_t)(f->_w.d.sz),o);
 	dynamic_buffer_chunk_t* c=f->_w.d.b;
-	addr_t ptr=ADDR(o->v);
-	sll_string_length_t l=o->l;
+	addr_t ptr=ADDR(o->data);
+	sll_string_length_t l=o->length;
 	do{
 		sll_copy_data(c->dt,(l>c->sz?c->sz:l),PTR(ptr));
 		l-=(sll_string_length_t)(c->sz);
@@ -412,8 +412,8 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_error_t sll_file_read_all(sll_file_t* f,sl
 			return err;
 		}
 		sll_string_increase(out,sz);
-		out->l+=sz;
-		sll_string_insert_pointer_length(f->_r_bf,sz,out->l-sz,out);
+		out->length+=sz;
+		sll_string_insert_pointer_length(f->_r_bf,sz,out->length-sz,out);
 	} while (sz==FILE_BUFFER_SIZE);
 	f->_r_bf_off=0;
 	f->_r_bf_sz=0;
@@ -726,7 +726,7 @@ __SLL_EXTERNAL sll_size_t sll_file_write_format(sll_file_t* f,const sll_char_t* 
 	sll_string_t str;
 	sll_string_format_list(fmt,sll_string_length(fmt),&dt,&str);
 	va_end(va);
-	sll_size_t o=sll_file_write(f,str.v,str.l,err);
+	sll_size_t o=sll_file_write(f,str.data,str.length,err);
 	sll_free_string(&str);
 	return o;
 }

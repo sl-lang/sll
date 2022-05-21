@@ -13,5 +13,5 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_object_t* sll_api_object_ne
 	sll_var_arg_list_t dt;
 	SLL_VAR_ARG_INIT_SLL(&dt,args,len);
 	sll_audit(SLL_CHAR("sll.object.new"),SLL_CHAR("sO+"),fmt,args,len);
-	return sll_new_object_list(fmt->v,fmt->l,&dt);
+	return sll_new_object_list(fmt->data,fmt->length,&dt);
 }

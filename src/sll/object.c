@@ -19,7 +19,7 @@
 
 
 
-#define GET_HASH_TABLE_OFFSET(dt,str) (ROTATE_BITS_RIGHT64((str)->c*(dt)->_rng,(dt)->_rng&63)&(dt)->_hash_table_bit_mask)
+#define GET_HASH_TABLE_OFFSET(dt,str) (ROTATE_BITS_RIGHT64((str)->checksum*(dt)->_rng,(dt)->_rng&63)&(dt)->_hash_table_bit_mask)
 
 
 
@@ -210,7 +210,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_type_t sll_add_type(sll_object_type
 		p++;
 		sll_string_t str=v->data.string;
 		SLL_RELEASE(v);
-		if (str.l>4&&str.v[0]=='@'&&str.v[1]=='@'&&str.v[str.l-2]=='@'&&str.v[str.l-1]=='@'){
+		if (str.length>4&&str.data[0]=='@'&&str.data[1]=='@'&&str.data[str.length-2]=='@'&&str.data[str.length-1]=='@'){
 			for (sll_object_function_index_t j=0;j<=SLL_MAX_OBJECT_FUNC;j++){
 				if (STRING_EQUAL(&str,_object_fn_list[j])){
 					n->fn[j]=(n->dt[i].c?~vv:vv);
