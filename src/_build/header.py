@@ -6,11 +6,10 @@ import sys
 
 
 COMMENT_REGEX=re.compile(r"\/\*.*?\*\/|\/\/.*?$",re.DOTALL|re.MULTILINE)
-DEFINE_LINE_CONTINUE_REGEX=re.compile(r"\s*\\\n[ \t\r]*")
-DEFINE_REMOVE_REGEX=re.compile(r"^[ \t\r]*(#define [a-zA-Z0-9_]+\([^\)]*\))[ \t\r]*(\\\n(?:[ \t\r]*.*\\\n)+[ \t\r]*.*\n?)",re.MULTILINE)
 INCLUDE_REGEX=re.compile(r"""^\s*#\s*include\s*(<[^>]*>|\"[^\"]*\")\s*$""",re.MULTILINE)
 INTERNAL_SLL_HEADERS=["_dispatcher.h"]
-MULTIPLE_NEWLINE_REGEX=re.compile(r"\n+")
+PREPROCESSOR_DEFINE_LINE_CONTINUE_REGEX=re.compile(r"\s*\\\n[ \t\r]*")
+PREPROCESSOR_DEFINE_REGEX=re.compile(r"^[ \t\r]*(#define [a-zA-Z0-9_]+\([^\)]*\))[ \t\r]*(\\\n(?:[ \t\r]*.*\\\n)+[ \t\r]*.*\n?)",re.MULTILINE)
 STACK_ADD=0
 STACK_SKIP=1
 STACK_SKIP_INNER=2
@@ -37,8 +36,8 @@ def _add_source_file(b_fp,fp,file_list,include_list,cycle):
 
 
 
-def generate_header(src_fp,out_fp,time):
-	log=(print if "--verbose" in sys.argv else lambda _:None)
+def generate_header(src_fp,out_fp,time,verbose):
+	log=(print if verbose else lambda _:None)
 	log(f"Combining header files from '{src_fp}' to '{out_fp}'...\n  Listing files...")
 	src=""
 	file_list=[]
@@ -58,7 +57,7 @@ def generate_header(src_fp,out_fp,time):
 		defines["__SLL_FULL_SHA__"]="\""+os.getenv("GITHUB_SHA")+"\""
 	stack=[STACK_ADD]
 	o=[]
-	for e in DEFINE_REMOVE_REGEX.sub(lambda g:g.group(1)+" "+DEFINE_LINE_CONTINUE_REGEX.sub(r"",g.group(2)),COMMENT_REGEX.sub(r"",src).strip().replace("\r\n","\n")).split("\n"):
+	for e in PREPROCESSOR_DEFINE_REGEX.sub(lambda g:g.group(1)+" "+PREPROCESSOR_DEFINE_LINE_CONTINUE_REGEX.sub(r"",g.group(2)),COMMENT_REGEX.sub(r"",src).strip().replace("\r\n","\n")).split("\n"):
 		if (not e):
 			continue
 		if (e[0]=="#"):
@@ -126,4 +125,4 @@ def generate_header(src_fp,out_fp,time):
 
 
 if (__name__=="__main__"):
-	generate_header("src/sll/include","build/sll.h",sys.argv[1])
+	generate_header("src/sll/include","build/sll.h",sys.argv[1],sys.argv[2]=="1")
