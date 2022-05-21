@@ -1,7 +1,0 @@
-{
-    "files.associations": {
-        ".files": "plaintext",
-        "*.h": "c",
-        "*.rh": "c"
-    }
-}
