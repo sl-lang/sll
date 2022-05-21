@@ -194,7 +194,7 @@ typedef const sll_char_t* sll_json_parser_state_t;
  * \group json-api
  * \desc Docs!
  * \arg sll_json_array_length_t l
- * \arg sll_json_object_t* dt
+ * \arg struct _SLL_JSON_OBJECT* dt
  */
 typedef struct _SLL_JSON_ARRAY{
 	sll_json_array_length_t l;
@@ -209,7 +209,7 @@ typedef struct _SLL_JSON_ARRAY{
  * \group json-api
  * \desc Docs!
  * \arg sll_json_map_length_t l
- * \arg sll_json_map_keypair_t* dt
+ * \arg struct _SLL_JSON_MAP_KEYPAIR* dt
  */
 typedef struct _SLL_JSON_MAP{
 	sll_json_map_length_t l;

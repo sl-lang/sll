@@ -29,7 +29,7 @@
 
 
 (= _format_type (,,, type
-	(= replace (:: config$WEBSITE_TYPE_REPLACEMENTS array_type))
+	(= replace (:: config$TYPE_REPLACEMENTS array_type))
 	(-> (= i 0) (< i ($ replace))
 		(= type (<- string$replace
 			type

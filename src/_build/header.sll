@@ -7,10 +7,22 @@
 	"log.sll"
 	"path.sll"
 	"string.sll"
+	"sys.sll"
 	"types.sll"
 )
 
 
+
+(= type_requirement_data_type (&:
+	(~ object_type) symbol
+	(~ array_type) requirements
+	int_type added
+))
+
+(= resolved_type_list_type (&:
+	(~ array_type) types
+	(~ array_type) type_names
+))
 
 (= header_module_type (&:
 	(~ func_type) generate_error_headers
@@ -33,6 +45,86 @@
 		(<- file$write fh (<- string$format "0x%.2x" (: data i)))
 		(++ i)
 	)
+))
+
+(= _format_type (,,, type
+	(= replace (:: config$TYPE_REPLACEMENTS array_type))
+	(-> (= i 0) (< i ($ replace))
+		(= type (<- string$replace
+			type
+			(: replace i)
+			(: replace (+ i 1))
+		))
+		(= i (+ i 2))
+	)
+	(@@ type)
+))
+
+(= _parse_requirements (,,, symbol struct_decl_list
+	(= type_list (?: (& symbol$flags documentation$FLAG_VAR)
+		[symbol$type$type]
+		([> (= i 0) (< i ($ symbol$args))
+			(= arg (: symbol$args i))
+			(++ i)
+			arg$type
+		)
+	))
+	(= out [])
+	(-> (= i 0) (< i ($ type_list))
+		(= type (<- string$replace
+			(<- string$replace
+				(: type_list i)
+				"const"
+				""
+			)
+			'*'
+			""
+		))
+		(= bracked_idx (<- string$index type '['))
+		(? (!== bracked_idx -1) (= type (: type 0 bracked_idx)))
+		(= type (<- string$trim type))
+		(? (<- string$starts type "struct ") {
+			(? (! (|: struct_decl_list type)) (<- array$push struct_decl_list type))
+		} {
+			(? (&&
+				(!== type "void")
+				(! (|: config$TYPE_REPLACEMENTS type))
+				(! (|: out type))
+			) (<- array$push out type))
+		})
+		(++ i)
+	)
+	(@@ out)
+))
+
+(= _add_type (,,, out name types
+	(? (|: out$names type_names) (@@))
+	(= type (: types name))
+	(? (! type) {
+		(:> "Unknown type: " name '\n')
+		(<- util$fail_and_exit)
+	})
+	(-> (= i 0) (< i ($ type$requirements))
+		(<- _add_type out (: type$requirements i) types)
+		(++ i)
+	)
+	(<- array$push out$types type)
+	(<- array$push out$type_names name)
+))
+
+(= _resolve_requirements (,,, types
+	(= out (. resolved_type_list_type
+		[]
+		[]
+	))
+	(= names (:: types map_key_type))
+	(-> (= i 0) (< i ($ names))
+		(= name (: names i))
+		(= type (: types name))
+		(? (! type$added) (<- _add_type out name types))
+		(++ i)
+	)
+	(@@ out$types)
 ))
 
 (= generate_error_headers (,,,
@@ -113,17 +205,23 @@ static const sll_char_t ` name `_END[]={
 ))
 
 (= generate_library_header (,,, docs
+	(<- util$execute [(?: (=== sys$PLATFORM "windows") "python.exe" "python3") "src/_build/header.py" config$BUILD_TIME config$OPTIONS$VERBOSE])(@@)
 	(<- log$log "Generating library header...")
 	(<- log$log "  Listing symbols...")
 	(= define_code_map <>)
-	(= types [])
+	(= struct_decl_list [])
+	(= types <>)
 	(= variables [])
 	(= functions [])
 	(-> (= i 0) (< i ($ docs$data))
 		(= symbol (: docs$data i))
 		(?
 			(& symbol$flags documentation$FLAG_MACRO) (= (: define_code_map symbol$name) nil)
-			(& symbol$flags documentation$FLAG_TYPE) (<- array$push types symbol)
+			(& symbol$flags documentation$FLAG_TYPE) (= (: types symbol$name) (. type_requirement_data_type
+				symbol
+				(<- _parse_requirements symbol struct_decl_list)
+				0
+			))
 			(& symbol$flags documentation$FLAG_VAR) (<- array$push variables symbol)
 			(<- array$push functions symbol)
 		)
@@ -165,6 +263,8 @@ static const sll_char_t ` name `_END[]={
 		)
 		(++ i)
 	)
+	(<- log$log "  Resolving type requirements...")
+	(= types (<- _resolve_requirements types))
 	(<- log$log "  Generating code in '" config$LIBRARY_HEADER_FILE_PATH "'...")
 	(= fh (<- file$open config$LIBRARY_HEADER_FILE_PATH "w"))
 	(<- file$write fh
@@ -172,16 +272,62 @@ static const sll_char_t ` name `_END[]={
 #define __SLL_H__ 1
 `)
 	(= define_macros (:: define_code_map map_value_type))
-	(<- log$log "    Generating " ($ define_macros) " preprocessor definitions...")
+	(<- log$log "    Generating preprocessor definitions...")
 	(-> (= i 0) (< i ($ define_macros))
 		(<- file$write fh (: define_macros i) '\n')
+		(++ i)
+	)
+	(<- log$log "    Generating types...")
+	(-> (= i 0) (< i ($ struct_decl_list))
+		(<- file$write fh (: struct_decl_list i) ";\n")
+		(++ i)
+	)
+	(-> (= i 0) (< i ($ types))
+		(= symbol (: types i))
+		(<- file$write fh symbol$name ";\n")
+		(++ i)
+	)
+	(<- log$log "    Generating variables...")
+	(-> (= i 0) (< i ($ variables))
+		(= symbol (: variables i))
+		(<- file$write fh (: config$LIBRARY_HEADER_EXTERNAL sys$PLATFORM) "extern " symbol$type$type ' ' symbol$name ";\n")
+		(++ i)
+	)
+	(<- log$log "    Generating functions...")
+	(-> (= i 0) (< i ($ functions))
+		(= symbol (: functions i))
+		(= str "")
+		(? symbol$api_fmt (= str (+ str (: config$LIBRARY_HEADER_API_CALL sys$PLATFORM))))
+		(? (& symbol$flags documentation$FLAG_CHECK_OUTPUT) (= str (+ str (: config$LIBRARY_HEADER_CHECK_OUTPUT sys$PLATFORM))))
+		(= str (+ str
+			(: config$LIBRARY_HEADER_EXTERNAL sys$PLATFORM)
+			(<- _format_type symbol$return$type)
+			' '
+			symbol$name
+			'('
+		))
+		(? symbol$args {
+			(-> (= j 0) (< j ($ symbol$args))
+				(= arg (: symbol$args j))
+				(? j (= str (+ str ',')))
+				(= str (+ str
+					(<- _format_type arg$type)
+					' '
+					arg$name
+				))
+				(++ j)
+			)
+		} {
+			(= str (+ str "void"))
+		})
+		(<- file$write fh str ");\n")
 		(++ i)
 	)
 	(<- file$write fh
 `#endif
 `)
 	(<- file$close fh)
-	(--- "sys.sll")(<- util$execute [(?: (=== sys$PLATFORM "windows") "python.exe" "python3") "src/_build/header.py" config$BUILD_TIME config$OPTIONS$VERBOSE])
+	(<- util$fail_and_exit)
 ))
 
 

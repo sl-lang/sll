@@ -64,6 +64,9 @@
 	(~ array_type) HASHLIST_FILE_EXTENSIONS
 	(~ string_type) HASHLIST_FILE_PATH
 	(~ string_type) INCLUDE_ROOT_DIRECTORY_PATH
+	(~ map_type) LIBRARY_HEADER_API_CALL
+	(~ map_type) LIBRARY_HEADER_CHECK_OUTPUT
+	(~ map_type) LIBRARY_HEADER_EXTERNAL
 	(~ string_type) LIBRARY_HEADER_FILE_PATH
 	(~ array_type) MODULE_BUNDLE_GENERATION_COMMAND
 	(~ array_type) MODULE_DEBUG_BUNDLE_GENERATION_COMMAND
@@ -77,7 +80,7 @@
 	(~ string_type) ROOT_SOURCE_FILE_PATH
 	(~ array_type) SOURCE_FILE_EXTENSIONS
 	(~ string_type) VERSION
-	(~ map_type) WEBSITE_TYPE_REPLACEMENTS
+	(~ map_type) TYPE_REPLACEMENTS
 ))
 
 
@@ -311,6 +314,21 @@
 	[".asm" ".c" ".h" ".inc"]
 	"build/.files"
 	"src/sll/include/"
+	<
+		"darwin" "__attribute__((ms_abi)) "
+		"linux" "__attribute__((ms_abi)) "
+		"windows" ""
+	>
+	<
+		"darwin" "__attribute__((warn_unused_result)) "
+		"linux" "__attribute__((warn_unused_result)) "
+		"windows" "_Must_inspect_result_ "
+	>
+	<
+		"darwin" ""
+		"linux" ""
+		"windows" "__declspec(dllimport) "
+	>
 	"build/sll.h"
 	(+ output_executable_args ["-b" "-d" "-D" "-n" "-N" "/" "-R" "-O" "build/lib/stdlib.slb" COMMAND_MARKER_INPUT])
 	(+ output_executable_args ["-b" "-n" "-N" "/" "-R" "-O" "build/lib_debug/stdlib.slb" COMMAND_MARKER_INPUT])
