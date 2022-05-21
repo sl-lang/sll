@@ -143,7 +143,7 @@
 			func_var_off=ADDR((thr->c_st.dt+thr->c_st.l-1)->_var_mem_off); \
 		} \
 		else{ \
-			func_var_off=ADDR(thr->stack)-ADDR(_vm_var_data+sll_current_runtime_data->a_dt->vc); \
+			func_var_off=ADDR(thr->stack)-ADDR(_vm_var_data+sll_current_runtime_data->a_dt->variable_count); \
 		} \
 		tls_var_off=ADDR(thr->tls)-ADDR(_vm_var_data); \
 		if (thr->_last_ai){ \
@@ -155,7 +155,7 @@
 			ai=_get_instruction_at_offset(sll_current_runtime_data->a_dt,thr->ii); \
 		} \
 	} while (0)
-#define VAR_REF(v) ((sll_object_t**)PTR(ADDR(_vm_var_data+SLL_ASSEMBLY_VARIABLE_GET_INDEX(v))+(SLL_ASSEMBLY_VARIABLE_GET_INDEX(v)>=sll_current_runtime_data->a_dt->vc)*func_var_off+SLL_ASSEMBLY_VARIABLE_IS_TLS(v)*tls_var_off))
+#define VAR_REF(v) ((sll_object_t**)PTR(ADDR(_vm_var_data+SLL_ASSEMBLY_VARIABLE_GET_INDEX(v))+(SLL_ASSEMBLY_VARIABLE_GET_INDEX(v)>=sll_current_runtime_data->a_dt->variable_count)*func_var_off+SLL_ASSEMBLY_VARIABLE_IS_TLS(v)*tls_var_off))
 
 
 
@@ -170,7 +170,7 @@ __SLL_EXTERNAL const sll_vm_config_t* sll_current_vm_config=NULL;
 
 
 void _call_function(thread_data_t* thr,sll_function_index_t fn,sll_arg_count_t ac,sll_bool_t fr){
-	sll_assembly_function_t* af=sll_current_runtime_data->a_dt->ft.data+fn;
+	sll_assembly_function_t* af=sll_current_runtime_data->a_dt->function_table.data+fn;
 	if (SLL_ASSEMBLY_FUNCTION_IS_VAR_ARG(af)){
 		sll_object_t* tos;
 		if (SLL_ASSEMBLY_FUNCTION_GET_ARGUMENT_COUNT(af)>ac){
@@ -210,10 +210,10 @@ void _call_function(thread_data_t* thr,sll_function_index_t fn,sll_arg_count_t a
 	}
 	if (fr){
 		SLL_ASSERT(thr->c_st.l<=sll_current_vm_config->c_st_sz);
-		(thr->c_st.dt+thr->c_st.l)->nm=(sll_current_runtime_data->a_dt->st.dt+af->name_string_index)->data;
+		(thr->c_st.dt+thr->c_st.l)->nm=(sll_current_runtime_data->a_dt->string_table.dt+af->name_string_index)->data;
 		(thr->c_st.dt+thr->c_st.l)->_ii=thr->ii;
 		(thr->c_st.dt+thr->c_st.l)->_s=thr->si-SLL_ASSEMBLY_FUNCTION_GET_ARGUMENT_COUNT(af);
-		(thr->c_st.dt+thr->c_st.l)->_var_mem_off=PTR(ADDR(thr->stack+(thr->c_st.dt+thr->c_st.l)->_s)-ADDR(_vm_var_data+sll_current_runtime_data->a_dt->vc));
+		(thr->c_st.dt+thr->c_st.l)->_var_mem_off=PTR(ADDR(thr->stack+(thr->c_st.dt+thr->c_st.l)->_s)-ADDR(_vm_var_data+sll_current_runtime_data->a_dt->variable_count));
 		(*((sll_call_stack_size_t*)(&(thr->c_st.l))))++;
 	}
 	thr->ii=af->instruction_index;
@@ -225,11 +225,11 @@ void _release_var_data(void){
 	SLL_ASSERT(_vm_var_data);
 	sll_object_t** obj=_vm_var_data;
 	_vm_var_data=NULL;
-	if (sll_current_runtime_data->a_dt->vc){
-		for (sll_variable_index_t i=0;i<sll_current_runtime_data->a_dt->vc;i++){
+	if (sll_current_runtime_data->a_dt->variable_count){
+		for (sll_variable_index_t i=0;i<sll_current_runtime_data->a_dt->variable_count;i++){
 			SLL_RELEASE(*(obj+i));
 		}
-		SLL_CRITICAL_ERROR(sll_platform_free_page(obj,SLL_ROUND_PAGE(sll_current_runtime_data->a_dt->vc*sizeof(sll_object_t*))));
+		SLL_CRITICAL_ERROR(sll_platform_free_page(obj,SLL_ROUND_PAGE(sll_current_runtime_data->a_dt->variable_count*sizeof(sll_object_t*))));
 	}
 }
 
@@ -241,9 +241,9 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_code_t sll_execute_assembly(const s
 	}
 	_vm_instruction_count=0;
 	sll_current_vm_config=cfg;// lgtm [cpp/stack-address-escape]
-	_vm_var_data=sll_platform_allocate_page(SLL_ROUND_PAGE(a_dt->vc*sizeof(sll_object_t*)),0,NULL);
-	sll_static_int[0]->rc+=a_dt->vc;
-	for (sll_variable_index_t i=0;i<a_dt->vc;i++){
+	_vm_var_data=sll_platform_allocate_page(SLL_ROUND_PAGE(a_dt->variable_count*sizeof(sll_object_t*)),0,NULL);
+	sll_static_int[0]->rc+=a_dt->variable_count;
+	for (sll_variable_index_t i=0;i<a_dt->variable_count;i++){
 		*(_vm_var_data+i)=sll_static_int[0];
 	}
 	sll_internal_function_table_t ift;
@@ -320,7 +320,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_wait_thread(sll_thread_index
 	addr_t tls_var_off;
 	RELOAD_THREAD_DATA;
 	while (1){
-		if (thr->ii>=sll_current_runtime_data->a_dt->ic||thr->si>=sll_current_vm_config->s_sz){
+		if (thr->ii>=sll_current_runtime_data->a_dt->instruction_count||thr->si>=sll_current_vm_config->s_sz){
 			SLL_UNIMPLEMENTED();
 		}
 		if (!thr->tm){
@@ -424,7 +424,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_wait_thread(sll_thread_index
 				thr->si++;
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_LOADS:
-				*(thr->stack+thr->si)=STRING_TO_OBJECT(sll_current_runtime_data->a_dt->st.dt+ai->data.string_index);
+				*(thr->stack+thr->si)=STRING_TO_OBJECT(sll_current_runtime_data->a_dt->string_table.dt+ai->data.string_index);
 				thr->si++;
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PACK:
@@ -511,7 +511,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_wait_thread(sll_thread_index
 				}
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_LOOKUP_STR:
 				{
-					sll_function_index_t i=sll_lookup_internal_function(sll_current_runtime_data->ift,(sll_current_runtime_data->a_dt->st.dt+ai->data.string_index)->data);
+					sll_function_index_t i=sll_lookup_internal_function(sll_current_runtime_data->ift,(sll_current_runtime_data->a_dt->string_table.dt+ai->data.string_index)->data);
 					*(thr->stack+thr->si)=(i==SLL_UNKNOWN_INTERNAL_FUNCTION_INDEX?SLL_ACQUIRE_STATIC_INT(0):sll_int_to_object(~((sll_integer_t)i)));
 					thr->si++;
 					break;
@@ -832,7 +832,7 @@ _cleanup_jump_table:;
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PRINT_STR:
 				if (!sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_FILE_IO)||sll_get_sandbox_flag(SLL_SANDBOX_FLAG_ENABLE_STDOUT_IO)){
-					sll_file_write(sll_current_vm_config->out,(sll_current_runtime_data->a_dt->st.dt+ai->data.string_index)->data,(sll_current_runtime_data->a_dt->st.dt+ai->data.string_index)->length*sizeof(sll_char_t),NULL);
+					sll_file_write(sll_current_vm_config->out,(sll_current_runtime_data->a_dt->string_table.dt+ai->data.string_index)->data,(sll_current_runtime_data->a_dt->string_table.dt+ai->data.string_index)->length*sizeof(sll_char_t),NULL);
 				}
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_CALL:
@@ -861,7 +861,7 @@ _cleanup_jump_table:;
 								break;
 							}
 						}
-						else if (i&&i<=sll_current_runtime_data->a_dt->ft.length){
+						else if (i&&i<=sll_current_runtime_data->a_dt->function_table.length){
 							_call_function(thr,(sll_function_index_t)(i-1),ai->data.arg_count,1);
 							RELOAD_THREAD_DATA;
 							continue;
@@ -890,7 +890,7 @@ _cleanup_jump_table:;
 						break;
 					}
 				}
-				else if (ai->data.int_&&ai->data.int_<=sll_current_runtime_data->a_dt->ft.length){
+				else if (ai->data.int_&&ai->data.int_<=sll_current_runtime_data->a_dt->function_table.length){
 					_call_function(thr,(sll_function_index_t)(ai->data.int_-1),0,1);
 					RELOAD_THREAD_DATA;
 					continue;
@@ -908,7 +908,7 @@ _cleanup_jump_table:;
 						break;
 					}
 				}
-				else if (ai->data.int_&&ai->data.int_<=sll_current_runtime_data->a_dt->ft.length){
+				else if (ai->data.int_&&ai->data.int_<=sll_current_runtime_data->a_dt->function_table.length){
 					_call_function(thr,(sll_function_index_t)(ai->data.int_-1),1,1);
 					RELOAD_THREAD_DATA;
 					continue;
@@ -934,7 +934,7 @@ _cleanup_jump_table:;
 								break;
 							}
 						}
-						else if (i&&i<=sll_current_runtime_data->a_dt->ft.length){
+						else if (i&&i<=sll_current_runtime_data->a_dt->function_table.length){
 							thr->si--;
 							SLL_RELEASE(*(thr->stack+thr->si));
 							for (sll_array_length_t j=0;j<tos->data.array.length;j++){
@@ -1017,7 +1017,7 @@ _return:;
 				thr->si++;
 				goto _return;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_RET_STR:
-				*(thr->stack+thr->si)=STRING_TO_OBJECT(sll_current_runtime_data->a_dt->st.dt+ai->data.string_index);
+				*(thr->stack+thr->si)=STRING_TO_OBJECT(sll_current_runtime_data->a_dt->string_table.dt+ai->data.string_index);
 				thr->si++;
 				goto _return;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_RET_VAR:

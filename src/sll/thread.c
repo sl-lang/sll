@@ -88,10 +88,10 @@ sll_thread_index_t _thread_new(void){
 		ptr=sll_platform_allocate_page(THREAD_SIZE,0,NULL);
 	}
 	thread_data_t* n=ptr;
-	n->stack=PTR(ADDR(ptr)+sizeof(thread_data_t)+sll_current_vm_config->c_st_sz*sizeof(sll_call_stack_frame_t)+sll_current_runtime_data->a_dt->tls_vc*sizeof(sll_object_t*));
+	n->stack=PTR(ADDR(ptr)+sizeof(thread_data_t)+sll_current_vm_config->c_st_sz*sizeof(sll_call_stack_frame_t)+sll_current_runtime_data->a_dt->tls_variable_count*sizeof(sll_object_t*));
 	n->tls=PTR(ADDR(ptr)+sizeof(thread_data_t)+sll_current_vm_config->c_st_sz*sizeof(sll_call_stack_frame_t));
-	sll_static_int[0]->rc+=sll_current_runtime_data->a_dt->tls_vc;
-	for (sll_variable_index_t i=0;i<sll_current_runtime_data->a_dt->tls_vc;i++){
+	sll_static_int[0]->rc+=sll_current_runtime_data->a_dt->tls_variable_count;
+	for (sll_variable_index_t i=0;i<sll_current_runtime_data->a_dt->tls_variable_count;i++){
 		*(n->tls+i)=sll_static_int[0];
 	}
 	n->ii=0;
@@ -172,7 +172,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_thread_index_t sll_thread_create(sll_integ
 	if (fn<0){
 		SLL_UNIMPLEMENTED();
 	}
-	if (fn&&fn<=sll_current_runtime_data->a_dt->ft.length){
+	if (fn&&fn<=sll_current_runtime_data->a_dt->function_table.length){
 		sll_thread_index_t o=_thread_new();
 		thread_data_t* thr=*(_thread_data+o);
 		for (;thr->si<all;thr->si++){
@@ -204,7 +204,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_thread_delete(sll_thread_index_
 	*(_thread_data+t)=THREAD_NEXT_UNUSED(_thread_next);
 	_thread_next=t;
 	SLL_RELEASE(thr->ret);
-	for (sll_variable_index_t i=0;i<sll_current_runtime_data->a_dt->tls_vc;i++){
+	for (sll_variable_index_t i=0;i<sll_current_runtime_data->a_dt->tls_variable_count;i++){
 		SLL_RELEASE(*(thr->tls+i));
 	}
 	SLL_ASSERT(!thr->si);

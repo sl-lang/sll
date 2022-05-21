@@ -202,27 +202,27 @@ __SLL_EXTERNAL void sll_write_assembly(sll_file_t* wf,const sll_assembly_data_t*
 	sll_file_write(wf,&n,sizeof(magic_number_t),NULL);
 	sll_version_t v=SLL_VERSION;
 	sll_file_write(wf,&v,sizeof(sll_version_t),NULL);
-	CHECK_ERROR(sll_encode_integer(wf,a_dt->tm));
-	CHECK_ERROR(sll_encode_integer(wf,a_dt->ic));
-	CHECK_ERROR(sll_encode_integer(wf,a_dt->vc));
-	CHECK_ERROR(sll_encode_integer(wf,a_dt->tls_vc));
-	CHECK_ERROR(sll_encode_integer(wf,a_dt->ft.length));
-	for (sll_function_index_t i=0;i<a_dt->ft.length;i++){
-		CHECK_ERROR(sll_encode_integer(wf,(a_dt->ft.data+i)->instruction_index));
-		CHECK_ERROR(sll_encode_integer(wf,(a_dt->ft.data+i)->arg_count));
-		CHECK_ERROR(sll_encode_integer(wf,(a_dt->ft.data+i)->name_string_index));
+	CHECK_ERROR(sll_encode_integer(wf,a_dt->time));
+	CHECK_ERROR(sll_encode_integer(wf,a_dt->instruction_count));
+	CHECK_ERROR(sll_encode_integer(wf,a_dt->variable_count));
+	CHECK_ERROR(sll_encode_integer(wf,a_dt->tls_variable_count));
+	CHECK_ERROR(sll_encode_integer(wf,a_dt->function_table.length));
+	for (sll_function_index_t i=0;i<a_dt->function_table.length;i++){
+		CHECK_ERROR(sll_encode_integer(wf,(a_dt->function_table.data+i)->instruction_index));
+		CHECK_ERROR(sll_encode_integer(wf,(a_dt->function_table.data+i)->arg_count));
+		CHECK_ERROR(sll_encode_integer(wf,(a_dt->function_table.data+i)->name_string_index));
 	}
-	CHECK_ERROR(sll_encode_integer(wf,a_dt->st.l));
-	for (sll_string_index_t i=0;i<a_dt->st.l;i++){
-		CHECK_ERROR(sll_encode_string(wf,a_dt->st.dt+i));
+	CHECK_ERROR(sll_encode_integer(wf,a_dt->string_table.l));
+	for (sll_string_index_t i=0;i<a_dt->string_table.l;i++){
+		CHECK_ERROR(sll_encode_string(wf,a_dt->string_table.dt+i));
 	}
-	CHECK_ERROR(sll_encode_integer(wf,a_dt->dbg.length));
-	for (sll_debug_data_length_t i=0;i<a_dt->dbg.length;i++){
-		CHECK_ERROR(sll_encode_integer(wf,(a_dt->dbg.data+i)->delta_instruction_index));
-		CHECK_ERROR(sll_encode_integer(wf,(a_dt->dbg.data+i)->line));
+	CHECK_ERROR(sll_encode_integer(wf,a_dt->debug_data.length));
+	for (sll_debug_data_length_t i=0;i<a_dt->debug_data.length;i++){
+		CHECK_ERROR(sll_encode_integer(wf,(a_dt->debug_data.data+i)->delta_instruction_index));
+		CHECK_ERROR(sll_encode_integer(wf,(a_dt->debug_data.data+i)->line));
 	}
-	const sll_assembly_instruction_t* ai=a_dt->h;
-	for (sll_instruction_index_t i=0;i<a_dt->ic;i++){
+	const sll_assembly_instruction_t* ai=a_dt->first_instruction;
+	for (sll_instruction_index_t i=0;i<a_dt->instruction_count;i++){
 		sll_file_write_char(wf,ai->type,NULL);
 		switch (SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(ai)){
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_INT:

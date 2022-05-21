@@ -59,7 +59,7 @@ static void _write_stack_frame(sll_file_descriptor_t fd,sll_instruction_index_t 
 	sll_string_index_t fp_i;
 	sll_string_index_t fn_i;
 	sll_file_offset_t ln=sll_get_location(sll_current_runtime_data->a_dt,ii,&fp_i,&fn_i);
-	const sll_string_t* str=sll_current_runtime_data->a_dt->st.dt+fp_i;
+	const sll_string_t* str=sll_current_runtime_data->a_dt->string_table.dt+fp_i;
 	sll_platform_file_write(fd,str->data,str->length,NULL);
 	sll_platform_file_write(fd,":",1,NULL);
 	_write_number(fd,ln);
@@ -68,7 +68,7 @@ static void _write_stack_frame(sll_file_descriptor_t fd,sll_instruction_index_t 
 		sll_platform_file_write(fd,"@code)\n",7,NULL);
 		return;
 	}
-	str=sll_current_runtime_data->a_dt->st.dt+fn_i;
+	str=sll_current_runtime_data->a_dt->string_table.dt+fn_i;
 	sll_platform_file_write(fd,str->data,str->length,NULL);
 	sll_platform_file_write(fd,")\n",2,NULL);
 }

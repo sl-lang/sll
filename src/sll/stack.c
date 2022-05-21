@@ -29,25 +29,25 @@ static void _request_new_node_page(sll_source_file_t* sf){
 
 
 sll_assembly_instruction_t* _acquire_next_instruction(sll_assembly_data_t* a_dt){
-	sll_assembly_instruction_t* o=a_dt->_s.next_instruction;
-	a_dt->ic++;
-	a_dt->_s.count--;
-	a_dt->_s.next_instruction++;
-	if (!a_dt->_s.count){
+	sll_assembly_instruction_t* o=a_dt->_instruction_stack.next_instruction;
+	a_dt->instruction_count++;
+	a_dt->_instruction_stack.count--;
+	a_dt->_instruction_stack.next_instruction++;
+	if (!a_dt->_instruction_stack.count){
 		assembly_stack_page_t* n=sll_platform_allocate_page(SLL_ROUND_PAGE(ASSEMBLY_INSTRUCTION_STACK_ALLOC_SIZE),0,NULL);
-		((assembly_stack_page_t*)(a_dt->_s.end))->nxt=n;
+		((assembly_stack_page_t*)(a_dt->_instruction_stack.end))->nxt=n;
 		n->nxt=NULL;
 		sll_assembly_instruction_t* s=PTR(ADDR(n)+sizeof(assembly_stack_page_t));
 		s->type=SLL_ASSEMBLY_INSTRUCTION_TYPE_CHANGE_STACK;
-		s->data._next_instruction=a_dt->_s.next_instruction-1;
-		SLL_ASSERT(a_dt->_s.next_instruction->type==SLL_ASSEMBLY_INSTRUCTION_TYPE_CHANGE_STACK);
-		a_dt->_s.next_instruction->data._next_instruction=s+1;
-		a_dt->_s.count=((SLL_ROUND_PAGE(ASSEMBLY_INSTRUCTION_STACK_ALLOC_SIZE)-sizeof(assembly_stack_page_t)-sizeof(sll_assembly_instruction_t)*2)/sizeof(sll_assembly_instruction_t));
-		a_dt->_s.next_instruction=s+1;
-		s+=a_dt->_s.count+1;
+		s->data._next_instruction=a_dt->_instruction_stack.next_instruction-1;
+		SLL_ASSERT(a_dt->_instruction_stack.next_instruction->type==SLL_ASSEMBLY_INSTRUCTION_TYPE_CHANGE_STACK);
+		a_dt->_instruction_stack.next_instruction->data._next_instruction=s+1;
+		a_dt->_instruction_stack.count=((SLL_ROUND_PAGE(ASSEMBLY_INSTRUCTION_STACK_ALLOC_SIZE)-sizeof(assembly_stack_page_t)-sizeof(sll_assembly_instruction_t)*2)/sizeof(sll_assembly_instruction_t));
+		a_dt->_instruction_stack.next_instruction=s+1;
+		s+=a_dt->_instruction_stack.count+1;
 		s->type=SLL_ASSEMBLY_INSTRUCTION_TYPE_CHANGE_STACK;
 		s->data._next_instruction=NULL;
-		a_dt->_s.end=n;
+		a_dt->_instruction_stack.end=n;
 	}
 	return o;
 }
@@ -95,7 +95,7 @@ void _clone_node_stack(const sll_source_file_t* src_sf,sll_source_file_t* dst_sf
 
 sll_assembly_instruction_t* _get_instruction_at_offset(const sll_assembly_data_t* a_dt,sll_instruction_index_t off){
 	sll_instruction_index_t cnt=(sll_instruction_index_t)(((SLL_ROUND_PAGE(ASSEMBLY_INSTRUCTION_STACK_ALLOC_SIZE)-sizeof(assembly_stack_page_t)-sizeof(sll_assembly_instruction_t)*2)/sizeof(sll_assembly_instruction_t)));
-	assembly_stack_page_t* pg=a_dt->_s.start;
+	assembly_stack_page_t* pg=a_dt->_instruction_stack.start;
 	while (off>=cnt){
 		pg=pg->nxt;
 		off-=cnt;
@@ -118,15 +118,15 @@ sll_node_t* _get_node_at_offset(const sll_source_file_t* sf,sll_node_offset_t of
 
 
 void _init_assembly_stack(sll_assembly_data_t* a_dt){
-	a_dt->_s.start=sll_platform_allocate_page(SLL_ROUND_PAGE(ASSEMBLY_INSTRUCTION_STACK_ALLOC_SIZE),0,NULL);
-	a_dt->_s.end=a_dt->_s.start;
-	((assembly_stack_page_t*)(a_dt->_s.start))->nxt=NULL;
-	sll_assembly_instruction_t* s=PTR(ADDR(a_dt->_s.start)+sizeof(assembly_stack_page_t));
+	a_dt->_instruction_stack.start=sll_platform_allocate_page(SLL_ROUND_PAGE(ASSEMBLY_INSTRUCTION_STACK_ALLOC_SIZE),0,NULL);
+	a_dt->_instruction_stack.end=a_dt->_instruction_stack.start;
+	((assembly_stack_page_t*)(a_dt->_instruction_stack.start))->nxt=NULL;
+	sll_assembly_instruction_t* s=PTR(ADDR(a_dt->_instruction_stack.start)+sizeof(assembly_stack_page_t));
 	s->type=SLL_ASSEMBLY_INSTRUCTION_TYPE_CHANGE_STACK;
 	s->data._next_instruction=NULL;
-	a_dt->_s.count=((SLL_ROUND_PAGE(ASSEMBLY_INSTRUCTION_STACK_ALLOC_SIZE)-sizeof(assembly_stack_page_t)-sizeof(sll_assembly_instruction_t)*2)/sizeof(sll_assembly_instruction_t));
-	a_dt->_s.next_instruction=s+1;
-	s+=a_dt->_s.count+1;
+	a_dt->_instruction_stack.count=((SLL_ROUND_PAGE(ASSEMBLY_INSTRUCTION_STACK_ALLOC_SIZE)-sizeof(assembly_stack_page_t)-sizeof(sll_assembly_instruction_t)*2)/sizeof(sll_assembly_instruction_t));
+	a_dt->_instruction_stack.next_instruction=s+1;
+	s+=a_dt->_instruction_stack.count+1;
 	s->type=SLL_ASSEMBLY_INSTRUCTION_TYPE_CHANGE_STACK;
 	s->data._next_instruction=NULL;
 }

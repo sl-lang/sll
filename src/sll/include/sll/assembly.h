@@ -1871,26 +1871,26 @@ typedef struct _SLL_ASSEMBLY_STACK_DATA{
  * \name sll_assembly_data_t
  * \group assembly
  * \desc Docs!
- * \arg sll_time_t tm
- * \arg sll_assembly_instruction_t* h
- * \arg sll_instruction_index_t ic
- * \arg sll_variable_index_t vc
- * \arg sll_variable_index_t tls_vc
- * \arg sll_assembly_function_table_t ft
- * \arg sll_string_table_t st
- * \arg sll_debug_data_t dbg
- * \arg sll_assembly_stack_data_t _s
+ * \arg sll_time_t time
+ * \arg sll_assembly_instruction_t* first_instruction
+ * \arg sll_instruction_index_t instruction_count
+ * \arg sll_variable_index_t variable_count
+ * \arg sll_variable_index_t tls_variable_count
+ * \arg sll_assembly_function_table_t function_table
+ * \arg sll_string_table_t string_table
+ * \arg sll_debug_data_t debug_data
+ * \arg sll_assembly_stack_data_t _instruction_stack
  */
 typedef struct _SLL_ASSEMBLY_DATA{
-	sll_time_t tm;
-	sll_assembly_instruction_t* h;
-	sll_instruction_index_t ic;
-	sll_variable_index_t vc;
-	sll_variable_index_t tls_vc;
-	sll_assembly_function_table_t ft;
-	sll_string_table_t st;
-	sll_debug_data_t dbg;
-	sll_assembly_stack_data_t _s;
+	sll_time_t time;
+	sll_assembly_instruction_t* first_instruction;
+	sll_instruction_index_t instruction_count;
+	sll_variable_index_t variable_count;
+	sll_variable_index_t tls_variable_count;
+	sll_assembly_function_table_t function_table;
+	sll_string_table_t string_table;
+	sll_debug_data_t debug_data;
+	sll_assembly_stack_data_t _instruction_stack;
 } sll_assembly_data_t;
 
 
@@ -1900,9 +1900,9 @@ typedef struct _SLL_ASSEMBLY_DATA{
  * \name sll_free_assembly_data
  * \group assembly
  * \desc Docs!
- * \arg sll_assembly_data_t* a_dt
+ * \arg sll_assembly_data_t* assembly_data
  */
-__SLL_EXTERNAL void sll_free_assembly_data(sll_assembly_data_t* a_dt);
+__SLL_EXTERNAL void sll_free_assembly_data(sll_assembly_data_t* assembly_data);
 
 
 
