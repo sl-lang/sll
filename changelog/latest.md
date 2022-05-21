@@ -1,4 +1,4 @@
-# Sll [0.7.18] - Ongoing
+# Sll [0.7.18] - 2022-05-21
 
 ## Added
 
@@ -31,5 +31,5 @@
 
 - Function `gauss2` is no longer directly exported from `math.sll`
 
-[0.7.18]: https://github.com/sl-lang/sll/compare/sll-v0.7.17...main
+[0.7.18]: https://github.com/sl-lang/sll/compare/sll-v0.7.17...sll-v0.7.18
 [#75]: https://github.com/sl-lang/sll/issues/75
