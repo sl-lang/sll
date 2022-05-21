@@ -1,4 +1,4 @@
-#!/usr/bin/bash
+#!/bin/bash
 if [ "$(uname -s)" == "Darwin" ]; then
 	platform="darwin"
 else
