@@ -17,7 +17,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_access(sll_object_t
 			if (!a->dt.s.l){
 				return SLL_ACQUIRE_STATIC_INT(0);
 			}
-			WRAP_ARRAY_INDEX(b->dt.i,a->dt.a.length,idx);
+			WRAP_ARRAY_INDEX(b->dt.int_value,a->dt.a.length,idx);
 			if (idx<0||idx>=a->dt.a.length){
 				return SLL_ACQUIRE_STATIC_INT(0);
 			}
@@ -29,7 +29,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_access(sll_object_t
 			if (!a->dt.a.length){
 				return SLL_ACQUIRE_STATIC_INT(0);
 			}
-			WRAP_ARRAY_INDEX(b->dt.i,a->dt.a.length,idx);
+			WRAP_ARRAY_INDEX(b->dt.int_value,a->dt.a.length,idx);
 			if (idx<0||idx>=a->dt.a.length){
 				return SLL_ACQUIRE_STATIC_INT(0);
 			}
@@ -54,14 +54,14 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_access_range(sll_ob
 	if (a->t==SLL_OBJECT_TYPE_STRING){
 		if (b->t==SLL_OBJECT_TYPE_INT&&c->t==SLL_OBJECT_TYPE_INT){
 			sll_object_t* o=sll_create_object(SLL_OBJECT_TYPE_STRING);
-			sll_string_select(&(a->dt.s),b->dt.i,c->dt.i,1,&(o->dt.s));
+			sll_string_select(&(a->dt.s),b->dt.int_value,c->dt.int_value,1,&(o->dt.s));
 			return o;
 		}
 	}
 	else if (a->t==SLL_OBJECT_TYPE_ARRAY){
 		if (b->t==SLL_OBJECT_TYPE_INT&&c->t==SLL_OBJECT_TYPE_INT){
 			sll_object_t* o=sll_create_object(SLL_OBJECT_TYPE_ARRAY);
-			sll_array_select(&(a->dt.a),b->dt.i,c->dt.i,1,&(o->dt.a));
+			sll_array_select(&(a->dt.a),b->dt.int_value,c->dt.int_value,1,&(o->dt.a));
 			return o;
 		}
 	}
@@ -85,14 +85,14 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_access_range_step(s
 	if (a->t==SLL_OBJECT_TYPE_STRING){
 		if (b->t==SLL_OBJECT_TYPE_INT&&c->t==SLL_OBJECT_TYPE_INT&&d->t==SLL_OBJECT_TYPE_INT){
 			sll_object_t* o=sll_create_object(SLL_OBJECT_TYPE_STRING);
-			sll_string_select(&(a->dt.s),b->dt.i,c->dt.i,d->dt.i,&(o->dt.s));
+			sll_string_select(&(a->dt.s),b->dt.int_value,c->dt.int_value,d->dt.int_value,&(o->dt.s));
 			return o;
 		}
 	}
 	else if (a->t==SLL_OBJECT_TYPE_ARRAY){
 		if (b->t==SLL_OBJECT_TYPE_INT&&c->t==SLL_OBJECT_TYPE_INT&&d->t==SLL_OBJECT_TYPE_INT){
 			sll_object_t* o=sll_create_object(SLL_OBJECT_TYPE_ARRAY);
-			sll_array_select(&(a->dt.a),b->dt.i,c->dt.i,d->dt.i,&(o->dt.a));
+			sll_array_select(&(a->dt.a),b->dt.int_value,c->dt.int_value,d->dt.int_value,&(o->dt.a));
 			return o;
 		}
 	}

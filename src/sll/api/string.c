@@ -101,7 +101,7 @@ static void _object_to_string(sll_object_t* a,sll_string_t* o){
 	switch (a->t){
 		case SLL_OBJECT_TYPE_INT:
 			{
-				sll_integer_t v=a->dt.i;
+				sll_integer_t v=a->dt.int_value;
 				if (v<0){
 					sll_string_increase(o,1);
 					o->v[o->l]='-';
@@ -114,7 +114,7 @@ static void _object_to_string(sll_object_t* a,sll_string_t* o){
 		case SLL_OBJECT_TYPE_FLOAT:
 			{
 				sll_char_t bf[256];
-				sll_string_length_t bfl=snprintf((char*)bf,256,"%.16lf",a->dt.f);
+				sll_string_length_t bfl=snprintf((char*)bf,256,"%.16lf",a->dt.float_value);
 				sll_string_increase(o,bfl);
 				sll_copy_data(bf,bfl,o->v+o->l);
 				o->l+=bfl;
@@ -124,7 +124,7 @@ static void _object_to_string(sll_object_t* a,sll_string_t* o){
 			sll_string_increase(o,1);
 			o->v[o->l]='\'';
 			o->l++;
-			_write_char(a->dt.c,o);
+			_write_char(a->dt.char_value,o);
 			sll_string_increase(o,1);
 			o->v[o->l]='\'';
 			o->l++;
@@ -132,13 +132,13 @@ static void _object_to_string(sll_object_t* a,sll_string_t* o){
 		case SLL_OBJECT_TYPE_COMPLEX:
 			{
 				sll_char_t bf[256];
-				if (a->dt.d.real){
-					sll_string_length_t bfl=snprintf((char*)bf,256,"%.16lf",a->dt.d.real);
+				if (a->dt.complex.real){
+					sll_string_length_t bfl=snprintf((char*)bf,256,"%.16lf",a->dt.complex.real);
 					sll_string_increase(o,bfl);
 					sll_copy_data(bf,bfl,o->v+o->l);
 					o->l+=bfl;
-					if (a->dt.d.imag){
-						sll_float_t v=a->dt.d.imag;
+					if (a->dt.complex.imag){
+						sll_float_t v=a->dt.complex.imag;
 						sll_string_increase(o,1);
 						if (v<0){
 							o->v[o->l]='-';
@@ -154,8 +154,8 @@ static void _object_to_string(sll_object_t* a,sll_string_t* o){
 						o->l+=bfl;
 					}
 				}
-				else if (a->dt.d.imag){
-					sll_string_length_t bfl=snprintf((char*)bf,256,"%.16lfi",a->dt.d.imag);
+				else if (a->dt.complex.imag){
+					sll_string_length_t bfl=snprintf((char*)bf,256,"%.16lfi",a->dt.complex.imag);
 					sll_string_increase(o,bfl);
 					sll_copy_data(bf,bfl,o->v+o->l);
 					o->l+=bfl;
@@ -255,13 +255,13 @@ static void _object_to_string(sll_object_t* a,sll_string_t* o){
 					sll_object_t* tmp;
 					switch (dt->dt[i].t){
 						case SLL_OBJECT_TYPE_INT:
-							tmp=sll_int_to_object(p->int_);
+							tmp=sll_int_to_object(p->int_value);
 							break;
 						case SLL_OBJECT_TYPE_FLOAT:
-							tmp=sll_float_to_object(p->float_);
+							tmp=sll_float_to_object(p->float_value);
 							break;
 						case SLL_OBJECT_TYPE_CHAR:
-							tmp=SLL_FROM_CHAR(p->char_);
+							tmp=SLL_FROM_CHAR(p->char_value);
 							break;
 						default:
 							tmp=p->any;
@@ -295,7 +295,7 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_string_convert(sll_object_t*const* ar
 		sll_object_t* v=*(args+i);
 		if (v->t==SLL_OBJECT_TYPE_CHAR){
 			sll_string_increase(out,1);
-			out->v[out->l]=v->dt.c;
+			out->v[out->l]=v->dt.char_value;
 			out->l++;
 		}
 		else if (v->t==SLL_OBJECT_TYPE_STRING){

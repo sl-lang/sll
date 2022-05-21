@@ -170,7 +170,7 @@ sll_return_code_t _scheduler_run(void){
 	}
 	_cpu_core_worker(NULL);
 	sll_object_t* rc_o=sll_operator_cast(_thread_get(0)->ret,sll_static_int[SLL_OBJECT_TYPE_INT]);
-	sll_return_code_t o=(sll_return_code_t)(rc_o->dt.i);
+	sll_return_code_t o=(sll_return_code_t)(rc_o->dt.int_value);
 	SLL_RELEASE(rc_o);
 	_cleanup_vm_exit_tables();
 	_release_var_data();

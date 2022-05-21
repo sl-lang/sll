@@ -16,16 +16,16 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_add(sll_object_t* a
 	COMMUTATIVE_OPERATOR;
 	switch (COMBINED_ARGS){
 		case COMBINED_TYPE_II:
-			return sll_int_to_object(a->dt.i+b->dt.i);
+			return sll_int_to_object(a->dt.int_value+b->dt.int_value);
 		case COMBINED_TYPE_IF:
-			return sll_float_to_object(a->dt.i+b->dt.f);
+			return sll_float_to_object(a->dt.int_value+b->dt.float_value);
 		case COMBINED_TYPE_IC:
-			return sll_int_to_object(a->dt.i+b->dt.c);
+			return sll_int_to_object(a->dt.int_value+b->dt.char_value);
 		case COMBINED_TYPE_ID:
 			{
 				sll_complex_t n={
-					a->dt.i+b->dt.d.real,
-					b->dt.d.imag
+					a->dt.int_value+b->dt.complex.real,
+					b->dt.complex.imag
 				};
 				return sll_complex_to_object(&n);
 			}
@@ -80,24 +80,24 @@ _add_to_string:
 				return o;
 			}
 		case COMBINED_TYPE_FF:
-			return sll_float_to_object(a->dt.f+b->dt.f);
+			return sll_float_to_object(a->dt.float_value+b->dt.float_value);
 		case COMBINED_TYPE_FC:
-			return sll_float_to_object(a->dt.f+b->dt.c);
+			return sll_float_to_object(a->dt.float_value+b->dt.char_value);
 		case COMBINED_TYPE_FD:
-			return sll_float_to_object(a->dt.f+b->dt.c);
+			return sll_float_to_object(a->dt.float_value+b->dt.char_value);
 		case COMBINED_TYPE_CC:
-			return SLL_FROM_CHAR(a->dt.c+b->dt.c);
+			return SLL_FROM_CHAR(a->dt.char_value+b->dt.char_value);
 		case COMBINED_TYPE_CD:
 			{
 				sll_complex_t n={
-					a->dt.c+b->dt.d.real,
-					b->dt.d.imag
+					a->dt.char_value+b->dt.complex.real,
+					b->dt.complex.imag
 				};
 				return sll_complex_to_object(&n);
 			}
 		case COMBINED_TYPE_DD:
 			{
-				sll_complex_t n=COMPLEX_ADD(a->dt.d,b->dt.d);
+				sll_complex_t n=COMPLEX_ADD(a->dt.complex,b->dt.complex);
 				return sll_complex_to_object(&n);
 			}
 		case COMBINED_TYPE_SS:

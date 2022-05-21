@@ -551,10 +551,10 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_wait_thread(sll_thread_index
 					sll_object_t* cnd=*(thr->stack+thr->si-1);
 					sll_integer_t cnd_v;
 					if (cnd->t==SLL_OBJECT_TYPE_INT){
-						cnd_v=cnd->dt.i;
+						cnd_v=cnd->dt.int_value;
 					}
 					else if (cnd->t==SLL_OBJECT_TYPE_CHAR){
-						cnd_v=cnd->dt.c;
+						cnd_v=cnd->dt.char_value;
 					}
 					else{
 						SLL_RELEASE(cnd);
@@ -567,7 +567,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_wait_thread(sll_thread_index
 					SLL_RELEASE(cnd);
 					while (thr->si<e_si){
 						sll_object_t* k=*(thr->stack+thr->si);
-						if ((k->t==SLL_OBJECT_TYPE_INT&&k->dt.i==cnd_v)||(k->t==SLL_OBJECT_TYPE_CHAR&&k->dt.c==cnd_v)){
+						if ((k->t==SLL_OBJECT_TYPE_INT&&k->dt.int_value==cnd_v)||(k->t==SLL_OBJECT_TYPE_CHAR&&k->dt.char_value==cnd_v)){
 							goto _cleanup_jump_table;
 						}
 						SLL_RELEASE(k);
@@ -576,13 +576,13 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_wait_thread(sll_thread_index
 					}
 _jump_to_default:
 					SLL_ASSERT(thr->si==e_si);
-					thr->ii=(sll_instruction_index_t)((*(thr->stack+thr->si))->dt.i);
+					thr->ii=(sll_instruction_index_t)((*(thr->stack+thr->si))->dt.int_value);
 					ai=_get_instruction_at_offset(sll_current_runtime_data->a_dt,thr->ii);
 					SLL_RELEASE(*(thr->stack+thr->si));
 					thr->si=i;
 					continue;
 _cleanup_jump_table:;
-					thr->ii=(sll_instruction_index_t)((*(thr->stack+thr->si+1))->dt.i);
+					thr->ii=(sll_instruction_index_t)((*(thr->stack+thr->si+1))->dt.int_value);
 					ai=_get_instruction_at_offset(sll_current_runtime_data->a_dt,thr->ii);
 					while (thr->si<e_si){
 						SLL_RELEASE(*(thr->stack+thr->si));
@@ -743,7 +743,7 @@ _cleanup_jump_table:;
 					sll_object_t* t=sll_operator_cast(*(thr->stack+thr->si-1),sll_static_int[SLL_OBJECT_TYPE_INT]);
 					SLL_RELEASE(*(thr->stack+thr->si-1));
 					sll_object_t* tos=sll_create_object(SLL_OBJECT_TYPE_STRING);
-					sll_get_type_name(sll_current_runtime_data->tt,(t->dt.i<0||t->dt.i>sll_current_runtime_data->tt->l+SLL_MAX_OBJECT_TYPE?SLL_OBJECT_TYPE_INT:(sll_object_type_t)(t->dt.i)),&(tos->dt.s));
+					sll_get_type_name(sll_current_runtime_data->tt,(t->dt.int_value<0||t->dt.int_value>sll_current_runtime_data->tt->l+SLL_MAX_OBJECT_TYPE?SLL_OBJECT_TYPE_INT:(sll_object_type_t)(t->dt.int_value)),&(tos->dt.s));
 					SLL_RELEASE(t);
 					*(thr->stack+thr->si-1)=tos;
 					break;
@@ -790,7 +790,7 @@ _cleanup_jump_table:;
 				{
 					sll_object_t* t=sll_operator_cast(*(thr->stack+thr->si-ai->dt.ac-1),sll_static_int[SLL_OBJECT_TYPE_INT]);
 					SLL_RELEASE(*(thr->stack+thr->si-ai->dt.ac-1));
-					sll_object_type_t ot=(t->dt.i<0||t->dt.i>sll_current_runtime_data->tt->l+SLL_MAX_OBJECT_TYPE?SLL_OBJECT_TYPE_INT:(sll_object_type_t)(t->dt.i));
+					sll_object_type_t ot=(t->dt.int_value<0||t->dt.int_value>sll_current_runtime_data->tt->l+SLL_MAX_OBJECT_TYPE?SLL_OBJECT_TYPE_INT:(sll_object_type_t)(t->dt.int_value));
 					SLL_RELEASE(t);
 					*(thr->stack+thr->si-ai->dt.ac-1)=sll_create_object_type(sll_current_runtime_data->tt,ot,thr->stack+thr->si-ai->dt.ac,ai->dt.ac);
 					for (sll_arg_count_t i=0;i<ai->dt.ac;i++){
@@ -841,7 +841,7 @@ _cleanup_jump_table:;
 					thr->si--;
 					sll_object_t* tos=*(thr->stack+thr->si);
 					if (tos->t==SLL_OBJECT_TYPE_INT){
-						sll_integer_t i=tos->dt.i;
+						sll_integer_t i=tos->dt.int_value;
 						SLL_RELEASE(tos);
 						if (i<0){
 							sll_function_index_t j=(sll_function_index_t)(~i);
@@ -921,7 +921,7 @@ _cleanup_jump_table:;
 					thr->si--;
 					sll_object_t* tos=*(thr->stack+thr->si);
 					if (tos->t==SLL_OBJECT_TYPE_INT){
-						sll_integer_t i=tos->dt.i;
+						sll_integer_t i=tos->dt.int_value;
 						SLL_RELEASE(tos);
 						tos=sll_operator_cast(*(thr->stack+thr->si-1),sll_static_int[SLL_OBJECT_TYPE_ARRAY]);
 						if (i<0){
@@ -1039,7 +1039,7 @@ _return:;
 					sll_object_t* n_tid_o=sll_operator_cast(*(thr->stack+thr->si-1),sll_static_int[SLL_OBJECT_TYPE_INT]);
 					thr->si--;
 					SLL_RELEASE(*(thr->stack+thr->si));
-					sll_integer_t w_tid=n_tid_o->dt.i;
+					sll_integer_t w_tid=n_tid_o->dt.int_value;
 					SLL_RELEASE(n_tid_o);
 					thread_data_t* c_thr=thr;
 					if (!_thread_wait(w_tid)){
@@ -1074,13 +1074,13 @@ _load_new_thread:;
 						sll_object_t* v_o=sll_operator_cast(*(thr->stack+thr->si-1),sll_static_int[SLL_OBJECT_TYPE_INT]);
 						thr->si--;
 						SLL_RELEASE(*(thr->stack+thr->si));
-						v=v_o->dt.i;
+						v=v_o->dt.int_value;
 						SLL_RELEASE(v_o);
 					}
 					sll_object_t* lck_o=sll_operator_cast(*(thr->stack+thr->si-1),sll_static_int[SLL_OBJECT_TYPE_INT]);
 					thr->si--;
 					SLL_RELEASE(*(thr->stack+thr->si));
-					sll_integer_t lck=lck_o->dt.i;
+					sll_integer_t lck=lck_o->dt.int_value;
 					SLL_RELEASE(lck_o);
 					thread_data_t* c_thr=thr;
 					sll_bool_t wait=0;
@@ -1126,12 +1126,12 @@ _load_new_thread:;
 					sll_object_t* sz_o=sll_operator_cast(*(thr->stack+thr->si-1),sll_static_int[SLL_OBJECT_TYPE_INT]);
 					thr->si--;
 					SLL_RELEASE(*(thr->stack+thr->si));
-					sll_integer_t sz=sz_o->dt.i;
+					sll_integer_t sz=sz_o->dt.int_value;
 					SLL_RELEASE(sz_o);
 					sll_object_t* fh_o=sll_operator_cast(*(thr->stack+thr->si-1),sll_static_int[SLL_OBJECT_TYPE_INT]);
 					thr->si--;
 					SLL_RELEASE(*(thr->stack+thr->si));
-					sll_file_t* f=sll_file_from_handle((sll_file_handle_t)(fh_o->dt.i));
+					sll_file_t* f=sll_file_from_handle((sll_file_handle_t)(fh_o->dt.int_value));
 					SLL_RELEASE(fh_o);
 					if (!f||sz<0){
 						*(thr->stack+thr->si)=EMPTY_STRING_TO_OBJECT();
@@ -1174,7 +1174,7 @@ _load_new_thread:;
 					sll_object_t* fh_o=sll_operator_cast(*(thr->stack+thr->si-1),sll_static_int[SLL_OBJECT_TYPE_INT]);
 					thr->si--;
 					SLL_RELEASE(*(thr->stack+thr->si));
-					sll_file_t* f=sll_file_from_handle((sll_file_handle_t)(fh_o->dt.i));
+					sll_file_t* f=sll_file_from_handle((sll_file_handle_t)(fh_o->dt.int_value));
 					SLL_RELEASE(fh_o);
 					if (!f){
 						*(thr->stack+thr->si)=SLL_FROM_CHAR(0);

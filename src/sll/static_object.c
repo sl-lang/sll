@@ -347,15 +347,15 @@ __SLL_EXTERNAL sll_object_t* sll_static_negative_int[16]={
 
 
 
-STATIC_OBJECT(float_zero,SLL_OBJECT_TYPE_FLOAT,f,0);
+STATIC_OBJECT(float_zero,SLL_OBJECT_TYPE_FLOAT,float_value,0);
 
 
 
-STATIC_OBJECT(float_one,SLL_OBJECT_TYPE_FLOAT,f,1);
+STATIC_OBJECT(float_one,SLL_OBJECT_TYPE_FLOAT,float_value,1);
 
 
 
-STATIC_OBJECT(float_half,SLL_OBJECT_TYPE_FLOAT,f,0.5);
+STATIC_OBJECT(float_half,SLL_OBJECT_TYPE_FLOAT,float_value,0.5);
 
 
 
@@ -666,7 +666,7 @@ __SLL_EXTERNAL sll_object_t* sll_static_char[256]={
 
 
 
-STATIC_OBJECT(complex_zero,SLL_OBJECT_TYPE_COMPLEX,d,SLL_INIT_COMPLEX_STRUCT);
+STATIC_OBJECT(complex_zero,SLL_OBJECT_TYPE_COMPLEX,complex,SLL_INIT_COMPLEX_STRUCT);
 
 
 
@@ -721,7 +721,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_complex_to_object(const sll_
 		return sll_static_complex_zero;
 	}
 	sll_object_t* o=sll_create_object(SLL_OBJECT_TYPE_COMPLEX);
-	o->dt.d=*v;
+	o->dt.complex=*v;
 	return o;
 }
 
@@ -741,7 +741,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_float_to_object(sll_float_t 
 		return sll_static_float_half;
 	}
 	sll_object_t* o=sll_create_object(SLL_OBJECT_TYPE_FLOAT);
-	o->dt.f=v;
+	o->dt.float_value=v;
 	return o;
 }
 
@@ -757,7 +757,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_int_to_object(sll_integer_t 
 		return sll_static_negative_int[-v-1];
 	}
 	sll_object_t* o=sll_create_object(SLL_OBJECT_TYPE_INT);
-	o->dt.i=v;
+	o->dt.int_value=v;
 	return o;
 }
 

@@ -17,20 +17,20 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_and(sll_object_t* a
 	COMMUTATIVE_OPERATOR;
 	switch (COMBINED_ARGS){
 		case COMBINED_TYPE_II:
-			return sll_int_to_object(a->dt.i&b->dt.i);
+			return sll_int_to_object(a->dt.int_value&b->dt.int_value);
 		case COMBINED_TYPE_IF:
 			{
 				f64_data_t v={
-					.dt=a->dt.i&TO_FLOAT_BITS(b)
+					.dt=a->dt.int_value&TO_FLOAT_BITS(b)
 				};
 				return sll_float_to_object(v.v);
 			}
 		case COMBINED_TYPE_IC:
-			return sll_int_to_object(a->dt.i&b->dt.c);
+			return sll_int_to_object(a->dt.int_value&b->dt.char_value);
 		case COMBINED_TYPE_IS:
 			{
 				sll_object_t* o=sll_create_object(SLL_OBJECT_TYPE_STRING);
-				sll_string_and_char(&(b->dt.s),(sll_char_t)(a->dt.i),&(o->dt.s));
+				sll_string_and_char(&(b->dt.s),(sll_char_t)(a->dt.int_value),&(o->dt.s));
 				return o;
 			}
 		case COMBINED_TYPE_IA:
@@ -65,22 +65,22 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_and(sll_object_t* a
 		case COMBINED_TYPE_FC:
 			{
 				f64_data_t v={
-					.dt=TO_FLOAT_BITS(a)&b->dt.c
+					.dt=TO_FLOAT_BITS(a)&b->dt.char_value
 				};
 				return sll_float_to_object(v.v);
 			}
 		case COMBINED_TYPE_FS:
 			{
 				sll_object_t* o=sll_create_object(SLL_OBJECT_TYPE_STRING);
-				sll_string_and_char(&(b->dt.s),(sll_char_t)round(a->dt.f),&(o->dt.s));
+				sll_string_and_char(&(b->dt.s),(sll_char_t)round(a->dt.float_value),&(o->dt.s));
 				return o;
 			}
 		case COMBINED_TYPE_CC:
-			return SLL_FROM_CHAR(a->dt.c&b->dt.c);
+			return SLL_FROM_CHAR(a->dt.char_value&b->dt.char_value);
 		case COMBINED_TYPE_CS:
 			{
 				sll_object_t* o=sll_create_object(SLL_OBJECT_TYPE_STRING);
-				sll_string_and_char(&(b->dt.s),a->dt.c,&(o->dt.s));
+				sll_string_and_char(&(b->dt.s),a->dt.char_value,&(o->dt.s));
 				return o;
 			}
 		case COMBINED_TYPE_SS:
@@ -130,16 +130,16 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_and(sll_object_t* a
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_inv(sll_object_t* a){
 	switch (a->t){
 		case SLL_OBJECT_TYPE_INT:
-			return sll_int_to_object(~a->dt.i);
+			return sll_int_to_object(~a->dt.int_value);
 		case SLL_OBJECT_TYPE_FLOAT:
-			return sll_float_to_object(-a->dt.f-1);
+			return sll_float_to_object(-a->dt.float_value-1);
 		case SLL_OBJECT_TYPE_CHAR:
-			return SLL_FROM_CHAR(~a->dt.c);
+			return SLL_FROM_CHAR(~a->dt.char_value);
 		case SLL_OBJECT_TYPE_COMPLEX:
 			{
 				sll_complex_t n={
-					-a->dt.d.real-1,
-					-a->dt.d.imag-1
+					-a->dt.complex.real-1,
+					-a->dt.complex.imag-1
 				};
 				return sll_complex_to_object(&n);
 			}
@@ -179,20 +179,20 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_or(sll_object_t* a,
 	COMMUTATIVE_OPERATOR;
 	switch (COMBINED_ARGS){
 		case COMBINED_TYPE_II:
-			return sll_int_to_object(a->dt.i|b->dt.i);
+			return sll_int_to_object(a->dt.int_value|b->dt.int_value);
 		case COMBINED_TYPE_IF:
 			{
 				f64_data_t v={
-					.dt=a->dt.i|TO_FLOAT_BITS(b)
+					.dt=a->dt.int_value|TO_FLOAT_BITS(b)
 				};
 				return sll_float_to_object(v.v);
 			}
 		case COMBINED_TYPE_IC:
-			return sll_int_to_object(a->dt.i|b->dt.c);
+			return sll_int_to_object(a->dt.int_value|b->dt.char_value);
 		case COMBINED_TYPE_IS:
 			{
 				sll_object_t* o=sll_create_object(SLL_OBJECT_TYPE_STRING);
-				sll_string_or_char(&(b->dt.s),(sll_char_t)(a->dt.i),&(o->dt.s));
+				sll_string_or_char(&(b->dt.s),(sll_char_t)(a->dt.int_value),&(o->dt.s));
 				return o;
 			}
 		case COMBINED_TYPE_IA:
@@ -227,22 +227,22 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_or(sll_object_t* a,
 		case COMBINED_TYPE_FC:
 			{
 				f64_data_t v={
-					.dt=TO_FLOAT_BITS(a)|b->dt.c
+					.dt=TO_FLOAT_BITS(a)|b->dt.char_value
 				};
 				return sll_float_to_object(v.v);
 			}
 		case COMBINED_TYPE_FS:
 			{
 				sll_object_t* o=sll_create_object(SLL_OBJECT_TYPE_STRING);
-				sll_string_or_char(&(b->dt.s),(sll_char_t)round(a->dt.f),&(o->dt.s));
+				sll_string_or_char(&(b->dt.s),(sll_char_t)round(a->dt.float_value),&(o->dt.s));
 				return o;
 			}
 		case COMBINED_TYPE_CC:
-			return SLL_FROM_CHAR(a->dt.c|b->dt.c);
+			return SLL_FROM_CHAR(a->dt.char_value|b->dt.char_value);
 		case COMBINED_TYPE_CS:
 			{
 				sll_object_t* o=sll_create_object(SLL_OBJECT_TYPE_STRING);
-				sll_string_or_char(&(b->dt.s),a->dt.c,&(o->dt.s));
+				sll_string_or_char(&(b->dt.s),a->dt.char_value,&(o->dt.s));
 				return o;
 			}
 		case COMBINED_TYPE_SS:
@@ -293,20 +293,20 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_xor(sll_object_t* a
 	COMMUTATIVE_OPERATOR;
 	switch (COMBINED_ARGS){
 		case COMBINED_TYPE_II:
-			return sll_int_to_object(a->dt.i^b->dt.i);
+			return sll_int_to_object(a->dt.int_value^b->dt.int_value);
 		case COMBINED_TYPE_IF:
 			{
 				f64_data_t v={
-					.dt=a->dt.i^TO_FLOAT_BITS(b)
+					.dt=a->dt.int_value^TO_FLOAT_BITS(b)
 				};
 				return sll_float_to_object(v.v);
 			}
 		case COMBINED_TYPE_IC:
-			return sll_int_to_object(a->dt.i^b->dt.c);
+			return sll_int_to_object(a->dt.int_value^b->dt.char_value);
 		case COMBINED_TYPE_IS:
 			{
 				sll_object_t* o=sll_create_object(SLL_OBJECT_TYPE_STRING);
-				sll_string_xor_char(&(b->dt.s),(sll_char_t)(a->dt.i),&(o->dt.s));
+				sll_string_xor_char(&(b->dt.s),(sll_char_t)(a->dt.int_value),&(o->dt.s));
 				return o;
 			}
 		case COMBINED_TYPE_IA:
@@ -341,22 +341,22 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_xor(sll_object_t* a
 		case COMBINED_TYPE_FC:
 			{
 				f64_data_t v={
-					.dt=TO_FLOAT_BITS(a)^b->dt.c
+					.dt=TO_FLOAT_BITS(a)^b->dt.char_value
 				};
 				return sll_float_to_object(v.v);
 			}
 		case COMBINED_TYPE_FS:
 			{
 				sll_object_t* o=sll_create_object(SLL_OBJECT_TYPE_STRING);
-				sll_string_xor_char(&(b->dt.s),(sll_char_t)round(a->dt.f),&(o->dt.s));
+				sll_string_xor_char(&(b->dt.s),(sll_char_t)round(a->dt.float_value),&(o->dt.s));
 				return o;
 			}
 		case COMBINED_TYPE_CC:
-			return SLL_FROM_CHAR(a->dt.c^b->dt.c);
+			return SLL_FROM_CHAR(a->dt.char_value^b->dt.char_value);
 		case COMBINED_TYPE_CS:
 			{
 				sll_object_t* o=sll_create_object(SLL_OBJECT_TYPE_STRING);
-				sll_string_xor_char(&(b->dt.s),a->dt.c,&(o->dt.s));
+				sll_string_xor_char(&(b->dt.s),a->dt.char_value,&(o->dt.s));
 				return o;
 			}
 		case COMBINED_TYPE_SS:

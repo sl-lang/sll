@@ -348,7 +348,7 @@ static void _stringify_object(sll_object_t* o,sll_string_t* s){
 	switch (o->t){
 		case SLL_OBJECT_TYPE_INT:
 			{
-				sll_integer_t v=o->dt.i;
+				sll_integer_t v=o->dt.int_value;
 				if (v<0){
 					sll_string_increase(s,1);
 					s->v[s->l]='-';
@@ -373,14 +373,14 @@ static void _stringify_object(sll_object_t* o,sll_string_t* s){
 		case SLL_OBJECT_TYPE_FLOAT:
 			{
 				sll_char_t bf[256];
-				sll_string_length_t l=snprintf((char*)bf,256,"%.16lf",o->dt.f);
+				sll_string_length_t l=snprintf((char*)bf,256,"%.16lf",o->dt.float_value);
 				sll_string_increase(s,l);
 				sll_copy_data(bf,l,s->v+s->l);
 				s->l+=l;
 				return;
 			}
 		case SLL_OBJECT_TYPE_CHAR:
-			_stringify_string(&(o->dt.c),1,s);
+			_stringify_string(&(o->dt.char_value),1,s);
 			return;
 		case SLL_OBJECT_TYPE_COMPLEX:
 			SLL_UNIMPLEMENTED();

@@ -69,7 +69,7 @@
 		inv=1; \
 	} \
 
-#define TO_FLOAT_BITS(n) ((n)->dt.i)
+#define TO_FLOAT_BITS(n) ((n)->dt.int_value)
 
 
 

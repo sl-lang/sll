@@ -16,17 +16,17 @@ __SLL_EXTERNAL void sll_operator_assign(sll_object_t* a,sll_object_t* b,sll_obje
 		if (b->t==SLL_OBJECT_TYPE_INT){
 			sll_object_t* tmp=sll_operator_cast(v,sll_static_int[SLL_OBJECT_TYPE_CHAR]);
 			SLL_ASSERT(tmp->t==SLL_OBJECT_TYPE_CHAR);
-			sll_integer_t idx=b->dt.i-b->dt.i/a->dt.s.l*a->dt.s.l;
+			sll_integer_t idx=b->dt.int_value-b->dt.int_value/a->dt.s.l*a->dt.s.l;
 			if (idx<0){
 				idx+=a->dt.s.l;
 			}
-			sll_string_set_char(tmp->dt.c,(sll_string_length_t)idx,&(a->dt.s));
+			sll_string_set_char(tmp->dt.char_value,(sll_string_length_t)idx,&(a->dt.s));
 			SLL_RELEASE(tmp);
 		}
 	}
 	else if (a->t==SLL_OBJECT_TYPE_ARRAY){
 		if (b->t==SLL_OBJECT_TYPE_INT){
-			sll_integer_t idx=b->dt.i-b->dt.i/a->dt.a.length*a->dt.a.length;
+			sll_integer_t idx=b->dt.int_value-b->dt.int_value/a->dt.a.length*a->dt.a.length;
 			if (idx<0){
 				idx+=a->dt.a.length;
 			}

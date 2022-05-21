@@ -13,16 +13,16 @@
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_dec(sll_object_t* a){
 	switch (a->t){
 		case SLL_OBJECT_TYPE_INT:
-			return sll_int_to_object(a->dt.i-1);
+			return sll_int_to_object(a->dt.int_value-1);
 		case SLL_OBJECT_TYPE_FLOAT:
-			return sll_float_to_object(a->dt.f-1);
+			return sll_float_to_object(a->dt.float_value-1);
 		case SLL_OBJECT_TYPE_CHAR:
-			return SLL_FROM_CHAR(a->dt.c-1);
+			return SLL_FROM_CHAR(a->dt.char_value-1);
 		case SLL_OBJECT_TYPE_COMPLEX:
 			{
 				sll_complex_t n={
-					a->dt.d.real-1,
-					a->dt.d.imag
+					a->dt.complex.real-1,
+					a->dt.complex.imag
 				};
 				return sll_complex_to_object(&n);
 			}
@@ -58,16 +58,16 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_dec(sll_object_t* a
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_inc(sll_object_t* a){
 	switch (a->t){
 		case SLL_OBJECT_TYPE_INT:
-			return sll_int_to_object(a->dt.i+1);
+			return sll_int_to_object(a->dt.int_value+1);
 		case SLL_OBJECT_TYPE_FLOAT:
-			return sll_float_to_object(a->dt.f+1);
+			return sll_float_to_object(a->dt.float_value+1);
 		case SLL_OBJECT_TYPE_CHAR:
-			return SLL_FROM_CHAR(a->dt.c+1);
+			return SLL_FROM_CHAR(a->dt.char_value+1);
 		case SLL_OBJECT_TYPE_COMPLEX:
 			{
 				sll_complex_t n={
-					a->dt.d.real+1,
-					a->dt.d.imag
+					a->dt.complex.real+1,
+					a->dt.complex.imag
 				};
 				return sll_complex_to_object(&n);
 			}
