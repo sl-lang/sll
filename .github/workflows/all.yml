@@ -211,7 +211,10 @@ jobs:
       - name: Setup MSVC
         uses: ilammy/msvc-dev-cmd@v1
       - name: Build
-        run: ${{env.BUILD_COMMAND_WINDOWS}} --bundle
+        run: ${{env.BUILD_COMMAND_WINDOWS}}
+      - name: Create bundle
+        run: src\_build\bundle.ps1
+        shell: powershell
         shell: cmd
       - name: Store assets
         uses: actions/upload-artifact@v3
@@ -234,7 +237,10 @@ jobs:
       - name: Setup MSVC
         uses: ilammy/msvc-dev-cmd@v1
       - name: Build
-        run: ${{env.BUILD_COMMAND_WINDOWS}} --release --bundle
+        run: ${{env.BUILD_COMMAND_WINDOWS}} --release
+      - name: Create bundle
+        run: src\_build\bundle.ps1
+        shell: powershell
         shell: cmd
       - name: Store assets
         uses: actions/upload-artifact@v3
