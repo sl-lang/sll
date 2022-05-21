@@ -1,4 +1,7 @@
 (---
+	"@build-script/config.sll"
+	"@build-script/hashlist.sll"
+	"@build-script/util.sll"
 	"array.sll"
 	"file.sll"
 	"log.sll"
@@ -7,11 +10,6 @@
 	"string.sll"
 	"sys.sll"
 	"types.sll"
-)
-(---
-	"config.sll"
-	"hashlist.sll"
-	"util.sll"
 )
 
 

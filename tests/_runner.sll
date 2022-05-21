@@ -19,8 +19,8 @@
 
 (= build_command (,,,
 	(= args [
-		(?: (=== sys$PLATFORM "windows") "build\\sll.exe" "build/sll")
-		"-I" "tests"
+		sys$EXECUTABLE
+		"-I" "@test|tests"
 	])
 	(= list (<- path$list_dir "tests" true))
 	(-> (= i 0) (< i ($ list))

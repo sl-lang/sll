@@ -1,15 +1,15 @@
-(--- "sys.sll")
 (---
-	"api.sll"
-	"assembly.sll"
-	"build.sll"
-	"config.sll"
-	"documentation.sll"
-	"hashlist.sll"
-	"header.sll"
-	"operator_parser.sll"
-	"util.sll"
-	"website.sll"
+	"@build-script/api.sll"
+	"@build-script/assembly.sll"
+	"@build-script/build.sll"
+	"@build-script/config.sll"
+	"@build-script/documentation.sll"
+	"@build-script/hashlist.sll"
+	"@build-script/header.sll"
+	"@build-script/operator_parser.sll"
+	"@build-script/util.sll"
+	"@build-script/website.sll"
+	"sys.sll"
 )
 
 

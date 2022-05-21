@@ -1,10 +1,10 @@
 (---
+	"@build-script/config.sll"
 	"file.sll"
 	"log.sll"
 	"sort.sll"
 	"types.sll"
 )
-(--- "config.sll")
 
 
 

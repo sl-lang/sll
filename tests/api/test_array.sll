@@ -1,5 +1,7 @@
-(--- "array.sll")
-(--- "_common.sll")
+(---
+	"@test/_common.sll"
+	"array.sll"
+)
 
 
 

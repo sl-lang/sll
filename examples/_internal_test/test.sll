@@ -1,4 +1,5 @@
 (---
+	"@internal/background_audit_logger.sll"
 	"array.sll"
 	"atexit.sll"
 	"audit.sll"
@@ -30,7 +31,6 @@
 	"vm.sll"
 	"weakref.sll"
 )
-(--- "@internal/background_audit_logger.sll")
 (= JSON_STRING "{\"key\":[\"value\",10,0.555,-842.9e-5,{\"a\":[\"c\",30,\"d\",\"\\t€\"],\"other\":\"else\"},true,false,null,[],{}]}")
 (-> (= i 1) (< i 11) {
 	(-> (= j 1) (< j 11) {

@@ -1,4 +1,5 @@
 (---
+	"@test/_common.sll"
 	"array.sll"
 	"audit.sll"
 	"error.sll"
@@ -11,7 +12,6 @@
 	"thread.sll"
 	"vm.sll"
 )
-(--- "_common.sll")
 
 
 

@@ -6,4 +6,4 @@ if not exist build\_sll_runtime_windows (
 	powershell -command "Expand-Archive -Force 'build\_sll_runtime_windows\windows.zip' 'build\_sll_runtime_windows\'"
 	del /f /q build\_sll_runtime_windows\windows.zip
 )
-build\_sll_runtime_windows\sll.exe src\_build\main.sll -I src\_build -A %*
+build\_sll_runtime_windows\sll.exe src\_build\main.sll -I "@build-script|src\_build" -A %*
