@@ -157,6 +157,7 @@ __SLL_EXTERNAL void sll_unify_compilation_data(const sll_compilation_data_t* c_d
 				*(export_dt+idx-1)=ex_dt;
 				sll_copy_data(sf->et.dt,sf->et.l*sizeof(sll_identifier_index_t),ex_dt);
 			}
+			o->fp_nm=sf->fp_nm;
 			sll_node_t* dbg=_acquire_next_node(o);
 			dbg->t=SLL_NODE_TYPE_DBG;
 			dbg->dt.s=sf->fp_nm;

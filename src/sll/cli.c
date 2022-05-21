@@ -759,7 +759,8 @@ _read_file_argument:
 			}
 			if ((_cli_flags&(SLL_CLI_FLAG_GENERATE_ASSEMBLY|SLL_CLI_FLAG_PRINT_ASSEMBLY))||!(_cli_flags&SLL_CLI_FLAG_NO_RUN)){
 				SLL_LOG("Generating assembly...");
-				sll_generate_assembly(&a_dt_sf,&a_dt);
+				SLL_ASSERT(c_dt.l==1);
+				sll_generate_assembly(*(c_dt.dt),&a_dt);
 			}
 		}
 		if (_cli_flags&SLL_CLI_FLAG_PRINT_ASSEMBLY){
