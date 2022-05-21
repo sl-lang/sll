@@ -90,13 +90,13 @@ __SLL_EXTERNAL void sll__release_object_internal(sll_object_t* o){
 		}
 	}
 	if (o->t==SLL_OBJECT_TYPE_STRING){
-		sll_free_string(&(o->dt.s));
+		sll_free_string(&(o->dt.string));
 	}
 	else if (o->t==SLL_OBJECT_TYPE_ARRAY||o->t==SLL_OBJECT_TYPE_MAP_KEYS||o->t==SLL_OBJECT_TYPE_MAP_VALUES){
-		sll_free_array(&(o->dt.a));
+		sll_free_array(&(o->dt.array));
 	}
 	else if (o->t==SLL_OBJECT_TYPE_MAP){
-		sll_free_map(&(o->dt.m));
+		sll_free_map(&(o->dt.map));
 	}
 	else if (o->t>SLL_MAX_OBJECT_TYPE&&o->t<SLL_OBJECT_TYPE_OBJECT){
 		if (sll_current_runtime_data&&o->t<=sll_current_runtime_data->tt->l+SLL_MAX_OBJECT_TYPE){
@@ -109,7 +109,7 @@ __SLL_EXTERNAL void sll__release_object_internal(sll_object_t* o){
 					return;
 				}
 			}
-			sll_object_field_t* p=o->dt.p;
+			sll_object_field_t* p=o->dt.fields;
 			for (sll_arg_count_t i=0;i<dt->l;i++){
 				if (dt->dt[i].t>SLL_OBJECT_TYPE_CHAR){
 					SLL_RELEASE(p->any);
@@ -117,7 +117,7 @@ __SLL_EXTERNAL void sll__release_object_internal(sll_object_t* o){
 				p++;
 			}
 		}
-		sll_deallocate(o->dt.p);
+		sll_deallocate(o->dt.fields);
 	}
 	o->_f=0;
 	if (_gc_fast_object_pool.space){

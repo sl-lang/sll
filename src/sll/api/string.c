@@ -171,8 +171,8 @@ static void _object_to_string(sll_object_t* a,sll_string_t* o){
 			sll_string_increase(o,1);
 			o->v[o->l]='\"';
 			o->l++;
-			for (sll_string_length_t i=0;i<a->dt.s.l;i++){
-				_write_char(a->dt.s.v[i],o);
+			for (sll_string_length_t i=0;i<a->dt.string.l;i++){
+				_write_char(a->dt.string.v[i],o);
 			}
 			sll_string_increase(o,1);
 			o->v[o->l]='\"';
@@ -182,13 +182,13 @@ static void _object_to_string(sll_object_t* a,sll_string_t* o){
 			sll_string_increase(o,1);
 			o->v[o->l]='[';
 			o->l++;
-			for (sll_array_length_t i=0;i<a->dt.a.length;i++){
+			for (sll_array_length_t i=0;i<a->dt.array.length;i++){
 				if (i){
 					sll_string_increase(o,1);
 					o->v[o->l]=' ';
 					o->l++;
 				}
-				_object_to_string(*(a->dt.a.data+i),o);
+				_object_to_string(*(a->dt.array.data+i),o);
 			}
 			sll_string_increase(o,1);
 			o->v[o->l]=']';
@@ -198,13 +198,13 @@ static void _object_to_string(sll_object_t* a,sll_string_t* o){
 			sll_string_increase(o,1);
 			o->v[o->l]='<';
 			o->l++;
-			for (sll_array_length_t i=0;i<(a->dt.m.length<<1);i++){
+			for (sll_array_length_t i=0;i<(a->dt.map.length<<1);i++){
 				if (i){
 					sll_string_increase(o,1);
 					o->v[o->l]=' ';
 					o->l++;
 				}
-				_object_to_string(*(a->dt.m.data+i),o);
+				_object_to_string(*(a->dt.map.data+i),o);
 			}
 			sll_string_increase(o,1);
 			o->v[o->l]='>';
@@ -223,9 +223,9 @@ static void _object_to_string(sll_object_t* a,sll_string_t* o){
 					sll_object_t* v=sll_execute_function(dt->fn[SLL_OBJECT_FUNC_STRING],&a,1,0);
 					sll_object_t* str=sll_operator_cast(v,sll_static_int[SLL_OBJECT_TYPE_STRING]);
 					SLL_RELEASE(v);
-					sll_string_increase(o,str->dt.s.l);
-					sll_copy_data(str->dt.s.v,str->dt.s.l,o->v+o->l);
-					o->l+=str->dt.s.l;
+					sll_string_increase(o,str->dt.string.l);
+					sll_copy_data(str->dt.string.v,str->dt.string.l,o->v+o->l);
+					o->l+=str->dt.string.l;
 					SLL_RELEASE(str);
 					return;
 				}
@@ -240,7 +240,7 @@ static void _object_to_string(sll_object_t* a,sll_string_t* o){
 					sll_copy_data(dt->nm.v,dt->nm.l,o->v+o->l);
 					o->l+=dt->nm.l;
 				}
-				sll_object_field_t* p=a->dt.p;
+				sll_object_field_t* p=a->dt.fields;
 				for (sll_arg_count_t i=0;i<dt->l;i++){
 					sll_string_t s=dt->dt[i].nm;
 					sll_string_increase(o,1);
@@ -299,9 +299,9 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_string_convert(sll_object_t*const* ar
 			out->l++;
 		}
 		else if (v->t==SLL_OBJECT_TYPE_STRING){
-			sll_string_increase(out,v->dt.s.l);
-			sll_copy_data(v->dt.s.v,v->dt.s.l,out->v+out->l);
-			out->l+=v->dt.s.l;
+			sll_string_increase(out,v->dt.string.l);
+			sll_copy_data(v->dt.string.v,v->dt.string.l,out->v+out->l);
+			out->l+=v->dt.string.l;
 		}
 		else{
 			_object_to_string(*(args+i),out);

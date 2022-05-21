@@ -689,7 +689,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_string_equal_array(const sll_st
 	}
 	for (sll_string_length_t i=0;i<s->l;i++){
 		sll_object_t* e=a->data[i];
-		if ((e->t==SLL_OBJECT_TYPE_CHAR&&e->dt.char_value==s->v[i])||(e->t==SLL_OBJECT_TYPE_INT&&e->dt.int_value==s->v[i])||(e->t==SLL_OBJECT_TYPE_STRING&&e->dt.s.l==1&&e->dt.s.v[0]==s->v[i])){
+		if ((e->t==SLL_OBJECT_TYPE_CHAR&&e->dt.char_value==s->v[i])||(e->t==SLL_OBJECT_TYPE_INT&&e->dt.int_value==s->v[i])||(e->t==SLL_OBJECT_TYPE_STRING&&e->dt.string.l==1&&e->dt.string.v[0]==s->v[i])){
 			continue;
 		}
 		return 0;
@@ -710,7 +710,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_string_equal_map(const sll_stri
 		}
 		sll_char_t c=s->v[e->dt.int_value];
 		e=m->data[i+1];
-		if ((e->t==SLL_OBJECT_TYPE_CHAR&&e->dt.char_value==c)||(e->t==SLL_OBJECT_TYPE_INT&&e->dt.int_value==c)||(e->t==SLL_OBJECT_TYPE_STRING&&e->dt.s.l==1&&e->dt.s.v[0]==c)){
+		if ((e->t==SLL_OBJECT_TYPE_CHAR&&e->dt.char_value==c)||(e->t==SLL_OBJECT_TYPE_INT&&e->dt.int_value==c)||(e->t==SLL_OBJECT_TYPE_STRING&&e->dt.string.l==1&&e->dt.string.v[0]==c)){
 			continue;
 		}
 		return 0;
@@ -1273,9 +1273,9 @@ __SLL_EXTERNAL void sll_string_join(const sll_string_t* s,sll_object_t*const* a,
 			o->l+=s->l;
 		}
 		sll_object_t* n=sll_operator_cast(*(a+i),sll_static_int[SLL_OBJECT_TYPE_STRING]);
-		sll_string_increase(o,n->dt.s.l);
-		sll_copy_data(n->dt.s.v,n->dt.s.l,o->v+o->l);
-		o->l+=n->dt.s.l;
+		sll_string_increase(o,n->dt.string.l);
+		sll_copy_data(n->dt.string.v,n->dt.string.l,o->v+o->l);
+		o->l+=n->dt.string.l;
 		SLL_RELEASE(n);
 	}
 	sll_allocator_move((void**)(&(o->v)),SLL_MEMORY_MOVE_DIRECTION_FROM_STACK);
@@ -1293,9 +1293,9 @@ __SLL_EXTERNAL void sll_string_join_char(sll_char_t c,sll_object_t*const* a,sll_
 			o->l++;
 		}
 		sll_object_t* n=sll_operator_cast(*(a+i),sll_static_int[SLL_OBJECT_TYPE_STRING]);
-		sll_string_increase(o,n->dt.s.l);
-		sll_copy_data(n->dt.s.v,n->dt.s.l,o->v+o->l);
-		o->l+=n->dt.s.l;
+		sll_string_increase(o,n->dt.string.l);
+		sll_copy_data(n->dt.string.v,n->dt.string.l,o->v+o->l);
+		o->l+=n->dt.string.l;
 		SLL_RELEASE(n);
 	}
 	sll_allocator_move((void**)(&(o->v)),SLL_MEMORY_MOVE_DIRECTION_FROM_STACK);

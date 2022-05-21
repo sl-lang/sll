@@ -24,13 +24,13 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_mult(sll_object_t* 
 		case COMBINED_TYPE_IS:
 			{
 				sll_object_t* o=sll_create_object(SLL_OBJECT_TYPE_STRING);
-				sll_string_duplicate(&(b->dt.s),a->dt.int_value*(inv?1:-1),0,&(o->dt.s));
+				sll_string_duplicate(&(b->dt.string),a->dt.int_value*(inv?1:-1),0,&(o->dt.string));
 				return o;
 			}
 		case COMBINED_TYPE_IA:
 			{
 				sll_object_t* o=sll_create_object(SLL_OBJECT_TYPE_ARRAY);
-				sll_array_duplicate(&(b->dt.a),a->dt.int_value*(inv?1:-1),0,&(o->dt.a));
+				sll_array_duplicate(&(b->dt.array),a->dt.int_value*(inv?1:-1),0,&(o->dt.array));
 				return o;
 			}
 		case COMBINED_TYPE_IM:
@@ -39,12 +39,12 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_mult(sll_object_t* 
 		case COMBINED_TYPE_SM:
 		case COMBINED_TYPE_AM:
 			{
-				sll_map_t m=b->dt.m;
+				sll_map_t m=b->dt.map;
 				sll_object_t* o=sll_map_length_to_object(m.length);
 				for (sll_map_length_t i=0;i<(m.length<<1);i+=2){
 					SLL_ACQUIRE(m.data[i]);
-					o->dt.m.data[i]=m.data[i];
-					o->dt.m.data[i+1]=sll_operator_mult(a,m.data[i+1]);
+					o->dt.map.data[i]=m.data[i];
+					o->dt.map.data[i+1]=sll_operator_mult(a,m.data[i+1]);
 				}
 				return o;
 			}
@@ -56,14 +56,14 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_mult(sll_object_t* 
 			{
 				sll_object_t* o=sll_create_object(SLL_OBJECT_TYPE_STRING);
 				sll_integer_t n=(sll_integer_t)a->dt.float_value;
-				sll_string_duplicate(&(b->dt.s),n,(sll_string_length_t)round(sll_math_abs(a->dt.float_value-n)*b->dt.s.l),&(o->dt.s));
+				sll_string_duplicate(&(b->dt.string),n,(sll_string_length_t)round(sll_math_abs(a->dt.float_value-n)*b->dt.string.l),&(o->dt.string));
 				return o;
 			}
 		case COMBINED_TYPE_FA:
 			{
 				sll_object_t* o=sll_create_object(SLL_OBJECT_TYPE_ARRAY);
 				sll_integer_t n=(sll_integer_t)a->dt.float_value;
-				sll_array_duplicate(&(b->dt.a),n,(sll_array_length_t)round(sll_math_abs(a->dt.float_value-n)*b->dt.a.length),&(o->dt.a));
+				sll_array_duplicate(&(b->dt.array),n,(sll_array_length_t)round(sll_math_abs(a->dt.float_value-n)*b->dt.array.length),&(o->dt.array));
 				return o;
 			}
 		case COMBINED_TYPE_CC:
@@ -71,43 +71,43 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_mult(sll_object_t* 
 		case COMBINED_TYPE_CS:
 			{
 				sll_object_t* o=sll_create_object(SLL_OBJECT_TYPE_STRING);
-				sll_string_duplicate(&(b->dt.s),a->dt.char_value,0,&(o->dt.s));
+				sll_string_duplicate(&(b->dt.string),a->dt.char_value,0,&(o->dt.string));
 				return o;
 			}
 		case COMBINED_TYPE_CA:
 			{
 				sll_object_t* o=sll_create_object(SLL_OBJECT_TYPE_ARRAY);
-				sll_array_duplicate(&(b->dt.a),a->dt.char_value,0,&(o->dt.a));
+				sll_array_duplicate(&(b->dt.array),a->dt.char_value,0,&(o->dt.array));
 				return o;
 			}
 		case COMBINED_TYPE_SS:
 			{
-				sll_string_t sa=a->dt.s;
-				sll_string_t sb=b->dt.s;
+				sll_string_t sa=a->dt.string;
+				sll_string_t sb=b->dt.string;
 				sll_object_t* o=sll_create_object(SLL_OBJECT_TYPE_ARRAY);
-				sll_string_combinations(&sa,&sb,&(o->dt.a));
+				sll_string_combinations(&sa,&sb,&(o->dt.array));
 				return o;
 			}
 		case COMBINED_TYPE_SA:
 			{
-				sll_string_t sa=a->dt.s;
-				sll_array_t ab=b->dt.a;
+				sll_string_t sa=a->dt.string;
+				sll_array_t ab=b->dt.array;
 				sll_object_t* o=sll_create_object(SLL_OBJECT_TYPE_ARRAY);
-				sll_array_combinations_string(&ab,&sa,&(o->dt.a));
+				sll_array_combinations_string(&ab,&sa,&(o->dt.array));
 				return o;
 			}
 		case COMBINED_TYPE_AA:
 			{
-				sll_array_t aa=a->dt.a;
-				sll_array_t ab=b->dt.a;
+				sll_array_t aa=a->dt.array;
+				sll_array_t ab=b->dt.array;
 				sll_object_t* o=sll_create_object(SLL_OBJECT_TYPE_ARRAY);
-				sll_array_combinations(&aa,&ab,&(o->dt.a));
+				sll_array_combinations(&aa,&ab,&(o->dt.array));
 				return o;
 			}
 		case COMBINED_TYPE_MM:
 			{
 				sll_object_t* o=sll_create_object(SLL_OBJECT_TYPE_MAP);
-				sll_map_and(&(a->dt.m),&(b->dt.m),&(o->dt.m));
+				sll_map_and(&(a->dt.map),&(b->dt.map),&(o->dt.map));
 				return o;
 			}
 		default:

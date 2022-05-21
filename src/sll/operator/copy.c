@@ -18,31 +18,31 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_copy(sll_object_t* 
 			SLL_ACQUIRE(a);
 			return a;
 		case SLL_OBJECT_TYPE_STRING:
-			return STRING_TO_OBJECT(&(a->dt.s));
+			return STRING_TO_OBJECT(&(a->dt.string));
 		case SLL_OBJECT_TYPE_ARRAY:
 			{
-				sll_object_t* o=sll_array_length_to_object(a->dt.a.length);
-				for (sll_map_length_t i=0;i<a->dt.a.length;i++){
+				sll_object_t* o=sll_array_length_to_object(a->dt.array.length);
+				for (sll_map_length_t i=0;i<a->dt.array.length;i++){
 					if (d){
-						o->dt.a.data[i]=sll_operator_copy(a->dt.a.data[i],1);
+						o->dt.array.data[i]=sll_operator_copy(a->dt.array.data[i],1);
 					}
 					else{
-						o->dt.a.data[i]=a->dt.a.data[i];
-						SLL_ACQUIRE(o->dt.a.data[i]);
+						o->dt.array.data[i]=a->dt.array.data[i];
+						SLL_ACQUIRE(o->dt.array.data[i]);
 					}
 				}
 				return o;
 			}
 		case SLL_OBJECT_TYPE_MAP:
 			{
-				sll_object_t* o=sll_map_length_to_object(a->dt.m.length);
-				for (sll_map_length_t i=0;i<(a->dt.m.length<<1);i++){
+				sll_object_t* o=sll_map_length_to_object(a->dt.map.length);
+				for (sll_map_length_t i=0;i<(a->dt.map.length<<1);i++){
 					if (d){
-						o->dt.m.data[i]=sll_operator_copy(a->dt.m.data[i],1);
+						o->dt.map.data[i]=sll_operator_copy(a->dt.map.data[i],1);
 					}
 					else{
-						o->dt.m.data[i]=a->dt.m.data[i];
-						SLL_ACQUIRE(o->dt.m.data[i]);
+						o->dt.map.data[i]=a->dt.map.data[i];
+						SLL_ACQUIRE(o->dt.map.data[i]);
 					}
 				}
 				return o;

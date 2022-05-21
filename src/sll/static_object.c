@@ -672,7 +672,7 @@ STATIC_OBJECT(complex_zero,SLL_OBJECT_TYPE_COMPLEX,complex_value,SLL_INIT_COMPLE
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_array_length_to_object(sll_array_length_t l){
 	sll_object_t* o=sll_create_object(SLL_OBJECT_TYPE_ARRAY);
-	sll_array_create(l,&(o->dt.a));
+	sll_array_create(l,&(o->dt.array));
 	return o;
 }
 
@@ -681,10 +681,10 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_array_length_to_object(sll_a
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_array_to_object(const sll_array_t* v){
 	sll_object_t* o=sll_create_object(SLL_OBJECT_TYPE_ARRAY);
 	if (v){
-		sll_array_clone(v,&(o->dt.a));
+		sll_array_clone(v,&(o->dt.array));
 	}
 	else{
-		SLL_INIT_MAP(&(o->dt.a));
+		SLL_INIT_MAP(&(o->dt.array));
 	}
 	return o;
 }
@@ -694,7 +694,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_array_to_object(const sll_ar
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_array_to_object_nocopy(sll_array_t* v){
 	SLL_ASSERT(v);
 	sll_object_t* o=sll_create_object(SLL_OBJECT_TYPE_ARRAY);
-	o->dt.a=*v;
+	o->dt.array=*v;
 	return o;
 }
 
@@ -709,7 +709,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_char_to_object(sll_char_t v)
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_char_to_string_object(sll_char_t v){
 	sll_object_t* o=sll_create_object(SLL_OBJECT_TYPE_STRING);
-	sll_string_from_char(v,&(o->dt.s));
+	sll_string_from_char(v,&(o->dt.string));
 	return o;
 }
 
@@ -765,7 +765,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_int_to_object(sll_integer_t 
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_map_length_to_object(sll_map_length_t l){
 	sll_object_t* o=sll_create_object(SLL_OBJECT_TYPE_MAP);
-	sll_map_create(l,&(o->dt.m));
+	sll_map_create(l,&(o->dt.map));
 	return o;
 }
 
@@ -774,10 +774,10 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_map_length_to_object(sll_map
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_map_to_object(const sll_map_t* v){
 	sll_object_t* o=sll_create_object(SLL_OBJECT_TYPE_MAP);
 	if (v){
-		sll_map_clone(v,&(o->dt.m));
+		sll_map_clone(v,&(o->dt.map));
 	}
 	else{
-		SLL_INIT_MAP(&(o->dt.m));
+		SLL_INIT_MAP(&(o->dt.map));
 	}
 	return o;
 }
@@ -787,7 +787,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_map_to_object(const sll_map_
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_map_to_object_nocopy(sll_map_t* v){
 	SLL_ASSERT(v);
 	sll_object_t* o=sll_create_object(SLL_OBJECT_TYPE_MAP);
-	o->dt.m=*v;
+	o->dt.map=*v;
 	return o;
 }
 
@@ -808,10 +808,10 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_string_pointer_length_to_obj
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_string_to_object(const sll_string_t* v){
 	sll_object_t* o=sll_create_object(SLL_OBJECT_TYPE_STRING);
 	if (v){
-		sll_string_clone(v,&(o->dt.s));
+		sll_string_clone(v,&(o->dt.string));
 	}
 	else{
-		SLL_INIT_STRING(&(o->dt.s));
+		SLL_INIT_STRING(&(o->dt.string));
 	}
 	return o;
 }

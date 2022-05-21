@@ -167,7 +167,7 @@ static sll_object_t* _parse_json_as_object(sll_json_parser_state_t* p){
 	}
 	if (c=='{'){
 		sll_object_t* o=sll_map_to_object(NULL);
-		sll_map_t* m=&(o->dt.m);
+		sll_map_t* m=&(o->dt.map);
 		while (1){
 			c=**p;
 			(*p)++;
@@ -186,7 +186,7 @@ static sll_object_t* _parse_json_as_object(sll_json_parser_state_t* p){
 			m->data=sll_reallocate(m->data,(m->length<<1)*sizeof(sll_object_t*));
 			sll_object_t* k=sll_create_object(SLL_OBJECT_TYPE_STRING);
 			m->data[(m->length-1)<<1]=k;
-			_parse_json_string(p,&(k->dt.s));
+			_parse_json_string(p,&(k->dt.string));
 			c=**p;
 			(*p)++;
 			while (c!=':'){
@@ -217,7 +217,7 @@ static sll_object_t* _parse_json_as_object(sll_json_parser_state_t* p){
 	}
 	if (c=='['){
 		sll_object_t* o=sll_array_to_object(NULL);
-		sll_array_t* a=&(o->dt.a);
+		sll_array_t* a=&(o->dt.array);
 		while (c==' '||c=='\t'||c=='\n'||c=='\r'){
 			c=**p;
 			(*p)++;
@@ -252,7 +252,7 @@ static sll_object_t* _parse_json_as_object(sll_json_parser_state_t* p){
 	}
 	if (c=='\"'){
 		sll_object_t* o=sll_create_object(SLL_OBJECT_TYPE_STRING);
-		_parse_json_string(p,&(o->dt.s));
+		_parse_json_string(p,&(o->dt.string));
 		return o;
 	}
 	if (c=='t'&&**p=='r'&&*((*p)+1)=='u'&&*((*p)+2)=='e'){
@@ -385,19 +385,19 @@ static void _stringify_object(sll_object_t* o,sll_string_t* s){
 		case SLL_OBJECT_TYPE_COMPLEX:
 			SLL_UNIMPLEMENTED();
 		case SLL_OBJECT_TYPE_STRING:
-			_stringify_string(o->dt.s.v,o->dt.s.l,s);
+			_stringify_string(o->dt.string.v,o->dt.string.l,s);
 			return;
 		case SLL_OBJECT_TYPE_ARRAY:
 			sll_string_increase(s,1);
 			s->v[s->l]='[';
 			s->l++;
-			for (sll_array_length_t i=0;i<o->dt.a.length;i++){
+			for (sll_array_length_t i=0;i<o->dt.array.length;i++){
 				if (i){
 					sll_string_increase(s,1);
 					s->v[s->l]=',';
 					s->l++;
 				}
-				_stringify_object(o->dt.a.data[i],s);
+				_stringify_object(o->dt.array.data[i],s);
 			}
 			sll_string_increase(s,1);
 			s->v[s->l]=']';
@@ -407,19 +407,19 @@ static void _stringify_object(sll_object_t* o,sll_string_t* s){
 			sll_string_increase(s,1);
 			s->v[s->l]='{';
 			s->l++;
-			for (sll_map_length_t i=0;i<o->dt.m.length;i++){
+			for (sll_map_length_t i=0;i<o->dt.map.length;i++){
 				if (i){
 					sll_string_increase(s,1);
 					s->v[s->l]=',';
 					s->l++;
 				}
-				sll_object_t* k=sll_operator_cast(o->dt.m.data[i<<1],sll_static_int[SLL_OBJECT_TYPE_STRING]);
-				_stringify_string(k->dt.s.v,k->dt.s.l,s);
+				sll_object_t* k=sll_operator_cast(o->dt.map.data[i<<1],sll_static_int[SLL_OBJECT_TYPE_STRING]);
+				_stringify_string(k->dt.string.v,k->dt.string.l,s);
 				SLL_RELEASE(k);
 				sll_string_increase(s,1);
 				s->v[s->l]=':';
 				s->l++;
-				_stringify_object(o->dt.m.data[(i<<1)+1],s);
+				_stringify_object(o->dt.map.data[(i<<1)+1],s);
 			}
 			sll_string_increase(s,1);
 			s->v[s->l]='}';

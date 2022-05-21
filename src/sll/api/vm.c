@@ -50,7 +50,7 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_vm_get_location(sll_instruction_index
 	}
 	sll_audit(SLL_CHAR("sll.vm.location"),SLL_CHAR("h"),ii);
 	sll_object_t* o=sll_instruction_to_location(ii);
-	*out=o->dt.a;
+	*out=o->dt.array;
 	SLL_CRITICAL(sll_destroy_object(o));
 }
 

@@ -83,11 +83,11 @@
 			SLL_UNIMPLEMENTED(); \
 		} \
 		sll_object_t* obj=sll_operator_cast(arg,sll_static_int[SLL_OBJECT_TYPE_ARRAY]); \
-		type** dt=sll_allocate(obj->dt.a.length*sizeof(type*)); \
+		type** dt=sll_allocate(obj->dt.array.length*sizeof(type*)); \
 		*GET_PTR(type**)=dt; \
-		*GET_PTR(sll_arg_count_t)=obj->dt.a.length; \
-		for (sll_arg_count_t i=0;i<obj->dt.a.length;i++){ \
-			sll_object_t* k=obj->dt.a.data[i]; \
+		*GET_PTR(sll_arg_count_t)=obj->dt.array.length; \
+		for (sll_arg_count_t i=0;i<obj->dt.array.length;i++){ \
+			sll_object_t* k=obj->dt.array.data[i]; \
 			ENSURE_TYPE(k,name); \
 			*(dt+i)=&(k->dt.field); \
 		} \
@@ -300,7 +300,7 @@ static void _parse_int_or_float_or_complex(sll_object_t* arg,arg_parse_flags_t f
 
 
 static void _parse_string(sll_object_t* arg,arg_parse_flags_t flags,arg_state_t** st,arg_output_t* o){
-	PARSE_TYPE_PTR(sll_string_t,STRING,s,SLL_INIT_STRING);
+	PARSE_TYPE_PTR(sll_string_t,STRING,string,SLL_INIT_STRING);
 }
 
 
@@ -325,7 +325,7 @@ static void _parse_char_or_string(sll_object_t* arg,arg_parse_flags_t flags,arg_
 	}
 	else if (arg->t==SLL_OBJECT_TYPE_STRING){
 		var->t=SLL_PARSE_ARGS_TYPE_STRING;
-		var->dt.s=&(arg->dt.s);
+		var->dt.s=&(arg->dt.string);
 	}
 	else{
 		SLL_UNIMPLEMENTED();
@@ -335,13 +335,13 @@ static void _parse_char_or_string(sll_object_t* arg,arg_parse_flags_t flags,arg_
 
 
 static void _parse_array(sll_object_t* arg,arg_parse_flags_t flags,arg_state_t** st,arg_output_t* o){
-	PARSE_TYPE_PTR(sll_array_t,ARRAY,a,SLL_INIT_ARRAY);
+	PARSE_TYPE_PTR(sll_array_t,ARRAY,array,SLL_INIT_ARRAY);
 }
 
 
 
 static void _parse_map(sll_object_t* arg,arg_parse_flags_t flags,arg_state_t** st,arg_output_t* o){
-	PARSE_TYPE_PTR(sll_map_t,MAP,m,SLL_INIT_MAP);
+	PARSE_TYPE_PTR(sll_map_t,MAP,map,SLL_INIT_MAP);
 }
 
 

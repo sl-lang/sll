@@ -81,7 +81,7 @@ static void _cleanup_vm_data(void){
 
 __SLL_EXTERNAL __SLL_API_CALL void sll_api_sys_get_args(sll_array_t* out){
 	sll_object_t* obj=sll_new_object(SLL_CHAR("s+"),_sys_argv,_sys_argc);
-	*out=obj->dt.a;
+	*out=obj->dt.array;
 	SLL_CRITICAL(sll_destroy_object(obj));
 }
 

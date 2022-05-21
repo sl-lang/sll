@@ -139,10 +139,10 @@ typedef union _SLL_OBJECT_DATA{
 	sll_float_t float_value;
 	sll_char_t char_value;
 	sll_complex_t complex_value;
-	sll_string_t s;
-	sll_array_t a;
-	sll_map_t m;
-	sll_object_field_t* p;
+	sll_string_t string;
+	sll_array_t array;
+	sll_map_t map;
+	sll_object_field_t* fields;
 	sll_object_ptr_t _ptr;
     sll_array_length_t _idx;
 } sll_object_data_t;

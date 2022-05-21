@@ -19,11 +19,11 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_len(sll_object_t* a
 		case SLL_OBJECT_TYPE_COMPLEX:
 			return sll_float_to_object(COMPLEX_ABS(a->dt.complex_value));
 		case SLL_OBJECT_TYPE_STRING:
-			return sll_int_to_object(a->dt.s.l);
+			return sll_int_to_object(a->dt.string.l);
 		case SLL_OBJECT_TYPE_ARRAY:
-			return sll_int_to_object(a->dt.a.length);
+			return sll_int_to_object(a->dt.array.length);
 		case SLL_OBJECT_TYPE_MAP:
-			return sll_int_to_object(a->dt.m.length);
+			return sll_int_to_object(a->dt.map.length);
 		default:
 			SLL_UNREACHABLE();
 	}

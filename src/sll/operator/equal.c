@@ -23,11 +23,11 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_operator_equal(sll_object_t* a,
 		case COMBINED_TYPE_ID:
 			return (!b->dt.complex_value.imag&&a->dt.int_value==b->dt.complex_value.real);
 		case COMBINED_TYPE_IS:
-			return a->dt.int_value==b->dt.s.l;
+			return a->dt.int_value==b->dt.string.l;
 		case COMBINED_TYPE_IA:
-			return a->dt.int_value==b->dt.a.length;
+			return a->dt.int_value==b->dt.array.length;
 		case COMBINED_TYPE_IM:
-			return a->dt.int_value==b->dt.m.length;
+			return a->dt.int_value==b->dt.map.length;
 		case COMBINED_TYPE_FI:
 			return a->dt.float_value==b->dt.int_value;
 		case COMBINED_TYPE_FF:
@@ -37,11 +37,11 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_operator_equal(sll_object_t* a,
 		case COMBINED_TYPE_FD:
 			return (!b->dt.complex_value.imag&&a->dt.float_value==b->dt.complex_value.real);
 		case COMBINED_TYPE_FS:
-			return a->dt.float_value==b->dt.s.l;
+			return a->dt.float_value==b->dt.string.l;
 		case COMBINED_TYPE_FA:
-			return a->dt.float_value==b->dt.a.length;
+			return a->dt.float_value==b->dt.array.length;
 		case COMBINED_TYPE_FM:
-			return a->dt.float_value==b->dt.m.length;
+			return a->dt.float_value==b->dt.map.length;
 		case COMBINED_TYPE_CI:
 			return a->dt.char_value==b->dt.int_value;
 		case COMBINED_TYPE_CF:
@@ -51,11 +51,11 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_operator_equal(sll_object_t* a,
 		case COMBINED_TYPE_CD:
 			return (!b->dt.complex_value.imag&&a->dt.char_value==b->dt.complex_value.real);
 		case COMBINED_TYPE_CS:
-			return (b->dt.s.l==1&&b->dt.s.v[0]==a->dt.char_value);
+			return (b->dt.string.l==1&&b->dt.string.v[0]==a->dt.char_value);
 		case COMBINED_TYPE_CA:
-			return a->dt.char_value==b->dt.a.length;
+			return a->dt.char_value==b->dt.array.length;
 		case COMBINED_TYPE_CM:
-			return a->dt.char_value==b->dt.m.length;
+			return a->dt.char_value==b->dt.map.length;
 		case COMBINED_TYPE_DI:
 			return (!a->dt.complex_value.imag&&a->dt.complex_value.real==b->dt.int_value);
 		case COMBINED_TYPE_DF:
@@ -65,53 +65,53 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_operator_equal(sll_object_t* a,
 		case COMBINED_TYPE_DD:
 			return (a->dt.complex_value.real==b->dt.complex_value.real&&a->dt.complex_value.imag==b->dt.complex_value.imag);
 		case COMBINED_TYPE_DS:
-			return (!a->dt.complex_value.imag&&a->dt.complex_value.real==b->dt.s.l);
+			return (!a->dt.complex_value.imag&&a->dt.complex_value.real==b->dt.string.l);
 		case COMBINED_TYPE_DA:
-			return (!a->dt.complex_value.imag&&a->dt.complex_value.real==b->dt.a.length);
+			return (!a->dt.complex_value.imag&&a->dt.complex_value.real==b->dt.array.length);
 		case COMBINED_TYPE_DM:
-			return (!a->dt.complex_value.imag&&a->dt.complex_value.real==b->dt.m.length);
+			return (!a->dt.complex_value.imag&&a->dt.complex_value.real==b->dt.map.length);
 		case COMBINED_TYPE_SI:
-			return a->dt.s.l==b->dt.int_value;
+			return a->dt.string.l==b->dt.int_value;
 		case COMBINED_TYPE_SF:
-			return a->dt.s.l==b->dt.float_value;
+			return a->dt.string.l==b->dt.float_value;
 		case COMBINED_TYPE_SC:
-			return (a->dt.s.l==1&&a->dt.s.v[0]==b->dt.char_value);
+			return (a->dt.string.l==1&&a->dt.string.v[0]==b->dt.char_value);
 		case COMBINED_TYPE_SD:
-			return (!b->dt.complex_value.imag&&a->dt.s.l==b->dt.complex_value.real);
+			return (!b->dt.complex_value.imag&&a->dt.string.l==b->dt.complex_value.real);
 		case COMBINED_TYPE_SS:
-			return STRING_EQUAL(&(a->dt.s),&(b->dt.s));
+			return STRING_EQUAL(&(a->dt.string),&(b->dt.string));
 		case COMBINED_TYPE_SA:
-			return sll_string_equal_array(&(a->dt.s),&(b->dt.a));
+			return sll_string_equal_array(&(a->dt.string),&(b->dt.array));
 		case COMBINED_TYPE_SM:
-			return sll_string_equal_map(&(a->dt.s),&(b->dt.m));
+			return sll_string_equal_map(&(a->dt.string),&(b->dt.map));
 		case COMBINED_TYPE_AI:
-			return a->dt.a.length==b->dt.int_value;
+			return a->dt.array.length==b->dt.int_value;
 		case COMBINED_TYPE_AF:
-			return a->dt.a.length==b->dt.float_value;
+			return a->dt.array.length==b->dt.float_value;
 		case COMBINED_TYPE_AC:
-			return a->dt.a.length==b->dt.char_value;
+			return a->dt.array.length==b->dt.char_value;
 		case COMBINED_TYPE_AD:
-			return (!b->dt.complex_value.imag&&a->dt.a.length==b->dt.complex_value.real);
+			return (!b->dt.complex_value.imag&&a->dt.array.length==b->dt.complex_value.real);
 		case COMBINED_TYPE_AS:
-			return sll_string_equal_array(&(b->dt.s),&(a->dt.a));
+			return sll_string_equal_array(&(b->dt.string),&(a->dt.array));
 		case COMBINED_TYPE_AA:
-			return sll_array_equal(&(a->dt.a),&(b->dt.a));
+			return sll_array_equal(&(a->dt.array),&(b->dt.array));
 		case COMBINED_TYPE_AM:
-			return sll_array_equal_map(&(a->dt.a),&(b->dt.m));
+			return sll_array_equal_map(&(a->dt.array),&(b->dt.map));
 		case COMBINED_TYPE_MI:
-			return a->dt.m.length==b->dt.int_value;
+			return a->dt.map.length==b->dt.int_value;
 		case COMBINED_TYPE_MF:
-			return a->dt.m.length==b->dt.float_value;
+			return a->dt.map.length==b->dt.float_value;
 		case COMBINED_TYPE_MC:
-			return a->dt.m.length==b->dt.char_value;
+			return a->dt.map.length==b->dt.char_value;
 		case COMBINED_TYPE_MD:
-			return (!b->dt.complex_value.imag&&a->dt.m.length==b->dt.complex_value.real);
+			return (!b->dt.complex_value.imag&&a->dt.map.length==b->dt.complex_value.real);
 		case COMBINED_TYPE_MS:
-			return sll_string_equal_map(&(b->dt.s),&(a->dt.m));
+			return sll_string_equal_map(&(b->dt.string),&(a->dt.map));
 		case COMBINED_TYPE_MA:
-			return sll_array_equal_map(&(b->dt.a),&(a->dt.m));
+			return sll_array_equal_map(&(b->dt.array),&(a->dt.map));
 		case COMBINED_TYPE_MM:
-			return sll_map_equal(&(a->dt.m),&(b->dt.m));
+			return sll_map_equal(&(a->dt.map),&(b->dt.map));
 		default:
 			SLL_UNREACHABLE();
 	}
@@ -132,16 +132,16 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_operator_strict_equal(sll_objec
 		case SLL_OBJECT_TYPE_CHAR:
 			return a->dt.char_value==b->dt.char_value;
 		case SLL_OBJECT_TYPE_STRING:
-			return STRING_EQUAL(&(a->dt.s),&(b->dt.s));
+			return STRING_EQUAL(&(a->dt.string),&(b->dt.string));
 		case SLL_OBJECT_TYPE_ARRAY:
-			return sll_array_equal(&(a->dt.a),&(b->dt.a));
+			return sll_array_equal(&(a->dt.array),&(b->dt.array));
 		case SLL_OBJECT_TYPE_MAP:
-			return sll_map_equal(&(a->dt.m),&(b->dt.m));
+			return sll_map_equal(&(a->dt.map),&(b->dt.map));
 	}
 	if (sll_current_runtime_data&&a->t>SLL_MAX_OBJECT_TYPE&&a->t<=sll_current_runtime_data->tt->l+SLL_MAX_OBJECT_TYPE){
 		const sll_object_type_data_t* dt=*(sll_current_runtime_data->tt->dt+a->t-SLL_MAX_OBJECT_TYPE-1);
-		sll_object_field_t* pa=a->dt.p;
-		sll_object_field_t* pb=b->dt.p;
+		sll_object_field_t* pa=a->dt.fields;
+		sll_object_field_t* pb=b->dt.fields;
 		for (sll_arg_count_t i=0;i<dt->l;i++){
 			switch (dt->dt[i].t){
 				case SLL_OBJECT_TYPE_INT:

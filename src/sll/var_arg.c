@@ -202,7 +202,7 @@ __SLL_EXTERNAL void sll_var_arg_get_string(sll_var_arg_list_t* va,sll_string_t* 
 	}
 	else{
 		sll_object_t* n=sll_operator_cast((sll_object_t*)(*(va->dt.sll.p)),sll_static_int[SLL_OBJECT_TYPE_STRING]);
-		sll_string_clone(&(n->dt.s),o);
+		sll_string_clone(&(n->dt.string),o);
 		SLL_RELEASE(n);
 		va->dt.sll.p++;
 		va->dt.sll.l--;

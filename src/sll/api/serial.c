@@ -294,7 +294,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_decode_object(sll_file_t* f,
 				}
 				sll_object_t* o=sll_array_length_to_object(l);
 				for (sll_array_length_t i=0;i<l;i++){
-					o->dt.a.data[i]=sll_decode_object(f,err);
+					o->dt.array.data[i]=sll_decode_object(f,err);
 					if (err&&*err!=SLL_NO_ERROR){
 						SLL_UNIMPLEMENTED();
 					}
@@ -314,7 +314,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_decode_object(sll_file_t* f,
 				}
 				sll_object_t* o=sll_map_length_to_object(l);
 				for (sll_map_length_t i=0;i<(l<<1);i++){
-					o->dt.m.data[i]=sll_decode_object(f,err);
+					o->dt.map.data[i]=sll_decode_object(f,err);
 					if (err&&*err!=SLL_NO_ERROR){
 						SLL_UNIMPLEMENTED();
 					}
@@ -464,7 +464,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_error_t sll_encode_object(sll_file_t* f,sl
 			if (err!=SLL_NO_ERROR){
 				return err;
 			}
-			sll_object_field_t* p=k->dt.p;
+			sll_object_field_t* p=k->dt.fields;
 			for (sll_arg_count_t i=0;i<dt->l;i++){
 				sll_file_write_char(f,SLL_OBJECT_TYPE_STRING,&err);
 				if (err!=SLL_NO_ERROR){
@@ -520,23 +520,23 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_error_t sll_encode_object(sll_file_t* f,sl
 			case SLL_OBJECT_TYPE_COMPLEX:
 				SLL_UNIMPLEMENTED();
 			case SLL_OBJECT_TYPE_STRING:
-				err=sll_encode_string(f,&(k->dt.s));
+				err=sll_encode_string(f,&(k->dt.string));
 				break;
 			case SLL_OBJECT_TYPE_ARRAY:
 			case SLL_OBJECT_TYPE_MAP_KEYS:
 			case SLL_OBJECT_TYPE_MAP_VALUES:
-				err=sll_encode_integer(f,k->dt.a.length);
+				err=sll_encode_integer(f,k->dt.array.length);
 				if (err!=SLL_NO_ERROR){
 					return err;
 				}
-				err=sll_encode_object(f,k->dt.a.data,k->dt.a.length);
+				err=sll_encode_object(f,k->dt.array.data,k->dt.array.length);
 				break;
 			case SLL_OBJECT_TYPE_MAP:
-				err=sll_encode_integer(f,k->dt.m.length);
+				err=sll_encode_integer(f,k->dt.map.length);
 				if (err!=SLL_NO_ERROR){
 					return err;
 				}
-				err=sll_encode_object(f,k->dt.m.data,k->dt.m.length<<1);
+				err=sll_encode_object(f,k->dt.map.data,k->dt.map.length<<1);
 				break;
 			default:
 				SLL_UNIMPLEMENTED();
