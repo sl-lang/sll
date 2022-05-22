@@ -8,34 +8,15 @@
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_index_t sll_add_string(sll_string_table_t* st,sll_string_t* s,sll_bool_t d){
-	for (sll_string_index_t i=0;i<st->length;i++){
-		if (STRING_EQUAL(st->data+i,s)){
-			if (d){
-				sll_free_string(s);
-			}
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_index_t sll_add_string(sll_string_table_t* string_table,sll_string_t* string){
+	for (sll_string_index_t i=0;i<string_table->length;i++){
+		if (STRING_EQUAL(string_table->data+i,string)){
+			sll_free_string(string);
 			return i;
 		}
 	}
-	st->length++;
-	st->data=sll_reallocate(st->data,st->length*sizeof(sll_string_t));
-	*(st->data+st->length-1)=*s;
-	return st->length-1;
-}
-
-
-
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_index_t sll_create_string(sll_string_table_t* st,const sll_char_t* dt,sll_string_length_t l){
-	sll_string_t n;
-	sll_string_from_pointer_length(dt,l,&n);
-	for (sll_string_index_t i=0;i<st->length;i++){
-		if (STRING_EQUAL(st->data+i,&n)){
-			sll_free_string(&n);
-			return i;
-		}
-	}
-	st->length++;
-	st->data=sll_reallocate(st->data,st->length*sizeof(sll_string_t));
-	*(st->data+st->length-1)=n;
-	return st->length-1;
+	string_table->length++;
+	string_table->data=sll_reallocate(string_table->data,string_table->length*sizeof(sll_string_t));
+	*(string_table->data+string_table->length-1)=*string;
+	return string_table->length-1;
 }

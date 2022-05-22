@@ -196,7 +196,7 @@ __SLL_EXTERNAL void sll_unify_compilation_data(const sll_compilation_data_t* com
 			for (sll_string_index_t i=0;i<sf->string_table.length;i++){
 				sll_string_t tmp;
 				sll_string_clone(sf->string_table.data+i,&tmp);
-				*(source_file_mapping_data.string_map+i)=sll_add_string(&(out->string_table),&tmp,1);
+				*(source_file_mapping_data.string_map+i)=sll_add_string(&(out->string_table),&tmp);
 			}
 			sll_node_t* dbg=_acquire_next_node(out);
 			dbg->type=SLL_NODE_TYPE_DBG;

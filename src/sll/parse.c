@@ -97,7 +97,7 @@ static sll_identifier_index_t _get_var_index(sll_source_file_t* source_file,cons
 		k->data=sll_reallocate(k->data,k->length*sizeof(sll_identifier_t));
 		(k->data+k->length-1)->scope=scope_data->scope;
 		o=SLL_CREATE_IDENTIFIER(k->length-1,name->length-1);
-		SLL_IDENTIFIER_SET_STRING_INDEX(k->data+k->length-1,sll_add_string(&(source_file->string_table),name,1),flags&GET_VAR_INDEX_FLAG_TLS);
+		SLL_IDENTIFIER_SET_STRING_INDEX(k->data+k->length-1,sll_add_string(&(source_file->string_table),name),flags&GET_VAR_INDEX_FLAG_TLS);
 		if ((flags&GET_VAR_INDEX_FLAG_ASSIGN)&&arg){
 			extra_compilation_data->new_variable_data->length++;
 			extra_compilation_data->new_variable_data->data=sll_reallocate(extra_compilation_data->new_variable_data->data,extra_compilation_data->new_variable_data->length*sizeof(sll_node_t*));
@@ -135,7 +135,7 @@ static sll_identifier_index_t _get_var_index(sll_source_file_t* source_file,cons
 	source_file->identifier_table.long_data=sll_reallocate(source_file->identifier_table.long_data,source_file->identifier_table.long_data_length*sizeof(sll_identifier_t));
 	o=SLL_CREATE_IDENTIFIER(source_file->identifier_table.long_data_length-1,SLL_MAX_SHORT_IDENTIFIER_LENGTH);
 	(source_file->identifier_table.long_data+source_file->identifier_table.long_data_length-1)->scope=scope_data->scope;
-	SLL_IDENTIFIER_SET_STRING_INDEX(source_file->identifier_table.long_data+source_file->identifier_table.long_data_length-1,sll_add_string(&(source_file->string_table),name,1),flags&GET_VAR_INDEX_FLAG_TLS);
+	SLL_IDENTIFIER_SET_STRING_INDEX(source_file->identifier_table.long_data+source_file->identifier_table.long_data_length-1,sll_add_string(&(source_file->string_table),name),flags&GET_VAR_INDEX_FLAG_TLS);
 	if ((flags&GET_VAR_INDEX_FLAG_ASSIGN)&&arg){
 		extra_compilation_data->new_variable_data->length++;
 		extra_compilation_data->new_variable_data->data=sll_reallocate(extra_compilation_data->new_variable_data->data,extra_compilation_data->new_variable_data->length*sizeof(sll_node_t*));
@@ -408,7 +408,7 @@ static void _read_object_internal(sll_file_t* file,sll_source_file_t* source_fil
 				SLL_STRING_FORMAT_PADDING(s.data,s.length);
 				sll_allocator_move((void**)(&(s.data)),SLL_MEMORY_MOVE_DIRECTION_FROM_STACK);
 				sll_string_calculate_checksum(&s);
-				arg->data.string_index=sll_add_string(&(source_file->string_table),&s,1);
+				arg->data.string_index=sll_add_string(&(source_file->string_table),&s);
 				if (extra_compilation_data->is_function){
 					desc=arg->data.string_index;
 				}
@@ -436,7 +436,7 @@ static void _read_object_internal(sll_file_t* file,sll_source_file_t* source_fil
 				SLL_STRING_FORMAT_PADDING(s.data,s.length);
 				sll_allocator_move((void**)(&(s.data)),SLL_MEMORY_MOVE_DIRECTION_FROM_STACK);
 				sll_string_calculate_checksum(&s);
-				arg->data.string_index=sll_add_string(&(source_file->string_table),&s,1);
+				arg->data.string_index=sll_add_string(&(source_file->string_table),&s);
 				char_=sll_file_read_char(file,NULL);
 			}
 			else if ((char_>47&&char_<58)||char_=='-'||char_=='+'){
@@ -723,7 +723,7 @@ _parse_identifier:
 				char_=_read_identifier(&str,rewind_bf_l,file,char_);
 				if (o&&o->type==SLL_NODE_TYPE_DECL&&(ac&1)){
 					arg->type=SLL_NODE_TYPE_FIELD;
-					arg->data.string_index=sll_add_string(&(source_file->string_table),&str,1);
+					arg->data.string_index=sll_add_string(&(source_file->string_table),&str);
 				}
 				else if (STRING_EQUAL(&str,&_parse_file_str)){
 					sll_free_string(&str);
@@ -779,7 +779,7 @@ _parse_identifier:
 							arg->data.arg_count++;
 							v=_acquire_next_node(source_file);
 							v->type=SLL_NODE_TYPE_FIELD;
-							v->data.string_index=sll_add_string(&(source_file->string_table),&str,1);
+							v->data.string_index=sll_add_string(&(source_file->string_table),&str);
 							if (char_!='$'){
 								break;
 							}

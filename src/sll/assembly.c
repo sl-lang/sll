@@ -2155,7 +2155,7 @@ __SLL_EXTERNAL void sll_generate_assembly(const sll_source_file_t* source_file,s
 			sll_string_t str;
 			sll_string_format(SLL_CHAR("@%u"),&str,fn_n);
 			fn_n++;
-			(out->function_table.data+i)->name_string_index=sll_add_string(&(out->string_table),&str,0);
+			(out->function_table.data+i)->name_string_index=sll_add_string(&(out->string_table),&str);
 		}
 		else{
 			(out->function_table.data+i)->name_string_index=k->name_string_index;
