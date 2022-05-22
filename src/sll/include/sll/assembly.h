@@ -1923,10 +1923,10 @@ __SLL_EXTERNAL void sll_generate_assembly(const sll_source_file_t* sf,sll_assemb
  * \name sll_print_assembly
  * \group assembly
  * \desc Docs!
- * \arg const sll_assembly_data_t* a_dt
+ * \arg const sll_assembly_data_t* assembly_data
  * \arg sll_file_t* wf
  */
-__SLL_EXTERNAL void sll_print_assembly(const sll_assembly_data_t* a_dt,sll_file_t* wf);
+__SLL_EXTERNAL void sll_print_assembly(const sll_assembly_data_t* assembly_data,sll_file_t* wf);
 
 
 

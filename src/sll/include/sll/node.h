@@ -1452,9 +1452,9 @@ __SLL_EXTERNAL void sll_compilation_data_from_source_file(const sll_source_file_
  * \name sll_free_compilation_data
  * \group node
  * \desc Docs!
- * \arg sll_compilation_data_t* c_dt
+ * \arg sll_compilation_data_t* compilation_data
  */
-__SLL_EXTERNAL void sll_free_compilation_data(sll_compilation_data_t* c_dt);
+__SLL_EXTERNAL void sll_free_compilation_data(sll_compilation_data_t* compilation_data);
 
 
 
@@ -1499,9 +1499,9 @@ __SLL_EXTERNAL void sll_init_compilation_data(const sll_char_t* fp,sll_compilati
  * \name sll_optimize_metadata
  * \group node
  * \desc Docs!
- * \arg sll_compilation_data_t* c_dt
+ * \arg sll_compilation_data_t* compilation_data
  */
-__SLL_EXTERNAL void sll_optimize_metadata(sll_compilation_data_t* c_dt);
+__SLL_EXTERNAL void sll_optimize_metadata(sll_compilation_data_t* compilation_data);
 
 
 
@@ -1511,11 +1511,11 @@ __SLL_EXTERNAL void sll_optimize_metadata(sll_compilation_data_t* c_dt);
  * \group node
  * \desc Docs!
  * \arg sll_file_t* rf
- * \arg sll_compilation_data_t* c_dt
+ * \arg sll_compilation_data_t* compilation_data
  * \arg sll_internal_function_table_t* i_ft
  * \arg sll_import_resolver_t il
  */
-__SLL_EXTERNAL void sll_parse_nodes(sll_file_t* rf,sll_compilation_data_t* c_dt,sll_internal_function_table_t* i_ft,sll_import_resolver_t il);
+__SLL_EXTERNAL void sll_parse_nodes(sll_file_t* rf,sll_compilation_data_t* compilation_data,sll_internal_function_table_t* i_ft,sll_import_resolver_t il);
 
 
 
@@ -1539,9 +1539,9 @@ __SLL_EXTERNAL void sll_print_node(const sll_source_file_t* sf,const sll_interna
  * \name sll_remove_debug_data
  * \group node
  * \desc Docs!
- * \arg sll_compilation_data_t* c_dt
+ * \arg sll_compilation_data_t* compilation_data
  */
-__SLL_EXTERNAL void sll_remove_debug_data(sll_compilation_data_t* c_dt);
+__SLL_EXTERNAL void sll_remove_debug_data(sll_compilation_data_t* compilation_data);
 
 
 
@@ -1550,9 +1550,9 @@ __SLL_EXTERNAL void sll_remove_debug_data(sll_compilation_data_t* c_dt);
  * \name sll_remove_debug_names
  * \group node
  * \desc Docs!
- * \arg sll_compilation_data_t* c_dt
+ * \arg sll_compilation_data_t* compilation_data
  */
-__SLL_EXTERNAL void sll_remove_debug_names(sll_compilation_data_t* c_dt);
+__SLL_EXTERNAL void sll_remove_debug_names(sll_compilation_data_t* compilation_data);
 
 
 
@@ -1561,9 +1561,9 @@ __SLL_EXTERNAL void sll_remove_debug_names(sll_compilation_data_t* c_dt);
  * \name sll_remove_node_padding
  * \group node
  * \desc Docs!
- * \arg sll_compilation_data_t* c_dt
+ * \arg sll_compilation_data_t* compilation_data
  */
-__SLL_EXTERNAL void sll_remove_node_padding(sll_compilation_data_t* c_dt);
+__SLL_EXTERNAL void sll_remove_node_padding(sll_compilation_data_t* compilation_data);
 
 
 
@@ -1598,10 +1598,10 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT const sll_node_t* sll_skip_node_const(const sl
  * \name sll_unify_compilation_data
  * \group node
  * \desc Docs!
- * \arg const sll_compilation_data_t* c_dt
+ * \arg const sll_compilation_data_t* compilation_data
  * \arg sll_source_file_t* o
  */
-__SLL_EXTERNAL void sll_unify_compilation_data(const sll_compilation_data_t* c_dt,sll_source_file_t* o);
+__SLL_EXTERNAL void sll_unify_compilation_data(const sll_compilation_data_t* compilation_data,sll_source_file_t* o);
 
 
 

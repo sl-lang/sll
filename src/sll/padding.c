@@ -101,9 +101,9 @@ static sll_node_t* _remove_padding_internal(sll_node_t* o,sll_source_file_t* sf,
 
 
 
-__SLL_EXTERNAL void sll_remove_node_padding(sll_compilation_data_t* c_dt){
-	for (sll_source_file_index_t i=0;i<c_dt->length;i++){
-		sll_source_file_t* sf=*(c_dt->data+i);
+__SLL_EXTERNAL void sll_remove_node_padding(sll_compilation_data_t* compilation_data){
+	for (sll_source_file_index_t i=0;i<compilation_data->length;i++){
+		sll_source_file_t* sf=*(compilation_data->data+i);
 		sll_node_t* d=sf->first_node;
 		if (!d){
 			continue;

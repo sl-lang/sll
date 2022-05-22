@@ -235,22 +235,22 @@ void _release_var_data(void){
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_code_t sll_execute_assembly(const sll_assembly_data_t* a_dt,const sll_vm_config_t* cfg){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_code_t sll_execute_assembly(const sll_assembly_data_t* assembly_data,const sll_vm_config_t* cfg){
 	if (_vm_var_data){
 		SLL_UNIMPLEMENTED();
 	}
 	_vm_instruction_count=0;
 	sll_current_vm_config=cfg;// lgtm [cpp/stack-address-escape]
-	_vm_var_data=sll_platform_allocate_page(SLL_ROUND_PAGE(a_dt->variable_count*sizeof(sll_object_t*)),0,NULL);
-	sll_static_int[0]->rc+=a_dt->variable_count;
-	for (sll_variable_index_t i=0;i<a_dt->variable_count;i++){
+	_vm_var_data=sll_platform_allocate_page(SLL_ROUND_PAGE(assembly_data->variable_count*sizeof(sll_object_t*)),0,NULL);
+	sll_static_int[0]->rc+=assembly_data->variable_count;
+	for (sll_variable_index_t i=0;i<assembly_data->variable_count;i++){
 		*(_vm_var_data+i)=sll_static_int[0];
 	}
 	sll_internal_function_table_t ift;
 	sll_clone_internal_function_table(cfg->internal_function_table,&ift);
 	sll_object_type_table_t tt=SLL_INIT_OBJECT_TYPE_TABLE_STRUCT;
 	sll_runtime_data_t r_dt={
-		a_dt,
+		assembly_data,
 		&ift,
 		&tt
 	};

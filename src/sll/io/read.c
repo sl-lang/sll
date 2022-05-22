@@ -226,43 +226,43 @@ static sll_bool_t _read_source_file(sll_file_t* rf,sll_source_file_t* sf){
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_load_assembly(sll_file_t* rf,sll_assembly_data_t* a_dt){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_load_assembly(sll_file_t* rf,sll_assembly_data_t* assembly_data){
 	magic_number_t n;
 	sll_version_t v;
 	if (sll_file_read(rf,&n,sizeof(magic_number_t),NULL)!=sizeof(magic_number_t)||n!=ASSEMBLY_FILE_MAGIC_NUMBER||sll_file_read(rf,&v,sizeof(sll_version_t),NULL)!=sizeof(sll_version_t)||v!=SLL_VERSION){
 		return 0;
 	}
-	CHECK_ERROR(rf,a_dt->time,sll_time_t);
-	CHECK_ERROR(rf,a_dt->instruction_count,sll_instruction_index_t);
-	CHECK_ERROR(rf,a_dt->variable_count,sll_variable_index_t);
-	CHECK_ERROR(rf,a_dt->tls_variable_count,sll_variable_index_t);
-	CHECK_ERROR(rf,a_dt->function_table.length,sll_function_index_t);
-	a_dt->function_table.data=sll_allocate(a_dt->function_table.length*sizeof(sll_assembly_function_t));
-	for (sll_function_index_t i=0;i<a_dt->function_table.length;i++){
-		CHECK_ERROR(rf,(a_dt->function_table.data+i)->instruction_index,sll_instruction_index_t);
-		CHECK_ERROR(rf,(a_dt->function_table.data+i)->arg_count,sll_arg_count_t);
-		CHECK_ERROR(rf,(a_dt->function_table.data+i)->name_string_index,sll_string_index_t);
+	CHECK_ERROR(rf,assembly_data->time,sll_time_t);
+	CHECK_ERROR(rf,assembly_data->instruction_count,sll_instruction_index_t);
+	CHECK_ERROR(rf,assembly_data->variable_count,sll_variable_index_t);
+	CHECK_ERROR(rf,assembly_data->tls_variable_count,sll_variable_index_t);
+	CHECK_ERROR(rf,assembly_data->function_table.length,sll_function_index_t);
+	assembly_data->function_table.data=sll_allocate(assembly_data->function_table.length*sizeof(sll_assembly_function_t));
+	for (sll_function_index_t i=0;i<assembly_data->function_table.length;i++){
+		CHECK_ERROR(rf,(assembly_data->function_table.data+i)->instruction_index,sll_instruction_index_t);
+		CHECK_ERROR(rf,(assembly_data->function_table.data+i)->arg_count,sll_arg_count_t);
+		CHECK_ERROR(rf,(assembly_data->function_table.data+i)->name_string_index,sll_string_index_t);
 	}
-	CHECK_ERROR(rf,a_dt->string_table.length,sll_string_index_t);
-	a_dt->string_table.data=sll_allocate(a_dt->string_table.length*sizeof(sll_string_t));
-	for (sll_string_index_t i=0;i<a_dt->string_table.length;i++){
-		if (!sll_decode_string(rf,a_dt->string_table.data+i)){
+	CHECK_ERROR(rf,assembly_data->string_table.length,sll_string_index_t);
+	assembly_data->string_table.data=sll_allocate(assembly_data->string_table.length*sizeof(sll_string_t));
+	for (sll_string_index_t i=0;i<assembly_data->string_table.length;i++){
+		if (!sll_decode_string(rf,assembly_data->string_table.data+i)){
 			return 0;
 		}
 	}
-	CHECK_ERROR(rf,a_dt->debug_data.length,sll_instruction_index_t);
-	a_dt->debug_data.data=sll_allocate(a_dt->debug_data.length*sizeof(sll_debug_line_data_t));
-	for (sll_debug_data_length_t i=0;i<a_dt->debug_data.length;i++){
-		CHECK_ERROR(rf,(a_dt->debug_data.data+i)->delta_instruction_index,sll_instruction_index_t);
-		CHECK_ERROR(rf,(a_dt->debug_data.data+i)->line,sll_file_offset_t);
+	CHECK_ERROR(rf,assembly_data->debug_data.length,sll_instruction_index_t);
+	assembly_data->debug_data.data=sll_allocate(assembly_data->debug_data.length*sizeof(sll_debug_line_data_t));
+	for (sll_debug_data_length_t i=0;i<assembly_data->debug_data.length;i++){
+		CHECK_ERROR(rf,(assembly_data->debug_data.data+i)->delta_instruction_index,sll_instruction_index_t);
+		CHECK_ERROR(rf,(assembly_data->debug_data.data+i)->line,sll_file_offset_t);
 	}
-	_init_assembly_stack(a_dt);
-	a_dt->first_instruction=a_dt->_instruction_stack.next_instruction;
-	sll_instruction_index_t i=a_dt->instruction_count;
-	a_dt->instruction_count=0;
+	_init_assembly_stack(assembly_data);
+	assembly_data->first_instruction=assembly_data->_instruction_stack.next_instruction;
+	sll_instruction_index_t i=assembly_data->instruction_count;
+	assembly_data->instruction_count=0;
 	while (i){
 		i--;
-		sll_assembly_instruction_t* ai=_acquire_next_instruction(a_dt);
+		sll_assembly_instruction_t* ai=_acquire_next_instruction(assembly_data);
 		sll_read_char_t c=sll_file_read_char(rf,NULL);
 		if (c==SLL_END_OF_DATA){
 			return 0;
@@ -392,10 +392,10 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_load_assembly(sll_file_t* rf,sl
 				break;
 		}
 	}
-	sll_assembly_instruction_t* ai=a_dt->first_instruction;
-	for (i=0;i<a_dt->instruction_count;i++){
+	sll_assembly_instruction_t* ai=assembly_data->first_instruction;
+	for (i=0;i<assembly_data->instruction_count;i++){
 		if (SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(ai)==SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_LABEL||(SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(ai)>=SLL_ASSEMBLY_INSTRUCTION_TYPE_JMP&&SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(ai)<=SLL_ASSEMBLY_INSTRUCTION_TYPE_JNI)){
-			ai->data.jump._instruction=_get_instruction_at_offset(a_dt,(SLL_ASSEMBLY_INSTRUCTION_FLAG_IS_RELATIVE(ai)?i+ai->data.jump.target.rel:ai->data.jump.target.abs));
+			ai->data.jump._instruction=_get_instruction_at_offset(assembly_data,(SLL_ASSEMBLY_INSTRUCTION_FLAG_IS_RELATIVE(ai)?i+ai->data.jump.target.rel:ai->data.jump.target.abs));
 		}
 		ai++;
 		if (SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(ai)==SLL_ASSEMBLY_INSTRUCTION_TYPE_CHANGE_STACK){
@@ -427,17 +427,17 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_load_bundle(sll_file_t* rf,sll_
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_load_compiled_node(sll_file_t* rf,sll_compilation_data_t* c_dt){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_load_compiled_node(sll_file_t* rf,sll_compilation_data_t* compilation_data){
 	magic_number_t n;
 	sll_version_t v;
 	if (sll_file_read(rf,&n,sizeof(magic_number_t),NULL)!=sizeof(magic_number_t)||n!=COMPLIED_OBJECT_FILE_MAGIC_NUMBER||sll_file_read(rf,&v,sizeof(sll_version_t),NULL)!=sizeof(sll_version_t)||v!=SLL_VERSION){
 		return 0;
 	}
-	CHECK_ERROR(rf,c_dt->length,sll_source_file_index_t);
-	c_dt->data=sll_allocate(c_dt->length*sizeof(sll_source_file_t*));
-	for (sll_source_file_index_t i=0;i<c_dt->length;i++){
+	CHECK_ERROR(rf,compilation_data->length,sll_source_file_index_t);
+	compilation_data->data=sll_allocate(compilation_data->length*sizeof(sll_source_file_t*));
+	for (sll_source_file_index_t i=0;i<compilation_data->length;i++){
 		sll_source_file_t* sf=sll_allocate(sizeof(sll_source_file_t));
-		*(c_dt->data+i)=sf;
+		*(compilation_data->data+i)=sf;
 		if (!_read_source_file(rf,sf)){
 			return 0;
 		}

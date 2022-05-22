@@ -74,10 +74,10 @@ static sll_source_file_index_t _add_source_file(const sll_bundle_t* b,const sll_
 
 
 
-__SLL_EXTERNAL void sll_bundle_add_file(const sll_char_t* nm,sll_compilation_data_t* c_dt,sll_bundle_t* o){
-	sll_source_file_index_t* idx_m=sll_allocate_stack(c_dt->length*sizeof(sll_source_file_index_t));
-	for (sll_source_file_index_t idx=0;idx<c_dt->length;idx++){
-		sll_source_file_t* sf=*(c_dt->data+idx);
+__SLL_EXTERNAL void sll_bundle_add_file(const sll_char_t* nm,sll_compilation_data_t* compilation_data,sll_bundle_t* o){
+	sll_source_file_index_t* idx_m=sll_allocate_stack(compilation_data->length*sizeof(sll_source_file_index_t));
+	for (sll_source_file_index_t idx=0;idx<compilation_data->length;idx++){
+		sll_source_file_t* sf=*(compilation_data->data+idx);
 		sll_source_file_index_t bsf_i=0;
 		while (bsf_i<o->length){
 			sll_bundle_source_file_t* bsf=*(o->data+bsf_i);
@@ -110,8 +110,8 @@ __SLL_EXTERNAL void sll_bundle_add_file(const sll_char_t* nm,sll_compilation_dat
 		bsf->data=*sf;
 		*(o->data+o->length-1)=bsf;
 	}
-	for (sll_source_file_index_t i=0;i<c_dt->length;i++){
-		sll_deallocate(*(c_dt->data+i));
+	for (sll_source_file_index_t i=0;i<compilation_data->length;i++){
+		sll_deallocate(*(compilation_data->data+i));
 		if ((*(idx_m+i))&BUNDLE_DO_NOT_REMAP_IMPORT){
 			continue;
 		}
@@ -122,9 +122,9 @@ __SLL_EXTERNAL void sll_bundle_add_file(const sll_char_t* nm,sll_compilation_dat
 		}
 	}
 	sll_deallocate(idx_m);
-	sll_deallocate(c_dt->data);
-	c_dt->data=NULL;
-	c_dt->length=0;
+	sll_deallocate(compilation_data->data);
+	compilation_data->data=NULL;
+	compilation_data->length=0;
 }
 
 
@@ -138,7 +138,7 @@ __SLL_EXTERNAL void sll_bundle_create(const sll_char_t* nm,sll_bundle_t* o){
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_bundle_fetch(const sll_bundle_t* b,const sll_string_t* nm,sll_compilation_data_t* c_dt){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_bundle_fetch(const sll_bundle_t* b,const sll_string_t* nm,sll_compilation_data_t* compilation_data){
 	if (!sll_string_starts(nm,&(b->name))){
 		return 0;
 	}
@@ -186,11 +186,11 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_bundle_fetch(const sll_bundle_t
 		}
 		idx+=1-off;
 	}
-	c_dt->length=sfl.length;
-	c_dt->data=sll_allocate(sfl.length*sizeof(sll_source_file_t*));
-	for (idx=0;idx<c_dt->length;idx++){
+	compilation_data->length=sfl.length;
+	compilation_data->data=sll_allocate(sfl.length*sizeof(sll_source_file_t*));
+	for (idx=0;idx<compilation_data->length;idx++){
 		source_file_with_index_t* sf=sfl.data+idx;
-		*(c_dt->data+idx)=sf->source_file;
+		*(compilation_data->data+idx)=sf->source_file;
 		for (sll_import_index_t i=0;i<sf->source_file->import_table.length;i++){
 			sll_import_file_t* if_=*(sf->source_file->import_table.data+i);
 			if_->source_file_index=*(sf_idx_map+if_->source_file_index);

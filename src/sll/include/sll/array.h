@@ -46,12 +46,12 @@
  * \name SLL_INIT_ARRAY
  * \group array
  * \desc Docs!
- * \arg sll_array_t* o
+ * \arg sll_array_t* out
  */
-#define SLL_INIT_ARRAY(o) \
+#define SLL_INIT_ARRAY(out) \
 	do{ \
-		(o)->length=0; \
-		(o)->data=NULL; \
+		(out)->length=0; \
+		(out)->data=NULL; \
 	} while (0)
 
 
@@ -75,9 +75,9 @@
  * \desc Docs!
  * \arg const sll_array_t* a
  * \arg const sll_array_t* b
- * \arg sll_array_t* o
+ * \arg sll_array_t* out
  */
-__SLL_EXTERNAL void sll_array_and(const sll_array_t* a,const sll_array_t* b,sll_array_t* o);
+__SLL_EXTERNAL void sll_array_and(const sll_array_t* a,const sll_array_t* b,sll_array_t* out);
 
 
 
@@ -86,10 +86,10 @@ __SLL_EXTERNAL void sll_array_and(const sll_array_t* a,const sll_array_t* b,sll_
  * \name sll_array_clone
  * \group array
  * \desc Docs!
- * \arg const sll_array_t* a
- * \arg sll_array_t* o
+ * \arg const sll_array_t* array
+ * \arg sll_array_t* out
  */
-__SLL_EXTERNAL void sll_array_clone(const sll_array_t* a,sll_array_t* o);
+__SLL_EXTERNAL void sll_array_clone(const sll_array_t* array,sll_array_t* out);
 
 
 
@@ -99,11 +99,11 @@ __SLL_EXTERNAL void sll_array_clone(const sll_array_t* a,sll_array_t* o);
  * \group array
  * \subgroup array-op
  * \desc Docs!
- * \arg const sll_array_t* a
- * \arg sll_object_t* v
+ * \arg const sll_array_t* array
+ * \arg sll_object_t* object
  * \ret sll_array_length_t
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_array_length_t sll_array_count(const sll_array_t* a,sll_object_t* v);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_array_length_t sll_array_count(const sll_array_t* array,sll_object_t* object);
 
 
 
@@ -113,12 +113,12 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_array_length_t sll_array_count(const sll_a
  * \group array
  * \subgroup array-op
  * \desc Docs!
- * \arg const sll_array_t* a
- * \arg sll_object_t*const* v
- * \arg sll_array_length_t vl
+ * \arg const sll_array_t* array
+ * \arg sll_object_t*const* object_data
+ * \arg sll_array_length_t object_count
  * \ret sll_array_length_t
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_array_length_t sll_array_count_multiple(const sll_array_t* a,sll_object_t*const* v,sll_array_length_t vl);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_array_length_t sll_array_count_multiple(const sll_array_t* array,sll_object_t*const* object_data,sll_array_length_t object_count);
 
 
 
@@ -130,9 +130,9 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_array_length_t sll_array_count_multiple(co
  * \desc Docs!
  * \arg const sll_array_t* a
  * \arg const sll_array_t* b
- * \arg sll_array_t* o
+ * \arg sll_array_t* out
  */
-__SLL_EXTERNAL void sll_array_combinations(const sll_array_t* a,const sll_array_t* b,sll_array_t* o);
+__SLL_EXTERNAL void sll_array_combinations(const sll_array_t* a,const sll_array_t* b,sll_array_t* out);
 
 
 
@@ -142,11 +142,11 @@ __SLL_EXTERNAL void sll_array_combinations(const sll_array_t* a,const sll_array_
  * \group array
  * \subgroup array-data
  * \desc Docs!
- * \arg const sll_array_t* a
- * \arg const sll_string_t* s
- * \arg sll_array_t* o
+ * \arg const sll_array_t* array
+ * \arg const sll_string_t* string
+ * \arg sll_array_t* out
  */
-__SLL_EXTERNAL void sll_array_combinations_string(const sll_array_t* a,const sll_string_t* s,sll_array_t* o);
+__SLL_EXTERNAL void sll_array_combinations_string(const sll_array_t* array,const sll_string_t* string,sll_array_t* out);
 
 
 
@@ -168,12 +168,12 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_compare_result_t sll_array_compare(const s
  * \name sll_array_compare_map
  * \group array
  * \desc Docs!
- * \arg const sll_array_t* a
- * \arg const sll_map_t* m
+ * \arg const sll_array_t* array
+ * \arg const sll_map_t* map
  * \arg sll_bool_t inv
  * \ret sll_compare_result_t
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_compare_result_t sll_array_compare_map(const sll_array_t* a,const sll_map_t* m,sll_bool_t inv);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_compare_result_t sll_array_compare_map(const sll_array_t* array,const sll_map_t* map,sll_bool_t inv);
 
 
 

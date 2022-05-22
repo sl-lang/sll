@@ -125,8 +125,8 @@ static const sll_node_t* _clone_node(const sll_node_t* src,sll_source_file_t* o,
 
 
 
-__SLL_EXTERNAL void sll_unify_compilation_data(const sll_compilation_data_t* c_dt,sll_source_file_t* o){
-	SLL_ASSERT(c_dt->length);
+__SLL_EXTERNAL void sll_unify_compilation_data(const sll_compilation_data_t* compilation_data,sll_source_file_t* o){
+	SLL_ASSERT(compilation_data->length);
 	_init_node_stack(o);
 	o->first_node=_acquire_next_node(o);
 	o->first_node->type=SLL_NODE_TYPE_OPERATION_LIST;
@@ -135,11 +135,11 @@ __SLL_EXTERNAL void sll_unify_compilation_data(const sll_compilation_data_t* c_d
 	o->import_table.data=NULL;
 	o->import_table.length=0;
 	o->file_path_string_index=0;
-	sll_source_file_index_t idx=c_dt->length;
+	sll_source_file_index_t idx=compilation_data->length;
 	sll_identifier_index_t** export_dt=sll_allocate_stack((idx-1)*sizeof(sll_identifier_index_t*));
 	do{
 		idx--;
-		sll_source_file_t* sf=*(c_dt->data+idx);
+		sll_source_file_t* sf=*(compilation_data->data+idx);
 		if (!idx){
 			o->time=sf->time;
 			o->file_size=sf->file_size;
@@ -275,7 +275,7 @@ __SLL_EXTERNAL void sll_unify_compilation_data(const sll_compilation_data_t* c_d
 		o->_next_scope+=sf->_next_scope;
 		o->first_node->data.arg_count++;
 	} while (idx);
-	for (sll_source_file_index_t i=0;i<c_dt->length-1;i++){
+	for (sll_source_file_index_t i=0;i<compilation_data->length-1;i++){
 		sll_deallocate(*(export_dt+i));
 	}
 	sll_deallocate(export_dt);

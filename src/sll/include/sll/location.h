@@ -67,13 +67,13 @@
  * \name sll_get_location
  * \group location
  * \desc Docs!
- * \arg const sll_assembly_data_t* a_dt
+ * \arg const sll_assembly_data_t* assembly_data
  * \arg sll_instruction_index_t ii
  * \arg sll_string_index_t* fp
  * \arg sll_string_index_t* fn
  * \ret sll_file_offset_t
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_file_offset_t sll_get_location(const sll_assembly_data_t* a_dt,sll_instruction_index_t ii,sll_string_index_t* fp,sll_string_index_t* fn);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_file_offset_t sll_get_location(const sll_assembly_data_t* assembly_data,sll_instruction_index_t ii,sll_string_index_t* fp,sll_string_index_t* fn);
 
 
 

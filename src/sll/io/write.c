@@ -197,32 +197,32 @@ static void _write_source_file(sll_file_t* wf,const sll_source_file_t* sf){
 
 
 
-__SLL_EXTERNAL void sll_write_assembly(sll_file_t* wf,const sll_assembly_data_t* a_dt){
+__SLL_EXTERNAL void sll_write_assembly(sll_file_t* wf,const sll_assembly_data_t* assembly_data){
 	magic_number_t n=ASSEMBLY_FILE_MAGIC_NUMBER;
 	sll_file_write(wf,&n,sizeof(magic_number_t),NULL);
 	sll_version_t v=SLL_VERSION;
 	sll_file_write(wf,&v,sizeof(sll_version_t),NULL);
-	CHECK_ERROR(sll_encode_integer(wf,a_dt->time));
-	CHECK_ERROR(sll_encode_integer(wf,a_dt->instruction_count));
-	CHECK_ERROR(sll_encode_integer(wf,a_dt->variable_count));
-	CHECK_ERROR(sll_encode_integer(wf,a_dt->tls_variable_count));
-	CHECK_ERROR(sll_encode_integer(wf,a_dt->function_table.length));
-	for (sll_function_index_t i=0;i<a_dt->function_table.length;i++){
-		CHECK_ERROR(sll_encode_integer(wf,(a_dt->function_table.data+i)->instruction_index));
-		CHECK_ERROR(sll_encode_integer(wf,(a_dt->function_table.data+i)->arg_count));
-		CHECK_ERROR(sll_encode_integer(wf,(a_dt->function_table.data+i)->name_string_index));
+	CHECK_ERROR(sll_encode_integer(wf,assembly_data->time));
+	CHECK_ERROR(sll_encode_integer(wf,assembly_data->instruction_count));
+	CHECK_ERROR(sll_encode_integer(wf,assembly_data->variable_count));
+	CHECK_ERROR(sll_encode_integer(wf,assembly_data->tls_variable_count));
+	CHECK_ERROR(sll_encode_integer(wf,assembly_data->function_table.length));
+	for (sll_function_index_t i=0;i<assembly_data->function_table.length;i++){
+		CHECK_ERROR(sll_encode_integer(wf,(assembly_data->function_table.data+i)->instruction_index));
+		CHECK_ERROR(sll_encode_integer(wf,(assembly_data->function_table.data+i)->arg_count));
+		CHECK_ERROR(sll_encode_integer(wf,(assembly_data->function_table.data+i)->name_string_index));
 	}
-	CHECK_ERROR(sll_encode_integer(wf,a_dt->string_table.length));
-	for (sll_string_index_t i=0;i<a_dt->string_table.length;i++){
-		CHECK_ERROR(sll_encode_string(wf,a_dt->string_table.data+i));
+	CHECK_ERROR(sll_encode_integer(wf,assembly_data->string_table.length));
+	for (sll_string_index_t i=0;i<assembly_data->string_table.length;i++){
+		CHECK_ERROR(sll_encode_string(wf,assembly_data->string_table.data+i));
 	}
-	CHECK_ERROR(sll_encode_integer(wf,a_dt->debug_data.length));
-	for (sll_debug_data_length_t i=0;i<a_dt->debug_data.length;i++){
-		CHECK_ERROR(sll_encode_integer(wf,(a_dt->debug_data.data+i)->delta_instruction_index));
-		CHECK_ERROR(sll_encode_integer(wf,(a_dt->debug_data.data+i)->line));
+	CHECK_ERROR(sll_encode_integer(wf,assembly_data->debug_data.length));
+	for (sll_debug_data_length_t i=0;i<assembly_data->debug_data.length;i++){
+		CHECK_ERROR(sll_encode_integer(wf,(assembly_data->debug_data.data+i)->delta_instruction_index));
+		CHECK_ERROR(sll_encode_integer(wf,(assembly_data->debug_data.data+i)->line));
 	}
-	const sll_assembly_instruction_t* ai=a_dt->first_instruction;
-	for (sll_instruction_index_t i=0;i<a_dt->instruction_count;i++){
+	const sll_assembly_instruction_t* ai=assembly_data->first_instruction;
+	for (sll_instruction_index_t i=0;i<assembly_data->instruction_count;i++){
 		sll_file_write_char(wf,ai->type,NULL);
 		switch (SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(ai)){
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_INT:
@@ -358,13 +358,13 @@ __SLL_EXTERNAL void sll_write_bundle(sll_file_t* wf,const sll_bundle_t* b){
 
 
 
-__SLL_EXTERNAL void sll_write_compiled_node(sll_file_t* wf,const sll_compilation_data_t* c_dt){
+__SLL_EXTERNAL void sll_write_compiled_node(sll_file_t* wf,const sll_compilation_data_t* compilation_data){
 	magic_number_t n=COMPLIED_OBJECT_FILE_MAGIC_NUMBER;
 	sll_file_write(wf,&n,sizeof(magic_number_t),NULL);
 	sll_version_t v=SLL_VERSION;
 	sll_file_write(wf,&v,sizeof(sll_version_t),NULL);
-	CHECK_ERROR(sll_encode_integer(wf,c_dt->length));
-	for (sll_source_file_index_t i=0;i<c_dt->length;i++){
-		_write_source_file(wf,*(c_dt->data+i));
+	CHECK_ERROR(sll_encode_integer(wf,compilation_data->length));
+	for (sll_source_file_index_t i=0;i<compilation_data->length;i++){
+		_write_source_file(wf,*(compilation_data->data+i));
 	}
 }

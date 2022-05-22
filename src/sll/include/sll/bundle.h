@@ -54,10 +54,10 @@ typedef struct _SLL_BUNDLE{
  * \group bundle
  * \desc Docs!
  * \arg const sll_char_t* nm
- * \arg sll_compilation_data_t* c_dt
+ * \arg sll_compilation_data_t* compilation_data
  * \arg sll_bundle_t* o
  */
-__SLL_EXTERNAL void sll_bundle_add_file(const sll_char_t* nm,sll_compilation_data_t* c_dt,sll_bundle_t* o);
+__SLL_EXTERNAL void sll_bundle_add_file(const sll_char_t* nm,sll_compilation_data_t* compilation_data,sll_bundle_t* o);
 
 
 
@@ -80,10 +80,10 @@ __SLL_EXTERNAL void sll_bundle_create(const sll_char_t* nm,sll_bundle_t* o);
  * \desc Docs!
  * \arg const sll_bundle_t* b
  * \arg const sll_string_t* nm
- * \arg sll_compilation_data_t* c_dt
+ * \arg sll_compilation_data_t* compilation_data
  * \ret sll_bool_t
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_bundle_fetch(const sll_bundle_t* b,const sll_string_t* nm,sll_compilation_data_t* c_dt);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_bundle_fetch(const sll_bundle_t* b,const sll_string_t* nm,sll_compilation_data_t* compilation_data);
 
 
 

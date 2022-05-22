@@ -10,8 +10,8 @@
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_file_offset_t sll_get_location(const sll_assembly_data_t* a_dt,sll_instruction_index_t ii,sll_string_index_t* fp,sll_string_index_t* fn){
-	if (ii>=a_dt->instruction_count){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_file_offset_t sll_get_location(const sll_assembly_data_t* assembly_data,sll_instruction_index_t ii,sll_string_index_t* fp,sll_string_index_t* fn){
+	if (ii>=assembly_data->instruction_count){
 		*fp=0;
 		*fn=SLL_MAX_STRING_INDEX;
 		return 0;
@@ -20,20 +20,20 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_file_offset_t sll_get_location(const sll_a
 	sll_file_offset_t o_ln=0;
 	sll_string_index_t o_fn=SLL_MAX_STRING_INDEX;
 	sll_string_index_t o_fp=0;
-	for (sll_debug_data_length_t i=0;i<a_dt->debug_data.length;i++){
-		c+=(a_dt->debug_data.data+i)->delta_instruction_index;
+	for (sll_debug_data_length_t i=0;i<assembly_data->debug_data.length;i++){
+		c+=(assembly_data->debug_data.data+i)->delta_instruction_index;
 		if (c>ii){
 			break;
 		}
-		if ((a_dt->debug_data.data+i)->line&SLL_DEBUG_LINE_DATA_FLAG_FILE){
-			o_fp=(sll_string_index_t)SLL_DEBUG_LINE_DATA_GET_DATA(a_dt->debug_data.data+i);
+		if ((assembly_data->debug_data.data+i)->line&SLL_DEBUG_LINE_DATA_FLAG_FILE){
+			o_fp=(sll_string_index_t)SLL_DEBUG_LINE_DATA_GET_DATA(assembly_data->debug_data.data+i);
 			o_ln=0;
 		}
-		else if ((a_dt->debug_data.data+i)->line&SLL_DEBUG_LINE_DATA_FLAG_FUNC){
-			o_fn=(sll_string_index_t)SLL_DEBUG_LINE_DATA_GET_DATA(a_dt->debug_data.data+i);
+		else if ((assembly_data->debug_data.data+i)->line&SLL_DEBUG_LINE_DATA_FLAG_FUNC){
+			o_fn=(sll_string_index_t)SLL_DEBUG_LINE_DATA_GET_DATA(assembly_data->debug_data.data+i);
 		}
 		else{
-			o_ln=SLL_DEBUG_LINE_DATA_GET_DATA(a_dt->debug_data.data+i);
+			o_ln=SLL_DEBUG_LINE_DATA_GET_DATA(assembly_data->debug_data.data+i);
 		}
 	}
 	*fp=o_fp;

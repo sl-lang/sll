@@ -10,8 +10,8 @@
 
 
 
-__SLL_EXTERNAL void sll_debug_print_assembly(const sll_assembly_data_t* a_dt){
-	sll_print_assembly(a_dt,sll_stdout);
+__SLL_EXTERNAL void sll_debug_print_assembly(const sll_assembly_data_t* assembly_data){
+	sll_print_assembly(assembly_data,sll_stdout);
 	sll_file_write_char(sll_stdout,'\n',NULL);
 }
 

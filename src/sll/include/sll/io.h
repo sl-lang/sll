@@ -21,10 +21,10 @@
  * \group io
  * \desc Docs!
  * \arg sll_file_t* rf
- * \arg sll_assembly_data_t* a_dt
+ * \arg sll_assembly_data_t* assembly_data
  * \ret sll_bool_t
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_load_assembly(sll_file_t* rf,sll_assembly_data_t* a_dt);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_load_assembly(sll_file_t* rf,sll_assembly_data_t* assembly_data);
 
 
 
@@ -47,10 +47,10 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_load_bundle(sll_file_t* rf,sll_
  * \group io
  * \desc Docs!
  * \arg sll_file_t* rf
- * \arg sll_compilation_data_t* c_dt
+ * \arg sll_compilation_data_t* compilation_data
  * \ret sll_bool_t
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_load_compiled_node(sll_file_t* rf,sll_compilation_data_t* c_dt);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_load_compiled_node(sll_file_t* rf,sll_compilation_data_t* compilation_data);
 
 
 
@@ -60,9 +60,9 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_load_compiled_node(sll_file_t* 
  * \group io
  * \desc Docs!
  * \arg sll_file_t* wf
- * \arg const sll_assembly_data_t* a_dt
+ * \arg const sll_assembly_data_t* assembly_data
  */
-__SLL_EXTERNAL void sll_write_assembly(sll_file_t* wf,const sll_assembly_data_t* a_dt);
+__SLL_EXTERNAL void sll_write_assembly(sll_file_t* wf,const sll_assembly_data_t* assembly_data);
 
 
 
@@ -84,9 +84,9 @@ __SLL_EXTERNAL void sll_write_bundle(sll_file_t* wf,const sll_bundle_t* b);
  * \group io
  * \desc Docs!
  * \arg sll_file_t* wf
- * \arg const sll_compilation_data_t* c_dt
+ * \arg const sll_compilation_data_t* compilation_data
  */
-__SLL_EXTERNAL void sll_write_compiled_node(sll_file_t* wf,const sll_compilation_data_t* c_dt);
+__SLL_EXTERNAL void sll_write_compiled_node(sll_file_t* wf,const sll_compilation_data_t* compilation_data);
 
 
 

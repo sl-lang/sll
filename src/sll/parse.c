@@ -1043,9 +1043,9 @@ _return_node:;
 
 
 
-__SLL_EXTERNAL void sll_parse_nodes(sll_file_t* rf,sll_compilation_data_t* c_dt,sll_internal_function_table_t* i_ft,sll_import_resolver_t ir){
-	sll_source_file_t* sf=*(c_dt->data);
-	SLL_ASSERT(c_dt->length==1&&!sf->first_node);
+__SLL_EXTERNAL void sll_parse_nodes(sll_file_t* rf,sll_compilation_data_t* compilation_data,sll_internal_function_table_t* i_ft,sll_import_resolver_t ir){
+	sll_source_file_t* sf=*(compilation_data->data);
+	SLL_ASSERT(compilation_data->length==1&&!sf->first_node);
 	sf->first_node=_acquire_next_node(sf);
 	sf->first_node->type=SLL_NODE_TYPE_OPERATION_LIST;
 	sf->first_node->data.arg_count=0;
@@ -1060,7 +1060,7 @@ __SLL_EXTERNAL void sll_parse_nodes(sll_file_t* rf,sll_compilation_data_t* c_dt,
 			1,
 			0
 		},
-		c_dt,
+		compilation_data,
 		i_ft,
 		ir,
 		&nv_dt,

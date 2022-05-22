@@ -157,9 +157,9 @@ static sll_node_t* _remove_type_names(sll_node_t* o){
 
 
 
-__SLL_EXTERNAL void sll_remove_debug_data(sll_compilation_data_t* c_dt){
-	for (sll_source_file_index_t i=0;i<c_dt->length;i++){
-		sll_node_t* p=(*(c_dt->data+i))->first_node;
+__SLL_EXTERNAL void sll_remove_debug_data(sll_compilation_data_t* compilation_data){
+	for (sll_source_file_index_t i=0;i<compilation_data->length;i++){
+		sll_node_t* p=(*(compilation_data->data+i))->first_node;
 		if (p){
 			_remove_debug_data(p);
 		}
@@ -168,9 +168,9 @@ __SLL_EXTERNAL void sll_remove_debug_data(sll_compilation_data_t* c_dt){
 
 
 
-__SLL_EXTERNAL void sll_remove_debug_names(sll_compilation_data_t* c_dt){
-	for (sll_source_file_index_t i=0;i<c_dt->length;i++){
-		sll_source_file_t* sf=*(c_dt->data+i);
+__SLL_EXTERNAL void sll_remove_debug_names(sll_compilation_data_t* compilation_data){
+	for (sll_source_file_index_t i=0;i<compilation_data->length;i++){
+		sll_source_file_t* sf=*(compilation_data->data+i);
 		for (sll_function_index_t j=0;j<sf->function_table.length;j++){
 			(*(sf->function_table.data+j))->name_string_index=SLL_MAX_STRING_INDEX;
 			(*(sf->function_table.data+j))->description_string_index=SLL_MAX_STRING_INDEX;

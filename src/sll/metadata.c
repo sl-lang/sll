@@ -162,9 +162,9 @@ static sll_node_t* _update(sll_node_t* o,sll_string_index_t* sm){
 
 
 
-__SLL_EXTERNAL void sll_optimize_metadata(sll_compilation_data_t* c_dt){
-	for (sll_source_file_index_t idx=0;idx<c_dt->length;idx++){
-		sll_source_file_t* sf=*(c_dt->data+idx);
+__SLL_EXTERNAL void sll_optimize_metadata(sll_compilation_data_t* compilation_data){
+	for (sll_source_file_index_t idx=0;idx<compilation_data->length;idx++){
+		sll_source_file_t* sf=*(compilation_data->data+idx);
 		if (!sf->string_table.length){
 			continue;
 		}

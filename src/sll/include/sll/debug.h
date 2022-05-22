@@ -19,9 +19,9 @@
  * \name sll_debug_print_assembly
  * \group debug
  * \desc Docs!
- * \arg const sll_assembly_data_t* a_dt
+ * \arg const sll_assembly_data_t* assembly_data
  */
-__SLL_EXTERNAL void sll_debug_print_assembly(const sll_assembly_data_t* a_dt);
+__SLL_EXTERNAL void sll_debug_print_assembly(const sll_assembly_data_t* assembly_data);
 
 
 

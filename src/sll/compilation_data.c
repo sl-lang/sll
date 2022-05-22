@@ -20,15 +20,15 @@ __SLL_EXTERNAL void sll_compilation_data_from_source_file(const sll_source_file_
 
 
 
-__SLL_EXTERNAL void sll_free_compilation_data(sll_compilation_data_t* c_dt){
-	for (sll_source_file_index_t i=0;i<c_dt->length;i++){
-		sll_source_file_t* sf=*(c_dt->data+i);
+__SLL_EXTERNAL void sll_free_compilation_data(sll_compilation_data_t* compilation_data){
+	for (sll_source_file_index_t i=0;i<compilation_data->length;i++){
+		sll_source_file_t* sf=*(compilation_data->data+i);
 		sll_free_source_file(sf);
 		sll_deallocate(sf);
 	}
-	sll_deallocate(c_dt->data);
-	c_dt->data=NULL;
-	c_dt->length=0;
+	sll_deallocate(compilation_data->data);
+	compilation_data->data=NULL;
+	compilation_data->length=0;
 }
 
 
