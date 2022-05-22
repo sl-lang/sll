@@ -1820,7 +1820,7 @@ __SLL_EXTERNAL void sll_string_select(const sll_string_t* s,sll_integer_t a,sll_
 
 
 
-__SLL_EXTERNAL void sll_string_set_char(sll_char_t c,sll_string_length_t i,sll_string_t* o){
+__SLL_EXTERNAL void sll_string_set_char(sll_string_t* o,sll_char_t c,sll_string_length_t i){
 	if (i<o->length){
 		o->checksum^=((sll_string_checksum_t)(o->data[i]^c))<<((i&3)<<3);
 		o->data[i]=c;

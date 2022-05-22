@@ -20,7 +20,7 @@ __SLL_EXTERNAL void sll_operator_assign(sll_object_t* a,sll_object_t* b,sll_obje
 			if (idx<0){
 				idx+=a->data.string.length;
 			}
-			sll_string_set_char(tmp->data.char_,(sll_string_length_t)idx,&(a->data.string));
+			sll_string_set_char(&(a->data.string),tmp->data.char_,(sll_string_length_t)idx);
 			SLL_RELEASE(tmp);
 		}
 	}

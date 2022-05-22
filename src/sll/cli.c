@@ -845,7 +845,7 @@ _read_file_argument:
 			sll_string_from_pointer(argv[*(fp+j)],&b_f_nm);
 			sll_string_length_t off=((_cli_flags&SLL_CLI_FLAG_NO_PATHS)?sll_path_split(&b_f_nm):0);
 			if (sll_string_ends(&b_f_nm,&_cli_slc_suffix)){
-				sll_string_set_char(0,b_f_nm.length-_cli_slc_suffix.length,&b_f_nm);
+				sll_string_set_char(&b_f_nm,0,b_f_nm.length-_cli_slc_suffix.length);
 			}
 			SLL_LOG("Adding file '%s' as '%s' to bundle...",f_fp,b_f_nm.data+off);
 			sll_bundle_add_file(b_f_nm.data+off,&compilation_data,&bundle);
