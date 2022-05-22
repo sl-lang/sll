@@ -28,10 +28,10 @@ typedef __SLL_U64 sll_compressed_integer_t;
  * \name sll_compress_integer
  * \group compression
  * \desc Docs!
- * \arg sll_size_t v
- * \ret sll_size_t
+ * \arg sll_size_t int_
+ * \ret sll_compressed_integer_t
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_size_t sll_compress_integer(sll_size_t v);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_compressed_integer_t sll_compress_integer(sll_size_t int_);
 
 
 
@@ -40,10 +40,10 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_size_t sll_compress_integer(sll_size_t v);
  * \name sll_decompress_integer
  * \group compression
  * \desc Docs!
- * \arg sll_compressed_integer_t v
+ * \arg sll_compressed_integer_t compressed_int
  * \ret sll_size_t
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_size_t sll_decompress_integer(sll_compressed_integer_t v);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_size_t sll_decompress_integer(sll_compressed_integer_t compressed_int);
 
 
 

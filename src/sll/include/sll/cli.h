@@ -334,9 +334,9 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_code_t sll_cli_main(sll_array_lengt
  * \name sll_cli_register_path_resolver
  * \group cli
  * \desc Docs!
- * \arg sll_cli_path_resolver_t fn
+ * \arg sll_cli_path_resolver_t function
  */
-__SLL_EXTERNAL void sll_cli_register_path_resolver(sll_cli_path_resolver_t fn);
+__SLL_EXTERNAL void sll_cli_register_path_resolver(sll_cli_path_resolver_t function);
 
 
 
@@ -345,10 +345,10 @@ __SLL_EXTERNAL void sll_cli_register_path_resolver(sll_cli_path_resolver_t fn);
  * \name sll_cli_unregister_path_resolver
  * \group cli
  * \desc Docs!
- * \arg sll_cli_path_resolver_t fn
+ * \arg sll_cli_path_resolver_t function
  * \ret sll_bool_t
  */
-__SLL_EXTERNAL sll_bool_t sll_cli_unregister_path_resolver(sll_cli_path_resolver_t fn);
+__SLL_EXTERNAL sll_bool_t sll_cli_unregister_path_resolver(sll_cli_path_resolver_t function);
 
 
 

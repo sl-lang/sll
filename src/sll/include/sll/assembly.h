@@ -1527,10 +1527,10 @@
  * \name SLL_ASSEMBLY_INSTRUCTION_GET_TYPE
  * \group assembly
  * \desc Docs!
- * \arg sll_assembly_instruction_type_t ai
+ * \arg sll_assembly_instruction_type_t instruction
  * \ret sll_assembly_instruction_type_t
  */
-#define SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(ai) ((ai)->type&0x7f)
+#define SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(instruction) ((instruction)->type&0x7f)
 
 
 
@@ -1539,10 +1539,10 @@
  * \name SLL_ASSEMBLY_INSTRUCTION_FLAG_IS_ANONYMOUS
  * \group assembly
  * \desc Docs!
- * \arg sll_assembly_instruction_type_t ai
+ * \arg sll_assembly_instruction_type_t instruction
  * \ret sll_bool_t
  */
-#define SLL_ASSEMBLY_INSTRUCTION_FLAG_IS_ANONYMOUS(ai) ((ai)->type>>7)
+#define SLL_ASSEMBLY_INSTRUCTION_FLAG_IS_ANONYMOUS(instruction) ((instruction)->type>>7)
 
 
 
@@ -1551,10 +1551,10 @@
  * \name SLL_ASSEMBLY_INSTRUCTION_FLAG_IS_INPLACE
  * \group assembly
  * \desc Docs!
- * \arg sll_assembly_instruction_type_t ai
+ * \arg sll_assembly_instruction_type_t instruction
  * \ret sll_bool_t
  */
-#define SLL_ASSEMBLY_INSTRUCTION_FLAG_IS_INPLACE(ai) ((ai)->type>>7)
+#define SLL_ASSEMBLY_INSTRUCTION_FLAG_IS_INPLACE(instruction) ((instruction)->type>>7)
 
 
 
@@ -1563,10 +1563,10 @@
  * \name SLL_ASSEMBLY_INSTRUCTION_FLAG_IS_RELATIVE
  * \group assembly
  * \desc Docs!
- * \arg sll_assembly_instruction_type_t ai
+ * \arg sll_assembly_instruction_type_t instruction
  * \ret sll_bool_t
  */
-#define SLL_ASSEMBLY_INSTRUCTION_FLAG_IS_RELATIVE(ai) ((ai)->type>>7)
+#define SLL_ASSEMBLY_INSTRUCTION_FLAG_IS_RELATIVE(instruction) ((instruction)->type>>7)
 
 
 
@@ -1586,10 +1586,10 @@
  * \name SLL_ASSEMBLY_FUNCTION_GET_ARGUMENT_COUNT
  * \group assembly
  * \desc Docs!
- * \arg const sll_assembly_function_t* f
+ * \arg const sll_assembly_function_t* function
  * \ret sll_arg_count_t
  */
-#define SLL_ASSEMBLY_FUNCTION_GET_ARGUMENT_COUNT(f) ((f)->arg_count>>1)
+#define SLL_ASSEMBLY_FUNCTION_GET_ARGUMENT_COUNT(function) ((function)->arg_count>>1)
 
 
 
@@ -1598,10 +1598,10 @@
  * \name SLL_ASSEMBLY_FUNCTION_IS_VAR_ARG
  * \group assembly
  * \desc Docs!
- * \arg const sll_assembly_function_t* f
+ * \arg const sll_assembly_function_t* function
  * \ret sll_bool_t
  */
-#define SLL_ASSEMBLY_FUNCTION_IS_VAR_ARG(f) ((f)->arg_count&1)
+#define SLL_ASSEMBLY_FUNCTION_IS_VAR_ARG(function) ((function)->arg_count&1)
 
 
 
@@ -1610,10 +1610,10 @@
  * \name SLL_ASSEMBLY_VARIABLE_GET_INDEX
  * \group assembly
  * \desc Docs!
- * \arg sll_variable_index_t v
+ * \arg sll_variable_index_t variable
  * \ret sll_variable_index_t
  */
-#define SLL_ASSEMBLY_VARIABLE_GET_INDEX(v) ((v)>>1)
+#define SLL_ASSEMBLY_VARIABLE_GET_INDEX(variable) ((variable)>>1)
 
 
 
@@ -1622,10 +1622,10 @@
  * \name SLL_ASSEMBLY_VARIABLE_IS_TLS
  * \group assembly
  * \desc Docs!
- * \arg sll_variable_index_t v
+ * \arg sll_variable_index_t variable
  * \ret sll_bool_t
  */
-#define SLL_ASSEMBLY_VARIABLE_IS_TLS(v) ((v)&1)
+#define SLL_ASSEMBLY_VARIABLE_IS_TLS(variable) ((variable)&1)
 
 
 

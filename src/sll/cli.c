@@ -932,25 +932,25 @@ _cleanup:
 
 
 
-__SLL_EXTERNAL void sll_cli_register_path_resolver(sll_cli_path_resolver_t fn){
+__SLL_EXTERNAL void sll_cli_register_path_resolver(sll_cli_path_resolver_t function){
 	if (_cli_resolver_table_size==CLI_PATH_RESOLVER_TABLE_SIZE){
 		return;
 	}
 	for (sll_array_length_t i=0;i<_cli_resolver_table_size;i++){
-		if (_cli_resolver_table[i]==fn){
+		if (_cli_resolver_table[i]==function){
 			return;
 		}
 	}
-	_cli_resolver_table[_cli_resolver_table_size]=fn;
+	_cli_resolver_table[_cli_resolver_table_size]=function;
 	_cli_resolver_table_size++;
 }
 
 
 
-__SLL_EXTERNAL sll_bool_t sll_cli_unregister_path_resolver(sll_cli_path_resolver_t fn){
+__SLL_EXTERNAL sll_bool_t sll_cli_unregister_path_resolver(sll_cli_path_resolver_t function){
 	sll_array_length_t i=0;
 	while (i<_cli_resolver_table_size){
-		if (_cli_resolver_table[i]==fn){
+		if (_cli_resolver_table[i]==function){
 			i++;
 			while (i<_cli_resolver_table_size){
 				_cli_resolver_table[i-1]=_cli_resolver_table[i];

@@ -16,12 +16,12 @@
  * \name SLL_INIT_COMPLEX
  * \group complex
  * \desc Docs!
- * \arg sll_complex_t* c
+ * \arg sll_complex_t* out
  */
-#define SLL_INIT_COMPLEX(c) \
+#define SLL_INIT_COMPLEX(out) \
 	do{ \
-		(c)->real=0; \
-		(c)->imag=0; \
+		(out)->real=0; \
+		(out)->imag=0; \
 	} while (0)
 
 
