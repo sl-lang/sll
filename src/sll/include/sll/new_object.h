@@ -32,7 +32,6 @@
  * \group new-object
  * \desc Docs!
  * \arg const sll_char_t* t
- * \arg sll_object_t* out
  * \ret sll_object_t*
  */
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_new_object(const sll_char_t* t,...);
@@ -73,7 +72,6 @@ __SLL_EXTERNAL void sll_new_object_array_list(const sll_char_t* t,sll_string_len
  * \arg const sll_char_t* t
  * \arg sll_string_length_t tl
  * \arg sll_var_arg_list_t* va
- * \arg sll_object_t* out
  * \ret sll_object_t*
  */
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_new_object_list(const sll_char_t* t,sll_string_length_t tl,sll_var_arg_list_t* va);

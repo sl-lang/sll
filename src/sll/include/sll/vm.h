@@ -181,7 +181,6 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_code_t sll_execute_assembly(const s
  * \arg sll_object_t*const* al
  * \arg sll_arg_count_t all
  * \arg sll_execution_flags_t fl
- * \arg sll_object_t* out
  * \ret sll_object_t*
  */
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_execute_function(sll_integer_t fn_idx,sll_object_t*const* al,sll_arg_count_t all,sll_execution_flags_t fl);
@@ -205,7 +204,6 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_size_t sll_vm_get_instruction_count(void);
  * \group vm
  * \desc Docs!
  * \arg sll_thread_index_t tid
- * \arg sll_object_t* out
  * \ret sll_object_t*
  */
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_wait_thread(sll_thread_index_t tid);
