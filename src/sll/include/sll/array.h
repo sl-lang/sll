@@ -486,10 +486,10 @@ __SLL_EXTERNAL void sll_array_resize(const sll_array_t* array,sll_integer_t delt
  * \group array
  * \subgroup array-op
  * \desc Docs!
- * \arg const sll_array_t* a
- * \arg sll_array_t* o
+ * \arg const sll_array_t* array
+ * \arg sll_array_t* out
  */
-__SLL_EXTERNAL void sll_array_reverse(const sll_array_t* a,sll_array_t* o);
+__SLL_EXTERNAL void sll_array_reverse(const sll_array_t* array,sll_array_t* out);
 
 
 
@@ -499,13 +499,13 @@ __SLL_EXTERNAL void sll_array_reverse(const sll_array_t* a,sll_array_t* o);
  * \group array
  * \subgroup array-op
  * \desc Docs!
- * \arg const sll_array_t* s
- * \arg sll_integer_t a
- * \arg sll_integer_t b
- * \arg sll_integer_t c
- * \arg sll_array_t* o
+ * \arg const sll_array_t* array
+ * \arg sll_integer_t start
+ * \arg sll_integer_t end
+ * \arg sll_integer_t step
+ * \arg sll_array_t* out
  */
-__SLL_EXTERNAL void sll_array_select(const sll_array_t* s,sll_integer_t a,sll_integer_t b,sll_integer_t c,sll_array_t* o);
+__SLL_EXTERNAL void sll_array_select(const sll_array_t* array,sll_integer_t start,sll_integer_t end,sll_integer_t step,sll_array_t* out);
 
 
 
@@ -515,12 +515,11 @@ __SLL_EXTERNAL void sll_array_select(const sll_array_t* s,sll_integer_t a,sll_in
  * \group array
  * \subgroup array-op
  * \desc Docs!
- * \arg const sll_array_t* s
- * \arg const sll_array_t* a
- * \arg sll_object_t* e
- * \arg sll_array_t* o
+ * \arg const sll_array_t* array
+ * \arg sll_object_t* object
+ * \arg sll_array_t* out
  */
-__SLL_EXTERNAL void sll_array_split(const sll_array_t* a,sll_object_t* e,sll_array_t* o);
+__SLL_EXTERNAL void sll_array_split(const sll_array_t* array,sll_object_t* object,sll_array_t* out);
 
 
 
@@ -530,11 +529,11 @@ __SLL_EXTERNAL void sll_array_split(const sll_array_t* a,sll_object_t* e,sll_arr
  * \group array
  * \subgroup array-data
  * \desc Docs!
- * \arg const sll_array_t* a
- * \arg sll_array_length_t i
- * \arg sll_object_t* v
+ * \arg const sll_array_t* array
+ * \arg sll_array_length_t index
+ * \arg sll_object_t* object
  */
-__SLL_EXTERNAL void sll_array_set(const sll_array_t* a,sll_array_length_t i,sll_object_t* v);
+__SLL_EXTERNAL void sll_array_set(const sll_array_t* array,sll_array_length_t index,sll_object_t* object);
 
 
 
