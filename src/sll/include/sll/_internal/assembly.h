@@ -34,19 +34,17 @@ typedef sll_instruction_index_t assembly_instruction_label_t;
 
 
 typedef struct _IDENTIFIER_DATA{
-	sll_variable_index_t v;
-	sll_bool_t rm;
+	sll_variable_index_t variable;
+	sll_bool_t remove;
 } identifier_data_t;
 
 
 
 typedef struct _IDENTIFIER_MAP_DATA{
-	identifier_data_t* s_im[SLL_MAX_SHORT_IDENTIFIER_LENGTH];
-	identifier_data_t* l_im;
-	sll_scope_t l_sc;
-	sll_variable_index_t* sc_vi;
-	sll_variable_index_t vc;
-	sll_variable_index_t tls_vc;
+	identifier_data_t* short_identifier_map[SLL_MAX_SHORT_IDENTIFIER_LENGTH];
+	identifier_data_t* long_identifier_map;
+	sll_variable_index_t variable_count;
+	sll_variable_index_t tls_variable_count;
 } identifier_map_data_t;
 
 
