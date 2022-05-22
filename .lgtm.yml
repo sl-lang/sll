@@ -15,16 +15,10 @@ extraction:
   cpp:
     prepare:
       packages:
-        - python3.8
         - nasm
-    before_index:
-      - alias python3=python3.8
     index:
       build_command:
         - ./build.sh --verbose
   javascript:
     index:
       typescript: none
-  python:
-    python_setup:
-      version: 3

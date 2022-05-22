@@ -30,10 +30,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-      - name: Setup Python
-        uses: actions/setup-python@v3
-        with:
-          python-version: 3.9
       - name: Setup NASM
         uses: ilammy/setup-nasm@v1
       - name: Initialize codeql@1
@@ -50,10 +46,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-      - name: Setup Python
-        uses: actions/setup-python@v3
-        with:
-          python-version: 3.9
       - name: Setup NASM
         uses: ilammy/setup-nasm@v1
       - name: Build
@@ -72,10 +64,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-      - name: Setup Python
-        uses: actions/setup-python@v3
-        with:
-          python-version: 3.9
       - name: Setup NASM
         uses: ilammy/setup-nasm@v1
       - name: Build
@@ -113,10 +101,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-      - name: Setup Python
-        uses: actions/setup-python@v3
-        with:
-          python-version: 3.9
       - name: Setup NASM
         uses: ilammy/setup-nasm@v1
       - name: Build
@@ -127,10 +111,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-      - name: Setup Python
-        uses: actions/setup-python@v3
-        with:
-          python-version: 3.9
       - name: Setup NASM
         uses: ilammy/setup-nasm@v1
       - name: Build
@@ -153,10 +133,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-      - name: Setup Python
-        uses: actions/setup-python@v3
-        with:
-          python-version: 3.9
       - name: Setup NASM
         uses: ilammy/setup-nasm@v1
       - name: Build
@@ -202,10 +178,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-      - name: Setup Python
-        uses: actions/setup-python@v3
-        with:
-          python-version: 3.9
       - name: Setup NASM
         uses: ilammy/setup-nasm@v1
       - name: Setup MSVC
@@ -228,10 +200,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-      - name: Setup Python
-        uses: actions/setup-python@v3
-        with:
-          python-version: 3.9
       - name: Setup NASM
         uses: ilammy/setup-nasm@v1
       - name: Setup MSVC
