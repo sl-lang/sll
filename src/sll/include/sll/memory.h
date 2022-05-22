@@ -38,10 +38,10 @@
  * \name sll_allocate
  * \group memory
  * \desc Docs!
- * \arg sll_size_t sz
+ * \arg sll_size_t size
  * \ret void*
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT void* sll_allocate(sll_size_t sz);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT void* sll_allocate(sll_size_t size);
 
 
 
@@ -50,10 +50,11 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT void* sll_allocate(sll_size_t sz);
  * \name sll_allocate_raw
  * \group memory
  * \desc Docs!
- * \arg sll_size_t sz
+ * \arg sll_size_t size
+ * \arg sll_bool_t fail_on_error
  * \ret void*
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT void* sll_allocate_raw(sll_size_t sz,sll_bool_t err);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT void* sll_allocate_raw(sll_size_t size,sll_bool_t fail_on_error);
 
 
 
@@ -62,10 +63,10 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT void* sll_allocate_raw(sll_size_t sz,sll_bool_
  * \name sll_allocate_stack
  * \group memory
  * \desc Docs!
- * \arg sll_size_t sz
+ * \arg sll_size_t size
  * \ret void*
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT void* sll_allocate_stack(sll_size_t sz);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT void* sll_allocate_stack(sll_size_t size);
 
 
 
@@ -74,10 +75,11 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT void* sll_allocate_stack(sll_size_t sz);
  * \name sll_allocate_stack_raw
  * \group memory
  * \desc Docs!
- * \arg sll_size_t sz
+ * \arg sll_size_t size
+ * \arg sll_bool_t fail_on_error
  * \ret void*
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT void* sll_allocate_stack_raw(sll_size_t sz,sll_bool_t err);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT void* sll_allocate_stack_raw(sll_size_t size,sll_bool_t fail_on_error);
 
 
 
@@ -86,9 +88,9 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT void* sll_allocate_stack_raw(sll_size_t sz,sll
  * \name sll_deallocate
  * \group memory
  * \desc Docs!
- * \arg void* p
+ * \arg void* pointer
  */
-__SLL_EXTERNAL void sll_deallocate(void* p);
+__SLL_EXTERNAL void sll_deallocate(void* pointer);
 
 
 
@@ -97,11 +99,11 @@ __SLL_EXTERNAL void sll_deallocate(void* p);
  * \name sll_memory_move
  * \group memory
  * \desc Docs!
- * \arg void* p
- * \arg sll_bool_t d
+ * \arg void* pointer
+ * \arg sll_bool_t direction
  * \ret void*
  */
-__SLL_EXTERNAL void* sll_memory_move(void* p,sll_bool_t d);
+__SLL_EXTERNAL void* sll_memory_move(void* pointer,sll_bool_t direction);
 
 
 
@@ -110,11 +112,11 @@ __SLL_EXTERNAL void* sll_memory_move(void* p,sll_bool_t d);
  * \name sll_reallocate
  * \group memory
  * \desc Docs!
- * \arg void* p
- * \arg sll_size_t sz
+ * \arg void* pointer
+ * \arg sll_size_t size
  * \ret void*
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT void* sll_reallocate(void* p,sll_size_t sz);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT void* sll_reallocate(void* pointer,sll_size_t size);
 
 
 
@@ -123,11 +125,12 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT void* sll_reallocate(void* p,sll_size_t sz);
  * \name sll_reallocate_raw
  * \group memory
  * \desc Docs!
- * \arg void* p
- * \arg sll_size_t sz
+ * \arg void* pointer
+ * \arg sll_size_t size
+ * \arg sll_bool_t fail_on_error
  * \ret void*
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT void* sll_reallocate_raw(void* p,sll_size_t sz,sll_bool_t err);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT void* sll_reallocate_raw(void* pointer,sll_size_t size,sll_bool_t fail_on_error);
 
 
 
@@ -136,10 +139,10 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT void* sll_reallocate_raw(void* p,sll_size_t sz
  * \name sll_zero_allocate
  * \group memory
  * \desc Docs!
- * \arg sll_size_t sz
+ * \arg sll_size_t size
  * \ret void*
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT void* sll_zero_allocate(sll_size_t sz);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT void* sll_zero_allocate(sll_size_t size);
 
 
 
@@ -148,10 +151,11 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT void* sll_zero_allocate(sll_size_t sz);
  * \name sll_zero_allocate_raw
  * \group memory
  * \desc Docs!
- * \arg sll_size_t sz
+ * \arg sll_size_t size
+ * \arg sll_bool_t fail_on_error
  * \ret void*
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT void* sll_zero_allocate_raw(sll_size_t sz,sll_bool_t err);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT void* sll_zero_allocate_raw(sll_size_t size,sll_bool_t fail_on_error);
 
 
 
@@ -160,10 +164,10 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT void* sll_zero_allocate_raw(sll_size_t sz,sll_
  * \name sll_zero_allocate_stack
  * \group memory
  * \desc Docs!
- * \arg sll_size_t sz
+ * \arg sll_size_t size
  * \ret void*
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT void* sll_zero_allocate_stack(sll_size_t sz);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT void* sll_zero_allocate_stack(sll_size_t size);
 
 
 
@@ -172,10 +176,11 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT void* sll_zero_allocate_stack(sll_size_t sz);
  * \name sll_zero_allocate_stack_raw
  * \group memory
  * \desc Docs!
- * \arg sll_size_t sz
+ * \arg sll_size_t size
+ * \arg sll_bool_t fail_on_error
  * \ret void*
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT void* sll_zero_allocate_stack_raw(sll_size_t sz,sll_bool_t err);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT void* sll_zero_allocate_stack_raw(sll_size_t size,sll_bool_t fail_on_error);
 
 
 
