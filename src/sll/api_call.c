@@ -22,7 +22,7 @@ sll_object_t* _call_api_func(sll_function_index_t fn,sll_object_t*const* al,sll_
 	arg_output_t ao={
 		ARG_OUTPUT_TYPE_ARRAY,
 		{
-			.arr={
+			.array={
 				bf,
 				dt->_arg_size
 			}

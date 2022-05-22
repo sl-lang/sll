@@ -31,20 +31,20 @@
 		*(x)=0; \
 	} while (0)
 
-#define GET_PTR(type) (o->t==ARG_OUTPUT_TYPE_C?va_arg(*(o->dt.c),type*):(type*)_get_ptr_array(o,sizeof(type)))
+#define GET_PTR(type_) (o->type==ARG_OUTPUT_TYPE_C?va_arg(*(o->data.c),type_*):(type_*)_get_ptr_array(o,sizeof(type_)))
 
 #define ENSURE_TYPE(var,name) \
 	if (var->type!=SLL_OBJECT_TYPE_##name){ \
 		var=sll_operator_cast(var,sll_static_int[SLL_OBJECT_TYPE_##name]); \
 		if (!*st){ \
 			*st=sll_allocate_stack(sizeof(arg_state_t)+sizeof(sll_object_t*)); \
-			(*st)->sz=1; \
+			(*st)->length=1; \
 		} \
 		else{ \
-			(*st)->sz++; \
-			*st=sll_reallocate(*st,sizeof(arg_state_t)+(*st)->sz*sizeof(sll_object_t*)); \
+			(*st)->length++; \
+			*st=sll_reallocate(*st,sizeof(arg_state_t)+(*st)->length*sizeof(sll_object_t*)); \
 		} \
-		(*st)->dt[(*st)->sz-1]=var; \
+		(*st)->data[(*st)->length-1]=var; \
 	} \
 
 #define PARSE_INT(sz) \
@@ -147,12 +147,12 @@
 
 
 static __SLL_FORCE_INLINE void* _get_ptr_array(arg_output_t* o,sll_size_t sz){
-	SLL_ASSERT(o->t==ARG_OUTPUT_TYPE_ARRAY);
+	SLL_ASSERT(o->type==ARG_OUTPUT_TYPE_ARRAY);
 	sz=(sz+7)&0xfffffffffffffff8ull;
-	SLL_ASSERT(o->dt.arr.sz>=sz);
-	void* ptr=o->dt.arr.ptr;
-	o->dt.arr.ptr=PTR(ADDR(o->dt.arr.ptr)+sz);
-	o->dt.arr.sz-=sz;
+	SLL_ASSERT(o->data.array.count>=sz);
+	void* ptr=o->data.array.pointer;
+	o->data.array.pointer=PTR(ADDR(o->data.array.pointer)+sz);
+	o->data.array.count-=sz;
 	return ptr;
 }
 
@@ -643,8 +643,8 @@ __SLL_EXTERNAL void sll_free_args(sll_arg_state_t dt){
 		return;
 	}
 	arg_state_t* st=dt;
-	for (sll_size_t i=0;i<st->sz;i++){
-		SLL_RELEASE(st->dt[i]);
+	for (sll_size_t i=0;i<st->length;i++){
+		SLL_RELEASE(st->data[i]);
 	}
 	sll_deallocate(dt);
 }

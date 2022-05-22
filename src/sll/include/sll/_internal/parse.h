@@ -21,9 +21,9 @@
 
 
 typedef struct _SCOPE_DATA{
-	bitmap_t* m;
-	sll_scope_t l_sc;
-	sll_scope_t ml;
+	bitmap_t* data;
+	sll_scope_t length;
+	sll_scope_t last_scope;
 } scope_data_t;
 
 

@@ -23,29 +23,29 @@ typedef __SLL_U8 arg_parse_flags_t;
 
 
 typedef struct _ARG_STATE{
-	sll_size_t sz;
-	sll_object_t* dt[];
+	sll_size_t length;
+	sll_object_t* data[];
 } arg_state_t;
 
 
 
 typedef struct _ARG_OUTPUT_ARRAY_DATA{
-	void* ptr;
-	sll_size_t sz;
+	void* pointer;
+	sll_size_t count;
 } arg_output_array_data_t;
 
 
 
 typedef union _ARG_OUTPUT_DATA{
-va_list* c;
-	arg_output_array_data_t arr;
+	va_list* c;
+	arg_output_array_data_t array;
 } arg_output_data_t;
 
 
 
 typedef struct _ARG_OUTPUT{
-	sll_bool_t t;
-	arg_output_data_t dt;
+	sll_bool_t type;
+	arg_output_data_t data;
 } arg_output_t;
 
 

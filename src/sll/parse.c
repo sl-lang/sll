@@ -41,13 +41,13 @@
 #define UPDATE_IF_SCOPE \
 	do{ \
 		if (o&&o->type>=SLL_NODE_TYPE_IF&&o->type<=SLL_NODE_TYPE_SWITCH&&(ac&1)==1){ \
-			SLL_ASSERT(n_l_sc.m); \
-			sll_deallocate(n_l_sc.m); \
-			n_l_sc.l_sc=sf->_next_scope; \
-			n_l_sc.ml=(n_l_sc.l_sc>>6)+1; \
-			n_l_sc.m=sll_zero_allocate_stack(n_l_sc.ml*sizeof(bitmap_t)); \
-			sll_copy_data(e_c_dt->sc.m,e_c_dt->sc.ml*sizeof(bitmap_t),n_l_sc.m); \
-			n_l_sc.m[n_l_sc.l_sc>>6]|=1ull<<(n_l_sc.l_sc&63); \
+			SLL_ASSERT(n_l_sc.data); \
+			sll_deallocate(n_l_sc.data); \
+			n_l_sc.last_scope=sf->_next_scope; \
+			n_l_sc.length=(n_l_sc.last_scope>>6)+1; \
+			n_l_sc.data=sll_zero_allocate_stack(n_l_sc.length*sizeof(bitmap_t)); \
+			sll_copy_data(e_c_dt->sc.data,e_c_dt->sc.length*sizeof(bitmap_t),n_l_sc.data); \
+			n_l_sc.data[n_l_sc.last_scope>>6]|=1ull<<(n_l_sc.last_scope&63); \
 			sf->_next_scope++; \
 		} \
 	} while (0)
@@ -72,14 +72,14 @@ static sll_identifier_index_t _get_var_index(sll_source_file_t* sf,const extra_c
 		if (!(fl&GET_VAR_INDEX_FLAG_FUNC)){
 			for (sll_identifier_list_length_t i=0;i<k->length;i++){
 				sll_identifier_t* si=k->data+i;
-				if (si->scope==SLL_MAX_SCOPE||l_sc->l_sc<si->scope||!STRING_EQUAL(sf->string_table.data+SLL_IDENTIFIER_GET_STRING_INDEX(si),str)){
+				if (si->scope==SLL_MAX_SCOPE||l_sc->last_scope<si->scope||!STRING_EQUAL(sf->string_table.data+SLL_IDENTIFIER_GET_STRING_INDEX(si),str)){
 					continue;
 				}
-				if (si->scope==l_sc->l_sc){
+				if (si->scope==l_sc->last_scope){
 					o=SLL_CREATE_IDENTIFIER(i,str->length-1);
 					goto _check_new_var;
 				}
-				else if ((mx_sc==SLL_MAX_SCOPE||si->scope>mx_sc)&&(l_sc->m[si->scope>>6]&(1ull<<(si->scope&0x3f)))){
+				else if ((mx_sc==SLL_MAX_SCOPE||si->scope>mx_sc)&&(l_sc->data[si->scope>>6]&(1ull<<(si->scope&0x3f)))){
 					mx_sc=si->scope;
 					mx_i=SLL_CREATE_IDENTIFIER(i,str->length-1);
 				}
@@ -95,7 +95,7 @@ static sll_identifier_index_t _get_var_index(sll_source_file_t* sf,const extra_c
 		}
 		k->length++;
 		k->data=sll_reallocate(k->data,k->length*sizeof(sll_identifier_t));
-		(k->data+k->length-1)->scope=l_sc->l_sc;
+		(k->data+k->length-1)->scope=l_sc->last_scope;
 		o=SLL_CREATE_IDENTIFIER(k->length-1,str->length-1);
 		SLL_IDENTIFIER_SET_STRING_INDEX(k->data+k->length-1,sll_add_string(&(sf->string_table),str,1),fl&GET_VAR_INDEX_FLAG_TLS);
 		if ((fl&GET_VAR_INDEX_FLAG_ASSIGN)&&arg){
@@ -110,14 +110,14 @@ static sll_identifier_index_t _get_var_index(sll_source_file_t* sf,const extra_c
 	if (!(fl&GET_VAR_INDEX_FLAG_FUNC)){
 		for (sll_identifier_list_length_t i=0;i<sf->identifier_table.long_data_length;i++){
 			sll_identifier_t* k=sf->identifier_table.long_data+i;
-			if (k->scope==SLL_MAX_SCOPE||l_sc->l_sc<k->scope||!STRING_EQUAL(sf->string_table.data+SLL_IDENTIFIER_GET_STRING_INDEX(k),str)){
+			if (k->scope==SLL_MAX_SCOPE||l_sc->last_scope<k->scope||!STRING_EQUAL(sf->string_table.data+SLL_IDENTIFIER_GET_STRING_INDEX(k),str)){
 				continue;
 			}
-			if (k->scope==l_sc->l_sc){
+			if (k->scope==l_sc->last_scope){
 				o=SLL_CREATE_IDENTIFIER(i,SLL_MAX_SHORT_IDENTIFIER_LENGTH);
 				goto _check_new_var;
 			}
-			else if ((mx_sc==SLL_MAX_SCOPE||k->scope>mx_sc)&&(l_sc->m[k->scope>>6]&(1ull<<(k->scope&0x3f)))){
+			else if ((mx_sc==SLL_MAX_SCOPE||k->scope>mx_sc)&&(l_sc->data[k->scope>>6]&(1ull<<(k->scope&0x3f)))){
 				mx_sc=k->scope;
 				mx_i=SLL_CREATE_IDENTIFIER(i,SLL_MAX_SHORT_IDENTIFIER_LENGTH);
 			}
@@ -134,7 +134,7 @@ static sll_identifier_index_t _get_var_index(sll_source_file_t* sf,const extra_c
 	sf->identifier_table.long_data_length++;
 	sf->identifier_table.long_data=sll_reallocate(sf->identifier_table.long_data,sf->identifier_table.long_data_length*sizeof(sll_identifier_t));
 	o=SLL_CREATE_IDENTIFIER(sf->identifier_table.long_data_length-1,SLL_MAX_SHORT_IDENTIFIER_LENGTH);
-	(sf->identifier_table.long_data+sf->identifier_table.long_data_length-1)->scope=l_sc->l_sc;
+	(sf->identifier_table.long_data+sf->identifier_table.long_data_length-1)->scope=l_sc->last_scope;
 	SLL_IDENTIFIER_SET_STRING_INDEX(sf->identifier_table.long_data+sf->identifier_table.long_data_length-1,sll_add_string(&(sf->string_table),str,1),fl&GET_VAR_INDEX_FLAG_TLS);
 	if ((fl&GET_VAR_INDEX_FLAG_ASSIGN)&&arg){
 		e_c_dt->nv_dt->sz++;
@@ -292,11 +292,11 @@ static void _read_object_internal(sll_file_t* rf,sll_source_file_t* sf,sll_read_
 				o->data.function.function_index=sf->function_table.length;
 			}
 			if ((o->type>=SLL_NODE_TYPE_IF&&o->type<=SLL_NODE_TYPE_LOOP)||o->type==SLL_NODE_TYPE_FUNC||o->type==SLL_NODE_TYPE_INLINE_FUNC||(o->type>=SLL_NODE_TYPE_FOR_ARRAY&&o->type<=SLL_NODE_TYPE_WHILE_MAP)){
-				n_l_sc.l_sc=sf->_next_scope;
-				n_l_sc.ml=(n_l_sc.l_sc>>6)+1;
-				n_l_sc.m=sll_zero_allocate_stack(n_l_sc.ml*sizeof(bitmap_t));
-				sll_copy_data(src->m,src->ml*sizeof(bitmap_t),n_l_sc.m);
-				n_l_sc.m[n_l_sc.l_sc>>6]|=1ull<<(n_l_sc.l_sc&63);
+				n_l_sc.last_scope=sf->_next_scope;
+				n_l_sc.length=(n_l_sc.last_scope>>6)+1;
+				n_l_sc.data=sll_zero_allocate_stack(n_l_sc.length*sizeof(bitmap_t));
+				sll_copy_data(src->data,src->length*sizeof(bitmap_t),n_l_sc.data);
+				n_l_sc.data[n_l_sc.last_scope>>6]|=1ull<<(n_l_sc.last_scope&63);
 				sf->_next_scope++;
 				l_sc=&n_l_sc;
 			}
@@ -1036,8 +1036,8 @@ _return_node:;
 	else{
 		o->data.arg_count=ac;
 	}
-	if (n_l_sc.m){
-		sll_deallocate(n_l_sc.m);
+	if (n_l_sc.data){
+		sll_deallocate(n_l_sc.data);
 	}
 }
 
@@ -1057,8 +1057,8 @@ __SLL_EXTERNAL void sll_parse_nodes(sll_file_t* rf,sll_compilation_data_t* c_dt,
 	extra_compilation_data_t e_c_dt={
 		{
 			sll_allocate(sizeof(bitmap_t)),
-			0,
-			1
+			1,
+			0
 		},
 		c_dt,
 		i_ft,
@@ -1070,7 +1070,7 @@ __SLL_EXTERNAL void sll_parse_nodes(sll_file_t* rf,sll_compilation_data_t* c_dt,
 		&ln
 	};
 	e_c_dt.not_fn_sc=&(e_c_dt.sc);
-	e_c_dt.sc.m[0]=1;
+	e_c_dt.sc.data[0]=1;
 	_file_start_hash(rf);
 	sll_read_char_t c=sll_file_read_char(rf,NULL);
 	while (c!=SLL_END_OF_DATA){
@@ -1078,7 +1078,7 @@ __SLL_EXTERNAL void sll_parse_nodes(sll_file_t* rf,sll_compilation_data_t* c_dt,
 		sf->first_node->data.arg_count++;
 		c=sll_file_read_char(rf,NULL);
 	}
-	sll_deallocate(e_c_dt.sc.m);
+	sll_deallocate(e_c_dt.sc.data);
 	sll_deallocate(nv_dt.dt);
 	_file_end_hash(rf);
 	sf->file_size=SLL_FILE_GET_OFFSET(rf);
