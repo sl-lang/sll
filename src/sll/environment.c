@@ -73,20 +73,20 @@ void _init_environment(void){
 
 
 
-__SLL_EXTERNAL sll_bool_t sll_expand_environment_variable(const sll_string_t* k,sll_string_t* o){
-	if (!sll_get_environment_variable(k,o)){
+__SLL_EXTERNAL sll_bool_t sll_expand_environment_variable(const sll_string_t* key,sll_string_t* out){
+	if (!sll_get_environment_variable(key,out)){
 		return 0;
 	}
-	if (!o->length){
+	if (!out->length){
 		return 1;
 	}
 	sll_string_length_t i=0;
 	while (1){
-		i=sll_string_index_char(o,'%',0,i);
+		i=sll_string_index_char(out,'%',0,i);
 		if (i==SLL_MAX_STRING_LENGTH){
 			break;
 		}
-		sll_string_length_t e=sll_string_index_char(o,'%',0,i);
+		sll_string_length_t e=sll_string_index_char(out,'%',0,i);
 		if (e==SLL_MAX_STRING_LENGTH){
 			break;
 		}
@@ -97,15 +97,15 @@ __SLL_EXTERNAL sll_bool_t sll_expand_environment_variable(const sll_string_t* k,
 
 
 
-__SLL_EXTERNAL sll_bool_t sll_get_environment_variable(const sll_string_t* k,sll_string_t* o){
+__SLL_EXTERNAL sll_bool_t sll_get_environment_variable(const sll_string_t* key,sll_string_t* out){
 	sll_string_t k_low;
-	sll_string_upper_case(k,&k_low);
+	sll_string_upper_case(key,&k_low);
 	LOCK_ENV;
 	for (sll_environment_length_t i=0;i<sll_environment->length;i++){
 		const sll_environment_variable_t* kv=*(sll_environment->data+i);
 		if (STRING_EQUAL(&k_low,&(kv->key))){
-			if (o){
-				sll_string_clone(&(kv->value),o);
+			if (out){
+				sll_string_clone(&(kv->value),out);
 			}
 			UNLOCK_ENV;
 			sll_free_string(&k_low);
@@ -114,21 +114,21 @@ __SLL_EXTERNAL sll_bool_t sll_get_environment_variable(const sll_string_t* k,sll
 	}
 	UNLOCK_ENV;
 	sll_free_string(&k_low);
-	SLL_INIT_STRING(o);
+	SLL_INIT_STRING(out);
 	return 0;
 }
 
 
 
-__SLL_EXTERNAL void sll_remove_environment_variable(const sll_string_t* k){
+__SLL_EXTERNAL void sll_remove_environment_variable(const sll_string_t* key){
 	sll_string_t k_low;
-	sll_string_upper_case(k,&k_low);
+	sll_string_upper_case(key,&k_low);
 	LOCK_ENV;
 	sll_environment_length_t i=0;
 	while (i<sll_environment->length){
 		sll_environment_variable_t* kv=(sll_environment_variable_t*)(*(sll_environment->data+i));
 		if (STRING_EQUAL(&k_low,&(kv->key))){
-			sll_platform_remove_environment_variable(k->data);
+			sll_platform_remove_environment_variable(key->data);
 			sll_free_string((sll_string_t*)(&(kv->key)));
 			sll_free_string((sll_string_t*)(&(kv->value)));
 			sll_deallocate(kv);
@@ -154,24 +154,24 @@ _cleanup:
 
 
 
-__SLL_EXTERNAL void sll_set_environment_variable(const sll_string_t* k,const sll_string_t* v){
+__SLL_EXTERNAL void sll_set_environment_variable(const sll_string_t* key,const sll_string_t* value){
 	sll_string_t k_low;
-	sll_string_upper_case(k,&k_low);
+	sll_string_upper_case(key,&k_low);
 	LOCK_ENV;
-	sll_platform_set_environment_variable(k->data,v->data);
+	sll_platform_set_environment_variable(key->data,value->data);
 	for (sll_environment_length_t i=0;i<sll_environment->length;i++){
 		sll_environment_variable_t* kv=(sll_environment_variable_t*)(*(sll_environment->data+i));
 		if (STRING_EQUAL(&k_low,&(kv->key))){
 			sll_free_string((sll_string_t*)(&(kv->value)));
-			sll_string_clone(v,(sll_string_t*)(&(kv->value)));
+			sll_string_clone(value,(sll_string_t*)(&(kv->value)));
 			goto _end;
 		}
 	}
 	(*((sll_environment_length_t*)(&(sll_environment->length))))++;
 	*((const sll_environment_variable_t*const**)(&(sll_environment->data)))=sll_reallocate(PTR(sll_environment->data),sll_environment->length*sizeof(sll_environment_variable_t*));
 	sll_environment_variable_t* n=sll_allocate(sizeof(sll_environment_variable_t));
-	sll_string_clone(k,(sll_string_t*)(&(n->key)));
-	sll_string_clone(v,(sll_string_t*)(&(n->value)));
+	sll_string_clone(key,(sll_string_t*)(&(n->key)));
+	sll_string_clone(value,(sll_string_t*)(&(n->value)));
 	*(((const sll_environment_variable_t**)(sll_environment->data))+sll_environment->length-1)=n;
 _end:
 	UNLOCK_ENV;

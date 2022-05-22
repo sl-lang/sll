@@ -139,10 +139,10 @@
  * \name SLL_ERROR_GET_TYPE
  * \group error
  * \desc Docs!
- * \arg sll_error_t e
+ * \arg sll_error_t error
  * \ret sll_error_t
  */
-#define SLL_ERROR_GET_TYPE(e) ((e)&0x100)
+#define SLL_ERROR_GET_TYPE(error) ((error)&0x100)
 
 
 
@@ -151,10 +151,10 @@
  * \name SLL_ERROR_GET_VALUE
  * \group error
  * \desc Docs!
- * \arg sll_error_t e
+ * \arg sll_error_t error
  * \ret sll_error_t
  */
-#define SLL_ERROR_GET_VALUE(e) ((e)&0xff)
+#define SLL_ERROR_GET_VALUE(error) ((error)&0xff)
 
 
 
@@ -163,10 +163,10 @@
  * \name SLL_ERROR_GET_EXTRA
  * \group error
  * \desc Docs!
- * \arg sll_error_t e
+ * \arg sll_error_t error
  * \ret sll_error_t
  */
-#define SLL_ERROR_GET_EXTRA(e) ((e)>>9)
+#define SLL_ERROR_GET_EXTRA(error) ((error)>>9)
 
 
 
@@ -175,10 +175,11 @@
  * \name SLL_ERROR_FROM_EXTRA
  * \group error
  * \desc Docs!
- * \arg sll_error_t e
+ * \arg sll_error_t type
+ * \arg sll_error_t extra
  * \ret sll_error_t
  */
-#define SLL_ERROR_FROM_EXTRA(t,e) ((((sll_error_t)(e))<<9)|(t))
+#define SLL_ERROR_FROM_EXTRA(type,extra) ((((sll_error_t)(extra))<<9)|(type))
 
 
 
@@ -187,10 +188,10 @@
  * \name SLL_ERROR_FROM_SANDBOX
  * \group error
  * \desc Docs!
- * \arg sll_error_t e
+ * \arg sll_error_t flag
  * \ret sll_error_t
  */
-#define SLL_ERROR_FROM_SANDBOX(f) SLL_ERROR_FROM_EXTRA(SLL_ERROR_SANDBOX,(f))
+#define SLL_ERROR_FROM_SANDBOX(flag) SLL_ERROR_FROM_EXTRA(SLL_ERROR_SANDBOX,(flag))
 
 
 

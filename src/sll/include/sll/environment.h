@@ -82,11 +82,11 @@ __SLL_EXTERNAL extern const sll_search_path_t* sll_environment_path;
  * \name sll_expand_environment_variable
  * \group environment
  * \desc Docs!
- * \arg const sll_string_t* k
- * \arg sll_string_t* o
+ * \arg const sll_string_t* key
+ * \arg sll_string_t* out
  * \ret sll_bool_t
  */
-__SLL_EXTERNAL sll_bool_t sll_expand_environment_variable(const sll_string_t* k,sll_string_t* o);
+__SLL_EXTERNAL sll_bool_t sll_expand_environment_variable(const sll_string_t* key,sll_string_t* out);
 
 
 
@@ -95,11 +95,11 @@ __SLL_EXTERNAL sll_bool_t sll_expand_environment_variable(const sll_string_t* k,
  * \name sll_get_environment_variable
  * \group environment
  * \desc Docs!
- * \arg const sll_string_t* k
- * \arg sll_string_t* o
+ * \arg const sll_string_t* key
+ * \arg sll_string_t* out
  * \ret sll_bool_t
  */
-__SLL_EXTERNAL sll_bool_t sll_get_environment_variable(const sll_string_t* k,sll_string_t* o);
+__SLL_EXTERNAL sll_bool_t sll_get_environment_variable(const sll_string_t* key,sll_string_t* out);
 
 
 
@@ -108,9 +108,9 @@ __SLL_EXTERNAL sll_bool_t sll_get_environment_variable(const sll_string_t* k,sll
  * \name sll_remove_environment_variable
  * \group environment
  * \desc Docs!
- * \arg const sll_string_t* k
+ * \arg const sll_string_t* key
  */
-__SLL_EXTERNAL void sll_remove_environment_variable(const sll_string_t* k);
+__SLL_EXTERNAL void sll_remove_environment_variable(const sll_string_t* key);
 
 
 
@@ -119,10 +119,10 @@ __SLL_EXTERNAL void sll_remove_environment_variable(const sll_string_t* k);
  * \name sll_set_environment_variable
  * \group environment
  * \desc Docs!
- * \arg const sll_string_t* k
- * \arg const sll_string_t* v
+ * \arg const sll_string_t* key
+ * \arg const sll_string_t* value
  */
-__SLL_EXTERNAL void sll_set_environment_variable(const sll_string_t* k,const sll_string_t* v);
+__SLL_EXTERNAL void sll_set_environment_variable(const sll_string_t* key,const sll_string_t* value);
 
 
 

@@ -17,20 +17,20 @@ __SLL_EXTERNAL void sll_debug_print_assembly(const sll_assembly_data_t* assembly
 
 
 
-__SLL_EXTERNAL void sll_debug_print_node(const sll_node_t* o,const sll_source_file_t* sf){
-	sll_print_node(sf,NULL,o,sll_stdout);
+__SLL_EXTERNAL void sll_debug_print_node(const sll_node_t* node,const sll_source_file_t* source_file){
+	sll_print_node(source_file,NULL,node,sll_stdout);
 	sll_file_write_char(sll_stdout,'\n',NULL);
 }
 
 
 
-__SLL_EXTERNAL void sll_debug_print_object(sll_object_t* v){
-	if (v->type==SLL_OBJECT_TYPE_STRING){
-		sll_file_write(sll_stdout,v->data.string.data,v->data.string.length*sizeof(sll_char_t),NULL);
+__SLL_EXTERNAL void sll_debug_print_object(sll_object_t* object){
+	if (object->type==SLL_OBJECT_TYPE_STRING){
+		sll_file_write(sll_stdout,object->data.string.data,object->data.string.length*sizeof(sll_char_t),NULL);
 	}
 	else{
 		sll_string_t str;
-		sll_api_string_convert(&v,1,&str);
+		sll_api_string_convert(&object,1,&str);
 		sll_file_write(sll_stdout,str.data,str.length*sizeof(sll_char_t),NULL);
 		sll_free_string(&str);
 	}
