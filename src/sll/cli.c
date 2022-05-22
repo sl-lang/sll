@@ -809,7 +809,7 @@ _read_file_argument:
 				SLL_LOG("Writing assembly to file '%s'...",bf);
 				sll_file_t of;
 				SLL_CRITICAL_ERROR(sll_file_open(bf,SLL_FILE_FLAG_WRITE,&of));
-				sll_write_assembly(&of,&assembly_data);
+				sll_write_assembly(&assembly_data,&of);
 				SLL_LOG("File written successfully.");
 				sll_file_close(&of);
 			}
@@ -819,7 +819,7 @@ _read_file_argument:
 				SLL_LOG("Writing compiled program to file '%s'...",bf);
 				sll_file_t of;
 				SLL_CRITICAL_ERROR(sll_file_open(bf,SLL_FILE_FLAG_WRITE,&of));
-				sll_write_compiled_node(&of,&compilation_data);
+				sll_write_compiled_node(&compilation_data,&of);
 				SLL_LOG("File written successfully.");
 				sll_file_close(&of);
 			}
@@ -881,7 +881,7 @@ _read_file_argument:
 		SLL_LOG("Writing bundle to '%s'...",bf);
 		sll_file_t of;
 		sll_file_open(bf,SLL_FILE_FLAG_WRITE,&of);
-		sll_write_bundle(&of,&bundle);
+		sll_write_bundle(&bundle,&of);
 		SLL_LOG("File written successfully.");
 		sll_file_close(&of);
 		sll_free_bundle(&bundle);

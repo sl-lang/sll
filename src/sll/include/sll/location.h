@@ -42,10 +42,10 @@
  * \name SLL_DEBUG_LINE_DATA_GET_DATA
  * \group location
  * \desc Docs!
- * \arg const sll_debug_line_data_t* dbg
+ * \arg const sll_debug_line_data_t* debug_data
  * \ret sll_file_offset_t
  */
-#define SLL_DEBUG_LINE_DATA_GET_DATA(dbg) ((dbg)->line>>2)
+#define SLL_DEBUG_LINE_DATA_GET_DATA(debug_data) ((debug_data)->line>>2)
 
 
 
@@ -54,11 +54,11 @@
  * \name SLL_DEBUG_LINE_DATA_SET_DATA
  * \group location
  * \desc Docs!
- * \arg const sll_debug_line_data_t* dbg
- * \arg sll_file_offset_t idx
- * \arg sll_file_offset_t fl
+ * \arg const sll_debug_line_data_t* debug_data
+ * \arg sll_file_offset_t index
+ * \arg sll_file_offset_t flags
  */
-#define SLL_DEBUG_LINE_DATA_SET_DATA(dbg,idx,fl) (dbg)->line=((idx)<<2)|(fl)
+#define SLL_DEBUG_LINE_DATA_SET_DATA(debug_data,index,flags) (debug_data)->line=((index)<<2)|(flags)
 
 
 
@@ -68,12 +68,12 @@
  * \group location
  * \desc Docs!
  * \arg const sll_assembly_data_t* assembly_data
- * \arg sll_instruction_index_t ii
- * \arg sll_string_index_t* fp
- * \arg sll_string_index_t* fn
+ * \arg sll_instruction_index_t instruction_index
+ * \arg sll_string_index_t* file_path_string_index
+ * \arg sll_string_index_t* function_string_index
  * \ret sll_file_offset_t
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_file_offset_t sll_get_location(const sll_assembly_data_t* assembly_data,sll_instruction_index_t ii,sll_string_index_t* fp,sll_string_index_t* fn);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_file_offset_t sll_get_location(const sll_assembly_data_t* assembly_data,sll_instruction_index_t instruction_index,sll_string_index_t* file_path_string_index,sll_string_index_t* function_string_index);
 
 
 
@@ -82,10 +82,10 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_file_offset_t sll_get_location(const sll_a
  * \name sll_get_name
  * \group location
  * \desc Docs!
- * \arg sll_object_t* v
- * \arg sll_string_t* o
+ * \arg sll_object_t* object
+ * \arg sll_string_t* out
  */
-__SLL_EXTERNAL void sll_get_name(sll_object_t* v,sll_string_t* o);
+__SLL_EXTERNAL void sll_get_name(sll_object_t* object,sll_string_t* out);
 
 
 

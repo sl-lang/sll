@@ -10,10 +10,10 @@
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_file_offset_t sll_get_location(const sll_assembly_data_t* assembly_data,sll_instruction_index_t ii,sll_string_index_t* fp,sll_string_index_t* fn){
-	if (ii>=assembly_data->instruction_count){
-		*fp=0;
-		*fn=SLL_MAX_STRING_INDEX;
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_file_offset_t sll_get_location(const sll_assembly_data_t* assembly_data,sll_instruction_index_t instruction_index,sll_string_index_t* file_path_string_index,sll_string_index_t* function_string_index){
+	if (instruction_index>=assembly_data->instruction_count){
+		*file_path_string_index=0;
+		*function_string_index=SLL_MAX_STRING_INDEX;
 		return 0;
 	}
 	sll_instruction_index_t c=0;
@@ -22,7 +22,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_file_offset_t sll_get_location(const sll_a
 	sll_string_index_t o_fp=0;
 	for (sll_debug_data_length_t i=0;i<assembly_data->debug_data.length;i++){
 		c+=(assembly_data->debug_data.data+i)->delta_instruction_index;
-		if (c>ii){
+		if (c>instruction_index){
 			break;
 		}
 		if ((assembly_data->debug_data.data+i)->line&SLL_DEBUG_LINE_DATA_FLAG_FILE){
@@ -36,27 +36,27 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_file_offset_t sll_get_location(const sll_a
 			o_ln=SLL_DEBUG_LINE_DATA_GET_DATA(assembly_data->debug_data.data+i);
 		}
 	}
-	*fp=o_fp;
-	*fn=o_fn;
+	*file_path_string_index=o_fp;
+	*function_string_index=o_fn;
 	return o_ln+1;
 }
 
 
 
-__SLL_EXTERNAL void sll_get_name(sll_object_t* v,sll_string_t* o){
-	SLL_INIT_STRING(o);
-	if (v->type==SLL_OBJECT_TYPE_INT){
-		if (v->data.int_<0){
-			sll_function_index_t i=(sll_function_index_t)(~v->data.int_);
+__SLL_EXTERNAL void sll_get_name(sll_object_t* object,sll_string_t* out){
+	SLL_INIT_STRING(out);
+	if (object->type==SLL_OBJECT_TYPE_INT){
+		if (object->data.int_<0){
+			sll_function_index_t i=(sll_function_index_t)(~object->data.int_);
 			if (i<sll_current_runtime_data->internal_function_table->length){
-				sll_string_clone(&((sll_current_runtime_data->internal_function_table->data+i)->name),o);
+				sll_string_clone(&((sll_current_runtime_data->internal_function_table->data+i)->name),out);
 			}
 		}
-		else if (v->data.int_&&v->data.int_<=sll_current_runtime_data->assembly_data->function_table.length){
-			sll_string_clone(sll_current_runtime_data->assembly_data->string_table.data+(sll_current_runtime_data->assembly_data->function_table.data+v->data.int_-1)->name_string_index,o);
+		else if (object->data.int_&&object->data.int_<=sll_current_runtime_data->assembly_data->function_table.length){
+			sll_string_clone(sll_current_runtime_data->assembly_data->string_table.data+(sll_current_runtime_data->assembly_data->function_table.data+object->data.int_-1)->name_string_index,out);
 		}
 	}
 	else{
-		sll_get_type_name(sll_current_runtime_data->type_table,v->type,o);
+		sll_get_type_name(sll_current_runtime_data->type_table,object->type,out);
 	}
 }

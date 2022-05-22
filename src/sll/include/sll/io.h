@@ -59,10 +59,10 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_load_compiled_node(sll_file_t* 
  * \name sll_write_assembly
  * \group io
  * \desc Docs!
- * \arg sll_file_t* wf
  * \arg const sll_assembly_data_t* assembly_data
+ * \arg sll_file_t* out
  */
-__SLL_EXTERNAL void sll_write_assembly(sll_file_t* wf,const sll_assembly_data_t* assembly_data);
+__SLL_EXTERNAL void sll_write_assembly(const sll_assembly_data_t* assembly_data,sll_file_t* out);
 
 
 
@@ -71,10 +71,10 @@ __SLL_EXTERNAL void sll_write_assembly(sll_file_t* wf,const sll_assembly_data_t*
  * \name sll_write_bundle
  * \group io
  * \desc Docs!
- * \arg sll_file_t* wf
- * \arg const sll_bundle_t* b
+ * \arg const sll_bundle_t* bundle
+ * \arg sll_file_t* out
  */
-__SLL_EXTERNAL void sll_write_bundle(sll_file_t* wf,const sll_bundle_t* b);
+__SLL_EXTERNAL void sll_write_bundle(const sll_bundle_t* bundle,sll_file_t* out);
 
 
 
@@ -83,10 +83,10 @@ __SLL_EXTERNAL void sll_write_bundle(sll_file_t* wf,const sll_bundle_t* b);
  * \name sll_write_compiled_node
  * \group io
  * \desc Docs!
- * \arg sll_file_t* wf
  * \arg const sll_compilation_data_t* compilation_data
+ * \arg sll_file_t* out
  */
-__SLL_EXTERNAL void sll_write_compiled_node(sll_file_t* wf,const sll_compilation_data_t* compilation_data);
+__SLL_EXTERNAL void sll_write_compiled_node(const sll_compilation_data_t* compilation_data,sll_file_t* out);
 
 
 
