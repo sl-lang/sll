@@ -4,22 +4,22 @@
 
 
 
-static sll_node_t* _remove_padding_internal(sll_node_t* o,sll_source_file_t* sf,sll_node_t** d,sll_node_offset_t* rm){
-	while (o->type==SLL_NODE_TYPE_NOP||o->type==SLL_NODE_TYPE_CHANGE_STACK){
-		if (o->type==SLL_NODE_TYPE_CHANGE_STACK){
-			o=o->data._next_node;
+static sll_node_t* _remove_padding_internal(sll_node_t* src,sll_source_file_t* source_file,sll_node_t** dst,sll_node_offset_t* removal_offset){
+	while (src->type==SLL_NODE_TYPE_NOP||src->type==SLL_NODE_TYPE_CHANGE_STACK){
+		if (src->type==SLL_NODE_TYPE_CHANGE_STACK){
+			src=src->data._next_node;
 		}
 		else{
-			o++;
-			(*rm)++;
+			src++;
+			(*removal_offset)++;
 		}
 	}
-	**d=*o;
-	(*d)++;
-	if ((*d)->type==SLL_NODE_TYPE_CHANGE_STACK){
-		(*d)=(*d)->data._next_node;
+	**dst=*src;
+	(*dst)++;
+	if ((*dst)->type==SLL_NODE_TYPE_CHANGE_STACK){
+		(*dst)=(*dst)->data._next_node;
 	}
-	switch (o->type){
+	switch (src->type){
 		case SLL_NODE_TYPE_INT:
 		case SLL_NODE_TYPE_FLOAT:
 		case SLL_NODE_TYPE_CHAR:
@@ -28,38 +28,38 @@ static sll_node_t* _remove_padding_internal(sll_node_t* o,sll_source_file_t* sf,
 		case SLL_NODE_TYPE_IDENTIFIER:
 		case SLL_NODE_TYPE_FIELD:
 		case SLL_NODE_TYPE_FUNCTION_ID:
-			return o+1;
+			return src+1;
 		case SLL_NODE_TYPE_ARRAY:
 			{
-				sll_array_length_t l=o->data.array_length;
-				o++;
+				sll_array_length_t l=src->data.array_length;
+				src++;
 				while (l){
 					l--;
-					o=_remove_padding_internal(o,sf,d,rm);
+					src=_remove_padding_internal(src,source_file,dst,removal_offset);
 				}
-				return o;
+				return src;
 			}
 		case SLL_NODE_TYPE_MAP:
 			{
-				sll_map_length_t l=o->data.map_length;
-				o++;
+				sll_map_length_t l=src->data.map_length;
+				src++;
 				while (l){
 					l--;
-					o=_remove_padding_internal(o,sf,d,rm);
+					src=_remove_padding_internal(src,source_file,dst,removal_offset);
 				}
-				return o;
+				return src;
 			}
 		case SLL_NODE_TYPE_FUNC:
-			(*(sf->function_table.data+o->data.function.function_index))->offset-=*rm;
+			(*(source_file->function_table.data+src->data.function.function_index))->offset-=*removal_offset;
 		case SLL_NODE_TYPE_INTERNAL_FUNC:
 			{
-				sll_arg_count_t l=o->data.function.arg_count;
-				o++;
+				sll_arg_count_t l=src->data.function.arg_count;
+				src++;
 				while (l){
 					l--;
-					o=_remove_padding_internal(o,sf,d,rm);
+					src=_remove_padding_internal(src,source_file,dst,removal_offset);
 				}
-				return o;
+				return src;
 			}
 		case SLL_NODE_TYPE_FOR:
 		case SLL_NODE_TYPE_WHILE:
@@ -69,34 +69,34 @@ static sll_node_t* _remove_padding_internal(sll_node_t* o,sll_source_file_t* sf,
 		case SLL_NODE_TYPE_FOR_MAP:
 		case SLL_NODE_TYPE_WHILE_MAP:
 			{
-				sll_arg_count_t l=o->data.loop.arg_count;
-				o++;
+				sll_arg_count_t l=src->data.loop.arg_count;
+				src++;
 				while (l){
 					l--;
-					o=_remove_padding_internal(o,sf,d,rm);
+					src=_remove_padding_internal(src,source_file,dst,removal_offset);
 				}
-				return o;
+				return src;
 			}
 		case SLL_NODE_TYPE_DECL:
 			{
-				sll_arg_count_t l=o->data.declaration.arg_count;
-				o++;
+				sll_arg_count_t l=src->data.declaration.arg_count;
+				src++;
 				while (l){
 					l--;
-					o=_remove_padding_internal(o,sf,d,rm);
+					src=_remove_padding_internal(src,source_file,dst,removal_offset);
 				}
-				return o;
+				return src;
 			}
 		case SLL_NODE_TYPE_DBG:
-			return _remove_padding_internal(o+1,sf,d,rm);
+			return _remove_padding_internal(src+1,source_file,dst,removal_offset);
 	}
-	sll_arg_count_t l=o->data.arg_count;
-	o++;
+	sll_arg_count_t l=src->data.arg_count;
+	src++;
 	while (l){
 		l--;
-		o=_remove_padding_internal(o,sf,d,rm);
+		src=_remove_padding_internal(src,source_file,dst,removal_offset);
 	}
-	return o;
+	return src;
 }
 
 

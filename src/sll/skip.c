@@ -4,11 +4,11 @@
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_node_t* sll_skip_node(sll_node_t* o){
-	while (o->type==SLL_NODE_TYPE_NOP||o->type==SLL_NODE_TYPE_DBG||o->type==SLL_NODE_TYPE_CHANGE_STACK){
-		o=(o->type==SLL_NODE_TYPE_CHANGE_STACK?o->data._next_node:o+1);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_node_t* sll_skip_node(sll_node_t* node){
+	while (node->type==SLL_NODE_TYPE_NOP||node->type==SLL_NODE_TYPE_DBG||node->type==SLL_NODE_TYPE_CHANGE_STACK){
+		node=(node->type==SLL_NODE_TYPE_CHANGE_STACK?node->data._next_node:node+1);
 	}
-	switch (o->type){
+	switch (node->type){
 		case SLL_NODE_TYPE_INT:
 		case SLL_NODE_TYPE_FLOAT:
 		case SLL_NODE_TYPE_CHAR:
@@ -17,37 +17,37 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_node_t* sll_skip_node(sll_node_t* o){
 		case SLL_NODE_TYPE_IDENTIFIER:
 		case SLL_NODE_TYPE_FIELD:
 		case SLL_NODE_TYPE_FUNCTION_ID:
-			return o+1;
+			return node+1;
 		case SLL_NODE_TYPE_ARRAY:
 			{
-				sll_array_length_t l=o->data.array_length;
-				o++;
+				sll_array_length_t l=node->data.array_length;
+				node++;
 				while (l){
 					l--;
-					o=sll_skip_node(o);
+					node=sll_skip_node(node);
 				}
-				return o;
+				return node;
 			}
 		case SLL_NODE_TYPE_MAP:
 			{
-				sll_map_length_t l=o->data.map_length;
-				o++;
+				sll_map_length_t l=node->data.map_length;
+				node++;
 				while (l){
 					l--;
-					o=sll_skip_node(o);
+					node=sll_skip_node(node);
 				}
-				return o;
+				return node;
 			}
 		case SLL_NODE_TYPE_FUNC:
 		case SLL_NODE_TYPE_INTERNAL_FUNC:
 			{
-				sll_arg_count_t l=o->data.function.arg_count;
-				o++;
+				sll_arg_count_t l=node->data.function.arg_count;
+				node++;
 				while (l){
 					l--;
-					o=sll_skip_node(o);
+					node=sll_skip_node(node);
 				}
-				return o;
+				return node;
 			}
 		case SLL_NODE_TYPE_FOR:
 		case SLL_NODE_TYPE_WHILE:
@@ -57,26 +57,26 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_node_t* sll_skip_node(sll_node_t* o){
 		case SLL_NODE_TYPE_FOR_MAP:
 		case SLL_NODE_TYPE_WHILE_MAP:
 			{
-				sll_arg_count_t l=o->data.loop.arg_count;
-				o++;
+				sll_arg_count_t l=node->data.loop.arg_count;
+				node++;
 				while (l){
 					l--;
-					o=sll_skip_node(o);
+					node=sll_skip_node(node);
 				}
-				return o;
+				return node;
 			}
 	}
-	sll_arg_count_t l=o->data.arg_count;
-	o++;
+	sll_arg_count_t l=node->data.arg_count;
+	node++;
 	while (l){
 		l--;
-		o=sll_skip_node(o);
+		node=sll_skip_node(node);
 	}
-	return o;
+	return node;
 }
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT const sll_node_t* sll_skip_node_const(const sll_node_t* o){
-	return sll_skip_node((sll_node_t*)o);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT const sll_node_t* sll_skip_node_const(const sll_node_t* node){
+	return sll_skip_node((sll_node_t*)node);
 }

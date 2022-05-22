@@ -1046,10 +1046,10 @@
  * \name SLL_IS_OBJECT_TYPE_NOT_TYPE
  * \group node
  * \desc Docs!
- * \arg const sll_node_t* o
+ * \arg const sll_node_t* node
  * \ret sll_bool_t
  */
-#define SLL_IS_OBJECT_TYPE_NOT_TYPE(o) ((o)->type>SLL_NODE_TYPE_FUNCTION_ID)
+#define SLL_IS_OBJECT_TYPE_NOT_TYPE(node) ((node)->type>SLL_NODE_TYPE_FUNCTION_ID)
 
 
 
@@ -1058,10 +1058,10 @@
  * \name SLL_IS_OBJECT_TYPE_IF
  * \group node
  * \desc Docs!
- * \arg const sll_node_t* o
+ * \arg const sll_node_t* node
  * \ret sll_bool_t
  */
-#define SLL_IS_OBJECT_TYPE_IF(o) ((o)->type>=SLL_NODE_TYPE_IF&&(o)->type<=SLL_NODE_TYPE_SWITCH)
+#define SLL_IS_OBJECT_TYPE_IF(node) ((node)->type>=SLL_NODE_TYPE_IF&&(node)->type<=SLL_NODE_TYPE_SWITCH)
 
 
 
@@ -1081,10 +1081,10 @@
  * \name SLL_FUNCTION_GET_ARGUMENT_COUNT
  * \group node
  * \desc Docs!
- * \arg const sll_function_t* f
+ * \arg const sll_function_t* function
  * \ret sll_arg_count_t
  */
-#define SLL_FUNCTION_GET_ARGUMENT_COUNT(f) ((f)->arg_count>>1)
+#define SLL_FUNCTION_GET_ARGUMENT_COUNT(function) ((function)->arg_count>>1)
 
 
 
@@ -1093,10 +1093,10 @@
  * \name SLL_FUNCTION_GET_ARGUMENT_COUNT_RAW
  * \group node
  * \desc Docs!
- * \arg sll_arg_count_t al
+ * \arg sll_arg_count_t arg_count
  * \ret sll_arg_count_t
  */
-#define SLL_FUNCTION_GET_ARGUMENT_COUNT_RAW(al) ((al)>>1)
+#define SLL_FUNCTION_GET_ARGUMENT_COUNT_RAW(arg_count) ((arg_count)>>1)
 
 
 
@@ -1105,10 +1105,10 @@
  * \name SLL_FUNCTION_IS_VAR_ARG
  * \group node
  * \desc Docs!
- * \arg const sll_function_t* f
+ * \arg const sll_function_t* function
  * \ret sll_bool_t
  */
-#define SLL_FUNCTION_IS_VAR_ARG(f) ((f)->arg_count&1)
+#define SLL_FUNCTION_IS_VAR_ARG(function) ((function)->arg_count&1)
 
 
 
@@ -1440,10 +1440,10 @@ typedef sll_bool_t (*sll_import_resolver_t)(const sll_string_t* path,sll_compila
  * \name sll_compilation_data_from_source_file
  * \group node
  * \desc Docs!
- * \arg const sll_source_file_t* sf
+ * \arg const sll_source_file_t* source_file
  * \arg sll_compilation_data_t* out
  */
-__SLL_EXTERNAL void sll_compilation_data_from_source_file(const sll_source_file_t* sf,sll_compilation_data_t* out);
+__SLL_EXTERNAL void sll_compilation_data_from_source_file(const sll_source_file_t* source_file,sll_compilation_data_t* out);
 
 
 
@@ -1463,9 +1463,9 @@ __SLL_EXTERNAL void sll_free_compilation_data(sll_compilation_data_t* compilatio
  * \name sll_free_source_file
  * \group node
  * \desc Docs!
- * \arg sll_source_file_t* sf
+ * \arg sll_source_file_t* source_file
  */
-__SLL_EXTERNAL void sll_free_source_file(sll_source_file_t* sf);
+__SLL_EXTERNAL void sll_free_source_file(sll_source_file_t* source_file);
 
 
 
@@ -1475,10 +1475,10 @@ __SLL_EXTERNAL void sll_free_source_file(sll_source_file_t* sf);
  * \group node
  * \subgroup node-util
  * \desc Docs!
- * \arg const sll_node_t* o
+ * \arg const sll_node_t* node
  * \ret sll_node_offset_t
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_node_offset_t sll_get_node_size(const sll_node_t* o);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_node_offset_t sll_get_node_size(const sll_node_t* node);
 
 
 
@@ -1487,10 +1487,10 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_node_offset_t sll_get_node_size(const sll_
  * \name sll_init_compilation_data
  * \group node
  * \desc Docs!
- * \arg const sll_char_t* fp
- * \arg sll_compilation_data_t* o
+ * \arg const sll_char_t* file_path
+ * \arg sll_compilation_data_t* out
  */
-__SLL_EXTERNAL void sll_init_compilation_data(const sll_char_t* fp,sll_compilation_data_t* o);
+__SLL_EXTERNAL void sll_init_compilation_data(const sll_char_t* file_path,sll_compilation_data_t* out);
 
 
 
@@ -1510,12 +1510,12 @@ __SLL_EXTERNAL void sll_optimize_metadata(sll_compilation_data_t* compilation_da
  * \name sll_parse_nodes
  * \group node
  * \desc Docs!
- * \arg sll_file_t* rf
+ * \arg sll_file_t* file
  * \arg sll_compilation_data_t* compilation_data
- * \arg sll_internal_function_table_t* i_ft
- * \arg sll_import_resolver_t il
+ * \arg sll_internal_function_table_t* internal_function_table
+ * \arg sll_import_resolver_t import_resolver
  */
-__SLL_EXTERNAL void sll_parse_nodes(sll_file_t* rf,sll_compilation_data_t* compilation_data,sll_internal_function_table_t* i_ft,sll_import_resolver_t il);
+__SLL_EXTERNAL void sll_parse_nodes(sll_file_t* file,sll_compilation_data_t* compilation_data,sll_internal_function_table_t* internal_function_table,sll_import_resolver_t import_resolver);
 
 
 
@@ -1525,12 +1525,12 @@ __SLL_EXTERNAL void sll_parse_nodes(sll_file_t* rf,sll_compilation_data_t* compi
  * \group node
  * \subgroup node-util
  * \desc Docs!
- * \arg const sll_source_file_t* sf
- * \arg const sll_internal_function_table_t* i_ft
- * \arg const sll_node_t* o
- * \arg sll_file_t* wf
+ * \arg const sll_source_file_t* source_file
+ * \arg const sll_internal_function_table_t* internal_function_table
+ * \arg const sll_node_t* node
+ * \arg sll_file_t* out
  */
-__SLL_EXTERNAL void sll_print_node(const sll_source_file_t* sf,const sll_internal_function_table_t* i_ft,const sll_node_t* o,sll_file_t* wf);
+__SLL_EXTERNAL void sll_print_node(const sll_source_file_t* source_file,const sll_internal_function_table_t* internal_function_table,const sll_node_t* node,sll_file_t* out);
 
 
 
@@ -1573,10 +1573,10 @@ __SLL_EXTERNAL void sll_remove_node_padding(sll_compilation_data_t* compilation_
  * \group node
  * \subgroup node-util
  * \desc Docs!
- * \arg sll_node_t* o
+ * \arg sll_node_t* node
  * \ret sll_node_t*
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_node_t* sll_skip_node(sll_node_t* o);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_node_t* sll_skip_node(sll_node_t* node);
 
 
 
@@ -1586,10 +1586,10 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_node_t* sll_skip_node(sll_node_t* o);
  * \group node
  * \subgroup node-util
  * \desc Docs!
- * \arg const sll_node_t* o
+ * \arg const sll_node_t* node
  * \ret const sll_node_t*
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT const sll_node_t* sll_skip_node_const(const sll_node_t* o);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT const sll_node_t* sll_skip_node_const(const sll_node_t* node);
 
 
 
@@ -1599,9 +1599,9 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT const sll_node_t* sll_skip_node_const(const sl
  * \group node
  * \desc Docs!
  * \arg const sll_compilation_data_t* compilation_data
- * \arg sll_source_file_t* o
+ * \arg sll_source_file_t* out
  */
-__SLL_EXTERNAL void sll_unify_compilation_data(const sll_compilation_data_t* compilation_data,sll_source_file_t* o);
+__SLL_EXTERNAL void sll_unify_compilation_data(const sll_compilation_data_t* compilation_data,sll_source_file_t* node);
 
 
 

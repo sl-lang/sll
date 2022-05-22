@@ -5,14 +5,14 @@
 
 
 
-static sll_node_t* _remove_debug_data(sll_node_t* o){
-	while (o->type==SLL_NODE_TYPE_NOP||o->type==SLL_NODE_TYPE_DBG||o->type==SLL_NODE_TYPE_CHANGE_STACK){
-		if (o->type==SLL_NODE_TYPE_DBG){
-			o->type=SLL_NODE_TYPE_NOP;
+static sll_node_t* _remove_debug_data(sll_node_t* node){
+	while (node->type==SLL_NODE_TYPE_NOP||node->type==SLL_NODE_TYPE_DBG||node->type==SLL_NODE_TYPE_CHANGE_STACK){
+		if (node->type==SLL_NODE_TYPE_DBG){
+			node->type=SLL_NODE_TYPE_NOP;
 		}
-		o=(o->type==SLL_NODE_TYPE_CHANGE_STACK?o->data._next_node:o+1);
+		node=(node->type==SLL_NODE_TYPE_CHANGE_STACK?node->data._next_node:node+1);
 	}
-	switch (o->type){
+	switch (node->type){
 		case SLL_NODE_TYPE_INT:
 		case SLL_NODE_TYPE_FLOAT:
 		case SLL_NODE_TYPE_CHAR:
@@ -21,37 +21,37 @@ static sll_node_t* _remove_debug_data(sll_node_t* o){
 		case SLL_NODE_TYPE_IDENTIFIER:
 		case SLL_NODE_TYPE_FIELD:
 		case SLL_NODE_TYPE_FUNCTION_ID:
-			return o+1;
+			return node+1;
 		case SLL_NODE_TYPE_ARRAY:
 			{
-				sll_array_length_t l=o->data.array_length;
-				o++;
+				sll_array_length_t l=node->data.array_length;
+				node++;
 				while (l){
 					l--;
-					o=_remove_debug_data(o);
+					node=_remove_debug_data(node);
 				}
-				return o;
+				return node;
 			}
 		case SLL_NODE_TYPE_MAP:
 			{
-				sll_map_length_t l=o->data.map_length;
-				o++;
+				sll_map_length_t l=node->data.map_length;
+				node++;
 				while (l){
 					l--;
-					o=_remove_debug_data(o);
+					node=_remove_debug_data(node);
 				}
-				return o;
+				return node;
 			}
 		case SLL_NODE_TYPE_FUNC:
 		case SLL_NODE_TYPE_INTERNAL_FUNC:
 			{
-				sll_arg_count_t l=o->data.function.arg_count;
-				o++;
+				sll_arg_count_t l=node->data.function.arg_count;
+				node++;
 				while (l){
 					l--;
-					o=_remove_debug_data(o);
+					node=_remove_debug_data(node);
 				}
-				return o;
+				return node;
 			}
 		case SLL_NODE_TYPE_FOR:
 		case SLL_NODE_TYPE_WHILE:
@@ -61,31 +61,31 @@ static sll_node_t* _remove_debug_data(sll_node_t* o){
 		case SLL_NODE_TYPE_FOR_MAP:
 		case SLL_NODE_TYPE_WHILE_MAP:
 			{
-				sll_arg_count_t l=o->data.loop.arg_count;
-				o++;
+				sll_arg_count_t l=node->data.loop.arg_count;
+				node++;
 				while (l){
 					l--;
-					o=_remove_debug_data(o);
+					node=_remove_debug_data(node);
 				}
-				return o;
+				return node;
 			}
 	}
-	sll_arg_count_t l=o->data.arg_count;
-	o++;
+	sll_arg_count_t l=node->data.arg_count;
+	node++;
 	while (l){
 		l--;
-		o=_remove_debug_data(o);
+		node=_remove_debug_data(node);
 	}
-	return o;
+	return node;
 }
 
 
 
-static sll_node_t* _remove_type_names(sll_node_t* o){
-	while (o->type==SLL_NODE_TYPE_NOP||o->type==SLL_NODE_TYPE_DBG||o->type==SLL_NODE_TYPE_CHANGE_STACK){
-		o=(o->type==SLL_NODE_TYPE_CHANGE_STACK?o->data._next_node:o+1);
+static sll_node_t* _remove_type_names(sll_node_t* node){
+	while (node->type==SLL_NODE_TYPE_NOP||node->type==SLL_NODE_TYPE_DBG||node->type==SLL_NODE_TYPE_CHANGE_STACK){
+		node=(node->type==SLL_NODE_TYPE_CHANGE_STACK?node->data._next_node:node+1);
 	}
-	switch (o->type){
+	switch (node->type){
 		case SLL_NODE_TYPE_INT:
 		case SLL_NODE_TYPE_FLOAT:
 		case SLL_NODE_TYPE_CHAR:
@@ -94,37 +94,37 @@ static sll_node_t* _remove_type_names(sll_node_t* o){
 		case SLL_NODE_TYPE_IDENTIFIER:
 		case SLL_NODE_TYPE_FIELD:
 		case SLL_NODE_TYPE_FUNCTION_ID:
-			return o+1;
+			return node+1;
 		case SLL_NODE_TYPE_ARRAY:
 			{
-				sll_array_length_t l=o->data.array_length;
-				o++;
+				sll_array_length_t l=node->data.array_length;
+				node++;
 				while (l){
 					l--;
-					o=_remove_type_names(o);
+					node=_remove_type_names(node);
 				}
-				return o;
+				return node;
 			}
 		case SLL_NODE_TYPE_MAP:
 			{
-				sll_map_length_t l=o->data.map_length;
-				o++;
+				sll_map_length_t l=node->data.map_length;
+				node++;
 				while (l){
 					l--;
-					o=_remove_type_names(o);
+					node=_remove_type_names(node);
 				}
-				return o;
+				return node;
 			}
 		case SLL_NODE_TYPE_FUNC:
 		case SLL_NODE_TYPE_INTERNAL_FUNC:
 			{
-				sll_arg_count_t l=o->data.function.arg_count;
-				o++;
+				sll_arg_count_t l=node->data.function.arg_count;
+				node++;
 				while (l){
 					l--;
-					o=_remove_type_names(o);
+					node=_remove_type_names(node);
 				}
-				return o;
+				return node;
 			}
 		case SLL_NODE_TYPE_FOR:
 		case SLL_NODE_TYPE_WHILE:
@@ -134,25 +134,25 @@ static sll_node_t* _remove_type_names(sll_node_t* o){
 		case SLL_NODE_TYPE_FOR_MAP:
 		case SLL_NODE_TYPE_WHILE_MAP:
 			{
-				sll_arg_count_t l=o->data.loop.arg_count;
-				o++;
+				sll_arg_count_t l=node->data.loop.arg_count;
+				node++;
 				while (l){
 					l--;
-					o=_remove_type_names(o);
+					node=_remove_type_names(node);
 				}
-				return o;
+				return node;
 			}
 		case SLL_NODE_TYPE_DECL:
-			o->data.declaration.name_string_index=SLL_MAX_STRING_INDEX;
+			node->data.declaration.name_string_index=SLL_MAX_STRING_INDEX;
 			break;
 	}
-	sll_arg_count_t l=o->data.arg_count;
-	o++;
+	sll_arg_count_t l=node->data.arg_count;
+	node++;
 	while (l){
 		l--;
-		o=_remove_type_names(o);
+		node=_remove_type_names(node);
 	}
-	return o;
+	return node;
 }
 
 

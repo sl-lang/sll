@@ -18,245 +18,245 @@
 
 
 
-#define PRINT_INT_SIGN(v,wf) \
+#define PRINT_INT_SIGN(value,out) \
 	do{ \
-		sll_integer_t __v=(v); \
+		sll_integer_t __v=(value); \
 		if (__v>=0){ \
-			sll_file_write_char((wf),'+',NULL); \
+			sll_file_write_char((out),'+',NULL); \
 		} \
-		_print_int(__v,(wf)); \
+		_print_int(__v,(out)); \
 	} while(0)
 
 
 
-static void _print_char(sll_char_t c,sll_file_t* wf){
+static void _print_char(sll_char_t char_,sll_file_t* out){
 	sll_char_t bf[4]={'\\'};
 	sll_string_length_t bfl=2;
-	if (c=='\''||c=='"'||c=='\\'){
-		bf[1]=c;
+	if (char_=='\''||char_=='"'||char_=='\\'){
+		bf[1]=char_;
 	}
-	else if (c=='\t'){
+	else if (char_=='\t'){
 		bf[1]='t';
 	}
-	else if (c=='\n'){
+	else if (char_=='\n'){
 		bf[1]='n';
 	}
-	else if (c=='\v'){
+	else if (char_=='\v'){
 		bf[1]='v';
 	}
-	else if (c=='\f'){
+	else if (char_=='\f'){
 		bf[1]='f';
 	}
-	else if (c=='\r'){
+	else if (char_=='\r'){
 		bf[1]='r';
 	}
-	else if (c<32||c>126){
+	else if (char_<32||char_>126){
 		bf[1]='x';
-		bf[2]=(c>>4)+(c>159?87:48);
-		bf[3]=(c&0xf)+((c&0xf)>9?87:48);
+		bf[2]=(char_>>4)+(char_>159?87:48);
+		bf[3]=(char_&0xf)+((char_&0xf)>9?87:48);
 		bfl=4;
 	}
 	else{
-		sll_file_write_char(wf,c,NULL);
+		sll_file_write_char(out,char_,NULL);
 		return;
 	}
-	sll_file_write(wf,bf,bfl,NULL);
+	sll_file_write(out,bf,bfl,NULL);
 }
 
 
 
-static void _print_float(sll_float_t v,sll_file_t* wf){
+static void _print_float(sll_float_t value,sll_file_t* out){
 	char bf[128];
-	int sz=snprintf(bf,128,"%.16lg",v);
-	sll_file_write(wf,bf,sz*sizeof(char),NULL);
+	int sz=snprintf(bf,128,"%.16lg",value);
+	sll_file_write(out,bf,sz*sizeof(char),NULL);
 }
 
 
 
-static void _print_complex(const sll_complex_t* c,sll_file_t* wf){
-	if (c->real){
-		_print_float(c->real,wf);
-		if (c->imag){
-			sll_file_write_char(wf,(c->imag<0?'-':'+'),NULL);
-			_print_float(sll_math_abs(c->imag),wf);
-			sll_file_write_char(wf,'i',NULL);
+static void _print_complex(const sll_complex_t* complex_,sll_file_t* out){
+	if (complex_->real){
+		_print_float(complex_->real,out);
+		if (complex_->imag){
+			sll_file_write_char(out,(complex_->imag<0?'-':'+'),NULL);
+			_print_float(sll_math_abs(complex_->imag),out);
+			sll_file_write_char(out,'i',NULL);
 		}
 	}
-	else if (c->imag){
-		_print_float(c->imag,wf);
-		sll_file_write_char(wf,'i',NULL);
+	else if (complex_->imag){
+		_print_float(complex_->imag,out);
+		sll_file_write_char(out,'i',NULL);
 	}
 	else{
-		sll_file_write_char(wf,'0',NULL);
+		sll_file_write_char(out,'0',NULL);
 	}
 }
 
 
 
-static void _print_int(sll_integer_t v,sll_file_t* wf){
-	if (!v){
-		sll_file_write_char(wf,'0',NULL);
+static void _print_int(sll_integer_t value,sll_file_t* out){
+	if (!value){
+		sll_file_write_char(out,'0',NULL);
 		return;
 	}
-	if (v<0){
-		v=-v;
-		sll_file_write_char(wf,'-',NULL);
+	if (value<0){
+		value=-value;
+		sll_file_write_char(out,'-',NULL);
 	}
 	sll_char_t bf[20];
 	sll_string_length_t i=0;
-	while (v){
-		bf[i]=v%10;
-		v/=10;
+	while (value){
+		bf[i]=value%10;
+		value/=10;
 		i++;
 	}
 	while (i){
 		i--;
-		sll_file_write_char(wf,bf[i]+48,NULL);
+		sll_file_write_char(out,bf[i]+48,NULL);
 	}
 }
 
 
 
-static void _print_identifier(sll_identifier_index_t ii,const sll_source_file_t* sf,sll_file_t* wf){
-	sll_identifier_t* id=(SLL_IDENTIFIER_GET_ARRAY_ID(ii)==SLL_MAX_SHORT_IDENTIFIER_LENGTH?sf->identifier_table.long_data:sf->identifier_table.short_[SLL_IDENTIFIER_GET_ARRAY_ID(ii)].data)+SLL_IDENTIFIER_GET_ARRAY_INDEX(ii);
-	sll_string_t* s=sf->string_table.data+SLL_IDENTIFIER_GET_STRING_INDEX(id);
+static void _print_identifier(sll_identifier_index_t identifier_index,const sll_source_file_t* source_file,sll_file_t* out){
+	sll_identifier_t* id=(SLL_IDENTIFIER_GET_ARRAY_ID(identifier_index)==SLL_MAX_SHORT_IDENTIFIER_LENGTH?source_file->identifier_table.long_data:source_file->identifier_table.short_[SLL_IDENTIFIER_GET_ARRAY_ID(identifier_index)].data)+SLL_IDENTIFIER_GET_ARRAY_INDEX(identifier_index);
+	sll_string_t* s=source_file->string_table.data+SLL_IDENTIFIER_GET_STRING_INDEX(id);
 	if (SLL_IDENTIFIER_IS_TLS(id)){
-		sll_file_write_char(wf,'!',NULL);
+		sll_file_write_char(out,'!',NULL);
 	}
-	sll_file_write(wf,s->data,s->length,NULL);
-	PRINT_STATIC_STRING("|#",wf);
-	_print_int(id->scope,wf);
-	PRINT_STATIC_STRING("#|",wf);
+	sll_file_write(out,s->data,s->length,NULL);
+	PRINT_STATIC_STRING("|#",out);
+	_print_int(id->scope,out);
+	PRINT_STATIC_STRING("#|",out);
 }
 
 
 
-static void _print_line(sll_string_index_t s,const sll_source_file_t* sf,sll_file_offset_t* ln,sll_file_t* wf){
-	if (s!=SLL_MAX_STRING_INDEX){
-		PRINT_STATIC_STRING("|# ",wf);
-		sll_file_write(wf,(sf->string_table.data+s)->data,(sf->string_table.data+s)->length,NULL);
-		PRINT_STATIC_STRING(" #|",wf);
-		*ln=0;
+static void _print_line(sll_string_index_t string_index,const sll_source_file_t* source_file,sll_file_offset_t* line,sll_file_t* out){
+	if (string_index!=SLL_MAX_STRING_INDEX){
+		PRINT_STATIC_STRING("|# ",out);
+		sll_file_write(out,(source_file->string_table.data+string_index)->data,(source_file->string_table.data+string_index)->length,NULL);
+		PRINT_STATIC_STRING(" #|",out);
+		*line=0;
 	}
-	(*ln)++;
-	PRINT_STATIC_STRING("|# :",wf);
-	_print_int(*ln,wf);
-	PRINT_STATIC_STRING(" #|",wf);
+	(*line)++;
+	PRINT_STATIC_STRING("|# :",out);
+	_print_int(*line,out);
+	PRINT_STATIC_STRING(" #|",out);
 }
 
 
 
-static void _print_assembly_identifier(sll_variable_index_t v,sll_file_t* wf){
-	if (SLL_ASSEMBLY_VARIABLE_IS_TLS(v)){
-		sll_file_write_char(wf,'!',NULL);
+static void _print_assembly_identifier(sll_variable_index_t variable,sll_file_t* out){
+	if (SLL_ASSEMBLY_VARIABLE_IS_TLS(variable)){
+		sll_file_write_char(out,'!',NULL);
 	}
-	_print_int(SLL_ASSEMBLY_VARIABLE_GET_INDEX(v),wf);
+	_print_int(SLL_ASSEMBLY_VARIABLE_GET_INDEX(variable),out);
 }
 
 
 
-static const sll_node_t* _print_node_internal(const sll_source_file_t* sf,const sll_internal_function_table_t* i_ft,const sll_node_t* o,sll_file_t* wf,sll_file_offset_t* ln){
-	while (o->type==SLL_NODE_TYPE_NOP||o->type==SLL_NODE_TYPE_DBG||o->type==SLL_NODE_TYPE_CHANGE_STACK){
-		if (o->type==SLL_NODE_TYPE_DBG){
-			_print_line(o->data.string_index,sf,ln,wf);
+static const sll_node_t* _print_node_internal(const sll_source_file_t* source_file,const sll_internal_function_table_t* internal_function_table,const sll_node_t* node,sll_file_t* out,sll_file_offset_t* line){
+	while (node->type==SLL_NODE_TYPE_NOP||node->type==SLL_NODE_TYPE_DBG||node->type==SLL_NODE_TYPE_CHANGE_STACK){
+		if (node->type==SLL_NODE_TYPE_DBG){
+			_print_line(node->data.string_index,source_file,line,out);
 		}
-		o=(o->type==SLL_NODE_TYPE_CHANGE_STACK?o->data._next_node:o+1);
+		node=(node->type==SLL_NODE_TYPE_CHANGE_STACK?node->data._next_node:node+1);
 	}
-	if (SLL_IS_OBJECT_TYPE_NOT_TYPE(o)&&o->type!=SLL_NODE_TYPE_VAR_ACCESS&&o->type!=SLL_NODE_TYPE_OPERATION_LIST&&o->type!=SLL_NODE_TYPE_DBG){
-		sll_file_write_char(wf,'(',NULL);
+	if (SLL_IS_OBJECT_TYPE_NOT_TYPE(node)&&node->type!=SLL_NODE_TYPE_VAR_ACCESS&&node->type!=SLL_NODE_TYPE_OPERATION_LIST&&node->type!=SLL_NODE_TYPE_DBG){
+		sll_file_write_char(out,'(',NULL);
 	}
-	switch (o->type){
+	switch (node->type){
 		case SLL_NODE_TYPE_INT:
-			_print_int(o->data.int_,wf);
-			return o+1;
+			_print_int(node->data.int_,out);
+			return node+1;
 		case SLL_NODE_TYPE_FLOAT:
-			_print_float(o->data.float_,wf);
-			return o+1;
+			_print_float(node->data.float_,out);
+			return node+1;
 		case SLL_NODE_TYPE_CHAR:
-			sll_file_write_char(wf,'\'',NULL);
-			_print_char(o->data.char_,wf);
-			sll_file_write_char(wf,'\'',NULL);
-			return o+1;
+			sll_file_write_char(out,'\'',NULL);
+			_print_char(node->data.char_,out);
+			sll_file_write_char(out,'\'',NULL);
+			return node+1;
 		case SLL_NODE_TYPE_COMPLEX:
-			_print_complex(&(o->data.complex_),wf);
-			return o+1;
+			_print_complex(&(node->data.complex_),out);
+			return node+1;
 		case SLL_NODE_TYPE_STRING:
 			{
-				sll_file_write_char(wf,'"',NULL);
-				sll_string_t* s=sf->string_table.data+o->data.string_index;
+				sll_file_write_char(out,'"',NULL);
+				sll_string_t* s=source_file->string_table.data+node->data.string_index;
 				for (sll_string_length_t i=0;i<s->length;i++){
-					_print_char(s->data[i],wf);
+					_print_char(s->data[i],out);
 				}
-				sll_file_write_char(wf,'"',NULL);
-				return o+1;
+				sll_file_write_char(out,'"',NULL);
+				return node+1;
 			}
 		case SLL_NODE_TYPE_ARRAY:
 			{
-				sll_file_write_char(wf,'[',NULL);
-				sll_array_length_t al=o->data.array_length;
-				o++;
+				sll_file_write_char(out,'[',NULL);
+				sll_array_length_t al=node->data.array_length;
+				node++;
 				for (sll_array_length_t i=0;i<al;i++){
 					if (i){
-						sll_file_write_char(wf,' ',NULL);
+						sll_file_write_char(out,' ',NULL);
 					}
-					o=_print_node_internal(sf,i_ft,o,wf,ln);
+					node=_print_node_internal(source_file,internal_function_table,node,out,line);
 				}
-				sll_file_write_char(wf,']',NULL);
-				return o;
+				sll_file_write_char(out,']',NULL);
+				return node;
 			}
 		case SLL_NODE_TYPE_MAP:
 			{
-				sll_file_write_char(wf,'<',NULL);
-				sll_map_length_t ml=o->data.map_length;
-				o++;
+				sll_file_write_char(out,'<',NULL);
+				sll_map_length_t ml=node->data.map_length;
+				node++;
 				for (sll_map_length_t i=0;i<ml;i++){
 					if (i){
-						sll_file_write_char(wf,' ',NULL);
+						sll_file_write_char(out,' ',NULL);
 					}
-					o=_print_node_internal(sf,i_ft,o,wf,ln);
+					node=_print_node_internal(source_file,internal_function_table,node,out,line);
 				}
-				sll_file_write_char(wf,'>',NULL);
-				return o;
+				sll_file_write_char(out,'>',NULL);
+				return node;
 			}
 		case SLL_NODE_TYPE_IDENTIFIER:
-			_print_identifier(o->data.identifier_index,sf,wf);
-			return o+1;
+			_print_identifier(node->data.identifier_index,source_file,out);
+			return node+1;
 		case SLL_NODE_TYPE_FIELD:
-			sll_file_write(wf,(sf->string_table.data+o->data.string_index)->data,(sf->string_table.data+o->data.string_index)->length,NULL);
-			return o+1;
+			sll_file_write(out,(source_file->string_table.data+node->data.string_index)->data,(source_file->string_table.data+node->data.string_index)->length,NULL);
+			return node+1;
 		case SLL_NODE_TYPE_FUNCTION_ID:
-			_print_int(o->data.function_index,wf);
-			return o+1;
+			_print_int(node->data.function_index,out);
+			return node+1;
 		case SLL_NODE_TYPE_PRINT:
-			PRINT_STATIC_STRING(":>",wf);
+			PRINT_STATIC_STRING(":>",out);
 			break;
 		case SLL_NODE_TYPE_AND:
-			PRINT_STATIC_STRING("&&",wf);
+			PRINT_STATIC_STRING("&&",out);
 			break;
 		case SLL_NODE_TYPE_OR:
-			PRINT_STATIC_STRING("||",wf);
+			PRINT_STATIC_STRING("||",out);
 			break;
 		case SLL_NODE_TYPE_NOT:
-			sll_file_write_char(wf,'!',NULL);
+			sll_file_write_char(out,'!',NULL);
 			break;
 		case SLL_NODE_TYPE_BOOL:
-			PRINT_STATIC_STRING("!!",wf);
+			PRINT_STATIC_STRING("!!",out);
 			break;
 		case SLL_NODE_TYPE_ASSIGN:
-			PRINT_STATIC_STRING("=",wf);
+			PRINT_STATIC_STRING("=",out);
 			break;
 		case SLL_NODE_TYPE_FUNC:
 			{
-				PRINT_STATIC_STRING(",,,",wf);
-				const sll_function_t* f=*(sf->function_table.data+o->data.function.function_index);
+				PRINT_STATIC_STRING(",,,",out);
+				const sll_function_t* f=*(source_file->function_table.data+node->data.function.function_index);
 				if (f->name_string_index!=SLL_MAX_STRING_INDEX){
-					PRINT_STATIC_STRING("|#",wf);
-					sll_file_write(wf,(sf->string_table.data+f->name_string_index)->data,(sf->string_table.data+f->name_string_index)->length,NULL);
-					PRINT_STATIC_STRING("#|",wf);
+					PRINT_STATIC_STRING("|#",out);
+					sll_file_write(out,(source_file->string_table.data+f->name_string_index)->data,(source_file->string_table.data+f->name_string_index)->length,NULL);
+					PRINT_STATIC_STRING("#|",out);
 				}
 				for (sll_arg_count_t i=0;i<SLL_FUNCTION_GET_ARGUMENT_COUNT(f);i++){
-					sll_file_write_char(wf,' ',NULL);
-					_print_identifier(f->args[i],sf,wf);
+					sll_file_write_char(out,' ',NULL);
+					_print_identifier(f->args[i],source_file,out);
 				}
 				if (f->description_string_index!=SLL_MAX_STRING_INDEX){
 					SLL_UNIMPLEMENTED();
@@ -264,344 +264,344 @@ static const sll_node_t* _print_node_internal(const sll_source_file_t* sf,const 
 			}
 		case SLL_NODE_TYPE_INTERNAL_FUNC:
 			{
-				if (o->type==SLL_NODE_TYPE_INTERNAL_FUNC){
-					if (i_ft&&o->data.function.function_index<i_ft->length){
-						PRINT_STATIC_STRING("... \"",wf);
-						sll_file_write(wf,(i_ft->data+o->data.function.function_index)->name.data,(i_ft->data+o->data.function.function_index)->name.length,NULL);
-						sll_file_write_char(wf,'\"',NULL);
+				if (node->type==SLL_NODE_TYPE_INTERNAL_FUNC){
+					if (internal_function_table&&node->data.function.function_index<internal_function_table->length){
+						PRINT_STATIC_STRING("... \"",out);
+						sll_file_write(out,(internal_function_table->data+node->data.function.function_index)->name.data,(internal_function_table->data+node->data.function.function_index)->name.length,NULL);
+						sll_file_write_char(out,'\"',NULL);
 					}
 					else{
-						PRINT_STATIC_STRING("... #",wf);
-						_print_int(o->data.function.function_index,wf);
+						PRINT_STATIC_STRING("... #",out);
+						_print_int(node->data.function.function_index,out);
 					}
 				}
-				sll_arg_count_t l=o->data.function.arg_count;
-				o++;
+				sll_arg_count_t l=node->data.function.arg_count;
+				node++;
 				while (l){
 					l--;
-					sll_file_write_char(wf,' ',NULL);
-					o=_print_node_internal(sf,i_ft,o,wf,ln);
+					sll_file_write_char(out,' ',NULL);
+					node=_print_node_internal(source_file,internal_function_table,node,out,line);
 				}
-				sll_file_write_char(wf,')',NULL);
-				return o;
+				sll_file_write_char(out,')',NULL);
+				return node;
 			}
 		case SLL_NODE_TYPE_INTERNAL_FUNC_LOAD:
-			PRINT_STATIC_STRING("...",wf);
+			PRINT_STATIC_STRING("...",out);
 			break;
 		case SLL_NODE_TYPE_INLINE_FUNC:
-			PRINT_STATIC_STRING("***",wf);
+			PRINT_STATIC_STRING("***",out);
 			break;
 		case SLL_NODE_TYPE_CALL:
 		case SLL_NODE_TYPE_CALL_ARRAY:
 			{
-				if (o->type==SLL_NODE_TYPE_CALL){
-					PRINT_STATIC_STRING("<-",wf);
+				if (node->type==SLL_NODE_TYPE_CALL){
+					PRINT_STATIC_STRING("<-",out);
 				}
 				else{
-					PRINT_STATIC_STRING("<-*",wf);
+					PRINT_STATIC_STRING("<-*",out);
 				}
-				sll_arg_count_t ac=o->data.arg_count;
-				o++;
+				sll_arg_count_t ac=node->data.arg_count;
+				node++;
 				if (ac){
-					while (o->type==SLL_NODE_TYPE_NOP||o->type==SLL_NODE_TYPE_DBG||o->type==SLL_NODE_TYPE_CHANGE_STACK){
-						if (o->type==SLL_NODE_TYPE_DBG){
-							_print_line(o->data.string_index,sf,ln,wf);
+					while (node->type==SLL_NODE_TYPE_NOP||node->type==SLL_NODE_TYPE_DBG||node->type==SLL_NODE_TYPE_CHANGE_STACK){
+						if (node->type==SLL_NODE_TYPE_DBG){
+							_print_line(node->data.string_index,source_file,line,out);
 						}
-						o=(o->type==SLL_NODE_TYPE_CHANGE_STACK?o->data._next_node:o+1);
+						node=(node->type==SLL_NODE_TYPE_CHANGE_STACK?node->data._next_node:node+1);
 					}
 					sll_arg_count_t i=0;
-					if (i_ft&&o->type==SLL_NODE_TYPE_INT&&o->data.int_<0){
-						sll_function_index_t j=(sll_function_index_t)(~(o->data.int_));
-						if (j<i_ft->length){
-							PRINT_STATIC_STRING(" (... \"",wf);
-							sll_file_write(wf,(i_ft->data+j)->name.data,(i_ft->data+j)->name.length,NULL);
-							PRINT_STATIC_STRING("\")",wf);
+					if (internal_function_table&&node->type==SLL_NODE_TYPE_INT&&node->data.int_<0){
+						sll_function_index_t j=(sll_function_index_t)(~(node->data.int_));
+						if (j<internal_function_table->length){
+							PRINT_STATIC_STRING(" (... \"",out);
+							sll_file_write(out,(internal_function_table->data+j)->name.data,(internal_function_table->data+j)->name.length,NULL);
+							PRINT_STATIC_STRING("\")",out);
 							i++;
-							o++;
+							node++;
 						}
 					}
 					for (;i<ac;i++){
-						sll_file_write_char(wf,' ',NULL);
-						o=_print_node_internal(sf,i_ft,o,wf,ln);
+						sll_file_write_char(out,' ',NULL);
+						node=_print_node_internal(source_file,internal_function_table,node,out,line);
 					}
 				}
-				sll_file_write_char(wf,')',NULL);
-				return o;
+				sll_file_write_char(out,')',NULL);
+				return node;
 			}
 		case SLL_NODE_TYPE_IF:
-			sll_file_write_char(wf,'?',NULL);
+			sll_file_write_char(out,'?',NULL);
 			break;
 		case SLL_NODE_TYPE_INLINE_IF:
-			PRINT_STATIC_STRING("?:",wf);
+			PRINT_STATIC_STRING("?:",out);
 			break;
 		case SLL_NODE_TYPE_SWITCH:
-			PRINT_STATIC_STRING("??",wf);
+			PRINT_STATIC_STRING("??",out);
 			break;
 		case SLL_NODE_TYPE_FOR:
 			{
-				PRINT_STATIC_STRING("->",wf);
-				sll_arg_count_t ac=o->data.loop.arg_count;
-				o++;
+				PRINT_STATIC_STRING("->",out);
+				sll_arg_count_t ac=node->data.loop.arg_count;
+				node++;
 				for (sll_arg_count_t i=0;i<ac;i++){
-					sll_file_write_char(wf,' ',NULL);
-					o=_print_node_internal(sf,i_ft,o,wf,ln);
+					sll_file_write_char(out,' ',NULL);
+					node=_print_node_internal(source_file,internal_function_table,node,out,line);
 				}
-				sll_file_write_char(wf,')',NULL);
-				return o;
+				sll_file_write_char(out,')',NULL);
+				return node;
 			}
 		case SLL_NODE_TYPE_WHILE:
 			{
-				PRINT_STATIC_STRING(">-",wf);
-				sll_arg_count_t ac=o->data.loop.arg_count;
-				o++;
+				PRINT_STATIC_STRING(">-",out);
+				sll_arg_count_t ac=node->data.loop.arg_count;
+				node++;
 				for (sll_arg_count_t i=0;i<ac;i++){
-					sll_file_write_char(wf,' ',NULL);
-					o=_print_node_internal(sf,i_ft,o,wf,ln);
+					sll_file_write_char(out,' ',NULL);
+					node=_print_node_internal(source_file,internal_function_table,node,out,line);
 				}
-				sll_file_write_char(wf,')',NULL);
-				return o;
+				sll_file_write_char(out,')',NULL);
+				return node;
 			}
 		case SLL_NODE_TYPE_LOOP:
 			{
-				PRINT_STATIC_STRING("><",wf);
-				sll_arg_count_t ac=o->data.loop.arg_count;
-				o++;
+				PRINT_STATIC_STRING("><",out);
+				sll_arg_count_t ac=node->data.loop.arg_count;
+				node++;
 				for (sll_arg_count_t i=0;i<ac;i++){
-					sll_file_write_char(wf,' ',NULL);
-					o=_print_node_internal(sf,i_ft,o,wf,ln);
+					sll_file_write_char(out,' ',NULL);
+					node=_print_node_internal(source_file,internal_function_table,node,out,line);
 				}
-				sll_file_write_char(wf,')',NULL);
-				return o;
+				sll_file_write_char(out,')',NULL);
+				return node;
 			}
 		case SLL_NODE_TYPE_INC:
-			PRINT_STATIC_STRING("++",wf);
+			PRINT_STATIC_STRING("++",out);
 			break;
 		case SLL_NODE_TYPE_DEC:
-			PRINT_STATIC_STRING("--",wf);
+			PRINT_STATIC_STRING("--",out);
 			break;
 		case SLL_NODE_TYPE_ADD:
-			sll_file_write_char(wf,'+',NULL);
+			sll_file_write_char(out,'+',NULL);
 			break;
 		case SLL_NODE_TYPE_SUB:
-			sll_file_write_char(wf,'-',NULL);
+			sll_file_write_char(out,'-',NULL);
 			break;
 		case SLL_NODE_TYPE_MULT:
-			sll_file_write_char(wf,'*',NULL);
+			sll_file_write_char(out,'*',NULL);
 			break;
 		case SLL_NODE_TYPE_DIV:
-			sll_file_write_char(wf,'/',NULL);
+			sll_file_write_char(out,'/',NULL);
 			break;
 		case SLL_NODE_TYPE_FLOOR_DIV:
-			PRINT_STATIC_STRING("//",wf);
+			PRINT_STATIC_STRING("//",out);
 			break;
 		case SLL_NODE_TYPE_MOD:
-			sll_file_write_char(wf,'%',NULL);
+			sll_file_write_char(out,'%',NULL);
 			break;
 		case SLL_NODE_TYPE_BIT_AND:
-			sll_file_write_char(wf,'&',NULL);
+			sll_file_write_char(out,'&',NULL);
 			break;
 		case SLL_NODE_TYPE_BIT_OR:
-			sll_file_write_char(wf,'|',NULL);
+			sll_file_write_char(out,'|',NULL);
 			break;
 		case SLL_NODE_TYPE_BIT_XOR:
-			sll_file_write_char(wf,'^',NULL);
+			sll_file_write_char(out,'^',NULL);
 			break;
 		case SLL_NODE_TYPE_BIT_NOT:
-			sll_file_write_char(wf,'~',NULL);
+			sll_file_write_char(out,'~',NULL);
 			break;
 		case SLL_NODE_TYPE_BIT_RSHIFT:
-			PRINT_STATIC_STRING(">>",wf);
+			PRINT_STATIC_STRING(">>",out);
 			break;
 		case SLL_NODE_TYPE_BIT_LSHIFT:
-			PRINT_STATIC_STRING("<<",wf);
+			PRINT_STATIC_STRING("<<",out);
 			break;
 		case SLL_NODE_TYPE_LESS:
-			sll_file_write_char(wf,'<',NULL);
+			sll_file_write_char(out,'<',NULL);
 			break;
 		case SLL_NODE_TYPE_LESS_EQUAL:
-			PRINT_STATIC_STRING("<=",wf);
+			PRINT_STATIC_STRING("<=",out);
 			break;
 		case SLL_NODE_TYPE_EQUAL:
-			PRINT_STATIC_STRING("==",wf);
+			PRINT_STATIC_STRING("==",out);
 			break;
 		case SLL_NODE_TYPE_NOT_EQUAL:
-			PRINT_STATIC_STRING("!=",wf);
+			PRINT_STATIC_STRING("!=",out);
 			break;
 		case SLL_NODE_TYPE_MORE:
-			sll_file_write_char(wf,'>',NULL);
+			sll_file_write_char(out,'>',NULL);
 			break;
 		case SLL_NODE_TYPE_MORE_EQUAL:
-			PRINT_STATIC_STRING(">=",wf);
+			PRINT_STATIC_STRING(">=",out);
 			break;
 		case SLL_NODE_TYPE_STRICT_EQUAL:
-			PRINT_STATIC_STRING("===",wf);
+			PRINT_STATIC_STRING("===",out);
 			break;
 		case SLL_NODE_TYPE_STRICT_NOT_EQUAL:
-			PRINT_STATIC_STRING("!==",wf);
+			PRINT_STATIC_STRING("!==",out);
 			break;
 		case SLL_NODE_TYPE_LENGTH:
-			sll_file_write_char(wf,'$',NULL);
+			sll_file_write_char(out,'$',NULL);
 			break;
 		case SLL_NODE_TYPE_ACCESS:
-			sll_file_write_char(wf,':',NULL);
+			sll_file_write_char(out,':',NULL);
 			break;
 		case SLL_NODE_TYPE_DEEP_COPY:
-			PRINT_STATIC_STRING(":!",wf);
+			PRINT_STATIC_STRING(":!",out);
 			break;
 		case SLL_NODE_TYPE_VAR_ACCESS:
 			{
-				sll_arg_count_t l=o->data.arg_count;
+				sll_arg_count_t l=node->data.arg_count;
 				SLL_ASSERT(l>1);
-				o++;
-				while (o->type==SLL_NODE_TYPE_NOP||o->type==SLL_NODE_TYPE_DBG||o->type==SLL_NODE_TYPE_CHANGE_STACK){
-					if (o->type==SLL_NODE_TYPE_DBG){
-						_print_line(o->data.string_index,sf,ln,wf);
+				node++;
+				while (node->type==SLL_NODE_TYPE_NOP||node->type==SLL_NODE_TYPE_DBG||node->type==SLL_NODE_TYPE_CHANGE_STACK){
+					if (node->type==SLL_NODE_TYPE_DBG){
+						_print_line(node->data.string_index,source_file,line,out);
 					}
-					o=(o->type==SLL_NODE_TYPE_CHANGE_STACK?o->data._next_node:o+1);
+					node=(node->type==SLL_NODE_TYPE_CHANGE_STACK?node->data._next_node:node+1);
 				}
-				SLL_ASSERT(o->type==SLL_NODE_TYPE_IDENTIFIER);
-				_print_identifier(o->data.identifier_index,sf,wf);
-				o++;
+				SLL_ASSERT(node->type==SLL_NODE_TYPE_IDENTIFIER);
+				_print_identifier(node->data.identifier_index,source_file,out);
+				node++;
 				l--;
 				do{
 					l--;
-					sll_file_write_char(wf,'$',NULL);
-					while (o->type==SLL_NODE_TYPE_NOP||o->type==SLL_NODE_TYPE_DBG||o->type==SLL_NODE_TYPE_CHANGE_STACK){
-						if (o->type==SLL_NODE_TYPE_DBG){
-							_print_line(o->data.string_index,sf,ln,wf);
+					sll_file_write_char(out,'$',NULL);
+					while (node->type==SLL_NODE_TYPE_NOP||node->type==SLL_NODE_TYPE_DBG||node->type==SLL_NODE_TYPE_CHANGE_STACK){
+						if (node->type==SLL_NODE_TYPE_DBG){
+							_print_line(node->data.string_index,source_file,line,out);
 						}
-						o=(o->type==SLL_NODE_TYPE_CHANGE_STACK?o->data._next_node:o+1);
+						node=(node->type==SLL_NODE_TYPE_CHANGE_STACK?node->data._next_node:node+1);
 					}
-					SLL_ASSERT(o->type==SLL_NODE_TYPE_FIELD);
-					sll_string_t* s=sf->string_table.data+o->data.string_index;
-					sll_file_write(wf,s->data,s->length,NULL);
-					o++;
+					SLL_ASSERT(node->type==SLL_NODE_TYPE_FIELD);
+					sll_string_t* s=source_file->string_table.data+node->data.string_index;
+					sll_file_write(out,s->data,s->length,NULL);
+					node++;
 				} while (l);
-				return o;
+				return node;
 			}
 		case SLL_NODE_TYPE_HAS:
-			PRINT_STATIC_STRING("|:",wf);
+			PRINT_STATIC_STRING("|:",out);
 			break;
 		case SLL_NODE_TYPE_CAST:
-			PRINT_STATIC_STRING("::",wf);
+			PRINT_STATIC_STRING("::",out);
 			break;
 		case SLL_NODE_TYPE_TYPEOF:
-			PRINT_STATIC_STRING(":?",wf);
+			PRINT_STATIC_STRING(":?",out);
 			break;
 		case SLL_NODE_TYPE_NAMEOF:
-			PRINT_STATIC_STRING(".?",wf);
+			PRINT_STATIC_STRING(".?",out);
 			break;
 		case SLL_NODE_TYPE_NAMEOF_TYPE:
-			PRINT_STATIC_STRING("&:?",wf);
+			PRINT_STATIC_STRING("&:?",out);
 			break;
 		case SLL_NODE_TYPE_DECL:
 			{
-				PRINT_STATIC_STRING("&:",wf);
-				if (o->data.declaration.name_string_index!=SLL_MAX_STRING_INDEX){
-					PRINT_STATIC_STRING("|#",wf);
-					sll_file_write(wf,(sf->string_table.data+o->data.declaration.name_string_index)->data,(sf->string_table.data+o->data.declaration.name_string_index)->length,NULL);
-					PRINT_STATIC_STRING("#|",wf);
+				PRINT_STATIC_STRING("&:",out);
+				if (node->data.declaration.name_string_index!=SLL_MAX_STRING_INDEX){
+					PRINT_STATIC_STRING("|#",out);
+					sll_file_write(out,(source_file->string_table.data+node->data.declaration.name_string_index)->data,(source_file->string_table.data+node->data.declaration.name_string_index)->length,NULL);
+					PRINT_STATIC_STRING("#|",out);
 				}
-				sll_arg_count_t ac=o->data.declaration.arg_count;
-				o++;
+				sll_arg_count_t ac=node->data.declaration.arg_count;
+				node++;
 				for (sll_arg_count_t i=0;i<ac;i++){
-					sll_file_write_char(wf,' ',NULL);
-					o=_print_node_internal(sf,i_ft,o,wf,ln);
+					sll_file_write_char(out,' ',NULL);
+					node=_print_node_internal(source_file,internal_function_table,node,out,line);
 				}
-				sll_file_write_char(wf,')',NULL);
-				return o;
+				sll_file_write_char(out,')',NULL);
+				return node;
 			}
 		case SLL_NODE_TYPE_NEW:
-			sll_file_write_char(wf,'.',NULL);
+			sll_file_write_char(out,'.',NULL);
 			break;
 		case SLL_NODE_TYPE_FOR_ARRAY:
-			PRINT_STATIC_STRING("[>",wf);
+			PRINT_STATIC_STRING("[>",out);
 			break;
 		case SLL_NODE_TYPE_WHILE_ARRAY:
-			PRINT_STATIC_STRING("[<",wf);
+			PRINT_STATIC_STRING("[<",out);
 			break;
 		case SLL_NODE_TYPE_FOR_MAP:
-			PRINT_STATIC_STRING("{>",wf);
+			PRINT_STATIC_STRING("{>",out);
 			break;
 		case SLL_NODE_TYPE_WHILE_MAP:
-			PRINT_STATIC_STRING("{<",wf);
+			PRINT_STATIC_STRING("{<",out);
 			break;
 		case SLL_NODE_TYPE_BREAK:
-			sll_file_write_char(wf,'@',NULL);
+			sll_file_write_char(out,'@',NULL);
 			break;
 		case SLL_NODE_TYPE_CONTINUE:
-			PRINT_STATIC_STRING("<<<",wf);
+			PRINT_STATIC_STRING("<<<",out);
 			break;
 		case SLL_NODE_TYPE_REF:
-			PRINT_STATIC_STRING("%%",wf);
+			PRINT_STATIC_STRING("%%",out);
 			break;
 		case SLL_NODE_TYPE_RETURN:
-			PRINT_STATIC_STRING("@@",wf);
+			PRINT_STATIC_STRING("@@",out);
 			break;
 		case SLL_NODE_TYPE_COMMA:
 			{
-				sll_file_write_char(wf,',',NULL);
-				sll_arg_count_t ac=o->data.arg_count;
-				o++;
+				sll_file_write_char(out,',',NULL);
+				sll_arg_count_t ac=node->data.arg_count;
+				node++;
 				for (sll_arg_count_t i=0;i<ac;i++){
-					sll_file_write_char(wf,' ',NULL);
-					o=_print_node_internal(sf,i_ft,o,wf,ln);
+					sll_file_write_char(out,' ',NULL);
+					node=_print_node_internal(source_file,internal_function_table,node,out,line);
 				}
-				sll_file_write_char(wf,')',NULL);
-				return o;
+				sll_file_write_char(out,')',NULL);
+				return node;
 			}
 		case SLL_NODE_TYPE_OPERATION_LIST:
 			{
-				sll_file_write_char(wf,'{',NULL);
-				sll_arg_count_t ac=o->data.arg_count;
-				o++;
+				sll_file_write_char(out,'{',NULL);
+				sll_arg_count_t ac=node->data.arg_count;
+				node++;
 				for (sll_arg_count_t i=0;i<ac;i++){
 					if (i){
-						sll_file_write_char(wf,' ',NULL);
+						sll_file_write_char(out,' ',NULL);
 					}
-					o=_print_node_internal(sf,i_ft,o,wf,ln);
+					node=_print_node_internal(source_file,internal_function_table,node,out,line);
 				}
-				sll_file_write_char(wf,'}',NULL);
-				return o;
+				sll_file_write_char(out,'}',NULL);
+				return node;
 			}
 		case SLL_NODE_TYPE_THREAD_ID:
-			PRINT_STATIC_STRING("!.",wf);
+			PRINT_STATIC_STRING("!.",out);
 			break;
 		case SLL_NODE_TYPE_THREAD_WAIT:
-			PRINT_STATIC_STRING("!<<",wf);
+			PRINT_STATIC_STRING("!<<",out);
 			break;
 		case SLL_NODE_TYPE_THREAD_LOCK:
-			PRINT_STATIC_STRING("!<*",wf);
+			PRINT_STATIC_STRING("!<*",out);
 			break;
 		case SLL_NODE_TYPE_THREAD_SEMAPHORE:
-			PRINT_STATIC_STRING("!<+",wf);
+			PRINT_STATIC_STRING("!<+",out);
 			break;
 		case SLL_NODE_TYPE_THREAD_BARRIER_EQ:
-			PRINT_STATIC_STRING("!<=",wf);
+			PRINT_STATIC_STRING("!<=",out);
 			break;
 		case SLL_NODE_TYPE_THREAD_EXIT:
-			PRINT_STATIC_STRING("!@@",wf);
+			PRINT_STATIC_STRING("!@@",out);
 			break;
 		case SLL_NODE_TYPE_THREAD_BARRIER_GEQ:
-			PRINT_STATIC_STRING("!<>",wf);
+			PRINT_STATIC_STRING("!<>",out);
 			break;
 		case SLL_NODE_TYPE_READ_BLOCKING:
-			PRINT_STATIC_STRING("!<-",wf);
+			PRINT_STATIC_STRING("!<-",out);
 			break;
 		case SLL_NODE_TYPE_READ_BLOCKING_CHAR:
-			PRINT_STATIC_STRING("!<.",wf);
+			PRINT_STATIC_STRING("!<.",out);
 			break;
 		default:
 			SLL_UNREACHABLE();
 	}
-	sll_arg_count_t ac=o->data.arg_count;
-	o++;
+	sll_arg_count_t ac=node->data.arg_count;
+	node++;
 	for (sll_arg_count_t i=0;i<ac;i++){
-		sll_file_write_char(wf,' ',NULL);
-		o=_print_node_internal(sf,i_ft,o,wf,ln);
+		sll_file_write_char(out,' ',NULL);
+		node=_print_node_internal(source_file,internal_function_table,node,out,line);
 	}
-	sll_file_write_char(wf,')',NULL);
-	return o;
+	sll_file_write_char(out,')',NULL);
+	return node;
 }
 
 
@@ -1033,7 +1033,7 @@ _print_inplace:
 
 
 
-__SLL_EXTERNAL void sll_print_node(const sll_source_file_t* sf,const sll_internal_function_table_t* i_ft,const sll_node_t* o,sll_file_t* wf){
+__SLL_EXTERNAL void sll_print_node(const sll_source_file_t* source_file,const sll_internal_function_table_t* internal_function_table,const sll_node_t* node,sll_file_t* out){
 	sll_file_offset_t off=0;
-	_print_node_internal(sf,i_ft,(o?o:sf->first_node),wf,&off);
+	_print_node_internal(source_file,internal_function_table,(node?node:source_file->first_node),out,&off);
 }
