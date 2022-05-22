@@ -34,15 +34,15 @@ typedef struct _CLI_INCLUDE_DIR{
 
 
 typedef struct _CLI_BUNDLE_SOURCE{
-	sll_char_t* nm;
-	sll_bundle_t b;
+	sll_char_t* name;
+	sll_bundle_t bundle;
 } cli_bundle_source_t;
 
 
 
 typedef struct _CLI_AUDIT_LIBRARY{
-	const sll_char_t* nm;
-	sll_library_handle_t lh;
+	const sll_char_t* name;
+	sll_library_handle_t handle;
 } cli_audit_library_t;
 
 

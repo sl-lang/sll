@@ -29,9 +29,9 @@ typedef __SLL_U32 event_list_length_t;
 
 
 typedef struct _EVENT_DATA{
-	sll_file_t* f;
-	sll_thread_index_t tid;
-	sll_string_length_t sz;
+	sll_file_t* file;
+	sll_thread_index_t thread_index;
+	sll_string_length_t size;
 } event_data_t;
 
 

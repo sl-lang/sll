@@ -11,15 +11,15 @@
 
 
 typedef struct _SOURCE_FILE_WITH_INDEX{
-	sll_source_file_t* dt;
-	sll_source_file_index_t idx;
+	sll_source_file_t* source_file;
+	sll_source_file_index_t index;
 } source_file_with_index_t;
 
 
 
 typedef struct _SOURCE_FILE_LIST{
-	source_file_with_index_t* dt;
-	sll_source_file_index_t l;
+	source_file_with_index_t* data;
+	sll_source_file_index_t length;
 } source_file_list_t;
 
 

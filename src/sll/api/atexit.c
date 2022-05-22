@@ -28,9 +28,9 @@ static void _cleanup_data(void){
 
 
 static void _delete_atexit_function(atexit_function_t* af){
-	while (af->all){
-		af->all--;
-		SLL_RELEASE(af->al[af->all]);
+	while (af->arg_count){
+		af->arg_count--;
+		SLL_RELEASE(af->args[af->arg_count]);
 	}
 	sll_deallocate(af);
 }
@@ -45,7 +45,7 @@ void _atexit_execute(void){
 	while (_atexit_data_len){
 		_atexit_data_len--;
 		atexit_function_t* af=*(_atexit_data+_atexit_data_len);
-		SLL_RELEASE(sll_execute_function(af->fn,af->al,af->all,EXECUTE_FUNCTION_NO_AUDIT_TERMINATE));
+		SLL_RELEASE(sll_execute_function(af->function,af->args,af->arg_count,EXECUTE_FUNCTION_NO_AUDIT_TERMINATE));
 		_delete_atexit_function(af);
 	}
 	sll_deallocate(_atexit_data);
@@ -67,11 +67,11 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_atexit_register(sll_integer_t fn,sll_
 	_atexit_data_len++;
 	_atexit_data=sll_reallocate(_atexit_data,_atexit_data_len*sizeof(atexit_function_t*));
 	atexit_function_t* af=sll_allocate(sizeof(atexit_function_t)+len*sizeof(sll_object_t*));
-	af->fn=fn;
-	af->all=len;
+	af->function=fn;
+	af->arg_count=len;
 	for (sll_arg_count_t i=0;i<len;i++){
 		SLL_ACQUIRE(*(args+i));
-		af->al[i]=*(args+i);
+		af->args[i]=*(args+i);
 	}
 	*(_atexit_data+_atexit_data_len-1)=af;
 	SLL_CRITICAL(sll_platform_lock_release(_atexit_lock));
@@ -88,7 +88,7 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_bool_t sll_api_atexit_unreg
 	sll_array_length_t i=0;
 	for (sll_array_length_t j=0;j<_atexit_data_len;j++){
 		atexit_function_t* af=*(_atexit_data+j);
-		if (af->fn==fn){
+		if (af->function==fn){
 			o=1;
 			_delete_atexit_function(af);
 		}

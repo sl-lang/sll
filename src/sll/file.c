@@ -141,8 +141,8 @@ __SLL_EXTERNAL void sll_file_close(sll_file_t* f){
 		if (f->flags&FILE_FLAG_DYNAMIC_BUFFERS){
 			dynamic_buffer_chunk_t* c=f->_write_buffer.dynamic.start;
 			do{
-				dynamic_buffer_chunk_t* n=c->n;
-				SLL_CRITICAL_ERROR(sll_platform_free_page(c,c->sz));
+				dynamic_buffer_chunk_t* n=c->next;
+				SLL_CRITICAL_ERROR(sll_platform_free_page(c,c->size));
 				c=n;
 			} while (c);
 		}
@@ -181,8 +181,8 @@ __SLL_EXTERNAL void sll_file_from_data(const void* ptr,sll_size_t sz,sll_file_fl
 	if (flags&SLL_FILE_FLAG_WRITE){
 		flags|=FILE_FLAG_DYNAMIC_BUFFERS;
 		dynamic_buffer_chunk_t* bf=sll_platform_allocate_page(SLL_ROUND_PAGE(FILE_DYNAMIC_BUFFER_ALLOC_SIZE),0,NULL);
-		bf->sz=SLL_ROUND_PAGE(FILE_DYNAMIC_BUFFER_ALLOC_SIZE);
-		bf->n=NULL;
+		bf->size=SLL_ROUND_PAGE(FILE_DYNAMIC_BUFFER_ALLOC_SIZE);
+		bf->next=NULL;
 		o->_write_buffer.dynamic.start=bf;
 		o->_write_buffer.dynamic.end=bf;
 		o->_write_buffer.dynamic.size=0;
@@ -209,10 +209,10 @@ __SLL_EXTERNAL void sll_file_get_buffer(sll_file_t* f,sll_string_t* o){
 	addr_t ptr=ADDR(o->data);
 	sll_string_length_t l=o->length;
 	do{
-		sll_copy_data(c->dt,(l>c->sz?c->sz:l),PTR(ptr));
-		l-=(sll_string_length_t)(c->sz);
-		ptr+=c->sz;
-		c=c->n;
+		sll_copy_data(c->data,(l>c->size?c->size:l),PTR(ptr));
+		l-=(sll_string_length_t)(c->size);
+		ptr+=c->size;
+		c=c->next;
 	} while (c);
 	sll_string_calculate_checksum(o);
 }
@@ -518,8 +518,8 @@ __SLL_EXTERNAL sll_size_t sll_file_write(sll_file_t* f,const void* ptr,sll_size_
 		LOCK;
 		if (f->flags&FILE_FLAG_DYNAMIC_BUFFERS){
 			dynamic_buffer_chunk_t* c=f->_write_buffer.dynamic.end;
-			if (c->sz-f->_write_buffer.dynamic.offset>=sz){
-				sll_copy_data(ptr,sz,c->dt+f->_write_buffer.dynamic.offset);
+			if (c->size-f->_write_buffer.dynamic.offset>=sz){
+				sll_copy_data(ptr,sz,c->data+f->_write_buffer.dynamic.offset);
 				f->_write_buffer.dynamic.size+=sz;
 				f->_write_buffer.dynamic.offset+=sz;
 				UNLOCK;
@@ -594,8 +594,8 @@ __SLL_EXTERNAL sll_bool_t sll_file_write_char(sll_file_t* f,sll_char_t chr,sll_e
 		LOCK;
 		if (f->flags&FILE_FLAG_DYNAMIC_BUFFERS){
 			dynamic_buffer_chunk_t* k=f->_write_buffer.dynamic.end;
-			if (k->sz>f->_write_buffer.dynamic.offset){
-				k->dt[f->_write_buffer.dynamic.offset]=chr;
+			if (k->size>f->_write_buffer.dynamic.offset){
+				k->data[f->_write_buffer.dynamic.offset]=chr;
 				f->_write_buffer.dynamic.size++;
 				f->_write_buffer.dynamic.offset++;
 				UNLOCK;

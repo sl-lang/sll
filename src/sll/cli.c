@@ -77,9 +77,9 @@ static void _load_bundle(const sll_char_t* nm,sll_file_t* rf){
 	_cli_bundle_list=sll_reallocate(_cli_bundle_list,_cli_bundle_list_len*sizeof(cli_bundle_source_t*));
 	cli_bundle_source_t* b=sll_allocate(sizeof(cli_bundle_source_t));
 	sll_string_length_t nml=sll_string_length(nm)+1;
-	b->nm=sll_allocate(nml);
-	sll_copy_data(nm,nml,b->nm);
-	b->b=b_dt;
+	b->name=sll_allocate(nml);
+	sll_copy_data(nm,nml,b->name);
+	b->bundle=b_dt;
 	*(_cli_bundle_list+_cli_bundle_list_len-1)=b;
 }
 
@@ -176,8 +176,8 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_cli_lookup_result_t sll_cli_lookup_file(co
 		do{
 			i--;
 			cli_bundle_source_t* b_dt=*(_cli_bundle_list+i);
-			SLL_LOG("Trying to open file '%s/%s'...",b_dt->nm,path->data);
-			if (sll_bundle_fetch(&(b_dt->b),path,&(out->data.compiled_object_data))){
+			SLL_LOG("Trying to open file '%s/%s'...",b_dt->name,path->data);
+			if (sll_bundle_fetch(&(b_dt->bundle),path,&(out->data.compiled_object_data))){
 				SLL_LOG("File successfully read.");
 				return SLL_LOOKUP_RESULT_COMPILED_OBJECT;
 			}
@@ -482,8 +482,8 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_code_t sll_cli_main(sll_array_lengt
 					}
 					audit_library_list_len++;
 					audit_library_list=sll_reallocate(audit_library_list,audit_library_list_len*sizeof(cli_audit_library_t));
-					(audit_library_list+audit_library_list_len-1)->nm=e;
-					(audit_library_list+audit_library_list_len-1)->lh=lh;
+					(audit_library_list+audit_library_list_len-1)->name=e;
+					(audit_library_list+audit_library_list_len-1)->handle=lh;
 					sll_audit_register_callback(cb);
 				}
 			}
@@ -614,7 +614,7 @@ _read_file_argument:
 		i++;
 	} while (i<argc);
 	sll_audit(SLL_CHAR("sll.cli.init.raw"),SLL_CHAR("S+"),argv,argc);
-	sll_audit(SLL_CHAR("sll.cli.init"),SLL_CHAR("uS{ss}{Si}{Sp}Si"),_cli_flags,o_fp,_cli_include_list,_cli_include_list_len,0ull,SLL_OFFSETOF(cli_include_dir_t,name),SLL_OFFSETOF(cli_include_dir_t,path),audit_library_list,audit_library_list_len,sizeof(cli_audit_library_t),SLL_OFFSETOF(cli_audit_library_t,nm),SLL_OFFSETOF(cli_audit_library_t,lh),_cli_bundle_list,_cli_bundle_list_len,0ull,SLL_OFFSETOF(cli_bundle_source_t,nm),SLL_OFFSETOF(cli_bundle_source_t,b),b_nm,sll_get_sandbox_flags());
+	sll_audit(SLL_CHAR("sll.cli.init"),SLL_CHAR("uS{ss}{Si}{Sp}Si"),_cli_flags,o_fp,_cli_include_list,_cli_include_list_len,0ull,SLL_OFFSETOF(cli_include_dir_t,name),SLL_OFFSETOF(cli_include_dir_t,path),audit_library_list,audit_library_list_len,sizeof(cli_audit_library_t),SLL_OFFSETOF(cli_audit_library_t,name),SLL_OFFSETOF(cli_audit_library_t,handle),_cli_bundle_list,_cli_bundle_list_len,0ull,SLL_OFFSETOF(cli_bundle_source_t,name),SLL_OFFSETOF(cli_bundle_source_t,bundle),b_nm,sll_get_sandbox_flags());
 	if (_cli_flags&SLL_CLI_FLAG_VERBOSE){
 		SLL_CRITICAL(sll_set_log_flags(NULL,NULL,SLL_LOG_FLAG_SHOW,1));
 		SLL_CRITICAL(sll_set_log_flags(SLL_CHAR(__FILE__),NULL,SLL_LOG_FLAG_NO_HEADER,1));
@@ -666,7 +666,7 @@ _read_file_argument:
 		}
 		SLL_LOG("Include path:");
 		for (sll_array_length_t j=0;j<_cli_bundle_list_len;j++){
-			SLL_LOG("  '%s' (bundle)",(*(_cli_bundle_list+j))->nm);
+			SLL_LOG("  '%s' (bundle)",(*(_cli_bundle_list+j))->name);
 		}
 		for (sll_string_length_t j=0;j<_cli_include_list_len;j++){
 			inc=*(_cli_include_list+j);
@@ -683,7 +683,7 @@ _read_file_argument:
 		}
 		SLL_LOG("Audit libraries:");
 		for (sll_array_length_t j=0;j<audit_library_list_len;j++){
-			SLL_LOG("  '%s'",(audit_library_list+j)->nm);
+			SLL_LOG("  '%s'",(audit_library_list+j)->name);
 		}
 	}
 	if (fpl+sll==1){
@@ -899,17 +899,17 @@ _cleanup:
 	while (_cli_bundle_list_len){
 		_cli_bundle_list_len--;
 		cli_bundle_source_t* b=*(_cli_bundle_list+_cli_bundle_list_len);
-		sll_deallocate(b->nm);
-		sll_free_bundle(&(b->b));
+		sll_deallocate(b->name);
+		sll_free_bundle(&(b->bundle));
 		sll_deallocate(b);
 	}
 	while (audit_library_list_len){
 		audit_library_list_len--;
-		void (*deinit)(void)=sll_platform_lookup_symbol((audit_library_list+audit_library_list_len)->lh,SLL_ABI_NAME(SLL_ABI_AUDIT_DEINIT));
+		void (*deinit)(void)=sll_platform_lookup_symbol((audit_library_list+audit_library_list_len)->handle,SLL_ABI_NAME(SLL_ABI_AUDIT_DEINIT));
 		if (deinit){
 			deinit();
 		}
-		SLL_CRITICAL_ERROR(sll_platform_unload_library((audit_library_list+audit_library_list_len)->lh));
+		SLL_CRITICAL_ERROR(sll_platform_unload_library((audit_library_list+audit_library_list_len)->handle));
 	}
 	while (path_resolver_list_len){
 		path_resolver_list_len--;

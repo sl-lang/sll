@@ -30,21 +30,21 @@ static raw_event_data_t* _io_dispatcher_raw_event;
 
 static sll_thread_index_t _restart_thread(event_list_length_t idx){
 	event_data_t* evt=_io_dispatcher_event+idx;
-	SLL_ASSERT(evt->f);
+	SLL_ASSERT(evt->file);
 	sll_object_t* o=NULL;
-	if (evt->sz==SLL_MAX_STRING_LENGTH){
+	if (evt->size==SLL_MAX_STRING_LENGTH){
 		sll_error_t err;
-		sll_read_char_t chr=sll_file_read_char(evt->f,&err);
+		sll_read_char_t chr=sll_file_read_char(evt->file,&err);
 		o=(chr==SLL_END_OF_DATA?(err==SLL_NO_ERROR?SLL_ACQUIRE_STATIC_INT(0):sll_int_to_object(~err)):SLL_FROM_CHAR(chr));
 	}
-	else if (!evt->sz){
+	else if (!evt->size){
 		SLL_UNIMPLEMENTED();
 	}
 	else{
 		sll_string_t bf;
-		sll_string_create(evt->sz,&bf);
+		sll_string_create(evt->size,&bf);
 		sll_error_t err;
-		sll_size_t sz=sll_file_read(evt->f,bf.data,evt->sz,&err);
+		sll_size_t sz=sll_file_read(evt->file,bf.data,evt->size,&err);
 		if (!sz&&err!=SLL_NO_ERROR){
 			sll_free_string(&bf);
 			o=sll_int_to_object(err);
@@ -55,7 +55,7 @@ static sll_thread_index_t _restart_thread(event_list_length_t idx){
 			o=STRING_TO_OBJECT_NOCOPY(&bf);
 		}
 	}
-	sll_thread_index_t tid=evt->tid;
+	sll_thread_index_t tid=evt->thread_index;
 	thread_data_t* thr=_thread_get(tid);
 	*(thr->stack+thr->si)=o;
 	thr->si++;
@@ -120,9 +120,9 @@ void _io_dispatcher_queue(sll_file_t* f,sll_string_length_t sz){
 	_io_dispatcher_event_len++;
 	_io_dispatcher_event=sll_reallocate(_io_dispatcher_event,_io_dispatcher_event_len*sizeof(event_data_t));
 	_io_dispatcher_raw_event=sll_reallocate(_io_dispatcher_raw_event,(_io_dispatcher_event_len+1)*sizeof(raw_event_data_t));
-	(_io_dispatcher_event+i)->f=f;
-	(_io_dispatcher_event+i)->tid=_scheduler_current_thread_index;
-	(_io_dispatcher_event+i)->sz=sz;
+	(_io_dispatcher_event+i)->file=f;
+	(_io_dispatcher_event+i)->thread_index=_scheduler_current_thread_index;
+	(_io_dispatcher_event+i)->size=sz;
 	INIT_RAW_EVENT(_io_dispatcher_raw_event+i+1,f->source.file.fd);
 	_platform_poll_start(_io_dispatcher_raw_event);
 	_scheduler_current_thread->st=THREAD_STATE_WAIT_IO;
