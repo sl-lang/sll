@@ -259,7 +259,7 @@ __SLL_EXTERNAL void sll_string_format_list(const sll_char_t* t,sll_string_length
 				}
 				else{
 					sn=sll_var_arg_get_int(va);
-					if (va->t==SLL_VAR_ARG_LIST_TYPE_C){
+					if (va->type==SLL_VAR_ARG_LIST_TYPE_C){
 						if (sn<-0x80000000ll){
 							sn=-0x80000000ll;
 						}
@@ -290,7 +290,7 @@ __SLL_EXTERNAL void sll_string_format_list(const sll_char_t* t,sll_string_length
 				}
 				else{
 					n=sll_var_arg_get_int(va);
-					if (va->t==SLL_VAR_ARG_LIST_TYPE_C){
+					if (va->type==SLL_VAR_ARG_LIST_TYPE_C){
 						n&=0xffffffff;
 					}
 				}

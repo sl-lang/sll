@@ -19,7 +19,7 @@
  * \name SLL_VAR_ARG_LIST_TYPE_C
  * \group var-arg
  * \desc Docs!
- * \type sll_var_arg_type_t
+ * \type sll_var_arg_list_type_t
  */
 #define SLL_VAR_ARG_LIST_TYPE_C 0
 
@@ -30,7 +30,7 @@
  * \name SLL_VAR_ARG_LIST_TYPE_SLL
  * \group var-arg
  * \desc Docs!
- * \type sll_var_arg_type_t
+ * \type sll_var_arg_list_type_t
  */
 #define SLL_VAR_ARG_LIST_TYPE_SLL 1
 
@@ -41,7 +41,7 @@
  * \name SLL_VAR_ARG_LIST_TYPE_RESERVED0
  * \group var-arg
  * \desc Internally used as `VAR_ARG_LIST_TYPE_STRUCT`
- * \type sll_var_arg_type_t
+ * \type sll_var_arg_list_type_t
  */
 #define SLL_VAR_ARG_LIST_TYPE_RESERVED0 2
 
@@ -58,8 +58,8 @@
 #define SLL_VAR_ARG_INIT_C(va,va_ptr) \
 	do{ \
 		sll_var_arg_list_t* __va=(va); \
-		__va->t=SLL_VAR_ARG_LIST_TYPE_C; \
-		__va->dt.c=(va_ptr); \
+		__va->type=SLL_VAR_ARG_LIST_TYPE_C; \
+		__va->data.c=(va_ptr); \
 	} while (0)
 
 
@@ -71,26 +71,26 @@
  * \desc Docs!
  * \arg sll_var_arg_list_t* va
  * \arg sll_object_t*const* ptr
- * \arg sll_arg_count_t len
+ * \arg sll_arg_count_t cnt
  */
-#define SLL_VAR_ARG_INIT_SLL(va,ptr,len) \
+#define SLL_VAR_ARG_INIT_SLL(va,ptr,cnt) \
 	do{ \
 		sll_var_arg_list_t* __va=(va); \
-		__va->t=SLL_VAR_ARG_LIST_TYPE_SLL; \
-		__va->dt.sll.p=(ptr); \
-		__va->dt.sll.l=(len); \
+		__va->type=SLL_VAR_ARG_LIST_TYPE_SLL; \
+		__va->data.sll.pointer=(ptr); \
+		__va->data.sll.count=(cnt); \
 	} while (0)
 
 
 
 /**
  * \flags type var
- * \name sll_var_arg_type_t
+ * \name sll_var_arg_list_type_t
  * \group var-arg
  * \desc Docs!
  * \type __SLL_U8
  */
-typedef __SLL_U8 sll_var_arg_type_t;
+typedef __SLL_U8 sll_var_arg_list_type_t;
 
 
 
@@ -99,12 +99,12 @@ typedef __SLL_U8 sll_var_arg_type_t;
  * \name sll_var_arg_list_data_sll_t
  * \group var-arg
  * \desc Docs!
- * \arg sll_object_t*const* p
- * \arg sll_arg_count_t l
+ * \arg sll_object_t*const* pointer
+ * \arg sll_arg_count_t count
  */
 typedef struct _SLL_VAR_ARG_LIST_DATA_SLL{
-	sll_object_t*const* p;
-	sll_arg_count_t l;
+	sll_object_t*const* pointer;
+	sll_arg_count_t count;
 } sll_var_arg_list_data_sll_t;
 
 
@@ -114,18 +114,18 @@ typedef struct _SLL_VAR_ARG_LIST_DATA_SLL{
  * \name sll_var_arg_list_data_struct_t
  * \group var-arg
  * \desc Docs!
- * \arg const void* ptr
- * \arg sll_size_t* off
- * \arg sll_arg_count_t l
- * \arg void** fn
- * \arg sll_arg_count_t fnl
+ * \arg const void* base_pointer
+ * \arg sll_size_t* offset_data
+ * \arg sll_arg_count_t offset_count
+ * \arg void** converter_function_data
+ * \arg sll_arg_count_t converter_function_count
  */
 typedef struct _SLL_VAR_ARG_LIST_DATA_STRUCT{
-	const void* ptr;
-	sll_size_t* off;
-	sll_arg_count_t l;
-	void** fn;
-	sll_arg_count_t fnl;
+	const void* base_pointer;
+	sll_size_t* offset_data;
+	sll_arg_count_t offset_count;
+	void** converter_function_data;
+	sll_arg_count_t converter_function_count;
 } sll_var_arg_list_data_struct_t;
 
 
@@ -137,12 +137,12 @@ typedef struct _SLL_VAR_ARG_LIST_DATA_STRUCT{
  * \desc Docs!
  * \arg va_list* c
  * \arg sll_var_arg_list_data_sll_t sll
- * \arg sll_var_arg_list_data_struct_t s
+ * \arg sll_var_arg_list_data_struct_t struct_
  */
 typedef union _SLL_VAR_ARG_LIST_DATA{
 	va_list* c;
 	sll_var_arg_list_data_sll_t sll;
-	sll_var_arg_list_data_struct_t s;
+	sll_var_arg_list_data_struct_t struct_;
 } sll_var_arg_list_data_t;
 
 
@@ -152,12 +152,12 @@ typedef union _SLL_VAR_ARG_LIST_DATA{
  * \name sll_var_arg_list_t
  * \group var-arg
  * \desc Docs!
- * \arg sll_var_arg_type_t t
- * \arg sll_var_arg_list_data_t dt
+ * \arg sll_var_arg_list_type_t type
+ * \arg sll_var_arg_list_data_t data
  */
 typedef struct _SLL_VAR_ARG_LIST{
-	sll_var_arg_type_t t;
-	sll_var_arg_list_data_t dt;
+	sll_var_arg_list_type_t type;
+	sll_var_arg_list_data_t data;
 } sll_var_arg_list_t;
 
 

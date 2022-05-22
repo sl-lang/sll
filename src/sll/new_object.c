@@ -150,7 +150,7 @@ static sll_object_t* _build_struct(const sll_char_t** t,sll_string_length_t* tl,
 		sll_var_arg_list_t arg_va={
 			VAR_ARG_LIST_TYPE_STRUCT,
 			{
-				.s={
+				.struct_={
 					(deref?*((const void**)ptr):(const void*)ptr),
 					off_dt.off,
 					off_dt.l,
@@ -203,7 +203,7 @@ static sll_object_t* _build_single(const sll_char_t** t,sll_string_length_t* tl,
 		(*t)++;
 		(*tl)--;
 	}
-	if (va->t!=SLL_VAR_ARG_LIST_TYPE_SLL){
+	if (va->type!=SLL_VAR_ARG_LIST_TYPE_SLL){
 		switch (st){
 			case 'h':
 				if (fl&NEW_OBJECT_FLAG_ARRAY){
