@@ -35,7 +35,7 @@ static file_log_data_t* _get_file_index(const sll_char_t* fp){
 	sll_array_length_t j=0;
 	for (;j<_log_file_data_len;j++){
 		file_log_data_t* k=*(_log_file_data+j);
-		if (STRING_EQUAL(&s,&(k->nm))){
+		if (STRING_EQUAL(&s,&(k->name))){
 			sll_free_string(&s);
 			return k;
 		}
@@ -43,10 +43,10 @@ static file_log_data_t* _get_file_index(const sll_char_t* fp){
 	_log_file_data_len++;
 	_log_file_data=sll_reallocate(_log_file_data,_log_file_data_len*sizeof(file_log_data_t*));
 	file_log_data_t* n=sll_allocate(sizeof(file_log_data_t));
-	sll_copy_data(&s,sizeof(sll_string_t),(sll_string_t*)(&(n->nm)));
-	n->dt=NULL;
-	n->dtl=0;
-	n->fl=_log_default;
+	sll_copy_data(&s,sizeof(sll_string_t),(sll_string_t*)(&(n->name)));
+	n->data=NULL;
+	n->length=0;
+	n->flags=_log_default;
 	*(_log_file_data+j)=n;
 	return n;
 }
@@ -57,19 +57,19 @@ static function_log_data_t* _get_func_index(file_log_data_t* f_dt,const sll_char
 	sll_string_t s;
 	sll_string_from_pointer(fn,&s);
 	sll_array_length_t i=0;
-	for (;i<f_dt->dtl;i++){
-		function_log_data_t* k=*(f_dt->dt+i);
-		if (STRING_EQUAL(&s,&(k->nm))){
+	for (;i<f_dt->length;i++){
+		function_log_data_t* k=*(f_dt->data+i);
+		if (STRING_EQUAL(&s,&(k->name))){
 			sll_free_string(&s);
 			return k;
 		}
 	}
-	f_dt->dtl++;
-	f_dt->dt=sll_reallocate(f_dt->dt,f_dt->dtl*sizeof(function_log_data_t*));
+	f_dt->length++;
+	f_dt->data=sll_reallocate(f_dt->data,f_dt->length*sizeof(function_log_data_t*));
 	function_log_data_t* n=sll_allocate(sizeof(function_log_data_t));
-	sll_copy_data(&s,sizeof(sll_string_t),(sll_string_t*)(&(n->nm)));
-	n->fl=f_dt->fl;
-	*(f_dt->dt+i)=n;
+	sll_copy_data(&s,sizeof(sll_string_t),(sll_string_t*)(&(n->name)));
+	n->flags=f_dt->flags;
+	*(f_dt->data+i)=n;
 	return n;
 }
 
@@ -102,13 +102,13 @@ void _log_release_data(void){
 	while (_log_file_data_len){
 		_log_file_data_len--;
 		file_log_data_t* k=*(_log_file_data+_log_file_data_len);
-		sll_free_string((sll_string_t*)(&(k->nm)));
-		for (sll_arg_count_t i=0;i<k->dtl;i++){
-			function_log_data_t* e=*(k->dt+i);
-			sll_free_string((sll_string_t*)(&(e->nm)));
+		sll_free_string((sll_string_t*)(&(k->name)));
+		for (sll_arg_count_t i=0;i<k->length;i++){
+			function_log_data_t* e=*(k->data+i);
+			sll_free_string((sll_string_t*)(&(e->name)));
 			sll_deallocate(e);
 		}
-		sll_deallocate(k->dt);
+		sll_deallocate(k->data);
 		sll_deallocate(k);
 	}
 	sll_deallocate(_log_file_data);
@@ -120,7 +120,7 @@ void _log_release_data(void){
 __SLL_EXTERNAL sll_bool_t sll_log(const sll_char_t* fp,const sll_char_t* fn,sll_file_offset_t ln,sll_bool_t w,const sll_char_t* t,...){
 	file_log_data_t* f_dt=_get_file_index(fp);
 	function_log_data_t* fn_dt=_get_func_index(f_dt,fn);
-	if (!w&&!(fn_dt->fl&SLL_LOG_FLAG_SHOW)){
+	if (!w&&!(fn_dt->flags&SLL_LOG_FLAG_SHOW)){
 		return 0;
 	}
 	va_list va;
@@ -130,8 +130,8 @@ __SLL_EXTERNAL sll_bool_t sll_log(const sll_char_t* fp,const sll_char_t* fn,sll_
 	sll_string_t s;
 	sll_string_format_list(t,sll_string_length(t),&dt,&s);
 	va_end(va);
-	if (!(fn_dt->fl&SLL_LOG_FLAG_NO_HEADER)){
-		_log_location(&(f_dt->nm),&(fn_dt->nm),ln,sll_stdout);
+	if (!(fn_dt->flags&SLL_LOG_FLAG_NO_HEADER)){
+		_log_location(&(f_dt->name),&(fn_dt->name),ln,sll_stdout);
 	}
 	sll_file_write(sll_stdout,s.data,s.length,NULL);
 	sll_file_write_char(sll_stdout,'\n',NULL);
@@ -147,11 +147,11 @@ __SLL_EXTERNAL sll_bool_t sll_log_raw(const sll_char_t* fp,const sll_char_t* fn,
 	}
 	file_log_data_t* f_dt=_get_file_index(fp);
 	function_log_data_t* fn_dt=_get_func_index(f_dt,fn);
-	if (!w&&!(fn_dt->fl&SLL_LOG_FLAG_SHOW)){
+	if (!w&&!(fn_dt->flags&SLL_LOG_FLAG_SHOW)){
 		return 0;
 	}
-	if (!(fn_dt->fl&SLL_LOG_FLAG_NO_HEADER)){
-		_log_location(&(f_dt->nm),&(fn_dt->nm),ln,sll_stdout);
+	if (!(fn_dt->flags&SLL_LOG_FLAG_NO_HEADER)){
+		_log_location(&(f_dt->name),&(fn_dt->name),ln,sll_stdout);
 	}
 	sll_file_write(sll_stdout,s->data,s->length,NULL);
 	sll_file_write_char(sll_stdout,'\n',NULL);
@@ -168,10 +168,10 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_set_log_flags(const sll_char_t*
 		file_log_data_t* dt=_get_file_index(fp);
 		if (fn){
 			function_log_data_t* fn_dt=_get_func_index(dt,fn);
-			SET_OR_CLEAR(fn_dt->fl,fl,st);
+			SET_OR_CLEAR(fn_dt->flags,fl,st);
 		}
 		else{
-			SET_OR_CLEAR(dt->fl,fl,st);
+			SET_OR_CLEAR(dt->flags,fl,st);
 		}
 	}
 	else{

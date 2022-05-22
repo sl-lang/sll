@@ -11,8 +11,8 @@
 
 
 typedef struct _LIBRARY{
-	const sll_string_t nm;
-	sll_library_handle_t h;
+	const sll_string_t name;
+	sll_library_handle_t handle;
 } library_t;
 
 

@@ -113,7 +113,7 @@ static sll_bool_t _parse_number(sll_char_t c,sll_json_parser_state_t* p,json_num
 	}
 	if (c!='.'&&c!='e'&&c!='E'){
 		(*p)--;
-		o->i=(sll_integer_t)(neg?-v:v);
+		o->int_=(sll_integer_t)(neg?-v:v);
 		return JSON_NUMBER_INT;
 	}
 	if (c=='.'){
@@ -149,7 +149,7 @@ static sll_bool_t _parse_number(sll_char_t c,sll_json_parser_state_t* p,json_num
 		v*=pow(10,(sll_float_t)(neg_pw?-pw:pw));
 	}
 	(*p)--;
-	o->f=(neg?-v:v);
+	o->float_=(neg?-v:v);
 	return JSON_NUMBER_FLOAT;
 }
 
@@ -274,7 +274,7 @@ static sll_object_t* _parse_json_as_object(sll_json_parser_state_t* p){
 		return NULL;
 	}
 	json_number_t n;
-	return (_parse_number(c,p,&n)==JSON_NUMBER_INT?sll_int_to_object(n.i):sll_float_to_object(n.f));
+	return (_parse_number(c,p,&n)==JSON_NUMBER_INT?sll_int_to_object(n.int_):sll_float_to_object(n.float_));
 }
 
 
@@ -641,11 +641,11 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_json_parse(sll_json_parser_stat
 	json_number_t n;
 	if (_parse_number(c,p,&n)==JSON_NUMBER_INT){
 		o->type=SLL_JSON_OBJECT_TYPE_INTEGER;
-		o->data.int_=n.i;
+		o->data.int_=n.int_;
 	}
 	else{
 		o->type=SLL_JSON_OBJECT_TYPE_FLOAT;
-		o->data.float_=n.f;
+		o->data.float_=n.float_;
 	}
 	return 1;
 }

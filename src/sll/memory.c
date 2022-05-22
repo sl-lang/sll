@@ -120,8 +120,8 @@ static __SLL_FORCE_INLINE void _fill_zero(void* o,sll_size_t sz){
 
 
 static __SLL_FORCE_INLINE void _pool_add(user_mem_block_t* b){
-	SLL_ASSERT(b->dt&USER_MEM_BLOCK_FLAG_USED);
-	SLL_ASSERT(!(b->dt&USER_MEM_BLOCK_FLAG_STACK));
+	SLL_ASSERT(b->data&USER_MEM_BLOCK_FLAG_USED);
+	SLL_ASSERT(!(b->data&USER_MEM_BLOCK_FLAG_STACK));
 	SLL_ASSERT(!(USER_MEM_BLOCK_GET_SIZE(b)&15));
 	sll_size_t sz=(USER_MEM_BLOCK_GET_SIZE(b)>>4)-1;
 	if (sz>=MEMORY_POOL_SIZE||_memory_pool[sz].cnt==MEMORY_POOL_MAX_BLOCKS){
@@ -155,22 +155,22 @@ static __SLL_FORCE_INLINE void* _pool_get(sll_size_t sz){
 
 static __SLL_FORCE_INLINE void _init_stack_node(stack_block_header_t* node,sll_size_t sz){
 	SLL_ASSERT(sz&&!(sz&7));
-	node->dt=STACK_BLOCK_INIT(sz);
+	node->data=STACK_BLOCK_INIT(sz);
 	STACK_BLOCK_SET_END(node);
 }
 
 
 
 static __SLL_FORCE_INLINE void _stack_add(user_mem_block_t* b){
-	SLL_ASSERT(b->dt&USER_MEM_BLOCK_FLAG_USED);
-	SLL_ASSERT(b->dt&USER_MEM_BLOCK_FLAG_STACK);
+	SLL_ASSERT(b->data&USER_MEM_BLOCK_FLAG_USED);
+	SLL_ASSERT(b->data&USER_MEM_BLOCK_FLAG_STACK);
 	stack_block_header_t* node;
 	STACK_BLOCK_NODE_FROM_USER_BLOCK(b,&node);
 	stack_block_header_t* next=STACK_BLOCK_GET_NEXT(node);
 	sll_size_t sz=STACK_BLOCK_GET_SIZE(node);
 	if (ADDR(b)!=ADDR(_memory_stack)){
 		stack_block_header_t* prev=STACK_BLOCK_GET_PREV(node);
-		if (!(prev->dt&USER_MEM_BLOCK_FLAG_USED)){
+		if (!(prev->data&USER_MEM_BLOCK_FLAG_USED)){
 			sz+=STACK_BLOCK_GET_SIZE(prev)+sizeof(stack_block_end_t);
 			node=prev;
 		}
@@ -178,10 +178,10 @@ static __SLL_FORCE_INLINE void _stack_add(user_mem_block_t* b){
 	if (STACK_BLOCK_END_OF_STACK(next)){
 		_memory_stack_top=node;
 	}
-	else if (!(next->dt&USER_MEM_BLOCK_FLAG_USED)){
+	else if (!(next->data&USER_MEM_BLOCK_FLAG_USED)){
 		sz+=STACK_BLOCK_GET_SIZE(next)+sizeof(stack_block_end_t);
 	}
-	node->dt=STACK_BLOCK_INIT(sz);
+	node->data=STACK_BLOCK_INIT(sz);
 	STACK_BLOCK_SET_END(node);
 	if (STACK_BLOCK_END_OF_STACK(STACK_BLOCK_GET_NEXT(next))){
 		_memory_stack_top=node;
@@ -201,12 +201,12 @@ static __SLL_FORCE_INLINE void* _stack_get(sll_size_t sz){
 		_memory_stack_top=NULL;
 	}
 	else{
-		o->dt=STACK_BLOCK_INIT(sz);
+		o->data=STACK_BLOCK_INIT(sz);
 		STACK_BLOCK_SET_END(o);
 		_memory_stack_top=STACK_BLOCK_GET_NEXT(o);
 		_init_stack_node(_memory_stack_top,blk_sz-sz-sizeof(stack_block_end_t));
 	}
-	o->dt=USER_MEM_BLOCK_INIT(sz)|USER_MEM_BLOCK_FLAG_STACK;
+	o->data=USER_MEM_BLOCK_INIT(sz)|USER_MEM_BLOCK_FLAG_STACK;
 	return o;
 }
 
@@ -225,7 +225,7 @@ static __SLL_FORCE_INLINE void* _allocate_chunk(sll_size_t sz,sll_bool_t err){
 			return NULL;
 		}
 	}
-	b->dt=USER_MEM_BLOCK_INIT(sz);
+	b->data=USER_MEM_BLOCK_INIT(sz);
 	return b;
 }
 
@@ -253,7 +253,7 @@ void _memory_init(void){
 	_memory_stack=sll_platform_allocate_page(SLL_ROUND_LARGE_PAGE(MEMORY_STACK_SIZE),1,NULL);
 	_memory_stack_top=_memory_stack;
 	_init_stack_node(_memory_stack_top,SLL_ROUND_LARGE_PAGE(MEMORY_STACK_SIZE)-sizeof(stack_block_end_t)-sizeof(user_mem_block_t));
-	STACK_BLOCK_GET_NEXT(_memory_stack_top)->dt=STACK_BLOCK_END_OF_STACK_MARKER;
+	STACK_BLOCK_GET_NEXT(_memory_stack_top)->data=STACK_BLOCK_END_OF_STACK_MARKER;
 }
 
 
@@ -298,8 +298,8 @@ __SLL_EXTERNAL void sll_deallocate(void* p){
 		return;
 	}
 	user_mem_block_t* b=(user_mem_block_t*)(ADDR(p)-sizeof(user_mem_block_t));
-	SLL_ASSERT(b->dt&USER_MEM_BLOCK_FLAG_USED);
-	if (b->dt&USER_MEM_BLOCK_FLAG_STACK){
+	SLL_ASSERT(b->data&USER_MEM_BLOCK_FLAG_USED);
+	if (b->data&USER_MEM_BLOCK_FLAG_STACK){
 		_stack_add(b);
 	}
 	else{
@@ -311,9 +311,9 @@ __SLL_EXTERNAL void sll_deallocate(void* p){
 
 __SLL_EXTERNAL void* sll_memory_move(void* p,sll_bool_t d){
 	user_mem_block_t* b=(user_mem_block_t*)(ADDR(p)-sizeof(user_mem_block_t));
-	SLL_ASSERT(b->dt&USER_MEM_BLOCK_FLAG_USED);
+	SLL_ASSERT(b->data&USER_MEM_BLOCK_FLAG_USED);
 	sll_size_t sz=USER_MEM_BLOCK_GET_SIZE(b);
-	if (b->dt&USER_MEM_BLOCK_FLAG_STACK){
+	if (b->data&USER_MEM_BLOCK_FLAG_STACK){
 		if (d==SLL_MEMORY_MOVE_DIRECTION_FROM_STACK){
 			user_mem_block_t* n=_allocate_chunk(sz,1);
 			sll_copy_data(PTR(ADDR(b)+sizeof(user_mem_block_t)),sz-sizeof(user_mem_block_t),PTR(ADDR(n)+sizeof(user_mem_block_t)));
@@ -351,9 +351,9 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT void* sll_reallocate_raw(void* p,sll_size_t sz
 	sz+=sizeof(user_mem_block_t);
 	sll_size_t raw_sz=sz;
 	user_mem_block_t* b=(user_mem_block_t*)(ADDR(p)-sizeof(user_mem_block_t));
-	SLL_ASSERT(b->dt&USER_MEM_BLOCK_FLAG_USED);
+	SLL_ASSERT(b->data&USER_MEM_BLOCK_FLAG_USED);
 	sll_size_t prev_sz=USER_MEM_BLOCK_GET_SIZE(b);
-	if (b->dt&USER_MEM_BLOCK_FLAG_STACK){
+	if (b->data&USER_MEM_BLOCK_FLAG_STACK){
 		sz=(sz+7)&0xfffffffffffffff8ull;
 		if (prev_sz==sz){
 			return p;
@@ -375,17 +375,17 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT void* sll_reallocate_raw(void* p,sll_size_t sz
 		else{
 			stack_block_header_t* next=STACK_BLOCK_GET_NEXT(b);
 			sll_size_t next_sz=STACK_BLOCK_GET_SIZE(next)+prev_sz-sz;
-			b->dt=USER_MEM_BLOCK_INIT(sz)|USER_MEM_BLOCK_FLAG_STACK;
+			b->data=USER_MEM_BLOCK_INIT(sz)|USER_MEM_BLOCK_FLAG_STACK;
 			STACK_BLOCK_SET_END(b);
 			if (STACK_BLOCK_END_OF_STACK(next)){
 				SLL_UNIMPLEMENTED();
 			}
-			else if (next->dt&USER_MEM_BLOCK_FLAG_USED){
+			else if (next->data&USER_MEM_BLOCK_FLAG_USED){
 				SLL_UNIMPLEMENTED();
 			}
 			else{
 				next=STACK_BLOCK_GET_NEXT(b);
-				next->dt=STACK_BLOCK_INIT(next_sz);
+				next->data=STACK_BLOCK_INIT(next_sz);
 				STACK_BLOCK_SET_END(next);
 			}
 		}
@@ -410,7 +410,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT void* sll_reallocate_raw(void* p,sll_size_t sz
 				return NULL;
 			}
 		}
-		b->dt=USER_MEM_BLOCK_INIT(sz);
+		b->data=USER_MEM_BLOCK_INIT(sz);
 	}
 	return PTR(ADDR(b)+sizeof(user_mem_block_t));
 }

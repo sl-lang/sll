@@ -19,7 +19,7 @@
 #define USER_MEM_BLOCK_FLAG_USED 1
 #define USER_MEM_BLOCK_FLAG_STACK 2
 
-#define USER_MEM_BLOCK_GET_SIZE(b) ((b)->dt&0xfffffffffffffff8ull)
+#define USER_MEM_BLOCK_GET_SIZE(b) ((b)->data&0xfffffffffffffff8ull)
 #define USER_MEM_BLOCK_INIT(sz) (USER_MEM_BLOCK_FLAG_USED|(sz))
 
 #define STACK_BLOCK_SET_END(b) \
@@ -28,20 +28,20 @@
 	} while (0)
 #define STACK_BLOCK_GET_NEXT(b) ((stack_block_header_t*)PTR(ADDR(b)+STACK_BLOCK_GET_SIZE(b)+sizeof(stack_block_end_t)))
 #define STACK_BLOCK_GET_PREV(b) ((stack_block_header_t*)(((stack_block_end_t*)PTR(ADDR(b)-sizeof(stack_block_end_t)))->head))
-#define STACK_BLOCK_GET_SIZE(b) ((b)->dt&0xfffffffffffffff8ull)
+#define STACK_BLOCK_GET_SIZE(b) ((b)->data&0xfffffffffffffff8ull)
 #define STACK_BLOCK_INIT(sz) (USER_MEM_BLOCK_FLAG_STACK|(sz))
-#define STACK_BLOCK_END_OF_STACK(b) (b->dt==STACK_BLOCK_END_OF_STACK_MARKER)
+#define STACK_BLOCK_END_OF_STACK(b) (b->data==STACK_BLOCK_END_OF_STACK_MARKER)
 #define STACK_BLOCK_END_OF_STACK_MARKER 0xffffffffffffffff
 #define STACK_BLOCK_NODE_FROM_USER_BLOCK(b,node) \
 	do{ \
 		*(node)=(b); \
-		(b)->dt&=~USER_MEM_BLOCK_FLAG_USED; \
+		(b)->data&=~USER_MEM_BLOCK_FLAG_USED; \
 	} while (0)
 
 
 
 typedef struct _USER_MEM_BLOCK{
-	__SLL_U64 dt;
+	__SLL_U64 data;
 } user_mem_block_t;
 
 

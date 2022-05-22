@@ -7,17 +7,17 @@
 
 
 typedef struct _FUNCTION_LOG_DATA{
-	const sll_string_t nm;
-	sll_logger_flags_t fl;
+	const sll_string_t name;
+	sll_logger_flags_t flags;
 } function_log_data_t;
 
 
 
 typedef struct _FILE_LOG_DATA{
-	const sll_string_t nm;
-	function_log_data_t** dt;
-	sll_array_length_t dtl;
-	sll_logger_flags_t fl;
+	const sll_string_t name;
+	function_log_data_t** data;
+	sll_array_length_t length;
+	sll_logger_flags_t flags;
 } file_log_data_t;
 
 

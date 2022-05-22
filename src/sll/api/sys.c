@@ -63,12 +63,12 @@ static void _cleanup_vm_data(void){
 		while (_sys_lhl){
 			_sys_lhl--;
 			library_t* l=*(_sys_lh+_sys_lhl);
-			sll_free_string((sll_string_t*)&(l->nm));
-			void (*fn)(void)=sll_platform_lookup_symbol(l->h,SLL_ABI_NAME(SLL_ABI_DEINIT));
+			sll_free_string((sll_string_t*)&(l->name));
+			void (*fn)(void)=sll_platform_lookup_symbol(l->handle,SLL_ABI_NAME(SLL_ABI_DEINIT));
 			if (fn){
 				fn();
 			}
-			SLL_CRITICAL_ERROR(sll_platform_unload_library(l->h));
+			SLL_CRITICAL_ERROR(sll_platform_unload_library(l->handle));
 			sll_deallocate(l);
 		}
 		sll_deallocate(_sys_lh);
@@ -154,7 +154,7 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_bool_t sll_api_sys_load_lib
 		return 0;
 	}
 	for (sll_array_length_t i=0;i<_sys_lhl;i++){
-		if (STRING_EQUAL(&((*(_sys_lh+i))->nm),&lib_name)){
+		if (STRING_EQUAL(&((*(_sys_lh+i))->name),&lib_name)){
 			sll_free_string(&lib_name);
 			return 1;
 		}
@@ -218,8 +218,8 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_bool_t sll_api_sys_load_lib
 	_sys_lhl++;
 	_sys_lh=sll_reallocate(_sys_lh,_sys_lhl*sizeof(library_t*));
 	library_t* n=sll_allocate(sizeof(library_t));
-	sll_copy_data(&lib_name,sizeof(sll_string_t),(sll_string_t*)(&(n->nm)));
-	n->h=h;
+	sll_copy_data(&lib_name,sizeof(sll_string_t),(sll_string_t*)(&(n->name)));
+	n->handle=h;
 	*(_sys_lh+_sys_lhl-1)=n;
 	if (!_sys_vm_init){
 		sll_register_cleanup(_cleanup_vm_data,SLL_CLEANUP_TYPE_VM);

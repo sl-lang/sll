@@ -10,8 +10,8 @@
 
 
 typedef union _JSON_NUMBER{
-	sll_integer_t i;
-	sll_float_t f;
+	sll_integer_t int_;
+	sll_float_t float_;
 } json_number_t;
 
 
