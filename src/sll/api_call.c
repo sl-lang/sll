@@ -33,57 +33,60 @@ sll_object_t* _call_api_func(sll_function_index_t fn,sll_object_t*const* al,sll_
 	sll_float_t ret_f=_call_api_func_assembly(&ret,dt->_registers,bf,dt->_arg_count,dt->pointer);
 	sll_object_t* o;
 	if ((dt->_return_value&RETURN_VALUE_FLAG_ERROR)&&ret_f){
-		o=sll_int_to_object(ret.err);
+		o=sll_int_to_object(ret.error);
 	}
 	else{
 		switch (RETURN_VALUE_GET_TYPE(dt->_return_value)){
 			case 'b':
-				o=SLL_ACQUIRE_STATIC_INT(ret.b);
+				o=SLL_ACQUIRE_STATIC_INT(ret.bool_);
 				break;
 			case 'B':
-				o=sll_int_to_object(ret.i&0xff);
+				o=sll_int_to_object(ret.int_&0xff);
 				break;
 			case 'W':
-				o=sll_int_to_object(ret.i&0xffff);
+				o=sll_int_to_object(ret.int_&0xffff);
 				break;
 			case 'D':
-				o=sll_int_to_object(ret.i&0xffffffff);
+				o=sll_int_to_object(ret.int_&0xffffffff);
 				break;
 			case 'Q':
 			case 'i':
-				o=sll_int_to_object(ret.i);
+				o=sll_int_to_object(ret.int_);
 				break;
 			case 'f':
+				if (dt->_return_value&RETURN_VALUE_FLAG_ERROR){
+					SLL_UNIMPLEMENTED();
+				}
 				o=sll_float_to_object(ret_f);
 				break;
 			case 'c':
-				o=SLL_FROM_CHAR(ret.c);
+				o=SLL_FROM_CHAR(ret.char_);
 				break;
 			case 'd':
-				o=sll_complex_to_object(&(ret.d));
+				o=sll_complex_to_object(&(ret.complex_));
 				break;
 			case 'x':
-				if (ret.x.type==SLL_PARSE_ARGS_TYPE_INT){
-					o=sll_int_to_object(ret.x.data.int_);
+				if (ret.number.type==SLL_PARSE_ARGS_TYPE_INT){
+					o=sll_int_to_object(ret.number.data.int_);
 				}
-				else if (ret.x.type==SLL_PARSE_ARGS_TYPE_FLOAT){
-					o=sll_float_to_object(ret.x.data.float_);
+				else if (ret.number.type==SLL_PARSE_ARGS_TYPE_FLOAT){
+					o=sll_float_to_object(ret.number.data.float_);
 				}
 				else{
-					o=sll_complex_to_object(&(ret.x.data.complex_));
+					o=sll_complex_to_object(&(ret.number.data.complex_));
 				}
 				break;
 			case 's':
-				o=STRING_TO_OBJECT_NOCOPY(&(ret.s));
+				o=STRING_TO_OBJECT_NOCOPY(&(ret.string));
 				break;
 			case 'a':
-				o=sll_array_to_object_nocopy(&(ret.a));
+				o=sll_array_to_object_nocopy(&(ret.array));
 				break;
 			case 'm':
-				o=sll_map_to_object_nocopy(&(ret.m));
+				o=sll_map_to_object_nocopy(&(ret.map));
 				break;
 			case 'o':
-				o=ret.o;
+				o=ret.object;
 				break;
 			case 'v':
 				o=SLL_ACQUIRE_STATIC_INT(0);

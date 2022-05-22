@@ -17,16 +17,16 @@
 
 
 typedef union _API_RETURN_VALUE{
-	sll_bool_t b;
-	sll_integer_t i;
-	sll_char_t c;
-	sll_complex_t d;
-	sll_number_t x;
-	sll_string_t s;
-	sll_array_t a;
-	sll_map_t m;
-	sll_object_t* o;
-	sll_error_t err;
+	sll_bool_t bool_;
+	sll_integer_t int_;
+	sll_char_t char_;
+	sll_complex_t complex_;
+	sll_number_t number;
+	sll_string_t string;
+	sll_array_t array;
+	sll_map_t map;
+	sll_object_t* object;
+	sll_error_t error;
 } api_return_value_t;
 
 

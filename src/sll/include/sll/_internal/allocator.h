@@ -4,16 +4,16 @@
 
 
 
-#define ALLOCATOR_HEADER_GET_SIZE(h) ((h)->dt)
+#define ALLOCATOR_HEADER_GET_SIZE(h) ((h)->data)
 #define ALLOCATOR_HEADER_INIT(h,sz) \
 	do{ \
-		(h)->dt=(sz); \
+		(h)->data=(sz); \
 	} while (0)
 
 
 
 typedef struct _ALLOCATOR_HEADER{
-	__SLL_U64 dt;
+	__SLL_U64 data;
 } allocator_header_t;
 
 
