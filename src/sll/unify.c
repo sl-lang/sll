@@ -180,22 +180,22 @@ __SLL_EXTERNAL void sll_unify_compilation_data(const sll_compilation_data_t* c_d
 				sll_copy_data(s,sizeof(sll_function_t)+s->arg_count*sizeof(sll_identifier_index_t),d);
 				d->offset+=o->_stack.offset;
 			}
-			o->string_table.l=sf->string_table.l;
-			o->string_table.dt=sll_allocate(sf->string_table.l*sizeof(sll_string_t));
-			for (sll_string_index_t i=0;i<sf->string_table.l;i++){
-				sll_string_clone(sf->string_table.dt+i,o->string_table.dt+i);
+			o->string_table.length=sf->string_table.length;
+			o->string_table.data=sll_allocate(sf->string_table.length*sizeof(sll_string_t));
+			for (sll_string_index_t i=0;i<sf->string_table.length;i++){
+				sll_string_clone(sf->string_table.data+i,o->string_table.data+i);
 			}
 			_clone_node(sf->first_node,o,NULL);
 		}
 		else{
 			source_file_mapping_data_t sf_m_dt={
-				sll_allocate_stack(sf->string_table.l*sizeof(sll_string_index_t)),
+				sll_allocate_stack(sf->string_table.length*sizeof(sll_string_index_t)),
 				o->function_table.length,
 				o->_next_scope
 			};
-			for (sll_string_index_t i=0;i<sf->string_table.l;i++){
+			for (sll_string_index_t i=0;i<sf->string_table.length;i++){
 				sll_string_t tmp;
-				sll_string_clone(sf->string_table.dt+i,&tmp);
+				sll_string_clone(sf->string_table.data+i,&tmp);
 				*(sf_m_dt.sm+i)=sll_add_string(&(o->string_table),&tmp,1);
 			}
 			sll_node_t* dbg=_acquire_next_node(o);

@@ -50,21 +50,21 @@
 
 
 __SLL_EXTERNAL __SLL_API_CALL void sll_api_math_abs(const sll_number_t* a,sll_number_t* out){
-	if (a->t==SLL_PARSE_ARGS_TYPE_INT){
-		out->t=SLL_PARSE_ARGS_TYPE_INT;
-		out->dt.i=(a->dt.i<0?-a->dt.i:a->dt.i);
+	if (a->type==SLL_PARSE_ARGS_TYPE_INT){
+		out->type=SLL_PARSE_ARGS_TYPE_INT;
+		out->data.int_=(a->data.int_<0?-a->data.int_:a->data.int_);
 		return;
 	}
-	out->t=SLL_PARSE_ARGS_TYPE_FLOAT;
-	if (a->t==SLL_PARSE_ARGS_TYPE_COMPLEX){
-		out->dt.f=COMPLEX_ABS(a->dt.d);
+	out->type=SLL_PARSE_ARGS_TYPE_FLOAT;
+	if (a->type==SLL_PARSE_ARGS_TYPE_COMPLEX){
+		out->data.float_=COMPLEX_ABS(a->data.complex_);
 	}
 	else{
 		f64_data_t dt={
-			.v=a->dt.f
+			.v=a->data.float_
 		};
 		dt.dt&=0x7fffffffffffffffull;
-		out->dt.f=dt.v;
+		out->data.float_=dt.v;
 	}
 }
 
@@ -119,14 +119,14 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_float_t sll_api_math_cbrt(s
 
 
 __SLL_EXTERNAL __SLL_API_CALL void sll_api_math_ceil(const sll_number_t* a,sll_number_t* out){
-	if (a->t==SLL_PARSE_ARGS_TYPE_FLOAT){
-		out->t=SLL_PARSE_ARGS_TYPE_INT;
-		out->dt.i=(sll_integer_t)ceil(a->dt.f);
+	if (a->type==SLL_PARSE_ARGS_TYPE_FLOAT){
+		out->type=SLL_PARSE_ARGS_TYPE_INT;
+		out->data.int_=(sll_integer_t)ceil(a->data.float_);
 	}
 	else{
-		out->t=SLL_PARSE_ARGS_TYPE_COMPLEX;
-		out->dt.d.real=ceil(a->dt.d.real);
-		out->dt.d.imag=ceil(a->dt.d.imag);
+		out->type=SLL_PARSE_ARGS_TYPE_COMPLEX;
+		out->data.complex_.real=ceil(a->data.complex_.real);
+		out->data.complex_.imag=ceil(a->data.complex_.imag);
 	}
 }
 
@@ -165,63 +165,63 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_size_t sll_api_math_combina
 
 
 __SLL_EXTERNAL __SLL_API_CALL void sll_api_math_copy_sign(const sll_number_t* a,const sll_number_t* b,sll_number_t* out){
-	if (a->t==b->t){
+	if (a->type==b->type){
 		SLL_UNIMPLEMENTED();
 	}
-	out->t=a->t;
-	if (a->t==SLL_PARSE_ARGS_TYPE_INT){
-		sll_integer_t neg=((a->dt.i^b->dt.i)<0);
-		out->dt.i=(a->dt.i^(-neg))+neg;
+	out->type=a->type;
+	if (a->type==SLL_PARSE_ARGS_TYPE_INT){
+		sll_integer_t neg=((a->data.int_^b->data.int_)<0);
+		out->data.int_=(a->data.int_^(-neg))+neg;
 	}
-	else if (a->t==SLL_PARSE_ARGS_TYPE_FLOAT){
+	else if (a->type==SLL_PARSE_ARGS_TYPE_FLOAT){
 		f64_data_t dt_a={
-			.v=a->dt.f
+			.v=a->data.float_
 		};
 		f64_data_t dt_b={
-			.v=b->dt.f
+			.v=b->data.float_
 		};
 		dt_a.dt=(dt_a.dt&0x7fffffffffffffffull)|(dt_b.dt&0x8000000000000000ull);
-		out->dt.f=dt_a.v;
+		out->data.float_=dt_a.v;
 	}
 	else{
 		f64_data_t dt_a={
-			.v=a->dt.d.real
+			.v=a->data.complex_.real
 		};
 		f64_data_t dt_b={
-			.v=b->dt.d.real
+			.v=b->data.complex_.real
 		};
 		dt_a.dt=(dt_a.dt&0x7fffffffffffffffull)|(dt_b.dt&0x8000000000000000ull);
-		out->dt.d.real=dt_a.v;
-		dt_a.v=a->dt.d.imag;
-		dt_b.v=b->dt.d.imag;
+		out->data.complex_.real=dt_a.v;
+		dt_a.v=a->data.complex_.imag;
+		dt_b.v=b->data.complex_.imag;
 		dt_a.dt=(dt_a.dt&0x7fffffffffffffffull)|(dt_b.dt&0x8000000000000000ull);
-		out->dt.d.imag=dt_a.v;
+		out->data.complex_.imag=dt_a.v;
 	}
 }
 
 
 
 __SLL_EXTERNAL __SLL_API_CALL void sll_api_math_cos(const sll_number_t* a,sll_number_t* out){
-	out->t=a->t;
-	if (a->t==SLL_PARSE_ARGS_TYPE_FLOAT){
-		out->dt.f=cos(a->dt.f);
+	out->type=a->type;
+	if (a->type==SLL_PARSE_ARGS_TYPE_FLOAT){
+		out->data.float_=cos(a->data.float_);
 	}
 	else{
-		out->dt.d.real=cos(a->dt.d.real)*cosh(a->dt.d.imag);
-		out->dt.d.imag=sin(a->dt.d.real)*sinh(a->dt.d.imag);
+		out->data.complex_.real=cos(a->data.complex_.real)*cosh(a->data.complex_.imag);
+		out->data.complex_.imag=sin(a->data.complex_.real)*sinh(a->data.complex_.imag);
 	}
 }
 
 
 
 __SLL_EXTERNAL __SLL_API_CALL void sll_api_math_cosh(const sll_number_t* a,sll_number_t* out){
-	out->t=a->t;
-	if (a->t==SLL_PARSE_ARGS_TYPE_FLOAT){
-		out->dt.f=cosh(a->dt.f);
+	out->type=a->type;
+	if (a->type==SLL_PARSE_ARGS_TYPE_FLOAT){
+		out->data.float_=cosh(a->data.float_);
 	}
 	else{
-		out->dt.d.real=cosh(a->dt.d.real)*cos(a->dt.d.imag);
-		out->dt.d.imag=sinh(a->dt.d.real)*sin(a->dt.d.imag);
+		out->data.complex_.real=cosh(a->data.complex_.real)*cos(a->data.complex_.imag);
+		out->data.complex_.imag=sinh(a->data.complex_.real)*sin(a->data.complex_.imag);
 	}
 }
 
@@ -271,12 +271,12 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_size_t sll_api_math_euler_p
 
 
 __SLL_EXTERNAL __SLL_API_CALL void sll_api_math_exp(const sll_number_t* a,sll_number_t* out){
-	out->t=a->t;
-	if (a->t==SLL_PARSE_ARGS_TYPE_FLOAT){
-		out->dt.f=exp(a->dt.f);
+	out->type=a->type;
+	if (a->type==SLL_PARSE_ARGS_TYPE_FLOAT){
+		out->data.float_=exp(a->data.float_);
 	}
 	else{
-		sll_complex_exp(&(a->dt.d),&(out->dt.d));
+		sll_complex_exp(&(a->data.complex_),&(out->data.complex_));
 	}
 }
 
@@ -305,14 +305,14 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_math_factors(sll_size_t a,sll_array_t
 
 
 __SLL_EXTERNAL __SLL_API_CALL void sll_api_math_floor(const sll_number_t* a,sll_number_t* out){
-	if (a->t==SLL_PARSE_ARGS_TYPE_FLOAT){
-		out->t=SLL_PARSE_ARGS_TYPE_INT;
-		out->dt.i=(sll_integer_t)floor(a->dt.f);
+	if (a->type==SLL_PARSE_ARGS_TYPE_FLOAT){
+		out->type=SLL_PARSE_ARGS_TYPE_INT;
+		out->data.int_=(sll_integer_t)floor(a->data.float_);
 	}
 	else{
-		out->t=SLL_PARSE_ARGS_TYPE_COMPLEX;
-		out->dt.d.real=floor(a->dt.d.real);
-		out->dt.d.imag=floor(a->dt.d.imag);
+		out->type=SLL_PARSE_ARGS_TYPE_COMPLEX;
+		out->data.complex_.real=floor(a->data.complex_.real);
+		out->data.complex_.imag=floor(a->data.complex_.imag);
 	}
 }
 
@@ -395,40 +395,40 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_size_t sll_api_math_int_sqr
 
 
 __SLL_EXTERNAL __SLL_API_CALL void sll_api_math_log(const sll_number_t* a,sll_number_t* out){
-	out->t=a->t;
-	if (a->t==SLL_PARSE_ARGS_TYPE_FLOAT){
-		out->dt.f=log(a->dt.f);
+	out->type=a->type;
+	if (a->type==SLL_PARSE_ARGS_TYPE_FLOAT){
+		out->data.float_=log(a->data.float_);
 	}
 	else{
-		sll_complex_log(&(a->dt.d),&(out->dt.d));
+		sll_complex_log(&(a->data.complex_),&(out->data.complex_));
 	}
 }
 
 
 
 __SLL_EXTERNAL __SLL_API_CALL void sll_api_math_log10(const sll_number_t* a,sll_number_t* out){
-	out->t=a->t;
-	if (a->t==SLL_PARSE_ARGS_TYPE_FLOAT){
-		out->dt.f=log10(a->dt.f);
+	out->type=a->type;
+	if (a->type==SLL_PARSE_ARGS_TYPE_FLOAT){
+		out->data.float_=log10(a->data.float_);
 	}
 	else{
 		sll_complex_t tmp;
-		sll_complex_log(&(a->dt.d),&tmp);
-		out->dt.d=COMPLEX_DIV_FLOAT(tmp,2.302585092994046);
+		sll_complex_log(&(a->data.complex_),&tmp);
+		out->data.complex_=COMPLEX_DIV_FLOAT(tmp,2.302585092994046);
 	}
 }
 
 
 
 __SLL_EXTERNAL __SLL_API_CALL void sll_api_math_log2(const sll_number_t* a,sll_number_t* out){
-	out->t=a->t;
-	if (a->t==SLL_PARSE_ARGS_TYPE_FLOAT){
-		out->dt.f=log2(a->dt.f);
+	out->type=a->type;
+	if (a->type==SLL_PARSE_ARGS_TYPE_FLOAT){
+		out->data.float_=log2(a->data.float_);
 	}
 	else{
 		sll_complex_t tmp;
-		sll_complex_log(&(a->dt.d),&tmp);
-		out->dt.d=COMPLEX_DIV_FLOAT(tmp,0.6931471805599453);
+		sll_complex_log(&(a->data.complex_),&tmp);
+		out->data.complex_=COMPLEX_DIV_FLOAT(tmp,0.6931471805599453);
 	}
 }
 
@@ -456,26 +456,26 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_size_t sll_api_math_permuta
 
 
 __SLL_EXTERNAL __SLL_API_CALL void sll_api_math_pow(const sll_number_t* a,const sll_number_t* b,sll_number_t* out){
-	if (a->t==SLL_PARSE_ARGS_TYPE_FLOAT&&b->t==SLL_OBJECT_TYPE_FLOAT){
-		out->t=SLL_PARSE_ARGS_TYPE_FLOAT;
-		out->dt.f=pow(a->dt.f,b->dt.f);
+	if (a->type==SLL_PARSE_ARGS_TYPE_FLOAT&&b->type==SLL_OBJECT_TYPE_FLOAT){
+		out->type=SLL_PARSE_ARGS_TYPE_FLOAT;
+		out->data.float_=pow(a->data.float_,b->data.float_);
 	}
 	else{
-		out->t=SLL_PARSE_ARGS_TYPE_COMPLEX;
-		if (a->t==SLL_PARSE_ARGS_TYPE_COMPLEX){
-			if (b->t==SLL_PARSE_ARGS_TYPE_COMPLEX){
-				sll_complex_pow(&(a->dt.d),&(b->dt.d),&(out->dt.d));
+		out->type=SLL_PARSE_ARGS_TYPE_COMPLEX;
+		if (a->type==SLL_PARSE_ARGS_TYPE_COMPLEX){
+			if (b->type==SLL_PARSE_ARGS_TYPE_COMPLEX){
+				sll_complex_pow(&(a->data.complex_),&(b->data.complex_),&(out->data.complex_));
 			}
 			else{
-				sll_complex_pow_float(&(a->dt.d),b->dt.f,&(out->dt.d));
+				sll_complex_pow_float(&(a->data.complex_),b->data.float_,&(out->data.complex_));
 			}
 		}
 		else{
 			sll_complex_t tmp={
-				a->dt.f,
+				a->data.float_,
 				0
 			};
-			sll_complex_pow(&tmp,&(b->dt.d),&(out->dt.d));
+			sll_complex_pow(&tmp,&(b->data.complex_),&(out->data.complex_));
 		}
 	}
 }
@@ -483,67 +483,67 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_math_pow(const sll_number_t* a,const 
 
 
 __SLL_EXTERNAL __SLL_API_CALL void sll_api_math_round(const sll_number_t* a,sll_number_t* out){
-	if (a->t==SLL_PARSE_ARGS_TYPE_FLOAT){
-		out->t=SLL_PARSE_ARGS_TYPE_INT;
-		out->dt.i=(sll_integer_t)round(a->dt.f);
+	if (a->type==SLL_PARSE_ARGS_TYPE_FLOAT){
+		out->type=SLL_PARSE_ARGS_TYPE_INT;
+		out->data.int_=(sll_integer_t)round(a->data.float_);
 	}
 	else{
-		out->t=SLL_PARSE_ARGS_TYPE_COMPLEX;
-		out->dt.d.real=round(a->dt.d.real);
-		out->dt.d.imag=round(a->dt.d.imag);
+		out->type=SLL_PARSE_ARGS_TYPE_COMPLEX;
+		out->data.complex_.real=round(a->data.complex_.real);
+		out->data.complex_.imag=round(a->data.complex_.imag);
 	}
 }
 
 
 
 __SLL_EXTERNAL __SLL_API_CALL void sll_api_math_sin(const sll_number_t* a,sll_number_t* out){
-	out->t=a->t;
-	if (a->t==SLL_PARSE_ARGS_TYPE_FLOAT){
-		out->dt.f=sin(a->dt.f);
+	out->type=a->type;
+	if (a->type==SLL_PARSE_ARGS_TYPE_FLOAT){
+		out->data.float_=sin(a->data.float_);
 	}
 	else{
-		out->dt.d.real=sin(a->dt.d.real)*cosh(a->dt.d.imag);
-		out->dt.d.imag=cos(a->dt.d.real)*sinh(a->dt.d.imag);
+		out->data.complex_.real=sin(a->data.complex_.real)*cosh(a->data.complex_.imag);
+		out->data.complex_.imag=cos(a->data.complex_.real)*sinh(a->data.complex_.imag);
 	}
 }
 
 
 
 __SLL_EXTERNAL __SLL_API_CALL void sll_api_math_sinh(const sll_number_t* a,sll_number_t* out){
-	out->t=a->t;
-	if (a->t==SLL_PARSE_ARGS_TYPE_FLOAT){
-		out->dt.f=sinh(a->dt.f);
+	out->type=a->type;
+	if (a->type==SLL_PARSE_ARGS_TYPE_FLOAT){
+		out->data.float_=sinh(a->data.float_);
 	}
 	else{
-		out->dt.d.real=sinh(a->dt.d.real)*cos(a->dt.d.imag);
-		out->dt.d.imag=cosh(a->dt.d.real)*sin(a->dt.d.imag);
+		out->data.complex_.real=sinh(a->data.complex_.real)*cos(a->data.complex_.imag);
+		out->data.complex_.imag=cosh(a->data.complex_.real)*sin(a->data.complex_.imag);
 	}
 }
 
 
 
 __SLL_EXTERNAL __SLL_API_CALL void sll_api_math_sqrt(const sll_number_t* a,sll_number_t* out){
-	out->t=a->t;
-	if (a->t==SLL_PARSE_ARGS_TYPE_FLOAT){
-		out->dt.f=sqrt(a->dt.f);
+	out->type=a->type;
+	if (a->type==SLL_PARSE_ARGS_TYPE_FLOAT){
+		out->data.float_=sqrt(a->data.float_);
 	}
 	else{
-		sll_float_t x=(hypot(a->dt.d.real,a->dt.d.imag)+a->dt.d.real)/2;
-		out->dt.d.real=sqrt(x);
-		out->dt.d.imag=sll_math_copy_sign(sqrt(x-a->dt.d.real),a->dt.d.imag);
+		sll_float_t x=(hypot(a->data.complex_.real,a->data.complex_.imag)+a->data.complex_.real)/2;
+		out->data.complex_.real=sqrt(x);
+		out->data.complex_.imag=sll_math_copy_sign(sqrt(x-a->data.complex_.real),a->data.complex_.imag);
 	}
 }
 
 
 
 __SLL_EXTERNAL __SLL_API_CALL void sll_api_math_tan(const sll_number_t* a,sll_number_t* out){
-	out->t=a->t;
-	if (a->t==SLL_PARSE_ARGS_TYPE_FLOAT){
-		out->dt.f=tan(a->dt.f);
+	out->type=a->type;
+	if (a->type==SLL_PARSE_ARGS_TYPE_FLOAT){
+		out->data.float_=tan(a->data.float_);
 	}
 	else{
-		sll_float_t t=tan(a->dt.d.real);
-		sll_float_t th=tanh(a->dt.d.imag);
+		sll_float_t t=tan(a->data.complex_.real);
+		sll_float_t th=tanh(a->data.complex_.imag);
 		sll_complex_t num={
 			t,
 			th
@@ -552,20 +552,20 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_math_tan(const sll_number_t* a,sll_nu
 			1,
 			-t*th
 		};
-		out->dt.d=COMPLEX_DIV(num,denom);
+		out->data.complex_=COMPLEX_DIV(num,denom);
 	}
 }
 
 
 
 __SLL_EXTERNAL __SLL_API_CALL void sll_api_math_tanh(const sll_number_t* a,sll_number_t* out){
-	out->t=a->t;
-	if (a->t==SLL_PARSE_ARGS_TYPE_FLOAT){
-		out->dt.f=tanh(a->dt.f);
+	out->type=a->type;
+	if (a->type==SLL_PARSE_ARGS_TYPE_FLOAT){
+		out->data.float_=tanh(a->data.float_);
 	}
 	else{
-		sll_float_t t=tan(a->dt.d.imag);
-		sll_float_t th=tanh(a->dt.d.real);
+		sll_float_t t=tan(a->data.complex_.imag);
+		sll_float_t th=tanh(a->data.complex_.real);
 		sll_complex_t num={
 			th,
 			t
@@ -574,7 +574,7 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_math_tanh(const sll_number_t* a,sll_n
 			1,
 			t*th
 		};
-		out->dt.d=COMPLEX_DIV(num,denom);
+		out->data.complex_=COMPLEX_DIV(num,denom);
 	}
 }
 

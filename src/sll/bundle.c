@@ -52,10 +52,10 @@ static sll_source_file_index_t _add_source_file(const sll_bundle_t* b,const sll_
 		sll_copy_data(bsf_fn,sizeof(sll_function_t)+SLL_FUNCTION_GET_ARGUMENT_COUNT(bsf_fn)*sizeof(sll_identifier_index_t),k);
 		*(sf->function_table.data+i)=k;
 	}
-	sf->string_table.l=bsf_sf.string_table.l;
-	sf->string_table.dt=sll_allocate(sf->string_table.l*sizeof(sll_string_t));
-	for (sll_string_index_t i=0;i<sf->string_table.l;i++){
-		sll_string_clone(bsf_sf.string_table.dt+i,sf->string_table.dt+i);
+	sf->string_table.length=bsf_sf.string_table.length;
+	sf->string_table.data=sll_allocate(sf->string_table.length*sizeof(sll_string_t));
+	for (sll_string_index_t i=0;i<sf->string_table.length;i++){
+		sll_string_clone(bsf_sf.string_table.data+i,sf->string_table.data+i);
 	}
 	sf->import_table.length=bsf_sf.import_table.length;
 	sf->import_table.data=sll_allocate(sf->import_table.length*sizeof(sll_import_file_t*));

@@ -17,7 +17,7 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_bool_t sll_api_log_log(sll_
 	sll_file_offset_t ln=sll_get_location(sll_current_runtime_data->a_dt,sll_thread_get_instruction_index(SLL_UNKNOWN_THREAD_INDEX),&fp,&fn);
 	sll_string_t s;
 	sll_api_string_convert(data,len,&s);
-	sll_bool_t o=sll_log_raw((sll_current_runtime_data->a_dt->string_table.dt+fp)->data,(fn==SLL_MAX_STRING_INDEX?SLL_CHAR("@code"):(sll_current_runtime_data->a_dt->string_table.dt+fn)->data),ln,0,&s);
+	sll_bool_t o=sll_log_raw((sll_current_runtime_data->a_dt->string_table.data+fp)->data,(fn==SLL_MAX_STRING_INDEX?SLL_CHAR("@code"):(sll_current_runtime_data->a_dt->string_table.data+fn)->data),ln,0,&s);
 	sll_free_string(&s);
 	return o;
 }

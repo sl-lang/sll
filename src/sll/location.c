@@ -53,7 +53,7 @@ __SLL_EXTERNAL void sll_get_name(sll_object_t* v,sll_string_t* o){
 			}
 		}
 		else if (v->data.int_&&v->data.int_<=sll_current_runtime_data->a_dt->function_table.length){
-			sll_string_clone(sll_current_runtime_data->a_dt->string_table.dt+(sll_current_runtime_data->a_dt->function_table.data+v->data.int_-1)->name_string_index,o);
+			sll_string_clone(sll_current_runtime_data->a_dt->string_table.data+(sll_current_runtime_data->a_dt->function_table.data+v->data.int_-1)->name_string_index,o);
 		}
 	}
 	else{

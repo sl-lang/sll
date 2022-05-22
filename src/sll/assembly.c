@@ -392,7 +392,7 @@ static const sll_node_t* _generate_jump(const sll_node_t* o,assembly_generator_d
 			}
 			return o+1;
 		case SLL_NODE_TYPE_STRING:
-			if ((!!((g_dt->sf->string_table.dt+o->data.string_index)->length))^inv){
+			if ((!!((g_dt->sf->string_table.data+o->data.string_index)->length))^inv){
 				GENERATE_OPCODE_WITH_LABEL(g_dt,SLL_ASSEMBLY_INSTRUCTION_TYPE_JMP,lbl);
 			}
 			return o+1;
@@ -2025,12 +2025,12 @@ __SLL_EXTERNAL void sll_free_assembly_data(sll_assembly_data_t* assembly_data){
 	sll_deallocate(assembly_data->function_table.data);
 	assembly_data->function_table.data=NULL;
 	assembly_data->function_table.length=0;
-	for (sll_string_index_t i=0;i<assembly_data->string_table.l;i++){
-		sll_free_string(assembly_data->string_table.dt+i);
+	for (sll_string_index_t i=0;i<assembly_data->string_table.length;i++){
+		sll_free_string(assembly_data->string_table.data+i);
 	}
-	sll_deallocate(assembly_data->string_table.dt);
-	assembly_data->string_table.dt=NULL;
-	assembly_data->string_table.l=0;
+	sll_deallocate(assembly_data->string_table.data);
+	assembly_data->string_table.data=NULL;
+	assembly_data->string_table.length=0;
 	sll_deallocate(assembly_data->debug_data.data);
 	assembly_data->debug_data.data=NULL;
 	assembly_data->debug_data.length=0;
@@ -2059,14 +2059,14 @@ __SLL_EXTERNAL void sll_generate_assembly(const sll_source_file_t* sf,sll_assemb
 		_acquire_next_instruction(o)->type=SLL_ASSEMBLY_INSTRUCTION_TYPE_RET_ZERO;
 		o->function_table.length=0;
 		o->function_table.data=NULL;
-		o->string_table.l=0;
-		o->string_table.dt=NULL;
+		o->string_table.length=0;
+		o->string_table.data=NULL;
 		return;
 	}
-	o->string_table.l=sf->string_table.l;
-	o->string_table.dt=sll_allocate(o->string_table.l*sizeof(sll_string_t));
-	for (sll_string_index_t i=0;i<o->string_table.l;i++){
-		sll_string_clone(sf->string_table.dt+i,o->string_table.dt+i);
+	o->string_table.length=sf->string_table.length;
+	o->string_table.data=sll_allocate(o->string_table.length*sizeof(sll_string_t));
+	for (sll_string_index_t i=0;i<o->string_table.length;i++){
+		sll_string_clone(sf->string_table.data+i,o->string_table.data+i);
 	}
 	assembly_generator_data_t g_dt={
 		o,
@@ -2227,8 +2227,8 @@ __SLL_EXTERNAL void sll_generate_assembly(const sll_source_file_t* sf,sll_assemb
 		}
 	}
 	strint_map_data_t sm={
-		(o->string_table.l>>6)+1,
-		sll_allocate(((o->string_table.l>>6)+1)*sizeof(bitmap_t))
+		(o->string_table.length>>6)+1,
+		sll_allocate(((o->string_table.length>>6)+1)*sizeof(bitmap_t))
 	};
 	for (sll_string_index_t i=0;i<sm.ml;i++){
 		*(sm.m+i)=0;
@@ -2333,34 +2333,34 @@ _remove_nop:
 	sll_deallocate(fn_ln);
 	o->debug_data.data=sll_reallocate(o->debug_data.data,dbg_i*sizeof(sll_debug_line_data_t));
 	o->debug_data.length=dbg_i;
-	sm.im=sll_allocate(o->string_table.l*sizeof(sll_string_index_t));
+	sm.im=sll_allocate(o->string_table.length*sizeof(sll_string_index_t));
 	sll_string_index_t k=0;
 	sll_string_index_t l=0;
 	for (sll_string_index_t i=0;i<sm.ml;i++){
 		bitmap_t v=~(*(sm.m+i));
 		while (v){
 			sll_string_index_t j=FIND_FIRST_SET_BIT(v)|(i<<6);
-			if (j==o->string_table.l){
+			if (j==o->string_table.length){
 				break;
 			}
 			for (sll_string_index_t n=k;n<j;n++){
-				*(o->string_table.dt+n-l)=*(o->string_table.dt+n);
+				*(o->string_table.data+n-l)=*(o->string_table.data+n);
 				*(sm.im+n)=n-l;
 			}
-			sll_free_string(o->string_table.dt+j);
+			sll_free_string(o->string_table.data+j);
 			k=j+1;
 			l++;
 			v&=v-1;
 		}
 	}
 	sll_deallocate(sm.m);
-	for (sll_string_index_t i=k;i<o->string_table.l;i++){
-		*(o->string_table.dt+i-l)=*(o->string_table.dt+i);
+	for (sll_string_index_t i=k;i<o->string_table.length;i++){
+		*(o->string_table.data+i-l)=*(o->string_table.data+i);
 		*(sm.im+i)=i-l;
 	}
 	if (l){
-		o->string_table.l-=l;
-		o->string_table.dt=sll_reallocate(o->string_table.dt,o->string_table.l*sizeof(sll_string_t));
+		o->string_table.length-=l;
+		o->string_table.data=sll_reallocate(o->string_table.data,o->string_table.length*sizeof(sll_string_t));
 	}
 	for (sll_function_index_t i=0;i<o->function_table.length;i++){
 		(o->function_table.data+i)->name_string_index=*(sm.im+(o->function_table.data+i)->name_string_index);

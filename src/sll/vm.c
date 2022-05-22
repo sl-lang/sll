@@ -210,7 +210,7 @@ void _call_function(thread_data_t* thr,sll_function_index_t fn,sll_arg_count_t a
 	}
 	if (fr){
 		SLL_ASSERT(thr->c_st.l<=sll_current_vm_config->c_st_sz);
-		(thr->c_st.dt+thr->c_st.l)->nm=(sll_current_runtime_data->a_dt->string_table.dt+af->name_string_index)->data;
+		(thr->c_st.dt+thr->c_st.l)->nm=(sll_current_runtime_data->a_dt->string_table.data+af->name_string_index)->data;
 		(thr->c_st.dt+thr->c_st.l)->_ii=thr->ii;
 		(thr->c_st.dt+thr->c_st.l)->_s=thr->si-SLL_ASSEMBLY_FUNCTION_GET_ARGUMENT_COUNT(af);
 		(thr->c_st.dt+thr->c_st.l)->_var_mem_off=PTR(ADDR(thr->stack+(thr->c_st.dt+thr->c_st.l)->_s)-ADDR(_vm_var_data+sll_current_runtime_data->a_dt->variable_count));
@@ -424,7 +424,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_wait_thread(sll_thread_index
 				thr->si++;
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_LOADS:
-				*(thr->stack+thr->si)=STRING_TO_OBJECT(sll_current_runtime_data->a_dt->string_table.dt+ai->data.string_index);
+				*(thr->stack+thr->si)=STRING_TO_OBJECT(sll_current_runtime_data->a_dt->string_table.data+ai->data.string_index);
 				thr->si++;
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PACK:
@@ -511,7 +511,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_wait_thread(sll_thread_index
 				}
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_LOOKUP_STR:
 				{
-					sll_function_index_t i=sll_lookup_internal_function(sll_current_runtime_data->ift,(sll_current_runtime_data->a_dt->string_table.dt+ai->data.string_index)->data);
+					sll_function_index_t i=sll_lookup_internal_function(sll_current_runtime_data->ift,(sll_current_runtime_data->a_dt->string_table.data+ai->data.string_index)->data);
 					*(thr->stack+thr->si)=(i==SLL_UNKNOWN_INTERNAL_FUNCTION_INDEX?SLL_ACQUIRE_STATIC_INT(0):sll_int_to_object(~((sll_integer_t)i)));
 					thr->si++;
 					break;
@@ -832,7 +832,7 @@ _cleanup_jump_table:;
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PRINT_STR:
 				if (!sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_FILE_IO)||sll_get_sandbox_flag(SLL_SANDBOX_FLAG_ENABLE_STDOUT_IO)){
-					sll_file_write(sll_current_vm_config->out,(sll_current_runtime_data->a_dt->string_table.dt+ai->data.string_index)->data,(sll_current_runtime_data->a_dt->string_table.dt+ai->data.string_index)->length*sizeof(sll_char_t),NULL);
+					sll_file_write(sll_current_vm_config->out,(sll_current_runtime_data->a_dt->string_table.data+ai->data.string_index)->data,(sll_current_runtime_data->a_dt->string_table.data+ai->data.string_index)->length*sizeof(sll_char_t),NULL);
 				}
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_CALL:
@@ -1017,7 +1017,7 @@ _return:;
 				thr->si++;
 				goto _return;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_RET_STR:
-				*(thr->stack+thr->si)=STRING_TO_OBJECT(sll_current_runtime_data->a_dt->string_table.dt+ai->data.string_index);
+				*(thr->stack+thr->si)=STRING_TO_OBJECT(sll_current_runtime_data->a_dt->string_table.data+ai->data.string_index);
 				thr->si++;
 				goto _return;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_RET_VAR:

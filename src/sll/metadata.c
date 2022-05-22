@@ -165,10 +165,10 @@ static sll_node_t* _update(sll_node_t* o,sll_string_index_t* sm){
 __SLL_EXTERNAL void sll_optimize_metadata(sll_compilation_data_t* c_dt){
 	for (sll_source_file_index_t idx=0;idx<c_dt->length;idx++){
 		sll_source_file_t* sf=*(c_dt->data+idx);
-		if (!sf->string_table.l){
+		if (!sf->string_table.length){
 			continue;
 		}
-		sll_string_index_t ml=(sf->string_table.l>>6)+1;
+		sll_string_index_t ml=(sf->string_table.length>>6)+1;
 		bitmap_t* m=sll_zero_allocate_stack(ml*sizeof(bitmap_t));
 		*(m+(sf->file_path_string_index>>6))|=1ull<<(sf->file_path_string_index&63);
 		for (sll_identifier_index_t i=0;i<SLL_MAX_SHORT_IDENTIFIER_LENGTH;i++){
@@ -193,19 +193,19 @@ __SLL_EXTERNAL void sll_optimize_metadata(sll_compilation_data_t* c_dt){
 		if (sf->first_node){
 			_mark(sf->first_node,m);
 		}
-		sll_string_index_t* sm=sll_allocate_stack(sf->string_table.l*sizeof(sll_string_index_t));
+		sll_string_index_t* sm=sll_allocate_stack(sf->string_table.length*sizeof(sll_string_index_t));
 		sll_string_index_t k=0;
 		sll_string_index_t l=0;
 		for (sll_string_index_t i=0;i<ml;i++){
 			bitmap_t v=~(*(m+i));
 			while (v){
 				sll_string_index_t j=FIND_FIRST_SET_BIT(v)|(i<<6);
-				if (j==sf->string_table.l){
+				if (j==sf->string_table.length){
 					break;
 				}
-				sll_free_string(sf->string_table.dt+j);
+				sll_free_string(sf->string_table.data+j);
 				for (sll_string_index_t n=k;n<j;n++){
-					*(sf->string_table.dt+n-l)=*(sf->string_table.dt+n);
+					*(sf->string_table.data+n-l)=*(sf->string_table.data+n);
 					*(sm+n)=n-l;
 				}
 				k=j+1;
@@ -214,13 +214,13 @@ __SLL_EXTERNAL void sll_optimize_metadata(sll_compilation_data_t* c_dt){
 			}
 		}
 		sll_deallocate(m);
-		for (sll_string_index_t i=k;i<sf->string_table.l;i++){
-			*(sf->string_table.dt+i-l)=*(sf->string_table.dt+i);
+		for (sll_string_index_t i=k;i<sf->string_table.length;i++){
+			*(sf->string_table.data+i-l)=*(sf->string_table.data+i);
 			*(sm+i)=i-l;
 		}
 		if (l){
-			sf->string_table.l-=l;
-			sf->string_table.dt=sll_reallocate(sf->string_table.dt,sf->string_table.l*sizeof(sll_string_t));
+			sf->string_table.length-=l;
+			sf->string_table.data=sll_reallocate(sf->string_table.data,sf->string_table.length*sizeof(sll_string_t));
 			for (sll_identifier_index_t i=0;i<SLL_MAX_SHORT_IDENTIFIER_LENGTH;i++){
 				sll_identifier_list_t* e=sf->identifier_table.short_+i;
 				for (sll_identifier_list_length_t j=0;j<e->length;j++){

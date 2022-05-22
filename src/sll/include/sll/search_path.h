@@ -77,12 +77,12 @@ typedef __SLL_U32 sll_search_path_length_t;
  * \name sll_search_path_t
  * \group search-path
  * \desc Docs!
- * \arg sll_string_t* dt
- * \arg sll_search_path_length_t l
+ * \arg sll_string_t* data
+ * \arg sll_search_path_length_t length
  */
 typedef struct _SLL_SEARCH_PATH{
-	sll_string_t* dt;
-	sll_search_path_length_t l;
+	sll_string_t* data;
+	sll_search_path_length_t length;
 } sll_search_path_t;
 
 

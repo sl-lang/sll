@@ -40,12 +40,12 @@ typedef __SLL_U32 sll_string_index_t;
  * \name sll_string_table_t
  * \group string-table
  * \desc Docs!
- * \arg sll_string_t* dt
- * \arg sll_string_index_t l
+ * \arg sll_string_t* data
+ * \arg sll_string_index_t length
  */
 typedef struct _SLL_STRING_TABLE{
-	sll_string_t* dt;
-	sll_string_index_t l;
+	sll_string_t* data;
+	sll_string_index_t length;
 } sll_string_table_t;
 
 

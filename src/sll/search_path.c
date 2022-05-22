@@ -11,28 +11,28 @@
 
 
 __SLL_EXTERNAL void sll_free_search_path(sll_search_path_t* sp){
-	while (sp->l){
-		sp->l--;
-		sll_free_string(sp->dt+sp->l);
+	while (sp->length){
+		sp->length--;
+		sll_free_string(sp->data+sp->length);
 	}
-	sll_deallocate(sp->dt);
-	sp->dt=NULL;
+	sll_deallocate(sp->data);
+	sp->data=NULL;
 }
 
 
 
 __SLL_EXTERNAL void sll_search_path_create(const sll_string_t* src,sll_search_path_t* o){
-	o->l=0;
-	o->dt=NULL;
+	o->length=0;
+	o->data=NULL;
 	sll_string_length_t i=0;
 	while (1){
 		sll_string_length_t e=sll_string_index_char(src,SLL_SEARCH_PATH_SPLIT_CHAR,0,i);
 		if (e==SLL_MAX_STRING_LENGTH){
 			e=src->length;
 		}
-		o->l++;
-		o->dt=sll_reallocate(o->dt,o->l*sizeof(sll_string_t));
-		sll_string_from_pointer_length(src->data+i,e-i,o->dt+o->l-1);
+		o->length++;
+		o->data=sll_reallocate(o->data,o->length*sizeof(sll_string_t));
+		sll_string_from_pointer_length(src->data+i,e-i,o->data+o->length-1);
 		if (e==src->length){
 			break;
 		}
@@ -61,12 +61,12 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_search_path_find(const sll_sear
 		return 0;
 	}
 	bf[sz]=SLL_API_FILE_PATH_SEPARATOR;
-	for (sll_search_path_length_t i=0;i<sp->l;i++){
-		if ((sp->dt+i)->length<=sz){
-			sll_copy_data((sp->dt+i)->data,(sp->dt+i)->length,bf+sz-(sp->dt+i)->length);
-			if (sll_platform_path_exists(bf+sz-(sp->dt+i)->length)){
+	for (sll_search_path_length_t i=0;i<sp->length;i++){
+		if ((sp->data+i)->length<=sz){
+			sll_copy_data((sp->data+i)->data,(sp->data+i)->length,bf+sz-(sp->data+i)->length);
+			if (sll_platform_path_exists(bf+sz-(sp->data+i)->length)){
 				const sll_string_t* dt[2]={
-					sp->dt+i,
+					sp->data+i,
 					nm
 				};
 				sll_api_path_join(dt,2,o);

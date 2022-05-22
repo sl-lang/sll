@@ -55,12 +55,12 @@ __SLL_EXTERNAL void sll_free_source_file(sll_source_file_t* sf){
 	sll_deallocate(sf->function_table.data);
 	sf->function_table.data=NULL;
 	sf->function_table.length=0;
-	for (sll_string_index_t i=0;i<sf->string_table.l;i++){
-		sll_free_string(sf->string_table.dt+i);
+	for (sll_string_index_t i=0;i<sf->string_table.length;i++){
+		sll_free_string(sf->string_table.data+i);
 	}
-	sll_deallocate(sf->string_table.dt);
-	sf->string_table.dt=NULL;
-	sf->string_table.l=0;
+	sll_deallocate(sf->string_table.data);
+	sf->string_table.data=NULL;
+	sf->string_table.length=0;
 	void* pg=sf->_stack.start;
 	while (pg){
 		void* n=*((void**)pg);
@@ -99,9 +99,9 @@ __SLL_EXTERNAL void sll_init_compilation_data(const sll_char_t* fp,sll_compilati
 	sf->export_table.length=0;
 	sf->function_table.data=NULL;
 	sf->function_table.length=0;
-	sf->string_table.dt=sll_allocate(sizeof(sll_string_t));
-	sf->string_table.l=1;
-	sll_string_from_pointer(fp,sf->string_table.dt);
+	sf->string_table.data=sll_allocate(sizeof(sll_string_t));
+	sf->string_table.length=1;
+	sll_string_from_pointer(fp,sf->string_table.data);
 	sf->import_table.data=NULL;
 	sf->import_table.length=0;
 	sf->file_path_string_index=0;

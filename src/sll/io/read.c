@@ -195,10 +195,10 @@ static sll_bool_t _read_source_file(sll_file_t* rf,sll_source_file_t* sf){
 		}
 		*(sf->function_table.data+i)=k;
 	}
-	CHECK_ERROR(rf,sf->string_table.l,sll_string_index_t);
-	sf->string_table.dt=sll_allocate(sf->string_table.l*sizeof(sll_string_t));
-	for (sll_string_index_t i=0;i<sf->string_table.l;i++){
-		if (!sll_decode_string(rf,sf->string_table.dt+i)){
+	CHECK_ERROR(rf,sf->string_table.length,sll_string_index_t);
+	sf->string_table.data=sll_allocate(sf->string_table.length*sizeof(sll_string_t));
+	for (sll_string_index_t i=0;i<sf->string_table.length;i++){
+		if (!sll_decode_string(rf,sf->string_table.data+i)){
 			return 0;
 		}
 	}
@@ -243,10 +243,10 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_load_assembly(sll_file_t* rf,sl
 		CHECK_ERROR(rf,(a_dt->function_table.data+i)->arg_count,sll_arg_count_t);
 		CHECK_ERROR(rf,(a_dt->function_table.data+i)->name_string_index,sll_string_index_t);
 	}
-	CHECK_ERROR(rf,a_dt->string_table.l,sll_string_index_t);
-	a_dt->string_table.dt=sll_allocate(a_dt->string_table.l*sizeof(sll_string_t));
-	for (sll_string_index_t i=0;i<a_dt->string_table.l;i++){
-		if (!sll_decode_string(rf,a_dt->string_table.dt+i)){
+	CHECK_ERROR(rf,a_dt->string_table.length,sll_string_index_t);
+	a_dt->string_table.data=sll_allocate(a_dt->string_table.length*sizeof(sll_string_t));
+	for (sll_string_index_t i=0;i<a_dt->string_table.length;i++){
+		if (!sll_decode_string(rf,a_dt->string_table.data+i)){
 			return 0;
 		}
 	}

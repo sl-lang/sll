@@ -171,9 +171,9 @@ static void _write_source_file(sll_file_t* wf,const sll_source_file_t* sf){
 			CHECK_ERROR(sll_encode_integer(wf,k->args[j]));
 		}
 	}
-	CHECK_ERROR(sll_encode_integer(wf,sf->string_table.l));
-	for (sll_string_index_t i=0;i<sf->string_table.l;i++){
-		CHECK_ERROR(sll_encode_string(wf,sf->string_table.dt+i));
+	CHECK_ERROR(sll_encode_integer(wf,sf->string_table.length));
+	for (sll_string_index_t i=0;i<sf->string_table.length;i++){
+		CHECK_ERROR(sll_encode_string(wf,sf->string_table.data+i));
 	}
 	CHECK_ERROR(sll_encode_integer(wf,sf->import_table.length));
 	for (sll_import_index_t i=0;i<sf->import_table.length;i++){
@@ -212,9 +212,9 @@ __SLL_EXTERNAL void sll_write_assembly(sll_file_t* wf,const sll_assembly_data_t*
 		CHECK_ERROR(sll_encode_integer(wf,(a_dt->function_table.data+i)->arg_count));
 		CHECK_ERROR(sll_encode_integer(wf,(a_dt->function_table.data+i)->name_string_index));
 	}
-	CHECK_ERROR(sll_encode_integer(wf,a_dt->string_table.l));
-	for (sll_string_index_t i=0;i<a_dt->string_table.l;i++){
-		CHECK_ERROR(sll_encode_string(wf,a_dt->string_table.dt+i));
+	CHECK_ERROR(sll_encode_integer(wf,a_dt->string_table.length));
+	for (sll_string_index_t i=0;i<a_dt->string_table.length;i++){
+		CHECK_ERROR(sll_encode_string(wf,a_dt->string_table.data+i));
 	}
 	CHECK_ERROR(sll_encode_integer(wf,a_dt->debug_data.length));
 	for (sll_debug_data_length_t i=0;i<a_dt->debug_data.length;i++){

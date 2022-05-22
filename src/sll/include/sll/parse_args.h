@@ -97,14 +97,14 @@ typedef void* sll_arg_state_t;
  * \name sll_number_data_t
  * \group parse-args
  * \desc Docs!
- * \arg sll_integer_t i
- * \arg sll_float_t f
- * \arg sll_complex_t d
+ * \arg sll_integer_t int_
+ * \arg sll_float_t float_
+ * \arg sll_complex_t complex_
  */
 typedef union _SLL_NUMBER_DATA{
-	sll_integer_t i;
-	sll_float_t f;
-	sll_complex_t d;
+	sll_integer_t int_;
+	sll_float_t float_;
+	sll_complex_t complex_;
 } sll_number_data_t;
 
 
@@ -114,12 +114,12 @@ typedef union _SLL_NUMBER_DATA{
  * \name sll_number_t
  * \group parse-args
  * \desc Docs!
- * \arg sll_number_type_t t
- * \arg sll_number_data_t dt
+ * \arg sll_number_type_t type
+ * \arg sll_number_data_t data
  */
 typedef struct _SLL_NUMBER{
-	sll_number_type_t t;
-	sll_number_data_t dt;
+	sll_number_type_t type;
+	sll_number_data_t data;
 } sll_number_t;
 
 
@@ -129,12 +129,12 @@ typedef struct _SLL_NUMBER{
  * \name sll_char_string_data_t
  * \group parse-args
  * \desc Docs!
- * \arg sll_char_t c
- * \arg const sll_string_t* s
+ * \arg sll_char_t char_
+ * \arg const sll_string_t* string
  */
 typedef union _SLL_CHAR_STRING_DATA{
-	sll_char_t c;
-	const sll_string_t* s;
+	sll_char_t char_;
+	const sll_string_t* string;
 } sll_char_string_data_t;
 
 
@@ -144,12 +144,12 @@ typedef union _SLL_CHAR_STRING_DATA{
  * \name sll_char_string_t
  * \group parse-args
  * \desc Docs!
- * \arg sll_bool_t t
- * \arg sll_char_string_data_t dt
+ * \arg sll_bool_t type
+ * \arg sll_char_string_data_t data
  */
 typedef struct _SLL_CHAR_STRING{
-	sll_bool_t t;
-	sll_char_string_data_t dt;
+	sll_bool_t type;
+	sll_char_string_data_t data;
 } sll_char_string_t;
 
 

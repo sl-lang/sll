@@ -10,52 +10,52 @@
 
 
 __SLL_EXTERNAL void sll_free_tls(sll_tls_object_t* tls){
-	while (tls->sz){
-		tls->sz--;
-		SLL_RELEASE((tls->dt+tls->sz)->v);
+	while (tls->length){
+		tls->length--;
+		SLL_RELEASE((tls->data+tls->length)->value);
 	}
-	sll_deallocate(tls->dt);
-	tls->dt=NULL;
+	sll_deallocate(tls->data);
+	tls->data=NULL;
 }
 
 
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t** sll_tls_get(sll_tls_object_t* tls){
-	if (!tls->sz){
-		tls->sz=1;
-		tls->dt=sll_allocate(sizeof(sll_tls_value_t));
-		tls->dt->t=_scheduler_current_thread_index;
-		tls->dt->v=SLL_ACQUIRE_STATIC_INT(0);
-		return &(tls->dt->v);
+	if (!tls->length){
+		tls->length=1;
+		tls->data=sll_allocate(sizeof(sll_tls_value_t));
+		tls->data->thread_index=_scheduler_current_thread_index;
+		tls->data->value=SLL_ACQUIRE_STATIC_INT(0);
+		return &(tls->data->value);
 	}
 _retry:;
-	sll_tls_object_length_t i=_scheduler_current_thread_index%tls->sz;
-	sll_tls_object_length_t c=tls->sz;
+	sll_tls_object_length_t i=_scheduler_current_thread_index%tls->length;
+	sll_tls_object_length_t c=tls->length;
 	while (c){
-		sll_tls_value_t* v=tls->dt+i;
-		if (!v->v){
-			v->t=_scheduler_current_thread_index;
-			v->v=SLL_ACQUIRE_STATIC_INT(0);
-			return &(v->v);
+		sll_tls_value_t* v=tls->data+i;
+		if (!v->value){
+			v->thread_index=_scheduler_current_thread_index;
+			v->value=SLL_ACQUIRE_STATIC_INT(0);
+			return &(v->value);
 		}
-		if (v->t==_scheduler_current_thread_index){
-			return &(v->v);
+		if (v->thread_index==_scheduler_current_thread_index){
+			return &(v->value);
 		}
 		i++;
-		if (i==tls->sz){
+		if (i==tls->length){
 			i=0;
 		}
 		c--;
 	}
-	tls->sz++;
-	sll_tls_value_t* n_dt=sll_zero_allocate(tls->sz*sizeof(sll_tls_value_t));
-	for (i=0;i<tls->sz-1;i++){
-		sll_tls_value_t* v=tls->dt+i;
-		if (v->v){
-			*(n_dt+(v->t%tls->sz))=*v;
+	tls->length++;
+	sll_tls_value_t* n_dt=sll_zero_allocate(tls->length*sizeof(sll_tls_value_t));
+	for (i=0;i<tls->length-1;i++){
+		sll_tls_value_t* v=tls->data+i;
+		if (v->value){
+			*(n_dt+(v->thread_index%tls->length))=*v;
 		}
 	}
-	sll_deallocate(tls->dt);
-	tls->dt=n_dt;
+	sll_deallocate(tls->data);
+	tls->data=n_dt;
 	goto _retry;
 }

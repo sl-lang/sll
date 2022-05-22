@@ -209,16 +209,16 @@ static void _parse_int_or_float(sll_object_t* arg,arg_parse_flags_t flags,arg_st
 	}
 	sll_number_t* var=GET_PTR(sll_number_t);
 	if (!arg){
-		var->t=SLL_PARSE_ARGS_TYPE_FLOAT;
-		var->dt.f=0;
+		var->type=SLL_PARSE_ARGS_TYPE_FLOAT;
+		var->data.float_=0;
 	}
 	else if (arg->type==SLL_OBJECT_TYPE_INT){
-		var->t=SLL_PARSE_ARGS_TYPE_INT;
-		var->dt.i=arg->data.int_;
+		var->type=SLL_PARSE_ARGS_TYPE_INT;
+		var->data.int_=arg->data.int_;
 	}
 	else if (arg->type==SLL_OBJECT_TYPE_FLOAT){
-		var->t=SLL_PARSE_ARGS_TYPE_FLOAT;
-		var->dt.f=arg->data.float_;
+		var->type=SLL_PARSE_ARGS_TYPE_FLOAT;
+		var->data.float_=arg->data.float_;
 	}
 	else{
 		SLL_UNIMPLEMENTED();
@@ -247,20 +247,20 @@ static void _parse_float_or_complex(sll_object_t* arg,arg_parse_flags_t flags,ar
 		SLL_UNIMPLEMENTED();
 	}
 	sll_number_t* var=GET_PTR(sll_number_t);
-	var->t=SLL_PARSE_ARGS_TYPE_FLOAT;
+	var->type=SLL_PARSE_ARGS_TYPE_FLOAT;
 	if (!arg){
-		var->dt.f=0;
+		var->data.float_=0;
 	}
 	else if (arg->type==SLL_OBJECT_TYPE_FLOAT){
-		var->dt.f=arg->data.float_;
+		var->data.float_=arg->data.float_;
 	}
 	else if (arg->type==SLL_OBJECT_TYPE_COMPLEX){
-		var->t=SLL_PARSE_ARGS_TYPE_COMPLEX;
-		var->dt.d=arg->data.complex_;
+		var->type=SLL_PARSE_ARGS_TYPE_COMPLEX;
+		var->data.complex_=arg->data.complex_;
 	}
 	else{
 		sll_object_t* obj=sll_operator_cast(arg,sll_static_int[SLL_OBJECT_TYPE_FLOAT]);
-		var->dt.f=obj->data.float_;
+		var->data.float_=obj->data.float_;
 		SLL_RELEASE(obj);
 	}
 }
@@ -275,24 +275,24 @@ static void _parse_int_or_float_or_complex(sll_object_t* arg,arg_parse_flags_t f
 		SLL_UNIMPLEMENTED();
 	}
 	sll_number_t* var=GET_PTR(sll_number_t);
-	var->t=SLL_PARSE_ARGS_TYPE_FLOAT;
+	var->type=SLL_PARSE_ARGS_TYPE_FLOAT;
 	if (!arg){
-		var->dt.f=0;
+		var->data.float_=0;
 	}
 	else if (arg->type==SLL_OBJECT_TYPE_INT){
-		var->t=SLL_PARSE_ARGS_TYPE_INT;
-		var->dt.i=arg->data.int_;
+		var->type=SLL_PARSE_ARGS_TYPE_INT;
+		var->data.int_=arg->data.int_;
 	}
 	else if (arg->type==SLL_OBJECT_TYPE_FLOAT){
-		var->dt.f=arg->data.float_;
+		var->data.float_=arg->data.float_;
 	}
 	else if (arg->type==SLL_OBJECT_TYPE_COMPLEX){
-		var->t=SLL_PARSE_ARGS_TYPE_COMPLEX;
-		var->dt.d=arg->data.complex_;
+		var->type=SLL_PARSE_ARGS_TYPE_COMPLEX;
+		var->data.complex_=arg->data.complex_;
 	}
 	else{
 		sll_object_t* obj=sll_operator_cast(arg,sll_static_int[SLL_OBJECT_TYPE_FLOAT]);
-		var->dt.f=obj->data.float_;
+		var->data.float_=obj->data.float_;
 		SLL_RELEASE(obj);
 	}
 }
@@ -320,12 +320,12 @@ static void _parse_char_or_string(sll_object_t* arg,arg_parse_flags_t flags,arg_
 		SLL_UNIMPLEMENTED();
 	}
 	else if (arg->type==SLL_OBJECT_TYPE_CHAR){
-		var->t=SLL_PARSE_ARGS_TYPE_CHAR;
-		var->dt.c=arg->data.char_;
+		var->type=SLL_PARSE_ARGS_TYPE_CHAR;
+		var->data.char_=arg->data.char_;
 	}
 	else if (arg->type==SLL_OBJECT_TYPE_STRING){
-		var->t=SLL_PARSE_ARGS_TYPE_STRING;
-		var->dt.s=&(arg->data.string);
+		var->type=SLL_PARSE_ARGS_TYPE_STRING;
+		var->data.string=&(arg->data.string);
 	}
 	else{
 		SLL_UNIMPLEMENTED();
