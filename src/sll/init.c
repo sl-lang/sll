@@ -170,19 +170,19 @@ __SLL_EXTERNAL void sll_init(void){
 
 
 
-__SLL_EXTERNAL void sll_register_cleanup(sll_cleanup_function_t fn,sll_bool_t type){
+__SLL_EXTERNAL void sll_register_cleanup(sll_cleanup_function_t function,sll_bool_t type){
 	if (type==SLL_CLEANUP_TYPE_VM){
 		if (_init_vm_exit_table_size>=MAX_CLEANUP_TABLE_SIZE){
 			SLL_UNREACHABLE();
 		}
-		_init_vm_exit_table[_init_vm_exit_table_size]=fn;
+		_init_vm_exit_table[_init_vm_exit_table_size]=function;
 		_init_vm_exit_table_size++;
 	}
 	else{
 		if (_init_exit_table_size>=MAX_CLEANUP_TABLE_SIZE){
 			SLL_UNREACHABLE();
 		}
-		_init_exit_table[_init_exit_table_size]=fn;
+		_init_exit_table[_init_exit_table_size]=function;
 		_init_exit_table_size++;
 	}
 }

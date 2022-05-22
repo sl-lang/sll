@@ -20,11 +20,11 @@
  * \name sll_load_assembly
  * \group io
  * \desc Docs!
- * \arg sll_file_t* rf
- * \arg sll_assembly_data_t* assembly_data
+ * \arg sll_file_t* file
+ * \arg sll_assembly_data_t* out
  * \ret sll_bool_t
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_load_assembly(sll_file_t* rf,sll_assembly_data_t* assembly_data);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_load_assembly(sll_file_t* file,sll_assembly_data_t* out);
 
 
 
@@ -33,11 +33,11 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_load_assembly(sll_file_t* rf,sl
  * \name sll_load_bundle
  * \group io
  * \desc Docs!
- * \arg sll_file_t* rf
- * \arg sll_bundle_t* b
+ * \arg sll_file_t* file
+ * \arg sll_bundle_t* out
  * \ret sll_bool_t
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_load_bundle(sll_file_t* rf,sll_bundle_t* b);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_load_bundle(sll_file_t* file,sll_bundle_t* out);
 
 
 
@@ -46,11 +46,11 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_load_bundle(sll_file_t* rf,sll_
  * \name sll_load_compiled_node
  * \group io
  * \desc Docs!
- * \arg sll_file_t* rf
- * \arg sll_compilation_data_t* compilation_data
+ * \arg sll_file_t* file
+ * \arg sll_compilation_data_t* out
  * \ret sll_bool_t
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_load_compiled_node(sll_file_t* rf,sll_compilation_data_t* compilation_data);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_load_compiled_node(sll_file_t* file,sll_compilation_data_t* out);
 
 
 

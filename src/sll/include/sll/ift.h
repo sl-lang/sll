@@ -130,10 +130,10 @@ __SLL_EXTERNAL extern const sll_function_index_t sll_builtin_internal_function_c
  * \name sll_clone_internal_function_table
  * \group ift
  * \desc Docs!
- * \arg sll_internal_function_table_t* ift
- * \arg sll_internal_function_table_t* o
+ * \arg sll_internal_function_table_t* internal_function_table
+ * \arg sll_internal_function_table_t* out
  */
-__SLL_EXTERNAL void sll_clone_internal_function_table(sll_internal_function_table_t* ift,sll_internal_function_table_t* o);
+__SLL_EXTERNAL void sll_clone_internal_function_table(sll_internal_function_table_t* internal_function_table,sll_internal_function_table_t* out);
 
 
 
@@ -142,9 +142,9 @@ __SLL_EXTERNAL void sll_clone_internal_function_table(sll_internal_function_tabl
  * \name sll_create_internal_function_table
  * \group ift
  * \desc Docs!
- * \arg sll_internal_function_table_t* o
+ * \arg sll_internal_function_table_t* out
  */
-__SLL_EXTERNAL void sll_create_internal_function_table(sll_internal_function_table_t* o);
+__SLL_EXTERNAL void sll_create_internal_function_table(sll_internal_function_table_t* out);
 
 
 
@@ -153,9 +153,9 @@ __SLL_EXTERNAL void sll_create_internal_function_table(sll_internal_function_tab
  * \name sll_free_internal_function_table
  * \group ift
  * \desc Docs!
- * \arg sll_internal_function_table_t* ift
+ * \arg sll_internal_function_table_t* internal_function_table
  */
-__SLL_EXTERNAL void sll_free_internal_function_table(sll_internal_function_table_t* ift);
+__SLL_EXTERNAL void sll_free_internal_function_table(sll_internal_function_table_t* internal_function_table);
 
 
 
@@ -164,11 +164,11 @@ __SLL_EXTERNAL void sll_free_internal_function_table(sll_internal_function_table
  * \name sll_lookup_internal_function
  * \group ift
  * \desc Docs!
- * \arg const sll_internal_function_table_t* i_ft
- * \arg const sll_char_t* nm
+ * \arg const sll_internal_function_table_t* internal_function_table
+ * \arg const sll_char_t* name
  * \ret sll_function_index_t
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_function_index_t sll_lookup_internal_function(const sll_internal_function_table_t* i_ft,const sll_char_t* nm);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_function_index_t sll_lookup_internal_function(const sll_internal_function_table_t* internal_function_table,const sll_char_t* name);
 
 
 
@@ -177,13 +177,13 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_function_index_t sll_lookup_internal_funct
  * \name sll_register_internal_function
  * \group ift
  * \desc Docs!
- * \arg sll_internal_function_table_t* i_ft
- * \arg const sll_char_t* nm
- * \arg const sll_char_t* fmt
- * \arg sll_internal_function_pointer_t f
+ * \arg sll_internal_function_table_t* internal_function_table
+ * \arg const sll_char_t* name
+ * \arg const sll_char_t* format
+ * \arg sll_internal_function_pointer_t function
  * \ret sll_function_index_t
  */
-__SLL_EXTERNAL sll_function_index_t sll_register_internal_function(sll_internal_function_table_t* i_ft,const sll_char_t* nm,const sll_char_t* fmt,sll_internal_function_pointer_t f);
+__SLL_EXTERNAL sll_function_index_t sll_register_internal_function(sll_internal_function_table_t* internal_function_table,const sll_char_t* name,const sll_char_t* format,sll_internal_function_pointer_t function);
 
 
 
@@ -192,11 +192,11 @@ __SLL_EXTERNAL sll_function_index_t sll_register_internal_function(sll_internal_
  * \name sll_register_internal_functionss
  * \group ift
  * \desc Docs!
- * \arg sll_internal_function_table_t* i_ft
- * \arg const sll_internal_function_descriptor_t* dt
- * \arg sll_function_index_t len
+ * \arg sll_internal_function_table_t* internal_function_table
+ * \arg const sll_internal_function_descriptor_t* data
+ * \arg sll_function_index_t length
  */
-__SLL_EXTERNAL void sll_register_internal_functions(sll_internal_function_table_t* i_ft,const sll_internal_function_descriptor_t* dt,sll_function_index_t len);
+__SLL_EXTERNAL void sll_register_internal_functions(sll_internal_function_table_t* internal_function_table,const sll_internal_function_descriptor_t* data,sll_function_index_t length);
 
 
 

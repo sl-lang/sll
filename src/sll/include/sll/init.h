@@ -68,10 +68,10 @@ __SLL_EXTERNAL void sll_init(void);
  * \name sll_register_cleanup
  * \group init
  * \desc Docs!
- * \arg sll_cleanup_function_t fn
+ * \arg sll_cleanup_function_t function
  * \arg sll_bool_t type
  */
-__SLL_EXTERNAL void sll_register_cleanup(sll_cleanup_function_t fn,sll_bool_t type);
+__SLL_EXTERNAL void sll_register_cleanup(sll_cleanup_function_t function,sll_bool_t type);
 
 
 

@@ -18,55 +18,55 @@ static void _create_function(sll_internal_function_pointer_t fn,const sll_char_t
 
 
 
-__SLL_EXTERNAL void sll_clone_internal_function_table(sll_internal_function_table_t* ift,sll_internal_function_table_t* o){
-	o->length=ift->length;
-	o->data=sll_allocate(o->length*sizeof(const sll_internal_function_t));
-	sll_internal_function_t* p=(sll_internal_function_t*)(o->data);
-	for (sll_function_index_t i=0;i<ift->length;i++){
-		sll_string_clone(&((ift->data+i)->name),&(p->name));
-		p->function=(ift->data+i)->function;
-		sll_string_length_t sz=sll_string_length((ift->data+i)->format)+1;
+__SLL_EXTERNAL void sll_clone_internal_function_table(sll_internal_function_table_t* internal_function_table,sll_internal_function_table_t* out){
+	out->length=internal_function_table->length;
+	out->data=sll_allocate(out->length*sizeof(const sll_internal_function_t));
+	sll_internal_function_t* p=(sll_internal_function_t*)(out->data);
+	for (sll_function_index_t i=0;i<internal_function_table->length;i++){
+		sll_string_clone(&((internal_function_table->data+i)->name),&(p->name));
+		p->function=(internal_function_table->data+i)->function;
+		sll_string_length_t sz=sll_string_length((internal_function_table->data+i)->format)+1;
 		p->format=sll_allocate(sz);
-		sll_copy_data((ift->data+i)->format,sz,p->format);
-		p->_return_value=(ift->data+i)->_return_value;
-		p->_arg_count=(ift->data+i)->_arg_count;
-		p->_arg_size=(ift->data+i)->_arg_size;
+		sll_copy_data((internal_function_table->data+i)->format,sz,p->format);
+		p->_return_value=(internal_function_table->data+i)->_return_value;
+		p->_arg_count=(internal_function_table->data+i)->_arg_count;
+		p->_arg_size=(internal_function_table->data+i)->_arg_size;
 		sz=(((p->_arg_count<<1)+65)>>6)*sizeof(bitmap_t);
 		p->_registers=sll_allocate(sz);
-		sll_copy_data((ift->data+i)->_registers,sz,p->_registers);
+		sll_copy_data((internal_function_table->data+i)->_registers,sz,p->_registers);
 		p++;
 	}
 }
 
 
 
-__SLL_EXTERNAL void sll_create_internal_function_table(sll_internal_function_table_t* o){
-	o->data=NULL;
-	o->length=0;
+__SLL_EXTERNAL void sll_create_internal_function_table(sll_internal_function_table_t* out){
+	out->data=NULL;
+	out->length=0;
 }
 
 
 
-__SLL_EXTERNAL void sll_free_internal_function_table(sll_internal_function_table_t* ift){
-	sll_internal_function_t* f=(sll_internal_function_t*)(ift->data);
-	for (sll_function_index_t i=0;i<ift->length;i++){
+__SLL_EXTERNAL void sll_free_internal_function_table(sll_internal_function_table_t* internal_function_table){
+	sll_internal_function_t* f=(sll_internal_function_t*)(internal_function_table->data);
+	for (sll_function_index_t i=0;i<internal_function_table->length;i++){
 		sll_free_string(&(f->name));
 		sll_deallocate(f->format);
 		sll_deallocate(f->_registers);
 		f++;
 	}
-	sll_deallocate(PTR(ift->data));
-	ift->data=NULL;
-	ift->length=0;
+	sll_deallocate(PTR(internal_function_table->data));
+	internal_function_table->data=NULL;
+	internal_function_table->length=0;
 }
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_function_index_t sll_lookup_internal_function(const sll_internal_function_table_t* i_ft,const sll_char_t* nm){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_function_index_t sll_lookup_internal_function(const sll_internal_function_table_t* internal_function_table,const sll_char_t* name){
 	sll_string_t tmp;
-	sll_string_from_pointer(nm,&tmp);
-	for (sll_function_index_t i=0;i<i_ft->length;i++){
-		if (STRING_EQUAL(&((i_ft->data+i)->name),&tmp)){
+	sll_string_from_pointer(name,&tmp);
+	for (sll_function_index_t i=0;i<internal_function_table->length;i++){
+		if (STRING_EQUAL(&((internal_function_table->data+i)->name),&tmp)){
 			sll_free_string(&tmp);
 			return i;
 		}
@@ -77,22 +77,22 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_function_index_t sll_lookup_internal_funct
 
 
 
-__SLL_EXTERNAL sll_function_index_t sll_register_internal_function(sll_internal_function_table_t* i_ft,const sll_char_t* nm,const sll_char_t* fmt,sll_internal_function_pointer_t f){
-	i_ft->length++;
-	i_ft->data=sll_reallocate(PTR(i_ft->data),i_ft->length*sizeof(const sll_internal_function_t));
-	_create_function(f,nm,fmt,(sll_internal_function_t*)(i_ft->data+i_ft->length-1));
-	return i_ft->length-1;
+__SLL_EXTERNAL sll_function_index_t sll_register_internal_function(sll_internal_function_table_t* internal_function_table,const sll_char_t* name,const sll_char_t* format,sll_internal_function_pointer_t function){
+	internal_function_table->length++;
+	internal_function_table->data=sll_reallocate(PTR(internal_function_table->data),internal_function_table->length*sizeof(const sll_internal_function_t));
+	_create_function(function,name,format,(sll_internal_function_t*)(internal_function_table->data+internal_function_table->length-1));
+	return internal_function_table->length-1;
 }
 
 
 
-__SLL_EXTERNAL void sll_register_internal_functions(sll_internal_function_table_t* i_ft,const sll_internal_function_descriptor_t* dt,sll_function_index_t len){
-	i_ft->length+=len;
-	i_ft->data=sll_reallocate(PTR(i_ft->data),i_ft->length*sizeof(const sll_internal_function_t));
-	sll_internal_function_t* p=(sll_internal_function_t*)(i_ft->data+i_ft->length-len);
-	for (sll_function_index_t i=0;i<len;i++){
-		_create_function(dt->function,dt->name,dt->format,p);
-		dt++;
+__SLL_EXTERNAL void sll_register_internal_functions(sll_internal_function_table_t* internal_function_table,const sll_internal_function_descriptor_t* data,sll_function_index_t length){
+	internal_function_table->length+=length;
+	internal_function_table->data=sll_reallocate(PTR(internal_function_table->data),internal_function_table->length*sizeof(const sll_internal_function_t));
+	sll_internal_function_t* p=(sll_internal_function_t*)(internal_function_table->data+internal_function_table->length-length);
+	for (sll_function_index_t i=0;i<length;i++){
+		_create_function(data->function,data->name,data->format,p);
+		data++;
 		p++;
 	}
 }
