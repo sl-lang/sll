@@ -19,8 +19,8 @@
 
 static void* _execute_wrapper(void* p){
 	execute_wrapper_data_t dt=*((execute_wrapper_data_t*)p);
-	sem_post((sem_t*)dt.lck);
-	dt.fn(dt.arg);
+	sem_post((sem_t*)(dt.lock));
+	dt.function(dt.arg);
 	return NULL;
 }
 
@@ -81,8 +81,8 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_internal_thread_index_t sll_platform_start
 		ERROR_PTR(pthread_err|SLL_ERROR_FLAG_SYSTEM);
 		return SLL_UNKNOWN_INTERNAL_THREAD_INDEX;
 	}
-	sem_wait(dt.lck);
-	sem_close(dt.lck);
+	sem_wait(dt.lock);
+	sem_close(dt.lock);
 	sem_unlink("/__sll_execute_wrapper_sync");
 	return (sll_internal_thread_index_t)o;
 }

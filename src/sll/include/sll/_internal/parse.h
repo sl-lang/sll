@@ -23,28 +23,28 @@
 typedef struct _SCOPE_DATA{
 	bitmap_t* data;
 	sll_scope_t length;
-	sll_scope_t last_scope;
+	sll_scope_t scope;
 } scope_data_t;
 
 
 
 typedef struct _NEW_VARIABLE_DATA{
-	sll_node_t** dt;
-	sll_arg_count_t sz;
+	sll_node_t** data;
+	sll_arg_count_t length;
 } new_variable_data_t;
 
 
 
 typedef struct _EXTRA_COMPILATION_DATA{
-	scope_data_t sc;
-	sll_compilation_data_t* c_dt;
-	sll_internal_function_table_t* i_ft;
-	sll_import_resolver_t ir;
-	new_variable_data_t* nv_dt;
-	const scope_data_t* not_fn_sc;
-	sll_string_index_t a_nm;
-	sll_bool_t fn;
-	sll_file_offset_t* ln;
+	scope_data_t scope;
+	sll_compilation_data_t* compilation_data;
+	sll_internal_function_table_t* internal_function_table;
+	sll_import_resolver_t import_resolver;
+	new_variable_data_t* new_variable_data;
+	const scope_data_t* non_function_scope;
+	sll_string_index_t variable_assignment_name_string_index;
+	sll_bool_t is_function;
+	sll_file_offset_t* file_line;
 } extra_compilation_data_t;
 
 
@@ -53,7 +53,7 @@ typedef struct _NUMBER_PARSER_STATE{
 	sll_integer_t hi;
 	sll_integer_t lo;
 	sll_integer_t exp;
-	__SLL_U32 cnt;
+	__SLL_U32 digit_count;
 } number_parser_state_t;
 
 

@@ -58,9 +58,9 @@ static sll_error_t _list_dir_files(sll_char_t* bf,sll_string_length_t i,file_lis
 		}
 		else{
 			sll_string_length_t j=sll_string_length(SLL_CHAR(dt.cFileName));
-			o->l++;
-			o->dt=sll_reallocate(o->dt,o->l*sizeof(sll_string_t));
-			sll_string_t* s=o->dt+o->l-1;
+			o->length++;
+			o->data=sll_reallocate(o->data,o->length*sizeof(sll_string_t));
+			sll_string_t* s=o->data+o->length-1;
 			sll_string_create(i+j,s);
 			sll_string_insert_pointer_length(bf,i,0,s);
 			sll_string_insert_pointer_length(dt.cFileName,j,i,s);
@@ -159,16 +159,16 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_array_length_t sll_platform_list_directory
 	sll_error_t v=_list_dir_files(bf,i,&dt);
 	if (v!=SLL_NO_ERROR){
 		*err=v;
-		sll_deallocate(dt.dt);
+		sll_deallocate(dt.data);
 		*o=NULL;
 		return 0;
 	}
-	if (!dt.l){
-		sll_deallocate(dt.dt);
-		dt.dt=NULL;
+	if (!dt.length){
+		sll_deallocate(dt.data);
+		dt.data=NULL;
 	}
-	*o=dt.dt;
-	return dt.l;
+	*o=dt.data;
+	return dt.length;
 }
 
 

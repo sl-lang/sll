@@ -30,7 +30,7 @@ sll_object_t* _call_api_func(sll_function_index_t fn,sll_object_t*const* al,sll_
 	};
 	sll_arg_state_t st=_parse_args_raw(dt->format,al,all,&ao);
 	api_return_value_t ret;
-	sll_float_t ret_f=_call_api_func_assembly(&ret,dt->_registers,bf,dt->_arg_count,dt->pointer);
+	sll_float_t ret_f=_call_api_func_assembly(&ret,dt->_registers,bf,dt->_arg_count,dt->function);
 	sll_object_t* o;
 	if ((dt->_return_value&RETURN_VALUE_FLAG_ERROR)&&ret_f){
 		o=sll_int_to_object(ret.error);

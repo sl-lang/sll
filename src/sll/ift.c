@@ -12,7 +12,7 @@
 
 static void _create_function(sll_internal_function_pointer_t fn,const sll_char_t* nm,const sll_char_t* fmt,sll_internal_function_t* o){
 	sll_string_from_pointer(nm,&(o->name));
-	o->pointer=fn;
+	o->function=fn;
 	_parse_api_call_format(fmt,o);
 }
 
@@ -24,7 +24,7 @@ __SLL_EXTERNAL void sll_clone_internal_function_table(sll_internal_function_tabl
 	sll_internal_function_t* p=(sll_internal_function_t*)(o->data);
 	for (sll_function_index_t i=0;i<ift->length;i++){
 		sll_string_clone(&((ift->data+i)->name),&(p->name));
-		p->pointer=(ift->data+i)->pointer;
+		p->function=(ift->data+i)->function;
 		sll_string_length_t sz=sll_string_length((ift->data+i)->format)+1;
 		p->format=sll_allocate(sz);
 		sll_copy_data((ift->data+i)->format,sz,p->format);
@@ -91,7 +91,7 @@ __SLL_EXTERNAL void sll_register_internal_functions(sll_internal_function_table_
 	i_ft->data=sll_reallocate(PTR(i_ft->data),i_ft->length*sizeof(const sll_internal_function_t));
 	sll_internal_function_t* p=(sll_internal_function_t*)(i_ft->data+i_ft->length-len);
 	for (sll_function_index_t i=0;i<len;i++){
-		_create_function(dt->pointer,dt->name,dt->format,p);
+		_create_function(dt->function,dt->name,dt->format,p);
 		dt++;
 		p++;
 	}

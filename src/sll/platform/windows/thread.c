@@ -12,8 +12,8 @@
 
 static DWORD __stdcall _execute_wrapper(void* p){
 	execute_wrapper_data_t dt=*((execute_wrapper_data_t*)p);
-	SLL_CRITICAL(ReleaseSemaphore(dt.lck,1,NULL));
-	dt.fn(dt.arg);
+	SLL_CRITICAL(ReleaseSemaphore(dt.lock,1,NULL));
+	dt.function(dt.arg);
 	return 0;
 }
 
@@ -49,7 +49,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_internal_thread_index_t sll_platform_start
 		ERROR_PTR_SYSTEM;
 		return SLL_UNKNOWN_INTERNAL_THREAD_INDEX;
 	}
-	SLL_CRITICAL(WaitForSingleObject(dt.lck,INFINITE)==WAIT_OBJECT_0);
-	CloseHandle(dt.lck);
+	SLL_CRITICAL(WaitForSingleObject(dt.lock,INFINITE)==WAIT_OBJECT_0);
+	CloseHandle(dt.lock);
 	return (sll_internal_thread_index_t)o;
 }

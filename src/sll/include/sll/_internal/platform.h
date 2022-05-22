@@ -12,16 +12,16 @@
 
 
 typedef struct _EXECUTE_WRAPPER_DATA{
-	sll_internal_thread_function_t fn;
+	sll_internal_thread_function_t function;
 	void* arg;
-	void* lck;
+	void* lock;
 } execute_wrapper_data_t;
 
 
 
 typedef struct _FILE_LIST_DATA{
-	sll_string_t* dt;
-	sll_array_length_t l;
+	sll_string_t* data;
+	sll_array_length_t length;
 } file_list_data_t;
 
 

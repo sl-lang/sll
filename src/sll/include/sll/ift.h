@@ -52,7 +52,7 @@ typedef void* sll_internal_function_pointer_t;
  * \group ift
  * \desc Docs!
  * \arg sll_string_t name
- * \arg sll_internal_function_pointer_t pointer
+ * \arg sll_internal_function_pointer_t function
  * \arg sll_char_t* format
  * \arg __SLL_U16 _return_value
  * \arg sll_arg_count_t _arg_count
@@ -61,7 +61,7 @@ typedef void* sll_internal_function_pointer_t;
  */
 typedef struct _SLL_INTERNAL_FUNCTION{
 	sll_string_t name;
-	sll_internal_function_pointer_t pointer;
+	sll_internal_function_pointer_t function;
 	sll_char_t* format;
 	__SLL_U16 _return_value;
 	sll_arg_count_t _arg_count;
@@ -92,12 +92,12 @@ typedef struct _SLL_INTERNAL_FUNCTION_TABLE{
  * \group ift
  * \desc Docs!
  * \arg const sll_char_t* name
- * \arg const sll_internal_function_pointer_t pointer
+ * \arg const sll_internal_function_pointer_t function
  * \arg const sll_char_t* format
  */
 typedef struct _SLL_INTERNAL_FUNCTION_DESCRIPTOR{
 	const sll_char_t* name;
-	const sll_internal_function_pointer_t pointer;
+	const sll_internal_function_pointer_t function;
 	const sll_char_t* format;
 } sll_internal_function_descriptor_t;
 
