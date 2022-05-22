@@ -249,10 +249,10 @@ typedef __SLL_U64 sll_sandbox_flags_t;
  * \name sll_get_sandbox_flag
  * \group sandbox
  * \desc Docs!
- * \arg sll_sandbox_flag_t f
+ * \arg sll_sandbox_flag_t flag
  * \ret sll_bool_t
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_get_sandbox_flag(sll_sandbox_flag_t f);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_get_sandbox_flag(sll_sandbox_flag_t flag);
 
 
 
@@ -272,10 +272,10 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_sandbox_flags_t sll_get_sandbox_flags(void
  * \name sll_set_sandbox_flag
  * \group sandbox
  * \desc Docs!
- * \arg sll_sandbox_flag_t f
+ * \arg sll_sandbox_flag_t flag
  * \ret void
  */
-__SLL_EXTERNAL void sll_set_sandbox_flag(sll_sandbox_flag_t f);
+__SLL_EXTERNAL void sll_set_sandbox_flag(sll_sandbox_flag_t flag);
 
 
 

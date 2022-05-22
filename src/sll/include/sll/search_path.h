@@ -92,9 +92,9 @@ typedef struct _SLL_SEARCH_PATH{
  * \name sll_free_search_path
  * \group search-path
  * \desc Docs!
- * \arg sll_search_path_t* sp
+ * \arg sll_search_path_t* search_path
  */
-__SLL_EXTERNAL void sll_free_search_path(sll_search_path_t* sp);
+__SLL_EXTERNAL void sll_free_search_path(sll_search_path_t* search_path);
 
 
 
@@ -103,10 +103,10 @@ __SLL_EXTERNAL void sll_free_search_path(sll_search_path_t* sp);
  * \name sll_search_path_create
  * \group search-path
  * \desc Docs!
- * \arg const sll_string_t* src
- * \arg sll_search_path_t* o
+ * \arg const sll_string_t* string
+ * \arg sll_search_path_t* out
  */
-__SLL_EXTERNAL void sll_search_path_create(const sll_string_t* src,sll_search_path_t* o);
+__SLL_EXTERNAL void sll_search_path_create(const sll_string_t* string,sll_search_path_t* out);
 
 
 
@@ -115,13 +115,13 @@ __SLL_EXTERNAL void sll_search_path_create(const sll_string_t* src,sll_search_pa
  * \name sll_search_path_find
  * \group search-path
  * \desc Docs!
- * \arg const sll_search_path_t* sp
- * \arg const sll_string_t* nm
- * \arg sll_search_flags_t fl
- * \arg sll_string_t* o
+ * \arg const sll_search_path_t* search_path
+ * \arg const sll_string_t* name
+ * \arg sll_search_flags_t flag
+ * \arg sll_string_t* out
  * \ret sll_bool_t
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_search_path_find(const sll_search_path_t* sp,const sll_string_t* nm,sll_search_flags_t fl,sll_string_t* o);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_search_path_find(const sll_search_path_t* search_path,const sll_string_t* name,sll_search_flags_t flags,sll_string_t* out);
 
 
 
@@ -131,9 +131,9 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_search_path_find(const sll_sear
  * \group search-path
  * \desc Docs!
  * \arg const sll_string_t* key
- * \arg sll_search_path_t* o
+ * \arg sll_search_path_t* out
  */
-__SLL_EXTERNAL void sll_search_path_from_environment(const sll_string_t* key,sll_search_path_t* o);
+__SLL_EXTERNAL void sll_search_path_from_environment(const sll_string_t* key,sll_search_path_t* out);
 
 
 
