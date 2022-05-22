@@ -30,20 +30,20 @@ void _init_platform_time(void){
 	TIME_ZONE_INFORMATION tz;
 	DWORD tz_st=GetTimeZoneInformation(&tz);
 	WCHAR* nm;
-	_win_platform_time_zone.off=-tz.Bias;
+	_win_platform_time_zone.offset=-tz.Bias;
 	if (tz_st==TIME_ZONE_ID_DAYLIGHT){
 		nm=tz.DaylightName;
-		_win_platform_time_zone.off-=tz.DaylightBias;
+		_win_platform_time_zone.offset-=tz.DaylightBias;
 	}
 	else{
 		nm=tz.StandardName;
-		_win_platform_time_zone.off-=tz.StandardBias;
+		_win_platform_time_zone.offset-=tz.StandardBias;
 	}
 	sll_string_length_t i=0;
 	do{
 		i++;
 	} while (*(nm+i-1));
-	WideCharToMultiByte(CP_UTF8,0,nm,i,_win_platform_time_zone.nm,32,NULL,NULL);
+	WideCharToMultiByte(CP_UTF8,0,nm,i,_win_platform_time_zone.name,32,NULL,NULL);
 }
 
 

@@ -35,9 +35,9 @@ void _init_platform_time(void){
 	if (sz>31){
 		sz=31;
 	}
-	sll_copy_data(nm,sz,_linux_platform_time_zone.nm);
-	_linux_platform_time_zone.nm[sz]=0;
-	_linux_platform_time_zone.off=-timezone/60;
+	sll_copy_data(nm,sz,_linux_platform_time_zone.name);
+	_linux_platform_time_zone.name[sz]=0;
+	_linux_platform_time_zone.offset=-timezone/60;
 }
 
 

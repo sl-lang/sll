@@ -120,16 +120,16 @@ typedef struct _SLL_RUNTIME_DATA{
  * \group vm
  * \desc Docs!
  * \arg sll_size_t s_sz
- * \arg sll_size_t c_st_sz
- * \arg sll_internal_function_table_t* ift
+ * \arg sll_size_t call_stack_size
+ * \arg sll_internal_function_table_t* internal_function_table
  * \arg sll_file_t* in
  * \arg sll_file_t* out
  * \arg sll_file_t* err
  */
 typedef struct _SLL_VM_CONFIG{
-	sll_size_t s_sz;
-	sll_size_t c_st_sz;
-	sll_internal_function_table_t* ift;
+	sll_size_t stack_size;
+	sll_size_t call_stack_size;
+	sll_internal_function_table_t* internal_function_table;
 	sll_file_t* in;
 	sll_file_t* out;
 	sll_file_t* err;

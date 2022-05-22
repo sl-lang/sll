@@ -209,7 +209,7 @@ void _call_function(thread_data_t* thr,sll_function_index_t fn,sll_arg_count_t a
 		}
 	}
 	if (fr){
-		SLL_ASSERT(thr->c_st.length<=sll_current_vm_config->c_st_sz);
+		SLL_ASSERT(thr->c_st.length<=sll_current_vm_config->call_stack_size);
 		(thr->c_st.data+thr->c_st.length)->name=(sll_current_runtime_data->assembly_data->string_table.data+af->name_string_index)->data;
 		(thr->c_st.data+thr->c_st.length)->_instruction_index=thr->ii;
 		(thr->c_st.data+thr->c_st.length)->_stack_offset=thr->si-SLL_ASSEMBLY_FUNCTION_GET_ARGUMENT_COUNT(af);
@@ -247,7 +247,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_code_t sll_execute_assembly(const s
 		*(_vm_var_data+i)=sll_static_int[0];
 	}
 	sll_internal_function_table_t ift;
-	sll_clone_internal_function_table(cfg->ift,&ift);
+	sll_clone_internal_function_table(cfg->internal_function_table,&ift);
 	sll_object_type_table_t tt=SLL_INIT_OBJECT_TYPE_TABLE_STRUCT;
 	sll_runtime_data_t r_dt={
 		a_dt,
@@ -320,7 +320,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_wait_thread(sll_thread_index
 	addr_t tls_var_off;
 	RELOAD_THREAD_DATA;
 	while (1){
-		if (thr->ii>=sll_current_runtime_data->assembly_data->instruction_count||thr->si>=sll_current_vm_config->s_sz){
+		if (thr->ii>=sll_current_runtime_data->assembly_data->instruction_count||thr->si>=sll_current_vm_config->stack_size){
 			SLL_UNIMPLEMENTED();
 		}
 		if (!thr->tm){

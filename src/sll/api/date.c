@@ -23,7 +23,7 @@ __SLL_EXTERNAL const sll_time_zone_t* sll_utc_time_zone=&_date_utc_time_zone;
 
 
 __SLL_EXTERNAL __SLL_API_CALL void sll_api_date_get_time_zone(sll_array_t* out){
-	sll_new_object_array(SLL_CHAR("iS"),out,sll_platform_time_zone->off,sll_platform_time_zone->nm);
+	sll_new_object_array(SLL_CHAR("iS"),out,sll_platform_time_zone->offset,sll_platform_time_zone->name);
 }
 
 
@@ -54,7 +54,7 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_float_t sll_api_date_merge(
 __SLL_EXTERNAL __SLL_API_CALL void sll_api_date_split(sll_float_t time,sll_array_t* out){
 	sll_date_t dt;
 	sll_date_from_time(time,NULL,&dt);
-	sll_new_object_array(SLL_CHAR("hhhhhhf"),out,dt.y,dt.m,dt.d,dt.wd,dt.h,dt.mn,dt.s);
+	sll_new_object_array(SLL_CHAR("hhhhhhf"),out,dt.year,dt.month,dt.day,dt.week_day,dt.hour,dt.minute,dt.second);
 }
 
 
@@ -64,36 +64,36 @@ __SLL_EXTERNAL void sll_date_from_time(sll_float_t time,const sll_time_zone_t* t
 	if (!tz){
 		tz=sll_utc_time_zone;
 	}
-	o->tz=*tz;
-	time+=o->tz.off*60;
+	o->time_zone=*tz;
+	time+=o->time_zone.offset*60;
 	sll_float_t hms=sll_math_mod(time,86400)+(time<0?86400:0);
-	o->s=sll_math_mod(hms,60);
+	o->second=sll_math_mod(hms,60);
 	sll_integer_t hms_i=((sll_integer_t)hms)/60;
-	o->mn=hms_i%60;
-	o->h=(hms_i/60)%60;
+	o->minute=hms_i%60;
+	o->hour=(hms_i/60)%60;
 	sll_integer_t v=((sll_integer_t)time)/86400;
-	o->wd=(v+4)%7;
+	o->week_day=(v+4)%7;
 	v+=719468-(time<0?1:0);
 	sll_integer_t e=(v-(v<0?146096:0))/146097;
 	sll_size_t d=v-e*146097;
 	sll_size_t y=(d-d/1460+d/36524-d/146096)/365;
 	e=y+e*400;
 	if (e>65534){
-		o->y=65535;
-		o->m=11;
-		o->d=30;
-		o->wd=6;
-		o->h=23;
-		o->mn=59;
-		o->s=59.999999;
+		o->year=65535;
+		o->month=11;
+		o->day=30;
+		o->week_day=6;
+		o->hour=23;
+		o->minute=59;
+		o->second=59.999999;
 		return;
 	}
-	o->y=(sll_year_t)e;
+	o->year=(sll_year_t)e;
 	d-=y*365+y/4-y/100;
 	sll_size_t m=(d*5+2)/153;
 	d=d-(m*153+2)/5;
 	SLL_ASSERT(d<31);
-	o->d=(sll_day_t)d;
+	o->day=(sll_day_t)d;
 	if (m<10){
 		m+=2;
 	}
@@ -101,10 +101,10 @@ __SLL_EXTERNAL void sll_date_from_time(sll_float_t time,const sll_time_zone_t* t
 		m-=10;
 	}
 	if (m<2){
-		o->y++;
+		o->year++;
 	}
 	SLL_ASSERT(m<12);
-	o->m=(sll_month_t)m;
+	o->month=(sll_month_t)m;
 }
 
 
@@ -117,11 +117,11 @@ __SLL_EXTERNAL void sll_date_from_time_ns(sll_time_t time,const sll_time_zone_t*
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_float_t sll_date_to_time(sll_date_t* date){
 	// Based on http://howardhinnant.github.io/date_algorithms.html#days_from_civil
-	sll_size_t y=date->y;
-	if (date->m<2){
+	sll_size_t y=date->year;
+	if (date->month<2){
 		y--;
 	}
 	sll_size_t e=y/400;
 	y-=e*400;
-	return (e*146097+y*365+y/4-y/100+(153*(date->m+1+(date->m+1>2?-3:9))+2)/5+date->d+1-1-719468)*86400+date->h*3600+date->mn*60+date->s-date->tz.off*60;
+	return (e*146097+y*365+y/4-y/100+(153*(date->month+1+(date->month+1>2?-3:9))+2)/5+date->day+1-1-719468)*86400+date->hour*3600+date->minute*60+date->second-date->time_zone.offset*60;
 }

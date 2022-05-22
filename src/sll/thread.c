@@ -88,8 +88,8 @@ sll_thread_index_t _thread_new(void){
 		ptr=sll_platform_allocate_page(THREAD_SIZE,0,NULL);
 	}
 	thread_data_t* n=ptr;
-	n->stack=PTR(ADDR(ptr)+sizeof(thread_data_t)+sll_current_vm_config->c_st_sz*sizeof(sll_call_stack_frame_t)+sll_current_runtime_data->assembly_data->tls_variable_count*sizeof(sll_object_t*));
-	n->tls=PTR(ADDR(ptr)+sizeof(thread_data_t)+sll_current_vm_config->c_st_sz*sizeof(sll_call_stack_frame_t));
+	n->stack=PTR(ADDR(ptr)+sizeof(thread_data_t)+sll_current_vm_config->call_stack_size*sizeof(sll_call_stack_frame_t)+sll_current_runtime_data->assembly_data->tls_variable_count*sizeof(sll_object_t*));
+	n->tls=PTR(ADDR(ptr)+sizeof(thread_data_t)+sll_current_vm_config->call_stack_size*sizeof(sll_call_stack_frame_t));
 	sll_static_int[0]->rc+=sll_current_runtime_data->assembly_data->tls_variable_count;
 	for (sll_variable_index_t i=0;i<sll_current_runtime_data->assembly_data->tls_variable_count;i++){
 		*(n->tls+i)=sll_static_int[0];

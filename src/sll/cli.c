@@ -622,7 +622,7 @@ _read_file_argument:
 	if (_cli_flags&SLL_CLI_FLAG_VERSION){
 		sll_date_t d;
 		sll_date_from_time_ns(SLL_VERSION_BUILD_TIME,sll_platform_time_zone,&d);
-		sll_file_write_format(sll_stdout,SLL_CHAR("sll "SLL_VERSION_STRING" ("CLI_BUILD_TYPE_STRING", %.4u/%.2u/%.2u %.2u:%.2u:%.2u)\n"),NULL,d.y,d.m+1,d.d+1,d.h,d.mn,floor(d.s));
+		sll_file_write_format(sll_stdout,SLL_CHAR("sll "SLL_VERSION_STRING" ("CLI_BUILD_TYPE_STRING", %.4u/%.2u/%.2u %.2u:%.2u:%.2u)\n"),NULL,d.year,d.month+1,d.day+1,d.hour,d.minute,floor(d.second));
 		goto _cleanup;
 	}
 	if (_cli_flags&SLL_CLI_FLAG_HELP){

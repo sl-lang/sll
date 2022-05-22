@@ -193,12 +193,12 @@ typedef const sll_char_t* sll_json_parser_state_t;
  * \name sll_json_array_t
  * \group json-api
  * \desc Docs!
- * \arg sll_json_array_length_t l
- * \arg struct _SLL_JSON_OBJECT* dt
+ * \arg struct _SLL_JSON_OBJECT* data
+ * \arg sll_json_array_length_t length
  */
 typedef struct _SLL_JSON_ARRAY{
-	sll_json_array_length_t l;
-	struct _SLL_JSON_OBJECT* dt;
+	struct _SLL_JSON_OBJECT* data;
+	sll_json_array_length_t length;
 } sll_json_array_t;
 
 
@@ -208,12 +208,12 @@ typedef struct _SLL_JSON_ARRAY{
  * \name sll_json_map_t
  * \group json-api
  * \desc Docs!
- * \arg sll_json_map_length_t l
- * \arg struct _SLL_JSON_MAP_KEYPAIR* dt
+ * \arg struct _SLL_JSON_MAP_KEYPAIR* data
+ * \arg sll_json_map_length_t length
  */
 typedef struct _SLL_JSON_MAP{
-	sll_json_map_length_t l;
-	struct _SLL_JSON_MAP_KEYPAIR* dt;
+	struct _SLL_JSON_MAP_KEYPAIR* data;
+	sll_json_map_length_t length;
 } sll_json_map_t;
 
 
@@ -223,18 +223,18 @@ typedef struct _SLL_JSON_MAP{
  * \name sll_json_object_data_t
  * \group json-api
  * \desc Docs!
- * \arg sll_integer_t i
- * \arg sll_float_t f
- * \arg sll_string_t s
- * \arg sll_json_array_t a
- * \arg sll_json_map_t m
+ * \arg sll_integer_t int_
+ * \arg sll_float_t float_
+ * \arg sll_string_t string
+ * \arg sll_json_array_t array
+ * \arg sll_json_map_t map
  */
 typedef union _SLL_JSON_OBJECT_DATA{
-	sll_integer_t i;
-	sll_float_t f;
-	sll_string_t s;
-	sll_json_array_t a;
-	sll_json_map_t m;
+	sll_integer_t int_;
+	sll_float_t float_;
+	sll_string_t string;
+	sll_json_array_t array;
+	sll_json_map_t map;
 } sll_json_object_data_t;
 
 
@@ -244,12 +244,12 @@ typedef union _SLL_JSON_OBJECT_DATA{
  * \name sll_json_object_t
  * \group json-api
  * \desc Docs!
- * \arg sll_json_object_type_t t
- * \arg sll_json_object_data_t dt
+ * \arg sll_json_object_type_t type
+ * \arg sll_json_object_data_t data
  */
 typedef struct _SLL_JSON_OBJECT{
-	sll_json_object_type_t t;
-	sll_json_object_data_t dt;
+	sll_json_object_type_t type;
+	sll_json_object_data_t data;
 } sll_json_object_t;
 
 
@@ -259,12 +259,12 @@ typedef struct _SLL_JSON_OBJECT{
  * \name sll_json_map_keypair_t
  * \group json-api
  * \desc Docs!
- * \arg sll_string_t k
- * \arg sll_json_object_t v
+ * \arg sll_string_t key
+ * \arg sll_json_object_t value
  */
 typedef struct _SLL_JSON_MAP_KEYPAIR{
-	sll_string_t k;
-	sll_json_object_t v;
+	sll_string_t key;
+	sll_json_object_t value;
 } sll_json_map_keypair_t;
 
 

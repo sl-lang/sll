@@ -85,12 +85,12 @@ typedef __SLL_F64 sll_second_t;
  * \name sll_time_zone_t
  * \group date-api
  * \desc Docs!
- * \arg sll_char_t[32] nm
- * \arg sll_time_t off
+ * \arg sll_char_t[32] name
+ * \arg sll_time_t offset
  */
 typedef struct _SLL_TIME_ZONE{
-	sll_char_t nm[32];
-	sll_time_t off;
+	sll_char_t name[32];
+	sll_time_t offset;
 } sll_time_zone_t;
 
 
@@ -100,24 +100,24 @@ typedef struct _SLL_TIME_ZONE{
  * \name sll_date_t
  * \group date-api
  * \desc Docs!
- * \arg sll_year_t y
- * \arg sll_month_t m
- * \arg sll_day_t d
- * \arg sll_day_t wd
- * \arg sll_hour_t h
- * \arg sll_minute_t mn
- * \arg sll_second_t s
- * \arg sll_time_zone_t tz
+ * \arg sll_year_t year
+ * \arg sll_month_t month
+ * \arg sll_day_t day
+ * \arg sll_day_t week_day
+ * \arg sll_hour_t hour
+ * \arg sll_minute_t minute
+ * \arg sll_second_t second
+ * \arg sll_time_zone_t time_zone
  */
 typedef struct _SLL_DATE{
-	sll_year_t y;
-	sll_month_t m;
-	sll_day_t d;
-	sll_day_t wd;
-	sll_hour_t h;
-	sll_minute_t mn;
-	sll_second_t s;
-	sll_time_zone_t tz;
+	sll_year_t year;
+	sll_month_t month;
+	sll_day_t day;
+	sll_day_t week_day;
+	sll_hour_t hour;
+	sll_minute_t minute;
+	sll_second_t second;
+	sll_time_zone_t time_zone;
 } sll_date_t;
 
 

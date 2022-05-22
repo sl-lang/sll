@@ -46,12 +46,12 @@
  * \name sll_factor_t
  * \group math-api
  * \desc Docs!
- * \arg sll_size_t n
- * \arg sll_size_t pw
+ * \arg sll_size_t number
+ * \arg sll_size_t power
  */
 typedef struct _SLL_FACTOR{
-	sll_size_t n;
-	sll_size_t pw;
+	sll_size_t number;
+	sll_size_t power;
 } sll_factor_t;
 
 
