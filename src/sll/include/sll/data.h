@@ -49,12 +49,12 @@
 /**
  * \flags func macro
  * \name SLL_COPY_STRING_NULL
- * \group data
+* \group data
  * \desc Docs!
- * \arg const sll_char_t* src
- * \arg void* dst
+ * \arg const sll_char_t* source
+ * \arg void* target
  */
-#define SLL_COPY_STRING_NULL(src,dst) (*((sll_char_t*)sll_copy_string((src),(dst)))=0)
+#define SLL_COPY_STRING_NULL(source,target) (*((sll_char_t*)sll_copy_string((source),(target)))=0)
 
 
 
@@ -76,10 +76,10 @@ typedef __SLL_U8 sll_compare_result_t;
  * \desc Docs!
  * \arg const void* a
  * \arg const void* b
- * \arg sll_size_t l
+ * \arg sll_size_t length
  * \ret sll_compare_result_t
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_compare_result_t sll_compare_data(const void* a,const void* b,sll_size_t l);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_compare_result_t sll_compare_data(const void* a,const void* b,sll_size_t length);
 
 
 
@@ -88,12 +88,12 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_compare_result_t sll_compare_data(const vo
  * \name sll_contains_character
  * \group data
  * \desc Docs!
- * \arg const void* p
- * \arg sll_size_t sz
- * \arg sll_char_t c
+ * \arg const void* pointer
+ * \arg sll_size_t length
+ * \arg sll_char_t char_
  * \ret sll_bool_t
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_contains_character(const void* p,sll_size_t sz,sll_char_t c);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_contains_character(const void* pointer,sll_size_t length,sll_char_t char_);
 
 
 
@@ -102,11 +102,11 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_contains_character(const void* 
  * \name sll_copy_data
  * \group data
  * \desc Docs!
- * \arg const void* s
- * \arg sll_size_t l
- * \arg void* d
+ * \arg const void* source
+ * \arg sll_size_t length
+ * \arg void* target
  */
-__SLL_EXTERNAL void sll_copy_data(const void* s,sll_size_t l,void* d);
+__SLL_EXTERNAL void sll_copy_data(const void* source,sll_size_t length,void* target);
 
 
 
@@ -115,11 +115,11 @@ __SLL_EXTERNAL void sll_copy_data(const void* s,sll_size_t l,void* d);
  * \name sll_copy_string
  * \group data
  * \desc Docs!
- * \arg const sll_char_t* s
- * \arg void* d
+ * \arg const sll_char_t* source
+ * \arg void* target
  * \ret void*
  */
-__SLL_EXTERNAL void* sll_copy_string(const sll_char_t* s,void* d);
+__SLL_EXTERNAL void* sll_copy_string(const sll_char_t* source,void* target);
 
 
 
@@ -128,10 +128,10 @@ __SLL_EXTERNAL void* sll_copy_string(const sll_char_t* s,void* d);
  * \name sll_copy_string_null
  * \group data
  * \desc Docs!
- * \arg const sll_char_t* s
- * \arg void* d
+ * \arg const sll_char_t* source
+ * \arg void* target
  */
-__SLL_EXTERNAL void sll_copy_string_null(const sll_char_t* s,void* d);
+__SLL_EXTERNAL void sll_copy_string_null(const sll_char_t* source,void* target);
 
 
 
@@ -140,11 +140,11 @@ __SLL_EXTERNAL void sll_copy_string_null(const sll_char_t* s,void* d);
  * \name sll_set_memory
  * \group data
  * \desc Docs!
- * \arg void* p
- * \arg sll_size_t l
- * \arg sll_char_t v
+ * \arg void* pointer
+ * \arg sll_size_t length
+ * \arg sll_char_t value
  */
-__SLL_EXTERNAL void sll_set_memory(void* p,sll_size_t l,sll_char_t v);
+__SLL_EXTERNAL void sll_set_memory(void* pointer,sll_size_t length,sll_char_t value);
 
 
 
@@ -153,10 +153,10 @@ __SLL_EXTERNAL void sll_set_memory(void* p,sll_size_t l,sll_char_t v);
  * \name sll_zero_memory
  * \group data
  * \desc Docs!
- * \arg void* p
- * \arg sll_size_t l
+ * \arg void* pointer
+ * \arg sll_size_t length
  */
-__SLL_EXTERNAL void sll_zero_memory(void* p,sll_size_t l);
+__SLL_EXTERNAL void sll_zero_memory(void* pointer,sll_size_t length);
 
 
 
