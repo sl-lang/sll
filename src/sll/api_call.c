@@ -17,26 +17,26 @@
 
 
 sll_object_t* _call_api_func(sll_function_index_t fn,sll_object_t*const* al,sll_arg_count_t all){
-	const sll_internal_function_t* dt=sll_current_runtime_data->ift->dt+fn;
-	void* bf=sll_allocate_stack(dt->_arg_sz);
+	const sll_internal_function_t* dt=sll_current_runtime_data->ift->data+fn;
+	void* bf=sll_allocate_stack(dt->_arg_size);
 	arg_output_t ao={
 		ARG_OUTPUT_TYPE_ARRAY,
 		{
 			.arr={
 				bf,
-				dt->_arg_sz
+				dt->_arg_size
 			}
 		}
 	};
-	sll_arg_state_t st=_parse_args_raw(dt->fmt,al,all,&ao);
+	sll_arg_state_t st=_parse_args_raw(dt->format,al,all,&ao);
 	api_return_value_t ret;
-	sll_float_t ret_f=_call_api_func_assembly(&ret,dt->_regs,bf,dt->_arg_cnt,dt->p);
+	sll_float_t ret_f=_call_api_func_assembly(&ret,dt->_registers,bf,dt->_arg_count,dt->pointer);
 	sll_object_t* o;
-	if ((dt->_ret&RETURN_VALUE_FLAG_ERROR)&&ret_f){
+	if ((dt->_return_value&RETURN_VALUE_FLAG_ERROR)&&ret_f){
 		o=sll_int_to_object(ret.err);
 	}
 	else{
-		switch (RETURN_VALUE_GET_TYPE(dt->_ret)){
+		switch (RETURN_VALUE_GET_TYPE(dt->_return_value)){
 			case 'b':
 				o=SLL_ACQUIRE_STATIC_INT(ret.b);
 				break;
@@ -104,24 +104,24 @@ void _parse_api_call_format(const sll_char_t* fmt,sll_internal_function_t* o){
 	while (*(fmt+off)&&*(fmt+off)!='|'){
 		off++;
 	}
-	o->fmt=sll_allocate(off+1);
-	sll_copy_data(fmt,off,o->fmt);
-	o->fmt[off]=0;
-	o->_ret='v';
+	o->format=sll_allocate(off+1);
+	sll_copy_data(fmt,off,o->format);
+	o->format[off]=0;
+	o->_return_value='v';
 	__SLL_U16 flags=0;
 	fmt+=off;
 	while (*fmt){
 		if (*fmt=='b'||*fmt=='B'||*fmt=='W'||*fmt=='D'||*fmt=='Q'||*fmt=='i'||*fmt=='f'||*fmt=='c'||*fmt=='d'||*fmt=='x'||*fmt=='s'||*fmt=='a'||*fmt=='m'||*fmt=='o'||*fmt=='v'){
-			o->_ret=*fmt;
+			o->_return_value=*fmt;
 		}
 		else if (*fmt=='~'){
 			flags|=RETURN_VALUE_FLAG_ERROR;
 		}
 		fmt++;
 	}
-	if (o->_ret=='x'&&(flags&RETURN_VALUE_FLAG_ERROR)){
+	if (o->_return_value=='x'&&(flags&RETURN_VALUE_FLAG_ERROR)){
 		SLL_UNIMPLEMENTED();
 	}
-	o->_ret|=flags;
-	o->_arg_cnt=_parse_arg_count(o->fmt,o->_ret,&(o->_regs),&(o->_arg_sz));
+	o->_return_value|=flags;
+	o->_arg_count=_parse_arg_count(o->format,o->_return_value,&(o->_registers),&(o->_arg_size));
 }

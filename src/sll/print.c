@@ -265,9 +265,9 @@ static const sll_node_t* _print_node_internal(const sll_source_file_t* sf,const 
 		case SLL_NODE_TYPE_INTERNAL_FUNC:
 			{
 				if (o->t==SLL_NODE_TYPE_INTERNAL_FUNC){
-					if (i_ft&&o->dt.fn.id<i_ft->l){
+					if (i_ft&&o->dt.fn.id<i_ft->length){
 						PRINT_STATIC_STRING("... \"",wf);
-						sll_file_write(wf,(i_ft->dt+o->dt.fn.id)->nm.data,(i_ft->dt+o->dt.fn.id)->nm.length,NULL);
+						sll_file_write(wf,(i_ft->data+o->dt.fn.id)->name.data,(i_ft->data+o->dt.fn.id)->name.length,NULL);
 						sll_file_write_char(wf,'\"',NULL);
 					}
 					else{
@@ -312,9 +312,9 @@ static const sll_node_t* _print_node_internal(const sll_source_file_t* sf,const 
 					sll_arg_count_t i=0;
 					if (i_ft&&o->t==SLL_NODE_TYPE_INT&&o->dt.i<0){
 						sll_function_index_t j=(sll_function_index_t)(~(o->dt.i));
-						if (j<i_ft->l){
+						if (j<i_ft->length){
 							PRINT_STATIC_STRING(" (... \"",wf);
-							sll_file_write(wf,(i_ft->dt+j)->nm.data,(i_ft->dt+j)->nm.length,NULL);
+							sll_file_write(wf,(i_ft->data+j)->name.data,(i_ft->data+j)->name.length,NULL);
 							PRINT_STATIC_STRING("\")",wf);
 							i++;
 							o++;

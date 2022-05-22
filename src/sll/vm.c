@@ -845,7 +845,7 @@ _cleanup_jump_table:;
 						SLL_RELEASE(tos);
 						if (i<0){
 							sll_function_index_t j=(sll_function_index_t)(~i);
-							if (j<sll_current_runtime_data->ift->l){
+							if (j<sll_current_runtime_data->ift->length){
 								sll_object_t* n=_call_api_func(j,thr->stack+thr->si-ai->data.arg_count,ai->data.arg_count);
 								for (sll_arg_count_t k=0;k<ai->data.arg_count;k++){
 									thr->si--;
@@ -883,7 +883,7 @@ _cleanup_jump_table:;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_CALL_ZERO:
 				if (ai->data.int_<0){
 					sll_function_index_t i=(sll_function_index_t)(~ai->data.int_);
-					if (i<sll_current_runtime_data->ift->l){
+					if (i<sll_current_runtime_data->ift->length){
 						sll_object_t* n=_call_api_func(i,NULL,0);
 						*(thr->stack+thr->si)=n;
 						thr->si++;
@@ -901,7 +901,7 @@ _cleanup_jump_table:;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_CALL_ONE:
 				if (ai->data.int_<0){
 					sll_function_index_t i=(sll_function_index_t)(~ai->data.int_);
-					if (i<sll_current_runtime_data->ift->l){
+					if (i<sll_current_runtime_data->ift->length){
 						sll_object_t* n=_call_api_func(i,thr->stack+thr->si-1,1);
 						SLL_RELEASE(*(thr->stack+thr->si-1));
 						*(thr->stack+thr->si-1)=n;
@@ -926,7 +926,7 @@ _cleanup_jump_table:;
 						tos=sll_operator_cast(*(thr->stack+thr->si-1),sll_static_int[SLL_OBJECT_TYPE_ARRAY]);
 						if (i<0){
 							sll_function_index_t j=(sll_function_index_t)(~i);
-							if (j<sll_current_runtime_data->ift->l){
+							if (j<sll_current_runtime_data->ift->length){
 								SLL_RELEASE(*(thr->stack+thr->si-1));
 								sll_object_t* n=_call_api_func(j,tos->data.array.data,tos->data.array.length);
 								SLL_RELEASE(tos);

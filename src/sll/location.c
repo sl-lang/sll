@@ -48,8 +48,8 @@ __SLL_EXTERNAL void sll_get_name(sll_object_t* v,sll_string_t* o){
 	if (v->type==SLL_OBJECT_TYPE_INT){
 		if (v->data.int_<0){
 			sll_function_index_t i=(sll_function_index_t)(~v->data.int_);
-			if (i<sll_current_runtime_data->ift->l){
-				sll_string_clone(&((sll_current_runtime_data->ift->dt+i)->nm),o);
+			if (i<sll_current_runtime_data->ift->length){
+				sll_string_clone(&((sll_current_runtime_data->ift->data+i)->name),o);
 			}
 		}
 		else if (v->data.int_&&v->data.int_<=sll_current_runtime_data->a_dt->function_table.length){
