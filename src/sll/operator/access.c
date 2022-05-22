@@ -41,7 +41,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_access(sll_object_t
 	else if (a->type==SLL_OBJECT_TYPE_MAP){
 		return sll_map_get(&(a->data.map),b);
 	}
-	else if (sll_current_runtime_data&&b->type==SLL_OBJECT_TYPE_STRING&&a->type>SLL_MAX_OBJECT_TYPE&&a->type<=sll_current_runtime_data->tt->l+SLL_MAX_OBJECT_TYPE){
+	else if (sll_current_runtime_data&&b->type==SLL_OBJECT_TYPE_STRING&&a->type>SLL_MAX_OBJECT_TYPE&&a->type<=sll_current_runtime_data->tt->length+SLL_MAX_OBJECT_TYPE){
 		return sll_object_get_field(sll_current_runtime_data->tt,a,&(b->data.string));
 	}
 	SLL_ACQUIRE(a);

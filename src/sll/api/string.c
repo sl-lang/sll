@@ -212,15 +212,15 @@ static void _object_to_string(sll_object_t* a,sll_string_t* o){
 			return;
 		default:
 			{
-				if (!sll_current_runtime_data||a->type>sll_current_runtime_data->tt->l+SLL_MAX_OBJECT_TYPE){
+				if (!sll_current_runtime_data||a->type>sll_current_runtime_data->tt->length+SLL_MAX_OBJECT_TYPE){
 					sll_string_increase(o,13);
 					sll_copy_string(SLL_CHAR("<custom-type>"),o->data+o->length);
 					o->length+=13;
 					return;
 				}
-				const sll_object_type_data_t* dt=*(sll_current_runtime_data->tt->dt+a->type-SLL_MAX_OBJECT_TYPE-1);
-				if (dt->fn[SLL_OBJECT_FUNC_STRING]){
-					sll_object_t* v=sll_execute_function(dt->fn[SLL_OBJECT_FUNC_STRING],&a,1,0);
+				const sll_object_type_data_t* dt=*(sll_current_runtime_data->tt->data+a->type-SLL_MAX_OBJECT_TYPE-1);
+				if (dt->functions[SLL_OBJECT_FUNC_STRING]){
+					sll_object_t* v=sll_execute_function(dt->functions[SLL_OBJECT_FUNC_STRING],&a,1,0);
 					sll_object_t* str=sll_operator_cast(v,sll_static_int[SLL_OBJECT_TYPE_STRING]);
 					SLL_RELEASE(v);
 					sll_string_increase(o,str->data.string.length);
@@ -232,17 +232,17 @@ static void _object_to_string(sll_object_t* a,sll_string_t* o){
 				sll_string_increase(o,3);
 				sll_copy_string(SLL_CHAR("<&:"),o->data+o->length);
 				o->length+=3;
-				if (!dt->nm.length){
+				if (!dt->name.length){
 					_write_int(a->type,o);
 				}
 				else{
-					sll_string_increase(o,dt->nm.length);
-					sll_copy_data(dt->nm.data,dt->nm.length,o->data+o->length);
-					o->length+=dt->nm.length;
+					sll_string_increase(o,dt->name.length);
+					sll_copy_data(dt->name.data,dt->name.length,o->data+o->length);
+					o->length+=dt->name.length;
 				}
 				sll_object_field_t* p=a->data.fields;
-				for (sll_arg_count_t i=0;i<dt->l;i++){
-					sll_string_t s=dt->dt[i].nm;
+				for (sll_arg_count_t i=0;i<dt->field_count;i++){
+					sll_string_t s=dt->fields[i].name;
 					sll_string_increase(o,1);
 					o->data[o->length]=' ';
 					o->length++;
@@ -253,7 +253,7 @@ static void _object_to_string(sll_object_t* a,sll_string_t* o){
 					o->data[o->length]=' ';
 					o->length++;
 					sll_object_t* tmp;
-					switch (dt->dt[i].t){
+					switch (dt->fields[i].type){
 						case SLL_OBJECT_TYPE_INT:
 							tmp=sll_int_to_object(p->int_);
 							break;

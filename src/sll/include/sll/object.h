@@ -204,18 +204,18 @@ typedef __SLL_U32 sll_object_type_table_length_t;
 
 /**
  * \flags type
- * \name sll_object_type_data_entry_t
+ * \name sll_object_type_data_field_t
  * \group object
  * \desc Docs!
- * \arg sll_object_type_t t
- * \arg sll_bool_t c
- * \arg sll_string_t nm
+ * \arg sll_object_type_t type
+ * \arg sll_bool_t read_only
+ * \arg sll_string_t name
  */
-typedef struct _SLL_OBJECT_TYPE_DATA_ENTRY{
-	sll_object_type_t t;
-	sll_bool_t c;
-	sll_string_t nm;
-} sll_object_type_data_entry_t;
+typedef struct _SLL_OBJECT_TYPE_DATA_FIELD{
+	sll_object_type_t type;
+	sll_bool_t read_only;
+	sll_string_t name;
+} sll_object_type_data_field_t;
 
 
 
@@ -224,22 +224,22 @@ typedef struct _SLL_OBJECT_TYPE_DATA_ENTRY{
  * \name sll_object_type_data_t
  * \group object
  * \desc Docs!
- * \arg const sll_string_t nm
- * \arg sll_arg_count_t l
+ * \arg const sll_string_t name
+ * \arg sll_arg_count_t field_count
  * \arg __SLL_U32 _hash_table_bit_mask
  * \arg sll_arg_count_t* _hash_table
  * \arg __SLL_U64 _rng
- * \arg sll_integer_t[SLL_MAX_OBJECT_FUNC+1] fn
- * \arg sll_object_type_data_entry_t[] dt
+ * \arg sll_integer_t[SLL_MAX_OBJECT_FUNC+1] functions
+ * \arg sll_object_type_data_field_t[] fields
  */
 typedef struct _SLL_OBJECT_TYPE_DATA{
-	const sll_string_t nm;
-	sll_arg_count_t l;
+	const sll_string_t name;
+	sll_arg_count_t field_count;
 	__SLL_U32 _hash_table_bit_mask;
 	sll_arg_count_t* _hash_table;
 	__SLL_U64 _rng;
-	sll_integer_t fn[SLL_MAX_OBJECT_FUNC+1];
-	sll_object_type_data_entry_t dt[];
+	sll_integer_t functions[SLL_MAX_OBJECT_FUNC+1];
+	sll_object_type_data_field_t fields[];
 } sll_object_type_data_t;
 
 
@@ -249,12 +249,12 @@ typedef struct _SLL_OBJECT_TYPE_DATA{
  * \name sll_object_type_table_t
  * \group object
  * \desc Docs!
- * \arg const sll_object_type_data_t** dt
- * \arg sll_object_type_table_length_t l
+ * \arg const sll_object_type_data_t** data
+ * \arg sll_object_type_table_length_t length
  */
 typedef struct _SLL_OBJECT_TYPE_TABLE{
-	const sll_object_type_data_t** dt;
-	sll_object_type_table_length_t l;
+	const sll_object_type_data_t** data;
+	sll_object_type_table_length_t length;
 } sll_object_type_table_t;
 
 

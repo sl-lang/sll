@@ -743,7 +743,7 @@ _cleanup_jump_table:;
 					sll_object_t* t=sll_operator_cast(*(thr->stack+thr->si-1),sll_static_int[SLL_OBJECT_TYPE_INT]);
 					SLL_RELEASE(*(thr->stack+thr->si-1));
 					sll_object_t* tos=sll_create_object(SLL_OBJECT_TYPE_STRING);
-					sll_get_type_name(sll_current_runtime_data->tt,(t->data.int_<0||t->data.int_>sll_current_runtime_data->tt->l+SLL_MAX_OBJECT_TYPE?SLL_OBJECT_TYPE_INT:(sll_object_type_t)(t->data.int_)),&(tos->data.string));
+					sll_get_type_name(sll_current_runtime_data->tt,(t->data.int_<0||t->data.int_>sll_current_runtime_data->tt->length+SLL_MAX_OBJECT_TYPE?SLL_OBJECT_TYPE_INT:(sll_object_type_t)(t->data.int_)),&(tos->data.string));
 					SLL_RELEASE(t);
 					*(thr->stack+thr->si-1)=tos;
 					break;
@@ -790,7 +790,7 @@ _cleanup_jump_table:;
 				{
 					sll_object_t* t=sll_operator_cast(*(thr->stack+thr->si-ai->data.arg_count-1),sll_static_int[SLL_OBJECT_TYPE_INT]);
 					SLL_RELEASE(*(thr->stack+thr->si-ai->data.arg_count-1));
-					sll_object_type_t ot=(t->data.int_<0||t->data.int_>sll_current_runtime_data->tt->l+SLL_MAX_OBJECT_TYPE?SLL_OBJECT_TYPE_INT:(sll_object_type_t)(t->data.int_));
+					sll_object_type_t ot=(t->data.int_<0||t->data.int_>sll_current_runtime_data->tt->length+SLL_MAX_OBJECT_TYPE?SLL_OBJECT_TYPE_INT:(sll_object_type_t)(t->data.int_));
 					SLL_RELEASE(t);
 					*(thr->stack+thr->si-ai->data.arg_count-1)=sll_create_object_type(sll_current_runtime_data->tt,ot,thr->stack+thr->si-ai->data.arg_count,ai->data.arg_count);
 					for (sll_arg_count_t i=0;i<ai->data.arg_count;i++){

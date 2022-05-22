@@ -99,19 +99,19 @@ __SLL_EXTERNAL void sll__release_object_internal(sll_object_t* o){
 		sll_free_map(&(o->data.map));
 	}
 	else if (o->type>SLL_MAX_OBJECT_TYPE&&o->type<SLL_OBJECT_TYPE_OBJECT){
-		if (sll_current_runtime_data&&o->type<=sll_current_runtime_data->tt->l+SLL_MAX_OBJECT_TYPE){
-			const sll_object_type_data_t* dt=*(sll_current_runtime_data->tt->dt+o->type-SLL_MAX_OBJECT_TYPE-1);
-			if (_scheduler_current_thread_index!=SLL_UNKNOWN_THREAD_INDEX&&dt->fn[SLL_OBJECT_FUNC_DELETE]){
+		if (sll_current_runtime_data&&o->type<=sll_current_runtime_data->tt->length+SLL_MAX_OBJECT_TYPE){
+			const sll_object_type_data_t* dt=*(sll_current_runtime_data->tt->data+o->type-SLL_MAX_OBJECT_TYPE-1);
+			if (_scheduler_current_thread_index!=SLL_UNKNOWN_THREAD_INDEX&&dt->functions[SLL_OBJECT_FUNC_DELETE]){
 				o->rc++;
-				SLL_RELEASE(sll_execute_function(dt->fn[SLL_OBJECT_FUNC_DELETE],&o,1,0));
+				SLL_RELEASE(sll_execute_function(dt->functions[SLL_OBJECT_FUNC_DELETE],&o,1,0));
 				o->rc--;
 				if (o->rc){
 					return;
 				}
 			}
 			sll_object_field_t* p=o->data.fields;
-			for (sll_arg_count_t i=0;i<dt->l;i++){
-				if (dt->dt[i].t>SLL_OBJECT_TYPE_CHAR){
+			for (sll_arg_count_t i=0;i<dt->field_count;i++){
+				if (dt->fields[i].type>SLL_OBJECT_TYPE_CHAR){
 					SLL_RELEASE(p->any);
 				}
 				p++;

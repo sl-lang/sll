@@ -85,18 +85,18 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_cast(sll_object_t* 
 		return a;
 	}
 	if (a->type>SLL_MAX_OBJECT_TYPE){
-		if (sll_current_runtime_data&&a->type<=sll_current_runtime_data->tt->l+SLL_MAX_OBJECT_TYPE){
-			const sll_object_type_data_t* dt=*(sll_current_runtime_data->tt->dt+a->type-SLL_MAX_OBJECT_TYPE-1);
+		if (sll_current_runtime_data&&a->type<=sll_current_runtime_data->tt->length+SLL_MAX_OBJECT_TYPE){
+			const sll_object_type_data_t* dt=*(sll_current_runtime_data->tt->data+a->type-SLL_MAX_OBJECT_TYPE-1);
 			switch (b->data.int_){
 				case SLL_OBJECT_TYPE_INT:
-					return sll_int_to_object(dt->l);
+					return sll_int_to_object(dt->field_count);
 				case SLL_OBJECT_TYPE_FLOAT:
 					SLL_UNIMPLEMENTED();
 				case SLL_OBJECT_TYPE_CHAR:
 					SLL_UNIMPLEMENTED();
 				case SLL_OBJECT_TYPE_STRING:
-					if (dt->fn[SLL_OBJECT_FUNC_STRING]){
-						sll_object_t* v=sll_execute_function(dt->fn[SLL_OBJECT_FUNC_STRING],&a,1,0);
+					if (dt->functions[SLL_OBJECT_FUNC_STRING]){
+						sll_object_t* v=sll_execute_function(dt->functions[SLL_OBJECT_FUNC_STRING],&a,1,0);
 						sll_object_t* str=sll_operator_cast(v,sll_static_int[SLL_OBJECT_TYPE_STRING]);
 						SLL_RELEASE(v);
 						return str;
@@ -126,7 +126,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_cast(sll_object_t* 
 		}
 	}
 	if (b->data.int_>SLL_MAX_OBJECT_TYPE){
-		if (sll_current_runtime_data&&b->data.int_<=sll_current_runtime_data->tt->l+SLL_MAX_OBJECT_TYPE){
+		if (sll_current_runtime_data&&b->data.int_<=sll_current_runtime_data->tt->length+SLL_MAX_OBJECT_TYPE){
 			sll_object_t* src=sll_operator_cast(a,sll_static_int[SLL_OBJECT_TYPE_ARRAY]);
 			sll_object_t* o=sll_create_object_type(sll_current_runtime_data->tt,(sll_object_type_t)(b->data.int_),src->data.array.data,src->data.array.length);
 			SLL_RELEASE(src);

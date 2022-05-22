@@ -434,17 +434,17 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_error_t sll_encode_object(sll_file_t* f,sl
 		sll_object_t* k=*a;
 		a++;
 		ac--;
-		if (k->type>sll_current_runtime_data->tt->l+SLL_MAX_OBJECT_TYPE){
+		if (k->type>sll_current_runtime_data->tt->length+SLL_MAX_OBJECT_TYPE){
 			k=sll_static_int[0];
 		}
 		else if (k->type>SLL_MAX_OBJECT_TYPE){
-			const sll_object_type_data_t* dt=*(sll_current_runtime_data->tt->dt+k->type-SLL_MAX_OBJECT_TYPE-1);
+			const sll_object_type_data_t* dt=*(sll_current_runtime_data->tt->data+k->type-SLL_MAX_OBJECT_TYPE-1);
 			sll_error_t err;
 			sll_file_write_char(f,SLL_OBJECT_TYPE_MAP,&err);
 			if (err!=SLL_NO_ERROR){
 				return err;
 			}
-			err=sll_encode_integer(f,dt->l+1);
+			err=sll_encode_integer(f,dt->field_count+1);
 			if (err!=SLL_NO_ERROR){
 				return err;
 			}
@@ -460,35 +460,35 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_error_t sll_encode_object(sll_file_t* f,sl
 			if (err!=SLL_NO_ERROR){
 				return err;
 			}
-			err=sll_encode_string(f,&(dt->nm));
+			err=sll_encode_string(f,&(dt->name));
 			if (err!=SLL_NO_ERROR){
 				return err;
 			}
 			sll_object_field_t* p=k->data.fields;
-			for (sll_arg_count_t i=0;i<dt->l;i++){
+			for (sll_arg_count_t i=0;i<dt->field_count;i++){
 				sll_file_write_char(f,SLL_OBJECT_TYPE_STRING,&err);
 				if (err!=SLL_NO_ERROR){
 					return err;
 				}
-				err=sll_encode_string(f,&(dt->dt[i].nm));
+				err=sll_encode_string(f,&(dt->fields[i].name));
 				if (err!=SLL_NO_ERROR){
 					return err;
 				}
-				if (dt->dt[i].t>SLL_OBJECT_TYPE_CHAR){
+				if (dt->fields[i].type>SLL_OBJECT_TYPE_CHAR){
 					err=sll_encode_object(f,&(p->any),1);
 					if (err!=SLL_NO_ERROR){
 						return err;
 					}
 				}
 				else{
-					sll_file_write_char(f,dt->dt[i].t,&err);
+					sll_file_write_char(f,dt->fields[i].type,&err);
 					if (err!=SLL_NO_ERROR){
 						return err;
 					}
-					if (dt->dt[i].t==SLL_OBJECT_TYPE_INT){
+					if (dt->fields[i].type==SLL_OBJECT_TYPE_INT){
 						err=sll_encode_signed_integer(f,p->int_);
 					}
-					else if (dt->dt[i].t==SLL_OBJECT_TYPE_FLOAT){
+					else if (dt->fields[i].type==SLL_OBJECT_TYPE_FLOAT){
 						sll_file_write(f,&(p->float_),sizeof(sll_float_t),&err);
 					}
 					else{
