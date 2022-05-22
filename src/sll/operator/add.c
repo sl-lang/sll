@@ -123,7 +123,7 @@ _add_to_string:
 		case COMBINED_TYPE_AA:
 			{
 				sll_object_t* o=sll_create_object(SLL_OBJECT_TYPE_ARRAY);
-				sll_array_join(&(a->data.array),&(b->data.array),&(o->data.array));
+				sll_array_extend(&(a->data.array),&(b->data.array),&(o->data.array));
 				return o;
 			}
 		case COMBINED_TYPE_AM:

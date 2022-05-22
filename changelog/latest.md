@@ -9,5 +9,9 @@
 - Renamed fields of multiple types
 - Translated the build script to Sll ([#75])
 
+## Removed
+
+- Duplicated functions: `sll_array_from_length` and `sll_array_join`
+
 [0.7.19]: https://github.com/sl-lang/sll/compare/sll-v0.7.18...main
 [#75]: https://github.com/sl-lang/sll/issues/75
