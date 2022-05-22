@@ -50,22 +50,22 @@ typedef struct _IDENTIFIER_MAP_DATA{
 
 
 typedef struct _IDENTIFIER_REMOVE_DATA{
-	void** s[SLL_MAX_SHORT_IDENTIFIER_LENGTH];
-	void** l;
+	void** short_[SLL_MAX_SHORT_IDENTIFIER_LENGTH];
+	void** long_;
 } identifier_remove_data_t;
 
 
 
 typedef struct _LOOP{
-	assembly_instruction_label_t cnt;
-	assembly_instruction_label_t brk;
+	assembly_instruction_label_t continue_;
+	assembly_instruction_label_t break_;
 } loop_t;
 
 
 
 typedef struct _ASSEMBLY_GENERATOR_DATA{
-	sll_assembly_data_t* a_dt;
-	const sll_source_file_t* sf;
+	sll_assembly_data_t* assembly_data;
+	const sll_source_file_t* source_file;
 	identifier_map_data_t it;
 	assembly_instruction_label_t n_lbl;
 	identifier_remove_data_t rm;
