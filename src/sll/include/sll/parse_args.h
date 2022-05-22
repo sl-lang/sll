@@ -159,9 +159,9 @@ typedef struct _SLL_CHAR_STRING{
  * \name sll_free_args
  * \group parse-args
  * \desc Docs!
- * \arg sll_arg_state_t dt
+ * \arg sll_arg_state_t arg_state
  */
-__SLL_EXTERNAL void sll_free_args(sll_arg_state_t dt);
+__SLL_EXTERNAL void sll_free_args(sll_arg_state_t arg_state);
 
 
 
@@ -170,10 +170,10 @@ __SLL_EXTERNAL void sll_free_args(sll_arg_state_t dt);
  * \name sll_parse_arg_count
  * \group parse-args
  * \desc Docs!
- * \arg const sll_char_t* t
+ * \arg const sll_char_t* format
  * \ret sll_arg_count_t
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_arg_count_t sll_parse_arg_count(const sll_char_t* t);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_arg_count_t sll_parse_arg_count(const sll_char_t* format);
 
 
 
@@ -182,12 +182,12 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_arg_count_t sll_parse_arg_count(const sll_
  * \name sll_parse_args
  * \group parse-args
  * \desc Docs!
- * \arg const sll_char_t* t
- * \arg sll_object_t*const* al
- * \arg sll_arg_count_t all
+ * \arg const sll_char_t* format
+ * \arg sll_object_t*const* args
+ * \arg sll_arg_count_t arg_count
  * \ret sll_arg_state_t
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_arg_state_t sll_parse_args(const sll_char_t* t,sll_object_t*const* al,sll_arg_count_t all,...);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_arg_state_t sll_parse_args(const sll_char_t* format,sll_object_t*const* args,sll_arg_count_t arg_count,...);
 
 
 
@@ -196,13 +196,13 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_arg_state_t sll_parse_args(const sll_char_
  * \name sll_parse_args_list
  * \group parse-args
  * \desc Docs!
- * \arg const sll_char_t* t
- * \arg sll_object_t*const* al
- * \arg sll_arg_count_t all
+ * \arg const sll_char_t* format
+ * \arg sll_object_t*const* args
+ * \arg sll_arg_count_t arg_count
  * \arg va_list* va
  * \ret sll_arg_state_t
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_arg_state_t sll_parse_args_list(const sll_char_t* t,sll_object_t*const* al,sll_arg_count_t all,va_list* va);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_arg_state_t sll_parse_args_list(const sll_char_t* format,sll_object_t*const* args,sll_arg_count_t arg_count,va_list* va);
 
 
 

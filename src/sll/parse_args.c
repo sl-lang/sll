@@ -22,8 +22,8 @@
 
 
 #define SKIP_WHITESPACE \
-	while (*t&&*t!='b'&&*t!='B'&&*t!='W'&&*t!='D'&&*t!='Q'&&*t!='i'&&*t!='f'&&*t!='x'&&*t!='c'&&*t!='d'&&*t!='X'&&*t!='z'&&*t!='s'&&*t!='y'&&*t!='a'&&*t!='m'&&*t!='o'&&*t!='!'&&*t!='+'&&*t!='&'&&*t!='#'&&*t!='@'){ \
-		t++; \
+	while (*format&&*format!='b'&&*format!='B'&&*format!='W'&&*format!='D'&&*format!='Q'&&*format!='i'&&*format!='f'&&*format!='x'&&*format!='c'&&*format!='d'&&*format!='X'&&*format!='z'&&*format!='s'&&*format!='y'&&*format!='a'&&*format!='m'&&*format!='o'&&*format!='!'&&*format!='+'&&*format!='&'&&*format!='#'&&*format!='@'){ \
+		format++; \
 	}
 
 #define INIT_ZERO(x) \
@@ -31,36 +31,36 @@
 		*(x)=0; \
 	} while (0)
 
-#define GET_PTR(type_) (o->type==ARG_OUTPUT_TYPE_C?va_arg(*(o->data.c),type_*):(type_*)_get_ptr_array(o,sizeof(type_)))
+#define GET_PTR(type_) (arg_output->type==ARG_OUTPUT_TYPE_C?va_arg(*(arg_output->data.c),type_*):(type_*)_get_ptr_array(arg_output,sizeof(type_)))
 
 #define ENSURE_TYPE(var,name) \
 	if (var->type!=SLL_OBJECT_TYPE_##name){ \
 		var=sll_operator_cast(var,sll_static_int[SLL_OBJECT_TYPE_##name]); \
-		if (!*st){ \
-			*st=sll_allocate_stack(sizeof(arg_state_t)+sizeof(sll_object_t*)); \
-			(*st)->length=1; \
+		if (!*arg_state){ \
+			*arg_state=sll_allocate_stack(sizeof(arg_state_t)+sizeof(sll_object_t*)); \
+			(*arg_state)->length=1; \
 		} \
 		else{ \
-			(*st)->length++; \
-			*st=sll_reallocate(*st,sizeof(arg_state_t)+(*st)->length*sizeof(sll_object_t*)); \
+			(*arg_state)->length++; \
+			*arg_state=sll_reallocate(*arg_state,sizeof(arg_state_t)+(*arg_state)->length*sizeof(sll_object_t*)); \
 		} \
-		(*st)->data[(*st)->length-1]=var; \
+		(*arg_state)->data[(*arg_state)->length-1]=var; \
 	} \
 
-#define PARSE_INT(sz) \
+#define PARSE_INT(size) \
 	if (flags&PARSE_ARGS_FLAG_ARRAY){ \
 		if (flags&PARSE_ARGS_FLAG_REF){ \
 			SLL_UNIMPLEMENTED(); \
 		} \
 		SLL_UNIMPLEMENTED(); \
 	} \
-	__SLL_U##sz* var=GET_PTR(__SLL_U##sz); \
+	__SLL_U##size* var=GET_PTR(__SLL_U##size); \
 	if (!arg){ \
 		*var=0; \
 		return; \
 	} \
 	sll_object_t* obj=sll_operator_cast(arg,sll_static_int[SLL_OBJECT_TYPE_INT]); \
-	*var=(obj->data.int_<0?0:(obj->data.int_>__SLL_U##sz##_MAX?__SLL_U##sz##_MAX:(__SLL_U##sz)(obj->data.int_))); \
+	*var=(obj->data.int_<0?0:(obj->data.int_>__SLL_U##size##_MAX?__SLL_U##size##_MAX:(__SLL_U##size)(obj->data.int_))); \
 	SLL_RELEASE(obj);
 #define PARSE_TYPE(type,name,field,init) \
 	if (flags&PARSE_ARGS_FLAG_ARRAY){ \
@@ -119,46 +119,46 @@
 
 #define PUSH_REGISTER(a,b) \
 	do{ \
-		if (regs){ \
+		if (registers){ \
 			if (reg_bit_count==64){ \
 				reg_sz++; \
-				*regs=sll_reallocate(*regs,reg_sz*sizeof(bitmap_t)); \
-				*(*regs+reg_sz-1)=0; \
+				*registers=sll_reallocate(*registers,reg_sz*sizeof(bitmap_t)); \
+				*(*registers+reg_sz-1)=0; \
 				reg_bit_count=0; \
 			} \
-			*(*regs+reg_sz-1)|=(((!!(b))<<1)|(!!(a)))<<reg_bit_count; \
+			*((*registers)+reg_sz-1)|=(((!!(b))<<1)|(!!(a)))<<reg_bit_count; \
 			reg_bit_count+=2; \
 		} \
 	} while (0)
 
-#define WARN_IGNORED_CONST(nm) \
+#define WARN_IGNORED_CONST(name) \
 	do{ \
 		if (flags&PARSE_ARGS_FLAG_CONST){ \
-			SLL_WARN("Ignoring 'const' modifier on type "nm": '%s'",tmp); \
+			SLL_WARN("Ignoring 'const' modifier on type "name": '%s'",tmp); \
 		} \
 	} while (0)
-#define WARN_IGNORED_NULL(nm) \
+#define WARN_IGNORED_NULL(name) \
 	do{ \
 		if (flags&PARSE_ARGS_FLAG_NULL){ \
-			SLL_WARN("Ignoring 'null' modifier on type "nm": '%s'",tmp); \
+			SLL_WARN("Ignoring 'null' modifier on type "name": '%s'",tmp); \
 		} \
 	} while (0)
 
 
 
-static __SLL_FORCE_INLINE void* _get_ptr_array(arg_output_t* o,sll_size_t sz){
-	SLL_ASSERT(o->type==ARG_OUTPUT_TYPE_ARRAY);
-	sz=(sz+7)&0xfffffffffffffff8ull;
-	SLL_ASSERT(o->data.array.count>=sz);
-	void* ptr=o->data.array.pointer;
-	o->data.array.pointer=PTR(ADDR(o->data.array.pointer)+sz);
-	o->data.array.count-=sz;
+static __SLL_FORCE_INLINE void* _get_ptr_array(arg_output_t* arg_output,sll_size_t size){
+	SLL_ASSERT(arg_output->type==ARG_OUTPUT_TYPE_ARRAY);
+	size=(size+7)&0xfffffffffffffff8ull;
+	SLL_ASSERT(arg_output->data.array.count>=size);
+	void* ptr=arg_output->data.array.pointer;
+	arg_output->data.array.pointer=PTR(ADDR(arg_output->data.array.pointer)+size);
+	arg_output->data.array.count-=size;
 	return ptr;
 }
 
 
 
-static void _parse_bool(sll_object_t* arg,arg_parse_flags_t flags,arg_state_t** st,arg_output_t* o){
+static void _parse_bool(sll_object_t* arg,arg_parse_flags_t flags,arg_state_t** arg_state,arg_output_t* arg_output){
 	if (flags&PARSE_ARGS_FLAG_ARRAY){
 		if (flags&PARSE_ARGS_FLAG_REF){
 			SLL_UNIMPLEMENTED();
@@ -170,37 +170,37 @@ static void _parse_bool(sll_object_t* arg,arg_parse_flags_t flags,arg_state_t** 
 
 
 
-static void _parse_uint8(sll_object_t* arg,arg_parse_flags_t flags,arg_state_t** st,arg_output_t* o){
+static void _parse_uint8(sll_object_t* arg,arg_parse_flags_t flags,arg_state_t** arg_state,arg_output_t* arg_output){
 	PARSE_INT(8);
 }
 
 
 
-static void _parse_uint16(sll_object_t* arg,arg_parse_flags_t flags,arg_state_t** st,arg_output_t* o){
+static void _parse_uint16(sll_object_t* arg,arg_parse_flags_t flags,arg_state_t** arg_state,arg_output_t* arg_output){
 	PARSE_INT(16);
 }
 
 
 
-static void _parse_uint32(sll_object_t* arg,arg_parse_flags_t flags,arg_state_t** st,arg_output_t* o){
+static void _parse_uint32(sll_object_t* arg,arg_parse_flags_t flags,arg_state_t** arg_state,arg_output_t* arg_output){
 	PARSE_INT(32);
 }
 
 
 
-static void _parse_int(sll_object_t* arg,arg_parse_flags_t flags,arg_state_t** st,arg_output_t* o){
+static void _parse_int(sll_object_t* arg,arg_parse_flags_t flags,arg_state_t** arg_state,arg_output_t* arg_output){
 	PARSE_TYPE(sll_integer_t,INT,int_,INIT_ZERO);
 }
 
 
 
-static void _parse_float(sll_object_t* arg,arg_parse_flags_t flags,arg_state_t** st,arg_output_t* o){
+static void _parse_float(sll_object_t* arg,arg_parse_flags_t flags,arg_state_t** arg_state,arg_output_t* arg_output){
 	PARSE_TYPE(sll_float_t,FLOAT,float_,INIT_ZERO);
 }
 
 
 
-static void _parse_int_or_float(sll_object_t* arg,arg_parse_flags_t flags,arg_state_t** st,arg_output_t* o){
+static void _parse_int_or_float(sll_object_t* arg,arg_parse_flags_t flags,arg_state_t** arg_state,arg_output_t* arg_output){
 	if (flags&PARSE_ARGS_FLAG_ARRAY){
 		if (flags&PARSE_ARGS_FLAG_REF){
 			SLL_UNIMPLEMENTED();
@@ -227,19 +227,19 @@ static void _parse_int_or_float(sll_object_t* arg,arg_parse_flags_t flags,arg_st
 
 
 
-static void _parse_char(sll_object_t* arg,arg_parse_flags_t flags,arg_state_t** st,arg_output_t* o){
+static void _parse_char(sll_object_t* arg,arg_parse_flags_t flags,arg_state_t** arg_state,arg_output_t* arg_output){
 	PARSE_TYPE(sll_char_t,CHAR,char_,INIT_ZERO);
 }
 
 
 
-static void _parse_complex(sll_object_t* arg,arg_parse_flags_t flags,arg_state_t** st,arg_output_t* o){
+static void _parse_complex(sll_object_t* arg,arg_parse_flags_t flags,arg_state_t** arg_state,arg_output_t* arg_output){
 	PARSE_TYPE(sll_complex_t,COMPLEX,complex_,SLL_INIT_COMPLEX);
 }
 
 
 
-static void _parse_float_or_complex(sll_object_t* arg,arg_parse_flags_t flags,arg_state_t** st,arg_output_t* o){
+static void _parse_float_or_complex(sll_object_t* arg,arg_parse_flags_t flags,arg_state_t** arg_state,arg_output_t* arg_output){
 	if (flags&PARSE_ARGS_FLAG_ARRAY){
 		if (flags&PARSE_ARGS_FLAG_REF){
 			SLL_UNIMPLEMENTED();
@@ -267,7 +267,7 @@ static void _parse_float_or_complex(sll_object_t* arg,arg_parse_flags_t flags,ar
 
 
 
-static void _parse_int_or_float_or_complex(sll_object_t* arg,arg_parse_flags_t flags,arg_state_t** st,arg_output_t* o){
+static void _parse_int_or_float_or_complex(sll_object_t* arg,arg_parse_flags_t flags,arg_state_t** arg_state,arg_output_t* arg_output){
 	if (flags&PARSE_ARGS_FLAG_ARRAY){
 		if (flags&PARSE_ARGS_FLAG_REF){
 			SLL_UNIMPLEMENTED();
@@ -299,13 +299,13 @@ static void _parse_int_or_float_or_complex(sll_object_t* arg,arg_parse_flags_t f
 
 
 
-static void _parse_string(sll_object_t* arg,arg_parse_flags_t flags,arg_state_t** st,arg_output_t* o){
+static void _parse_string(sll_object_t* arg,arg_parse_flags_t flags,arg_state_t** arg_state,arg_output_t* arg_output){
 	PARSE_TYPE_PTR(sll_string_t,STRING,string,SLL_INIT_STRING);
 }
 
 
 
-static void _parse_char_or_string(sll_object_t* arg,arg_parse_flags_t flags,arg_state_t** st,arg_output_t* o){
+static void _parse_char_or_string(sll_object_t* arg,arg_parse_flags_t flags,arg_state_t** arg_state,arg_output_t* arg_output){
 	if (flags&PARSE_ARGS_FLAG_ARRAY){
 		if (flags&PARSE_ARGS_FLAG_REF){
 			SLL_UNIMPLEMENTED();
@@ -334,19 +334,19 @@ static void _parse_char_or_string(sll_object_t* arg,arg_parse_flags_t flags,arg_
 
 
 
-static void _parse_array(sll_object_t* arg,arg_parse_flags_t flags,arg_state_t** st,arg_output_t* o){
+static void _parse_array(sll_object_t* arg,arg_parse_flags_t flags,arg_state_t** arg_state,arg_output_t* arg_output){
 	PARSE_TYPE_PTR(sll_array_t,ARRAY,array,SLL_INIT_ARRAY);
 }
 
 
 
-static void _parse_map(sll_object_t* arg,arg_parse_flags_t flags,arg_state_t** st,arg_output_t* o){
+static void _parse_map(sll_object_t* arg,arg_parse_flags_t flags,arg_state_t** arg_state,arg_output_t* arg_output){
 	PARSE_TYPE_PTR(sll_map_t,MAP,map,SLL_INIT_MAP);
 }
 
 
 
-static void _parse_object(sll_object_t* arg,arg_parse_flags_t flags,arg_state_t** st,arg_output_t* o){
+static void _parse_object(sll_object_t* arg,arg_parse_flags_t flags,arg_state_t** arg_state,arg_output_t* arg_output){
 	if (flags&PARSE_ARGS_FLAG_ARRAY){
 		if (flags&PARSE_ARGS_FLAG_REF){
 			ENSURE_TYPE(arg,ARRAY);
@@ -360,23 +360,23 @@ static void _parse_object(sll_object_t* arg,arg_parse_flags_t flags,arg_state_t*
 
 
 
-sll_arg_count_t _parse_arg_count(const sll_char_t* t,__SLL_U16 ret,bitmap_t** regs,sll_size_t* o){
+sll_arg_count_t _parse_arg_count(const sll_char_t* format,__SLL_U16 return_type,bitmap_t** registers,sll_size_t* out){
 	SKIP_WHITESPACE;
 	sll_size_t reg_sz=0;
 	__SLL_U8 reg_bit_count=64;
-	if (regs){
-		*regs=NULL;
+	if (registers){
+		*registers=NULL;
 	}
 	sll_arg_count_t ac=0;
 	sll_size_t sz=0;
 	sll_bool_t va=0;
 	sll_bool_t arr=0;
 	sll_bool_t ref=0;
-	while (*t){
-		if (*t=='!'){
+	while (*format){
+		if (*format=='!'){
 			va=1;
 		}
-		else if (*t=='+'){
+		else if (*format=='+'){
 			if (!arr){
 				if (ac){
 					sz+=8;
@@ -386,19 +386,19 @@ sll_arg_count_t _parse_arg_count(const sll_char_t* t,__SLL_U16 ret,bitmap_t** re
 				arr=1;
 			}
 		}
-		else if (*t=='&'){
+		else if (*format=='&'){
 			ref=1;
 		}
-		else if (*t=='b'||*t=='B'||*t=='W'||*t=='D'||*t=='Q'||*t=='i'||*t=='f'||*t=='x'||*t=='c'||*t=='d'||*t=='X'||*t=='z'||*t=='s'||*t=='y'||*t=='a'||*t=='m'||*t=='o'){
+		else if (*format=='b'||*format=='B'||*format=='W'||*format=='D'||*format=='Q'||*format=='i'||*format=='f'||*format=='x'||*format=='c'||*format=='d'||*format=='X'||*format=='z'||*format=='s'||*format=='y'||*format=='a'||*format=='m'||*format=='o'){
 			sz+=8;
 			arr=0;
 			sll_bool_t wide=0;
 			sll_bool_t extra_wide=0;
-			if (!ref&&(*t=='d'||*t=='y')){
+			if (!ref&&(*format=='d'||*format=='y')){
 				sz+=8;
 				wide=1;
 			}
-			else if (!ref&&(*t=='x'||*t=='X'||*t=='z')){
+			else if (!ref&&(*format=='x'||*format=='X'||*format=='z')){
 				sz+=16;
 				extra_wide=1;
 			}
@@ -406,7 +406,7 @@ sll_arg_count_t _parse_arg_count(const sll_char_t* t,__SLL_U16 ret,bitmap_t** re
 			ref=0;
 			ac++;
 		}
-		t++;
+		format++;
 		SKIP_WHITESPACE;
 	}
 	if (ac&&va){
@@ -414,22 +414,22 @@ sll_arg_count_t _parse_arg_count(const sll_char_t* t,__SLL_U16 ret,bitmap_t** re
 		PUSH_REGISTER(0,0);
 		ac++;
 	}
-	PUSH_REGISTER(((ret&RETURN_VALUE_FLAG_ERROR)||RETURN_VALUE_GET_TYPE(ret)=='d'||RETURN_VALUE_GET_TYPE(ret)=='x'||RETURN_VALUE_GET_TYPE(ret)=='X'||RETURN_VALUE_GET_TYPE(ret)=='z'||RETURN_VALUE_GET_TYPE(ret)=='s'||RETURN_VALUE_GET_TYPE(ret)=='a'||RETURN_VALUE_GET_TYPE(ret)=='m'),(ret&RETURN_VALUE_FLAG_ERROR));
-	SLL_ASSERT(!regs||reg_sz==(ac>>5)+1);
-	if (o){
-		*o=sz;
+	PUSH_REGISTER(((return_type&RETURN_VALUE_FLAG_ERROR)||RETURN_VALUE_GET_TYPE(return_type)=='d'||RETURN_VALUE_GET_TYPE(return_type)=='x'||RETURN_VALUE_GET_TYPE(return_type)=='X'||RETURN_VALUE_GET_TYPE(return_type)=='z'||RETURN_VALUE_GET_TYPE(return_type)=='s'||RETURN_VALUE_GET_TYPE(return_type)=='a'||RETURN_VALUE_GET_TYPE(return_type)=='m'),(return_type&RETURN_VALUE_FLAG_ERROR));
+	SLL_ASSERT(!registers||reg_sz==(ac>>5)+1);
+	if (out){
+		*out=sz;
 	}
 	return ac;
 }
 
 
 
-sll_arg_state_t _parse_args_raw(const sll_char_t* t,sll_object_t*const* al,sll_arg_count_t all,arg_output_t* o){
+sll_arg_state_t _parse_args_raw(const sll_char_t* format,sll_object_t*const* args,sll_arg_count_t arg_count,arg_output_t* arg_output){
 	SKIP_WHITESPACE;
-	if (!(*t)){
+	if (!(*format)){
 		return NULL;
 	}
-	const sll_char_t* tmp=t;
+	const sll_char_t* tmp=format;
 	sll_bool_t var_arg=0;
 	sll_string_length_t var_arg_idx=0;
 	while (*tmp){
@@ -444,47 +444,47 @@ sll_arg_state_t _parse_args_raw(const sll_char_t* t,sll_object_t*const* al,sll_a
 	if (!var_arg){
 		var_arg_idx=SLL_MAX_STRING_INDEX;
 	}
-	tmp=t;
+	tmp=format;
 	arg_state_t* st=NULL;
 	arg_parse_flags_t flags=0;
 	while (1){
 		SKIP_WHITESPACE;
-		if (*t=='&'){
+		if (*format=='&'){
 			flags|=PARSE_ARGS_FLAG_REF;
 		}
-		else if (*t=='#'){
+		else if (*format=='#'){
 			flags|=PARSE_ARGS_FLAG_CONST;
 		}
-		else if (*t=='@'){
+		else if (*format=='@'){
 			flags|=PARSE_ARGS_FLAG_NULL;
 		}
-		else if (*t!='+'&&*t!='!'){
+		else if (*format!='+'&&*format!='!'){
 			break;
 		}
-		t++;
+		format++;
 	}
-	while (*t){
-		sll_char_t type=*t;
-		t++;
+	while (*format){
+		sll_char_t type=*format;
+		format++;
 		arg_parse_flags_t n_flags=0;
 		while (1){
 			SKIP_WHITESPACE;
-			if (*t=='+'){
+			if (*format=='+'){
 				flags|=PARSE_ARGS_FLAG_ARRAY;
 			}
-			else if (*t=='&'){
+			else if (*format=='&'){
 				n_flags|=PARSE_ARGS_FLAG_REF;
 			}
-			else if (*t=='#'){
+			else if (*format=='#'){
 				n_flags|=PARSE_ARGS_FLAG_CONST;
 			}
-			else if (*t=='@'){
+			else if (*format=='@'){
 				n_flags|=PARSE_ARGS_FLAG_NULL;
 			}
-			else if (*t!='!'){
+			else if (*format!='!'){
 				break;
 			}
-			t++;
+			format++;
 		}
 		var_arg_idx--;
 		if (!var_arg_idx){
@@ -525,12 +525,12 @@ sll_arg_state_t _parse_args_raw(const sll_char_t* t,sll_object_t*const* al,sll_a
 					SLL_UNIMPLEMENTED();
 				case 'o':
 					{
-						sll_object_t** dt=sll_allocate(all*sizeof(sll_object_t*));
+						sll_object_t** dt=sll_allocate(arg_count*sizeof(sll_object_t*));
 						*GET_PTR(sll_object_t**)=dt;
-						*GET_PTR(sll_arg_count_t)=all;
-						while (all){
-							all--;
-							*(dt+all)=*(al+all);
+						*GET_PTR(sll_arg_count_t)=arg_count;
+						while (arg_count){
+							arg_count--;
+							*(dt+arg_count)=*(args+arg_count);
 						}
 						break;
 					}
@@ -540,10 +540,10 @@ sll_arg_state_t _parse_args_raw(const sll_char_t* t,sll_object_t*const* al,sll_a
 			break;
 		}
 		sll_object_t* arg=NULL;
-		if (all){
-			arg=*al;
-			al++;
-			all--;
+		if (arg_count){
+			arg=*args;
+			args++;
+			arg_count--;
 		}
 		void (*fn)(sll_object_t*,arg_parse_flags_t,arg_state_t**,arg_output_t*)=NULL;
 		switch (type){
@@ -625,7 +625,7 @@ sll_arg_state_t _parse_args_raw(const sll_char_t* t,sll_object_t*const* al,sll_a
 			if ((flags&(PARSE_ARGS_FLAG_NULL))&&(flags&(PARSE_ARGS_FLAG_ARRAY|PARSE_ARGS_FLAG_REF))){
 				SLL_UNIMPLEMENTED();
 			}
-			fn(arg,flags,&st,o);
+			fn(arg,flags,&st,arg_output);
 			flags=n_flags;
 		}
 	}
@@ -638,45 +638,45 @@ sll_arg_state_t _parse_args_raw(const sll_char_t* t,sll_object_t*const* al,sll_a
 
 
 
-__SLL_EXTERNAL void sll_free_args(sll_arg_state_t dt){
-	if (!dt){
+__SLL_EXTERNAL void sll_free_args(sll_arg_state_t arg_state){
+	if (!arg_state){
 		return;
 	}
-	arg_state_t* st=dt;
+	arg_state_t* st=arg_state;
 	for (sll_size_t i=0;i<st->length;i++){
 		SLL_RELEASE(st->data[i]);
 	}
-	sll_deallocate(dt);
+	sll_deallocate(arg_state);
 }
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_arg_count_t sll_parse_arg_count(const sll_char_t* t){
-	return _parse_arg_count(t,0,NULL,NULL);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_arg_count_t sll_parse_arg_count(const sll_char_t* format){
+	return _parse_arg_count(format,0,NULL,NULL);
 }
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_arg_state_t sll_parse_args(const sll_char_t* t,sll_object_t*const* al,sll_arg_count_t all,...){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_arg_state_t sll_parse_args(const sll_char_t* format,sll_object_t*const* args,sll_arg_count_t arg_count,...){
 	SKIP_WHITESPACE;
-	if (!(*t)){
+	if (!(*format)){
 		return NULL;
 	}
 	va_list va;
-	va_start(va,all);
-	sll_arg_state_t o=sll_parse_args_list(t,al,all,&va);
+	va_start(va,arg_count);
+	sll_arg_state_t o=sll_parse_args_list(format,args,arg_count,&va);
 	va_end(va);
 	return o;
 }
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_arg_state_t sll_parse_args_list(const sll_char_t* t,sll_object_t*const* al,sll_arg_count_t all,va_list* va){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_arg_state_t sll_parse_args_list(const sll_char_t* format,sll_object_t*const* args,sll_arg_count_t arg_count,va_list* va){
 	arg_output_t o={
 		ARG_OUTPUT_TYPE_C,
 		{
 			.c=va
 		}
 	};
-	return _parse_args_raw(t,al,all,&o);
+	return _parse_args_raw(format,args,arg_count,&o);
 }
