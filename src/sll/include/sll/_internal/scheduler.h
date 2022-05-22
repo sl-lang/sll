@@ -21,14 +21,14 @@ typedef __SLL_U32 queue_length_t;
 
 
 typedef struct _SCHEDULER_CPU_DATA{
+	sll_thread_index_t queue[SCHEDULER_MAX_CPU_CORE_THREADS];
 	queue_length_t queue_idx;
 	queue_length_t queue_len;
-	sll_internal_thread_index_t tid;
-	sll_event_handle_t evt;
-	sll_lock_handle_t lck;
-	sll_cpu_t id;
+	sll_internal_thread_index_t internal_thread_index;
+	sll_event_handle_t signal_event;
+	sll_lock_handle_t lock;
+	sll_cpu_t cpu_id;
 	sll_bool_t wait;
-	sll_thread_index_t queue[SCHEDULER_MAX_CPU_CORE_THREADS];
 } scheduler_cpu_data_t;
 
 
