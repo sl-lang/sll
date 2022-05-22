@@ -398,9 +398,9 @@ __SLL_EXTERNAL extern sll_file_t* sll_stderr;
  * \name sll_file_close
  * \group file
  * \desc Docs!
- * \arg sll_file_t* f
+ * \arg sll_file_t* file
  */
-__SLL_EXTERNAL void sll_file_close(sll_file_t* f);
+__SLL_EXTERNAL void sll_file_close(sll_file_t* file);
 
 
 
@@ -409,10 +409,10 @@ __SLL_EXTERNAL void sll_file_close(sll_file_t* f);
  * \name sll_file_data_available
  * \group file
  * \desc Docs!
- * \arg sll_file_t* f
+ * \arg sll_file_t* file
  * \ret sll_bool_t
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_file_data_available(sll_file_t* f);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_file_data_available(sll_file_t* file);
 
 
 
@@ -422,10 +422,10 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_file_data_available(sll_file_t*
  * \group file
  * \subgroup file-io
  * \desc Docs!
- * \arg sll_file_t* f
+ * \arg sll_file_t* file
  * \ret sll_error_t
  */
-__SLL_EXTERNAL sll_error_t sll_file_flush(sll_file_t* f);
+__SLL_EXTERNAL sll_error_t sll_file_flush(sll_file_t* file);
 
 
 
@@ -434,12 +434,12 @@ __SLL_EXTERNAL sll_error_t sll_file_flush(sll_file_t* f);
  * \name sll_file_from_data
  * \group file
  * \desc Docs!
- * \arg const void* ptr
- * \arg sll_size_t sz
+ * \arg const void* pointer
+ * \arg sll_size_t size
  * \arg sll_file_flags_t flags
- * \arg sll_file_t* o
+ * \arg sll_file_t* out
  */
-__SLL_EXTERNAL void sll_file_from_data(const void* ptr,sll_size_t sz,sll_file_flags_t flags,sll_file_t* o);
+__SLL_EXTERNAL void sll_file_from_data(const void* pointer,sll_size_t size,sll_file_flags_t flags,sll_file_t* out);
 
 
 
@@ -449,10 +449,10 @@ __SLL_EXTERNAL void sll_file_from_data(const void* ptr,sll_size_t sz,sll_file_fl
  * \group file
  * \desc Docs!
  * \arg void* p
- * \arg sll_file_t* f
- * \arg sll_string_t* o
+ * \arg sll_file_t* file
+ * \arg sll_string_t* out
  */
-__SLL_EXTERNAL void sll_file_get_buffer(sll_file_t* f,sll_string_t* o);
+__SLL_EXTERNAL void sll_file_get_buffer(sll_file_t* file,sll_string_t* out);
 
 
 
@@ -463,10 +463,10 @@ __SLL_EXTERNAL void sll_file_get_buffer(sll_file_t* f,sll_string_t* o);
  * \desc Docs!
  * \arg const sll_char_t* name
  * \arg sll_file_flags_t flags
- * \arg sll_file_t* o
+ * \arg sll_file_t* out
  * \ret sll_error_t
  */
-__SLL_EXTERNAL sll_error_t sll_file_open(const sll_char_t* name,sll_file_flags_t flags,sll_file_t* o);
+__SLL_EXTERNAL sll_error_t sll_file_open(const sll_char_t* name,sll_file_flags_t flags,sll_file_t* out);
 
 
 
@@ -475,12 +475,12 @@ __SLL_EXTERNAL sll_error_t sll_file_open(const sll_char_t* name,sll_file_flags_t
  * \name sll_file_open_descriptor
  * \group file
  * \desc Docs!
- * \arg const sll_char_t* nm
+ * \arg const sll_char_t* name
  * \arg sll_file_descriptor_t fd
  * \arg sll_file_flags_t flags
- * \arg sll_file_t* o
+ * \arg sll_file_t* out
  */
-__SLL_EXTERNAL void sll_file_open_descriptor(const sll_char_t* nm,sll_file_descriptor_t fd,sll_file_flags_t flags,sll_file_t* o);
+__SLL_EXTERNAL void sll_file_open_descriptor(const sll_char_t* name,sll_file_descriptor_t fd,sll_file_flags_t flags,sll_file_t* out);
 
 
 
