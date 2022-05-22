@@ -36,8 +36,8 @@ void _thread_deinit(void){
 		if (THREAD_IS_UNUSED(thr)){
 			continue;
 		}
-		if (thr->st==THREAD_STATE_TERMINATED){
-			SLL_RELEASE(thr->ret);
+		if (thr->state==THREAD_STATE_TERMINATED){
+			SLL_RELEASE(thr->return_value);
 		}
 		SLL_CRITICAL_ERROR(sll_platform_free_page(thr,THREAD_SIZE));
 	}
@@ -94,17 +94,17 @@ sll_thread_index_t _thread_new(void){
 	for (sll_variable_index_t i=0;i<sll_current_runtime_data->assembly_data->tls_variable_count;i++){
 		*(n->tls+i)=sll_static_int[0];
 	}
-	n->ii=0;
-	n->si=0;
+	n->instruction_index=0;
+	n->stack_index=0;
 	n->wait=SLL_UNKNOWN_THREAD_INDEX;
-	n->ret=NULL;
-	n->c_st.data=PTR(ADDR(ptr)+sizeof(thread_data_t));
-	n->c_st.length=0;
+	n->return_value=NULL;
+	n->call_stack.data=PTR(ADDR(ptr)+sizeof(thread_data_t));
+	n->call_stack.length=0;
 	n->sandbox=(_scheduler_current_thread_index==SLL_UNKNOWN_THREAD_INDEX?_sandbox_flags:_scheduler_current_thread->sandbox);
-	n->tm=THREAD_SCHEDULER_INSTRUCTION_COUNT;
-	n->st=THREAD_STATE_INITIALIZED;
+	n->time_quantum=THREAD_SCHEDULER_INSTRUCTION_COUNT;
+	n->state=THREAD_STATE_INITIALIZED;
 	n->flags=0;
-	n->_last_ai=NULL;
+	n->_last_instruction=NULL;
 	*(_thread_data+o)=n;
 	_thread_active_count++;
 	SLL_CRITICAL(sll_platform_lock_release(_thread_lock));
@@ -114,25 +114,25 @@ sll_thread_index_t _thread_new(void){
 
 
 void _thread_terminate(sll_object_t* ret){
-	SLL_ASSERT(_scheduler_current_thread->st==THREAD_STATE_RUNNING&&!(_scheduler_current_thread->flags&THREAD_FLAG_SUSPENDED));
+	SLL_ASSERT(_scheduler_current_thread->state==THREAD_STATE_RUNNING&&!(_scheduler_current_thread->flags&THREAD_FLAG_SUSPENDED));
 	SLL_ACQUIRE(ret);
 	sll_thread_index_t tid=_scheduler_current_thread_index;
 	sll_bool_t del=!!(_scheduler_current_thread->flags&THREAD_FLAG_DELETE);
-	_scheduler_current_thread->ret=ret;
-	_scheduler_current_thread->st=THREAD_STATE_TERMINATED;
+	_scheduler_current_thread->return_value=ret;
+	_scheduler_current_thread->state=THREAD_STATE_TERMINATED;
 	_scheduler_current_thread_index=_scheduler_current_thread->wait;
 	if (_scheduler_current_thread_index!=SLL_UNKNOWN_THREAD_INDEX){
 		_scheduler_current_thread=*(_thread_data+_scheduler_current_thread_index);
-		while (_scheduler_current_thread->nxt!=SLL_UNKNOWN_THREAD_INDEX){
-			_scheduler_current_thread->st=THREAD_STATE_QUEUED;
+		while (_scheduler_current_thread->next!=SLL_UNKNOWN_THREAD_INDEX){
+			_scheduler_current_thread->state=THREAD_STATE_QUEUED;
 			if (_scheduler_current_thread->flags&THREAD_FLAG_SUSPENDED){
 				SLL_UNIMPLEMENTED();
 			}
 			_scheduler_queue_thread(_scheduler_current_thread_index);
-			_scheduler_current_thread_index=_scheduler_current_thread->nxt;
+			_scheduler_current_thread_index=_scheduler_current_thread->next;
 			_scheduler_current_thread=*(_thread_data+_scheduler_current_thread_index);
 		}
-		_scheduler_current_thread->st=THREAD_STATE_RUNNING;
+		_scheduler_current_thread->state=THREAD_STATE_RUNNING;
 	}
 	if (!(_scheduler_current_thread->flags&THREAD_FLAG_NO_AUDIT_TERMINATE)){
 		sll_audit(SLL_CHAR("sll.thread.return"),SLL_CHAR("u"),tid);
@@ -154,13 +154,13 @@ void _thread_terminate(sll_object_t* ret){
 
 
 sll_bool_t _thread_wait(sll_integer_t w){
-	if (w<0||w>=_thread_len||!*(_thread_data+w)||w==_scheduler_current_thread_index||(*(_thread_data+w))->ret){
+	if (w<0||w>=_thread_len||!*(_thread_data+w)||w==_scheduler_current_thread_index||(*(_thread_data+w))->return_value){
 		return 0;
 	}
-	_scheduler_current_thread->tm=THREAD_SCHEDULER_INSTRUCTION_COUNT;
+	_scheduler_current_thread->time_quantum=THREAD_SCHEDULER_INSTRUCTION_COUNT;
 	thread_data_t* thr=*(_thread_data+w);
-	_scheduler_current_thread->nxt=thr->wait;
-	_scheduler_current_thread->st=THREAD_STATE_WAIT_THREAD;
+	_scheduler_current_thread->next=thr->wait;
+	_scheduler_current_thread->state=THREAD_STATE_WAIT_THREAD;
 	thr->wait=_scheduler_current_thread_index;
 	_scheduler_current_thread_index=SLL_UNKNOWN_THREAD_INDEX;
 	return 1;
@@ -175,9 +175,9 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_thread_index_t sll_thread_create(sll_integ
 	if (fn&&fn<=sll_current_runtime_data->assembly_data->function_table.length){
 		sll_thread_index_t o=_thread_new();
 		thread_data_t* thr=*(_thread_data+o);
-		for (;thr->si<all;thr->si++){
-			*(thr->stack+thr->si)=*(al+thr->si);
-			SLL_ACQUIRE(*(al+thr->si));
+		for (;thr->stack_index<all;thr->stack_index++){
+			*(thr->stack+thr->stack_index)=*(al+thr->stack_index);
+			SLL_ACQUIRE(*(al+thr->stack_index));
 		}
 		_call_function(thr,(sll_function_index_t)(fn-1),all,0);
 		return o;
@@ -196,18 +196,18 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_thread_delete(sll_thread_index_
 		return 0;
 	}
 	SLL_CRITICAL_ERROR(sll_platform_lock_acquire(_thread_lock));
-	if (thr->st!=THREAD_STATE_TERMINATED){
+	if (thr->state!=THREAD_STATE_TERMINATED){
 		thr->flags|=THREAD_FLAG_DELETE;
 		SLL_CRITICAL(sll_platform_lock_release(_thread_lock));
 		return 1;
 	}
 	*(_thread_data+t)=THREAD_NEXT_UNUSED(_thread_next);
 	_thread_next=t;
-	SLL_RELEASE(thr->ret);
+	SLL_RELEASE(thr->return_value);
 	for (sll_variable_index_t i=0;i<sll_current_runtime_data->assembly_data->tls_variable_count;i++){
 		SLL_RELEASE(*(thr->tls+i));
 	}
-	SLL_ASSERT(!thr->si);
+	SLL_ASSERT(!thr->stack_index);
 	if (_scheduler_allocator_cache_pool_len<THREAD_ALLOCATOR_CACHE_POOL_SIZE){
 		_scheduler_allocator_cache_pool[_scheduler_allocator_cache_pool_len]=thr;
 		_scheduler_allocator_cache_pool_len++;
@@ -229,14 +229,14 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT const sll_call_stack_t* sll_thread_get_call_st
 	if (THREAD_IS_UNUSED(thr)){
 		return NULL;
 	}
-	return &(thr->c_st);
+	return &(thr->call_stack);
 }
 
 
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_instruction_index_t sll_thread_get_instruction_index(sll_thread_index_t t){
 	thread_data_t* thr=(t==SLL_UNKNOWN_THREAD_INDEX?_scheduler_current_thread:_thread_get(t));
-	return (thr?thr->ii:0);
+	return (thr?thr->instruction_index:0);
 }
 
 
@@ -249,7 +249,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_thread_restart(sll_thread_index
 	if (THREAD_IS_UNUSED(thr)||t==_scheduler_current_thread_index){
 		return 0;
 	}
-	if ((thr->flags&THREAD_FLAG_SUSPENDED)&&thr->st==THREAD_STATE_QUEUED){
+	if ((thr->flags&THREAD_FLAG_SUSPENDED)&&thr->state==THREAD_STATE_QUEUED){
 		_scheduler_queue_thread(t);
 	}
 	thr->flags&=~THREAD_FLAG_SUSPENDED;
@@ -263,10 +263,10 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_thread_start(sll_thread_index_t
 		return 0;
 	}
 	thread_data_t* thr=*(_thread_data+t);
-	if (THREAD_IS_UNUSED(thr)||thr->st!=THREAD_STATE_INITIALIZED){
+	if (THREAD_IS_UNUSED(thr)||thr->state!=THREAD_STATE_INITIALIZED){
 		return 0;
 	}
-	thr->st=THREAD_STATE_QUEUED;
+	thr->state=THREAD_STATE_QUEUED;
 	_scheduler_queue_thread(t);
 	return 1;
 }

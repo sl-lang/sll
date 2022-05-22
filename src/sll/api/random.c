@@ -18,9 +18,9 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_float_t sll_api_random_get_
 	v&=0xfffffffffffffull;
 	sll_size_t l=FIND_LAST_SET_BIT(v);
 	f64_data_t o={
-		.dt=((l+971)<<52)|((v<<(52-l))&0xfffffffffffffull)
+		.data=((l+971)<<52)|((v<<(52-l))&0xfffffffffffffull)
 	};
-	return o.v*(max-min)+min;
+	return o.value*(max-min)+min;
 }
 
 

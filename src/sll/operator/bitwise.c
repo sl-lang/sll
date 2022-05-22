@@ -21,9 +21,9 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_and(sll_object_t* a
 		case COMBINED_TYPE_IF:
 			{
 				f64_data_t v={
-					.dt=a->data.int_&TO_FLOAT_BITS(b)
+					.data=a->data.int_&TO_FLOAT_BITS(b)
 				};
-				return sll_float_to_object(v.v);
+				return sll_float_to_object(v.value);
 			}
 		case COMBINED_TYPE_IC:
 			return sll_int_to_object(a->data.int_&b->data.char_);
@@ -58,16 +58,16 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_and(sll_object_t* a
 		case COMBINED_TYPE_FF:
 			{
 				f64_data_t v={
-					.dt=TO_FLOAT_BITS(a)&TO_FLOAT_BITS(b)
+					.data=TO_FLOAT_BITS(a)&TO_FLOAT_BITS(b)
 				};
-				return sll_float_to_object(v.v);
+				return sll_float_to_object(v.value);
 			}
 		case COMBINED_TYPE_FC:
 			{
 				f64_data_t v={
-					.dt=TO_FLOAT_BITS(a)&b->data.char_
+					.data=TO_FLOAT_BITS(a)&b->data.char_
 				};
-				return sll_float_to_object(v.v);
+				return sll_float_to_object(v.value);
 			}
 		case COMBINED_TYPE_FS:
 			{
@@ -183,9 +183,9 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_or(sll_object_t* a,
 		case COMBINED_TYPE_IF:
 			{
 				f64_data_t v={
-					.dt=a->data.int_|TO_FLOAT_BITS(b)
+					.data=a->data.int_|TO_FLOAT_BITS(b)
 				};
-				return sll_float_to_object(v.v);
+				return sll_float_to_object(v.value);
 			}
 		case COMBINED_TYPE_IC:
 			return sll_int_to_object(a->data.int_|b->data.char_);
@@ -220,16 +220,16 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_or(sll_object_t* a,
 		case COMBINED_TYPE_FF:
 			{
 				f64_data_t v={
-					.dt=TO_FLOAT_BITS(a)|TO_FLOAT_BITS(b)
+					.data=TO_FLOAT_BITS(a)|TO_FLOAT_BITS(b)
 				};
-				return sll_float_to_object(v.v);
+				return sll_float_to_object(v.value);
 			}
 		case COMBINED_TYPE_FC:
 			{
 				f64_data_t v={
-					.dt=TO_FLOAT_BITS(a)|b->data.char_
+					.data=TO_FLOAT_BITS(a)|b->data.char_
 				};
-				return sll_float_to_object(v.v);
+				return sll_float_to_object(v.value);
 			}
 		case COMBINED_TYPE_FS:
 			{
@@ -297,9 +297,9 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_xor(sll_object_t* a
 		case COMBINED_TYPE_IF:
 			{
 				f64_data_t v={
-					.dt=a->data.int_^TO_FLOAT_BITS(b)
+					.data=a->data.int_^TO_FLOAT_BITS(b)
 				};
-				return sll_float_to_object(v.v);
+				return sll_float_to_object(v.value);
 			}
 		case COMBINED_TYPE_IC:
 			return sll_int_to_object(a->data.int_^b->data.char_);
@@ -334,16 +334,16 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_xor(sll_object_t* a
 		case COMBINED_TYPE_FF:
 			{
 				f64_data_t v={
-					.dt=TO_FLOAT_BITS(a)^TO_FLOAT_BITS(b)
+					.data=TO_FLOAT_BITS(a)^TO_FLOAT_BITS(b)
 				};
-				return sll_float_to_object(v.v);
+				return sll_float_to_object(v.value);
 			}
 		case COMBINED_TYPE_FC:
 			{
 				f64_data_t v={
-					.dt=TO_FLOAT_BITS(a)^b->data.char_
+					.data=TO_FLOAT_BITS(a)^b->data.char_
 				};
-				return sll_float_to_object(v.v);
+				return sll_float_to_object(v.value);
 			}
 		case COMBINED_TYPE_FS:
 			{

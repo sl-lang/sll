@@ -46,11 +46,11 @@ sll_bool_t _semaphore_wait(sll_integer_t w){
 		(_semaphore_data+w)->first=_scheduler_current_thread_index;
 	}
 	else{
-		(_semaphore_data+w)->last->nxt=_scheduler_current_thread_index;
+		(_semaphore_data+w)->last->next=_scheduler_current_thread_index;
 	}
 	(_semaphore_data+w)->last=_scheduler_current_thread;
-	_scheduler_current_thread->nxt=SLL_UNKNOWN_THREAD_INDEX;
-	_scheduler_current_thread->st=THREAD_STATE_WAIT_SEMAPHORE;
+	_scheduler_current_thread->next=SLL_UNKNOWN_THREAD_INDEX;
+	_scheduler_current_thread->state=THREAD_STATE_WAIT_SEMAPHORE;
 	_scheduler_current_thread_index=SLL_UNKNOWN_THREAD_INDEX;
 	return 1;
 }
@@ -99,8 +99,8 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_semaphore_release(sll_semaphore
 		return 1;
 	}
 	thread_data_t* thr=*(_thread_data+(_semaphore_data+l)->first);
-	thr->st=THREAD_STATE_QUEUED;
+	thr->state=THREAD_STATE_QUEUED;
 	_scheduler_queue_thread((_semaphore_data+l)->first);
-	(_semaphore_data+l)->first=thr->nxt;
+	(_semaphore_data+l)->first=thr->next;
 	return 1;
 }

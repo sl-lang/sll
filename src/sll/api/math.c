@@ -61,10 +61,10 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_math_abs(const sll_number_t* a,sll_nu
 	}
 	else{
 		f64_data_t dt={
-			.v=a->data.float_
+			.value=a->data.float_
 		};
-		dt.dt&=0x7fffffffffffffffull;
-		out->data.float_=dt.v;
+		dt.data&=0x7fffffffffffffffull;
+		out->data.float_=dt.value;
 	}
 }
 
@@ -175,27 +175,27 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_math_copy_sign(const sll_number_t* a,
 	}
 	else if (a->type==SLL_PARSE_ARGS_TYPE_FLOAT){
 		f64_data_t dt_a={
-			.v=a->data.float_
+			.value=a->data.float_
 		};
 		f64_data_t dt_b={
-			.v=b->data.float_
+			.value=b->data.float_
 		};
-		dt_a.dt=(dt_a.dt&0x7fffffffffffffffull)|(dt_b.dt&0x8000000000000000ull);
-		out->data.float_=dt_a.v;
+		dt_a.data=(dt_a.data&0x7fffffffffffffffull)|(dt_b.data&0x8000000000000000ull);
+		out->data.float_=dt_a.value;
 	}
 	else{
 		f64_data_t dt_a={
-			.v=a->data.complex_.real
+			.value=a->data.complex_.real
 		};
 		f64_data_t dt_b={
-			.v=b->data.complex_.real
+			.value=b->data.complex_.real
 		};
-		dt_a.dt=(dt_a.dt&0x7fffffffffffffffull)|(dt_b.dt&0x8000000000000000ull);
-		out->data.complex_.real=dt_a.v;
-		dt_a.v=a->data.complex_.imag;
-		dt_b.v=b->data.complex_.imag;
-		dt_a.dt=(dt_a.dt&0x7fffffffffffffffull)|(dt_b.dt&0x8000000000000000ull);
-		out->data.complex_.imag=dt_a.v;
+		dt_a.data=(dt_a.data&0x7fffffffffffffffull)|(dt_b.data&0x8000000000000000ull);
+		out->data.complex_.real=dt_a.value;
+		dt_a.value=a->data.complex_.imag;
+		dt_b.value=b->data.complex_.imag;
+		dt_a.data=(dt_a.data&0x7fffffffffffffffull)|(dt_b.data&0x8000000000000000ull);
+		out->data.complex_.imag=dt_a.value;
 	}
 }
 
@@ -582,23 +582,23 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_math_tanh(const sll_number_t* a,sll_n
 
 __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_float_t sll_math_abs(sll_float_t a){
 	f64_data_t dt={
-		.v=a
+		.value=a
 	};
-	dt.dt&=0x7fffffffffffffffull;
-	return dt.v;
+	dt.data&=0x7fffffffffffffffull;
+	return dt.value;
 }
 
 
 
 __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_float_t sll_math_copy_sign(sll_float_t a,sll_float_t b){
 	f64_data_t dt_a={
-		.v=a
+		.value=a
 	};
 	f64_data_t dt_b={
-		.v=b
+		.value=b
 	};
-	dt_a.dt=(dt_a.dt&0x7fffffffffffffffull)|(dt_b.dt&0x8000000000000000ull);
-	return dt_a.v;
+	dt_a.data=(dt_a.data&0x7fffffffffffffffull)|(dt_b.data&0x8000000000000000ull);
+	return dt_a.value;
 }
 
 

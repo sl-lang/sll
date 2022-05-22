@@ -72,7 +72,7 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_thread_get_internal_data(sll_thread_i
 	}
 	thread_data_t* thr=_thread_get(tid);
 	if (thr){
-		sll_new_object_array(SLL_CHAR("hh"),out,thr->ii,thr->si);
+		sll_new_object_array(SLL_CHAR("hh"),out,thr->instruction_index,thr->stack_index);
 		return;
 	}
 _error:

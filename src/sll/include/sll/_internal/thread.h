@@ -51,17 +51,17 @@ typedef __SLL_U32 thread_list_length_t;
 typedef struct _THREAD_DATA{
 	sll_object_t** stack;
 	sll_object_t** tls;
-	sll_instruction_index_t ii;
-	sll_stack_offset_t si;
-	sll_thread_index_t nxt;
+	sll_instruction_index_t instruction_index;
+	sll_stack_offset_t stack_index;
+	sll_thread_index_t next;
 	sll_thread_index_t wait;
-	sll_object_t* ret;
-	sll_call_stack_t c_st;
+	sll_object_t* return_value;
+	sll_call_stack_t call_stack;
 	sll_sandbox_flags_t sandbox;
-	sll_char_t tm;
-	thread_state_t st;
+	sll_char_t time_quantum;
+	thread_state_t state;
 	thread_flags_t flags;
-	const sll_assembly_instruction_t* _last_ai;
+	const sll_assembly_instruction_t* _last_instruction;
 } thread_data_t;
 
 

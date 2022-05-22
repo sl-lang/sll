@@ -7,10 +7,10 @@
 
 
 typedef struct _WEAKREF_KEY_PAIR{
-	addr_t obj;
+	addr_t object;
 	sll_weak_reference_t wr;
-	sll_weak_ref_destructor_t cb;
-	void* arg;
+	sll_weak_ref_destructor_t destructor;
+	void* ctx;
 } weakref_key_pair_t;
 
 

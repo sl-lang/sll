@@ -22,10 +22,10 @@ static sll_weak_reference_t _create_new(addr_t obj){
 	_weakref_data=sll_reallocate(_weakref_data,_weakref_data_len*sizeof(weakref_key_pair_t*));
 	_weakref_next=PTR(ADDR(_weakref_next)+1);
 	weakref_key_pair_t* kp=sll_allocate(sizeof(weakref_key_pair_t));
-	kp->obj=obj;
+	kp->object=obj;
 	kp->wr=_weakref_next;
-	kp->cb=NULL;
-	kp->arg=NULL;
+	kp->destructor=NULL;
+	kp->ctx=NULL;
 	*(_weakref_data+_weakref_data_len-1)=kp;
 	return _weakref_next;
 }
@@ -51,9 +51,9 @@ void _weakref_delete(sll_object_t* o){
 	weakref_key_pair_t** kp=_weakref_data;
 	for (sll_array_length_t j=0;j<_weakref_data_len;j++){
 		weakref_key_pair_t* v=*kp;
-		if (v->obj==ADDR(o)){
-			if (v->cb){
-				v->cb(v->wr,o,v->arg);
+		if (v->object==ADDR(o)){
+			if (v->destructor){
+				v->destructor(v->wr,o,v->ctx);
 			}
 			sll_deallocate(v);
 		}
@@ -74,7 +74,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_weak_reference_t sll_weakref_clone(sll_wea
 	for (sll_array_length_t i=0;i<_weakref_data_len;i++){
 		weakref_key_pair_t* k=*kp;
 		if (k->wr==wr){
-			return _create_new(k->obj);
+			return _create_new(k->object);
 		}
 		kp++;
 	}
@@ -116,7 +116,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_weakref_get(sll_weak_referen
 	weakref_key_pair_t** kp=_weakref_data;
 	for (sll_array_length_t i=0;i<_weakref_data_len;i++){
 		if ((*kp)->wr==wr){
-			return PTR((*kp)->obj);
+			return PTR((*kp)->object);
 		}
 		kp++;
 	}
@@ -130,8 +130,8 @@ __SLL_EXTERNAL void sll_weakref_set_callback(sll_weak_reference_t wr,sll_weak_re
 	for (sll_array_length_t i=0;i<_weakref_data_len;i++){
 		weakref_key_pair_t* v=*kp;
 		if (v->wr==wr){
-			v->cb=cb;
-			v->arg=arg;
+			v->destructor=cb;
+			v->ctx=arg;
 			return;
 		}
 		kp++;

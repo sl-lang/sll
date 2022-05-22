@@ -53,11 +53,11 @@ sll_bool_t _barrier_wait(sll_integer_t w,sll_integer_t v,sll_bool_t g){
 		(_barrier_data+w)->first=_scheduler_current_thread_index;
 	}
 	else{
-		(_barrier_data+w)->last->nxt=_scheduler_current_thread_index;
+		(_barrier_data+w)->last->next=_scheduler_current_thread_index;
 	}
 	(_barrier_data+w)->last=_scheduler_current_thread;
-	_scheduler_current_thread->nxt=SLL_UNKNOWN_THREAD_INDEX;
-	_scheduler_current_thread->st=THREAD_STATE_WAIT_BARRIER;
+	_scheduler_current_thread->next=SLL_UNKNOWN_THREAD_INDEX;
+	_scheduler_current_thread->state=THREAD_STATE_WAIT_BARRIER;
 	_scheduler_current_thread_index=SLL_UNKNOWN_THREAD_INDEX;
 	return 1;
 }

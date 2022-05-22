@@ -25,15 +25,15 @@
 
 
 typedef union _F32_DATA{
-	__SLL_F32 v;
-	__SLL_U32 dt;
+	__SLL_F32 value;
+	__SLL_U32 data;
 } f32_data_t;
 
 
 
 typedef union _F64_DATA{
-	__SLL_F64 v;
-	__SLL_U64 dt;
+	__SLL_F64 value;
+	__SLL_U64 data;
 } f64_data_t;
 
 

@@ -10,7 +10,7 @@
 
 
 
-typedef sll_object_t* (*converter_func_t)(void*);
+typedef sll_object_t* (*converter_func_t)(void* arg);
 
 
 
