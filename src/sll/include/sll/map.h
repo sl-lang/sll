@@ -46,12 +46,12 @@
  * \name SLL_INIT_MAP
  * \group map
  * \desc Docs!
- * \arg sll_map_t* o
+ * \arg sll_map_t* out
  */
-#define SLL_INIT_MAP(o) \
+#define SLL_INIT_MAP(out) \
 	do{ \
-		(o)->length=0; \
-		(o)->data=NULL; \
+		(out)->length=0; \
+		(out)->data=NULL; \
 	} while (0)
 
 
@@ -72,9 +72,9 @@
  * \name sll_free_map
  * \group map
  * \desc Docs!
- * \arg sll_map_t* m
+ * \arg sll_map_t* map
  */
-__SLL_EXTERNAL void sll_free_map(sll_map_t* m);
+__SLL_EXTERNAL void sll_free_map(sll_map_t* map);
 
 
 
@@ -84,12 +84,12 @@ __SLL_EXTERNAL void sll_free_map(sll_map_t* m);
  * \group map
  * \subgroup map-data
  * \desc Docs!
- * \arg const sll_map_t* m
- * \arg sll_object_t* k
- * \arg sll_object_t* v
- * \arg sll_map_t* o
+ * \arg const sll_map_t* map
+ * \arg sll_object_t* key
+ * \arg sll_object_t* value
+ * \arg sll_map_t* out
  */
-__SLL_EXTERNAL void sll_map_add(const sll_map_t* m,sll_object_t* k,sll_object_t* v,sll_map_t* o);
+__SLL_EXTERNAL void sll_map_add(const sll_map_t* map,sll_object_t* key,sll_object_t* value,sll_map_t* out);
 
 
 
@@ -99,11 +99,11 @@ __SLL_EXTERNAL void sll_map_add(const sll_map_t* m,sll_object_t* k,sll_object_t*
  * \group map
  * \subgroup map-data
  * \desc Docs!
- * \arg const sll_map_t* m
- * \arg const sll_array_t* a
- * \arg sll_map_t* o
+ * \arg const sll_map_t* map
+ * \arg const sll_array_t* array
+ * \arg sll_map_t* out
  */
-__SLL_EXTERNAL void sll_map_add_array(const sll_map_t* m,const sll_array_t* a,sll_map_t* o);
+__SLL_EXTERNAL void sll_map_add_array(const sll_map_t* map,const sll_array_t* a,sll_map_t* out);
 
 
 
@@ -113,11 +113,11 @@ __SLL_EXTERNAL void sll_map_add_array(const sll_map_t* m,const sll_array_t* a,sl
  * \group map
  * \subgroup map-data
  * \desc Docs!
- * \arg const sll_map_t* m
- * \arg const sll_string_t* s
- * \arg sll_map_t* o
+ * \arg const sll_map_t* map
+ * \arg const sll_string_t* string
+ * \arg sll_map_t* out
  */
-__SLL_EXTERNAL void sll_map_add_string(const sll_map_t* m,const sll_string_t* s,sll_map_t* o);
+__SLL_EXTERNAL void sll_map_add_string(const sll_map_t* map,const sll_string_t* string,sll_map_t* out);
 
 
 
@@ -129,9 +129,9 @@ __SLL_EXTERNAL void sll_map_add_string(const sll_map_t* m,const sll_string_t* s,
  * \desc Docs!
  * \arg const sll_map_t* a
  * \arg const sll_map_t* b
- * \arg sll_map_t* o
+ * \arg sll_map_t* out
  */
-__SLL_EXTERNAL void sll_map_and(const sll_map_t* a,const sll_map_t* b,sll_map_t* o);
+__SLL_EXTERNAL void sll_map_and(const sll_map_t* a,const sll_map_t* b,sll_map_t* out);
 
 
 
@@ -141,11 +141,11 @@ __SLL_EXTERNAL void sll_map_and(const sll_map_t* a,const sll_map_t* b,sll_map_t*
  * \group map
  * \subgroup map-op
  * \desc Docs!
- * \arg const sll_map_t* m
- * \arg const sll_array_t* a
- * \arg sll_map_t* o
+ * \arg const sll_map_t* map
+ * \arg const sll_array_t* array
+ * \arg sll_map_t* out
  */
-__SLL_EXTERNAL void sll_map_and_array(const sll_map_t* m,const sll_array_t* a,sll_map_t* o);
+__SLL_EXTERNAL void sll_map_and_array(const sll_map_t* map,const sll_array_t* array,sll_map_t* out);
 
 
 
@@ -155,11 +155,11 @@ __SLL_EXTERNAL void sll_map_and_array(const sll_map_t* m,const sll_array_t* a,sl
  * \group map
  * \subgroup map-op
  * \desc Docs!
- * \arg const sll_map_t* m
- * \arg const sll_string_t* s
- * \arg sll_map_t* o
+ * \arg const sll_map_t* map
+ * \arg const sll_string_t* string
+ * \arg sll_map_t* out
  */
-__SLL_EXTERNAL void sll_map_and_string(const sll_map_t* m,const sll_string_t* s,sll_map_t* o);
+__SLL_EXTERNAL void sll_map_and_string(const sll_map_t* map,const sll_string_t* string,sll_map_t* out);
 
 
 
@@ -168,10 +168,10 @@ __SLL_EXTERNAL void sll_map_and_string(const sll_map_t* m,const sll_string_t* s,
  * \name sll_map_clone
  * \group map
  * \desc Docs!
- * \arg const sll_map_t* m
- * \arg sll_map_t* o
+ * \arg const sll_map_t* map
+ * \arg sll_map_t* out
  */
-__SLL_EXTERNAL void sll_map_clone(const sll_map_t* m,sll_map_t* o);
+__SLL_EXTERNAL void sll_map_clone(const sll_map_t* map,sll_map_t* out);
 
 
 
@@ -194,10 +194,10 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_compare_result_t sll_map_compare(const sll
  * \name sll_map_create
  * \group map
  * \desc Docs!
- * \arg sll_map_length_t l
- * \arg sll_map_t* o
+ * \arg sll_map_length_t length
+ * \arg sll_map_t* out
  */
-__SLL_EXTERNAL void sll_map_create(sll_map_length_t l,sll_map_t* o);
+__SLL_EXTERNAL void sll_map_create(sll_map_length_t length,sll_map_t* out);
 
 
 
@@ -221,11 +221,11 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_map_equal(const sll_map_t* a,co
  * \group map
  * \subgroup map-data
  * \desc Docs!
- * \arg const sll_map_t* m
- * \arg sll_object_t* k
+ * \arg const sll_map_t* map
+ * \arg sll_object_t* key
  * \ret sll_object_t*
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_map_get(const sll_map_t* m,sll_object_t* k);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_map_get(const sll_map_t* map,sll_object_t* key);
 
 
 
@@ -235,11 +235,11 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_map_get(const sll_map_t* m,s
  * \group map
  * \subgroup map-data
  * \desc Docs!
- * \arg const sll_map_t* m
- * \arg sll_map_length_t i
+ * \arg const sll_map_t* map
+ * \arg sll_map_length_t index
  * \ret sll_object_t*
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_map_get_key(const sll_map_t* m,sll_map_length_t i);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_map_get_key(const sll_map_t* map,sll_map_length_t index);
 
 
 
@@ -249,11 +249,11 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_map_get_key(const sll_map_t*
  * \group map
  * \subgroup map-data
  * \desc Docs!
- * \arg const sll_map_t* m
- * \arg sll_map_length_t i
+ * \arg const sll_map_t* map
+ * \arg sll_map_length_t index
  * \ret sll_object_t*
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_map_get_value(const sll_map_t* m,sll_map_length_t i);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_map_get_value(const sll_map_t* map,sll_map_length_t index);
 
 
 
@@ -262,11 +262,11 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_map_get_value(const sll_map_
  * \name sll_map_includes
  * \group map
  * \desc Docs!
- * \arg const sll_map_t* m
- * \arg sll_object_t* e
+ * \arg const sll_map_t* map
+ * \arg sll_object_t* key
  * \ret sll_bool_t
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_map_includes(const sll_map_t* m,sll_object_t* e);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_map_includes(const sll_map_t* map,sll_object_t* key);
 
 
 
@@ -278,9 +278,9 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_map_includes(const sll_map_t* m
  * \desc Docs!
  * \arg const sll_map_t* a
  * \arg const sll_map_t* b
- * \arg sll_map_t* o
+ * \arg sll_map_t* out
  */
-__SLL_EXTERNAL void sll_map_join(const sll_map_t* a,const sll_map_t* b,sll_map_t* o);
+__SLL_EXTERNAL void sll_map_join(const sll_map_t* a,const sll_map_t* b,sll_map_t* out);
 
 
 
@@ -289,10 +289,10 @@ __SLL_EXTERNAL void sll_map_join(const sll_map_t* a,const sll_map_t* b,sll_map_t
  * \name sll_map_keys
  * \group map
  * \desc Docs!
- * \arg const sll_map_t* m
- * \arg sll_array_t* o
+ * \arg const sll_map_t* map
+ * \arg sll_array_t* out
  */
-__SLL_EXTERNAL void sll_map_keys(const sll_map_t* m,sll_array_t* o);
+__SLL_EXTERNAL void sll_map_keys(const sll_map_t* map,sll_array_t* out);
 
 
 
@@ -304,10 +304,10 @@ __SLL_EXTERNAL void sll_map_keys(const sll_map_t* m,sll_array_t* o);
  * \desc Docs!
  * \arg const sll_map_t* a
  * \arg const sll_map_t* b
- * \arg sll_binary_operator_t f
- * \arg sll_map_t* o
+ * \arg sll_binary_operator_t operator
+ * \arg sll_map_t* out
  */
-__SLL_EXTERNAL void sll_map_op(const sll_map_t* a,const sll_map_t* b,sll_binary_operator_t f,sll_map_t* o);
+__SLL_EXTERNAL void sll_map_op(const sll_map_t* a,const sll_map_t* b,sll_binary_operator_t operator,sll_map_t* out);
 
 
 
@@ -317,12 +317,12 @@ __SLL_EXTERNAL void sll_map_op(const sll_map_t* a,const sll_map_t* b,sll_binary_
  * \group map
  * \subgroup map-data
  * \desc Docs!
- * \arg const sll_map_t* m
- * \arg sll_object_t* k
- * \arg sll_map_t* o
+ * \arg const sll_map_t* map
+ * \arg sll_object_t* key
+ * \arg sll_map_t* out
  * \ret sll_object_t*
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_map_remove(const sll_map_t* m,sll_object_t* k,sll_map_t* o);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_map_remove(const sll_map_t* map,sll_object_t* key,sll_map_t* out);
 
 
 
@@ -332,11 +332,11 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_map_remove(const sll_map_t* 
  * \group map
  * \subgroup map-data
  * \desc Docs!
- * \arg const sll_map_t* m
- * \arg const sll_array_t* a
- * \arg sll_map_t* o
+ * \arg const sll_map_t* map
+ * \arg const sll_array_t* array
+ * \arg sll_map_t* out
  */
-__SLL_EXTERNAL void sll_map_remove_array(const sll_map_t* m,const sll_array_t* a,sll_map_t* o);
+__SLL_EXTERNAL void sll_map_remove_array(const sll_map_t* map,const sll_array_t* array,sll_map_t* out);
 
 
 
@@ -348,9 +348,9 @@ __SLL_EXTERNAL void sll_map_remove_array(const sll_map_t* m,const sll_array_t* a
  * \desc Docs!
  * \arg const sll_map_t* a
  * \arg const sll_map_t* b
- * \arg sll_map_t* o
+ * \arg sll_map_t* out
  */
-__SLL_EXTERNAL void sll_map_remove_map(const sll_map_t* a,const sll_map_t* b,sll_map_t* o);
+__SLL_EXTERNAL void sll_map_remove_map(const sll_map_t* a,const sll_map_t* b,sll_map_t* out);
 
 
 
@@ -360,11 +360,11 @@ __SLL_EXTERNAL void sll_map_remove_map(const sll_map_t* a,const sll_map_t* b,sll
  * \group map
  * \subgroup map-data
  * \desc Docs!
- * \arg const sll_map_t* m
- * \arg const sll_string_t* s
- * \arg sll_map_t* o
+ * \arg const sll_map_t* map
+ * \arg const sll_string_t* string
+ * \arg sll_map_t* out
  */
-__SLL_EXTERNAL void sll_map_remove_string(const sll_map_t* m,const sll_string_t* s,sll_map_t* o);
+__SLL_EXTERNAL void sll_map_remove_string(const sll_map_t* map,const sll_string_t* string,sll_map_t* out);
 
 
 
@@ -375,10 +375,10 @@ __SLL_EXTERNAL void sll_map_remove_string(const sll_map_t* m,const sll_string_t*
  * \subgroup map-data
  * \desc Docs!
  * \arg sll_map_t* m
- * \arg sll_object_t* k
- * \arg sll_object_t* v
+ * \arg sll_object_t* key
+ * \arg sll_object_t* value
  */
-__SLL_EXTERNAL void sll_map_set(sll_map_t* m,sll_object_t* k,sll_object_t* v);
+__SLL_EXTERNAL void sll_map_set(sll_map_t* m,sll_object_t* key,sll_object_t* value);
 
 
 
@@ -388,11 +388,11 @@ __SLL_EXTERNAL void sll_map_set(sll_map_t* m,sll_object_t* k,sll_object_t* v);
  * \group map
  * \subgroup map-data
  * \desc Docs!
- * \arg const sll_map_t* m
- * \arg sll_map_length_t i
- * \arg sll_object_t* v
+ * \arg const sll_map_t* map
+ * \arg sll_map_length_t index
+ * \arg sll_object_t* key
  */
-__SLL_EXTERNAL void sll_map_set_key(const sll_map_t* m,sll_map_length_t i,sll_object_t* v);
+__SLL_EXTERNAL void sll_map_set_key(const sll_map_t* map,sll_map_length_t index,sll_object_t* key);
 
 
 
@@ -402,11 +402,11 @@ __SLL_EXTERNAL void sll_map_set_key(const sll_map_t* m,sll_map_length_t i,sll_ob
  * \group map
  * \subgroup map-data
  * \desc Docs!
- * \arg const sll_map_t* m
- * \arg sll_map_length_t i
- * \arg sll_object_t* v
+ * \arg const sll_map_t* map
+ * \arg sll_map_length_t index
+ * \arg sll_object_t* value
  */
-__SLL_EXTERNAL void sll_map_set_value(const sll_map_t* m,sll_map_length_t i,sll_object_t* v);
+__SLL_EXTERNAL void sll_map_set_value(const sll_map_t* map,sll_map_length_t index,sll_object_t* value);
 
 
 
@@ -415,10 +415,10 @@ __SLL_EXTERNAL void sll_map_set_value(const sll_map_t* m,sll_map_length_t i,sll_
  * \name sll_map_to_array
  * \group map
  * \desc Docs!
- * \arg const sll_map_t* m
- * \arg sll_array_t* o
+ * \arg const sll_map_t* map
+ * \arg sll_array_t* out
  */
-__SLL_EXTERNAL void sll_map_to_array(const sll_map_t* m,sll_array_t* o);
+__SLL_EXTERNAL void sll_map_to_array(const sll_map_t* map,sll_array_t* out);
 
 
 
@@ -427,10 +427,10 @@ __SLL_EXTERNAL void sll_map_to_array(const sll_map_t* m,sll_array_t* o);
  * \name sll_map_values
  * \group map
  * \desc Docs!
- * \arg const sll_map_t* m
- * \arg sll_array_t* o
+ * \arg const sll_map_t* map
+ * \arg sll_array_t* out
  */
-__SLL_EXTERNAL void sll_map_values(const sll_map_t* m,sll_array_t* o);
+__SLL_EXTERNAL void sll_map_values(const sll_map_t* map,sll_array_t* out);
 
 
 
