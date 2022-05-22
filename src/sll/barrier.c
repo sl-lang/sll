@@ -42,20 +42,20 @@ void _barrier_init(void){
 
 
 
-sll_bool_t _barrier_wait(sll_integer_t w,sll_integer_t v,sll_bool_t g){
-	if (w<0||w>=_barrier_len||(_barrier_data+w)->count==BARRIER_UNUSED){
+sll_bool_t _barrier_wait(sll_integer_t barrier_index,sll_integer_t value,sll_bool_t greate_or_equal){
+	if (barrier_index<0||barrier_index>=_barrier_len||(_barrier_data+barrier_index)->count==BARRIER_UNUSED){
 		return 0;
 	}
-	if ((_barrier_data+w)->count==v||(g&&(_barrier_data+w)->count>v)){
+	if ((_barrier_data+barrier_index)->count==value||(greate_or_equal&&(_barrier_data+barrier_index)->count>value)){
 		return 0;
 	}
-	if ((_barrier_data+w)->first==SLL_UNKNOWN_THREAD_INDEX){
-		(_barrier_data+w)->first=_scheduler_current_thread_index;
+	if ((_barrier_data+barrier_index)->first==SLL_UNKNOWN_THREAD_INDEX){
+		(_barrier_data+barrier_index)->first=_scheduler_current_thread_index;
 	}
 	else{
-		(_barrier_data+w)->last->next=_scheduler_current_thread_index;
+		(_barrier_data+barrier_index)->last->next=_scheduler_current_thread_index;
 	}
-	(_barrier_data+w)->last=_scheduler_current_thread;
+	(_barrier_data+barrier_index)->last=_scheduler_current_thread;
 	_scheduler_current_thread->next=SLL_UNKNOWN_THREAD_INDEX;
 	_scheduler_current_thread->state=THREAD_STATE_WAIT_BARRIER;
 	_scheduler_current_thread_index=SLL_UNKNOWN_THREAD_INDEX;
@@ -82,38 +82,38 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_barrier_index_t sll_barrier_create(void){
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_barrier_delete(sll_barrier_index_t b){
-	if (b>=_barrier_len||(_barrier_data+b)->count==BARRIER_UNUSED){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_barrier_delete(sll_barrier_index_t barrier_index){
+	if (barrier_index>=_barrier_len||(_barrier_data+barrier_index)->count==BARRIER_UNUSED){
 		return 0;
 	}
 	SLL_CRITICAL_ERROR(sll_platform_lock_acquire(_barrier_lock));
-	(_barrier_data+b)->count=BARRIER_UNUSED;
-	BARRIER_SET_NEXT_ID(_barrier_data+b,_barrier_next);
-	_barrier_next=b;
+	(_barrier_data+barrier_index)->count=BARRIER_UNUSED;
+	BARRIER_SET_NEXT_ID(_barrier_data+barrier_index,_barrier_next);
+	_barrier_next=barrier_index;
 	SLL_CRITICAL(sll_platform_lock_release(_barrier_lock));
 	return 1;
 }
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_barrier_counter_t sll_barrier_increase(sll_barrier_index_t b){
-	if (b>=_barrier_len||(_barrier_data+b)->count==BARRIER_UNUSED){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_barrier_counter_t sll_barrier_increase(sll_barrier_index_t barrier_index){
+	if (barrier_index>=_barrier_len||(_barrier_data+barrier_index)->count==BARRIER_UNUSED){
 		return 0;
 	}
-	(_barrier_data+b)->count++;
-	_queue_barrier(_barrier_data+b);
-	return (_barrier_data+b)->count;
+	(_barrier_data+barrier_index)->count++;
+	_queue_barrier(_barrier_data+barrier_index);
+	return (_barrier_data+barrier_index)->count;
 }
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_barrier_reset(sll_barrier_index_t b){
-	if (b>=_barrier_len||(_barrier_data+b)->count==BARRIER_UNUSED){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_barrier_reset(sll_barrier_index_t barrier_index){
+	if (barrier_index>=_barrier_len||(_barrier_data+barrier_index)->count==BARRIER_UNUSED){
 		return 0;
 	}
-	if ((_barrier_data+b)->count){
-		(_barrier_data+b)->count=0;
-		_queue_barrier(_barrier_data+b);
+	if ((_barrier_data+barrier_index)->count){
+		(_barrier_data+barrier_index)->count=0;
+		_queue_barrier(_barrier_data+barrier_index);
 	}
 	return 1;
 }

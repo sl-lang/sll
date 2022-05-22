@@ -53,11 +53,11 @@ typedef struct _SLL_BUNDLE{
  * \name sll_bundle_add_file
  * \group bundle
  * \desc Docs!
- * \arg const sll_char_t* nm
+ * \arg const sll_char_t* name
  * \arg sll_compilation_data_t* compilation_data
- * \arg sll_bundle_t* o
+ * \arg sll_bundle_t* out
  */
-__SLL_EXTERNAL void sll_bundle_add_file(const sll_char_t* nm,sll_compilation_data_t* compilation_data,sll_bundle_t* o);
+__SLL_EXTERNAL void sll_bundle_add_file(const sll_char_t* name,sll_compilation_data_t* compilation_data,sll_bundle_t* out);
 
 
 
@@ -66,10 +66,10 @@ __SLL_EXTERNAL void sll_bundle_add_file(const sll_char_t* nm,sll_compilation_dat
  * \name sll_bundle_create
  * \group bundle
  * \desc Docs!
- * \arg const sll_char_t* nm
- * \arg sll_bundle_t* o
+ * \arg const sll_char_t* name
+ * \arg sll_bundle_t* out
  */
-__SLL_EXTERNAL void sll_bundle_create(const sll_char_t* nm,sll_bundle_t* o);
+__SLL_EXTERNAL void sll_bundle_create(const sll_char_t* name,sll_bundle_t* out);
 
 
 
@@ -78,12 +78,12 @@ __SLL_EXTERNAL void sll_bundle_create(const sll_char_t* nm,sll_bundle_t* o);
  * \name sll_bundle_fetch
  * \group bundle
  * \desc Docs!
- * \arg const sll_bundle_t* b
- * \arg const sll_string_t* nm
- * \arg sll_compilation_data_t* compilation_data
+ * \arg const sll_bundle_t* bundle
+ * \arg const sll_string_t* name
+ * \arg sll_compilation_data_t* out
  * \ret sll_bool_t
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_bundle_fetch(const sll_bundle_t* b,const sll_string_t* nm,sll_compilation_data_t* compilation_data);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_bundle_fetch(const sll_bundle_t* bundle,const sll_string_t* name,sll_compilation_data_t* out);
 
 
 
@@ -92,9 +92,9 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_bundle_fetch(const sll_bundle_t
  * \name sll_free_bundle
  * \group bundle
  * \desc Docs!
- * \arg sll_bundle_t* b
+ * \arg sll_bundle_t* bundle
  */
-__SLL_EXTERNAL void sll_free_bundle(sll_bundle_t* b);
+__SLL_EXTERNAL void sll_free_bundle(sll_bundle_t* bundle);
 
 
 

@@ -61,10 +61,10 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_barrier_index_t sll_barrier_create(void);
  * \name sll_barrier_delete
  * \group barrier
  * \desc Docs!
- * \arg sll_barrier_index_t b
+ * \arg sll_barrier_index_t barrier_indexarrier_index
  * \ret sll_bool_t
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_barrier_delete(sll_barrier_index_t b);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_barrier_delete(sll_barrier_index_t barrier_index);
 
 
 
@@ -73,10 +73,10 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_barrier_delete(sll_barrier_inde
  * \name sll_barrier_increase
  * \group barrier
  * \desc Docs!
- * \arg sll_barrier_index_t b
+ * \arg sll_barrier_index_t barrier_index
  * \ret sll_barrier_counter_t
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_barrier_counter_t sll_barrier_increase(sll_barrier_index_t b);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_barrier_counter_t sll_barrier_increase(sll_barrier_index_t barrier_index);
 
 
 
@@ -85,10 +85,10 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_barrier_counter_t sll_barrier_increase(sll
  * \name sll_barrier_reset
  * \group barrier
  * \desc Docs!
- * \arg sll_barrier_index_t b
+ * \arg sll_barrier_index_t barrier_index
  * \ret sll_bool_t
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_barrier_reset(sll_barrier_index_t b);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_barrier_reset(sll_barrier_index_t barrier_index);
 
 
 

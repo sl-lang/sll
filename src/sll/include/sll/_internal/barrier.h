@@ -35,7 +35,7 @@ void _barrier_init(void);
 
 
 
-sll_bool_t _barrier_wait(sll_integer_t w,sll_integer_t v,sll_bool_t g);
+sll_bool_t _barrier_wait(sll_integer_t barrier_index,sll_integer_t value,sll_bool_t greate_or_equal);
 
 
 
