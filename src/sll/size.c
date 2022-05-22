@@ -5,9 +5,9 @@
 
 
 static const sll_node_t* _get_node_size(const sll_node_t* o,sll_node_offset_t* sz){
-	while (o->t==SLL_NODE_TYPE_NOP||o->t==SLL_NODE_TYPE_DBG||o->t==SLL_NODE_TYPE_CHANGE_STACK){
-		if (o->t==SLL_NODE_TYPE_CHANGE_STACK){
-			o=o->dt._p;
+	while (o->type==SLL_NODE_TYPE_NOP||o->type==SLL_NODE_TYPE_DBG||o->type==SLL_NODE_TYPE_CHANGE_STACK){
+		if (o->type==SLL_NODE_TYPE_CHANGE_STACK){
+			o=o->data._next_node;
 		}
 		else{
 			(*sz)++;
@@ -15,7 +15,7 @@ static const sll_node_t* _get_node_size(const sll_node_t* o,sll_node_offset_t* s
 		}
 	}
 	(*sz)++;
-	switch (o->t){
+	switch (o->type){
 		case SLL_NODE_TYPE_INT:
 		case SLL_NODE_TYPE_FLOAT:
 		case SLL_NODE_TYPE_CHAR:
@@ -27,7 +27,7 @@ static const sll_node_t* _get_node_size(const sll_node_t* o,sll_node_offset_t* s
 			return o+1;
 		case SLL_NODE_TYPE_ARRAY:
 			{
-				sll_array_length_t l=o->dt.al;
+				sll_array_length_t l=o->data.array_length;
 				o++;
 				while (l){
 					l--;
@@ -37,7 +37,7 @@ static const sll_node_t* _get_node_size(const sll_node_t* o,sll_node_offset_t* s
 			}
 		case SLL_NODE_TYPE_MAP:
 			{
-				sll_map_length_t l=o->dt.ml;
+				sll_map_length_t l=o->data.map_length;
 				o++;
 				while (l){
 					l--;
@@ -48,7 +48,7 @@ static const sll_node_t* _get_node_size(const sll_node_t* o,sll_node_offset_t* s
 		case SLL_NODE_TYPE_FUNC:
 		case SLL_NODE_TYPE_INTERNAL_FUNC:
 			{
-				sll_arg_count_t l=o->dt.fn.ac;
+				sll_arg_count_t l=o->data.function.arg_count;
 				o++;
 				while (l){
 					l--;
@@ -64,7 +64,7 @@ static const sll_node_t* _get_node_size(const sll_node_t* o,sll_node_offset_t* s
 		case SLL_NODE_TYPE_FOR_MAP:
 		case SLL_NODE_TYPE_WHILE_MAP:
 			{
-				sll_arg_count_t l=o->dt.l.ac;
+				sll_arg_count_t l=o->data.loop.arg_count;
 				o++;
 				while (l){
 					l--;
@@ -73,7 +73,7 @@ static const sll_node_t* _get_node_size(const sll_node_t* o,sll_node_offset_t* s
 				return o;
 			}
 	}
-	sll_arg_count_t l=o->dt.ac;
+	sll_arg_count_t l=o->data.arg_count;
 	o++;
 	while (l){
 		l--;

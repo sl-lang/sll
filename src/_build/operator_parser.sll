@@ -90,7 +90,7 @@ static __SLL_FORCE_INLINE sll_read_char_t _operator_parser(sll_node_t* o,sll_rea
 		}
 		c=sll_file_read_char(rf,NULL);
 	} while (c<9||(c>13&&c!=' '&&c!='('&&c!=')'&&c!=';'&&c!=SLL_END_OF_DATA));
-	o->t=SLL_NODE_TYPE_OPERATION_LIST;
+	o->type=SLL_NODE_TYPE_OPERATION_LIST;
 `)
 	(-> (= i 0) (< i max_operator_length)
 		(++ i)
@@ -108,10 +108,10 @@ static __SLL_FORCE_INLINE sll_read_char_t _operator_parser(sll_node_t* o,sll_rea
 			)))
 			(<- file$write fh
 `		` (?: j "else " "") `if (` symbol_cmp `){
-			o->t=SLL_NODE_TYPE_` (<- string$upper_case operator$name) `;
+			o->type=SLL_NODE_TYPE_` (<- string$upper_case operator$name) `;
 `)
 			(? operator$scope_variable (<- file$write fh
-`			o->dt.` operator$scope_variable `.sc=sf->_n_sc_id;
+`			o->data.` operator$scope_variable `.scope=sf->_next_scope;
 `))
 			(? operator$extra_flag (<- file$write fh
 `			(*fl)|=EXTRA_COMPILATION_DATA_` (<- string$upper_case operator$extra_flag) `;

@@ -5,10 +5,10 @@
 
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_node_t* sll_skip_node(sll_node_t* o){
-	while (o->t==SLL_NODE_TYPE_NOP||o->t==SLL_NODE_TYPE_DBG||o->t==SLL_NODE_TYPE_CHANGE_STACK){
-		o=(o->t==SLL_NODE_TYPE_CHANGE_STACK?o->dt._p:o+1);
+	while (o->type==SLL_NODE_TYPE_NOP||o->type==SLL_NODE_TYPE_DBG||o->type==SLL_NODE_TYPE_CHANGE_STACK){
+		o=(o->type==SLL_NODE_TYPE_CHANGE_STACK?o->data._next_node:o+1);
 	}
-	switch (o->t){
+	switch (o->type){
 		case SLL_NODE_TYPE_INT:
 		case SLL_NODE_TYPE_FLOAT:
 		case SLL_NODE_TYPE_CHAR:
@@ -20,7 +20,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_node_t* sll_skip_node(sll_node_t* o){
 			return o+1;
 		case SLL_NODE_TYPE_ARRAY:
 			{
-				sll_array_length_t l=o->dt.al;
+				sll_array_length_t l=o->data.array_length;
 				o++;
 				while (l){
 					l--;
@@ -30,7 +30,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_node_t* sll_skip_node(sll_node_t* o){
 			}
 		case SLL_NODE_TYPE_MAP:
 			{
-				sll_map_length_t l=o->dt.ml;
+				sll_map_length_t l=o->data.map_length;
 				o++;
 				while (l){
 					l--;
@@ -41,7 +41,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_node_t* sll_skip_node(sll_node_t* o){
 		case SLL_NODE_TYPE_FUNC:
 		case SLL_NODE_TYPE_INTERNAL_FUNC:
 			{
-				sll_arg_count_t l=o->dt.fn.ac;
+				sll_arg_count_t l=o->data.function.arg_count;
 				o++;
 				while (l){
 					l--;
@@ -57,7 +57,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_node_t* sll_skip_node(sll_node_t* o){
 		case SLL_NODE_TYPE_FOR_MAP:
 		case SLL_NODE_TYPE_WHILE_MAP:
 			{
-				sll_arg_count_t l=o->dt.l.ac;
+				sll_arg_count_t l=o->data.loop.arg_count;
 				o++;
 				while (l){
 					l--;
@@ -66,7 +66,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_node_t* sll_skip_node(sll_node_t* o){
 				return o;
 			}
 	}
-	sll_arg_count_t l=o->dt.ac;
+	sll_arg_count_t l=o->data.arg_count;
 	o++;
 	while (l){
 		l--;

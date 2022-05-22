@@ -19,232 +19,232 @@ static __SLL_FORCE_INLINE sll_read_char_t _operator_parser(sll_node_t* o,sll_rea
 		}
 		c=sll_file_read_char(rf,NULL);
 	} while (c<9||(c>13&&c!=' '&&c!='('&&c!=')'&&c!=';'&&c!=SLL_END_OF_DATA));
-	o->t=SLL_NODE_TYPE_OPERATION_LIST;
+	o->type=SLL_NODE_TYPE_OPERATION_LIST;
 	if (sz==1){
 		if (str[0]=='!'){
-			o->t=SLL_NODE_TYPE_NOT;
+			o->type=SLL_NODE_TYPE_NOT;
 		}
 		else if (str[0]=='#'){
-			o->t=SLL_NODE_TYPE_OPERATION_LIST;
+			o->type=SLL_NODE_TYPE_OPERATION_LIST;
 			(*fl)|=EXTRA_COMPILATION_DATA_VARIABLE_DEFINITION;
 		}
 		else if (str[0]=='$'){
-			o->t=SLL_NODE_TYPE_LENGTH;
+			o->type=SLL_NODE_TYPE_LENGTH;
 		}
 		else if (str[0]=='%'){
-			o->t=SLL_NODE_TYPE_MOD;
+			o->type=SLL_NODE_TYPE_MOD;
 		}
 		else if (str[0]=='&'){
-			o->t=SLL_NODE_TYPE_BIT_AND;
+			o->type=SLL_NODE_TYPE_BIT_AND;
 		}
 		else if (str[0]=='*'){
-			o->t=SLL_NODE_TYPE_MULT;
+			o->type=SLL_NODE_TYPE_MULT;
 		}
 		else if (str[0]=='+'){
-			o->t=SLL_NODE_TYPE_ADD;
+			o->type=SLL_NODE_TYPE_ADD;
 		}
 		else if (str[0]==','){
-			o->t=SLL_NODE_TYPE_COMMA;
+			o->type=SLL_NODE_TYPE_COMMA;
 		}
 		else if (str[0]=='-'){
-			o->t=SLL_NODE_TYPE_SUB;
+			o->type=SLL_NODE_TYPE_SUB;
 		}
 		else if (str[0]=='.'){
-			o->t=SLL_NODE_TYPE_NEW;
+			o->type=SLL_NODE_TYPE_NEW;
 		}
 		else if (str[0]=='/'){
-			o->t=SLL_NODE_TYPE_DIV;
+			o->type=SLL_NODE_TYPE_DIV;
 		}
 		else if (str[0]==':'){
-			o->t=SLL_NODE_TYPE_ACCESS;
+			o->type=SLL_NODE_TYPE_ACCESS;
 		}
 		else if (str[0]=='<'){
-			o->t=SLL_NODE_TYPE_LESS;
+			o->type=SLL_NODE_TYPE_LESS;
 		}
 		else if (str[0]=='='){
-			o->t=SLL_NODE_TYPE_ASSIGN;
+			o->type=SLL_NODE_TYPE_ASSIGN;
 		}
 		else if (str[0]=='>'){
-			o->t=SLL_NODE_TYPE_MORE;
+			o->type=SLL_NODE_TYPE_MORE;
 		}
 		else if (str[0]=='?'){
-			o->t=SLL_NODE_TYPE_IF;
+			o->type=SLL_NODE_TYPE_IF;
 		}
 		else if (str[0]=='@'){
-			o->t=SLL_NODE_TYPE_BREAK;
+			o->type=SLL_NODE_TYPE_BREAK;
 		}
 		else if (str[0]=='^'){
-			o->t=SLL_NODE_TYPE_BIT_XOR;
+			o->type=SLL_NODE_TYPE_BIT_XOR;
 		}
 		else if (str[0]=='|'){
-			o->t=SLL_NODE_TYPE_BIT_OR;
+			o->type=SLL_NODE_TYPE_BIT_OR;
 		}
 		else if (str[0]=='~'){
-			o->t=SLL_NODE_TYPE_BIT_NOT;
+			o->type=SLL_NODE_TYPE_BIT_NOT;
 		}
 	}
 	else if (sz==2){
 		if (str[0]=='!'&&str[1]=='!'){
-			o->t=SLL_NODE_TYPE_BOOL;
+			o->type=SLL_NODE_TYPE_BOOL;
 		}
 		else if (str[0]=='!'&&str[1]=='.'){
-			o->t=SLL_NODE_TYPE_THREAD_ID;
+			o->type=SLL_NODE_TYPE_THREAD_ID;
 		}
 		else if (str[0]=='!'&&str[1]=='='){
-			o->t=SLL_NODE_TYPE_NOT_EQUAL;
+			o->type=SLL_NODE_TYPE_NOT_EQUAL;
 		}
 		else if (str[0]=='#'&&str[1]=='#'){
-			o->t=SLL_NODE_TYPE_OPERATION_LIST;
+			o->type=SLL_NODE_TYPE_OPERATION_LIST;
 			(*fl)|=EXTRA_COMPILATION_DATA_EXPORT;
 		}
 		else if (str[0]=='%'&&str[1]=='%'){
-			o->t=SLL_NODE_TYPE_REF;
+			o->type=SLL_NODE_TYPE_REF;
 		}
 		else if (str[0]=='&'&&str[1]=='&'){
-			o->t=SLL_NODE_TYPE_AND;
+			o->type=SLL_NODE_TYPE_AND;
 		}
 		else if (str[0]=='&'&&str[1]==':'){
-			o->t=SLL_NODE_TYPE_DECL;
+			o->type=SLL_NODE_TYPE_DECL;
 		}
 		else if (str[0]=='+'&&str[1]=='+'){
-			o->t=SLL_NODE_TYPE_INC;
+			o->type=SLL_NODE_TYPE_INC;
 		}
 		else if (str[0]=='-'&&str[1]=='-'){
-			o->t=SLL_NODE_TYPE_DEC;
+			o->type=SLL_NODE_TYPE_DEC;
 		}
 		else if (str[0]=='-'&&str[1]=='>'){
-			o->t=SLL_NODE_TYPE_FOR;
-			o->dt.l.sc=sf->_n_sc_id;
+			o->type=SLL_NODE_TYPE_FOR;
+			o->data.loop.scope=sf->_next_scope;
 		}
 		else if (str[0]=='.'&&str[1]=='?'){
-			o->t=SLL_NODE_TYPE_NAMEOF;
+			o->type=SLL_NODE_TYPE_NAMEOF;
 		}
 		else if (str[0]=='/'&&str[1]=='/'){
-			o->t=SLL_NODE_TYPE_FLOOR_DIV;
+			o->type=SLL_NODE_TYPE_FLOOR_DIV;
 		}
 		else if (str[0]==':'&&str[1]=='!'){
-			o->t=SLL_NODE_TYPE_DEEP_COPY;
+			o->type=SLL_NODE_TYPE_DEEP_COPY;
 		}
 		else if (str[0]==':'&&str[1]==':'){
-			o->t=SLL_NODE_TYPE_CAST;
+			o->type=SLL_NODE_TYPE_CAST;
 		}
 		else if (str[0]==':'&&str[1]=='>'){
-			o->t=SLL_NODE_TYPE_PRINT;
+			o->type=SLL_NODE_TYPE_PRINT;
 		}
 		else if (str[0]==':'&&str[1]=='?'){
-			o->t=SLL_NODE_TYPE_TYPEOF;
+			o->type=SLL_NODE_TYPE_TYPEOF;
 		}
 		else if (str[0]=='<'&&str[1]=='-'){
-			o->t=SLL_NODE_TYPE_CALL;
+			o->type=SLL_NODE_TYPE_CALL;
 		}
 		else if (str[0]=='<'&&str[1]=='<'){
-			o->t=SLL_NODE_TYPE_BIT_LSHIFT;
+			o->type=SLL_NODE_TYPE_BIT_LSHIFT;
 		}
 		else if (str[0]=='<'&&str[1]=='='){
-			o->t=SLL_NODE_TYPE_LESS_EQUAL;
+			o->type=SLL_NODE_TYPE_LESS_EQUAL;
 		}
 		else if (str[0]=='='&&str[1]=='='){
-			o->t=SLL_NODE_TYPE_EQUAL;
+			o->type=SLL_NODE_TYPE_EQUAL;
 		}
 		else if (str[0]=='>'&&str[1]=='-'){
-			o->t=SLL_NODE_TYPE_WHILE;
-			o->dt.l.sc=sf->_n_sc_id;
+			o->type=SLL_NODE_TYPE_WHILE;
+			o->data.loop.scope=sf->_next_scope;
 		}
 		else if (str[0]=='>'&&str[1]=='<'){
-			o->t=SLL_NODE_TYPE_LOOP;
+			o->type=SLL_NODE_TYPE_LOOP;
 		}
 		else if (str[0]=='>'&&str[1]=='='){
-			o->t=SLL_NODE_TYPE_MORE_EQUAL;
+			o->type=SLL_NODE_TYPE_MORE_EQUAL;
 		}
 		else if (str[0]=='>'&&str[1]=='>'){
-			o->t=SLL_NODE_TYPE_BIT_RSHIFT;
+			o->type=SLL_NODE_TYPE_BIT_RSHIFT;
 		}
 		else if (str[0]=='?'&&str[1]==':'){
-			o->t=SLL_NODE_TYPE_INLINE_IF;
+			o->type=SLL_NODE_TYPE_INLINE_IF;
 		}
 		else if (str[0]=='?'&&str[1]=='?'){
-			o->t=SLL_NODE_TYPE_SWITCH;
+			o->type=SLL_NODE_TYPE_SWITCH;
 		}
 		else if (str[0]=='@'&&str[1]=='@'){
-			o->t=SLL_NODE_TYPE_RETURN;
+			o->type=SLL_NODE_TYPE_RETURN;
 		}
 		else if (str[0]=='['&&str[1]=='<'){
-			o->t=SLL_NODE_TYPE_WHILE_ARRAY;
-			o->dt.l.sc=sf->_n_sc_id;
+			o->type=SLL_NODE_TYPE_WHILE_ARRAY;
+			o->data.loop.scope=sf->_next_scope;
 		}
 		else if (str[0]=='['&&str[1]=='>'){
-			o->t=SLL_NODE_TYPE_FOR_ARRAY;
-			o->dt.l.sc=sf->_n_sc_id;
+			o->type=SLL_NODE_TYPE_FOR_ARRAY;
+			o->data.loop.scope=sf->_next_scope;
 		}
 		else if (str[0]=='{'&&str[1]=='<'){
-			o->t=SLL_NODE_TYPE_WHILE_MAP;
-			o->dt.l.sc=sf->_n_sc_id;
+			o->type=SLL_NODE_TYPE_WHILE_MAP;
+			o->data.loop.scope=sf->_next_scope;
 		}
 		else if (str[0]=='{'&&str[1]=='>'){
-			o->t=SLL_NODE_TYPE_FOR_MAP;
-			o->dt.l.sc=sf->_n_sc_id;
+			o->type=SLL_NODE_TYPE_FOR_MAP;
+			o->data.loop.scope=sf->_next_scope;
 		}
 		else if (str[0]=='|'&&str[1]==':'){
-			o->t=SLL_NODE_TYPE_HAS;
+			o->type=SLL_NODE_TYPE_HAS;
 		}
 		else if (str[0]=='|'&&str[1]=='|'){
-			o->t=SLL_NODE_TYPE_OR;
+			o->type=SLL_NODE_TYPE_OR;
 		}
 	}
 	else if (sz==3){
 		if (str[0]=='!'&&str[1]=='<'&&str[2]=='*'){
-			o->t=SLL_NODE_TYPE_THREAD_LOCK;
+			o->type=SLL_NODE_TYPE_THREAD_LOCK;
 		}
 		else if (str[0]=='!'&&str[1]=='<'&&str[2]=='+'){
-			o->t=SLL_NODE_TYPE_THREAD_SEMAPHORE;
+			o->type=SLL_NODE_TYPE_THREAD_SEMAPHORE;
 		}
 		else if (str[0]=='!'&&str[1]=='<'&&str[2]=='-'){
-			o->t=SLL_NODE_TYPE_READ_BLOCKING;
+			o->type=SLL_NODE_TYPE_READ_BLOCKING;
 		}
 		else if (str[0]=='!'&&str[1]=='<'&&str[2]=='.'){
-			o->t=SLL_NODE_TYPE_READ_BLOCKING_CHAR;
+			o->type=SLL_NODE_TYPE_READ_BLOCKING_CHAR;
 		}
 		else if (str[0]=='!'&&str[1]=='<'&&str[2]=='<'){
-			o->t=SLL_NODE_TYPE_THREAD_WAIT;
+			o->type=SLL_NODE_TYPE_THREAD_WAIT;
 		}
 		else if (str[0]=='!'&&str[1]=='<'&&str[2]=='='){
-			o->t=SLL_NODE_TYPE_THREAD_BARRIER_EQ;
+			o->type=SLL_NODE_TYPE_THREAD_BARRIER_EQ;
 		}
 		else if (str[0]=='!'&&str[1]=='<'&&str[2]=='>'){
-			o->t=SLL_NODE_TYPE_THREAD_BARRIER_GEQ;
+			o->type=SLL_NODE_TYPE_THREAD_BARRIER_GEQ;
 		}
 		else if (str[0]=='!'&&str[1]=='='&&str[2]=='='){
-			o->t=SLL_NODE_TYPE_STRICT_NOT_EQUAL;
+			o->type=SLL_NODE_TYPE_STRICT_NOT_EQUAL;
 		}
 		else if (str[0]=='!'&&str[1]=='@'&&str[2]=='@'){
-			o->t=SLL_NODE_TYPE_THREAD_EXIT;
+			o->type=SLL_NODE_TYPE_THREAD_EXIT;
 		}
 		else if (str[0]=='&'&&str[1]==':'&&str[2]=='?'){
-			o->t=SLL_NODE_TYPE_NAMEOF_TYPE;
+			o->type=SLL_NODE_TYPE_NAMEOF_TYPE;
 		}
 		else if (str[0]=='*'&&str[1]=='*'&&str[2]=='*'){
-			o->t=SLL_NODE_TYPE_INLINE_FUNC;
-			o->dt.fn.sc=sf->_n_sc_id;
+			o->type=SLL_NODE_TYPE_INLINE_FUNC;
+			o->data.function.scope=sf->_next_scope;
 		}
 		else if (str[0]==','&&str[1]==','&&str[2]==','){
-			o->t=SLL_NODE_TYPE_FUNC;
-			o->dt.fn.sc=sf->_n_sc_id;
+			o->type=SLL_NODE_TYPE_FUNC;
+			o->data.function.scope=sf->_next_scope;
 		}
 		else if (str[0]=='-'&&str[1]=='-'&&str[2]=='-'){
-			o->t=SLL_NODE_TYPE_OPERATION_LIST;
+			o->type=SLL_NODE_TYPE_OPERATION_LIST;
 			(*fl)|=EXTRA_COMPILATION_DATA_IMPORT;
 		}
 		else if (str[0]=='.'&&str[1]=='.'&&str[2]=='.'){
-			o->t=SLL_NODE_TYPE_INTERNAL_FUNC;
+			o->type=SLL_NODE_TYPE_INTERNAL_FUNC;
 		}
 		else if (str[0]=='<'&&str[1]=='-'&&str[2]=='*'){
-			o->t=SLL_NODE_TYPE_CALL_ARRAY;
+			o->type=SLL_NODE_TYPE_CALL_ARRAY;
 		}
 		else if (str[0]=='<'&&str[1]=='<'&&str[2]=='<'){
-			o->t=SLL_NODE_TYPE_CONTINUE;
+			o->type=SLL_NODE_TYPE_CONTINUE;
 		}
 		else if (str[0]=='='&&str[1]=='='&&str[2]=='='){
-			o->t=SLL_NODE_TYPE_STRICT_EQUAL;
+			o->type=SLL_NODE_TYPE_STRICT_EQUAL;
 		}
 	}
 	return c;

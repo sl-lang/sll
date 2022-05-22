@@ -754,13 +754,13 @@ _read_file_argument:
 			SLL_LOG("Optimizing node metadata...");
 			sll_optimize_metadata(&c_dt);
 			if (_cli_flags&SLL_CLI_FLAG_PRINT_NODES){
-				sll_print_node(*(c_dt.dt),&_cli_ift,NULL,sll_stdout);
+				sll_print_node(*(c_dt.data),&_cli_ift,NULL,sll_stdout);
 				sll_file_write_char(sll_stdout,'\n',NULL);
 			}
 			if ((_cli_flags&(SLL_CLI_FLAG_GENERATE_ASSEMBLY|SLL_CLI_FLAG_PRINT_ASSEMBLY))||!(_cli_flags&SLL_CLI_FLAG_NO_RUN)){
 				SLL_LOG("Generating assembly...");
-				SLL_ASSERT(c_dt.l==1);
-				sll_generate_assembly(*(c_dt.dt),&a_dt);
+				SLL_ASSERT(c_dt.length==1);
+				sll_generate_assembly(*(c_dt.data),&a_dt);
 			}
 		}
 		if (_cli_flags&SLL_CLI_FLAG_PRINT_ASSEMBLY){

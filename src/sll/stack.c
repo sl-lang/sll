@@ -11,19 +11,19 @@
 
 static void _request_new_node_page(sll_source_file_t* sf){
 	node_stack_page_t* n=sll_platform_allocate_page(SLL_ROUND_PAGE(NODE_STACK_ALLOC_SIZE),0,NULL);
-	((node_stack_page_t*)(sf->_s.e))->nxt=n;
+	((node_stack_page_t*)(sf->_stack.end))->nxt=n;
 	n->nxt=NULL;
 	sll_node_t* s=PTR(ADDR(n)+sizeof(node_stack_page_t));
-	s->t=SLL_NODE_TYPE_CHANGE_STACK;
-	s->dt._p=sf->_s.p-1;
-	SLL_ASSERT(sf->_s.p->t==SLL_NODE_TYPE_CHANGE_STACK);
-	sf->_s.p->dt._p=s+1;
-	sf->_s.c=((SLL_ROUND_PAGE(NODE_STACK_ALLOC_SIZE)-sizeof(node_stack_page_t)-sizeof(sll_node_t)*2)/sizeof(sll_node_t));
-	sf->_s.p=s+1;
-	s+=sf->_s.c+1;
-	s->t=SLL_NODE_TYPE_CHANGE_STACK;
-	s->dt._p=NULL;
-	sf->_s.e=n;
+	s->type=SLL_NODE_TYPE_CHANGE_STACK;
+	s->data._next_node=sf->_stack.next_node-1;
+	SLL_ASSERT(sf->_stack.next_node->type==SLL_NODE_TYPE_CHANGE_STACK);
+	sf->_stack.next_node->data._next_node=s+1;
+	sf->_stack.count=((SLL_ROUND_PAGE(NODE_STACK_ALLOC_SIZE)-sizeof(node_stack_page_t)-sizeof(sll_node_t)*2)/sizeof(sll_node_t));
+	sf->_stack.next_node=s+1;
+	s+=sf->_stack.count+1;
+	s->type=SLL_NODE_TYPE_CHANGE_STACK;
+	s->data._next_node=NULL;
+	sf->_stack.end=n;
 }
 
 
@@ -55,11 +55,11 @@ sll_assembly_instruction_t* _acquire_next_instruction(sll_assembly_data_t* a_dt)
 
 
 sll_node_t* _acquire_next_node(sll_source_file_t* sf){
-	sll_node_t* o=sf->_s.p;
-	sf->_s.off++;
-	sf->_s.c--;
-	sf->_s.p++;
-	if (!sf->_s.c){
+	sll_node_t* o=sf->_stack.next_node;
+	sf->_stack.offset++;
+	sf->_stack.count--;
+	sf->_stack.next_node++;
+	if (!sf->_stack.count){
 		_request_new_node_page(sf);
 	}
 	return o;
@@ -69,18 +69,18 @@ sll_node_t* _acquire_next_node(sll_source_file_t* sf){
 
 void _clone_node_stack(const sll_source_file_t* src_sf,sll_source_file_t* dst_sf){
 	_init_node_stack(dst_sf);
-	dst_sf->dt=dst_sf->_s.p;
+	dst_sf->first_node=dst_sf->_stack.next_node;
 	sll_node_offset_t cnt=((SLL_ROUND_PAGE(NODE_STACK_ALLOC_SIZE)-sizeof(node_stack_page_t)-sizeof(sll_node_t)*2)/sizeof(sll_node_t));
-	node_stack_page_t* src=src_sf->_s.s;
-	node_stack_page_t* dst=dst_sf->_s.s;
-	sll_node_offset_t src_cnt=src_sf->_s.off;
+	node_stack_page_t* src=src_sf->_stack.start;
+	node_stack_page_t* dst=dst_sf->_stack.start;
+	sll_node_offset_t src_cnt=src_sf->_stack.offset;
 	while (1){
 		if (!src->nxt){
 			cnt=src_cnt;
 		}
 		sll_copy_data(PTR(ADDR(src)+sizeof(node_stack_page_t)+sizeof(sll_node_t)),cnt*sizeof(sll_node_t),PTR(ADDR(dst)+sizeof(node_stack_page_t)+sizeof(sll_node_t)));
-		dst_sf->_s.off+=cnt;
-		dst_sf->_s.p+=cnt;
+		dst_sf->_stack.offset+=cnt;
+		dst_sf->_stack.next_node+=cnt;
 		src_cnt-=cnt;
 		if (!src->nxt){
 			return;
@@ -107,7 +107,7 @@ sll_assembly_instruction_t* _get_instruction_at_offset(const sll_assembly_data_t
 
 sll_node_t* _get_node_at_offset(const sll_source_file_t* sf,sll_node_offset_t off){
 	sll_node_offset_t cnt=(sll_node_offset_t)(((SLL_ROUND_PAGE(NODE_STACK_ALLOC_SIZE)-sizeof(node_stack_page_t)-sizeof(sll_node_t)*2)/sizeof(sll_node_t)));
-	node_stack_page_t* pg=sf->_s.s;
+	node_stack_page_t* pg=sf->_stack.start;
 	while (off>=cnt){
 		pg=pg->nxt;
 		off-=cnt;
@@ -134,16 +134,16 @@ void _init_assembly_stack(sll_assembly_data_t* a_dt){
 
 
 void _init_node_stack(sll_source_file_t* sf){
-	sf->_s.s=sll_platform_allocate_page(SLL_ROUND_PAGE(NODE_STACK_ALLOC_SIZE),0,NULL);
-	sf->_s.e=sf->_s.s;
-	((node_stack_page_t*)(sf->_s.s))->nxt=NULL;
-	sll_node_t* s=PTR(ADDR(sf->_s.s)+sizeof(node_stack_page_t));
-	s->t=SLL_NODE_TYPE_CHANGE_STACK;
-	s->dt._p=NULL;
-	sf->_s.c=((SLL_ROUND_PAGE(NODE_STACK_ALLOC_SIZE)-sizeof(node_stack_page_t)-sizeof(sll_node_t)*2)/sizeof(sll_node_t));
-	sf->_s.p=s+1;
-	sf->_s.off=0;
-	s+=sf->_s.c+1;
-	s->t=SLL_NODE_TYPE_CHANGE_STACK;
-	s->dt._p=NULL;
+	sf->_stack.start=sll_platform_allocate_page(SLL_ROUND_PAGE(NODE_STACK_ALLOC_SIZE),0,NULL);
+	sf->_stack.end=sf->_stack.start;
+	((node_stack_page_t*)(sf->_stack.start))->nxt=NULL;
+	sll_node_t* s=PTR(ADDR(sf->_stack.start)+sizeof(node_stack_page_t));
+	s->type=SLL_NODE_TYPE_CHANGE_STACK;
+	s->data._next_node=NULL;
+	sf->_stack.count=((SLL_ROUND_PAGE(NODE_STACK_ALLOC_SIZE)-sizeof(node_stack_page_t)-sizeof(sll_node_t)*2)/sizeof(sll_node_t));
+	sf->_stack.next_node=s+1;
+	sf->_stack.offset=0;
+	s+=sf->_stack.count+1;
+	s->type=SLL_NODE_TYPE_CHANGE_STACK;
+	s->data._next_node=NULL;
 }

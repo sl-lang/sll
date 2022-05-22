@@ -21,15 +21,15 @@ $ length
 &: decl
 &:? nameof_type
 * mult
-*** inline_func $fn
+*** inline_func $function
 + add
 ++ inc
 , comma
-,,, func $fn
+,,, func $function
 - sub
 -- dec
 --- operation_list import
--> for $l
+-> for $loop
 . new
 ... internal_func
 .? nameof
@@ -50,7 +50,7 @@ $ length
 == equal
 === strict_equal
 > more
->- while $l
+>- while $loop
 >< loop
 >= more_equal
 >> bit_rshift
@@ -59,11 +59,11 @@ $ length
 ?? switch
 @ break
 @@ return
-[< while_array $l
-[> for_array $l
+[< while_array $loop
+[> for_array $loop
 ^ bit_xor
-{< while_map $l
-{> for_map $l
+{< while_map $loop
+{> for_map $loop
 | bit_or
 |: has
 || or

@@ -12,102 +12,102 @@
 
 
 __SLL_EXTERNAL void sll_compilation_data_from_source_file(const sll_source_file_t* sf,sll_compilation_data_t* out){
-	out->l=1;
-	out->dt=sll_allocate(sizeof(sll_source_file_t*));
-	*(out->dt)=sll_allocate(sizeof(sll_source_file_t));
-	**(out->dt)=*sf;
+	out->length=1;
+	out->data=sll_allocate(sizeof(sll_source_file_t*));
+	*(out->data)=sll_allocate(sizeof(sll_source_file_t));
+	**(out->data)=*sf;
 }
 
 
 
 __SLL_EXTERNAL void sll_free_compilation_data(sll_compilation_data_t* c_dt){
-	for (sll_source_file_index_t i=0;i<c_dt->l;i++){
-		sll_source_file_t* sf=*(c_dt->dt+i);
+	for (sll_source_file_index_t i=0;i<c_dt->length;i++){
+		sll_source_file_t* sf=*(c_dt->data+i);
 		sll_free_source_file(sf);
 		sll_deallocate(sf);
 	}
-	sll_deallocate(c_dt->dt);
-	c_dt->dt=NULL;
-	c_dt->l=0;
+	sll_deallocate(c_dt->data);
+	c_dt->data=NULL;
+	c_dt->length=0;
 }
 
 
 
 __SLL_EXTERNAL void sll_free_source_file(sll_source_file_t* sf){
-	sf->tm=0;
-	sf->sz=0;
-	sf->dt=NULL;
+	sf->time=0;
+	sf->file_size=0;
+	sf->first_node=NULL;
 	for (unsigned int i=0;i<SLL_MAX_SHORT_IDENTIFIER_LENGTH;i++){
-		sll_identifier_list_t* e=sf->idt.short_+i;
+		sll_identifier_list_t* e=sf->identifier_table.short_+i;
 		sll_deallocate(e->data);
 		e->data=NULL;
 		e->length=0;
 	}
-	sll_deallocate(sf->idt.long_data);
-	sf->idt.long_data=NULL;
-	sf->idt.long_data_length=0;
-	sll_deallocate(sf->et.dt);
-	sf->et.dt=NULL;
-	sf->et.l=0;
-	for (sll_function_index_t i=0;i<sf->ft.l;i++){
-		sll_deallocate(*(sf->ft.dt+i));
+	sll_deallocate(sf->identifier_table.long_data);
+	sf->identifier_table.long_data=NULL;
+	sf->identifier_table.long_data_length=0;
+	sll_deallocate(sf->export_table.data);
+	sf->export_table.data=NULL;
+	sf->export_table.length=0;
+	for (sll_function_index_t i=0;i<sf->function_table.length;i++){
+		sll_deallocate(*(sf->function_table.data+i));
 	}
-	sll_deallocate(sf->ft.dt);
-	sf->ft.dt=NULL;
-	sf->ft.l=0;
-	for (sll_string_index_t i=0;i<sf->st.l;i++){
-		sll_free_string(sf->st.dt+i);
+	sll_deallocate(sf->function_table.data);
+	sf->function_table.data=NULL;
+	sf->function_table.length=0;
+	for (sll_string_index_t i=0;i<sf->string_table.l;i++){
+		sll_free_string(sf->string_table.dt+i);
 	}
-	sll_deallocate(sf->st.dt);
-	sf->st.dt=NULL;
-	sf->st.l=0;
-	void* pg=sf->_s.s;
+	sll_deallocate(sf->string_table.dt);
+	sf->string_table.dt=NULL;
+	sf->string_table.l=0;
+	void* pg=sf->_stack.start;
 	while (pg){
 		void* n=*((void**)pg);
 		SLL_CRITICAL_ERROR(sll_platform_free_page(pg,SLL_ROUND_PAGE(NODE_STACK_ALLOC_SIZE)));
 		pg=n;
 	}
-	for (sll_import_index_t i=0;i<sf->it.l;i++){
-		sll_deallocate(*(sf->it.dt+i));
+	for (sll_import_index_t i=0;i<sf->import_table.length;i++){
+		sll_deallocate(*(sf->import_table.data+i));
 	}
-	sll_deallocate(sf->it.dt);
-	sf->it.dt=NULL;
-	sf->it.l=0;
-	sf->fp_nm=0;
-	sf->_s.s=NULL;
-	sf->_s.e=NULL;
-	sf->_s.c=0;
-	sf->_s.p=NULL;
-	sf->_s.off=0;
-	sf->_n_sc_id=1;
+	sll_deallocate(sf->import_table.data);
+	sf->import_table.data=NULL;
+	sf->import_table.length=0;
+	sf->file_path_string_index=0;
+	sf->_stack.start=NULL;
+	sf->_stack.end=NULL;
+	sf->_stack.count=0;
+	sf->_stack.next_node=NULL;
+	sf->_stack.offset=0;
+	sf->_next_scope=1;
 }
 
 
 
 __SLL_EXTERNAL void sll_init_compilation_data(const sll_char_t* fp,sll_compilation_data_t* o){
 	sll_source_file_t* sf=sll_allocate(sizeof(sll_source_file_t));
-	sf->tm=sll_platform_get_current_time();
-	sf->sz=0;
-	sf->dt=NULL;
+	sf->time=sll_platform_get_current_time();
+	sf->file_size=0;
+	sf->first_node=NULL;
 	for (unsigned int i=0;i<SLL_MAX_SHORT_IDENTIFIER_LENGTH;i++){
-		sf->idt.short_[i].data=NULL;
-		sf->idt.short_[i].length=0;
+		sf->identifier_table.short_[i].data=NULL;
+		sf->identifier_table.short_[i].length=0;
 	}
-	sf->idt.long_data=NULL;
-	sf->idt.long_data_length=0;
-	sf->et.dt=NULL;
-	sf->et.l=0;
-	sf->ft.dt=NULL;
-	sf->ft.l=0;
-	sf->st.dt=sll_allocate(sizeof(sll_string_t));
-	sf->st.l=1;
-	sll_string_from_pointer(fp,sf->st.dt);
-	sf->it.dt=NULL;
-	sf->it.l=0;
-	sf->fp_nm=0;
+	sf->identifier_table.long_data=NULL;
+	sf->identifier_table.long_data_length=0;
+	sf->export_table.data=NULL;
+	sf->export_table.length=0;
+	sf->function_table.data=NULL;
+	sf->function_table.length=0;
+	sf->string_table.dt=sll_allocate(sizeof(sll_string_t));
+	sf->string_table.l=1;
+	sll_string_from_pointer(fp,sf->string_table.dt);
+	sf->import_table.data=NULL;
+	sf->import_table.length=0;
+	sf->file_path_string_index=0;
 	_init_node_stack(sf);
-	sf->_n_sc_id=1;
-	o->dt=sll_allocate(sizeof(sll_source_file_t*));
-	o->l=1;
-	*(o->dt)=sf;
+	sf->_next_scope=1;
+	o->data=sll_allocate(sizeof(sll_source_file_t*));
+	o->length=1;
+	*(o->data)=sf;
 }
