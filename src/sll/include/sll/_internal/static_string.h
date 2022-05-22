@@ -27,22 +27,41 @@
 #define _UNIQUE_NAME_JOIN(a,b) _UNIQUE_NAME_JOIN2(a,b)
 #define _UNIQUE_NAME(a) _UNIQUE_NAME_JOIN(a,__LINE__)
 
-#define __STATIC_STRING(nm,dt) sll_string_t nm=SLL_INIT_STRING_STRUCT;static const init_string_t _UNIQUE_NAME(__init_string)={&(nm),{.s=SLL_CHAR(dt)},sizeof(dt)/sizeof(char)-1};static const __STATIC_STRING_DATA_SECTION init_string_t* _UNIQUE_NAME(__init_string_ptr)=&_UNIQUE_NAME(__init_string)
-#define __STATIC_STRING_CODE(nm,c) sll_string_t nm=SLL_INIT_STRING_STRUCT;static void _UNIQUE_NAME(__init_string_fn)(sll_string_t* out){c};static const init_string_t _UNIQUE_NAME(__init_string)={&(nm),{.fn=_UNIQUE_NAME(__init_string_fn)},SLL_MAX_STRING_LENGTH};static const __STATIC_STRING_DATA_SECTION init_string_t* _UNIQUE_NAME(__init_string_ptr)=&_UNIQUE_NAME(__init_string)
+#define __STATIC_STRING(nm,dt) \
+	sll_string_t nm=SLL_INIT_STRING_STRUCT; \
+	static const init_string_t _UNIQUE_NAME(__init_string)={ \
+		&(nm), \
+		{ \
+			.pointer=SLL_CHAR(dt) \
+		}, \
+		sizeof(dt)/sizeof(char)-1 \
+	}; \
+	static const __STATIC_STRING_DATA_SECTION init_string_t* _UNIQUE_NAME(__init_string_ptr)=&_UNIQUE_NAME(__init_string)
+#define __STATIC_STRING_CODE(nm,c) \
+	sll_string_t nm=SLL_INIT_STRING_STRUCT; \
+	static void _UNIQUE_NAME(__init_string_fn)(sll_string_t* out){c}; \
+	static const init_string_t _UNIQUE_NAME(__init_string)={ \
+		&(nm), \
+		{ \
+			.function=_UNIQUE_NAME(__init_string_fn) \
+		}, \
+		SLL_MAX_STRING_LENGTH \
+	}; \
+	static const __STATIC_STRING_DATA_SECTION init_string_t* _UNIQUE_NAME(__init_string_ptr)=&_UNIQUE_NAME(__init_string)
 
 
 
 typedef union _STATIC_STRING_SOURCE{
-	const sll_char_t* s;
-	void (*fn)(sll_string_t*);
+	const sll_char_t* pointer;
+	void (*function)(sll_string_t*);
 } static_string_source_t;
 
 
 
 typedef struct _INIT_STRING{
-	sll_string_t* p;
-	static_string_source_t dt;
-	sll_string_length_t dtl;
+	sll_string_t* target;
+	static_string_source_t source;
+	sll_string_length_t length;
 } init_string_t;
 
 

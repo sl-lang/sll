@@ -12,13 +12,13 @@
 
 
 typedef struct _ASSEMBLY_STACK_PAGE{
-	struct _ASSEMBLY_STACK_PAGE* nxt;
+	struct _ASSEMBLY_STACK_PAGE* next;
 } assembly_stack_page_t;
 
 
 
 typedef struct _NODE_STACK_PAGE{
-	struct _NODE_STACK_PAGE* nxt;
+	struct _NODE_STACK_PAGE* next;
 } node_stack_page_t;
 
 

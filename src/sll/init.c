@@ -120,7 +120,7 @@ __SLL_EXTERNAL void sll_deinit(void){
 	while (l<(const init_string_t*const*)(&__init_string_end)){
 		const init_string_t* k=*l;
 		if (k){
-			sll_free_string(k->p);
+			sll_free_string(k->target);
 		}
 		l++;
 	}
@@ -157,11 +157,11 @@ __SLL_EXTERNAL void sll_init(void){
 	while (l<(const init_string_t*const*)(&__init_string_end)){
 		const init_string_t* k=*l;
 		if (k){
-			if (k->dtl==SLL_MAX_STRING_LENGTH){
-				k->dt.fn(k->p);
+			if (k->length==SLL_MAX_STRING_LENGTH){
+				k->source.function(k->target);
 			}
 			else{
-				sll_string_from_pointer_length(k->dt.s,k->dtl,k->p);
+				sll_string_from_pointer_length(k->source.pointer,k->length,k->target);
 			}
 		}
 		l++;

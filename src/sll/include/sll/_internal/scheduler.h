@@ -34,9 +34,9 @@ typedef struct _SCHEDULER_CPU_DATA{
 
 
 typedef struct _LOAD_BALANCER{
-	sll_lock_handle_t lck;
-	sll_cpu_t len;
-	sll_cpu_t brk;
+	sll_lock_handle_t lock;
+	sll_cpu_t length;
+	sll_cpu_t index;
 } load_balancer_t;
 
 

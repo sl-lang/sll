@@ -11,8 +11,8 @@
 
 static void _request_new_node_page(sll_source_file_t* sf){
 	node_stack_page_t* n=sll_platform_allocate_page(SLL_ROUND_PAGE(NODE_STACK_ALLOC_SIZE),0,NULL);
-	((node_stack_page_t*)(sf->_stack.end))->nxt=n;
-	n->nxt=NULL;
+	((node_stack_page_t*)(sf->_stack.end))->next=n;
+	n->next=NULL;
 	sll_node_t* s=PTR(ADDR(n)+sizeof(node_stack_page_t));
 	s->type=SLL_NODE_TYPE_CHANGE_STACK;
 	s->data._next_node=sf->_stack.next_node-1;
@@ -35,8 +35,8 @@ sll_assembly_instruction_t* _acquire_next_instruction(sll_assembly_data_t* a_dt)
 	a_dt->_instruction_stack.next_instruction++;
 	if (!a_dt->_instruction_stack.count){
 		assembly_stack_page_t* n=sll_platform_allocate_page(SLL_ROUND_PAGE(ASSEMBLY_INSTRUCTION_STACK_ALLOC_SIZE),0,NULL);
-		((assembly_stack_page_t*)(a_dt->_instruction_stack.end))->nxt=n;
-		n->nxt=NULL;
+		((assembly_stack_page_t*)(a_dt->_instruction_stack.end))->next=n;
+		n->next=NULL;
 		sll_assembly_instruction_t* s=PTR(ADDR(n)+sizeof(assembly_stack_page_t));
 		s->type=SLL_ASSEMBLY_INSTRUCTION_TYPE_CHANGE_STACK;
 		s->data._next_instruction=a_dt->_instruction_stack.next_instruction-1;
@@ -75,19 +75,19 @@ void _clone_node_stack(const sll_source_file_t* src_sf,sll_source_file_t* dst_sf
 	node_stack_page_t* dst=dst_sf->_stack.start;
 	sll_node_offset_t src_cnt=src_sf->_stack.offset;
 	while (1){
-		if (!src->nxt){
+		if (!src->next){
 			cnt=src_cnt;
 		}
 		sll_copy_data(PTR(ADDR(src)+sizeof(node_stack_page_t)+sizeof(sll_node_t)),cnt*sizeof(sll_node_t),PTR(ADDR(dst)+sizeof(node_stack_page_t)+sizeof(sll_node_t)));
 		dst_sf->_stack.offset+=cnt;
 		dst_sf->_stack.next_node+=cnt;
 		src_cnt-=cnt;
-		if (!src->nxt){
+		if (!src->next){
 			return;
 		}
 		_request_new_node_page(dst_sf);
-		src=src->nxt;
-		dst=dst->nxt;
+		src=src->next;
+		dst=dst->next;
 	}
 }
 
@@ -97,7 +97,7 @@ sll_assembly_instruction_t* _get_instruction_at_offset(const sll_assembly_data_t
 	sll_instruction_index_t cnt=(sll_instruction_index_t)(((SLL_ROUND_PAGE(ASSEMBLY_INSTRUCTION_STACK_ALLOC_SIZE)-sizeof(assembly_stack_page_t)-sizeof(sll_assembly_instruction_t)*2)/sizeof(sll_assembly_instruction_t)));
 	assembly_stack_page_t* pg=a_dt->_instruction_stack.start;
 	while (off>=cnt){
-		pg=pg->nxt;
+		pg=pg->next;
 		off-=cnt;
 	}
 	return PTR(ADDR(pg)+sizeof(assembly_stack_page_t)+sizeof(sll_assembly_instruction_t)*(off+1));
@@ -109,7 +109,7 @@ sll_node_t* _get_node_at_offset(const sll_source_file_t* sf,sll_node_offset_t of
 	sll_node_offset_t cnt=(sll_node_offset_t)(((SLL_ROUND_PAGE(NODE_STACK_ALLOC_SIZE)-sizeof(node_stack_page_t)-sizeof(sll_node_t)*2)/sizeof(sll_node_t)));
 	node_stack_page_t* pg=sf->_stack.start;
 	while (off>=cnt){
-		pg=pg->nxt;
+		pg=pg->next;
 		off-=cnt;
 	}
 	return PTR(ADDR(pg)+sizeof(node_stack_page_t)+sizeof(sll_node_t)*(off+1));
@@ -120,7 +120,7 @@ sll_node_t* _get_node_at_offset(const sll_source_file_t* sf,sll_node_offset_t of
 void _init_assembly_stack(sll_assembly_data_t* a_dt){
 	a_dt->_instruction_stack.start=sll_platform_allocate_page(SLL_ROUND_PAGE(ASSEMBLY_INSTRUCTION_STACK_ALLOC_SIZE),0,NULL);
 	a_dt->_instruction_stack.end=a_dt->_instruction_stack.start;
-	((assembly_stack_page_t*)(a_dt->_instruction_stack.start))->nxt=NULL;
+	((assembly_stack_page_t*)(a_dt->_instruction_stack.start))->next=NULL;
 	sll_assembly_instruction_t* s=PTR(ADDR(a_dt->_instruction_stack.start)+sizeof(assembly_stack_page_t));
 	s->type=SLL_ASSEMBLY_INSTRUCTION_TYPE_CHANGE_STACK;
 	s->data._next_instruction=NULL;
@@ -136,7 +136,7 @@ void _init_assembly_stack(sll_assembly_data_t* a_dt){
 void _init_node_stack(sll_source_file_t* sf){
 	sf->_stack.start=sll_platform_allocate_page(SLL_ROUND_PAGE(NODE_STACK_ALLOC_SIZE),0,NULL);
 	sf->_stack.end=sf->_stack.start;
-	((node_stack_page_t*)(sf->_stack.start))->nxt=NULL;
+	((node_stack_page_t*)(sf->_stack.start))->next=NULL;
 	sll_node_t* s=PTR(ADDR(sf->_stack.start)+sizeof(node_stack_page_t));
 	s->type=SLL_NODE_TYPE_CHANGE_STACK;
 	s->data._next_node=NULL;
