@@ -35,7 +35,7 @@ void _semaphore_init(void);
 
 
 
-sll_bool_t _semaphore_wait(sll_integer_t w);
+sll_bool_t _semaphore_wait(sll_integer_t sempahore_index);
 
 
 

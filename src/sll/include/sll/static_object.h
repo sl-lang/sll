@@ -24,10 +24,10 @@
  * \name SLL_ACQUIRE_STATIC
  * \group static-object
  * \desc Docs!
- * \arg __identifier__ nm
+ * \arg __identifier__ name
  * \ret sll_object_t*
  */
-#define SLL_ACQUIRE_STATIC(nm) (SLL_ACQUIRE(sll_static_##nm),sll_static_##nm)
+#define SLL_ACQUIRE_STATIC(name) (SLL_ACQUIRE(sll_static_##name),sll_static_##name)
 
 
 
@@ -36,10 +36,10 @@
  * \name SLL_ACQUIRE_STATIC_INT
  * \group static-object
  * \desc Docs!
- * \arg sll_integer_t v
+ * \arg sll_integer_t value
  * \ret sll_object_t*
  */
-#define SLL_ACQUIRE_STATIC_INT(v) (SLL_ACQUIRE(sll_static_int[(v)]),sll_static_int[(v)])
+#define SLL_ACQUIRE_STATIC_INT(value) (SLL_ACQUIRE(sll_static_int[(value)]),sll_static_int[(value)])
 
 
 
@@ -48,10 +48,10 @@
  * \name SLL_ACQUIRE_STATIC_NEG_INT
  * \group static-object
  * \desc Docs!
- * \arg sll_integer_t v
+ * \arg sll_integer_t value
  * \ret sll_object_t*
  */
-#define SLL_ACQUIRE_STATIC_NEG_INT(v) (SLL_ACQUIRE(sll_static_negative_int[(v)-1]),sll_static_negative_int[(v)-1])
+#define SLL_ACQUIRE_STATIC_NEG_INT(value) (SLL_ACQUIRE(sll_static_negative_int[(value)-1]),sll_static_negative_int[(value)-1])
 
 
 
@@ -60,10 +60,10 @@
  * \name SLL_FROM_CHAR
  * \group static-object
  * \desc Docs!
- * \arg sll_char_t c
+ * \arg sll_char_t char_
  * \ret sll_object_t*
  */
-#define SLL_FROM_CHAR(c) (SLL_ACQUIRE(sll_static_char[(sll_char_t)(c)]),sll_static_char[(sll_char_t)(c)])
+#define SLL_FROM_CHAR(char_) (SLL_ACQUIRE(sll_static_char[(sll_char_t)(char_)]),sll_static_char[(sll_char_t)(char_)])
 
 
 
@@ -150,10 +150,10 @@ __SLL_EXTERNAL extern sll_object_t* sll_static_complex_zero;
  * \group static-object
  * \subgroup static-object-create
  * \desc Docs!
- * \arg sll_array_length_t l
+ * \arg sll_array_length_t length
  * \ret sll_object_t*
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_array_length_to_object(sll_array_length_t l);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_array_length_to_object(sll_array_length_t length);
 
 
 
@@ -163,10 +163,10 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_array_length_to_object(sll_a
  * \group static-object
  * \subgroup static-object-create
  * \desc Docs!
- * \arg const sll_array_t* v
+ * \arg const sll_array_t* array
  * \ret sll_object_t*
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_array_to_object(const sll_array_t* v);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_array_to_object(const sll_array_t* array);
 
 
 
@@ -176,10 +176,10 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_array_to_object(const sll_ar
  * \group static-object
  * \subgroup static-object-create
  * \desc Docs!
- * \arg sll_array_t* v
+ * \arg sll_array_t* array
  * \ret sll_object_t*
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_array_to_object_nocopy(sll_array_t* v);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_array_to_object_nocopy(sll_array_t* array);
 
 
 
@@ -189,10 +189,10 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_array_to_object_nocopy(sll_a
  * \group static-object
  * \subgroup static-object-create
  * \desc Docs!
- * \arg sll_char_t v
+ * \arg sll_char_t char_
  * \ret sll_object_t*
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_char_to_object(sll_char_t v);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_char_to_object(sll_char_t char_);
 
 
 
@@ -202,10 +202,10 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_char_to_object(sll_char_t v)
  * \group static-object
  * \subgroup static-object-create
  * \desc Docs!
- * \arg sll_char_t v
+ * \arg sll_char_t char_
  * \ret sll_object_t*
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_char_to_string_object(sll_char_t v);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_char_to_string_object(sll_char_t char_);
 
 
 
@@ -215,10 +215,10 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_char_to_string_object(sll_ch
  * \group static-object
  * \subgroup static-object-create
  * \desc Docs!
- * \arg const sll_complex_t* v
+ * \arg const sll_complex_t* complex_
  * \ret sll_object_t*
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_complex_to_object(const sll_complex_t* v);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_complex_to_object(const sll_complex_t* complex_);
 
 
 
@@ -228,10 +228,10 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_complex_to_object(const sll_
  * \group static-object
  * \subgroup static-object-create
  * \desc Docs!
- * \arg sll_float_t v
+ * \arg sll_float_t float_
  * \ret sll_object_t*
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_float_to_object(sll_float_t v);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_float_to_object(sll_float_t float_);
 
 
 
@@ -241,10 +241,10 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_float_to_object(sll_float_t 
  * \group static-object
  * \subgroup static-object-create
  * \desc Docs!
- * \arg sll_integer_t v
+ * \arg sll_integer_t int_
  * \ret sll_object_t*
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_int_to_object(sll_integer_t v);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_int_to_object(sll_integer_t int_);
 
 
 
@@ -254,10 +254,10 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_int_to_object(sll_integer_t 
  * \group static-object
  * \subgroup static-object-create
  * \desc Docs!
- * \arg sll_map_length_t l
+ * \arg sll_map_length_t length
  * \ret sll_object_t*
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_map_length_to_object(sll_map_length_t l);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_map_length_to_object(sll_map_length_t length);
 
 
 
@@ -267,10 +267,10 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_map_length_to_object(sll_map
  * \group static-object
  * \subgroup static-object-create
  * \desc Docs!
- * \arg const sll_map_t* v
+ * \arg const sll_map_t* map
  * \ret sll_object_t*
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_map_to_object(const sll_map_t* v);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_map_to_object(const sll_map_t* map);
 
 
 
@@ -280,10 +280,10 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_map_to_object(const sll_map_
  * \group static-object
  * \subgroup static-object-create
  * \desc Docs!
- * \arg sll_map_t* v
+ * \arg sll_map_t* map
  * \ret sll_object_t*
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_map_to_object_nocopy(sll_map_t* v);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_map_to_object_nocopy(sll_map_t* map);
 
 
 
@@ -293,10 +293,10 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_map_to_object_nocopy(sll_map
  * \group static-object
  * \subgroup static-object-create
  * \desc Docs!
- * \arg const sll_char_t* p
+ * \arg const sll_char_t* pointer
  * \ret sll_object_t*
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_string_pointer_to_object(const sll_char_t* p);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_string_pointer_to_object(const sll_char_t* pointer);
 
 
 
@@ -306,11 +306,11 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_string_pointer_to_object(con
  * \group static-object
  * \subgroup static-object-create
  * \desc Docs!
- * \arg const sll_char_t* p
- * \arg sll_string_length_t l
+ * \arg const sll_char_t* pointer
+ * \arg sll_string_length_t length
  * \ret sll_object_t*
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_string_pointer_length_to_object(const sll_char_t* p,sll_string_length_t l);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_string_pointer_length_to_object(const sll_char_t* pointer,sll_string_length_t length);
 
 
 
@@ -320,10 +320,10 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_string_pointer_length_to_obj
  * \group static-object
  * \subgroup static-object-create
  * \desc Docs!
- * \arg const sll_string_t* v
+ * \arg const sll_string_t* string
  * \ret sll_object_t*
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_string_to_object(const sll_string_t* v);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_string_to_object(const sll_string_t* string);
 
 
 
@@ -333,10 +333,10 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_string_to_object(const sll_s
  * \group static-object
  * \subgroup static-object-create
  * \desc Docs!
- * \arg sll_string_t* v
+ * \arg sll_string_t* string
  * \ret sll_object_t*
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_string_to_object_nocopy(sll_string_t* v);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_string_to_object_nocopy(sll_string_t* string);
 
 
 

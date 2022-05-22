@@ -50,10 +50,10 @@ typedef __SLL_U32 sll_semaphore_index_t;
  * \name sll_semaphore_create
  * \group semaphore
  * \desc Docs!
- * \arg sll_semaphore_counter_t c
+ * \arg sll_semaphore_counter_t count
  * \ret sll_semaphore_index_t
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_semaphore_index_t sll_semaphore_create(sll_semaphore_counter_t c);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_semaphore_index_t sll_semaphore_create(sll_semaphore_counter_t count);
 
 
 
@@ -62,10 +62,10 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_semaphore_index_t sll_semaphore_create(sll
  * \name sll_semaphore_delete
  * \group semaphore
  * \desc Docs!
- * \arg sll_semaphore_index_t s
+ * \arg sll_semaphore_index_t sempahore_index
  * \ret sll_bool_t
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_semaphore_delete(sll_semaphore_index_t s);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_semaphore_delete(sll_semaphore_index_t sempahore_index);
 
 
 
@@ -74,10 +74,10 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_semaphore_delete(sll_semaphore_
  * \name sll_semaphore_release
  * \group semaphore
  * \desc Docs!
- * \arg sll_semaphore_index_t l
+ * \arg sll_semaphore_index_t sempahore_index
  * \ret sll_bool_t
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_semaphore_release(sll_semaphore_index_t l);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_semaphore_release(sll_semaphore_index_t sempahore_index);
 
 
 

@@ -33,22 +33,22 @@ void _semaphore_init(void){
 
 
 
-sll_bool_t _semaphore_wait(sll_integer_t w){
-	if (w<0||w>=_semaphore_len||(_semaphore_data+w)->count==SEMAPHORE_UNUSED){
+sll_bool_t _semaphore_wait(sll_integer_t sempahore_index){
+	if (sempahore_index<0||sempahore_index>=_semaphore_len||(_semaphore_data+sempahore_index)->count==SEMAPHORE_UNUSED){
 		return 0;
 	}
-	if ((_semaphore_data+w)->count){
-		(_semaphore_data+w)->count--;
-		(_semaphore_data+w)->first=SLL_UNKNOWN_THREAD_INDEX;
+	if ((_semaphore_data+sempahore_index)->count){
+		(_semaphore_data+sempahore_index)->count--;
+		(_semaphore_data+sempahore_index)->first=SLL_UNKNOWN_THREAD_INDEX;
 		return 0;
 	}
-	if ((_semaphore_data+w)->first==SLL_UNKNOWN_THREAD_INDEX){
-		(_semaphore_data+w)->first=_scheduler_current_thread_index;
+	if ((_semaphore_data+sempahore_index)->first==SLL_UNKNOWN_THREAD_INDEX){
+		(_semaphore_data+sempahore_index)->first=_scheduler_current_thread_index;
 	}
 	else{
-		(_semaphore_data+w)->last->next=_scheduler_current_thread_index;
+		(_semaphore_data+sempahore_index)->last->next=_scheduler_current_thread_index;
 	}
-	(_semaphore_data+w)->last=_scheduler_current_thread;
+	(_semaphore_data+sempahore_index)->last=_scheduler_current_thread;
 	_scheduler_current_thread->next=SLL_UNKNOWN_THREAD_INDEX;
 	_scheduler_current_thread->state=THREAD_STATE_WAIT_SEMAPHORE;
 	_scheduler_current_thread_index=SLL_UNKNOWN_THREAD_INDEX;
@@ -57,7 +57,7 @@ sll_bool_t _semaphore_wait(sll_integer_t w){
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_semaphore_index_t sll_semaphore_create(sll_semaphore_counter_t c){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_semaphore_index_t sll_semaphore_create(sll_semaphore_counter_t count){
 	SLL_CRITICAL_ERROR(sll_platform_lock_acquire(_semaphore_lock));
 	sll_semaphore_index_t o=_semaphore_next;
 	if (o==SEMAPHORE_UNUSED){
@@ -68,7 +68,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_semaphore_index_t sll_semaphore_create(sll
 	else{
 		_semaphore_next=SEMAPHORE_GET_NEXT_ID(_semaphore_data+o);
 	}
-	(_semaphore_data+o)->count=c;
+	(_semaphore_data+o)->count=count;
 	(_semaphore_data+o)->first=SLL_UNKNOWN_THREAD_INDEX;
 	SLL_CRITICAL(sll_platform_lock_release(_semaphore_lock));
 	return o;
@@ -76,31 +76,31 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_semaphore_index_t sll_semaphore_create(sll
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_semaphore_delete(sll_semaphore_index_t s){
-	if (s>=_semaphore_len||(_semaphore_data+s)->count==SEMAPHORE_UNUSED){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_semaphore_delete(sll_semaphore_index_t sempahore_index){
+	if (sempahore_index>=_semaphore_len||(_semaphore_data+sempahore_index)->count==SEMAPHORE_UNUSED){
 		return 0;
 	}
 	SLL_CRITICAL_ERROR(sll_platform_lock_acquire(_semaphore_lock));
-	(_semaphore_data+s)->count=SEMAPHORE_UNUSED;
-	SEMAPHORE_SET_NEXT_ID(_semaphore_data+s,_semaphore_next);
-	_semaphore_next=s;
+	(_semaphore_data+sempahore_index)->count=SEMAPHORE_UNUSED;
+	SEMAPHORE_SET_NEXT_ID(_semaphore_data+sempahore_index,_semaphore_next);
+	_semaphore_next=sempahore_index;
 	SLL_CRITICAL(sll_platform_lock_release(_semaphore_lock));
 	return 1;
 }
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_semaphore_release(sll_semaphore_index_t l){
-	if (l>=_semaphore_len||(_semaphore_data+l)->count==SEMAPHORE_UNUSED){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_semaphore_release(sll_semaphore_index_t sempahore_index){
+	if (sempahore_index>=_semaphore_len||(_semaphore_data+sempahore_index)->count==SEMAPHORE_UNUSED){
 		return 0;
 	}
-	if ((_semaphore_data+l)->first==SLL_UNKNOWN_THREAD_INDEX){
-		(_semaphore_data+l)->count++;
+	if ((_semaphore_data+sempahore_index)->first==SLL_UNKNOWN_THREAD_INDEX){
+		(_semaphore_data+sempahore_index)->count++;
 		return 1;
 	}
-	thread_data_t* thr=*(_thread_data+(_semaphore_data+l)->first);
+	thread_data_t* thr=*(_thread_data+(_semaphore_data+sempahore_index)->first);
 	thr->state=THREAD_STATE_QUEUED;
-	_scheduler_queue_thread((_semaphore_data+l)->first);
-	(_semaphore_data+l)->first=thr->next;
+	_scheduler_queue_thread((_semaphore_data+sempahore_index)->first);
+	(_semaphore_data+sempahore_index)->first=thr->next;
 	return 1;
 }
