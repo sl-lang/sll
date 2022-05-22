@@ -105,7 +105,7 @@
  * \arg sll_identifier_t* v
  * \ret sll_string_index_t
  */
-#define SLL_IDENTIFIER_GET_STRING_INDEX(v) ((v)->i>>1)
+#define SLL_IDENTIFIER_GET_STRING_INDEX(v) ((v)->name_string_index>>1)
 
 
 
@@ -117,7 +117,7 @@
  * \arg sll_identifier_t* v
  * \ret sll_bool_t
  */
-#define SLL_IDENTIFIER_IS_TLS(v) ((v)->i&1)
+#define SLL_IDENTIFIER_IS_TLS(v) ((v)->name_string_index&1)
 
 
 
@@ -129,7 +129,7 @@
  * \arg sll_identifier_t* v
  * \arg sll_string_index_t si
  */
-#define SLL_IDENTIFIER_UPDATE_STRING_INDEX(v,si) ((v)->i=((si)<<1)|((v)->i&1))
+#define SLL_IDENTIFIER_UPDATE_STRING_INDEX(v,si) ((v)->name_string_index=((si)<<1)|((v)->name_string_index&1))
 
 
 
@@ -142,7 +142,7 @@
  * \arg sll_string_index_t si
  * \arg sll_bool_t tls
  */
-#define SLL_IDENTIFIER_SET_STRING_INDEX(v,si,tls) ((v)->i=((si)<<1)|(!!(tls)))
+#define SLL_IDENTIFIER_SET_STRING_INDEX(v,si,tls) ((v)->name_string_index=((si)<<1)|(!!(tls)))
 
 
 
@@ -184,12 +184,12 @@ typedef __SLL_U32 sll_scope_t;
  * \name sll_identifier_t
  * \group identifier
  * \desc Docs!
- * \arg sll_scope_t sc
- * \arg sll_string_index_t i
+ * \arg sll_scope_t scope
+ * \arg sll_string_index_t name_string_index
  */
 typedef struct _SLL_IDENTIFIER{
-	sll_scope_t sc;
-	sll_string_index_t i;
+	sll_scope_t scope;
+	sll_string_index_t name_string_index;
 } sll_identifier_t;
 
 
@@ -199,12 +199,12 @@ typedef struct _SLL_IDENTIFIER{
  * \name sll_identifier_list_t
  * \group identifier
  * \desc Docs!
- * \arg sll_identifier_t* dt
- * \arg sll_identifier_list_length_t l
+ * \arg sll_identifier_t* data
+ * \arg sll_identifier_list_length_t length
  */
 typedef struct _SLL_IDENTIFIER_LIST{
-	sll_identifier_t* dt;
-	sll_identifier_list_length_t l;
+	sll_identifier_t* data;
+	sll_identifier_list_length_t length;
 } sll_identifier_list_t;
 
 
@@ -214,14 +214,14 @@ typedef struct _SLL_IDENTIFIER_LIST{
  * \name sll_identifier_table_t
  * \group identifier
  * \desc Docs!
- * \arg sll_identifier_list_t[SLL_MAX_SHORT_IDENTIFIER_LENGTH] s
- * \arg sll_identifier_t* il
- * \arg sll_identifier_list_length_t ill
+ * \arg sll_identifier_list_t[SLL_MAX_SHORT_IDENTIFIER_LENGTH] short_
+ * \arg sll_identifier_t* long_data
+ * \arg sll_identifier_list_length_t long_data_length
  */
 typedef struct _SLL_IDENTIFIER_TABLE{
-	sll_identifier_list_t s[SLL_MAX_SHORT_IDENTIFIER_LENGTH];
-	sll_identifier_t* il;
-	sll_identifier_list_length_t ill;
+	sll_identifier_list_t short_[SLL_MAX_SHORT_IDENTIFIER_LENGTH];
+	sll_identifier_t* long_data;
+	sll_identifier_list_length_t long_data_length;
 } sll_identifier_table_t;
 
 

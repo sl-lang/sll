@@ -158,18 +158,18 @@ static sll_bool_t _read_source_file(sll_file_t* rf,sll_source_file_t* sf){
 	CHECK_ERROR(rf,sf->sz,sll_file_offset_t);
 	READ_FIELD(sf->h,rf);
 	for (sll_identifier_index_t i=0;i<SLL_MAX_SHORT_IDENTIFIER_LENGTH;i++){
-		CHECK_ERROR(rf,sf->idt.s[i].l,sll_identifier_list_length_t);
-		sf->idt.s[i].dt=sll_allocate(sf->idt.s[i].l*sizeof(sll_identifier_t));
-		for (sll_identifier_list_length_t j=0;j<sf->idt.s[i].l;j++){
-			CHECK_ERROR(rf,(sf->idt.s[i].dt+j)->sc,sll_scope_t);
-			CHECK_ERROR(rf,(sf->idt.s[i].dt+j)->i,sll_string_index_t);
+		CHECK_ERROR(rf,sf->idt.short_[i].length,sll_identifier_list_length_t);
+		sf->idt.short_[i].data=sll_allocate(sf->idt.short_[i].length*sizeof(sll_identifier_t));
+		for (sll_identifier_list_length_t j=0;j<sf->idt.short_[i].length;j++){
+			CHECK_ERROR(rf,(sf->idt.short_[i].data+j)->scope,sll_scope_t);
+			CHECK_ERROR(rf,(sf->idt.short_[i].data+j)->name_string_index,sll_string_index_t);
 		}
 	}
-	CHECK_ERROR(rf,sf->idt.ill,sll_identifier_list_length_t);
-	sf->idt.il=sll_allocate(sf->idt.ill*sizeof(sll_identifier_t));
-	for (sll_identifier_list_length_t i=0;i<sf->idt.ill;i++){
-		CHECK_ERROR(rf,(sf->idt.il+i)->sc,sll_scope_t);
-		CHECK_ERROR(rf,(sf->idt.il+i)->i,sll_string_index_t);
+	CHECK_ERROR(rf,sf->idt.long_data_length,sll_identifier_list_length_t);
+	sf->idt.long_data=sll_allocate(sf->idt.long_data_length*sizeof(sll_identifier_t));
+	for (sll_identifier_list_length_t i=0;i<sf->idt.long_data_length;i++){
+		CHECK_ERROR(rf,(sf->idt.long_data+i)->scope,sll_scope_t);
+		CHECK_ERROR(rf,(sf->idt.long_data+i)->name_string_index,sll_string_index_t);
 	}
 	CHECK_ERROR(rf,sf->et.l,sll_export_table_length_t);
 	sf->et.dt=sll_allocate(sf->et.l*sizeof(sll_identifier_index_t));

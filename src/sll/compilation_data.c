@@ -38,14 +38,14 @@ __SLL_EXTERNAL void sll_free_source_file(sll_source_file_t* sf){
 	sf->sz=0;
 	sf->dt=NULL;
 	for (unsigned int i=0;i<SLL_MAX_SHORT_IDENTIFIER_LENGTH;i++){
-		sll_identifier_list_t* e=sf->idt.s+i;
-		sll_deallocate(e->dt);
-		e->dt=NULL;
-		e->l=0;
+		sll_identifier_list_t* e=sf->idt.short_+i;
+		sll_deallocate(e->data);
+		e->data=NULL;
+		e->length=0;
 	}
-	sll_deallocate(sf->idt.il);
-	sf->idt.il=NULL;
-	sf->idt.ill=0;
+	sll_deallocate(sf->idt.long_data);
+	sf->idt.long_data=NULL;
+	sf->idt.long_data_length=0;
 	sll_deallocate(sf->et.dt);
 	sf->et.dt=NULL;
 	sf->et.l=0;
@@ -90,11 +90,11 @@ __SLL_EXTERNAL void sll_init_compilation_data(const sll_char_t* fp,sll_compilati
 	sf->sz=0;
 	sf->dt=NULL;
 	for (unsigned int i=0;i<SLL_MAX_SHORT_IDENTIFIER_LENGTH;i++){
-		sf->idt.s[i].dt=NULL;
-		sf->idt.s[i].l=0;
+		sf->idt.short_[i].data=NULL;
+		sf->idt.short_[i].length=0;
 	}
-	sf->idt.il=NULL;
-	sf->idt.ill=0;
+	sf->idt.long_data=NULL;
+	sf->idt.long_data_length=0;
 	sf->et.dt=NULL;
 	sf->et.l=0;
 	sf->ft.dt=NULL;

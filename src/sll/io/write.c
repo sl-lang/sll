@@ -144,17 +144,17 @@ static void _write_source_file(sll_file_t* wf,const sll_source_file_t* sf){
 	CHECK_ERROR(sll_encode_integer(wf,sf->sz));
 	sll_file_write(wf,&(sf->h),sizeof(sll_sha256_data_t),NULL);
 	for (sll_identifier_index_t i=0;i<SLL_MAX_SHORT_IDENTIFIER_LENGTH;i++){
-		const sll_identifier_list_t* l=sf->idt.s+i;
-		CHECK_ERROR(sll_encode_integer(wf,l->l));
-		for (sll_identifier_list_length_t j=0;j<l->l;j++){
-			CHECK_ERROR(sll_encode_integer(wf,(l->dt+j)->sc));
-			CHECK_ERROR(sll_encode_integer(wf,(l->dt+j)->i));
+		const sll_identifier_list_t* l=sf->idt.short_+i;
+		CHECK_ERROR(sll_encode_integer(wf,l->length));
+		for (sll_identifier_list_length_t j=0;j<l->length;j++){
+			CHECK_ERROR(sll_encode_integer(wf,(l->data+j)->scope));
+			CHECK_ERROR(sll_encode_integer(wf,(l->data+j)->name_string_index));
 		}
 	}
-	CHECK_ERROR(sll_encode_integer(wf,sf->idt.ill));
-	for (sll_identifier_list_length_t i=0;i<sf->idt.ill;i++){
-		CHECK_ERROR(sll_encode_integer(wf,(sf->idt.il+i)->sc));
-		CHECK_ERROR(sll_encode_integer(wf,(sf->idt.il+i)->i));
+	CHECK_ERROR(sll_encode_integer(wf,sf->idt.long_data_length));
+	for (sll_identifier_list_length_t i=0;i<sf->idt.long_data_length;i++){
+		CHECK_ERROR(sll_encode_integer(wf,(sf->idt.long_data+i)->scope));
+		CHECK_ERROR(sll_encode_integer(wf,(sf->idt.long_data+i)->name_string_index));
 	}
 	CHECK_ERROR(sll_encode_integer(wf,sf->et.l));
 	for (sll_export_table_length_t i=0;i<sf->et.l;i++){

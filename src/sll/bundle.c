@@ -34,13 +34,13 @@ static sll_source_file_index_t _add_source_file(const sll_bundle_t* b,const sll_
 	sf->sz=bsf_sf.sz;
 	sf->h=bsf_sf.h;
 	for (sll_identifier_index_t i=0;i<SLL_MAX_SHORT_IDENTIFIER_LENGTH;i++){
-		sf->idt.s[i].l=bsf_sf.idt.s[i].l;
-		sf->idt.s[i].dt=sll_allocate(sf->idt.s[i].l*sizeof(sll_identifier_t));
-		sll_copy_data(bsf_sf.idt.s[i].dt,sf->idt.s[i].l*sizeof(sll_identifier_t),sf->idt.s[i].dt);
+		sf->idt.short_[i].length=bsf_sf.idt.short_[i].length;
+		sf->idt.short_[i].data=sll_allocate(sf->idt.short_[i].length*sizeof(sll_identifier_t));
+		sll_copy_data(bsf_sf.idt.short_[i].data,sf->idt.short_[i].length*sizeof(sll_identifier_t),sf->idt.short_[i].data);
 	}
-	sf->idt.ill=bsf_sf.idt.ill;
-	sf->idt.il=sll_allocate(sf->idt.ill*sizeof(sll_identifier_t));
-	sll_copy_data(bsf_sf.idt.il,sf->idt.ill*sizeof(sll_identifier_t),sf->idt.il);
+	sf->idt.long_data_length=bsf_sf.idt.long_data_length;
+	sf->idt.long_data=sll_allocate(sf->idt.long_data_length*sizeof(sll_identifier_t));
+	sll_copy_data(bsf_sf.idt.long_data,sf->idt.long_data_length*sizeof(sll_identifier_t),sf->idt.long_data);
 	sf->et.l=bsf_sf.et.l;
 	sf->et.dt=sll_allocate(sf->et.l*sizeof(sll_identifier_index_t));
 	sll_copy_data(bsf_sf.et.dt,sf->et.l*sizeof(sll_identifier_index_t),sf->et.dt);
