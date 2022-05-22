@@ -15,10 +15,10 @@ typedef __SLL_U8 object_creation_flags_t;
 
 
 typedef struct _STRUCT_OFFSET_BUILDER{
-	sll_size_t* off;
-	sll_arg_count_t l;
-	void** fn;
-	sll_arg_count_t fnl;
+	sll_size_t* offset_data;
+	sll_arg_count_t offset_count;
+	void** converter_function_data;
+	sll_arg_count_t converter_function_count;
 } struct_offset_builder_t;
 
 

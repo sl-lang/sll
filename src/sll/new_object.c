@@ -68,9 +68,9 @@ static void _build_struct_offsets(const sll_char_t** t,sll_string_length_t* tl,s
 	}
 	switch (st){
 		case '#':
-			o->fnl++;
-			o->fn=sll_reallocate(o->fn,o->fnl*sizeof(void*));
-			*(o->fn+o->fnl-1)=sll_var_arg_get(va);
+			o->converter_function_count++;
+			o->converter_function_data=sll_reallocate(o->converter_function_data,o->converter_function_count*sizeof(void*));
+			*(o->converter_function_data+o->converter_function_count-1)=sll_var_arg_get(va);
 		case 'p':
 			cnt=1;
 		case 'h':
@@ -86,11 +86,11 @@ static void _build_struct_offsets(const sll_char_t** t,sll_string_length_t* tl,s
 		case 'a':
 		case 'm':
 		case 'O':
-			o->l+=cnt;
-			o->off=sll_reallocate(o->off,o->l*sizeof(sll_size_t));
-			*(o->off+o->l-1)=sll_var_arg_get_int(va);
+			o->offset_count+=cnt;
+			o->offset_data=sll_reallocate(o->offset_data,o->offset_count*sizeof(sll_size_t));
+			*(o->offset_data+o->offset_count-1)=sll_var_arg_get_int(va);
 			if (cnt==2){
-				*(o->off+o->l-2)=sll_var_arg_get_int(va);
+				*(o->offset_data+o->offset_count-2)=sll_var_arg_get_int(va);
 			}
 			return;
 		case '(':
@@ -152,10 +152,10 @@ static sll_object_t* _build_struct(const sll_char_t** t,sll_string_length_t* tl,
 			{
 				.struct_={
 					(deref?*((const void**)ptr):(const void*)ptr),
-					off_dt.off,
-					off_dt.l,
-					off_dt.fn,
-					off_dt.fnl
+					off_dt.offset_data,
+					off_dt.offset_count,
+					off_dt.converter_function_data,
+					off_dt.converter_function_count
 				}
 			}
 		};
@@ -169,8 +169,8 @@ static sll_object_t* _build_struct(const sll_char_t** t,sll_string_length_t* tl,
 		}
 		sll_allocator_collapse((void**)(&(arg->data.array.data)),arg->data.array.length*sizeof(sll_object_t*));
 	}
-	sll_deallocate(off_dt.off);
-	sll_deallocate(off_dt.fn);
+	sll_deallocate(off_dt.offset_data);
+	sll_deallocate(off_dt.converter_function_data);
 	return o;
 }
 
