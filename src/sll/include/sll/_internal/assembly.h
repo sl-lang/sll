@@ -66,42 +66,42 @@ typedef struct _LOOP{
 typedef struct _ASSEMBLY_GENERATOR_DATA{
 	sll_assembly_data_t* assembly_data;
 	const sll_source_file_t* source_file;
-	identifier_map_data_t it;
-	assembly_instruction_label_t n_lbl;
-	identifier_remove_data_t rm;
-	loop_t l_dt;
-	assembly_instruction_label_t rt;
-	sll_stack_offset_t s_off;
-	sll_variable_index_t l_dt_vc;
+	identifier_map_data_t identifier_map;
+	assembly_instruction_label_t next_label;
+	identifier_remove_data_t identifier_remove_data;
+	loop_t loop_data;
+	assembly_instruction_label_t return_label;
+	sll_stack_offset_t stack_offset;
+	sll_variable_index_t loop_variable_count;
 } assembly_generator_data_t;
 
 
 
 typedef struct _ASSEMBLY_LOOP_GENERATOR_DATA{
-	loop_t p_l_dt;
-	bitmap_t* v_st;
+	loop_t last_loop_data;
+	bitmap_t* variable_data;
 } assembly_loop_generator_data_t;
 
 
 
 typedef struct _STRING_MAP_DATA{
-	sll_string_index_t ml;
-	bitmap_t* m;
-	sll_string_index_t* im;
+	sll_string_index_t map_length;
+	bitmap_t* map_data;
+	sll_string_index_t* new_indicies;
 } strint_map_data_t;
 
 
 
 typedef struct _NODE_LABEL{
-	const sll_node_t* o;
-	assembly_instruction_label_t l;
+	const sll_node_t* node;
+	assembly_instruction_label_t label;
 } node_label_t;
 
 
 
 typedef struct _FILE_LINE{
-	sll_file_offset_t ln;
-	sll_string_index_t fp;
+	sll_file_offset_t line;
+	sll_string_index_t file_path_string_index;
 } file_line_t;
 
 

@@ -42,14 +42,14 @@
 		} \
 	} while (0)
 #define GET_SIGN_ENCODED_INTEGER(x) ((x)<0?((~(x))<<1)|1:(x)<<1)
-#define GET_VARIABLE_INDEX(o,g_dt) (SLL_IDENTIFIER_GET_ARRAY_ID((o)->data.identifier_index)==SLL_MAX_SHORT_IDENTIFIER_LENGTH?((g_dt)->it.long_identifier_map+SLL_IDENTIFIER_GET_ARRAY_INDEX((o)->data.identifier_index))->variable:((g_dt)->it.short_identifier_map[SLL_IDENTIFIER_GET_ARRAY_ID((o)->data.identifier_index)]+SLL_IDENTIFIER_GET_ARRAY_INDEX((o)->data.identifier_index))->variable)
-#define NEXT_LABEL(g_dt) ((g_dt)->n_lbl++)
+#define GET_VARIABLE_INDEX(o,g_dt) (SLL_IDENTIFIER_GET_ARRAY_ID((o)->data.identifier_index)==SLL_MAX_SHORT_IDENTIFIER_LENGTH?((g_dt)->identifier_map.long_identifier_map+SLL_IDENTIFIER_GET_ARRAY_INDEX((o)->data.identifier_index))->variable:((g_dt)->identifier_map.short_identifier_map[SLL_IDENTIFIER_GET_ARRAY_ID((o)->data.identifier_index)]+SLL_IDENTIFIER_GET_ARRAY_INDEX((o)->data.identifier_index))->variable)
+#define NEXT_LABEL(g_dt) ((g_dt)->next_label++)
 
-#define PUSH (g_dt->s_off++)
-#define POP (g_dt->s_off--)
-#define POP2 (g_dt->s_off-=2)
-#define POP3 (g_dt->s_off-=3)
-#define POP_N(n) (g_dt->s_off-=(n))
+#define PUSH (g_dt->stack_offset++)
+#define POP (g_dt->stack_offset--)
+#define POP2 (g_dt->stack_offset-=2)
+#define POP3 (g_dt->stack_offset-=3)
+#define POP_N(n) (g_dt->stack_offset-=(n))
 
 
 
@@ -86,43 +86,43 @@ static const sll_node_t* _map_identifiers(const sll_node_t* o,const sll_source_f
 				sll_identifier_index_t j=SLL_IDENTIFIER_GET_ARRAY_ID(o->data.identifier_index);
 				if (j==SLL_MAX_SHORT_IDENTIFIER_LENGTH){
 					sll_identifier_t* id=sf->identifier_table.long_data+i;
-					if ((g_dt->it.long_identifier_map+i)->variable==SLL_MAX_VARIABLE_INDEX){
+					if ((g_dt->identifier_map.long_identifier_map+i)->variable==SLL_MAX_VARIABLE_INDEX){
 						if (SLL_IDENTIFIER_IS_TLS(id)){
-							(g_dt->it.long_identifier_map+i)->variable=(g_dt->it.tls_variable_count<<1)|1;
-							g_dt->it.tls_variable_count++;
+							(g_dt->identifier_map.long_identifier_map+i)->variable=(g_dt->identifier_map.tls_variable_count<<1)|1;
+							g_dt->identifier_map.tls_variable_count++;
 						}
 						else{
-							(g_dt->it.long_identifier_map+i)->variable=g_dt->it.variable_count<<1;
-							g_dt->it.variable_count++;
+							(g_dt->identifier_map.long_identifier_map+i)->variable=g_dt->identifier_map.variable_count<<1;
+							g_dt->identifier_map.variable_count++;
 						}
 					}
-					if (*(g_dt->rm.long_+i)!=VARIABLE_OFFSET_NEVER_DELETE){
+					if (*(g_dt->identifier_remove_data.long_+i)!=VARIABLE_OFFSET_NEVER_DELETE){
 						if (fn_sc==SLL_MAX_SCOPE||id->scope>=fn_sc){
-							*(g_dt->rm.long_+i)=PTR(o);
+							*(g_dt->identifier_remove_data.long_+i)=PTR(o);
 						}
 						else{
-							*(g_dt->rm.long_+i)=VARIABLE_OFFSET_NEVER_DELETE;
+							*(g_dt->identifier_remove_data.long_+i)=VARIABLE_OFFSET_NEVER_DELETE;
 						}
 					}
 				}
 				else{
 					sll_identifier_t* id=sf->identifier_table.short_[j].data+i;
-					if ((g_dt->it.short_identifier_map[j]+i)->variable==SLL_MAX_VARIABLE_INDEX){
+					if ((g_dt->identifier_map.short_identifier_map[j]+i)->variable==SLL_MAX_VARIABLE_INDEX){
 						if (SLL_IDENTIFIER_IS_TLS(id)){
-							(g_dt->it.short_identifier_map[j]+i)->variable=(g_dt->it.tls_variable_count<<1)|1;
-							g_dt->it.tls_variable_count++;
+							(g_dt->identifier_map.short_identifier_map[j]+i)->variable=(g_dt->identifier_map.tls_variable_count<<1)|1;
+							g_dt->identifier_map.tls_variable_count++;
 						}
 						else{
-							(g_dt->it.short_identifier_map[j]+i)->variable=g_dt->it.variable_count<<1;
-							g_dt->it.variable_count++;
+							(g_dt->identifier_map.short_identifier_map[j]+i)->variable=g_dt->identifier_map.variable_count<<1;
+							g_dt->identifier_map.variable_count++;
 						}
 					}
-					if (*(g_dt->rm.short_[j]+i)!=VARIABLE_OFFSET_NEVER_DELETE){
+					if (*(g_dt->identifier_remove_data.short_[j]+i)!=VARIABLE_OFFSET_NEVER_DELETE){
 						if (fn_sc==SLL_MAX_SCOPE||id->scope>=fn_sc){
-							*(g_dt->rm.short_[j]+i)=PTR(o);
+							*(g_dt->identifier_remove_data.short_[j]+i)=PTR(o);
 						}
 						else{
-							*(g_dt->rm.short_[j]+i)=VARIABLE_OFFSET_NEVER_DELETE;
+							*(g_dt->identifier_remove_data.short_[j]+i)=VARIABLE_OFFSET_NEVER_DELETE;
 						}
 					}
 				}
@@ -327,16 +327,16 @@ static void _generate_identifier(const sll_node_t* n,assembly_generator_data_t* 
 	sll_assembly_instruction_t* ai=_acquire_next_instruction(g_dt->assembly_data);
 	ai->type=SLL_ASSEMBLY_INSTRUCTION_TYPE_LOAD;
 	if (SLL_IDENTIFIER_GET_ARRAY_ID(n->data.identifier_index)==SLL_MAX_SHORT_IDENTIFIER_LENGTH){
-		if (*(g_dt->rm.long_+SLL_IDENTIFIER_GET_ARRAY_INDEX(n->data.identifier_index))==n){
+		if (*(g_dt->identifier_remove_data.long_+SLL_IDENTIFIER_GET_ARRAY_INDEX(n->data.identifier_index))==n){
 			ai->type=SLL_ASSEMBLY_INSTRUCTION_TYPE_LOAD_DEL;
 		}
-		ai->data.variable=(g_dt->it.long_identifier_map+SLL_IDENTIFIER_GET_ARRAY_INDEX(n->data.identifier_index))->variable;
+		ai->data.variable=(g_dt->identifier_map.long_identifier_map+SLL_IDENTIFIER_GET_ARRAY_INDEX(n->data.identifier_index))->variable;
 	}
 	else{
-		if (*(g_dt->rm.short_[SLL_IDENTIFIER_GET_ARRAY_ID(n->data.identifier_index)]+SLL_IDENTIFIER_GET_ARRAY_INDEX(n->data.identifier_index))==n){
+		if (*(g_dt->identifier_remove_data.short_[SLL_IDENTIFIER_GET_ARRAY_ID(n->data.identifier_index)]+SLL_IDENTIFIER_GET_ARRAY_INDEX(n->data.identifier_index))==n){
 			ai->type=SLL_ASSEMBLY_INSTRUCTION_TYPE_LOAD_DEL;
 		}
-		ai->data.variable=(g_dt->it.short_identifier_map[SLL_IDENTIFIER_GET_ARRAY_ID(n->data.identifier_index)]+SLL_IDENTIFIER_GET_ARRAY_INDEX(n->data.identifier_index))->variable;
+		ai->data.variable=(g_dt->identifier_map.short_identifier_map[SLL_IDENTIFIER_GET_ARRAY_ID(n->data.identifier_index)]+SLL_IDENTIFIER_GET_ARRAY_INDEX(n->data.identifier_index))->variable;
 	}
 	PUSH;
 }
@@ -634,8 +634,8 @@ static const sll_node_t* _generate_call_array(const sll_node_t* o,assembly_gener
 static const sll_node_t* _generate_inline_function(const sll_node_t* o,assembly_generator_data_t* g_dt){
 	SLL_ASSERT(o->type==SLL_NODE_TYPE_INLINE_FUNC);
 	assembly_instruction_label_t e=NEXT_LABEL(g_dt);
-	assembly_instruction_label_t p_rt=g_dt->rt;
-	g_dt->rt=e;
+	assembly_instruction_label_t p_rt=g_dt->return_label;
+	g_dt->return_label=e;
 	sll_arg_count_t l=o->data.arg_count;
 	o++;
 	while (l){
@@ -645,7 +645,7 @@ static const sll_node_t* _generate_inline_function(const sll_node_t* o,assembly_
 	GENERATE_OPCODE(g_dt,SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_ZERO);
 	PUSH;
 	DEFINE_LABEL(g_dt,e);
-	g_dt->rt=p_rt;
+	g_dt->return_label=p_rt;
 	return o;
 }
 
@@ -661,7 +661,7 @@ static const sll_node_t* _generate_assign(const sll_node_t* o,assembly_generator
 	}
 	const sll_node_t* io=o;
 	if (io->type==SLL_NODE_TYPE_IDENTIFIER){
-		if ((SLL_IDENTIFIER_GET_ARRAY_ID(io->data.identifier_index)==SLL_MAX_SHORT_IDENTIFIER_LENGTH&&*(g_dt->rm.long_+SLL_IDENTIFIER_GET_ARRAY_INDEX(io->data.identifier_index))==io)||(SLL_IDENTIFIER_GET_ARRAY_ID(io->data.identifier_index)!=SLL_MAX_SHORT_IDENTIFIER_LENGTH&&*(g_dt->rm.short_[SLL_IDENTIFIER_GET_ARRAY_ID(io->data.identifier_index)]+SLL_IDENTIFIER_GET_ARRAY_INDEX(io->data.identifier_index))==io)){
+		if ((SLL_IDENTIFIER_GET_ARRAY_ID(io->data.identifier_index)==SLL_MAX_SHORT_IDENTIFIER_LENGTH&&*(g_dt->identifier_remove_data.long_+SLL_IDENTIFIER_GET_ARRAY_INDEX(io->data.identifier_index))==io)||(SLL_IDENTIFIER_GET_ARRAY_ID(io->data.identifier_index)!=SLL_MAX_SHORT_IDENTIFIER_LENGTH&&*(g_dt->identifier_remove_data.short_[SLL_IDENTIFIER_GET_ARRAY_ID(io->data.identifier_index)]+SLL_IDENTIFIER_GET_ARRAY_INDEX(io->data.identifier_index))==io)){
 			o++;
 			l--;
 			do{
@@ -826,17 +826,17 @@ static const sll_node_t* _mark_loop_delete(const sll_node_t* o,const assembly_ge
 				sll_identifier_index_t i=SLL_IDENTIFIER_GET_ARRAY_INDEX(o->data.identifier_index);
 				if (SLL_IDENTIFIER_GET_ARRAY_ID(o->data.identifier_index)==SLL_MAX_SHORT_IDENTIFIER_LENGTH){
 					sll_identifier_t* id=g_dt->source_file->identifier_table.long_data+i;
-					if (id->scope<=sc&&*(g_dt->rm.long_+i)==o){
-						*(g_dt->rm.long_+i)=VARIABLE_OFFSET_NEVER_DELETE;
-						sll_variable_index_t k=(g_dt->it.long_identifier_map+SLL_IDENTIFIER_GET_ARRAY_INDEX(o->data.identifier_index))->variable;
+					if (id->scope<=sc&&*(g_dt->identifier_remove_data.long_+i)==o){
+						*(g_dt->identifier_remove_data.long_+i)=VARIABLE_OFFSET_NEVER_DELETE;
+						sll_variable_index_t k=(g_dt->identifier_map.long_identifier_map+SLL_IDENTIFIER_GET_ARRAY_INDEX(o->data.identifier_index))->variable;
 						*(v_st+(k>>6))|=1ull<<(k&63);
 					}
 				}
 				else{
 					sll_identifier_t* id=g_dt->source_file->identifier_table.short_[SLL_IDENTIFIER_GET_ARRAY_ID(o->data.identifier_index)].data+i;
-					if (id->scope<=sc&&*(g_dt->rm.short_[SLL_IDENTIFIER_GET_ARRAY_ID(o->data.identifier_index)]+i)==o){
-						*(g_dt->rm.short_[SLL_IDENTIFIER_GET_ARRAY_ID(o->data.identifier_index)]+i)=VARIABLE_OFFSET_NEVER_DELETE;
-						sll_variable_index_t k=(g_dt->it.short_identifier_map[SLL_IDENTIFIER_GET_ARRAY_ID(o->data.identifier_index)]+SLL_IDENTIFIER_GET_ARRAY_INDEX(o->data.identifier_index))->variable;
+					if (id->scope<=sc&&*(g_dt->identifier_remove_data.short_[SLL_IDENTIFIER_GET_ARRAY_ID(o->data.identifier_index)]+i)==o){
+						*(g_dt->identifier_remove_data.short_[SLL_IDENTIFIER_GET_ARRAY_ID(o->data.identifier_index)]+i)=VARIABLE_OFFSET_NEVER_DELETE;
+						sll_variable_index_t k=(g_dt->identifier_map.short_identifier_map[SLL_IDENTIFIER_GET_ARRAY_ID(o->data.identifier_index)]+SLL_IDENTIFIER_GET_ARRAY_INDEX(o->data.identifier_index))->variable;
 						*(v_st+(k>>6))|=1ull<<(k&63);
 					}
 				}
@@ -882,10 +882,10 @@ static const sll_node_t* _mark_loop_delete(const sll_node_t* o,const assembly_ge
 
 
 static void _init_loop_data(assembly_generator_data_t* g_dt,assembly_loop_generator_data_t* lg_dt,assembly_instruction_label_t cnt,assembly_instruction_label_t brk){
-	lg_dt->p_l_dt=g_dt->l_dt;
-	g_dt->l_dt.continue_=cnt;
-	g_dt->l_dt.break_=brk;
-	lg_dt->v_st=sll_zero_allocate(g_dt->l_dt_vc*sizeof(bitmap_t));
+	lg_dt->last_loop_data=g_dt->loop_data;
+	g_dt->loop_data.continue_=cnt;
+	g_dt->loop_data.break_=brk;
+	lg_dt->variable_data=sll_zero_allocate(g_dt->loop_variable_count*sizeof(bitmap_t));
 }
 
 
@@ -898,7 +898,7 @@ static const sll_node_t* _generate_loop_start(assembly_generator_data_t* g_dt,co
 	o=_generate(o+1,g_dt);
 	const sll_node_t* cnd=o;
 	for (sll_arg_count_t i=0;i<l;i++){
-		o=_mark_loop_delete(o,g_dt,lg_dt->v_st,sc);
+		o=_mark_loop_delete(o,g_dt,lg_dt->variable_data,sc);
 	}
 	return cnd;
 }
@@ -906,9 +906,9 @@ static const sll_node_t* _generate_loop_start(assembly_generator_data_t* g_dt,co
 
 
 static void _generate_loop_end(assembly_generator_data_t* g_dt,assembly_loop_generator_data_t* lg_dt){
-	g_dt->l_dt=lg_dt->p_l_dt;
-	for (sll_variable_index_t i=0;i<g_dt->l_dt_vc;i++){
-		bitmap_t v=*(lg_dt->v_st+i);
+	g_dt->loop_data=lg_dt->last_loop_data;
+	for (sll_variable_index_t i=0;i<g_dt->loop_variable_count;i++){
+		bitmap_t v=*(lg_dt->variable_data+i);
 		while (v){
 			sll_assembly_instruction_t* ai=_acquire_next_instruction(g_dt->assembly_data);
 			ai->type=SLL_ASSEMBLY_INSTRUCTION_TYPE_DEL;
@@ -916,7 +916,7 @@ static void _generate_loop_end(assembly_generator_data_t* g_dt,assembly_loop_gen
 			v&=v-1;
 		}
 	}
-	sll_deallocate(lg_dt->v_st);
+	sll_deallocate(lg_dt->variable_data);
 }
 
 
@@ -1640,17 +1640,17 @@ static const sll_node_t* _generate(const sll_node_t* o,assembly_generator_data_t
 		case SLL_NODE_TYPE_IDENTIFIER:
 			{
 				if (SLL_IDENTIFIER_GET_ARRAY_ID(o->data.identifier_index)==SLL_MAX_SHORT_IDENTIFIER_LENGTH){
-					if (*(g_dt->rm.long_+SLL_IDENTIFIER_GET_ARRAY_INDEX(o->data.identifier_index))==o){
+					if (*(g_dt->identifier_remove_data.long_+SLL_IDENTIFIER_GET_ARRAY_INDEX(o->data.identifier_index))==o){
 						sll_assembly_instruction_t* ai=_acquire_next_instruction(g_dt->assembly_data);
 						ai->type=SLL_ASSEMBLY_INSTRUCTION_TYPE_DEL;
-						ai->data.variable=(g_dt->it.long_identifier_map+SLL_IDENTIFIER_GET_ARRAY_INDEX(o->data.identifier_index))->variable;
+						ai->data.variable=(g_dt->identifier_map.long_identifier_map+SLL_IDENTIFIER_GET_ARRAY_INDEX(o->data.identifier_index))->variable;
 					}
 				}
 				else{
-					if (*(g_dt->rm.short_[SLL_IDENTIFIER_GET_ARRAY_ID(o->data.identifier_index)]+SLL_IDENTIFIER_GET_ARRAY_INDEX(o->data.identifier_index))==o){
+					if (*(g_dt->identifier_remove_data.short_[SLL_IDENTIFIER_GET_ARRAY_ID(o->data.identifier_index)]+SLL_IDENTIFIER_GET_ARRAY_INDEX(o->data.identifier_index))==o){
 						sll_assembly_instruction_t* ai=_acquire_next_instruction(g_dt->assembly_data);
 						ai->type=SLL_ASSEMBLY_INSTRUCTION_TYPE_DEL;
-						ai->data.variable=(g_dt->it.short_identifier_map[SLL_IDENTIFIER_GET_ARRAY_ID(o->data.identifier_index)]+SLL_IDENTIFIER_GET_ARRAY_INDEX(o->data.identifier_index))->variable;
+						ai->data.variable=(g_dt->identifier_map.short_identifier_map[SLL_IDENTIFIER_GET_ARRAY_ID(o->data.identifier_index)]+SLL_IDENTIFIER_GET_ARRAY_INDEX(o->data.identifier_index))->variable;
 					}
 				}
 				return o+1;
@@ -1766,8 +1766,8 @@ static const sll_node_t* _generate(const sll_node_t* o,assembly_generator_data_t
 					o=_generate_on_stack(o,g_dt);
 					GENERATE_OPCODE_WITH_LABEL(g_dt,SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_LABEL,j);
 					PUSH;
-					(m+i)->o=o;
-					(m+i)->l=j;
+					(m+i)->node=o;
+					(m+i)->label=j;
 					i++;
 					o=sll_skip_node_const(o);
 				}
@@ -1776,14 +1776,14 @@ static const sll_node_t* _generate(const sll_node_t* o,assembly_generator_data_t
 					assembly_instruction_label_t j=NEXT_LABEL(g_dt);
 					GENERATE_OPCODE_WITH_LABEL(g_dt,SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_LABEL,j);
 					PUSH;
-					(m+i)->o=o;
-					(m+i)->l=j;
+					(m+i)->node=o;
+					(m+i)->label=j;
 				}
 				else{
 					GENERATE_OPCODE_WITH_LABEL(g_dt,SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_LABEL,e);
 					PUSH;
-					(m+i)->o=NULL;
-					(m+i)->l=e;
+					(m+i)->node=NULL;
+					(m+i)->label=e;
 				}
 				sll_assembly_instruction_t* ai=_acquire_next_instruction(g_dt->assembly_data);
 				ai->type=SLL_ASSEMBLY_INSTRUCTION_TYPE_JT;
@@ -1791,9 +1791,9 @@ static const sll_node_t* _generate(const sll_node_t* o,assembly_generator_data_t
 				POP_N(i*2+1);
 				o=r+1;
 				for (sll_arg_count_t j=0;j<=i;j++){
-					if ((m+j)->o){
-						DEFINE_LABEL(g_dt,(m+j)->l);
-						o=_generate((m+j)->o,g_dt);
+					if ((m+j)->node){
+						DEFINE_LABEL(g_dt,(m+j)->label);
+						o=_generate((m+j)->node,g_dt);
 						GENERATE_OPCODE_WITH_LABEL(g_dt,SLL_ASSEMBLY_INSTRUCTION_TYPE_JMP,e);
 					}
 				}
@@ -1866,16 +1866,16 @@ static const sll_node_t* _generate(const sll_node_t* o,assembly_generator_data_t
 				sll_assembly_instruction_t* ai=_acquire_next_instruction(g_dt->assembly_data);
 				ai->type=ai_t|SLL_ASSEMBLY_INSTRUCTION_FLAG_INPLACE;
 				if (SLL_IDENTIFIER_GET_ARRAY_ID(o->data.identifier_index)==SLL_MAX_SHORT_IDENTIFIER_LENGTH){
-					if (*(g_dt->rm.long_+SLL_IDENTIFIER_GET_ARRAY_INDEX(o->data.identifier_index))==o){
+					if (*(g_dt->identifier_remove_data.long_+SLL_IDENTIFIER_GET_ARRAY_INDEX(o->data.identifier_index))==o){
 						SLL_UNIMPLEMENTED();
 					}
-					ai->data.variable=(g_dt->it.long_identifier_map+SLL_IDENTIFIER_GET_ARRAY_INDEX(o->data.identifier_index))->variable;
+					ai->data.variable=(g_dt->identifier_map.long_identifier_map+SLL_IDENTIFIER_GET_ARRAY_INDEX(o->data.identifier_index))->variable;
 				}
 				else{
-					if (*(g_dt->rm.short_[SLL_IDENTIFIER_GET_ARRAY_ID(o->data.identifier_index)]+SLL_IDENTIFIER_GET_ARRAY_INDEX(o->data.identifier_index))==o){
+					if (*(g_dt->identifier_remove_data.short_[SLL_IDENTIFIER_GET_ARRAY_ID(o->data.identifier_index)]+SLL_IDENTIFIER_GET_ARRAY_INDEX(o->data.identifier_index))==o){
 						SLL_UNIMPLEMENTED();
 					}
-					ai->data.variable=(g_dt->it.short_identifier_map[SLL_IDENTIFIER_GET_ARRAY_ID(o->data.identifier_index)]+SLL_IDENTIFIER_GET_ARRAY_INDEX(o->data.identifier_index))->variable;
+					ai->data.variable=(g_dt->identifier_map.short_identifier_map[SLL_IDENTIFIER_GET_ARRAY_ID(o->data.identifier_index)]+SLL_IDENTIFIER_GET_ARRAY_INDEX(o->data.identifier_index))->variable;
 				}
 				l--;
 				o++;
@@ -1909,12 +1909,12 @@ static const sll_node_t* _generate(const sll_node_t* o,assembly_generator_data_t
 					l--;
 					o=_generate(o,g_dt);
 				}
-				if (g_dt->l_dt.break_==MAX_ASSEMBLY_INSTRUCTION_LABEL){
+				if (g_dt->loop_data.break_==MAX_ASSEMBLY_INSTRUCTION_LABEL){
 					GENERATE_OPCODE(g_dt,SLL_ASSEMBLY_INSTRUCTION_TYPE_RET_ZERO);
 					PUSH;
 				}
 				else{
-					GENERATE_OPCODE_WITH_LABEL(g_dt,SLL_ASSEMBLY_INSTRUCTION_TYPE_JMP,g_dt->l_dt.break_);
+					GENERATE_OPCODE_WITH_LABEL(g_dt,SLL_ASSEMBLY_INSTRUCTION_TYPE_JMP,g_dt->loop_data.break_);
 				}
 				return o;
 			}
@@ -1926,12 +1926,12 @@ static const sll_node_t* _generate(const sll_node_t* o,assembly_generator_data_t
 					l--;
 					o=_generate(o,g_dt);
 				}
-				if (g_dt->l_dt.continue_==MAX_ASSEMBLY_INSTRUCTION_LABEL){
+				if (g_dt->loop_data.continue_==MAX_ASSEMBLY_INSTRUCTION_LABEL){
 					GENERATE_OPCODE(g_dt,SLL_ASSEMBLY_INSTRUCTION_TYPE_RET_ZERO);
 					PUSH;
 				}
 				else{
-					GENERATE_OPCODE_WITH_LABEL(g_dt,SLL_ASSEMBLY_INSTRUCTION_TYPE_JMP,g_dt->l_dt.continue_);
+					GENERATE_OPCODE_WITH_LABEL(g_dt,SLL_ASSEMBLY_INSTRUCTION_TYPE_JMP,g_dt->loop_data.continue_);
 				}
 				return o;
 			}
@@ -1952,12 +1952,12 @@ static const sll_node_t* _generate(const sll_node_t* o,assembly_generator_data_t
 					}
 				}
 				sll_assembly_instruction_t* ai=_acquire_next_instruction(g_dt->assembly_data);
-				if (g_dt->rt==MAX_ASSEMBLY_INSTRUCTION_LABEL){
+				if (g_dt->return_label==MAX_ASSEMBLY_INSTRUCTION_LABEL){
 					ai->type=SLL_ASSEMBLY_INSTRUCTION_TYPE_RET;
 				}
 				else{
 					ai->type=SLL_ASSEMBLY_INSTRUCTION_TYPE_JMP|ASSEMBLY_INSTRUCTION_FLAG_LABEL;
-					ASSEMBLY_INSTRUCTION_MISC_FIELD_SET(ai,g_dt->rt);
+					ASSEMBLY_INSTRUCTION_MISC_FIELD_SET(ai,g_dt->return_label);
 				}
 				return o;
 			}
@@ -2088,35 +2088,35 @@ __SLL_EXTERNAL void sll_generate_assembly(const sll_source_file_t* sf,sll_assemb
 		0
 	};
 	for (sll_identifier_index_t i=0;i<SLL_MAX_SHORT_IDENTIFIER_LENGTH;i++){
-		g_dt.it.short_identifier_map[i]=sll_allocate(sf->identifier_table.short_[i].length*sizeof(identifier_data_t));
-		g_dt.rm.short_[i]=sll_allocate(sf->identifier_table.short_[i].length*sizeof(void*));
+		g_dt.identifier_map.short_identifier_map[i]=sll_allocate(sf->identifier_table.short_[i].length*sizeof(identifier_data_t));
+		g_dt.identifier_remove_data.short_[i]=sll_allocate(sf->identifier_table.short_[i].length*sizeof(void*));
 		for (sll_identifier_list_length_t j=0;j<sf->identifier_table.short_[i].length;j++){
-			(g_dt.it.short_identifier_map[i]+j)->variable=SLL_MAX_VARIABLE_INDEX;
-			*(g_dt.rm.short_[i]+j)=NULL;
+			(g_dt.identifier_map.short_identifier_map[i]+j)->variable=SLL_MAX_VARIABLE_INDEX;
+			*(g_dt.identifier_remove_data.short_[i]+j)=NULL;
 		}
 	}
 	for (sll_identifier_list_length_t i=0;i<sf->identifier_table.long_data_length;i++){
-		(g_dt.it.long_identifier_map+i)->variable=SLL_MAX_VARIABLE_INDEX;
-		*(g_dt.rm.long_+i)=NULL;
+		(g_dt.identifier_map.long_identifier_map+i)->variable=SLL_MAX_VARIABLE_INDEX;
+		*(g_dt.identifier_remove_data.long_+i)=NULL;
 	}
 	_map_identifiers(sf->first_node,sf,&g_dt,SLL_MAX_SCOPE);
-	sll_variable_index_t g_vc=g_dt.it.variable_count;
+	sll_variable_index_t g_vc=g_dt.identifier_map.variable_count;
 	sll_variable_index_t mx_vc=g_vc;
 	sll_variable_index_t* fn_vc=sll_allocate_stack(sf->function_table.length*sizeof(sll_variable_index_t));
 	for (sll_function_index_t i=0;i<sf->function_table.length;i++){
-		g_dt.it.variable_count=g_vc;
+		g_dt.identifier_map.variable_count=g_vc;
 		const sll_function_t* k=*(sf->function_table.data+i);
 		for (sll_arg_count_t j=0;j<SLL_FUNCTION_GET_ARGUMENT_COUNT(k);j++){
 			sll_identifier_index_t ii=k->args[j];
 			if (SLL_IDENTIFIER_GET_ARRAY_ID(ii)==SLL_MAX_SHORT_IDENTIFIER_LENGTH){
-				(g_dt.it.long_identifier_map+SLL_IDENTIFIER_GET_ARRAY_INDEX(ii))->variable=g_dt.it.variable_count<<1;
+				(g_dt.identifier_map.long_identifier_map+SLL_IDENTIFIER_GET_ARRAY_INDEX(ii))->variable=g_dt.identifier_map.variable_count<<1;
 			}
 			else{
-				(g_dt.it.short_identifier_map[SLL_IDENTIFIER_GET_ARRAY_ID(ii)]+SLL_IDENTIFIER_GET_ARRAY_INDEX(ii))->variable=g_dt.it.variable_count<<1;
+				(g_dt.identifier_map.short_identifier_map[SLL_IDENTIFIER_GET_ARRAY_ID(ii)]+SLL_IDENTIFIER_GET_ARRAY_INDEX(ii))->variable=g_dt.identifier_map.variable_count<<1;
 			}
-			g_dt.it.variable_count++;
+			g_dt.identifier_map.variable_count++;
 		}
-		g_dt.s_off=0;
+		g_dt.stack_offset=0;
 		const sll_node_t* fo=_get_node_at_offset(sf,k->offset);
 		SLL_ASSERT(fo->type==SLL_NODE_TYPE_FUNC);
 		sll_arg_count_t ac=fo->data.function.arg_count;
@@ -2126,21 +2126,21 @@ __SLL_EXTERNAL void sll_generate_assembly(const sll_source_file_t* sf,sll_assemb
 			ac--;
 			fo=_map_identifiers(fo,sf,&g_dt,sc);
 		}
-		*(fn_vc+i)=g_dt.it.variable_count-g_vc-SLL_FUNCTION_GET_ARGUMENT_COUNT(k);
-		if (g_dt.it.variable_count>mx_vc){
-			mx_vc=g_dt.it.variable_count;
+		*(fn_vc+i)=g_dt.identifier_map.variable_count-g_vc-SLL_FUNCTION_GET_ARGUMENT_COUNT(k);
+		if (g_dt.identifier_map.variable_count>mx_vc){
+			mx_vc=g_dt.identifier_map.variable_count;
 		}
 	}
 	o->variable_count=g_vc;
-	o->tls_variable_count=g_dt.it.tls_variable_count;
-	g_dt.l_dt_vc=(o->tls_variable_count<<1)+1;
-	if (g_dt.l_dt_vc<(mx_vc<<1)){
-		g_dt.l_dt_vc=mx_vc<<1;
+	o->tls_variable_count=g_dt.identifier_map.tls_variable_count;
+	g_dt.loop_variable_count=(o->tls_variable_count<<1)+1;
+	if (g_dt.loop_variable_count<(mx_vc<<1)){
+		g_dt.loop_variable_count=mx_vc<<1;
 	}
-	g_dt.l_dt_vc=(g_dt.l_dt_vc+63)>>6;
-	g_dt.s_off=0;
+	g_dt.loop_variable_count=(g_dt.loop_variable_count+63)>>6;
+	g_dt.stack_offset=0;
 	_generate(sf->first_node,&g_dt);
-	SLL_ASSERT(g_dt.rt==MAX_ASSEMBLY_INSTRUCTION_LABEL);
+	SLL_ASSERT(g_dt.return_label==MAX_ASSEMBLY_INSTRUCTION_LABEL);
 	GENERATE_OPCODE(&g_dt,SLL_ASSEMBLY_INSTRUCTION_TYPE_RET_ZERO);
 	o->function_table.length=sf->function_table.length;
 	o->function_table.data=sll_allocate(sf->function_table.length*sizeof(sll_assembly_function_t));
@@ -2168,7 +2168,7 @@ __SLL_EXTERNAL void sll_generate_assembly(const sll_source_file_t* sf,sll_assemb
 		const sll_node_t* fo=_get_node_at_offset(sf,k->offset);
 		SLL_ASSERT(fo->type==SLL_NODE_TYPE_FUNC);
 		sll_arg_count_t ac=fo->data.function.arg_count;
-		g_dt.s_off=0;
+		g_dt.stack_offset=0;
 		fo++;
 		while (ac){
 			ac--;
@@ -2178,11 +2178,11 @@ __SLL_EXTERNAL void sll_generate_assembly(const sll_source_file_t* sf,sll_assemb
 	}
 	sll_deallocate(fn_vc);
 	for (sll_identifier_index_t i=0;i<SLL_MAX_SHORT_IDENTIFIER_LENGTH;i++){
-		sll_deallocate(g_dt.it.short_identifier_map[i]);
-		sll_deallocate(g_dt.rm.short_[i]);
+		sll_deallocate(g_dt.identifier_map.short_identifier_map[i]);
+		sll_deallocate(g_dt.identifier_remove_data.short_[i]);
 	}
-	sll_deallocate(g_dt.it.long_identifier_map);
-	sll_deallocate(g_dt.rm.long_);
+	sll_deallocate(g_dt.identifier_map.long_identifier_map);
+	sll_deallocate(g_dt.identifier_remove_data.long_);
 	sll_assembly_instruction_t* ai=o->first_instruction;
 	sll_assembly_instruction_t* st[5]={
 		&_assembly_nop,
@@ -2223,12 +2223,12 @@ __SLL_EXTERNAL void sll_generate_assembly(const sll_source_file_t* sf,sll_assemb
 		(o->string_table.length>>6)+1,
 		sll_allocate(((o->string_table.length>>6)+1)*sizeof(bitmap_t))
 	};
-	for (sll_string_index_t i=0;i<sm.ml;i++){
-		*(sm.m+i)=0;
+	for (sll_string_index_t i=0;i<sm.map_length;i++){
+		*(sm.map_data+i)=0;
 	}
 	for (sll_function_index_t i=0;i<o->function_table.length;i++){
 		sll_string_index_t j=(o->function_table.data+i)->name_string_index;
-		*(sm.m+(j>>6))|=1ull<<(j&63);
+		*(sm.map_data+(j>>6))|=1ull<<(j&63);
 	}
 	ai=o->first_instruction;
 	o->debug_data.data=sll_allocate(o->debug_data.length*sizeof(sll_debug_line_data_t));
@@ -2237,7 +2237,7 @@ __SLL_EXTERNAL void sll_generate_assembly(const sll_source_file_t* sf,sll_assemb
 	sll_string_index_t f_idx=0;
 	sll_instruction_index_t l_dbg_ii=0;
 	sll_assembly_instruction_t* s=ai;
-	sll_instruction_index_t* lbl=sll_allocate(g_dt.n_lbl*sizeof(sll_instruction_index_t));
+	sll_instruction_index_t* lbl=sll_allocate(g_dt.next_label*sizeof(sll_instruction_index_t));
 	file_line_t* fn_ln=sll_allocate(sf->function_table.length*sizeof(file_line_t));
 	{
 		sll_instruction_index_t i=0;
@@ -2253,7 +2253,7 @@ _remove_nop:
 			}
 			*ai=*s;
 			if (ai->type==SLL_ASSEMBLY_INSTRUCTION_TYPE_LOADS||ai->type==SLL_ASSEMBLY_INSTRUCTION_TYPE_LOOKUP_STR||ai->type==SLL_ASSEMBLY_INSTRUCTION_TYPE_PRINT_STR||ai->type==SLL_ASSEMBLY_INSTRUCTION_TYPE_RET_STR){
-				*(sm.m+(ai->data.string_index>>6))|=1ull<<(ai->data.string_index&63);
+				*(sm.map_data+(ai->data.string_index>>6))|=1ull<<(ai->data.string_index&63);
 			}
 			else if (ai->type==ASSEMBLY_INSTRUCTION_TYPE_DBG){
 				if (ai->data.string_index==SLL_MAX_STRING_INDEX){
@@ -2267,7 +2267,7 @@ _remove_nop:
 				else if (f_idx!=ai->data.string_index){
 					(o->debug_data.data+dbg_i)->delta_instruction_index=i-l_dbg_ii;
 					SLL_DEBUG_LINE_DATA_SET_DATA(o->debug_data.data+dbg_i,ai->data.string_index,SLL_DEBUG_LINE_DATA_FLAG_FILE);
-					*(sm.m+(ai->data.string_index>>6))|=1ull<<(ai->data.string_index&63);
+					*(sm.map_data+(ai->data.string_index>>6))|=1ull<<(ai->data.string_index&63);
 					f_off=0;
 					f_idx=ai->data.string_index;
 					dbg_i++;
@@ -2276,14 +2276,14 @@ _remove_nop:
 				goto _remove_nop;
 			}
 			else if (ai->type==ASSEMBLY_INSTRUCTION_TYPE_DBG_FUNC){
-				(fn_ln+ASSEMBLY_INSTRUCTION_MISC_FIELD_GET(ai))->ln=f_off;
-				(fn_ln+ASSEMBLY_INSTRUCTION_MISC_FIELD_GET(ai))->fp=f_idx;
+				(fn_ln+ASSEMBLY_INSTRUCTION_MISC_FIELD_GET(ai))->line=f_off;
+				(fn_ln+ASSEMBLY_INSTRUCTION_MISC_FIELD_GET(ai))->file_path_string_index=f_idx;
 				goto _remove_nop;
 			}
 			else if (ai->type==ASSEMBLY_INSTRUCTION_TYPE_FUNC_START){
 				(o->function_table.data+ASSEMBLY_INSTRUCTION_MISC_FIELD_GET(ai))->instruction_index=i;
-				if (f_idx!=(fn_ln+ASSEMBLY_INSTRUCTION_MISC_FIELD_GET(ai))->fp){
-					f_idx=(fn_ln+ASSEMBLY_INSTRUCTION_MISC_FIELD_GET(ai))->fp;
+				if (f_idx!=(fn_ln+ASSEMBLY_INSTRUCTION_MISC_FIELD_GET(ai))->file_path_string_index){
+					f_idx=(fn_ln+ASSEMBLY_INSTRUCTION_MISC_FIELD_GET(ai))->file_path_string_index;
 					(o->debug_data.data+dbg_i)->delta_instruction_index=i-l_dbg_ii;
 					SLL_DEBUG_LINE_DATA_SET_DATA(o->debug_data.data+dbg_i,f_idx,SLL_DEBUG_LINE_DATA_FLAG_FILE);
 					dbg_i++;
@@ -2292,7 +2292,7 @@ _remove_nop:
 				(o->debug_data.data+dbg_i)->delta_instruction_index=i-l_dbg_ii;
 				SLL_DEBUG_LINE_DATA_SET_DATA(o->debug_data.data+dbg_i,(o->function_table.data+ASSEMBLY_INSTRUCTION_MISC_FIELD_GET(ai))->name_string_index,SLL_DEBUG_LINE_DATA_FLAG_FUNC);
 				dbg_i++;
-				f_off=(fn_ln+ASSEMBLY_INSTRUCTION_MISC_FIELD_GET(ai))->ln;
+				f_off=(fn_ln+ASSEMBLY_INSTRUCTION_MISC_FIELD_GET(ai))->line;
 				(o->debug_data.data+dbg_i)->delta_instruction_index=0;
 				SLL_DEBUG_LINE_DATA_SET_DATA(o->debug_data.data+dbg_i,f_off,0);
 				dbg_i++;
@@ -2326,11 +2326,11 @@ _remove_nop:
 	sll_deallocate(fn_ln);
 	o->debug_data.data=sll_reallocate(o->debug_data.data,dbg_i*sizeof(sll_debug_line_data_t));
 	o->debug_data.length=dbg_i;
-	sm.im=sll_allocate(o->string_table.length*sizeof(sll_string_index_t));
+	sm.new_indicies=sll_allocate(o->string_table.length*sizeof(sll_string_index_t));
 	sll_string_index_t k=0;
 	sll_string_index_t l=0;
-	for (sll_string_index_t i=0;i<sm.ml;i++){
-		bitmap_t v=~(*(sm.m+i));
+	for (sll_string_index_t i=0;i<sm.map_length;i++){
+		bitmap_t v=~(*(sm.map_data+i));
 		while (v){
 			sll_string_index_t j=FIND_FIRST_SET_BIT(v)|(i<<6);
 			if (j==o->string_table.length){
@@ -2338,7 +2338,7 @@ _remove_nop:
 			}
 			for (sll_string_index_t n=k;n<j;n++){
 				*(o->string_table.data+n-l)=*(o->string_table.data+n);
-				*(sm.im+n)=n-l;
+				*(sm.new_indicies+n)=n-l;
 			}
 			sll_free_string(o->string_table.data+j);
 			k=j+1;
@@ -2346,21 +2346,21 @@ _remove_nop:
 			v&=v-1;
 		}
 	}
-	sll_deallocate(sm.m);
+	sll_deallocate(sm.map_data);
 	for (sll_string_index_t i=k;i<o->string_table.length;i++){
 		*(o->string_table.data+i-l)=*(o->string_table.data+i);
-		*(sm.im+i)=i-l;
+		*(sm.new_indicies+i)=i-l;
 	}
 	if (l){
 		o->string_table.length-=l;
 		o->string_table.data=sll_reallocate(o->string_table.data,o->string_table.length*sizeof(sll_string_t));
 	}
 	for (sll_function_index_t i=0;i<o->function_table.length;i++){
-		(o->function_table.data+i)->name_string_index=*(sm.im+(o->function_table.data+i)->name_string_index);
+		(o->function_table.data+i)->name_string_index=*(sm.new_indicies+(o->function_table.data+i)->name_string_index);
 	}
 	for (sll_debug_data_length_t i=0;i<o->debug_data.length;i++){
 		if ((o->debug_data.data+i)->line&(SLL_DEBUG_LINE_DATA_FLAG_FILE|SLL_DEBUG_LINE_DATA_FLAG_FUNC)){
-			SLL_DEBUG_LINE_DATA_SET_DATA(o->debug_data.data+i,*(sm.im+SLL_DEBUG_LINE_DATA_GET_DATA(o->debug_data.data+i)),(o->debug_data.data+i)->line&(SLL_DEBUG_LINE_DATA_FLAG_FILE|SLL_DEBUG_LINE_DATA_FLAG_FUNC));
+			SLL_DEBUG_LINE_DATA_SET_DATA(o->debug_data.data+i,*(sm.new_indicies+SLL_DEBUG_LINE_DATA_GET_DATA(o->debug_data.data+i)),(o->debug_data.data+i)->line&(SLL_DEBUG_LINE_DATA_FLAG_FILE|SLL_DEBUG_LINE_DATA_FLAG_FUNC));
 		}
 	}
 	ai=o->first_instruction;
@@ -2395,7 +2395,7 @@ _remove_nop:
 			}
 		}
 		else if (ai->type==SLL_ASSEMBLY_INSTRUCTION_TYPE_LOADS||ai->type==SLL_ASSEMBLY_INSTRUCTION_TYPE_LOOKUP_STR||ai->type==SLL_ASSEMBLY_INSTRUCTION_TYPE_PRINT_STR||ai->type==SLL_ASSEMBLY_INSTRUCTION_TYPE_RET_STR){
-			ai->data.string_index=*(sm.im+ai->data.string_index);
+			ai->data.string_index=*(sm.new_indicies+ai->data.string_index);
 		}
 		ai++;
 		if (SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(ai)==SLL_ASSEMBLY_INSTRUCTION_TYPE_CHANGE_STACK){
@@ -2403,5 +2403,5 @@ _remove_nop:
 		}
 	}
 	sll_deallocate(lbl);
-	sll_deallocate(sm.im);
+	sll_deallocate(sm.new_indicies);
 }
