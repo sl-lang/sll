@@ -58,10 +58,10 @@
  * \name SLL_CHAR
  * \group string
  * \desc Docs!
- * \arg char* x
+ * \arg char* pointer
  * \ret sll_char_t*
  */
-#define SLL_CHAR(x) ((sll_char_t*)(x))
+#define SLL_CHAR(pointer) ((sll_char_t*)(pointer))
 
 
 
@@ -70,13 +70,13 @@
  * \name SLL_INIT_STRING
  * \group string
  * \desc Docs!
- * \arg sll_string_t* o
+ * \arg sll_string_t* out
  */
-#define SLL_INIT_STRING(o) \
+#define SLL_INIT_STRING(out) \
 	do{ \
-		(o)->length=0; \
-		(o)->checksum=0; \
-		(o)->data=NULL; \
+		(out)->length=0; \
+		(out)->checksum=0; \
+		(out)->data=NULL; \
 	} while (0)
 
 
@@ -97,10 +97,10 @@
  * \name SLL_STRING_ALIGN_LENGTH
  * \group string
  * \desc Docs!
- * \arg sll_string_length_t l
+ * \arg sll_string_length_t length
  * \ret sll_string_length_t
  */
-#define SLL_STRING_ALIGN_LENGTH(l) (((l)+8)&0xfffffffffffffff8ull)
+#define SLL_STRING_ALIGN_LENGTH(length) (((length)+8)&0xfffffffffffffff8ull)
 
 
 
@@ -114,7 +114,7 @@
  * \arg sll_string_checksum_t b
  * \ret sll_string_checksum_t
  */
-#define SLL_STRING_COMBINE_CHECKSUMS(a,l,b) (((sll_string_checksum_t)(a))^((((sll_string_checksum_t)(b))<<(((l)&3)<<3))|(((sll_string_checksum_t)(b))>>(32-(((l)&3)<<3)))))
+#define SLL_STRING_COMBINE_CHECKSUMS(a,length,b) (((sll_string_checksum_t)(a))^((((sll_string_checksum_t)(b))<<(((length)&3)<<3))|(((sll_string_checksum_t)(b))>>(32-(((length)&3)<<3)))))
 
 
 
@@ -123,10 +123,10 @@
  * \name SLL_STRING_ESCAPE
  * \group string
  * \desc Docs!
- * \arg sll_char_t c
+ * \arg sll_char_t char_
  * \ret sll_bool_t
  */
-#define SLL_STRING_ESCAPE(c) ((c)=='\t'||(c)=='\n'||(c)=='\v'||(c)=='\f'||(c)=='\r'||(c)=='\"'||(c)=='\''||(c)=='\\')
+#define SLL_STRING_ESCAPE(char_) ((char_)=='\t'||(char_)=='\n'||(char_)=='\v'||(char_)=='\f'||(char_)=='\r'||(char_)=='\"'||(char_)=='\''||(char_)=='\\')
 
 
 
@@ -135,12 +135,12 @@
  * \name SLL_STRING_FORMAT_PADDING
  * \group string
  * \desc Docs!
- * \arg sll_char_t* v
- * \arg sll_string_length_t l
+ * \arg sll_char_t* pointer
+ * \arg sll_string_length_t length
  */
-#define SLL_STRING_FORMAT_PADDING(v,l) \
+#define SLL_STRING_FORMAT_PADDING(pointer,length) \
 	do{ \
-		(*((__SLL_U64*)((v)+((l)&0xfffffffffffffff8ull))))&=(1ull<<(((l)&7)<<3))-1; \
+		(*((__SLL_U64*)((pointer)+((length)&0xfffffffffffffff8ull))))&=(1ull<<(((length)&7)<<3))-1; \
 	} while (0)
 
 
@@ -150,10 +150,10 @@
  * \name SLL_STRING_HEX_ESCAPE
  * \group string
  * \desc Docs!
- * \arg sll_char_t c
+ * \arg sll_char_t char_
  * \ret sll_bool_t
  */
-#define SLL_STRING_HEX_ESCAPE(c) ((c)<32||(c)>126)
+#define SLL_STRING_HEX_ESCAPE(char_) ((char_)<32||(char_)>126)
 
 
 
@@ -162,12 +162,12 @@
  * \name SLL_STRING_INSERT_POINTER_STATIC
  * \group string
  * \desc Docs!
- * \arg const sll_char_t* nm
- * \arg sll_string_length_t i
- * \arg sll_string_t* s
+ * \arg const sll_char_t* static_string
+ * \arg sll_string_length_t index
+ * \arg sll_string_t* string
  * \ret sll_string_length_t
  */
-#define SLL_STRING_INSERT_POINTER_STATIC(nm,i,s) sll_string_insert_pointer_length(SLL_CHAR(nm),sizeof(nm)/sizeof(char)-1,(i),(s))
+#define SLL_STRING_INSERT_POINTER_STATIC(static_string,index,string) sll_string_insert_pointer_length(SLL_CHAR(static_string),sizeof(static_string)/sizeof(char)-1,(index),(string))
 
 
 
@@ -187,9 +187,9 @@
  * \name sll_free_string
  * \group string
  * \desc Docs!
- * \arg sll_string_t* s
+ * \arg sll_string_t* sstring
  */
-__SLL_EXTERNAL void sll_free_string(sll_string_t* s);
+__SLL_EXTERNAL void sll_free_string(sll_string_t* string);
 
 
 

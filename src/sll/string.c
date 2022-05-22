@@ -118,11 +118,11 @@ static sll_bool_t _compare_data(const sll_char_t* a,const sll_char_t* b,sll_stri
 
 
 
-__SLL_EXTERNAL void sll_free_string(sll_string_t* s){
-	s->length=0;
-	s->checksum=0;
-	sll_allocator_release(s->data);
-	s->data=NULL;
+__SLL_EXTERNAL void sll_free_string(sll_string_t* string){
+	string->length=0;
+	string->checksum=0;
+	sll_allocator_release(string->data);
+	string->data=NULL;
 }
 
 
