@@ -52,10 +52,10 @@
  * \name SLL_IDENTIFIER_GET_ARRAY_ID
  * \group identifier
  * \desc Docs!
- * \arg sll_identifier_index_t i
+ * \arg sll_identifier_index_t identifier_index
  * \ret sll_identifier_index_t
  */
-#define SLL_IDENTIFIER_GET_ARRAY_ID(i) ((i)&0xf)
+#define SLL_IDENTIFIER_GET_ARRAY_ID(identifier_index) ((identifier_index)&0xf)
 
 
 
@@ -64,10 +64,10 @@
  * \name SLL_IDENTIFIER_GET_ARRAY_INDEX
  * \group identifier
  * \desc Docs!
- * \arg sll_identifier_index_t i
+ * \arg sll_identifier_index_t identifier_index
  * \ret sll_identifier_index_t
  */
-#define SLL_IDENTIFIER_GET_ARRAY_INDEX(i) ((i)>>4)
+#define SLL_IDENTIFIER_GET_ARRAY_INDEX(identifier_index) ((identifier_index)>>4)
 
 
 
@@ -76,11 +76,11 @@
  * \name SLL_IDENTIFIER_ADD_INDEX
  * \group identifier
  * \desc Docs!
- * \arg sll_identifier_index_t i
- * \arg sll_identifier_index_t j
+ * \arg sll_identifier_index_t identifier_index
+ * \arg sll_identifier_index_t delta_index
  * \ret sll_identifier_index_t
  */
-#define SLL_IDENTIFIER_ADD_INDEX(i,j) ((i)+((j)<<4))
+#define SLL_IDENTIFIER_ADD_INDEX(identifier_index,delta_index) ((identifier_index)+((delta_index)<<4))
 
 
 
@@ -89,11 +89,11 @@
  * \name SLL_CREATE_IDENTIFIER
  * \group identifier
  * \desc Docs!
- * \arg sll_identifier_index_t i
- * \arg sll_identifier_index_t j
+ * \arg sll_identifier_index_t index
+ * \arg sll_identifier_index_t id
  * \ret sll_identifier_index_t
  */
-#define SLL_CREATE_IDENTIFIER(i,j) (((i)<<4)|(j))
+#define SLL_CREATE_IDENTIFIER(index,id) (((index)<<4)|(id))
 
 
 
@@ -102,10 +102,10 @@
  * \name SLL_IDENTIFIER_GET_STRING_INDEX
  * \group identifier
  * \desc Docs!
- * \arg sll_identifier_t* v
+ * \arg sll_identifier_t* identifier
  * \ret sll_string_index_t
  */
-#define SLL_IDENTIFIER_GET_STRING_INDEX(v) ((v)->name_string_index>>1)
+#define SLL_IDENTIFIER_GET_STRING_INDEX(identifier) ((identifier)->name_string_index>>1)
 
 
 
@@ -114,10 +114,10 @@
  * \name SLL_IDENTIFIER_IS_TLS
  * \group identifier
  * \desc Docs!
- * \arg sll_identifier_t* v
+ * \arg sll_identifier_t* identifier
  * \ret sll_bool_t
  */
-#define SLL_IDENTIFIER_IS_TLS(v) ((v)->name_string_index&1)
+#define SLL_IDENTIFIER_IS_TLS(identifier) ((identifier)->name_string_index&1)
 
 
 
@@ -126,10 +126,10 @@
  * \name SLL_IDENTIFIER_UPDATE_STRING_INDEX
  * \group identifier
  * \desc Docs!
- * \arg sll_identifier_t* v
- * \arg sll_string_index_t si
+ * \arg sll_identifier_t* identifier
+ * \arg sll_string_index_t name_string_index_
  */
-#define SLL_IDENTIFIER_UPDATE_STRING_INDEX(v,si) ((v)->name_string_index=((si)<<1)|((v)->name_string_index&1))
+#define SLL_IDENTIFIER_UPDATE_STRING_INDEX(identifier,name_string_index_) ((identifier)->name_string_index=((name_string_index_)<<1)|((identifier)->name_string_index&1))
 
 
 
@@ -138,11 +138,11 @@
  * \name SLL_IDENTIFIER_SET_STRING_INDEX
  * \group identifier
  * \desc Docs!
- * \arg sll_identifier_t* v
- * \arg sll_string_index_t si
+ * \arg sll_identifier_t* identifier
+ * \arg sll_string_index_t name_string_index
  * \arg sll_bool_t tls
  */
-#define SLL_IDENTIFIER_SET_STRING_INDEX(v,si,tls) ((v)->name_string_index=((si)<<1)|(!!(tls)))
+#define SLL_IDENTIFIER_SET_STRING_INDEX(identifier,name_string_index_,tls) ((identifier)->name_string_index=((name_string_index_)<<1)|(!!(tls)))
 
 
 
@@ -231,11 +231,11 @@ typedef struct _SLL_IDENTIFIER_TABLE{
  * \name sll_identifier_add_index
  * \group identifier
  * \desc Docs!
- * \arg sll_identifier_index_t i
- * \arg sll_identifier_index_t j
+ * \arg sll_identifier_index_t identifier_index
+ * \arg sll_identifier_index_t delta_index
  * \ret sll_identifier_index_t
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_identifier_index_t sll_identifier_add_index(sll_identifier_index_t i,sll_identifier_index_t j);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_identifier_index_t sll_identifier_add_index(sll_identifier_index_t identifier_index,sll_identifier_index_t delta_index);
 
 
 
@@ -244,11 +244,11 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_identifier_index_t sll_identifier_add_inde
  * \name sll_identifier_create
  * \group identifier
  * \desc Docs!
- * \arg sll_identifier_index_t i
- * \arg sll_identifier_index_t j
+ * \arg sll_identifier_index_t index
+ * \arg sll_identifier_index_t id
  * \ret sll_identifier_index_t
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_identifier_index_t sll_identifier_create(sll_identifier_index_t i,sll_identifier_index_t j);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_identifier_index_t sll_identifier_create(sll_identifier_index_t index,sll_identifier_index_t id);
 
 
 
@@ -257,10 +257,10 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_identifier_index_t sll_identifier_create(s
  * \name sll_identifier_get_array_id
  * \group identifier
  * \desc Docs!
- * \arg sll_identifier_index_t i
+ * \arg sll_identifier_index_t identifier_index
  * \ret sll_identifier_index_t
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_identifier_index_t sll_identifier_get_array_id(sll_identifier_index_t i);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_identifier_index_t sll_identifier_get_array_id(sll_identifier_index_t identifier_index);
 
 
 
@@ -269,10 +269,10 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_identifier_index_t sll_identifier_get_arra
  * \name sll_identifier_get_array_index
  * \group identifier
  * \desc Docs!
- * \arg sll_identifier_index_t i
+ * \arg sll_identifier_index_t identifier_index
  * \ret sll_identifier_index_t
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_identifier_index_t sll_identifier_get_array_index(sll_identifier_index_t i);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_identifier_index_t sll_identifier_get_array_index(sll_identifier_index_t identifier_index);
 
 
 
@@ -281,10 +281,10 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_identifier_index_t sll_identifier_get_arra
  * \name sll_identifier_get_string_index
  * \group identifier
  * \desc Docs!
- * \arg sll_identifier_t* v
+ * \arg sll_identifier_t* identifier
  * \ret sll_string_index_t
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_index_t sll_identifier_get_string_index(sll_identifier_t* v);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_index_t sll_identifier_get_string_index(sll_identifier_t* identifier);
 
 
 
@@ -293,10 +293,10 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_index_t sll_identifier_get_string_i
  * \name sll_identifier_is_tls
  * \group identifier
  * \desc Docs!
- * \arg sll_identifier_t* v
+ * \arg sll_identifier_t* identifier
  * \ret sll_bool_t
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_identifier_is_tls(sll_identifier_t* v);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_identifier_is_tls(sll_identifier_t* identifier);
 
 
 
@@ -305,11 +305,11 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_identifier_is_tls(sll_identifie
  * \name sll_identifier_set_string_index
  * \group identifier
  * \desc Docs!
- * \arg sll_identifier_t* v
- * \arg sll_string_index_t si
+ * \arg sll_identifier_t* identifier
+ * \arg sll_string_index_t name_string_index
  * \arg sll_bool_t tls
  */
-__SLL_EXTERNAL void sll_identifier_set_string_index(sll_identifier_t* v,sll_string_index_t si,sll_bool_t tls);
+__SLL_EXTERNAL void sll_identifier_set_string_index(sll_identifier_t* identifier,sll_string_index_t name_string_index,sll_bool_t tls);
 
 
 
@@ -318,10 +318,10 @@ __SLL_EXTERNAL void sll_identifier_set_string_index(sll_identifier_t* v,sll_stri
  * \name sll_identifier_update_string_index
  * \group identifier
  * \desc Docs!
- * \arg sll_identifier_t* v
- * \arg sll_string_index_t si
+ * \arg sll_identifier_t* identifier
+ * \arg sll_string_index_t name_string_index
  */
-__SLL_EXTERNAL void sll_identifier_update_string_index(sll_identifier_t* v,sll_string_index_t si);
+__SLL_EXTERNAL void sll_identifier_update_string_index(sll_identifier_t* identifier,sll_string_index_t name_string_index);
 
 
 
