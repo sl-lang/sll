@@ -159,12 +159,12 @@
  * \name SLL_INIT_OBJECT_TYPE_TABLE
  * \group object
  * \desc Docs!
- * \arg sll_object_type_table_t* o
+ * \arg sll_object_type_table_t* out
  */
-#define SLL_INIT_OBJECT_TYPE_TABLE(o) \
+#define SLL_INIT_OBJECT_TYPE_TABLE(out) \
 	do{ \
-		(o)->dt=NULL; \
-		(o)->l=0; \
+		(out)->dt=NULL; \
+		(out)->l=0; \
 	} while (0)
 
 
