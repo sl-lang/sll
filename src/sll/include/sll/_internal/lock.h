@@ -27,7 +27,7 @@ typedef struct _LOCK{
 
 
 
-sll_bool_t _lock_wait(sll_integer_t w);
+sll_bool_t _lock_wait(sll_integer_t lock_index);
 
 
 

@@ -18,9 +18,9 @@
  * \name SLL_LOG
  * \group log
  * \desc Docs!
- * \arg const sll_char_t* t
+ * \arg const sll_char_t* format
  */
-#define SLL_LOG(t,...) sll_log(SLL_CHAR(__FILE__),SLL_CHAR(__func__),__LINE__,0,SLL_CHAR(t),##__VA_ARGS__)
+#define SLL_LOG(format,...) sll_log(SLL_CHAR(__FILE__),SLL_CHAR(__func__),__LINE__,0,SLL_CHAR(format),##__VA_ARGS__)
 
 
 
@@ -29,9 +29,9 @@
  * \name SLL_WARN
  * \group log
  * \desc Docs!
- * \arg const sll_char_t* t
+ * \arg const sll_char_t* format
  */
-#define SLL_WARN(t,...) sll_log(SLL_CHAR(__FILE__),SLL_CHAR(__func__),__LINE__,1,SLL_CHAR(t),##__VA_ARGS__)
+#define SLL_WARN(format,...) sll_log(SLL_CHAR(__FILE__),SLL_CHAR(__func__),__LINE__,1,SLL_CHAR(format),##__VA_ARGS__)
 
 
 
@@ -73,14 +73,14 @@ typedef __SLL_U8 sll_logger_flags_t;
  * \name sll_log
  * \group log
  * \desc Docs!
- * \arg const sll_char_t* fp
- * \arg const sll_char_t* fn
- * \arg sll_file_offset_t ln
- * \arg sll_bool_t w
- * \arg const sll_char_t* t
+ * \arg const sll_char_t* file_path
+ * \arg const sll_char_t* function
+ * \arg sll_file_offset_t line
+ * \arg sll_bool_t is_warning
+ * \arg const sll_char_t* format
  * \ret sll_bool_t
  */
-__SLL_EXTERNAL sll_bool_t sll_log(const sll_char_t* fp,const sll_char_t* fn,sll_file_offset_t ln,sll_bool_t w,const sll_char_t* t,...);
+__SLL_EXTERNAL sll_bool_t sll_log(const sll_char_t* file_path,const sll_char_t* function,sll_file_offset_t line,sll_bool_t is_warning,const sll_char_t* format,...);
 
 
 
@@ -89,14 +89,14 @@ __SLL_EXTERNAL sll_bool_t sll_log(const sll_char_t* fp,const sll_char_t* fn,sll_
  * \name sll_log_raw
  * \group log
  * \desc Docs!
- * \arg const sll_char_t* fp
- * \arg const sll_char_t* fn
- * \arg sll_file_offset_t ln
- * \arg sll_bool_t w
- * \arg const sll_string_t* s
+ * \arg const sll_char_t* file_path
+ * \arg const sll_char_t* function
+ * \arg sll_file_offset_t line
+ * \arg sll_bool_t is_warning
+ * \arg const sll_string_t* string
  * \ret sll_bool_t
  */
-__SLL_EXTERNAL sll_bool_t sll_log_raw(const sll_char_t* fp,const sll_char_t* fn,sll_file_offset_t ln,sll_bool_t w,const sll_string_t* s);
+__SLL_EXTERNAL sll_bool_t sll_log_raw(const sll_char_t* file_path,const sll_char_t* function,sll_file_offset_t line,sll_bool_t is_warning,const sll_string_t* string);
 
 
 
@@ -105,13 +105,13 @@ __SLL_EXTERNAL sll_bool_t sll_log_raw(const sll_char_t* fp,const sll_char_t* fn,
  * \name sll_set_log_flags
  * \group log
  * \desc Docs!
- * \arg const sll_char_t* fp
- * \arg const sll_char_t* fn
- * \arg sll_logger_flags_t fl
- * \arg sll_bool_t st
+ * \arg const sll_char_t* file_path
+ * \arg const sll_char_t* function
+ * \arg sll_logger_flags_t flags
+ * \arg sll_bool_t state
  * \ret sll_bool_t
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_set_log_flags(const sll_char_t* fp,const sll_char_t* fn,sll_logger_flags_t fl,sll_bool_t st);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_set_log_flags(const sll_char_t* file_path,const sll_char_t* function,sll_logger_flags_t flags,sll_bool_t state);
 
 
 

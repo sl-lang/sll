@@ -117,21 +117,21 @@ void _log_release_data(void){
 
 
 
-__SLL_EXTERNAL sll_bool_t sll_log(const sll_char_t* fp,const sll_char_t* fn,sll_file_offset_t ln,sll_bool_t w,const sll_char_t* t,...){
-	file_log_data_t* f_dt=_get_file_index(fp);
-	function_log_data_t* fn_dt=_get_func_index(f_dt,fn);
-	if (!w&&!(fn_dt->flags&SLL_LOG_FLAG_SHOW)){
+__SLL_EXTERNAL sll_bool_t sll_log(const sll_char_t* file_path,const sll_char_t* function,sll_file_offset_t line,sll_bool_t is_warning,const sll_char_t* format,...){
+	file_log_data_t* f_dt=_get_file_index(file_path);
+	function_log_data_t* fn_dt=_get_func_index(f_dt,function);
+	if (!is_warning&&!(fn_dt->flags&SLL_LOG_FLAG_SHOW)){
 		return 0;
 	}
 	va_list va;
-	va_start(va,t);
+	va_start(va,format);
 	sll_var_arg_list_t dt;
 	SLL_VAR_ARG_INIT_C(&dt,&va);
 	sll_string_t s;
-	sll_string_format_list(t,sll_string_length(t),&dt,&s);
+	sll_string_format_list(format,sll_string_length(format),&dt,&s);
 	va_end(va);
 	if (!(fn_dt->flags&SLL_LOG_FLAG_NO_HEADER)){
-		_log_location(&(f_dt->name),&(fn_dt->name),ln,sll_stdout);
+		_log_location(&(f_dt->name),&(fn_dt->name),line,sll_stdout);
 	}
 	sll_file_write(sll_stdout,s.data,s.length,NULL);
 	sll_file_write_char(sll_stdout,'\n',NULL);
@@ -141,41 +141,41 @@ __SLL_EXTERNAL sll_bool_t sll_log(const sll_char_t* fp,const sll_char_t* fn,sll_
 
 
 
-__SLL_EXTERNAL sll_bool_t sll_log_raw(const sll_char_t* fp,const sll_char_t* fn,sll_file_offset_t ln,sll_bool_t w,const sll_string_t* s){
+__SLL_EXTERNAL sll_bool_t sll_log_raw(const sll_char_t* file_path,const sll_char_t* function,sll_file_offset_t line,sll_bool_t is_warning,const sll_string_t* string){
 	if (!_log_default&&!_log_file_data_len){
 		return 0;
 	}
-	file_log_data_t* f_dt=_get_file_index(fp);
-	function_log_data_t* fn_dt=_get_func_index(f_dt,fn);
-	if (!w&&!(fn_dt->flags&SLL_LOG_FLAG_SHOW)){
+	file_log_data_t* f_dt=_get_file_index(file_path);
+	function_log_data_t* fn_dt=_get_func_index(f_dt,function);
+	if (!is_warning&&!(fn_dt->flags&SLL_LOG_FLAG_SHOW)){
 		return 0;
 	}
 	if (!(fn_dt->flags&SLL_LOG_FLAG_NO_HEADER)){
-		_log_location(&(f_dt->name),&(fn_dt->name),ln,sll_stdout);
+		_log_location(&(f_dt->name),&(fn_dt->name),line,sll_stdout);
 	}
-	sll_file_write(sll_stdout,s->data,s->length,NULL);
+	sll_file_write(sll_stdout,string->data,string->length,NULL);
 	sll_file_write_char(sll_stdout,'\n',NULL);
 	return 1;
 }
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_set_log_flags(const sll_char_t* fp,const sll_char_t* fn,sll_logger_flags_t fl,sll_bool_t st){
-	sll_logger_flags_t tmp=fl;
-	fl&=SLL_LOG_FLAG_SHOW|SLL_LOG_FLAG_NO_HEADER;
-	sll_bool_t o=(tmp==fl);
-	if (fp){
-		file_log_data_t* dt=_get_file_index(fp);
-		if (fn){
-			function_log_data_t* fn_dt=_get_func_index(dt,fn);
-			SET_OR_CLEAR(fn_dt->flags,fl,st);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_set_log_flags(const sll_char_t* file_path,const sll_char_t* function,sll_logger_flags_t flags,sll_bool_t state){
+	sll_logger_flags_t tmp=flags;
+	flags&=SLL_LOG_FLAG_SHOW|SLL_LOG_FLAG_NO_HEADER;
+	sll_bool_t o=(tmp==flags);
+	if (file_path){
+		file_log_data_t* dt=_get_file_index(file_path);
+		if (function){
+			function_log_data_t* fn_dt=_get_func_index(dt,function);
+			SET_OR_CLEAR(fn_dt->flags,flags,state);
 		}
 		else{
-			SET_OR_CLEAR(dt->flags,fl,st);
+			SET_OR_CLEAR(dt->flags,flags,state);
 		}
 	}
 	else{
-		SET_OR_CLEAR(_log_default,fl,st);
+		SET_OR_CLEAR(_log_default,flags,state);
 	}
 	return o;
 }

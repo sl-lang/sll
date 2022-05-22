@@ -34,23 +34,23 @@ void _lock_init(void){
 
 
 
-sll_bool_t _lock_wait(sll_integer_t w){
-	if (w<0||w>=_lock_len||(_lock_data+w)->lock==LOCK_UNUSED){
+sll_bool_t _lock_wait(sll_integer_t lock_index){
+	if (lock_index<0||lock_index>=_lock_len||(_lock_data+lock_index)->lock==LOCK_UNUSED){
 		return 0;
 	}
-	SLL_ASSERT((_lock_data+w)->lock!=_scheduler_current_thread_index);
-	if ((_lock_data+w)->lock==SLL_UNKNOWN_THREAD_INDEX){
-		(_lock_data+w)->lock=_scheduler_current_thread_index;
-		(_lock_data+w)->first=SLL_UNKNOWN_THREAD_INDEX;
+	SLL_ASSERT((_lock_data+lock_index)->lock!=_scheduler_current_thread_index);
+	if ((_lock_data+lock_index)->lock==SLL_UNKNOWN_THREAD_INDEX){
+		(_lock_data+lock_index)->lock=_scheduler_current_thread_index;
+		(_lock_data+lock_index)->first=SLL_UNKNOWN_THREAD_INDEX;
 		return 0;
 	}
-	if ((_lock_data+w)->first==SLL_UNKNOWN_THREAD_INDEX){
-		(_lock_data+w)->first=_scheduler_current_thread_index;
+	if ((_lock_data+lock_index)->first==SLL_UNKNOWN_THREAD_INDEX){
+		(_lock_data+lock_index)->first=_scheduler_current_thread_index;
 	}
 	else{
-		(_lock_data+w)->last->next=_scheduler_current_thread_index;
+		(_lock_data+lock_index)->last->next=_scheduler_current_thread_index;
 	}
-	(_lock_data+w)->last=_scheduler_current_thread;
+	(_lock_data+lock_index)->last=_scheduler_current_thread;
 	_scheduler_current_thread->next=SLL_UNKNOWN_THREAD_INDEX;
 	_scheduler_current_thread->state=THREAD_STATE_WAIT_LOCK;
 	_scheduler_current_thread_index=SLL_UNKNOWN_THREAD_INDEX;
@@ -77,32 +77,32 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_lock_index_t sll_lock_create(void){
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_lock_delete(sll_lock_index_t l){
-	if (l>=_lock_len||(_lock_data+l)->lock==LOCK_UNUSED){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_lock_delete(sll_lock_index_t lock_index){
+	if (lock_index>=_lock_len||(_lock_data+lock_index)->lock==LOCK_UNUSED){
 		return 0;
 	}
 	SLL_CRITICAL_ERROR(sll_platform_lock_acquire(_lock_lock));
-	SLL_ASSERT((_lock_data+l)->lock==SLL_UNKNOWN_THREAD_INDEX);
-	(_lock_data+l)->lock=LOCK_UNUSED;
-	LOCK_SET_NEXT_ID(_lock_data+l,_lock_next);
-	_lock_next=l;
+	SLL_ASSERT((_lock_data+lock_index)->lock==SLL_UNKNOWN_THREAD_INDEX);
+	(_lock_data+lock_index)->lock=LOCK_UNUSED;
+	LOCK_SET_NEXT_ID(_lock_data+lock_index,_lock_next);
+	_lock_next=lock_index;
 	SLL_CRITICAL(sll_platform_lock_release(_lock_lock));
 	return 1;
 }
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_lock_release(sll_lock_index_t l){
-	if (l>=_lock_len||(_lock_data+l)->lock==LOCK_UNUSED||(_lock_data+l)->lock==SLL_UNKNOWN_THREAD_INDEX){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_lock_release(sll_lock_index_t lock_index){
+	if (lock_index>=_lock_len||(_lock_data+lock_index)->lock==LOCK_UNUSED||(_lock_data+lock_index)->lock==SLL_UNKNOWN_THREAD_INDEX){
 		return 0;
 	}
-	(_lock_data+l)->lock=(_lock_data+l)->first;
-	if ((_lock_data+l)->first==SLL_UNKNOWN_THREAD_INDEX){
+	(_lock_data+lock_index)->lock=(_lock_data+lock_index)->first;
+	if ((_lock_data+lock_index)->first==SLL_UNKNOWN_THREAD_INDEX){
 		return 1;
 	}
-	thread_data_t* thr=*(_thread_data+(_lock_data+l)->lock);
-	(_lock_data+l)->first=thr->next;
+	thread_data_t* thr=*(_thread_data+(_lock_data+lock_index)->lock);
+	(_lock_data+lock_index)->first=thr->next;
 	thr->state=THREAD_STATE_QUEUED;
-	_scheduler_queue_thread((_lock_data+l)->lock);
+	_scheduler_queue_thread((_lock_data+lock_index)->lock);
 	return 1;
 }
