@@ -1082,5 +1082,5 @@ __SLL_EXTERNAL void sll_parse_nodes(sll_file_t* rf,sll_compilation_data_t* c_dt,
 	sll_deallocate(nv_dt.dt);
 	_file_end_hash(rf);
 	sf->sz=SLL_FILE_GET_OFFSET(rf);
-	sf->h=rf->_h.h;
+	sf->h=rf->_hash.hash;
 }

@@ -158,7 +158,7 @@
  * \arg sll_file_t* file
  * \ret sll_file_offset_t
  */
-#define SLL_FILE_GET_LINE_NUMBER(file) ((file)->_l_num)
+#define SLL_FILE_GET_LINE_NUMBER(file) ((file)->_line_number)
 
 
 
@@ -170,7 +170,7 @@
  * \arg sll_file_t* file
  * \ret sll_file_offset_t
  */
-#define SLL_FILE_GET_OFFSET(file) ((file)->_off)
+#define SLL_FILE_GET_OFFSET(file) ((file)->_offset)
 
 
 
@@ -224,11 +224,11 @@ typedef __SLL_U64 sll_file_offset_t;
  * \group file
  * \desc Docs!
  * \arg const sll_file_descriptor_t fd
- * \arg const sll_string_t nm
+ * \arg const sll_string_t path
  */
 typedef struct _SLL_FILE_DATA_FILE{
 	const sll_file_descriptor_t fd;
-	const sll_string_t nm;
+	const sll_string_t path;
 } sll_file_data_file_t;
 
 
@@ -238,12 +238,12 @@ typedef struct _SLL_FILE_DATA_FILE{
  * \name sll_file_data_memory_t
  * \group file
  * \desc Docs!
- * \arg const void* p
- * \arg const sll_size_t sz
+ * \arg const void* pointer
+ * \arg const sll_size_t size
  */
 typedef struct _SLL_FILE_DATA_MEMORY{
-	const void* p;
-	const sll_size_t sz;
+	const void* pointer;
+	const sll_size_t size;
 } sll_file_data_memory_t;
 
 
@@ -253,34 +253,34 @@ typedef struct _SLL_FILE_DATA_MEMORY{
  * \name sll_file_data_t
  * \group file
  * \desc Docs!
- * \arg const sll_file_data_file_t fl
- * \arg const sll_file_data_memory_t mm
+ * \arg const sll_file_data_file_t file
+ * \arg const sll_file_data_memory_t memory
  */
 typedef union _SLL_FILE_DATA{
-	const sll_file_data_file_t fl;
-	const sll_file_data_memory_t mm;
+	const sll_file_data_file_t file;
+	const sll_file_data_memory_t memory;
 } sll_file_data_t;
 
 
 
 /**
  * \flags type
- * \name sll_file_write_data_buffered_t
+ * \name sll_file_write_buffer_static_t
  * \group file
  * \desc Docs!
- * \arg sll_char_t* p
- * \arg sll_file_offset_t off
+ * \arg sll_char_t* pointer
+ * \arg sll_file_offset_t offset
  */
-typedef struct _SLL_FILE_WRITE_DATA_BUFFERED{
-	sll_char_t* p;
-	sll_file_offset_t off;
-} sll_file_write_data_buffered_t;
+typedef struct _SLL_FILE_WRITE_BUFFER_STATIC{
+	sll_char_t* pointer;
+	sll_file_offset_t offset;
+} sll_file_write_buffer_static_t;
 
 
 
 /**
  * \flags type
- * \name sll_file_write_data_dynamic_t
+ * \name sll_file_write_buffer_dynamic_t
  * \group file
  * \desc Docs!
  * \arg void* b
@@ -288,27 +288,27 @@ typedef struct _SLL_FILE_WRITE_DATA_BUFFERED{
  * \arg sll_file_offset_t sz
  * \arg sll_file_offset_t off
  */
-typedef struct _SLL_FILE_WRITE_DATA_DYNAMIC{
-	void* b;
-	void* t;
-	sll_file_offset_t sz;
-	sll_file_offset_t off;
-} sll_file_write_data_dynamic_t;
+typedef struct _SLL_FILE_WRITE_BUFFER_DYNAMIC{
+	void* start;
+	void* end;
+	sll_file_offset_t size;
+	sll_file_offset_t offset;
+} sll_file_write_buffer_dynamic_t;
 
 
 
 /**
  * \flags type union
- * \name sll_file_write_data_t
+ * \name sll_file_write_buffer_t
  * \group file
  * \desc Docs!
- * \arg sll_file_write_data_buffered_t bf
- * \arg sll_file_write_data_dynamic_t d
+ * \arg sll_file_write_buffer_static_t static_
+ * \arg sll_file_write_buffer_dynamic_t dynamic
  */
-typedef union _SLL_FILE_WRITE_DATA{
-	sll_file_write_data_buffered_t bf;
-	sll_file_write_data_dynamic_t d;
-} sll_file_write_data_t;
+typedef union _SLL_FILE_WRITE_BUFFER{
+	sll_file_write_buffer_static_t static_;
+	sll_file_write_buffer_dynamic_t dynamic;
+} sll_file_write_buffer_t;
 
 
 
@@ -317,14 +317,14 @@ typedef union _SLL_FILE_WRITE_DATA{
  * \name sll_file_hash_t
  * \group file
  * \desc Docs!
- * \arg sll_sha256_data_t h
- * \arg sll_char_t[64] bf
- * \arg __SLL_U8 bfl
+ * \arg sll_sha256_data_t hash
+ * \arg sll_char_t[64] buffer
+ * \arg __SLL_U8 buffer_offset
  */
 typedef struct _SLL_FILE_HASH{
-	sll_sha256_data_t h;
-	sll_char_t bf[64];
-	__SLL_U8 bfl;
+	sll_sha256_data_t hash;
+	sll_char_t buffer[64];
+	__SLL_U8 buffer_offset;
 } sll_file_hash_t;
 
 
@@ -334,28 +334,28 @@ typedef struct _SLL_FILE_HASH{
  * \name sll_file_t
  * \group file
  * \desc Docs!
- * \arg const sll_file_data_t dt
- * \arg const sll_file_flags_t f
- * \arg sll_file_offset_t _l_num
- * \arg sll_file_offset_t _off
- * \arg sll_char_t* _r_bf
- * \arg sll_file_offset_t _r_bf_off
- * \arg sll_file_offset_t _r_bf_sz
- * \arg sll_file_write_data_t _w
- * \arg sll_file_hash_t _h
- * \arg sll_lock_handle_t _lck
+ * \arg const sll_file_data_t source
+ * \arg const sll_file_flags_t flags
+ * \arg sll_file_offset_t _line_number
+ * \arg sll_file_offset_t _offset
+ * \arg sll_char_t* _read_buffer
+ * \arg sll_file_offset_t _read_buffer_offset
+ * \arg sll_file_offset_t _read_buffer_size
+ * \arg sll_file_write_buffer_t _write_buffer
+ * \arg sll_file_hash_t _hash
+ * \arg sll_lock_handle_t _lock
  */
 typedef struct _SLL_FILE{
-	const sll_file_data_t dt;
-	const sll_file_flags_t f;
-	sll_file_offset_t _l_num;
-	sll_file_offset_t _off;
-	sll_char_t* _r_bf;
-	sll_file_offset_t _r_bf_off;
-	sll_file_offset_t _r_bf_sz;
-	sll_file_write_data_t _w;
-	sll_file_hash_t _h;
-	sll_lock_handle_t _lck;
+	const sll_file_data_t source;
+	const sll_file_flags_t flags;
+	sll_file_offset_t _line_number;
+	sll_file_offset_t _offset;
+	sll_char_t* _read_buffer;
+	sll_file_offset_t _read_buffer_offset;
+	sll_file_offset_t _read_buffer_size;
+	sll_file_write_buffer_t _write_buffer;
+	sll_file_hash_t _hash;
+	sll_lock_handle_t _lock;
 } sll_file_t;
 
 
