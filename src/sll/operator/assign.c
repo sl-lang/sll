@@ -36,8 +36,8 @@ __SLL_EXTERNAL void sll_operator_assign(sll_object_t* a,sll_object_t* b,sll_obje
 	else if (a->type==SLL_OBJECT_TYPE_MAP){
 		sll_map_set(&(a->data.map),b,v);
 	}
-	else if (sll_current_runtime_data&&b->type==SLL_OBJECT_TYPE_STRING&&a->type>SLL_MAX_OBJECT_TYPE&&a->type<=sll_current_runtime_data->tt->length+SLL_MAX_OBJECT_TYPE){
-		sll_object_set_field(sll_current_runtime_data->tt,a,&(b->data.string),v);
+	else if (sll_current_runtime_data&&b->type==SLL_OBJECT_TYPE_STRING&&a->type>SLL_MAX_OBJECT_TYPE&&a->type<=sll_current_runtime_data->type_table->length+SLL_MAX_OBJECT_TYPE){
+		sll_object_set_field(sll_current_runtime_data->type_table,a,&(b->data.string),v);
 	}
 }
 

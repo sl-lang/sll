@@ -43,7 +43,7 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_instruction_index_t sll_api
 __SLL_EXTERNAL __SLL_API_CALL void sll_api_vm_get_location(sll_instruction_index_t ii,sll_array_t* out){
 	if (!ii){
 		const sll_call_stack_t* c_st=sll_thread_get_call_stack(_scheduler_current_thread_index);
-		ii=(c_st->l?(c_st->dt+c_st->l-1)->_ii:sll_thread_get_instruction_index(SLL_UNKNOWN_THREAD_INDEX));
+		ii=(c_st->length?(c_st->data+c_st->length-1)->_instruction_index:sll_thread_get_instruction_index(SLL_UNKNOWN_THREAD_INDEX));
 	}
 	else{
 		ii--;
@@ -69,6 +69,6 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_reference_count_t sll_api_v
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_instruction_to_location(sll_instruction_index_t ii){
 	sll_string_index_t fp_i;
 	sll_string_index_t fn_i;
-	sll_file_offset_t ln=sll_get_location(sll_current_runtime_data->a_dt,ii,&fp_i,&fn_i);
-	return sll_new_object(SLL_CHAR("(sis)"),sll_current_runtime_data->a_dt->string_table.data+fp_i,ln,(fn_i==SLL_MAX_STRING_INDEX?&_vm_code_name:sll_current_runtime_data->a_dt->string_table.data+fn_i));
+	sll_file_offset_t ln=sll_get_location(sll_current_runtime_data->assembly_data,ii,&fp_i,&fn_i);
+	return sll_new_object(SLL_CHAR("(sis)"),sll_current_runtime_data->assembly_data->string_table.data+fp_i,ln,(fn_i==SLL_MAX_STRING_INDEX?&_vm_code_name:sll_current_runtime_data->assembly_data->string_table.data+fn_i));
 }

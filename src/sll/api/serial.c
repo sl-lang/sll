@@ -434,11 +434,11 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_error_t sll_encode_object(sll_file_t* f,sl
 		sll_object_t* k=*a;
 		a++;
 		ac--;
-		if (k->type>sll_current_runtime_data->tt->length+SLL_MAX_OBJECT_TYPE){
+		if (k->type>sll_current_runtime_data->type_table->length+SLL_MAX_OBJECT_TYPE){
 			k=sll_static_int[0];
 		}
 		else if (k->type>SLL_MAX_OBJECT_TYPE){
-			const sll_object_type_data_t* dt=*(sll_current_runtime_data->tt->data+k->type-SLL_MAX_OBJECT_TYPE-1);
+			const sll_object_type_data_t* dt=*(sll_current_runtime_data->type_table->data+k->type-SLL_MAX_OBJECT_TYPE-1);
 			sll_error_t err;
 			sll_file_write_char(f,SLL_OBJECT_TYPE_MAP,&err);
 			if (err!=SLL_NO_ERROR){

@@ -68,16 +68,16 @@ typedef __SLL_U16 sll_call_stack_size_t;
  * \name sll_call_stack_frame_t
  * \group vm
  * \desc Docs!
- * \arg const sll_char_t* nm
- * \arg sll_instruction_index_t _ii
- * \arg sll_stack_offset_t _s
- * \arg void* _var_mem_off
+ * \arg const sll_char_t* name
+ * \arg sll_instruction_index_t _instruction_index
+ * \arg sll_stack_offset_t _stack_offset
+ * \arg void* _variable_memory_offset
  */
 typedef struct _SLL_CALL_STACK_FRAME{
-	const sll_char_t* nm;
-	sll_instruction_index_t _ii;
-	sll_stack_offset_t _s;
-	void* _var_mem_off;
+	const sll_char_t* name;
+	sll_instruction_index_t _instruction_index;
+	sll_stack_offset_t _stack_offset;
+	void* _variable_memory_offset;
 } sll_call_stack_frame_t;
 
 
@@ -87,12 +87,12 @@ typedef struct _SLL_CALL_STACK_FRAME{
  * \name sll_call_stack_t
  * \group vm
  * \desc Docs!
- * \arg sll_call_stack_frame_t* dt
- * \arg sll_call_stack_size_t l
+ * \arg sll_call_stack_frame_t* data
+ * \arg sll_call_stack_size_t length
  */
 typedef struct _SLL_CALL_STACK{
-	sll_call_stack_frame_t* dt;
-	sll_call_stack_size_t l;
+	sll_call_stack_frame_t* data;
+	sll_call_stack_size_t length;
 } sll_call_stack_t;
 
 
@@ -102,14 +102,14 @@ typedef struct _SLL_CALL_STACK{
  * \name sll_runtime_data_t
  * \group vm
  * \desc Docs!
- * \arg const sll_assembly_data_t* a_dt
- * \arg sll_internal_function_table_t* ift
- * \arg sll_object_type_table_t* tt
+ * \arg const sll_assembly_data_t* assembly_data
+ * \arg sll_internal_function_table_t* internal_function_table
+ * \arg sll_object_type_table_t* type_table
  */
 typedef struct _SLL_RUNTIME_DATA{
-	const sll_assembly_data_t* a_dt;
-	sll_internal_function_table_t* ift;
-	sll_object_type_table_t* tt;
+	const sll_assembly_data_t* assembly_data;
+	sll_internal_function_table_t* internal_function_table;
+	sll_object_type_table_t* type_table;
 } sll_runtime_data_t;
 
 

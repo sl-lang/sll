@@ -99,8 +99,8 @@ __SLL_EXTERNAL void sll__release_object_internal(sll_object_t* o){
 		sll_free_map(&(o->data.map));
 	}
 	else if (o->type>SLL_MAX_OBJECT_TYPE&&o->type<SLL_OBJECT_TYPE_OBJECT){
-		if (sll_current_runtime_data&&o->type<=sll_current_runtime_data->tt->length+SLL_MAX_OBJECT_TYPE){
-			const sll_object_type_data_t* dt=*(sll_current_runtime_data->tt->data+o->type-SLL_MAX_OBJECT_TYPE-1);
+		if (sll_current_runtime_data&&o->type<=sll_current_runtime_data->type_table->length+SLL_MAX_OBJECT_TYPE){
+			const sll_object_type_data_t* dt=*(sll_current_runtime_data->type_table->data+o->type-SLL_MAX_OBJECT_TYPE-1);
 			if (_scheduler_current_thread_index!=SLL_UNKNOWN_THREAD_INDEX&&dt->functions[SLL_OBJECT_FUNC_DELETE]){
 				o->rc++;
 				SLL_RELEASE(sll_execute_function(dt->functions[SLL_OBJECT_FUNC_DELETE],&o,1,0));

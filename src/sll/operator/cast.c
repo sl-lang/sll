@@ -85,8 +85,8 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_cast(sll_object_t* 
 		return a;
 	}
 	if (a->type>SLL_MAX_OBJECT_TYPE){
-		if (sll_current_runtime_data&&a->type<=sll_current_runtime_data->tt->length+SLL_MAX_OBJECT_TYPE){
-			const sll_object_type_data_t* dt=*(sll_current_runtime_data->tt->data+a->type-SLL_MAX_OBJECT_TYPE-1);
+		if (sll_current_runtime_data&&a->type<=sll_current_runtime_data->type_table->length+SLL_MAX_OBJECT_TYPE){
+			const sll_object_type_data_t* dt=*(sll_current_runtime_data->type_table->data+a->type-SLL_MAX_OBJECT_TYPE-1);
 			switch (b->data.int_){
 				case SLL_OBJECT_TYPE_INT:
 					return sll_int_to_object(dt->field_count);
@@ -105,13 +105,13 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_cast(sll_object_t* 
 				case SLL_OBJECT_TYPE_ARRAY:
 					{
 						sll_object_t* o=sll_create_object(SLL_OBJECT_TYPE_ARRAY);
-						sll_object_to_array(sll_current_runtime_data->tt,a,&(o->data.array));
+						sll_object_to_array(sll_current_runtime_data->type_table,a,&(o->data.array));
 						return o;
 					}
 				case SLL_OBJECT_TYPE_MAP:
 					{
 						sll_object_t* o=sll_create_object(SLL_OBJECT_TYPE_MAP);
-						sll_object_to_map(sll_current_runtime_data->tt,a,&(o->data.map));
+						sll_object_to_map(sll_current_runtime_data->type_table,a,&(o->data.map));
 						return o;
 					}
 				case SLL_OBJECT_TYPE_MAP_KEYS:
@@ -126,9 +126,9 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_cast(sll_object_t* 
 		}
 	}
 	if (b->data.int_>SLL_MAX_OBJECT_TYPE){
-		if (sll_current_runtime_data&&b->data.int_<=sll_current_runtime_data->tt->length+SLL_MAX_OBJECT_TYPE){
+		if (sll_current_runtime_data&&b->data.int_<=sll_current_runtime_data->type_table->length+SLL_MAX_OBJECT_TYPE){
 			sll_object_t* src=sll_operator_cast(a,sll_static_int[SLL_OBJECT_TYPE_ARRAY]);
-			sll_object_t* o=sll_create_object_type(sll_current_runtime_data->tt,(sll_object_type_t)(b->data.int_),src->data.array.data,src->data.array.length);
+			sll_object_t* o=sll_create_object_type(sll_current_runtime_data->type_table,(sll_object_type_t)(b->data.int_),src->data.array.data,src->data.array.length);
 			SLL_RELEASE(src);
 			return o;
 		}

@@ -49,8 +49,8 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_copy(sll_object_t* 
 			}
 	}
 	SLL_ASSERT(a->type>SLL_MAX_OBJECT_TYPE);
-	if (sll_current_runtime_data&&a->type<=sll_current_runtime_data->tt->length+SLL_MAX_OBJECT_TYPE){
-		return sll_object_clone(sll_current_runtime_data->tt,a,d);
+	if (sll_current_runtime_data&&a->type<=sll_current_runtime_data->type_table->length+SLL_MAX_OBJECT_TYPE){
+		return sll_object_clone(sll_current_runtime_data->type_table,a,d);
 	}
 	SLL_ACQUIRE(a);
 	return a;

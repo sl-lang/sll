@@ -17,7 +17,7 @@
 
 
 sll_object_t* _call_api_func(sll_function_index_t fn,sll_object_t*const* al,sll_arg_count_t all){
-	const sll_internal_function_t* dt=sll_current_runtime_data->ift->data+fn;
+	const sll_internal_function_t* dt=sll_current_runtime_data->internal_function_table->data+fn;
 	void* bf=sll_allocate_stack(dt->_arg_size);
 	arg_output_t ao={
 		ARG_OUTPUT_TYPE_ARRAY,

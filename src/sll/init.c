@@ -58,8 +58,8 @@ static void _write_stack_frame(sll_file_descriptor_t fd,sll_instruction_index_t 
 	sll_platform_file_write(fd,"at ",3,NULL);
 	sll_string_index_t fp_i;
 	sll_string_index_t fn_i;
-	sll_file_offset_t ln=sll_get_location(sll_current_runtime_data->a_dt,ii,&fp_i,&fn_i);
-	const sll_string_t* str=sll_current_runtime_data->a_dt->string_table.data+fp_i;
+	sll_file_offset_t ln=sll_get_location(sll_current_runtime_data->assembly_data,ii,&fp_i,&fn_i);
+	const sll_string_t* str=sll_current_runtime_data->assembly_data->string_table.data+fp_i;
 	sll_platform_file_write(fd,str->data,str->length,NULL);
 	sll_platform_file_write(fd,":",1,NULL);
 	_write_number(fd,ln);
@@ -68,7 +68,7 @@ static void _write_stack_frame(sll_file_descriptor_t fd,sll_instruction_index_t 
 		sll_platform_file_write(fd,"@code)\n",7,NULL);
 		return;
 	}
-	str=sll_current_runtime_data->a_dt->string_table.data+fn_i;
+	str=sll_current_runtime_data->assembly_data->string_table.data+fn_i;
 	sll_platform_file_write(fd,str->data,str->length,NULL);
 	sll_platform_file_write(fd,")\n",2,NULL);
 }
@@ -89,14 +89,14 @@ __SLL_NO_RETURN void _force_exit(const sll_char_t* a,const sll_char_t* b,const s
 	sll_platform_file_write(fd,a,sll_string_length(a),NULL);
 	sll_platform_file_write(fd,b,sll_string_length(b),NULL);
 	sll_platform_file_write(fd,c,sll_string_length(c),NULL);
-	if (sll_current_runtime_data&&sll_current_runtime_data->a_dt){
+	if (sll_current_runtime_data&&sll_current_runtime_data->assembly_data){
 		const sll_call_stack_t* c_st=sll_thread_get_call_stack(_scheduler_current_thread_index);
 		if (c_st){
 			_write_stack_frame(fd,sll_thread_get_instruction_index(SLL_UNKNOWN_THREAD_INDEX));
-			sll_call_stack_size_t i=c_st->l;
+			sll_call_stack_size_t i=c_st->length;
 			while (i){
 				i--;
-				_write_stack_frame(fd,(c_st->dt+i)->_ii);
+				_write_stack_frame(fd,(c_st->data+i)->_instruction_index);
 			}
 			sll_platform_file_write(fd,"at <thread-",11,NULL);
 			_write_number(fd,_scheduler_current_thread_index);

@@ -212,13 +212,13 @@ static void _object_to_string(sll_object_t* a,sll_string_t* o){
 			return;
 		default:
 			{
-				if (!sll_current_runtime_data||a->type>sll_current_runtime_data->tt->length+SLL_MAX_OBJECT_TYPE){
+				if (!sll_current_runtime_data||a->type>sll_current_runtime_data->type_table->length+SLL_MAX_OBJECT_TYPE){
 					sll_string_increase(o,13);
 					sll_copy_string(SLL_CHAR("<custom-type>"),o->data+o->length);
 					o->length+=13;
 					return;
 				}
-				const sll_object_type_data_t* dt=*(sll_current_runtime_data->tt->data+a->type-SLL_MAX_OBJECT_TYPE-1);
+				const sll_object_type_data_t* dt=*(sll_current_runtime_data->type_table->data+a->type-SLL_MAX_OBJECT_TYPE-1);
 				if (dt->functions[SLL_OBJECT_FUNC_STRING]){
 					sll_object_t* v=sll_execute_function(dt->functions[SLL_OBJECT_FUNC_STRING],&a,1,0);
 					sll_object_t* str=sll_operator_cast(v,sll_static_int[SLL_OBJECT_TYPE_STRING]);

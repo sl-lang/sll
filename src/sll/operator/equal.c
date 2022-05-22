@@ -138,8 +138,8 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_operator_strict_equal(sll_objec
 		case SLL_OBJECT_TYPE_MAP:
 			return sll_map_equal(&(a->data.map),&(b->data.map));
 	}
-	if (sll_current_runtime_data&&a->type>SLL_MAX_OBJECT_TYPE&&a->type<=sll_current_runtime_data->tt->length+SLL_MAX_OBJECT_TYPE){
-		const sll_object_type_data_t* dt=*(sll_current_runtime_data->tt->data+a->type-SLL_MAX_OBJECT_TYPE-1);
+	if (sll_current_runtime_data&&a->type>SLL_MAX_OBJECT_TYPE&&a->type<=sll_current_runtime_data->type_table->length+SLL_MAX_OBJECT_TYPE){
+		const sll_object_type_data_t* dt=*(sll_current_runtime_data->type_table->data+a->type-SLL_MAX_OBJECT_TYPE-1);
 		sll_object_field_t* pa=a->data.fields;
 		sll_object_field_t* pb=b->data.fields;
 		for (sll_arg_count_t i=0;i<dt->field_count;i++){
