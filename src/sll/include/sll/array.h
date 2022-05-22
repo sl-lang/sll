@@ -543,12 +543,11 @@ __SLL_EXTERNAL void sll_array_set(const sll_array_t* array,sll_array_length_t in
  * \group array
  * \subgroup array-data
  * \desc Docs!
- * \arg const sll_array_t* a
- * \arg sll_array_t* o
- * \arg sll_object_t* out
+ * \arg const sll_array_t* array
+ * \arg sll_array_t* out
  * \ret sll_object_t*
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_array_shift(const sll_array_t* a,sll_array_t* o);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_array_shift(const sll_array_t* array,sll_array_t* out);
 
 
 
@@ -557,10 +556,10 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_array_shift(const sll_array_
  * \name sll_array_to_map
  * \group array
  * \desc Docs!
- * \arg const sll_array_t* a
- * \arg sll_map_t* o
+ * \arg const sll_array_t* array
+ * \arg sll_map_t* out
  */
-__SLL_EXTERNAL void sll_array_to_map(const sll_array_t* a,sll_map_t* o);
+__SLL_EXTERNAL void sll_array_to_map(const sll_array_t* array,sll_map_t* out);
 
 
 
@@ -570,11 +569,11 @@ __SLL_EXTERNAL void sll_array_to_map(const sll_array_t* a,sll_map_t* o);
  * \group array
  * \subgroup array-data
  * \desc Docs!
- * \arg const sll_array_t* a
- * \arg sll_object_t* v
- * \arg sll_array_t* o
+ * \arg const sll_array_t* array
+ * \arg sll_object_t* object
+ * \arg sll_array_t* out
  */
-__SLL_EXTERNAL void sll_array_unshift(const sll_array_t* a,sll_object_t* v,sll_array_t* o);
+__SLL_EXTERNAL void sll_array_unshift(const sll_array_t* array,sll_object_t* object,sll_array_t* out);
 
 
 
@@ -586,9 +585,9 @@ __SLL_EXTERNAL void sll_array_unshift(const sll_array_t* a,sll_object_t* v,sll_a
  * \desc Docs!
  * \arg const sll_array_t* a
  * \arg const sll_array_t* b
- * \arg sll_array_t* o
+ * \arg sll_array_t* out
  */
-__SLL_EXTERNAL void sll_array_xor(const sll_array_t* a,const sll_array_t* b,sll_array_t* o);
+__SLL_EXTERNAL void sll_array_xor(const sll_array_t* a,const sll_array_t* b,sll_array_t* out);
 
 
 
@@ -597,9 +596,9 @@ __SLL_EXTERNAL void sll_array_xor(const sll_array_t* a,const sll_array_t* b,sll_
  * \name sll_free_array
  * \group array
  * \desc Docs!
- * \arg sll_array_t* a
+ * \arg sll_array_t* array
  */
-__SLL_EXTERNAL void sll_free_array(sll_array_t* a);
+__SLL_EXTERNAL void sll_free_array(sll_array_t* array);
 
 
 

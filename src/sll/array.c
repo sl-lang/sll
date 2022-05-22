@@ -723,115 +723,115 @@ __SLL_EXTERNAL void sll_array_set(const sll_array_t* array,sll_array_length_t in
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_array_shift(const sll_array_t* a,sll_array_t* o){
-	if (!a){
-		if (!o->length){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_array_shift(const sll_array_t* array,sll_array_t* out){
+	if (!array){
+		if (!out->length){
 			return SLL_ACQUIRE_STATIC_INT(0);
 		}
-		sll_object_t* e=o->data[0];
-		o->length--;
-		for (sll_array_length_t i=0;i<o->length;i++){
-			o->data[i]=o->data[i+1];
+		sll_object_t* e=out->data[0];
+		out->length--;
+		for (sll_array_length_t i=0;i<out->length;i++){
+			out->data[i]=out->data[i+1];
 		}
-		sll_allocator_resize((void**)(&(o->data)),o->length*sizeof(sll_object_t*));
+		sll_allocator_resize((void**)(&(out->data)),out->length*sizeof(sll_object_t*));
 		return e;
 	}
-	if (!a->length){
-		SLL_INIT_ARRAY(o);
+	if (!array->length){
+		SLL_INIT_ARRAY(out);
 		return SLL_ACQUIRE_STATIC_INT(0);
 	}
-	SLL_ACQUIRE(a->data[0]);
-	if (a->length==1){
-		SLL_INIT_ARRAY(o);
+	SLL_ACQUIRE(array->data[0]);
+	if (array->length==1){
+		SLL_INIT_ARRAY(out);
 	}
 	else{
-		o->length=a->length-1;
-		o->data=sll_allocator_init(o->length*sizeof(sll_object_t*));
-		if (!o->data){
+		out->length=array->length-1;
+		out->data=sll_allocator_init(out->length*sizeof(sll_object_t*));
+		if (!out->data){
 			return 0;
 		}
-		for (sll_array_length_t i=0;i<o->length;i++){
-			o->data[i]=a->data[i+1];
-			SLL_ACQUIRE(o->data[i]);
+		for (sll_array_length_t i=0;i<out->length;i++){
+			out->data[i]=array->data[i+1];
+			SLL_ACQUIRE(out->data[i]);
 		}
 	}
-	return a->data[0];
+	return array->data[0];
 }
 
 
 
-__SLL_EXTERNAL void sll_array_to_map(const sll_array_t* a,sll_map_t* o){
-	if (!a->length){
-		SLL_INIT_MAP(o);
+__SLL_EXTERNAL void sll_array_to_map(const sll_array_t* array,sll_map_t* out){
+	if (!array->length){
+		SLL_INIT_MAP(out);
 		return;
 	}
-	o->length=a->length;
-	sll_map_length_t e=a->length<<1;
-	o->data=sll_allocate(e*sizeof(sll_object_t*));
+	out->length=array->length;
+	sll_map_length_t e=array->length<<1;
+	out->data=sll_allocate(e*sizeof(sll_object_t*));
 	sll_array_length_t i=0;
 	for (sll_map_length_t j=0;j<e;j+=2){
-		o->data[j]=sll_int_to_object(i);
-		o->data[j+1]=a->data[i];
-		SLL_ACQUIRE(a->data[i]);
+		out->data[j]=sll_int_to_object(i);
+		out->data[j+1]=array->data[i];
+		SLL_ACQUIRE(array->data[i]);
 		i++;
 	}
 }
 
 
 
-__SLL_EXTERNAL void sll_array_unshift(const sll_array_t* a,sll_object_t* v,sll_array_t* o){
-	if (!a){
-		o->length++;
-		sll_allocator_resize((void**)(&(o->data)),o->length*sizeof(sll_object_t*));
-		for (sll_array_length_t i=o->length-1;i;i--){
-			o->data[i]=o->data[i-1];
+__SLL_EXTERNAL void sll_array_unshift(const sll_array_t* array,sll_object_t* object,sll_array_t* out){
+	if (!array){
+		out->length++;
+		sll_allocator_resize((void**)(&(out->data)),out->length*sizeof(sll_object_t*));
+		for (sll_array_length_t i=out->length-1;i;i--){
+			out->data[i]=out->data[i-1];
 		}
-		o->data[0]=v;
-		SLL_ACQUIRE(v);
+		out->data[0]=object;
+		SLL_ACQUIRE(object);
 		return;
 	}
-	o->length=a->length+1;
-	o->data=sll_allocator_init(o->length*sizeof(sll_object_t*));
-	o->data[0]=v;
-	SLL_ACQUIRE(v);
-	for (sll_array_length_t i=1;i<o->length;i++){
-		o->data[i]=a->data[i-1];
-		SLL_ACQUIRE(o->data[i]);
+	out->length=array->length+1;
+	out->data=sll_allocator_init(out->length*sizeof(sll_object_t*));
+	out->data[0]=object;
+	SLL_ACQUIRE(object);
+	for (sll_array_length_t i=1;i<out->length;i++){
+		out->data[i]=array->data[i-1];
+		SLL_ACQUIRE(out->data[i]);
 	}
 }
 
 
 
-__SLL_EXTERNAL void sll_array_xor(const sll_array_t* a,const sll_array_t* b,sll_array_t* o){
+__SLL_EXTERNAL void sll_array_xor(const sll_array_t* a,const sll_array_t* b,sll_array_t* out){
 	if (b->length>a->length){
 		const sll_array_t* c=a;
 		a=b;
 		b=c;
 	}
 	if (!b->length){
-		sll_array_clone(a,o);
+		sll_array_clone(a,out);
 		return;
 	}
-	o->length=a->length;
-	o->data=sll_allocator_init(o->length*sizeof(sll_object_t*));
+	out->length=a->length;
+	out->data=sll_allocator_init(out->length*sizeof(sll_object_t*));
 	sll_array_length_t i=0;
 	for (;i<b->length;i++){
-		o->data[i]=sll_operator_xor(a->data[i],b->data[i]);
+		out->data[i]=sll_operator_xor(a->data[i],b->data[i]);
 	}
 	while (i<a->length){
 		SLL_ACQUIRE(a->data[i]);
-		o->data[i]=a->data[i];
+		out->data[i]=a->data[i];
 		i++;
 	}
 }
 
 
 
-__SLL_EXTERNAL void sll_free_array(sll_array_t* a){
-	for (sll_array_length_t i=0;i<a->length;i++){
-		SLL_RELEASE(a->data[i]);
+__SLL_EXTERNAL void sll_free_array(sll_array_t* array){
+	for (sll_array_length_t i=0;i<array->length;i++){
+		SLL_RELEASE(array->data[i]);
 	}
-	sll_allocator_release(a->data);
-	a->data=NULL;
-	a->length=0;
+	sll_allocator_release(array->data);
+	array->data=NULL;
+	array->length=0;
 }

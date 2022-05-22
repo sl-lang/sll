@@ -32,9 +32,9 @@ typedef void (*sll_audit_callback_t)(const sll_string_t* name,const sll_array_t*
  * \group audit
  * \desc Docs!
  * \arg const sll_char_t* name
- * \arg const sll_char_t* fmt
+ * \arg const sll_char_t* format
  */
-__SLL_EXTERNAL void sll_audit(const sll_char_t* name,const sll_char_t* fmt,...);
+__SLL_EXTERNAL void sll_audit(const sll_char_t* name,const sll_char_t* format,...);
 
 
 
@@ -56,10 +56,10 @@ __SLL_EXTERNAL sll_bool_t sll_audit_enable(sll_bool_t enable);
  * \group audit
  * \desc Docs!
  * \arg const sll_char_t* name
- * \arg const sll_char_t* fmt
+ * \arg const sll_char_t* format
  * \arg sll_var_arg_list_t* va
  */
-__SLL_EXTERNAL void sll_audit_list(const sll_char_t* name,const sll_char_t* fmt,sll_var_arg_list_t* va);
+__SLL_EXTERNAL void sll_audit_list(const sll_char_t* name,const sll_char_t* format,sll_var_arg_list_t* va);
 
 
 
@@ -68,9 +68,9 @@ __SLL_EXTERNAL void sll_audit_list(const sll_char_t* name,const sll_char_t* fmt,
  * \name sll_audit_register_callback
  * \group audit
  * \desc Docs!
- * \arg sll_audit_callback_t cb_fn
+ * \arg sll_audit_callback_t callback
  */
-__SLL_EXTERNAL void sll_audit_register_callback(sll_audit_callback_t cb_fn);
+__SLL_EXTERNAL void sll_audit_register_callback(sll_audit_callback_t callback);
 
 
 
@@ -79,10 +79,10 @@ __SLL_EXTERNAL void sll_audit_register_callback(sll_audit_callback_t cb_fn);
  * \name sll_audit_unregister_callback
  * \group audit
  * \desc Docs!
- * \arg sll_audit_callback_t cb_fn
+ * \arg sll_audit_callback_t callback
  * \ret sll_bool_t
  */
-__SLL_EXTERNAL sll_bool_t sll_audit_unregister_callback(sll_audit_callback_t cb_fn);
+__SLL_EXTERNAL sll_bool_t sll_audit_unregister_callback(sll_audit_callback_t callback);
 
 
 

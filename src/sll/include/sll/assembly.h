@@ -1911,10 +1911,10 @@ __SLL_EXTERNAL void sll_free_assembly_data(sll_assembly_data_t* assembly_data);
  * \name sll_generate_assembly
  * \group assembly
  * \desc Docs!
- * \arg const sll_source_file_t* sf
- * \arg sll_assembly_data_t* o
+ * \arg const sll_source_file_t* source_file
+ * \arg sll_assembly_data_t* out
  */
-__SLL_EXTERNAL void sll_generate_assembly(const sll_source_file_t* sf,sll_assembly_data_t* o);
+__SLL_EXTERNAL void sll_generate_assembly(const sll_source_file_t* source_file,sll_assembly_data_t* out);
 
 
 
@@ -1924,9 +1924,9 @@ __SLL_EXTERNAL void sll_generate_assembly(const sll_source_file_t* sf,sll_assemb
  * \group assembly
  * \desc Docs!
  * \arg const sll_assembly_data_t* assembly_data
- * \arg sll_file_t* wf
+ * \arg sll_file_t* out
  */
-__SLL_EXTERNAL void sll_print_assembly(const sll_assembly_data_t* assembly_data,sll_file_t* wf);
+__SLL_EXTERNAL void sll_print_assembly(const sll_assembly_data_t* assembly_data,sll_file_t* out);
 
 
 
