@@ -198,7 +198,7 @@ static const sll_node_t* _mark_loop_change(const sll_node_t* node){
 			LOCK_IDENTIFIER(var->data.identifier_index);
 		}
 		else{
-			// SLL_UNIMPLEMENTED();
+			SLL_UNIMPLEMENTED();
 		}
 	}
 	sll_arg_count_t arg_count=0;
@@ -307,7 +307,7 @@ OPTIMIZER_FUNTION(known_variables){
 			}
 		}
 		else{
-			// SLL_UNIMPLEMENTED();
+			SLL_UNIMPLEMENTED();
 		}
 	}
 	return node;
