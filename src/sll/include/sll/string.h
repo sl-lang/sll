@@ -377,11 +377,11 @@ __SLL_EXTERNAL void sll_string_concat_chars(sll_char_t a,sll_char_t b,sll_string
  * \group string
  * \subgroup string-op
  * \desc Docs!
- * \arg const sll_string_t* a
- * \arg const sll_string_t* b
+ * \arg const sll_string_t* string
+ * \arg const sll_string_t* substring
  * \ret sll_string_length_t
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_length_t sll_string_count(const sll_string_t* a,const sll_string_t* b);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_length_t sll_string_count(const sll_string_t* string,const sll_string_t* substring);
 
 
 
