@@ -326,7 +326,7 @@
 		"windows" "__declspec(dllimport) "
 	>
 	"build/sll.h"
-	(+ output_executable_args ["-b" "-d" "-D" "-n" "-N" "/" "-R" "-B" "build/lib/stdlib.slb" COMMAND_MARKER_INPUT])
+	(+ output_executable_args ["-b" "-d" "-D" "-O" "-n" "-N" "/" "-R" "-B" "build/lib/stdlib.slb" COMMAND_MARKER_INPUT])
 	(+ output_executable_args ["-b" "-n" "-N" "/" "-R" "-B" "build/lib_debug/stdlib.slb" COMMAND_MARKER_INPUT])
 	(+ output_executable_args ["-c" "-R" "-I" "build/lib" "-I" "src/sll/lib" "-o" "build/lib/" COMMAND_MARKER_INPUT])
 	"src/sll/data/operator_parser.txt"

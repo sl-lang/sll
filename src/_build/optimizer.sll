@@ -32,7 +32,7 @@
 	(= data ([> (= i 0) (< i ($ data))
 		(= line (<- string$trim (: data i)))
 		(++ i)
-		(? (! line) (<<<))
+		(? (|| (! line) (=== (: line 0) '#')) (<<<))
 		(= line (<- string$split line ':'))
 		(= name (: line 0))
 		(= line (>> line 1))

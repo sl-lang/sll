@@ -10,7 +10,7 @@
 
 static sll_node_t* _visit_node(sll_source_file_t* source_file,sll_node_t* node,sll_node_t* parent){
 	SKIP_NODE_NOP(node);
-	sll_arg_count_t arg_count=0;
+	sll_arg_count_t* arg_count=NULL;
 	switch (node->type){
 		case SLL_NODE_TYPE_INT:
 		case SLL_NODE_TYPE_FLOAT:
@@ -22,14 +22,14 @@ static sll_node_t* _visit_node(sll_source_file_t* source_file,sll_node_t* node,s
 		case SLL_NODE_TYPE_FUNCTION_ID:
 			break;
 		case SLL_NODE_TYPE_ARRAY:
-			arg_count=node->data.array_length;
+			arg_count=&(node->data.array_length);
 			break;
 		case SLL_NODE_TYPE_MAP:
-			arg_count=node->data.map_length;
+			arg_count=&(node->data.map_length);
 			break;
 		case SLL_NODE_TYPE_FUNC:
 		case SLL_NODE_TYPE_INTERNAL_FUNC:
-			arg_count=node->data.function.arg_count;
+			arg_count=&(node->data.function.arg_count);
 			break;
 		case SLL_NODE_TYPE_FOR:
 		case SLL_NODE_TYPE_WHILE:
@@ -38,20 +38,31 @@ static sll_node_t* _visit_node(sll_source_file_t* source_file,sll_node_t* node,s
 		case SLL_NODE_TYPE_WHILE_ARRAY:
 		case SLL_NODE_TYPE_FOR_MAP:
 		case SLL_NODE_TYPE_WHILE_MAP:
-			arg_count=node->data.loop.arg_count;
+			arg_count=&(node->data.loop.arg_count);
 			break;
 		default:
-			arg_count=node->data.arg_count;
+			arg_count=&(node->data.arg_count);
 			break;
 	}
 	_pre_visit_optimizer(source_file,node,parent);
 	sll_node_t* current_node=node;
 	node++;
-	sll_node_t** children=sll_allocate_stack(arg_count*sizeof(sll_node_t*));
-	for (sll_arg_count_t i=0;i<arg_count;i++){
-		SKIP_NODE_NOP(node);
-		*(children+i)=node;
-		node=_visit_node(source_file,node,current_node);
+	sll_node_t** children=sll_allocate_stack(1);
+	if (arg_count){
+		sll_arg_count_t i=0;
+		while (i<*arg_count){
+			i++;
+			children=sll_reallocate(children,i*sizeof(sll_node_t*));
+			*(children+i-1)=node;
+			sll_arg_count_t old_ac=*arg_count;
+			node=_visit_node(source_file,node,current_node);
+			if (*arg_count<old_ac){
+				i--;
+			}
+			else{
+				SKIP_NODE_NOP(*(children+i-1));
+			}
+		}
 	}
 	_visit_optimizer(source_file,current_node,children,parent);
 	sll_deallocate(children);
@@ -78,7 +89,7 @@ void _unneeded_result(sll_arg_count_t* arg_count,sll_node_t* node){
 		case SLL_NODE_TYPE_COMMA:
 		case SLL_NODE_TYPE_OPERATION_LIST:
 			node->type=SLL_NODE_TYPE_NOP;
-			(*arg_count)+=node->data.arg_count;
+			(*arg_count)+=node->data.arg_count-1;
 			break;
 	}
 }

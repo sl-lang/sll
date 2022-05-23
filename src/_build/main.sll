@@ -21,7 +21,6 @@
 	config$VERSION
 )
 (<- util$create_output_dir)
-(<- hashlist$init)
 (<- assembly$generate_assembly_optimizer)
 (<- optimizer$generate_optimizer)
 (<- operator_parser$generate_operator_parser)
@@ -33,6 +32,7 @@
 	(@@)
 })
 (<- header$generate_library_header docs)
+(<- hashlist$init)
 (<- build$build_sll)
 (<- build$build_sll_cli)
 (<- build$build_modules)
@@ -43,7 +43,7 @@
 (? config$OPTIONS$RUN {
 	(? (||
 		(<- util$execute [output_executable "-h"])
-		(<- util$execute (+ [output_executable "-v" "-O" "-c" "-o" "build/test" "-e" "-R" "examples/_internal_test/test.sll" "-I" "@internal|examples/_internal_test" "-p"] (* ["-r"] config$OPTIONS$RELEASE)))
+		(<- util$execute (+ [output_executable "-v" "-O" "-c" "-o" "build/test" "-e" "-R" "examples/_internal_test/test.sll" "-I" "@internal|examples/_internal_test"] (* ["-r"] config$OPTIONS$RELEASE)))
 		(<- util$execute [output_executable "build/test.slc" "-v" "-O" "-e" "-a" "-c" "-o" "build/test2" "-R"])
 		(<- util$execute (+
 			(?: (: sys$ENVIRONMENT "SLL_DEBUGGER") (: config$DEBUGGER_COMMAND sys$PLATFORM) [])
