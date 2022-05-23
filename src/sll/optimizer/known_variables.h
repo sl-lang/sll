@@ -1,5 +1,6 @@
 #include <sll/_internal/common.h>
 #include <sll/_internal/optimizer.h>
+#include <sll/_internal/stack.h>
 #include <sll/_internal/static_object.h>
 #include <sll/_internal/util.h>
 #include <sll/_size_types.h>
@@ -117,31 +118,73 @@ static const sll_node_t* _parse_value(const sll_source_file_t* source_file,const
 
 
 
-static void _build_value(sll_source_file_t* source_file,sll_object_t* object,sll_node_t* out){
+static sll_node_offset_t _get_value_size(sll_object_t* object){
 	switch (object->type){
 		case SLL_OBJECT_TYPE_INT:
-			out->type=SLL_NODE_TYPE_INT;
-			out->data.int_=object->data.int_;
-			break;
 		case SLL_OBJECT_TYPE_FLOAT:
-			out->type=SLL_NODE_TYPE_FLOAT;
-			out->data.float_=object->data.float_;
-			break;
 		case SLL_OBJECT_TYPE_CHAR:
-			out->type=SLL_NODE_TYPE_CHAR;
-			out->data.char_=object->data.char_;
-			break;
 		case SLL_OBJECT_TYPE_STRING:
+			return 1;
+		case SLL_OBJECT_TYPE_ARRAY:
 			{
-				sll_string_t tmp;
-				sll_string_clone(&(object->data.string),&tmp);
-				out->type=SLL_NODE_TYPE_STRING;
-				out->data.string_index=sll_add_string(&(source_file->string_table),&tmp);
-				break;
+				sll_node_offset_t out=1;
+				for (sll_array_length_t i=0;i<object->data.array.length;i++){
+					out+=_get_value_size(object->data.array.data[i]);
+				}
+				return out;
+			}
+		case SLL_OBJECT_TYPE_MAP:
+			{
+				sll_node_offset_t out=1;
+				for (sll_map_length_t i=0;i<(object->data.map.length<<1);i++){
+					out+=_get_value_size(object->data.map.data[i]);
+				}
+				return out;
 			}
 		default:
 			SLL_UNIMPLEMENTED();
 	}
+}
+
+
+
+static sll_node_t* _build_value(sll_source_file_t* source_file,sll_object_t* object,sll_node_t* node){
+	SKIP_NODE_NOP(node);
+	switch (object->type){
+		case SLL_OBJECT_TYPE_INT:
+			node->type=SLL_NODE_TYPE_INT;
+			node->data.int_=object->data.int_;
+			return node+1;
+		case SLL_OBJECT_TYPE_FLOAT:
+			node->type=SLL_NODE_TYPE_FLOAT;
+			node->data.float_=object->data.float_;
+			return node+1;
+		case SLL_OBJECT_TYPE_CHAR:
+			node->type=SLL_NODE_TYPE_CHAR;
+			node->data.char_=object->data.char_;
+			return node+1;
+		case SLL_OBJECT_TYPE_STRING:
+			{
+				sll_string_t tmp;
+				sll_string_clone(&(object->data.string),&tmp);
+				node->type=SLL_NODE_TYPE_STRING;
+				node->data.string_index=sll_add_string(&(source_file->string_table),&tmp);
+				return node+1;
+			}
+		case SLL_OBJECT_TYPE_ARRAY:
+			{
+				node->type=SLL_NODE_TYPE_NOP;
+				_require_node_stack_space(source_file,node,_get_value_size(object));
+				node->type=SLL_NODE_TYPE_ARRAY;
+				node->data.array_length=object->data.array.length;
+				node++;
+				for (sll_array_length_t i=0;i<object->data.array.length;i++){
+					node=_build_value(source_file,object->data.array.data[i],node);
+				}
+				return node;
+			}
+	}
+	SLL_UNIMPLEMENTED();
 }
 
 
@@ -242,10 +285,12 @@ OPTIMIZER_FUNTION(known_variables){
 			var=var->next;
 		}
 	}
-	else if (node->type==SLL_NODE_TYPE_IDENTIFIER&&parent&&parent->type!=SLL_NODE_TYPE_ASSIGN&&parent->type!=SLL_NODE_TYPE_ACCESS&&parent->type!=SLL_NODE_TYPE_VAR_ACCESS&&parent->type!=SLL_NODE_TYPE_INC&&parent->type!=SLL_NODE_TYPE_DEC){
+	else if (node->type==SLL_NODE_TYPE_IDENTIFIER&&(!parent||(parent->type!=SLL_NODE_TYPE_ASSIGN&&parent->type!=SLL_NODE_TYPE_ACCESS&&parent->type!=SLL_NODE_TYPE_VAR_ACCESS&&parent->type!=SLL_NODE_TYPE_INC&&parent->type!=SLL_NODE_TYPE_DEC&&parent->type!=SLL_NODE_TYPE_CALL))){
 		variable_data_t* var_data=GET_VARIABLE_DATA(node->data.identifier_index);
 		if (var_data->value){
-			_build_value(source_file,var_data->value,node);
+			node=_build_value(source_file,var_data->value,node);
+			REWIND_NODE(node);
+			return node;
 		}
 	}
 	else if (node->type==SLL_NODE_TYPE_ASSIGN){

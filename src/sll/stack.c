@@ -147,3 +147,37 @@ void _init_node_stack(sll_source_file_t* sf){
 	s->type=SLL_NODE_TYPE_CHANGE_STACK;
 	s->data._next_node=NULL;
 }
+
+
+
+void _require_node_stack_space(sll_source_file_t* sf,sll_node_t* node,sll_node_offset_t size){
+	if (!size){
+		return;
+	}
+	sll_node_t* source=sf->_stack.next_node-1;
+	if (node->type==SLL_NODE_TYPE_CHANGE_STACK){
+		node=node->data._next_node;
+	}
+	if (source->type==SLL_NODE_TYPE_CHANGE_STACK){
+		source=source->data._next_node;
+	}
+	for (sll_node_offset_t i=1;i<size;i++){
+		_acquire_next_node(sf);
+	}
+	sll_node_t* dest=_acquire_next_node(sf);
+	do{
+		*dest=*source;
+		if (dest->type==SLL_NODE_TYPE_FUNC){
+			(*(sf->function_table.data+dest->data.function.function_index))->offset+=size;
+		}
+		source--;
+		if (source->type==SLL_NODE_TYPE_CHANGE_STACK){
+			source=source->data._next_node;
+		}
+		dest--;
+		if (dest->type==SLL_NODE_TYPE_CHANGE_STACK){
+			dest=dest->data._next_node;
+		}
+	} while (source!=node);
+	*dest=*source;
+}

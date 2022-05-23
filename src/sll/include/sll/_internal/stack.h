@@ -51,4 +51,8 @@ void _init_node_stack(sll_source_file_t* sf);
 
 
 
+void _require_node_stack_space(sll_source_file_t* sf,sll_node_t* start,sll_node_offset_t size);
+
+
+
 #endif
