@@ -750,8 +750,8 @@ _read_file_argument:
 			}
 			if (_cli_flags&SLL_CLI_FLAG_OPTIMIZE){
 				SLL_LOG("Optimizing compilation data...");
-				for (sll_source_file_index_t i=0;i<compilation_data.length;i++){
-					sll_optimize_source_file(*(compilation_data.data+i));
+				for (sll_source_file_index_t k=0;k<compilation_data.length;k++){
+					sll_optimize_source_file(*(compilation_data.data+k));
 				}
 			}
 			if (_cli_flags&SLL_CLI_FLAG_STRIP_DEBUG){
