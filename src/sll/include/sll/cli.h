@@ -109,13 +109,25 @@
 
 /**
  * \flags macro var
+ * \name SLL_CLI_FLAG_OPTIMIZE
+ * \group cli
+ * \subgroup cli-flag
+ * \desc Docs!
+ * \type __SLL_U32
+ */
+#define SLL_CLI_FLAG_OPTIMIZE 128
+
+
+
+/**
+ * \flags macro var
  * \name SLL_CLI_FLAG_PRINT_ASSEMBLY
  * \group cli
  * \subgroup cli-flag
  * \desc Docs!
  * \type __SLL_U32
  */
-#define SLL_CLI_FLAG_PRINT_ASSEMBLY 128
+#define SLL_CLI_FLAG_PRINT_ASSEMBLY 256
 
 
 
@@ -127,7 +139,7 @@
  * \desc Docs!
  * \type __SLL_U32
  */
-#define SLL_CLI_FLAG_PRINT_NODES 256
+#define SLL_CLI_FLAG_PRINT_NODES 512
 
 
 
@@ -139,7 +151,7 @@
  * \desc Docs!
  * \type __SLL_U32
  */
-#define SLL_CLI_FLAG_RELEASE_MODE 512
+#define SLL_CLI_FLAG_RELEASE_MODE 1024
 
 
 
@@ -151,7 +163,7 @@
  * \desc Docs!
  * \type __SLL_U32
  */
-#define SLL_CLI_FLAG_STRIP_DEBUG 1024
+#define SLL_CLI_FLAG_STRIP_DEBUG 2048
 
 
 
@@ -163,7 +175,7 @@
  * \desc Docs!
  * \type __SLL_U32
  */
-#define SLL_CLI_FLAG_STRIP_NAMES 2048
+#define SLL_CLI_FLAG_STRIP_NAMES 4096
 
 
 
@@ -175,7 +187,7 @@
  * \desc Docs!
  * \type __SLL_U32
  */
-#define SLL_CLI_FLAG_VERBOSE 4096
+#define SLL_CLI_FLAG_VERBOSE 8192
 
 
 
@@ -187,7 +199,7 @@
  * \desc Docs!
  * \type __SLL_U32
  */
-#define SLL_CLI_FLAG_VERSION 8192
+#define SLL_CLI_FLAG_VERSION 16384
 
 
 
@@ -199,7 +211,7 @@
  * \desc Internally used as `CLI_FLAG_SINGLE_OUTPUT`
  * \type __SLL_U32
  */
-#define SLL_CLI_FLAG_RESERVED0 16384
+#define SLL_CLI_FLAG_RESERVED0 32768
 
 
 

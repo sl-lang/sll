@@ -22,6 +22,7 @@
 #include <sll/memory.h>
 #include <sll/new_object.h>
 #include <sll/node.h>
+#include <sll/optimizer.h>
 #include <sll/platform/library.h>
 #include <sll/platform/path.h>
 #include <sll/platform/process.h>
@@ -94,7 +95,7 @@ static void _check_release_mode(sll_array_length_t argc,const sll_char_t*const*a
 		if (nm=='A'||sll_string_compare_pointer(e,SLL_CHAR("--args"))==SLL_COMPARE_RESULT_EQUAL){
 			break;
 		}
-		else if (nm=='f'||nm=='F'||nm=='i'||nm=='I'||nm=='L'||nm=='N'||nm=='o'||nm=='O'||nm=='s'||nm=='S'||sll_string_compare_pointer(e,SLL_CHAR("--file"))==SLL_COMPARE_RESULT_EQUAL||sll_string_compare_pointer(e,SLL_CHAR("--file-path-resolver"))==SLL_COMPARE_RESULT_EQUAL||sll_string_compare_pointer(e,SLL_CHAR("--install-path"))==SLL_COMPARE_RESULT_EQUAL||sll_string_compare_pointer(e,SLL_CHAR("--include"))==SLL_COMPARE_RESULT_EQUAL||sll_string_compare_pointer(e,SLL_CHAR("--audit-library"))==SLL_COMPARE_RESULT_EQUAL||sll_string_compare_pointer(e,SLL_CHAR("--bundle-name"))==SLL_COMPARE_RESULT_EQUAL||sll_string_compare_pointer(e,SLL_CHAR("--output"))==SLL_COMPARE_RESULT_EQUAL||sll_string_compare_pointer(e,SLL_CHAR("--bundle-output"))==SLL_COMPARE_RESULT_EQUAL||sll_string_compare_pointer(e,SLL_CHAR("--source"))==SLL_COMPARE_RESULT_EQUAL||sll_string_compare_pointer(e,SLL_CHAR("--sandbox"))==SLL_COMPARE_RESULT_EQUAL){
+		else if (nm=='B'||nm=='f'||nm=='F'||nm=='i'||nm=='I'||nm=='L'||nm=='N'||nm=='o'||nm=='s'||nm=='S'||sll_string_compare_pointer(e,SLL_CHAR("--file"))==SLL_COMPARE_RESULT_EQUAL||sll_string_compare_pointer(e,SLL_CHAR("--file-path-resolver"))==SLL_COMPARE_RESULT_EQUAL||sll_string_compare_pointer(e,SLL_CHAR("--install-path"))==SLL_COMPARE_RESULT_EQUAL||sll_string_compare_pointer(e,SLL_CHAR("--include"))==SLL_COMPARE_RESULT_EQUAL||sll_string_compare_pointer(e,SLL_CHAR("--audit-library"))==SLL_COMPARE_RESULT_EQUAL||sll_string_compare_pointer(e,SLL_CHAR("--bundle-name"))==SLL_COMPARE_RESULT_EQUAL||sll_string_compare_pointer(e,SLL_CHAR("--output"))==SLL_COMPARE_RESULT_EQUAL||sll_string_compare_pointer(e,SLL_CHAR("--bundle-output"))==SLL_COMPARE_RESULT_EQUAL||sll_string_compare_pointer(e,SLL_CHAR("--source"))==SLL_COMPARE_RESULT_EQUAL||sll_string_compare_pointer(e,SLL_CHAR("--sandbox"))==SLL_COMPARE_RESULT_EQUAL){
 			if (argc){
 				argc--;
 				argv++;
@@ -334,6 +335,13 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_code_t sll_cli_main(sll_array_lengt
 		else if (nm=='b'||sll_string_compare_pointer(e,SLL_CHAR("--bundle"))==SLL_COMPARE_RESULT_EQUAL){
 			_cli_flags|=SLL_CLI_FLAG_GENERATE_BUNDLE;
 		}
+		else if (nm=='B'||sll_string_compare_pointer(e,SLL_CHAR("--bundle-output"))==SLL_COMPARE_RESULT_EQUAL){
+			i++;
+			if (i==argc){
+				break;
+			}
+			b_o_fp=argv[i];
+		}
 		else if (nm=='c'||sll_string_compare_pointer(e,SLL_CHAR("--generate-compiled-object"))==SLL_COMPARE_RESULT_EQUAL){
 			_cli_flags|=SLL_CLI_FLAG_GENERATE_COMPILED_OBJECT;
 		}
@@ -508,12 +516,8 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_code_t sll_cli_main(sll_array_lengt
 			}
 			o_fp=argv[i];
 		}
-		else if (nm=='O'||sll_string_compare_pointer(e,SLL_CHAR("--bundle-output"))==SLL_COMPARE_RESULT_EQUAL){
-			i++;
-			if (i==argc){
-				break;
-			}
-			b_o_fp=argv[i];
+		else if (nm=='O'||sll_string_compare_pointer(e,SLL_CHAR("--optimize"))==SLL_COMPARE_RESULT_EQUAL){
+			_cli_flags|=SLL_CLI_FLAG_OPTIMIZE;
 		}
 		else if (nm=='p'||sll_string_compare_pointer(e,SLL_CHAR("--print-objects"))==SLL_COMPARE_RESULT_EQUAL){
 			_cli_flags|=SLL_CLI_FLAG_PRINT_NODES;
@@ -649,6 +653,9 @@ _read_file_argument:
 		if (!(_cli_flags&SLL_CLI_FLAG_NO_RUN)){
 			SLL_LOG("  Execution");
 		}
+		if (_cli_flags&SLL_CLI_FLAG_OPTIMIZE){
+			SLL_LOG("  Optimizations");
+		}
 		if (_cli_flags&SLL_CLI_FLAG_PRINT_ASSEMBLY){
 			SLL_LOG("  Assembly printing");
 		}
@@ -740,6 +747,12 @@ _read_file_argument:
 				sll_unify_compilation_data(&compilation_data,&a_dt_sf);
 				sll_free_compilation_data(&compilation_data);
 				sll_compilation_data_from_source_file(&a_dt_sf,&compilation_data);
+			}
+			if (_cli_flags&SLL_CLI_FLAG_OPTIMIZE){
+				SLL_LOG("Optimizing compilation data...");
+				for (sll_source_file_index_t i=0;i<compilation_data.length;i++){
+					sll_optimize_source_file(*(compilation_data.data+i));
+				}
 			}
 			if (_cli_flags&SLL_CLI_FLAG_STRIP_DEBUG){
 				SLL_LOG("Removing debugging data...");
