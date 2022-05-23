@@ -86,10 +86,49 @@ void _unneeded_result(sll_arg_count_t* arg_count,sll_node_t* node){
 			break;
 		case SLL_NODE_TYPE_ARRAY:
 		case SLL_NODE_TYPE_MAP:
+		case SLL_NODE_TYPE_NOT:
+		case SLL_NODE_TYPE_BOOL:
+		case SLL_NODE_TYPE_INTERNAL_FUNC:
+		case SLL_NODE_TYPE_INTERNAL_FUNC_LOAD:
+		case SLL_NODE_TYPE_ADD:
+		case SLL_NODE_TYPE_SUB:
+		case SLL_NODE_TYPE_MULT:
+		case SLL_NODE_TYPE_DIV:
+		case SLL_NODE_TYPE_FLOOR_DIV:
+		case SLL_NODE_TYPE_MOD:
+		case SLL_NODE_TYPE_BIT_AND:
+		case SLL_NODE_TYPE_BIT_OR:
+		case SLL_NODE_TYPE_BIT_XOR:
+		case SLL_NODE_TYPE_BIT_NOT:
+		case SLL_NODE_TYPE_BIT_RSHIFT:
+		case SLL_NODE_TYPE_BIT_LSHIFT:
+		case SLL_NODE_TYPE_LENGTH:
+		case SLL_NODE_TYPE_ACCESS:
+		case SLL_NODE_TYPE_DEEP_COPY:
+		case SLL_NODE_TYPE_VAR_ACCESS:
+		case SLL_NODE_TYPE_HAS:
+		case SLL_NODE_TYPE_CAST:
+		case SLL_NODE_TYPE_TYPEOF:
+		case SLL_NODE_TYPE_NAMEOF:
+		case SLL_NODE_TYPE_NAMEOF_TYPE:
+		case SLL_NODE_TYPE_DECL:
+		case SLL_NODE_TYPE_NEW:
+		case SLL_NODE_TYPE_REF:
 		case SLL_NODE_TYPE_COMMA:
 		case SLL_NODE_TYPE_OPERATION_LIST:
 			node->type=SLL_NODE_TYPE_NOP;
 			(*arg_count)+=node->data.arg_count-1;
+			break;
+		case SLL_NODE_TYPE_INLINE_IF:
+			node->type=SLL_NODE_TYPE_IF;
+			break;
+		case SLL_NODE_TYPE_FOR_ARRAY:
+		case SLL_NODE_TYPE_FOR_MAP:
+			node->type=SLL_NODE_TYPE_FOR;
+			break;
+		case SLL_NODE_TYPE_WHILE_ARRAY:
+		case SLL_NODE_TYPE_WHILE_MAP:
+			node->type=SLL_NODE_TYPE_WHILE;
 			break;
 	}
 }
