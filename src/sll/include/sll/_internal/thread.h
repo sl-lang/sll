@@ -71,7 +71,7 @@ extern thread_data_t** _thread_data;
 
 
 
-thread_data_t* _thread_get(sll_thread_index_t t);
+thread_data_t* _thread_get(sll_thread_index_t thread_index);
 
 
 
@@ -79,11 +79,11 @@ sll_thread_index_t _thread_new(void);
 
 
 
-void _thread_terminate(sll_object_t* ret);
+void _thread_terminate(sll_object_t* return_value);
 
 
 
-sll_bool_t _thread_wait(sll_integer_t w);
+sll_bool_t _thread_wait(sll_integer_t thread_index);
 
 
 
