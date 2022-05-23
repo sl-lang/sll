@@ -1,5 +1,6 @@
 (---
 	"@build-script/config.sll"
+	"array.sll"
 	"file.sll"
 	"log.sll"
 	"string.sll"
@@ -26,10 +27,15 @@
 		)
 		'\n'
 	))
+	(= init_and_deinit [])
 	(= data ([> (= i 0) (< i ($ data))
 		(= line (<- string$trim (: data i)))
 		(++ i)
 		(? (! line) (<<<))
+		(? (=== (: line 0) '!') {
+			(= line (>> line 1))
+			(<- array$push init_and_deinit line)
+		})
 		line
 	))
 	(<- log$log "  Generating code in '" config$OPTIMIZER_OUTPUT_FILE_PATH "'...")
@@ -49,14 +55,38 @@
 `
 
 
+static __SLL_FORCE_INLINE void _deinit_optimizer(sll_source_file_t* source_file){
+`)
+	(-> (= i 0) (< i ($ init_and_deinit))
+		(= name (: init_and_deinit i))
+		(<- file$write fh "\t__optimizer_deinit_" name "(source_file);\n")
+		(++ i)
+	)
+	(<- file$write fh
+`}
+
+
+
+static __SLL_FORCE_INLINE void _init_optimizer(sll_source_file_t* source_file){
+`)
+	(-> (= i 0) (< i ($ init_and_deinit))
+		(= name (: init_and_deinit i))
+		(<- file$write fh "\t__optimizer_init_" name "(source_file);\n")
+		(++ i)
+	)
+	(<- file$write fh
+`}
+
+
+
 static __SLL_FORCE_INLINE void _execute_optimizer(sll_source_file_t* source_file,sll_node_t* node,sll_node_t*const* children,sll_node_t* parent){
 `)
 	(-> (= i 0) (< i ($ data))
 		(= name (: data i))
 		(<- file$write fh '\t')
-		(? i (<- file$write fh "node="))
-		(<- file$write fh "__optimizer_" name "(source_file,node,children,parent);\n")
 		(++ i)
+		(? (!== i ($ data)) (<- file$write fh "node="))
+		(<- file$write fh "__optimizer_" name "(source_file,node,children,parent);\n")
 	)
 	(<- file$write fh
 `}

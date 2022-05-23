@@ -20,5 +20,11 @@ OPTIMIZER_FUNTION(optimize_assign){
 		node->type=SLL_NODE_TYPE_NOP;
 		node=*children;
 	}
+	else{
+		sll_node_t* var=*children;
+		if (var->type!=SLL_NODE_TYPE_IDENTIFIER&&var->type!=SLL_NODE_TYPE_ACCESS&&var->type!=SLL_NODE_TYPE_VAR_ACCESS){
+			SLL_UNIMPLEMENTED();
+		}
+	}
 	return node;
 }

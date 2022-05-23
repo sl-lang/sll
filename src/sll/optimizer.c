@@ -94,5 +94,7 @@ __SLL_EXTERNAL void sll_optimize_source_file(sll_source_file_t* source_file){
 	if (!source_file->first_node){
 		return;
 	}
+	_init_optimizer(source_file);
 	_visit_node(source_file,source_file->first_node,NULL);
+	_deinit_optimizer(source_file);
 }

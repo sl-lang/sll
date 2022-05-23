@@ -2,4 +2,4 @@ optimize_print
 optimize_assign
 optimize_comma
 optimize_operation_list
-known_variables
+!known_variables
