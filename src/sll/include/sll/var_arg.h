@@ -70,15 +70,15 @@
  * \group var-arg
  * \desc Docs!
  * \arg sll_var_arg_list_t* va
- * \arg sll_object_t*const* ptr
- * \arg sll_arg_count_t cnt
+ * \arg sll_object_t*const* pointer_
+ * \arg sll_arg_count_t count_
  */
-#define SLL_VAR_ARG_INIT_SLL(va,ptr,cnt) \
+#define SLL_VAR_ARG_INIT_SLL(va,pointer_,count_) \
 	do{ \
 		sll_var_arg_list_t* __va=(va); \
 		__va->type=SLL_VAR_ARG_LIST_TYPE_SLL; \
-		__va->data.sll.pointer=(ptr); \
-		__va->data.sll.count=(cnt); \
+		__va->data.sll.pointer=(pointer_); \
+		__va->data.sll.count=(count_); \
 	} while (0)
 
 
@@ -192,9 +192,9 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_char_t sll_var_arg_get_char(sll_var_arg_li
  * \group var-arg
  * \desc Docs!
  * \arg sll_var_arg_list_t* va
- * \arg sll_complex_t* o
+ * \arg sll_complex_t* out
  */
-__SLL_EXTERNAL void sll_var_arg_get_complex(sll_var_arg_list_t* va,sll_complex_t* o);
+__SLL_EXTERNAL void sll_var_arg_get_complex(sll_var_arg_list_t* va,sll_complex_t* out);
 
 
 
@@ -240,9 +240,9 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_var_arg_get_object(sll_var_a
  * \group var-arg
  * \desc Docs!
  * \arg sll_var_arg_list_t* va
- * \arg sll_string_t* o
+ * \arg sll_string_t* out
  */
-__SLL_EXTERNAL void sll_var_arg_get_string(sll_var_arg_list_t* va,sll_string_t* o);
+__SLL_EXTERNAL void sll_var_arg_get_string(sll_var_arg_list_t* va,sll_string_t* out);
 
 
 

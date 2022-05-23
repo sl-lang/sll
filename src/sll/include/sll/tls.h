@@ -19,12 +19,12 @@
  * \name SLL_INIT_TLS
  * \group tls
  * \desc Docs!
- * \arg sll_tls_object_t* o
+ * \arg sll_tls_object_t* out
  */
-#define SLL_INIT_TLS(o) \
+#define SLL_INIT_TLS(out) \
 	do{ \
-		(o)->sz=0; \
-		(o)->dt=NULL; \
+		(out)->sz=0; \
+		(out)->dt=NULL; \
 	} while (0)
 
 

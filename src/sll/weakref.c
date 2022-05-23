@@ -17,12 +17,12 @@ static sll_weak_reference_t _weakref_next=NULL;
 
 
 
-static sll_weak_reference_t _create_new(addr_t obj){
+static sll_weak_reference_t _create_new(addr_t object){
 	_weakref_data_len++;
 	_weakref_data=sll_reallocate(_weakref_data,_weakref_data_len*sizeof(weakref_key_pair_t*));
 	_weakref_next=PTR(ADDR(_weakref_next)+1);
 	weakref_key_pair_t* kp=sll_allocate(sizeof(weakref_key_pair_t));
-	kp->object=obj;
+	kp->object=object;
 	kp->wr=_weakref_next;
 	kp->destructor=NULL;
 	kp->ctx=NULL;
@@ -45,15 +45,15 @@ void _weakref_cleanup_data(void){
 
 
 
-void _weakref_delete(sll_object_t* o){
-	SLL_ASSERT(o->_flags&GC_FLAG_HAS_WEAKREF);
+void _weakref_delete(sll_object_t* object){
+	SLL_ASSERT(object->_flags&GC_FLAG_HAS_WEAKREF);
 	sll_array_length_t i=0;
 	weakref_key_pair_t** kp=_weakref_data;
 	for (sll_array_length_t j=0;j<_weakref_data_len;j++){
 		weakref_key_pair_t* v=*kp;
-		if (v->object==ADDR(o)){
+		if (v->object==ADDR(object)){
 			if (v->destructor){
-				v->destructor(v->wr,o,v->ctx);
+				v->destructor(v->wr,object,v->ctx);
 			}
 			sll_deallocate(v);
 		}
@@ -83,9 +83,9 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_weak_reference_t sll_weakref_clone(sll_wea
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_weak_reference_t sll_weakref_create(sll_object_t* o){
-	o->_flags|=GC_FLAG_HAS_WEAKREF;
-	return _create_new(ADDR(o));
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_weak_reference_t sll_weakref_create(sll_object_t* object){
+	object->_flags|=GC_FLAG_HAS_WEAKREF;
+	return _create_new(ADDR(object));
 }
 
 
@@ -125,12 +125,12 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_weakref_get(sll_weak_referen
 
 
 
-__SLL_EXTERNAL void sll_weakref_set_callback(sll_weak_reference_t wr,sll_weak_ref_destructor_t cb,void* arg){
+__SLL_EXTERNAL void sll_weakref_set_callback(sll_weak_reference_t wr,sll_weak_ref_destructor_t destructor,void* arg){
 	weakref_key_pair_t** kp=_weakref_data;
 	for (sll_array_length_t i=0;i<_weakref_data_len;i++){
 		weakref_key_pair_t* v=*kp;
 		if (v->wr==wr){
-			v->destructor=cb;
+			v->destructor=destructor;
 			v->ctx=arg;
 			return;
 		}

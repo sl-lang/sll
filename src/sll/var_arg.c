@@ -98,23 +98,23 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_char_t sll_var_arg_get_char(sll_var_arg_li
 
 
 
-__SLL_EXTERNAL void sll_var_arg_get_complex(sll_var_arg_list_t* va,sll_complex_t* o){
+__SLL_EXTERNAL void sll_var_arg_get_complex(sll_var_arg_list_t* va,sll_complex_t* out){
 	if (va->type==SLL_VAR_ARG_LIST_TYPE_C){
-		*o=*va_arg(*(va->data.c),sll_complex_t*);
+		*out=*va_arg(*(va->data.c),sll_complex_t*);
 	}
 	else if (va->type==VAR_ARG_LIST_TYPE_STRUCT){
 		SLL_ASSERT(va->data.struct_.offset_count);
 		sll_size_t off=*(va->data.struct_.offset_data);
 		va->data.struct_.offset_data++;
 		va->data.struct_.offset_count--;
-		*o=*((sll_complex_t*)PTR(ADDR(va->data.struct_.base_pointer)+off));
+		*out=*((sll_complex_t*)PTR(ADDR(va->data.struct_.base_pointer)+off));
 	}
 	else if (!va->data.sll.count){
-		SLL_INIT_COMPLEX(o);
+		SLL_INIT_COMPLEX(out);
 	}
 	else{
 		sll_object_t* n=sll_operator_cast((sll_object_t*)(*(va->data.sll.pointer)),sll_static_int[SLL_OBJECT_TYPE_COMPLEX]);
-		*o=n->data.complex_;
+		*out=n->data.complex_;
 		SLL_RELEASE(n);
 		va->data.sll.pointer++;
 		va->data.sll.count--;
@@ -190,19 +190,19 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_var_arg_get_object(sll_var_a
 
 
 
-__SLL_EXTERNAL void sll_var_arg_get_string(sll_var_arg_list_t* va,sll_string_t* o){
+__SLL_EXTERNAL void sll_var_arg_get_string(sll_var_arg_list_t* va,sll_string_t* out){
 	if (va->type==SLL_VAR_ARG_LIST_TYPE_C){
-		sll_string_from_pointer(va_arg(*(va->data.c),const sll_char_t*),o);
+		sll_string_from_pointer(va_arg(*(va->data.c),const sll_char_t*),out);
 	}
 	else if (va->type==VAR_ARG_LIST_TYPE_STRUCT){
 		SLL_UNREACHABLE();
 	}
 	else if (!va->data.sll.count){
-		SLL_INIT_STRING(o);
+		SLL_INIT_STRING(out);
 	}
 	else{
 		sll_object_t* n=sll_operator_cast((sll_object_t*)(*(va->data.sll.pointer)),sll_static_int[SLL_OBJECT_TYPE_STRING]);
-		sll_string_clone(&(n->data.string),o);
+		sll_string_clone(&(n->data.string),out);
 		SLL_RELEASE(n);
 		va->data.sll.pointer++;
 		va->data.sll.count--;

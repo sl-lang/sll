@@ -165,10 +165,10 @@ __SLL_EXTERNAL extern const sll_vm_config_t* sll_current_vm_config;
  * \group vm
  * \desc Docs!
  * \arg const sll_assembly_data_t* assembly_data
- * \arg const sll_vm_config_t* cfg
+ * \arg const sll_vm_config_t* vm_config
  * \ret sll_return_code_t
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_code_t sll_execute_assembly(const sll_assembly_data_t* assembly_data,const sll_vm_config_t* cfg);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_code_t sll_execute_assembly(const sll_assembly_data_t* assembly_data,const sll_vm_config_t* vm_config);
 
 
 
@@ -177,13 +177,13 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_code_t sll_execute_assembly(const s
  * \name sll_execute_function
  * \group vm
  * \desc Docs!
- * \arg sll_integer_t fn_idx
- * \arg sll_object_t*const* al
- * \arg sll_arg_count_t all
- * \arg sll_execution_flags_t fl
+ * \arg sll_integer_t function
+ * \arg sll_object_t*const* args
+ * \arg sll_arg_count_t arg_count
+ * \arg sll_execution_flags_t flags
  * \ret sll_object_t*
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_execute_function(sll_integer_t fn_idx,sll_object_t*const* al,sll_arg_count_t all,sll_execution_flags_t fl);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_execute_function(sll_integer_t function,sll_object_t*const* args,sll_arg_count_t arg_count,sll_execution_flags_t flags);
 
 
 
@@ -203,10 +203,10 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_size_t sll_vm_get_instruction_count(void);
  * \name sll_wait_thread
  * \group vm
  * \desc Docs!
- * \arg sll_thread_index_t tid
+ * \arg sll_thread_index_t thread_index
  * \ret sll_object_t*
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_wait_thread(sll_thread_index_t tid);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_wait_thread(sll_thread_index_t thread_index);
 
 
 
