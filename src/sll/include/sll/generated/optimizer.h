@@ -22,7 +22,13 @@ static __SLL_FORCE_INLINE void _init_optimizer(sll_source_file_t* source_file){
 
 
 
-static __SLL_FORCE_INLINE void _execute_optimizer(sll_source_file_t* source_file,sll_node_t* node,sll_node_t*const* children,sll_node_t* parent){
+static __SLL_FORCE_INLINE void _pre_visit_optimizer(sll_source_file_t* source_file,sll_node_t* node,sll_node_t* parent){
+	node=__optimizer_pre_known_variables(source_file,node,parent);
+}
+
+
+
+static __SLL_FORCE_INLINE void _visit_optimizer(sll_source_file_t* source_file,sll_node_t* node,sll_node_t*const* children,sll_node_t* parent){
 	node=__optimizer_optimize_print(source_file,node,children,parent);
 	node=__optimizer_optimize_assign(source_file,node,children,parent);
 	node=__optimizer_optimize_comma(source_file,node,children,parent);

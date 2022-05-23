@@ -1,4 +1,5 @@
 #include <sll/_internal/common.h>
+#include <sll/_internal/optimizer.h>
 #include <sll/common.h>
 #include <sll/generated/optimizer.h>
 #include <sll/memory.h>
@@ -7,15 +8,8 @@
 
 
 
-#define SKIP_NOP \
-	while (node->type==SLL_NODE_TYPE_NOP||node->type==SLL_NODE_TYPE_DBG||node->type==SLL_NODE_TYPE_CHANGE_STACK){ \
-		node=(node->type==SLL_NODE_TYPE_CHANGE_STACK?node->data._next_node:node+1); \
-	} \
-
-
-
 static sll_node_t* _visit_node(sll_source_file_t* source_file,sll_node_t* node,sll_node_t* parent){
-	SKIP_NOP;
+	SKIP_NODE_NOP(node);
 	sll_arg_count_t arg_count=0;
 	switch (node->type){
 		case SLL_NODE_TYPE_INT:
@@ -50,15 +44,16 @@ static sll_node_t* _visit_node(sll_source_file_t* source_file,sll_node_t* node,s
 			arg_count=node->data.arg_count;
 			break;
 	}
+	_pre_visit_optimizer(source_file,node,parent);
 	sll_node_t* current_node=node;
 	node++;
 	sll_node_t** children=sll_allocate_stack(arg_count*sizeof(sll_node_t*));
 	for (sll_arg_count_t i=0;i<arg_count;i++){
-		SKIP_NOP;
+		SKIP_NODE_NOP(node);
 		*(children+i)=node;
-		node=_visit_node(source_file,node,current_node);
+		node=_visit_node(source_file,node,parent);
 	}
-	_execute_optimizer(source_file,current_node,children,parent);
+	_visit_optimizer(source_file,current_node,children,parent);
 	sll_deallocate(children);
 	return node;
 }
