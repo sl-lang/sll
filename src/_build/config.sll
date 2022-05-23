@@ -72,14 +72,16 @@
 	(~ array_type) MODULE_COMPILATION_COMMAND
 	(~ string_type) OPERATOR_PARSER_CONFIG_FILE_PATH
 	(~ string_type) OPERATOR_PARSER_OUTPUT_FILE_PATH
+	(~ string_type) OPTIMIZER_CONFIG_FILE_PATH
+	(~ string_type) OPTIMIZER_OUTPUT_FILE_PATH
 	(~ cli_options_types) OPTIONS
 	(~ map_type) PREPROCESSOR_DEFINITION_PREFIX
 	(~ array_type) PREPROCESSOR_DEFINITIONS
 	(~ map_type) ROOT_PLATFORM_SOURCE_FILE_PATH
 	(~ string_type) ROOT_SOURCE_FILE_PATH
 	(~ array_type) SOURCE_FILE_EXTENSIONS
-	(~ string_type) VERSION
 	(~ map_type) TYPE_REPLACEMENTS
+	(~ string_type) VERSION
 ))
 
 
@@ -329,6 +331,8 @@
 	(+ output_executable_args ["-c" "-R" "-I" "build/lib" "-I" "src/sll/lib" "-o" "build/lib/" COMMAND_MARKER_INPUT])
 	"src/sll/data/operator_parser.txt"
 	"src/sll/include/sll/generated/operator_parser.h"
+	"src/sll/data/optimizer.txt"
+	"src/sll/include/sll/generated/optimizer.h"
 	options
 	<
 		"darwin" "-D"
@@ -343,7 +347,6 @@
 	>
 	"src/sll/"
 	[".c" ".asm"]
-	version
 	<
 		"__SLL_S8" "signed char"
 		"__SLL_U8" "unsigned char"
@@ -358,5 +361,6 @@
 		"__SLL_S1" "signed char"
 		"__SLL_U1" "_Bool"
 	>
+	version
 ))
 (## config)

@@ -7,6 +7,7 @@
 	"@build-script/hashlist.sll"
 	"@build-script/header.sll"
 	"@build-script/operator_parser.sll"
+	"@build-script/optimizer.sll"
 	"@build-script/util.sll"
 	"@build-script/website.sll"
 	"file.sll"
@@ -22,6 +23,7 @@
 (<- util$create_output_dir)
 (<- hashlist$init)
 (<- assembly$generate_assembly_optimizer)
+(<- optimizer$generate_optimizer)
 (<- operator_parser$generate_operator_parser)
 (<- header$generate_error_headers)
 (= docs (<- documentation$parse_documentation_files))

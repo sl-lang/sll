@@ -1,4 +1,3 @@
-#include <sll/_internal/common.h>
 #include <sll/_internal/optimizer.h>
 #include <sll/node.h>
 #include <sll/string.h>
@@ -7,11 +6,10 @@
 
 
 
-sll_bool_t _merge_print_strings(sll_source_file_t* source_file,sll_node_t* node,sll_arg_count_t arg_count,sll_node_t*const* children,sll_node_t* parent){
+OPTIMIZER_FUNTION(merge_print_strings){
 	if (node->type!=SLL_NODE_TYPE_PRINT){
-		return 0;
+		return;
 	}
-	sll_bool_t update_arg_count=0;
 	sll_node_t* prev=NULL;
 	for (sll_arg_count_t i=0;i<arg_count;i++){
 		sll_node_t* child=*(children+i);
@@ -25,7 +23,7 @@ sll_bool_t _merge_print_strings(sll_source_file_t* source_file,sll_node_t* node,
 					sll_string_concat_char(source_file->string_table.data+prev->data.string_index,child->data.char_,&tmp);
 				}
 				prev->type=SLL_NODE_TYPE_NOP;
-				update_arg_count=1;
+				node->data.arg_count--;
 				child->type=SLL_NODE_TYPE_STRING;
 				child->data.string_index=sll_add_string(&(source_file->string_table),&tmp);
 			}
@@ -35,7 +33,7 @@ sll_bool_t _merge_print_strings(sll_source_file_t* source_file,sll_node_t* node,
 			sll_string_t* str=source_file->string_table.data+child->data.string_index;
 			if (!str->length){
 				child->type=SLL_NODE_TYPE_NOP;
-				update_arg_count=1;
+				node->data.arg_count--;
 			}
 			else{
 				if (prev){
@@ -47,7 +45,7 @@ sll_bool_t _merge_print_strings(sll_source_file_t* source_file,sll_node_t* node,
 						sll_string_concat(source_file->string_table.data+prev->data.string_index,str,&tmp);
 					}
 					prev->type=SLL_NODE_TYPE_NOP;
-					update_arg_count=1;
+					node->data.arg_count--;
 					child->data.string_index=sll_add_string(&(source_file->string_table),&tmp);
 				}
 				else if (str->length==1){
@@ -61,5 +59,4 @@ sll_bool_t _merge_print_strings(sll_source_file_t* source_file,sll_node_t* node,
 			prev=NULL;
 		}
 	}
-	return update_arg_count;
 }

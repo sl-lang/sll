@@ -1,0 +1,74 @@
+(---
+	"@build-script/config.sll"
+	"file.sll"
+	"log.sll"
+	"string.sll"
+	"types.sll"
+)
+
+
+
+(= optimizer_module_type (&:
+	(~ func_type) generate_optimizer
+))
+
+
+
+(= generate_optimizer (,,,
+	(<- log$log "Generating optimizer from '" config$OPTIMIZER_CONFIG_FILE_PATH "'...")
+	(<- log$log "  Reading configuration file...")
+	(= data (<- string$split
+		(<- file$read
+			(<- file$open
+				config$OPTIMIZER_CONFIG_FILE_PATH
+				"r"
+			)
+		)
+		'\n'
+	))
+	(= data ([> (= i 0) (< i ($ data))
+		(= line (<- string$trim (: data i)))
+		(++ i)
+		(? (! line) (<<<))
+		line
+	))
+	(<- log$log "  Generating code in '" config$OPTIMIZER_OUTPUT_FILE_PATH "'...")
+	(= fh (<- file$open config$OPTIMIZER_OUTPUT_FILE_PATH "w"))
+	(<- file$write fh
+`#ifndef __SLL_GENERATED_OPTIMIZER_H__
+#define __SLL_GENERATED_OPTIMIZER_H__ 1
+#include <sll/_internal/common.h>
+#include <sll/node.h>
+`)
+	(-> (= i 0) (< i ($ data))
+		(= name (: data i))
+		(<- file$write fh "#include <../optimizer/" name ".h>\n")
+		(++ i)
+	)
+	(<- file$write fh
+`
+
+
+static __SLL_FORCE_INLINE void _execute_optimizer(sll_source_file_t* source_file,sll_node_t* node,sll_arg_count_t arg_count,sll_node_t*const* children,sll_node_t* parent){
+`)
+	(-> (= i 0) (< i ($ data))
+		(= name (: data i))
+		(<- file$write fh "\t__optimizer_" name "(source_file,node,arg_count,children,parent);\n")
+		(++ i)
+	)
+	(<- file$write fh
+`}
+
+
+
+#endif
+`)
+	(<- file$close fh)
+))
+
+
+
+(= optimizer (. optimizer_module_type
+	generate_optimizer
+))
+(## optimizer)
