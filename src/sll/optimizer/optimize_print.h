@@ -6,12 +6,13 @@
 
 
 
-OPTIMIZER_FUNTION(merge_print_strings){
+OPTIMIZER_FUNTION(optimize_print){
 	if (node->type!=SLL_NODE_TYPE_PRINT){
-		return;
+		return node;
 	}
+	sll_arg_count_t ac=node->data.arg_count;
 	sll_node_t* prev=NULL;
-	for (sll_arg_count_t i=0;i<arg_count;i++){
+	for (sll_arg_count_t i=0;i<ac;i++){
 		sll_node_t* child=*(children+i);
 		if (child->type==SLL_NODE_TYPE_CHAR){
 			if (prev){
@@ -59,4 +60,5 @@ OPTIMIZER_FUNTION(merge_print_strings){
 			prev=NULL;
 		}
 	}
+	return node;
 }

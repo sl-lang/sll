@@ -49,11 +49,13 @@
 `
 
 
-static __SLL_FORCE_INLINE void _execute_optimizer(sll_source_file_t* source_file,sll_node_t* node,sll_arg_count_t arg_count,sll_node_t*const* children,sll_node_t* parent){
+static __SLL_FORCE_INLINE void _execute_optimizer(sll_source_file_t* source_file,sll_node_t* node,sll_node_t*const* children,sll_node_t* parent){
 `)
 	(-> (= i 0) (< i ($ data))
 		(= name (: data i))
-		(<- file$write fh "\t__optimizer_" name "(source_file,node,arg_count,children,parent);\n")
+		(<- file$write fh '\t')
+		(? i (<- file$write fh "node="))
+		(<- file$write fh "__optimizer_" name "(source_file,node,children,parent);\n")
 		(++ i)
 	)
 	(<- file$write fh

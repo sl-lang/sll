@@ -1,2 +1,3 @@
-merge_print_strings
-merge_operation_list
+optimize_print
+optimize_comma
+optimize_operation_list

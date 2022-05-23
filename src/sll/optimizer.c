@@ -58,7 +58,7 @@ static sll_node_t* _visit_node(sll_source_file_t* source_file,sll_node_t* node,s
 		*(children+i)=node;
 		node=_visit_node(source_file,node,current_node);
 	}
-	_execute_optimizer(source_file,current_node,arg_count,children,parent);
+	_execute_optimizer(source_file,current_node,children,parent);
 	sll_deallocate(children);
 	return node;
 }
