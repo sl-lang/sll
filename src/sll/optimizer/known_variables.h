@@ -183,6 +183,18 @@ static sll_node_t* _build_value(sll_source_file_t* source_file,sll_object_t* obj
 				}
 				return node;
 			}
+		case SLL_OBJECT_TYPE_MAP:
+			{
+				node->type=SLL_NODE_TYPE_NOP;
+				_require_node_stack_space(source_file,node,_get_value_size(object));
+				node->type=SLL_NODE_TYPE_MAP;
+				node->data.array_length=object->data.map.length<<1;
+				node++;
+				for (sll_map_length_t i=0;i<(object->data.map.length<<1);i++){
+					node=_build_value(source_file,object->data.map.data[i],node);
+				}
+				return node;
+			}
 	}
 	SLL_UNIMPLEMENTED();
 }
