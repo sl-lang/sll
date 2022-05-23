@@ -65,6 +65,31 @@ static sll_node_t* _visit_node(sll_source_file_t* source_file,sll_node_t* node,s
 
 
 
+void _unneeded_result(sll_arg_count_t* arg_count,sll_node_t* node){
+	switch (node->type){
+		case SLL_NODE_TYPE_INT:
+		case SLL_NODE_TYPE_FLOAT:
+		case SLL_NODE_TYPE_CHAR:
+		case SLL_NODE_TYPE_COMPLEX:
+		case SLL_NODE_TYPE_STRING:
+		case SLL_NODE_TYPE_IDENTIFIER:
+		case SLL_NODE_TYPE_FIELD:
+		case SLL_NODE_TYPE_FUNCTION_ID:
+			node->type=SLL_NODE_TYPE_NOP;
+			(*arg_count)--;
+			break;
+		case SLL_NODE_TYPE_ARRAY:
+		case SLL_NODE_TYPE_MAP:
+		case SLL_NODE_TYPE_COMMA:
+		case SLL_NODE_TYPE_OPERATION_LIST:
+			node->type=SLL_NODE_TYPE_NOP;
+			(*arg_count)+=node->data.arg_count;
+			break;
+	}
+}
+
+
+
 __SLL_EXTERNAL void sll_optimize_source_file(sll_source_file_t* source_file){
 	if (!source_file->first_node){
 		return;

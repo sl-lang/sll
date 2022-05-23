@@ -4,13 +4,12 @@
 
 
 
-OPTIMIZER_FUNTION(optimize_comma){
-	if (node->type!=SLL_NODE_TYPE_COMMA){
+OPTIMIZER_FUNTION(optimize_assign){
+	if (node->type!=SLL_NODE_TYPE_ASSIGN){
 		return node;
 	}
 	sll_arg_count_t ac=node->data.arg_count;
-	sll_node_t* last=*(children+ac-1);
-	for (sll_arg_count_t i=0;i<ac-1;i++){
+	for (sll_arg_count_t i=2;i<ac;i++){
 		_unneeded_result(&(node->data.arg_count),*(children+i));
 	}
 	if (!node->data.arg_count){
@@ -19,7 +18,7 @@ OPTIMIZER_FUNTION(optimize_comma){
 	}
 	else if (node->data.arg_count==1){
 		node->type=SLL_NODE_TYPE_NOP;
-		node=last;
+		node=*children;
 	}
 	return node;
 }

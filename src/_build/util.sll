@@ -78,7 +78,9 @@
 		_obj_file_prefix
 		(<- string$replace
 			(<- string$replace
-				(:: file_path string_type)
+				(<- path$absolute
+					(:: file_path string_type)
+				)
 				'\\'
 				'/'
 			)

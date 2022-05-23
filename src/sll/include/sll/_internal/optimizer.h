@@ -10,4 +10,8 @@
 
 
 
+void _unneeded_result(sll_arg_count_t* arg_count,sll_node_t* node);
+
+
+
 #endif
