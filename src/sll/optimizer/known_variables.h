@@ -15,10 +15,10 @@
 
 
 
-#define GET_VARIABLE_POINTER(identifier_index) (&((_variable_data[SLL_IDENTIFIER_GET_ARRAY_ID((identifier_index))]+SLL_IDENTIFIER_GET_ARRAY_INDEX((identifier_index)))->value))
+#define GET_VARIABLE_DATA(identifier_index) (_variable_data[SLL_IDENTIFIER_GET_ARRAY_ID((identifier_index))]+SLL_IDENTIFIER_GET_ARRAY_INDEX((identifier_index)))
 #define LOCK_IDENTIFIER(identifier_index) \
 	do{ \
-		variable_data_t* __var=(_variable_data[SLL_IDENTIFIER_GET_ARRAY_ID((identifier_index))]+SLL_IDENTIFIER_GET_ARRAY_INDEX((identifier_index))); \
+		variable_data_t* __var=GET_VARIABLE_DATA(identifier_index); \
 		if (!__var->locked){ \
 			__var->locked=1; \
 			if (__var->value){ \
@@ -68,25 +68,48 @@ static void _release_var_data(variable_data_t* data,sll_identifier_list_length_t
 
 
 
-static sll_object_t* _parse_value(const sll_source_file_t* source_file,const sll_node_t* node){
+static const sll_node_t* _parse_value(const sll_source_file_t* source_file,const sll_node_t* node,sll_object_t** out){
 	switch (node->type){
 		case SLL_NODE_TYPE_INT:
-			return sll_int_to_object(node->data.int_);
+			*out=sll_int_to_object(node->data.int_);
+			return node+1;
 		case SLL_NODE_TYPE_FLOAT:
-			return sll_float_to_object(node->data.float_);
+			*out=sll_float_to_object(node->data.float_);
+			return node+1;
 		case SLL_NODE_TYPE_CHAR:
-			return SLL_FROM_CHAR(node->data.char_);
+			*out=SLL_FROM_CHAR(node->data.char_);
+			return node+1;
 		case SLL_NODE_TYPE_COMPLEX:
 			SLL_UNIMPLEMENTED();
 		case SLL_NODE_TYPE_STRING:
-			return STRING_TO_OBJECT(source_file->string_table.data+node->data.string_index);
+			*out=STRING_TO_OBJECT(source_file->string_table.data+node->data.string_index);
+			return node+1;
 		case SLL_NODE_TYPE_IDENTIFIER:
+			*out=GET_VARIABLE_DATA(node->data.identifier_index)->value;
+			if (*out){
+				SLL_ACQUIRE(*out);
+			}
+			return node+1;
+		case SLL_NODE_TYPE_ARRAY:
 			{
-				sll_object_t* value=*GET_VARIABLE_POINTER(node->data.identifier_index);
-				if (value){
-					SLL_ACQUIRE(value);
+				sll_array_length_t length=node->data.array_length;
+				*out=sll_array_length_to_object(length);
+				node++;
+				sll_array_length_t i=0;
+				while (i<length){
+					node=_parse_value(source_file,node,(*out)->data.array.data+i);
+					if (!node){
+						while (i){
+							i--;
+							SLL_RELEASE((*out)->data.array.data[i]);
+						}
+						SLL_CRITICAL(sll_destroy_object(*out));
+						*out=NULL;
+						return NULL;
+					}
+					i++;
 				}
-				return value;
+				return node;
 			}
 	}
 	return NULL;
@@ -220,20 +243,23 @@ OPTIMIZER_FUNTION(known_variables){
 		}
 	}
 	else if (node->type==SLL_NODE_TYPE_IDENTIFIER&&parent&&parent->type!=SLL_NODE_TYPE_ASSIGN&&parent->type!=SLL_NODE_TYPE_ACCESS&&parent->type!=SLL_NODE_TYPE_VAR_ACCESS&&parent->type!=SLL_NODE_TYPE_INC&&parent->type!=SLL_NODE_TYPE_DEC){
-		sll_object_t* value=*GET_VARIABLE_POINTER(node->data.identifier_index);
-		if (value){
-			_build_value(source_file,value,node);
+		variable_data_t* var_data=GET_VARIABLE_DATA(node->data.identifier_index);
+		if (var_data->value){
+			_build_value(source_file,var_data->value,node);
 		}
 	}
 	else if (node->type==SLL_NODE_TYPE_ASSIGN){
 		SLL_ASSERT(node->type>=2);
 		sll_node_t* variable=*children;
 		if (variable->type==SLL_NODE_TYPE_IDENTIFIER){
-			sll_object_t** value=GET_VARIABLE_POINTER(variable->data.identifier_index);
-			if (*value){
-				SLL_RELEASE(*value);
+			variable_data_t* var_data=GET_VARIABLE_DATA(variable->data.identifier_index);
+			if (!var_data->locked){
+				if (var_data->value){
+					SLL_RELEASE(var_data->value);
+					var_data->value=NULL;
+				}
+				_parse_value(source_file,*(children+1),&(var_data->value));
 			}
-			*value=_parse_value(source_file,*(children+1));
 		}
 		else{
 			// SLL_UNIMPLEMENTED();
