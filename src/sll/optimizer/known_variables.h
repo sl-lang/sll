@@ -26,7 +26,7 @@ static sll_object_t* _parse_value(const sll_source_file_t* source_file,const sll
 		case SLL_NODE_TYPE_INT:
 			return sll_int_to_object(node->data.int_);
 		case SLL_NODE_TYPE_FLOAT:
-			return sll_float_to_object(node->data.int_);
+			return sll_float_to_object(node->data.float_);
 		case SLL_NODE_TYPE_CHAR:
 			return SLL_FROM_CHAR(node->data.char_);
 		case SLL_NODE_TYPE_COMPLEX:
