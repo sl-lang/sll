@@ -2,9 +2,10 @@
 
 ## Added
 
-- CLI option to eanble optimizations: `-O` or `--optimize`
+- CLI option to enable optimizations: `-O` or `--optimize`
+- CLI option to specify the number of optimization rounds: `-x` or `--optimization-rounds`
 - Compilation data optimizer
-- Implemented `sll_optimize_source_file`
+- Implemented `sll_optimization_round_count_t` and `sll_optimize_source_file`
 
 ## Changed
 

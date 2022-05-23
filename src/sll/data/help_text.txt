@@ -27,6 +27,7 @@ Options:
   -S <flag>, --sandbox <flag> -> enable the sandbox <flag> (see Sandbox Flags)
   -v, --verbose -> Enable verbose mode
   -V, --version -> Print the Sll version and exit
+  -x <number>, --optimization-rounds <number> -> Execute <number> of optimization rounds. <number> must be a positive integer greater than zero and lower than 256
   -X, --disable-audit -> Disable all audit events
 
 Installed Objects:

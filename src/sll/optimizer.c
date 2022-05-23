@@ -4,6 +4,7 @@
 #include <sll/generated/optimizer.h>
 #include <sll/memory.h>
 #include <sll/node.h>
+#include <sll/optimizer.h>
 #include <sll/types.h>
 
 
@@ -135,11 +136,14 @@ void _unneeded_result(sll_arg_count_t* arg_count,sll_node_t* node){
 
 
 
-__SLL_EXTERNAL void sll_optimize_source_file(sll_source_file_t* source_file){
+__SLL_EXTERNAL void sll_optimize_source_file(sll_source_file_t* source_file,sll_optimization_round_count_t round_count){
 	if (!source_file->first_node){
 		return;
 	}
-	_init_optimizer(source_file);
-	_visit_node(source_file,source_file->first_node,NULL);
-	_deinit_optimizer(source_file);
+	while (round_count){
+		round_count--;
+		_init_optimizer(source_file);
+		_visit_node(source_file,source_file->first_node,NULL);
+		_deinit_optimizer(source_file);
+	}
 }

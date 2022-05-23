@@ -48,6 +48,7 @@ static sll_internal_function_table_t _cli_ift;
 static sll_bool_t _cli_enable_file_lookup=0;
 static sll_cli_path_resolver_t _cli_resolver_table[CLI_PATH_RESOLVER_TABLE_SIZE];
 static sll_array_length_t _cli_resolver_table_size=0;
+static sll_optimization_round_count_t _cli_optimization_count=1;
 
 
 
@@ -95,7 +96,7 @@ static void _check_release_mode(sll_array_length_t argc,const sll_char_t*const*a
 		if (nm=='A'||sll_string_compare_pointer(e,SLL_CHAR("--args"))==SLL_COMPARE_RESULT_EQUAL){
 			break;
 		}
-		else if (nm=='B'||nm=='f'||nm=='F'||nm=='i'||nm=='I'||nm=='L'||nm=='N'||nm=='o'||nm=='s'||nm=='S'||sll_string_compare_pointer(e,SLL_CHAR("--file"))==SLL_COMPARE_RESULT_EQUAL||sll_string_compare_pointer(e,SLL_CHAR("--file-path-resolver"))==SLL_COMPARE_RESULT_EQUAL||sll_string_compare_pointer(e,SLL_CHAR("--install-path"))==SLL_COMPARE_RESULT_EQUAL||sll_string_compare_pointer(e,SLL_CHAR("--include"))==SLL_COMPARE_RESULT_EQUAL||sll_string_compare_pointer(e,SLL_CHAR("--audit-library"))==SLL_COMPARE_RESULT_EQUAL||sll_string_compare_pointer(e,SLL_CHAR("--bundle-name"))==SLL_COMPARE_RESULT_EQUAL||sll_string_compare_pointer(e,SLL_CHAR("--output"))==SLL_COMPARE_RESULT_EQUAL||sll_string_compare_pointer(e,SLL_CHAR("--bundle-output"))==SLL_COMPARE_RESULT_EQUAL||sll_string_compare_pointer(e,SLL_CHAR("--source"))==SLL_COMPARE_RESULT_EQUAL||sll_string_compare_pointer(e,SLL_CHAR("--sandbox"))==SLL_COMPARE_RESULT_EQUAL){
+		else if (nm=='B'||nm=='f'||nm=='F'||nm=='i'||nm=='I'||nm=='L'||nm=='N'||nm=='o'||nm=='s'||nm=='S'||nm=='x'||sll_string_compare_pointer(e,SLL_CHAR("--file"))==SLL_COMPARE_RESULT_EQUAL||sll_string_compare_pointer(e,SLL_CHAR("--file-path-resolver"))==SLL_COMPARE_RESULT_EQUAL||sll_string_compare_pointer(e,SLL_CHAR("--install-path"))==SLL_COMPARE_RESULT_EQUAL||sll_string_compare_pointer(e,SLL_CHAR("--include"))==SLL_COMPARE_RESULT_EQUAL||sll_string_compare_pointer(e,SLL_CHAR("--audit-library"))==SLL_COMPARE_RESULT_EQUAL||sll_string_compare_pointer(e,SLL_CHAR("--bundle-name"))==SLL_COMPARE_RESULT_EQUAL||sll_string_compare_pointer(e,SLL_CHAR("--output"))==SLL_COMPARE_RESULT_EQUAL||sll_string_compare_pointer(e,SLL_CHAR("--bundle-output"))==SLL_COMPARE_RESULT_EQUAL||sll_string_compare_pointer(e,SLL_CHAR("--source"))==SLL_COMPARE_RESULT_EQUAL||sll_string_compare_pointer(e,SLL_CHAR("--sandbox"))==SLL_COMPARE_RESULT_EQUAL||sll_string_compare_pointer(e,SLL_CHAR("--optimization-rounds"))==SLL_COMPARE_RESULT_EQUAL){
 			if (argc){
 				argc--;
 				argv++;
@@ -601,12 +602,39 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_code_t sll_cli_main(sll_array_lengt
 		else if (nm=='V'||sll_string_compare_pointer(e,SLL_CHAR("--version"))==SLL_COMPARE_RESULT_EQUAL){
 			_cli_flags|=SLL_CLI_FLAG_VERSION;
 		}
+		else if (nm=='x'||sll_string_compare_pointer(e,SLL_CHAR("--optimization-rounds"))==SLL_COMPARE_RESULT_EQUAL){
+			i++;
+			if (i==argc){
+				break;
+			}
+			e=argv[i];
+			__SLL_U16 rounds=0;
+			while (*e){
+				if (*e<48||*e>57){
+					goto _skip_int_read;
+				}
+				rounds=rounds*10+(*e)-48;
+				if (rounds>255){
+					rounds=255;
+					break;
+				}
+				e++;
+			}
+			if (!rounds){
+				rounds=1;
+			}
+			_cli_optimization_count=(sll_optimization_round_count_t)rounds;
+			goto _skip_warning;
+_skip_int_read:;
+			SLL_WARN("Ignoring non-integer count '%s'",argv[i]);
+_skip_warning:;
+		}
 		else if (nm=='X'||sll_string_compare_pointer(e,SLL_CHAR("--disable-audit"))==SLL_COMPARE_RESULT_EQUAL){
 			sll_audit_enable(0);
 		}
 		else if (nm!='r'&&sll_string_compare_pointer(e,SLL_CHAR("--release-mode"))!=SLL_COMPARE_RESULT_EQUAL){
 			if (*e=='-'){
-				SLL_WARN(SLL_CHAR("Ignroing unknown switch '%s'"),e);
+				SLL_WARN("Ignroing unknown switch '%s'",e);
 			}
 			else{
 _read_file_argument:
@@ -751,7 +779,7 @@ _read_file_argument:
 			if (_cli_flags&SLL_CLI_FLAG_OPTIMIZE){
 				SLL_LOG("Optimizing compilation data...");
 				for (sll_source_file_index_t k=0;k<compilation_data.length;k++){
-					sll_optimize_source_file(*(compilation_data.data+k));
+					sll_optimize_source_file(*(compilation_data.data+k),_cli_optimization_count);
 				}
 			}
 			if (_cli_flags&SLL_CLI_FLAG_STRIP_DEBUG){
