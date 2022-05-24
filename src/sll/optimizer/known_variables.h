@@ -53,6 +53,7 @@ static loop_closure_data_t _loop_closure_data={
 	NULL,
 	0
 };
+static sll_function_index_t _function_depth=0;
 
 
 
@@ -144,13 +145,15 @@ OPTIMIZER_FUNTION_DEINIT(known_variables){
 
 
 OPTIMIZER_FUNTION_PRE_VISIT(known_variables){
-	if (node->type!=SLL_NODE_TYPE_FOR&&node->type!=SLL_NODE_TYPE_WHILE&&node->type!=SLL_NODE_TYPE_LOOP&&node->type!=SLL_NODE_TYPE_FOR_ARRAY&&node->type!=SLL_NODE_TYPE_WHILE_ARRAY&&node->type!=SLL_NODE_TYPE_FOR_MAP&&node->type!=SLL_NODE_TYPE_WHILE_MAP){
-		return node;
+	if (node->type==SLL_NODE_TYPE_FOR||node->type==SLL_NODE_TYPE_WHILE||node->type==SLL_NODE_TYPE_LOOP||node->type==SLL_NODE_TYPE_FOR_ARRAY||node->type==SLL_NODE_TYPE_WHILE_ARRAY||node->type==SLL_NODE_TYPE_FOR_MAP||node->type==SLL_NODE_TYPE_WHILE_MAP){
+		_loop_closure_data.data=sll_reallocate(_loop_closure_data.data,(_loop_closure_data.length+1)*sizeof(variable_data_t*));
+		_loop_closure_data.data[_loop_closure_data.length]=NULL;
+		_mark_loop_change(node);
+		_loop_closure_data.length++;
 	}
-	_loop_closure_data.data=sll_reallocate(_loop_closure_data.data,(_loop_closure_data.length+1)*sizeof(variable_data_t*));
-	_loop_closure_data.data[_loop_closure_data.length]=NULL;
-	_mark_loop_change(node);
-	_loop_closure_data.length++;
+	else if (node->type==SLL_NODE_TYPE_FUNC||node->type==SLL_NODE_TYPE_INLINE_FUNC){
+		_function_depth++;
+	}
 	return node;
 }
 
@@ -164,6 +167,10 @@ OPTIMIZER_FUNTION(known_variables){
 			var->locked=0;
 			var=var->next;
 		}
+	}
+	else if (node->type==SLL_NODE_TYPE_FUNC||node->type==SLL_NODE_TYPE_INLINE_FUNC){
+		SLL_ASSERT(_function_depth);
+		_function_depth--;
 	}
 	else if (node->type==SLL_NODE_TYPE_IDENTIFIER&&(!parent||(parent->type!=SLL_NODE_TYPE_ASSIGN&&parent->type!=SLL_NODE_TYPE_ACCESS&&parent->type!=SLL_NODE_TYPE_VAR_ACCESS&&parent->type!=SLL_NODE_TYPE_INC&&parent->type!=SLL_NODE_TYPE_DEC&&parent->type!=SLL_NODE_TYPE_CALL))){
 		variable_data_t* var_data=GET_VARIABLE_DATA(node->data.identifier_index);
