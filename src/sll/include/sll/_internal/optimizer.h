@@ -26,6 +26,18 @@
 
 
 
+const sll_node_t* _node_to_object(const sll_source_file_t* source_file,const sll_node_t* node,sll_object_t** out);
+
+
+
+sll_node_offset_t _object_size_as_node(sll_object_t* object);
+
+
+
+sll_node_t* _object_to_node(sll_source_file_t* source_file,sll_object_t* object,sll_node_t* node);
+
+
+
 void _unneeded_result(sll_arg_count_t* arg_count,sll_node_t* node);
 
 
