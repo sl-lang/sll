@@ -14,7 +14,7 @@ OPTIMIZER_FUNTION(optimize_print){
 	sll_node_t* prev=NULL;
 	for (sll_arg_count_t i=0;i<ac;i++){
 		sll_node_t* child=*(children+i);
-		if (child->type==SLL_NODE_TYPE_DBG||child->type==SLL_NODE_TYPE_NOP){
+		if (child->type==SLL_NODE_TYPE_NOP){
 			continue;
 		}
 		if (child->type==SLL_NODE_TYPE_CHAR){
