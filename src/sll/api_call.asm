@@ -15,6 +15,11 @@ __SLL_EXPORT _call_api_func_assembly
 	mov rbp, rsp
 	push rsi
 
+	; rcx - Return value pointer
+	; rdx - Argument bitmap pointer
+	; r8 - Argument data pointer
+	; r9 - Argument count
+	; [rbp+48] - Function pointer
 	mov QWORD [rbp+16], rcx
 %ifdef DEBUG_BUILD
 	mov QWORD [rbp+24], rdx
