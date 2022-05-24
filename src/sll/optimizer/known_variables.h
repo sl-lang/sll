@@ -112,6 +112,30 @@ static const sll_node_t* _parse_value(const sll_source_file_t* source_file,const
 				}
 				return node;
 			}
+		case SLL_NODE_TYPE_MAP:
+			{
+				sll_map_length_t length=node->data.map_length;
+				*out=sll_map_length_to_object((length+1)>>1);
+				node++;
+				sll_map_length_t i=0;
+				while (i<length){
+					node=_parse_value(source_file,node,(*out)->data.map.data+i);
+					if (!node){
+						while (i){
+							i--;
+							SLL_RELEASE((*out)->data.map.data[i]);
+						}
+						SLL_CRITICAL(sll_destroy_object(*out));
+						*out=NULL;
+						return NULL;
+					}
+					i++;
+				}
+				if (i&1){
+					(*out)->data.map.data[i]=SLL_ACQUIRE_STATIC_INT(0);
+				}
+				return node;
+			}
 	}
 	return NULL;
 }
