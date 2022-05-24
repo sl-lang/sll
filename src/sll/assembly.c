@@ -1836,12 +1836,17 @@ static const sll_node_t* _generate(const sll_node_t* o,assembly_generator_data_t
 		case SLL_NODE_TYPE_LOOP:
 			{
 				sll_arg_count_t l=o->data.loop.arg_count;
+				o++;
 				assembly_instruction_label_t s=NEXT_LABEL(g_dt);
+				if (!l){
+					DEFINE_LABEL(g_dt,s);
+					GENERATE_OPCODE_WITH_LABEL(g_dt,SLL_ASSEMBLY_INSTRUCTION_TYPE_JMP,s);
+					return o;
+				}
 				assembly_instruction_label_t e=NEXT_LABEL(g_dt);
 				assembly_loop_generator_data_t lg_dt;
 				_init_loop_data(g_dt,&lg_dt,s,e);
 				DEFINE_LABEL(g_dt,s);
-				o++;
 				while (l){
 					l--;
 					o=_generate(o,g_dt);
