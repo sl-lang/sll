@@ -172,9 +172,15 @@ OPTIMIZER_FUNTION(known_variables){
 		SLL_ASSERT(_function_depth);
 		_function_depth--;
 	}
-	else if (node->type==SLL_NODE_TYPE_IDENTIFIER&&(!parent||(parent->type!=SLL_NODE_TYPE_ASSIGN&&parent->type!=SLL_NODE_TYPE_ACCESS&&parent->type!=SLL_NODE_TYPE_VAR_ACCESS&&parent->type!=SLL_NODE_TYPE_INC&&parent->type!=SLL_NODE_TYPE_DEC&&parent->type!=SLL_NODE_TYPE_CALL))){
+	else if (node->type==SLL_NODE_TYPE_IDENTIFIER){
 		variable_data_t* var_data=GET_VARIABLE_DATA(node->data.identifier_index);
-		if (var_data->value){
+		if (parent&&(parent->type==SLL_NODE_TYPE_ASSIGN||parent->type==SLL_NODE_TYPE_ACCESS||parent->type==SLL_NODE_TYPE_VAR_ACCESS||parent->type==SLL_NODE_TYPE_INC||parent->type==SLL_NODE_TYPE_DEC||parent->type==SLL_NODE_TYPE_CALL)){
+			if (var_data->value){
+				SLL_RELEASE(var_data->value);
+				var_data->value=NULL;
+			}
+		}
+		else if (var_data->value){
 			node=_build_value(source_file,var_data->value,node);
 			REWIND_NODE(node);
 			return node;
