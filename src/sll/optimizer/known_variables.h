@@ -31,12 +31,16 @@
 		} \
 	} while (0)
 
+#define SCOPE_GLOBAL 1
+#define SCOPE_FUNCTION 2
+
 
 
 typedef struct _VARIABLE_DATA{
 	sll_object_t* value;
 	struct _VARIABLE_DATA* next;
 	sll_bool_t locked;
+	__SLL_U8 scopes;
 } variable_data_t;
 
 
@@ -66,6 +70,63 @@ static void _release_var_data(variable_data_t* data,sll_identifier_list_length_t
 		SLL_ASSERT(!(data+length)->locked);
 	}
 	sll_deallocate(data);
+}
+
+
+
+static const sll_node_t* _find_scopes(const sll_node_t* node,sll_bool_t fn){
+	SKIP_NODE_NOP(node);
+	if (node->type==SLL_NODE_TYPE_ASSIGN||node->type==SLL_NODE_TYPE_INC||node->type==SLL_NODE_TYPE_DEC){
+		const sll_node_t* var=node+1;
+		SKIP_NODE_NOP(var);
+		if (var->type==SLL_NODE_TYPE_IDENTIFIER){
+			variable_data_t* var_data=GET_VARIABLE_DATA(var->data.identifier_index);
+			var_data->scopes|=(fn?SCOPE_FUNCTION:SCOPE_GLOBAL);
+		}
+		else{
+			SLL_UNIMPLEMENTED();
+		}
+	}
+	sll_arg_count_t arg_count=0;
+	switch (node->type){
+		case SLL_NODE_TYPE_INT:
+		case SLL_NODE_TYPE_FLOAT:
+		case SLL_NODE_TYPE_CHAR:
+		case SLL_NODE_TYPE_COMPLEX:
+		case SLL_NODE_TYPE_STRING:
+		case SLL_NODE_TYPE_IDENTIFIER:
+		case SLL_NODE_TYPE_FIELD:
+		case SLL_NODE_TYPE_FUNCTION_ID:
+			break;
+		case SLL_NODE_TYPE_ARRAY:
+			arg_count=node->data.array_length;
+			break;
+		case SLL_NODE_TYPE_MAP:
+			arg_count=node->data.map_length;
+			break;
+		case SLL_NODE_TYPE_FUNC:
+		case SLL_NODE_TYPE_INTERNAL_FUNC:
+		fn=1;
+			arg_count=node->data.function.arg_count;
+			break;
+		case SLL_NODE_TYPE_FOR:
+		case SLL_NODE_TYPE_WHILE:
+		case SLL_NODE_TYPE_LOOP:
+		case SLL_NODE_TYPE_FOR_ARRAY:
+		case SLL_NODE_TYPE_WHILE_ARRAY:
+		case SLL_NODE_TYPE_FOR_MAP:
+		case SLL_NODE_TYPE_WHILE_MAP:
+			arg_count=node->data.loop.arg_count;
+			break;
+		default:
+			arg_count=node->data.arg_count;
+			break;
+	}
+	node++;
+	for (sll_arg_count_t i=0;i<arg_count;i++){
+		node=_find_scopes(node,fn);
+	}
+	return node;
 }
 
 
@@ -130,16 +191,17 @@ OPTIMIZER_FUNTION_INIT(known_variables){
 		_variable_data[i]=sll_zero_allocate(source_file->identifier_table.short_[i].length*sizeof(variable_data_t));
 	}
 	_variable_data[SLL_MAX_SHORT_IDENTIFIER_LENGTH]=sll_zero_allocate(source_file->identifier_table.long_data_length*sizeof(variable_data_t));
+	_find_scopes(source_file->first_node);
 }
 
 
 
 OPTIMIZER_FUNTION_DEINIT(known_variables){
+	SLL_ASSERT(!_loop_closure_data.length);
 	for (sll_identifier_index_t i=0;i<SLL_MAX_SHORT_IDENTIFIER_LENGTH;i++){
 		_release_var_data(_variable_data[i],source_file->identifier_table.short_[i].length);
 	}
 	_release_var_data(_variable_data[SLL_MAX_SHORT_IDENTIFIER_LENGTH],source_file->identifier_table.long_data_length);
-	SLL_ASSERT(!_loop_closure_data.length);
 }
 
 
