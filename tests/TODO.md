@@ -1,4 +1,11 @@
+# List of test files to implement
+
+- [x] `api/array.sll`
 - [ ] `api/atexit.sll`
+- [x] `api/audit.sll`
+- [x] `api/base64.sll`
+- [x] `api/data_file.sll`
+- [x] `api/date.sll`
 - [ ] `api/error.sll`
 - [ ] `api/error_codes.sll`
 - [ ] `api/file.sll`
@@ -38,6 +45,7 @@
 - [ ] `symbols/test_bit_or.sll` (`|`)
 - [ ] `symbols/test_bit_rshift.sll` (`>>`)
 - [ ] `symbols/test_bit_xor.sll` (`^`)
+- [x] `symbols/test_bool.sll` (`!!`)
 - [ ] `symbols/test_break.sll` (`@`)
 - [ ] `symbols/test_call.sll` (`<-`)
 - [ ] `symbols/test_call_array.sll` (`<-*`)
@@ -46,9 +54,11 @@
 - [ ] `symbols/test_continue.sll` (`<<<`)
 - [ ] `symbols/test_dec.sll` (`--`)
 - [ ] `symbols/test_decl.sll` (`&:`)
+- [x] `symbols/test_declaration.sll` (`#`)
 - [ ] `symbols/test_deep_copy.sll` (`:!`)
 - [ ] `symbols/test_div.sll` (`/`)
 - [ ] `symbols/test_equal.sll` (`==`)
+- [x] `symbols/test_export.sll` (`##`)
 - [ ] `symbols/test_floor_div.sll` (`//`)
 - [ ] `symbols/test_for.sll` (`->`)
 - [ ] `symbols/test_for_array.sll` (`[>`)
@@ -60,6 +70,7 @@
 - [ ] `symbols/test_inline_func.sll` (`***`)
 - [ ] `symbols/test_inline_if.sll` (`?:`)
 - [ ] `symbols/test_internal_func.sll` (`...`)
+- [x] `symbols/test_length.sll` (`$`)
 - [ ] `symbols/test_less.sll` (`<`)
 - [ ] `symbols/test_less_equal.sll` (`<=`)
 - [ ] `symbols/test_loop.sll` (`><`)
@@ -70,12 +81,14 @@
 - [ ] `symbols/test_nameof.sll` (`.?`)
 - [ ] `symbols/test_nameof_type.sll` (`&:?`)
 - [ ] `symbols/test_new.sll` (`.`)
+- [x] `symbols/test_not.sll` (`!`)
 - [ ] `symbols/test_not_equal.sll` (`!=`)
 - [ ] `symbols/test_operation_list.sll` (`---`)
 - [ ] `symbols/test_or.sll` (`||`)
 - [ ] `symbols/test_print.sll` (`:>`)
 - [ ] `symbols/test_read_blocking.sll` (`!<-`)
 - [ ] `symbols/test_read_blocking_char.sll` (`!<.`)
+- [x] `symbols/test_ref.sll` (`%%`)
 - [ ] `symbols/test_return.sll` (`@@`)
 - [ ] `symbols/test_strict_equal.sll` (`===`)
 - [ ] `symbols/test_strict_not_equal.sll` (`!==`)
