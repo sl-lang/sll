@@ -1,0 +1,30 @@
+(---
+	"@test/_common.sll"
+	"types.sll"
+)
+
+
+
+(= test_no_operands (,,,
+	(<- expect (%%) 0)
+))
+
+(= test_one_operand (,,,
+	(= var_a 56)
+	(= var_b 'A')
+	(<- expect_not_equal (%% var_a) (%% var_b))
+))
+
+(= test_multple_operands (,,,
+	(= var_a 56)
+	(= var_b 'A')
+	(<- expect_not_equal (%% var_a "AA") (%% var_b "BB"))
+))
+
+
+
+(<- run "Reference operator (%%)" (,,,
+	(<- test_no_operands)
+	(<- test_one_operand)
+	(<- test_multple_operands)
+))

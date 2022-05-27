@@ -107,6 +107,30 @@
 	)
 ))
 
+(= expect_not_equal (,,, result value flt_err extra
+	(= extra (?: (=== (:? value) float_type)
+		extra
+		flt_err
+	))
+	(= extra_str (?: (&& extra (=== (:? extra) array_type))
+		(+ " (Input: " (<- string$str (: extra 0)) ")")
+		""
+	))
+	(? (&&
+			(=== (:? result) (:? value))
+			(?: (=== (:? value) float_type)
+				(<= (<- math$abs (- value result)) flt_err)
+				(=== result value)
+			)
+		)
+		(<- _expect_raw <
+			"output" (<- _encode_object result)
+			"invalid_target" (<- _encode_object value)
+		> (+ "Expected not" (<- string$str value) ", got " (<- string$str result) extra_str))
+		(<- _expect_raw nil nil)
+	)
+))
+
 (= expect_audit_event (,,, name data keys_to_check
 	(= recv_data (: _audit_event_data name))
 	(? (=== data nil) {
@@ -218,4 +242,4 @@
 
 
 
-(## expect expect_audit_event expect_error run)
+(## expect expect_not_equal expect_audit_event expect_error run)
