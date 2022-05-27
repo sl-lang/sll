@@ -264,11 +264,22 @@ static const sll_node_t* _skip_with_dbg(const sll_node_t* o,assembly_generator_d
 
 static const sll_node_t* _generate_sequential_jump(const sll_node_t* o,assembly_generator_data_t* g_dt,sll_assembly_instruction_type_t t,sll_bool_t stack){
 	sll_arg_count_t l=o->data.arg_count;
-	SLL_ASSERT(l);
-	if (l==1){
-		return _generate(o+1,g_dt);
+	o++;
+	if (!l){
+		if (stack){
+			GENERATE_OPCODE(g_dt,SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_ZERO);
+			PUSH;
+		}
+		return o;
 	}
-	o=_generate_on_stack(o+1,g_dt);
+	if (l==1){
+		if (stack){
+			GENERATE_OPCODE(g_dt,SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_ZERO);
+			PUSH;
+		}
+		return _generate(o,g_dt);
+	}
+	o=_generate_on_stack(o,g_dt);
 	assembly_instruction_label_t e=NEXT_LABEL(g_dt);
 	l-=2;
 	while (l){
