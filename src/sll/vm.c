@@ -222,7 +222,6 @@ void _call_function(thread_data_t* thr,sll_function_index_t fn,sll_arg_count_t a
 
 
 void _release_var_data(void){
-	SLL_ASSERT(_vm_var_data);
 	sll_object_t** obj=_vm_var_data;
 	_vm_var_data=NULL;
 	if (sll_current_runtime_data->assembly_data->variable_count){

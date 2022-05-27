@@ -26,7 +26,10 @@
 	(-> (= i 0) (< i ($ list))
 		(= fp (: list i))
 		(++ i)
-		(? (=== (: (: (<- path$split fp) 1) 0) '_') (<<<))
+		(? (||
+			(=== (: (: (<- path$split fp) 1) 0) '_')
+			(!== (>> fp (<- string$index_reverse fp '.')) ".sll")
+		) (<<<))
 		(<- array$push args fp)
 	)
 	(@@ args)
