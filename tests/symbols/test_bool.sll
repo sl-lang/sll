@@ -143,7 +143,7 @@
 
 
 
-(<- run "Boolean predicate operator" (,,,
+(<- run "Boolean predicate operator (!!)" (,,,
 	(<- test_no_operands)
 	(<- test_one_operand)
 	(<- test_multple_operands)

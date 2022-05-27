@@ -11,7 +11,7 @@
 != not_equal
 !== strict_not_equal
 !@@ thread_exit
-# operation_list variable_definition
+# operation_list variable_declaration
 ## operation_list export
 $ length
 % mod

@@ -789,7 +789,7 @@ _parse_identifier:
 				}
 				else{
 _normal_identifier:;
-					unsigned int var_fl=((!o||o->type!=SLL_NODE_TYPE_ASSIGN||ac)&&!(fl&EXTRA_COMPILATION_DATA_VARIABLE_DEFINITION)?GET_VAR_INDEX_FLAG_UNKNOWN:0)|(o&&o->type==SLL_NODE_TYPE_ASSIGN?GET_VAR_INDEX_FLAG_ASSIGN:(o&&o->type==SLL_NODE_TYPE_FUNC?GET_VAR_INDEX_FLAG_FUNC:0));
+					unsigned int var_fl=((!o||o->type!=SLL_NODE_TYPE_ASSIGN||ac)&&!(fl&EXTRA_COMPILATION_DATA_VARIABLE_DECLARATION)?GET_VAR_INDEX_FLAG_UNKNOWN:0)|(o&&o->type==SLL_NODE_TYPE_ASSIGN?GET_VAR_INDEX_FLAG_ASSIGN:(o&&o->type==SLL_NODE_TYPE_FUNC?GET_VAR_INDEX_FLAG_FUNC:0));
 					if (str.length&&str.data[0]=='!'){
 						var_fl|=GET_VAR_INDEX_FLAG_TLS*(!extra_compilation_data->is_function);
 						for (sll_string_length_t i=0;i<str.length-1;i++){

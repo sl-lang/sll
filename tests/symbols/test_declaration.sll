@@ -1,0 +1,43 @@
+(---
+	"@test/_common.sll"
+	"types.sll"
+)
+
+
+
+(= test_no_operands (,,,
+	(<- expect (#) nil)
+))
+
+(= test_one_operand (,,,
+	(<- expect (# var) nil)
+	(<- expect var nil)
+	(-> (= i 0) (< i 5)
+		(= var i)
+		(++ i)
+	)
+	(<- expect var 4)
+))
+
+(= test_multple_operands (,,,
+	(<- expect (# var_a var_b) nil)
+	(<- expect var_a nil)
+	(-> (= i 0) (< i 5)
+		(= var_a i)
+		(-> (= j 0) (< j 5)
+			(= var_b (* var_a j))
+			(++ j)
+		)
+		(++ i)
+	)
+	(<- expect var_a 4)
+	(<- expect var_b 16)
+))
+
+
+
+(<- run "Declaration operator (#)" (,,,
+	(<- test_no_operands)
+	(<- test_one_operand)
+	(<- test_multple_operands)
+))

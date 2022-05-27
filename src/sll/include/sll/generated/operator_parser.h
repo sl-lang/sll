@@ -26,7 +26,7 @@ static __SLL_FORCE_INLINE sll_read_char_t _operator_parser(sll_node_t* o,sll_rea
 		}
 		else if (str[0]=='#'){
 			o->type=SLL_NODE_TYPE_OPERATION_LIST;
-			(*fl)|=EXTRA_COMPILATION_DATA_VARIABLE_DEFINITION;
+			(*fl)|=EXTRA_COMPILATION_DATA_VARIABLE_DECLARATION;
 		}
 		else if (str[0]=='$'){
 			o->type=SLL_NODE_TYPE_LENGTH;
