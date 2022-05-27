@@ -1,0 +1,150 @@
+(---
+	"@test/_common.sll"
+	"types.sll"
+)
+
+
+
+(= test_vector_type (&:
+	object_type input
+	object_type output
+))
+
+
+
+(= TEST_VECTORS [
+	(. test_vector_type
+		false
+		false
+	)
+	(. test_vector_type
+		nil
+		false
+	)
+	(. test_vector_type
+		true
+		true
+	)
+	(. test_vector_type
+		0
+		false
+	)
+	(. test_vector_type
+		+987
+		true
+	)
+	(. test_vector_type
+		-579
+		true
+	)
+	(. test_vector_type
+		0.0
+		false
+	)
+	(. test_vector_type
+		123.456
+		true
+	)
+	(. test_vector_type
+		-3.1415926
+		true
+	)
+	(. test_vector_type
+		'\x00'
+		false
+	)
+	(. test_vector_type
+		'A'
+		true
+	)
+	(. test_vector_type
+		0i
+		false
+	)
+	(. test_vector_type
+		1.0+0.0i
+		true
+	)
+	(. test_vector_type
+		-1.0+0.0i
+		true
+	)
+	(. test_vector_type
+		0.0+1.0i
+		true
+	)
+	(. test_vector_type
+		0.0-1.0i
+		true
+	)
+	(. test_vector_type
+		""
+		false
+	)
+	(. test_vector_type
+		"\x00"
+		true
+	)
+	(. test_vector_type
+		"zero"
+		true
+	)
+	(. test_vector_type
+		[]
+		false
+	)
+	(. test_vector_type
+		[false]
+		true
+	)
+	(. test_vector_type
+		[1.2+3.4i 'a' 'b' 'c']
+		true
+	)
+	(. test_vector_type
+		<>
+		false
+	)
+	(. test_vector_type
+		<false false>
+		true
+	)
+	(. test_vector_type
+		<1.2+3.4i 'a' 'b' 'c'>
+		true
+	)
+])
+
+
+
+(= test_no_operands (,,,
+	(<- expect (!!) 0)
+))
+
+(= test_one_operand (,,,
+	(-> (= i 0) (< i ($ TEST_VECTORS))
+		(= vec (: TEST_VECTORS i))
+		(<- expect (!! vec$input) vec$output [vec$input])
+		(++ i)
+	)
+))
+
+(= test_multple_operands (,,,
+	(-> (= i 0) (< i ($ TEST_VECTORS))
+		(= vec (: TEST_VECTORS i))
+		(-> (= j 0) (< j ($ TEST_VECTORS))
+			(= vec2 (: TEST_VECTORS i))
+			(<- expect (!! vec$input vec2$input) vec$output [vec$input])
+			(++ j)
+		)
+		(++ i)
+	)
+))
+
+
+
+(<- run "Boolean predicate operator" (,,,
+	(<- test_no_operands)
+	(<- test_one_operand)
+	(<- test_multple_operands)
+))

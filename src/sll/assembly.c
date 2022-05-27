@@ -1092,13 +1092,14 @@ static const sll_node_t* _generate_on_stack(const sll_node_t* o,assembly_generat
 					PUSH;
 					return o+1;
 				}
-				o++;
-				if (l==1){
-					o=_generate_on_stack(o,g_dt);
-					GENERATE_OPCODE(g_dt,SLL_ASSEMBLY_INSTRUCTION_TYPE_BOOL);
-					return o;
+				o=_generate_on_stack(o+1,g_dt);
+				GENERATE_OPCODE(g_dt,SLL_ASSEMBLY_INSTRUCTION_TYPE_BOOL);
+				l--;
+				while (l){
+					l--;
+					o=_generate(o,g_dt);
 				}
-				SLL_UNIMPLEMENTED();
+				return o;
 			}
 		case SLL_NODE_TYPE_ASSIGN:
 			return _generate_assign(o,g_dt,1);
