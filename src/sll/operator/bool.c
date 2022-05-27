@@ -14,7 +14,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_operator_bool(sll_object_t* a){
 		case SLL_OBJECT_TYPE_CHAR:
 			return !!a->data.char_;
 		case SLL_OBJECT_TYPE_COMPLEX:
-			return (!!a->data.complex_.real)|(!!a->data.complex_.imag);
+			return (!!a->data.complex_.real)||(!!a->data.complex_.imag);
 		case SLL_OBJECT_TYPE_STRING:
 			return !!a->data.string.length;
 		case SLL_OBJECT_TYPE_ARRAY:
