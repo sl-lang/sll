@@ -1,0 +1,9 @@
+(= export_symbol_var 123)
+(= export_symbol_var_a 'a')
+(= export_symbol_var_b 'b')
+
+
+
+(##)
+(## export_symbol_var)
+(## export_symbol_var_a export_symbol_var_b)

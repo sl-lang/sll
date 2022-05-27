@@ -1,0 +1,23 @@
+(---
+	"@test/_common.sll"
+	"@test/symbols/_export_test_source_file.sll"
+	"types.sll"
+)
+
+
+
+(= test_one_operand (,,,
+	(<- expect export_symbol_var 123)
+))
+
+(= test_multple_operands (,,,
+	(<- expect export_symbol_var_a 'a')
+	(<- expect export_symbol_var_b 'b')
+))
+
+
+
+(<- run "Export operator (##)" (,,,
+	(<- test_one_operand)
+	(<- test_multple_operands)
+))
