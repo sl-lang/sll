@@ -47,6 +47,7 @@
 ))
 
 (= clib_types_module_type (&:
+	(~ type_type) clib_type
 	(~ clib_type) bool
 	(~ clib_type) char
 	(~ clib_type) const_void
@@ -171,6 +172,7 @@
 
 
 (= clib_types (. clib_types_module_type
+	clib_type
 	bool
 	char
 	const_void
