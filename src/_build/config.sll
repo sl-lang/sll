@@ -10,6 +10,7 @@
 
 
 
+(= COMMAND_MARKER_INCLUDE (. (&:)))
 (= COMMAND_MARKER_INPUT (. (&:)))
 (= COMMAND_MARKER_OUTPUT (. (&:)))
 
@@ -40,6 +41,14 @@
 	(~ array_type) POST_LINK_COMMAND
 ))
 
+(= platform_extension_command_list_type (&:
+	(~ array_type) COMPILATION_COMMAND
+	(~ array_type) LINK_COMMAND
+	(~ array_type) POST_LINK_COMMAND
+	(~ string_type) OUTPUT_PREFIX
+	(~ string_type) OUTPUT_LINK_PREFIX
+))
+
 (= config_module_type (&:
 	(~ string_type) API_FUNCTION_TABLE_FILE_PATH
 	(~ string_type) ASSEMBLY_OPTIMIZER_CONFIG_FILE_PATH
@@ -52,6 +61,7 @@
 	(~ array_type) BUILTIN_TYPES
 	(~ int_type) BYTE_ARRAY_WRAP_SIZE
 	(~ map_type) CLI_COMMANDS
+	(~ (:? COMMAND_MARKER_INCLUDE)) COMMAND_MARKER_INCLUDE
 	(~ (:? COMMAND_MARKER_INPUT)) COMMAND_MARKER_INPUT
 	(~ (:? COMMAND_MARKER_OUTPUT)) COMMAND_MARKER_OUTPUT
 	(~ map_type) COMMANDS
@@ -60,8 +70,19 @@
 	(~ string_type) ERROR_HEADER_OUTPUT_DIRECTORY_PATH
 	(~ string_type) ERROR_HEADER_SOURCE_DIRECTORY_PATH
 	(~ array_type) ERROR_HEADERS
+	(~ map_type) EXTENSION_COMMANDS
+	(~ string_type) EXTENSION_DIRECTORY_FILE_PATH
+	(~ string_type) EXTENSION_INCLUDE_FILE_PATH
+	(~ string_type) EXTENSION_LIBRARY_ROOT_FILE_PATH
+	(~ array_type) EXTENSION_MODULE_BUNDLE_GENERATION_COMMAND
+	(~ array_type) EXTENSION_MODULE_DEBUG_BUNDLE_GENERATION_COMMAND
+	(~ array_type) EXTENSION_MODULE_COMPILATION_COMMAND
+	(~ map_type) EXTENSION_PLATFORM_SOURCE_FILE_PATH
+	(~ array_type) EXTENSION_PREPROCESSOR_DEFINITIONS
+	(~ string_type) EXTENSION_ROOT_SOURCE_FILE_PATH
 	(~ array_type) HASHLIST_FILE_EXTENSIONS
 	(~ string_type) HASHLIST_FILE_PATH
+	(~ string_type) HASHLIST_ROOT_SOURCE_FILE_PATH
 	(~ string_type) INCLUDE_ROOT_DIRECTORY_PATH
 	(~ map_type) LIBRARY_HEADER_API_CALL
 	(~ map_type) LIBRARY_HEADER_CHECK_OUTPUT
@@ -139,13 +160,12 @@
 	(+ "__SLL_TIME_RAW__=" build_time)
 	(+ "__SLL_BUILD_" (<- string$upper_case sys$PLATFORM))
 ])
-(? (! options$RELEASE) (<- array$push defines "DEBUG_BUILD"))
 (= sha (: sys$ENVIRONMENT "GITHUB_SHA"))
 (? sha (<- array$extend defines [
 	(+ `__SLL_SHA__="` (: sha 0 7) `"`)
 	(+ `__SLL_FULL_SHA__="` sha `"`)
 ]))
-(<- array$extend defines (?: (=== sys$PLATFORM "windows")
+(= platform_defines (?: (=== sys$PLATFORM "windows")
 	[
 		"_WINDOWS"
 		"WINDLL"
@@ -195,6 +215,12 @@
 		"_GNU_SOURCE"
 	]
 ))
+(? (! options$RELEASE) (<- array$push platform_defines "DEBUG_BUILD"))
+(<- array$extend defines platform_defines)
+(= ext_defines (+
+	[(+ "__SLL_BUILD_" (<- string$upper_case sys$PLATFORM))]
+	platform_defines
+))
 
 (= version (<- _read_version))
 
@@ -241,6 +267,7 @@
 			nil
 		)
 	>
+	COMMAND_MARKER_INCLUDE
 	COMMAND_MARKER_INPUT
 	COMMAND_MARKER_OUTPUT
 	<
@@ -307,8 +334,66 @@
 		"help_text.txt"
 		"memory_fail.txt"
 	]
+	<
+		"darwin" (. platform_extension_command_list_type
+			["gcc" "-fno-exceptions" "-fno-stack-protector" "-fdiagnostics-color=always" "-fPIC" "-c" "-fvisibility=hidden" "-Wall" "-g" "-O0" "-Werror" "-I" "build" "-I" COMMAND_MARKER_INCLUDE "-o" COMMAND_MARKER_OUTPUT COMMAND_MARKER_INPUT]
+			["gcc" "-fno-exceptions" "-fno-stack-protector" "-fdiagnostics-color=always" "-shared" "-fPIC" "-fvisibility=hidden" "-Wall" "-Werror" "-g" "-O0" "-o" COMMAND_MARKER_OUTPUT COMMAND_MARKER_INPUT]
+			nil
+			""
+			""
+		)
+		"darwin_release" (. platform_extension_command_list_type
+			["gcc" "-fno-exceptions" "-fno-stack-protector" "-fdiagnostics-color=always" "-fPIC" "-c" "-fvisibility=hidden" "-Wall" "-O3" "-Werror" "-I" "build" "-I" COMMAND_MARKER_INCLUDE "-o" COMMAND_MARKER_OUTPUT COMMAND_MARKER_INPUT]
+			["gcc" "-fno-exceptions" "-fno-stack-protector" "-fdiagnostics-color=always" "-shared" "-fPIC" "-fvisibility=hidden" "-Wall" "-O3" "-Werror" "-o" COMMAND_MARKER_OUTPUT COMMAND_MARKER_INPUT]
+			nil
+			""
+			""
+		)
+		"linux" (. platform_extension_command_list_type
+			["gcc" "-fno-exceptions" "-fno-stack-protector" "-fdiagnostics-color=always" "-fPIC" "-c" "-fvisibility=hidden" "-Wall" "-g" "-O0" "-Werror" "-I" "build" "-I" COMMAND_MARKER_INCLUDE "-mavx" "-mavx2" "-o" COMMAND_MARKER_OUTPUT COMMAND_MARKER_INPUT]
+			["gcc" "-fno-exceptions" "-fno-stack-protector" "-fdiagnostics-color=always" "-shared" "-fPIC" "-fvisibility=hidden" "-Wall" "-Werror" "-g" "-O0" "-mavx" "-mavx2" "-o" COMMAND_MARKER_OUTPUT COMMAND_MARKER_INPUT]
+			nil
+			""
+			""
+		)
+		"linux_release" (. platform_extension_command_list_type
+			(+ ["gcc" "-fno-exceptions" "-fno-stack-protector" "-fdiagnostics-color=always" "-fPIC" "-c" "-fvisibility=hidden" "-Wall" "-O3" "-Werror" "-I" "build" "-I" COMMAND_MARKER_INCLUDE "-mavx" "-mavx2" "-o" COMMAND_MARKER_OUTPUT COMMAND_MARKER_INPUT] (* ["-g"] options$DEBUG))
+			(+ ["gcc" "-fno-exceptions" "-fno-stack-protector" "-fdiagnostics-color=always" "-shared" "-fPIC" "-fvisibility=hidden" "-Wall" "-O3" "-Werror" "-mavx" "-mavx2" "-o" COMMAND_MARKER_OUTPUT COMMAND_MARKER_INPUT] (* ["-g"] options$DEBUG))
+			(* ["strip" COMMAND_MARKER_OUTPUT "-s" "-R" ".note.*" "-R" ".comment"] (! options$DEBUG))
+			""
+			""
+		)
+		"windows" (. platform_extension_command_list_type
+			["cl.exe" "/c" "/permissive-" "/Zc:preprocessor" "/std:c11" "/Wv:18" "/GS" "/utf-8" "/W3" "/Zc:wchar_t" "/Gm-" "/sdl" "/Zc:inline" "/fp:precise" "/D" "_DEBUG" "/errorReport:none" "/WX" "/Zc:forScope" "/Gd" "/Oi" "/EHsc" "/nologo" "/diagnostics:column" "/Zi" "/Od" "/RTC1" "/MDd" "/I" "build" "/I" COMMAND_MARKER_INCLUDE "/Fdbuild/sll.pdb" COMMAND_MARKER_OUTPUT COMMAND_MARKER_INPUT]
+			["link.exe" COMMAND_MARKER_OUTPUT "/DLL" "/DYNAMICBASE" "/MACHINE:X64" "/ERRORREPORT:none" "/NOLOGO" "/TLBID:1" "/WX" "/DEBUG" "/INCREMENTAL:NO" "/RELEASE" "/PDB:build/sll.pdb" COMMAND_MARKER_INPUT]
+			nil
+			"/Fo"
+			"/OUT:"
+		)
+		"windows_release" (. platform_extension_command_list_type
+			["cl.exe" "/c" "/permissive-" "/Zc:preprocessor" "/std:c11" "/Wv:18" "/GS" "/utf-8" "/W3" "/Zc:wchar_t" "/Gm-" "/sdl" "/Zc:inline" "/fp:precise" "/D" "NDEBUG" "/errorReport:none" "/WX" "/Zc:forScope" "/Gd" "/Oi" "/EHsc" "/nologo" "/diagnostics:column" "/GL" "/Gy" "/O2" "/MD" "/I" "build" "/I" COMMAND_MARKER_INCLUDE COMMAND_MARKER_OUTPUT COMMAND_MARKER_INPUT]
+			["link.exe" COMMAND_MARKER_OUTPUT "/DLL" "/DYNAMICBASE" "/MACHINE:X64" "/ERRORREPORT:none" "/NOLOGO" "/TLBID:1" "/WX" "/LTCG" "/OPT:NOREF" "/INCREMENTAL:NO" "/RELEASE" COMMAND_MARKER_INPUT]
+			nil
+			"/Fo"
+			"/OUT:"
+		)
+	>
+	"src/ext/"
+	"src/ext/<name>/include/"
+	"src/ext/<name>/lib/"
+	(+ output_executable_args ["-b" "-d" "-D" "-O" "-x" "5" "-n" "-N" "clib/" "-R" "-B" COMMAND_MARKER_OUTPUT COMMAND_MARKER_INPUT])
+	(+ output_executable_args ["-b" "-n" "-N" "clib/" "-R" "-B" COMMAND_MARKER_OUTPUT COMMAND_MARKER_INPUT])
+	(+ output_executable_args ["-c" "-R" "-I" "build/lib" "-I" COMMAND_MARKER_INCLUDE "-o" "build/lib/" COMMAND_MARKER_INPUT])
+	<
+		"darwin" "src/ext/<name>/platform/linux/"
+		"linux" "src/ext/<name>/platform/linux/"
+		"windows" "src/ext/<name>/platform/windows/"
+	>
+	ext_defines
+	"src/ext/<name>/"
 	[".asm" ".c" ".h" ".inc"]
 	"build/.files"
+	"src/"
 	"src/sll/include/"
 	<
 		"darwin" "__attribute__((ms_abi)) "

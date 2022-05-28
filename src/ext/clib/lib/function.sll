@@ -1,0 +1,12 @@
+(--- "types.sll")
+
+
+
+(= clib_function_module_type (&:
+))
+
+
+
+(= clib_function (. clib_function_module_type
+))
+(## clib_function)

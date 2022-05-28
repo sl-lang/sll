@@ -3,6 +3,7 @@
 	"@build-script/hashlist.sll"
 	"@build-script/util.sll"
 	"array.sll"
+	"error.sll"
 	"file.sll"
 	"log.sll"
 	"path.sll"
@@ -15,6 +16,7 @@
 
 
 (= build_module_type (&:
+	(~ func_type) build_extensions
 	(~ func_type) build_modules
 	(~ func_type) build_sll
 	(~ func_type) build_sll_cli
@@ -37,11 +39,15 @@
 	)
 ))
 
-(= _execute_command (,,, args input output options
+(= _execute_command (,,, args input output options include_file_path
 	(? (! args) (@@))
 	(= args (+ (<- _replace_marker
 		(<- _replace_marker
-			args
+			(<- _replace_marker
+				args
+				config$COMMAND_MARKER_INCLUDE
+				include_file_path
+			)
 			config$COMMAND_MARKER_INPUT
 			input
 		)
@@ -49,6 +55,128 @@
 		output
 	) (|| options [])))
 	(@@ (<- util$execute args))
+))
+
+
+(= build_extensions (,,,
+	(<- log$log "Compiling extensions...")
+	(<- log$log "  Listing extensions...")
+	(= extensions (<- path$list_dir config$EXTENSION_DIRECTORY_FILE_PATH false ))
+	(<- log$log "    Found " ($ extensions) " extension" (?: (=== ($ extensions) 1) "" "s"))
+	(-> (= extension_index 0) (< extension_index ($ extensions))
+		(= name (: extensions extension_index))
+		(++ extension_index)
+		(<- log$log "  Compiling extension '" name "'...")
+		(<- log$log "    Listing files...")
+		(= files (<- path$list_dir
+			(<- string$replace
+				config$EXTENSION_ROOT_SOURCE_FILE_PATH
+				"<name>"
+				name
+			)
+			true
+		))
+		(= platform_files (<- path$list_dir
+			(<- string$replace
+				(: config$EXTENSION_PLATFORM_SOURCE_FILE_PATH sys$PLATFORM)
+				"<name>"
+				name
+			)
+			true
+		))
+		(= files (+
+			([> (= i 0) (< i ($ files))
+				(= fp (: files i))
+				(++ i)
+				(? (|: fp "platform") (<<<))
+				fp
+			)
+			(?: (=== (:? platform_files) error$error_type)
+				[]
+				platform_files
+			)
+		))
+		(= files ([> (= i 0) (< i ($ files))
+			(= fp (: files i))
+			(++ i)
+			(? (! (|: config$SOURCE_FILE_EXTENSIONS (>> fp (<- string$index_reverse fp '.')))) (<<<))
+			fp
+		))
+		(<- log$log "      Found " ($ files) " files")
+		(<- log$log "    Aggregating preprocessor definitions...")
+		(= options [])
+		(-> (= i 0) (< i ($ config$EXTENSION_PREPROCESSOR_DEFINITIONS))
+			(<- array$extend options [
+				(: config$PREPROCESSOR_DEFINITION_PREFIX sys$PLATFORM)
+				(: config$EXTENSION_PREPROCESSOR_DEFINITIONS i)
+			])
+			(++ i)
+		)
+		(= include_file_path (<- string$replace
+			config$EXTENSION_INCLUDE_FILE_PATH
+			"<name>"
+			name
+		))
+		(= command_list (: config$EXTENSION_COMMANDS (+
+			sys$PLATFORM
+			(* "_release" config$OPTIONS$RELEASE)
+		)))
+		(= output_files [])
+		(<- log$log "    Compiling files...")
+		(= err false)
+		(-> (= i 0) (< i ($ files))
+			(= file_path (: files i))
+			(++ i)
+			(= output_file_path (<- util$get_output_file_path file_path))
+			(<- array$push output_files output_file_path)
+			(? (! (<- hashlist$check output_file_path)) (<<<))
+			(<- log$log "      " file_path)
+			(? (<- _execute_command command_list$COMPILATION_COMMAND file_path (+ command_list$OUTPUT_PREFIX output_file_path) options include_file_path) {
+				(<- hashlist$fail output_file_path)
+				(= err true)
+			})
+		)
+		(? err (<- util$fail_and_exit))
+		(= output_library (+
+			"build/"
+			name
+			"-"
+			config$VERSION
+			sys$LIBRARY_EXTENSION
+		))
+		(<- log$log "    Linking files...")
+		(? (<- _execute_command command_list$LINK_COMMAND output_files (+ command_list$OUTPUT_LINK_PREFIX output_library)) (<- util$fail_and_exit))
+		(<- log$log "    Executing post-link command...")
+		(? (<- _execute_command command_list$POST_LINK_COMMAND nil output_library) (<- util$fail_and_exit))
+		(<- log$log "  Compiling extension module '" name "'...")
+		(<- log$log "    Listing module files...")
+		(= module_file_root (<- string$replace
+			config$EXTENSION_LIBRARY_ROOT_FILE_PATH
+			"<name>"
+			name
+		))
+		(= module_files (<- path$list_dir module_file_root false))
+		(<- log$log "      Found " ($ module_files) " files")
+		(<- log$log "    Compiling files...")
+		(? (<- _execute_command config$EXTENSION_MODULE_COMPILATION_COMMAND module_files nil nil module_file_root) (<- util$fail_and_exit))
+		(= output_files ([> (= i 0) (< i ($ module_files))
+			(= file_path (: module_files i))
+			(++ i)
+			(? (=== (: file_path 0) '_') (<<<))
+			(+ "build/lib/" file_path ".slc")
+		))
+		(<- log$log "    Generating bundle...")
+		(? (<- _execute_command config$EXTENSION_MODULE_BUNDLE_GENERATION_COMMAND output_files (+ "build/lib/"  name ".slb")) (<- util$fail_and_exit))
+		(<- log$log "    Generating debug bundle...")
+		(? (<- _execute_command config$EXTENSION_MODULE_DEBUG_BUNDLE_GENERATION_COMMAND output_files (+ "build/lib_debug/" name ".slb")) (<- util$fail_and_exit))
+		(<- log$log "    Removing compilation files...")
+		(-> (= i 0) (< i ($ module_files))
+			(= file_path (+ "build/lib/" (: module_files i) ".slc"))
+			(<- log$log "      Removing '" file_path "'...")
+			(<- file$delete file_path)
+			(++ i)
+		)
+	)
 ))
 
 (= build_modules (,,,
@@ -155,6 +283,7 @@
 
 
 (= build (. build_module_type
+	build_extensions
 	build_modules
 	build_sll
 	build_sll_cli

@@ -125,7 +125,7 @@
 	})
 	(<- log$log "    Loaded " ($ _hash_map) " hashes")
 	(<- log$log "  Checking for file changes...")
-	(= files (<- path$list_dir config$ROOT_SOURCE_FILE_PATH true))
+	(= files (<- path$list_dir config$HASHLIST_ROOT_SOURCE_FILE_PATH true))
 	(= current_file_list [])
 	(-> (= i 0) (< i ($ files))
 		(= file_path (: files i))

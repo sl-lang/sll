@@ -1,0 +1,32 @@
+(--- "types.sll")
+
+
+
+(= clib_library_module_type (&:
+	(~ func_type) load
+	(~ func_type) lookup_symbol
+	(~ func_type) unload
+))
+
+
+
+(= load (,,,
+	(@@ nil)
+))
+
+(= lookup_symbol (,,,
+	(@@ nil)
+))
+
+(= unload (,,,
+	(@@ nil)
+))
+
+
+
+(= clib_library (. clib_library_module_type
+	load
+	lookup_symbol
+	unload
+))
+(## clib_library)
