@@ -131,6 +131,8 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_operator_strict_equal(sll_objec
 			return a->data.float_==b->data.float_;
 		case SLL_OBJECT_TYPE_CHAR:
 			return a->data.char_==b->data.char_;
+		case SLL_OBJECT_TYPE_COMPLEX:
+			return a->data.complex_.real==b->data.complex_.real&&a->data.complex_.imag==b->data.complex_.imag;
 		case SLL_OBJECT_TYPE_STRING:
 			return STRING_EQUAL(&(a->data.string),&(b->data.string));
 		case SLL_OBJECT_TYPE_ARRAY:

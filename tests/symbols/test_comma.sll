@@ -1,0 +1,48 @@
+(---
+	"@test/_common.sll"
+	"types.sll"
+)
+
+
+
+(= TEST_VALUES [
+	true
+	-589
+	309.4e-6
+	'\x8f'
+	-23.22-99.5i
+	"abc_test_string"
+	[4 5 6 7 8]
+	<"start" 'A' "end" 'Z'>
+])
+
+
+
+(= test_no_operands (,,,
+	(<- expect (,) nil)
+))
+
+(= test_one_operand (,,,
+	(-> (= i 0) (< i ($ TEST_VALUES))
+		(<- expect (, (: TEST_VALUES i)) (: TEST_VALUES i) [(: TEST_VALUES i)])
+		(++ i)
+	)
+))
+
+(= test_multple_operands (,,,
+	(-> (= i 0) (< i ($ TEST_VALUES))
+		(-> (= j 0) (< j ($ TEST_VALUES))
+			(<- expect (, (: TEST_VALUES j) (: TEST_VALUES i)) (: TEST_VALUES i) [(: TEST_VALUES i) (: TEST_VALUES j)])
+			(++ j)
+		)
+		(++ i)
+	)
+))
+
+
+
+(<- run "Continue operator (<<<)" (,,,
+	(<- test_no_operands)
+	(<- test_one_operand)
+	(<- test_multple_operands)
+))
