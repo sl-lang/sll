@@ -77,6 +77,7 @@
 	(~ array_type) EXTENSION_MODULE_BUNDLE_GENERATION_COMMAND
 	(~ array_type) EXTENSION_MODULE_DEBUG_BUNDLE_GENERATION_COMMAND
 	(~ array_type) EXTENSION_MODULE_COMPILATION_COMMAND
+	(~ string_type) EXTENSION_OUTPUT_FILE_PATH
 	(~ map_type) EXTENSION_PLATFORM_SOURCE_FILE_PATH
 	(~ array_type) EXTENSION_PREPROCESSOR_DEFINITIONS
 	(~ string_type) EXTENSION_ROOT_SOURCE_FILE_PATH
@@ -238,8 +239,8 @@
 	"src/sll/data/assembly_optimizer.txt"
 	"src/sll/include/sll/generated/assembly_optimizer.h"
 	5
-	["build/lib/" "build/lib_debug/" "build/web/"]
-	["build/lib/" "build/lib_debug/" "build/objects/"]
+	["build/lib/" "build/lib_debug/" "build/sys_lib/" "build/web/"]
+	["build/lib/" "build/lib_debug/" "build/sys_lib/" "build/objects/"]
 	build_time
 	"src/sll/lib/"
 	["void" "va_list" "__SLL_S1" "__SLL_U1" "__SLL_S8" "__SLL_U8" "__SLL_S16" "__SLL_U16" "__SLL_S32" "__SLL_U32" "__SLL_S64" "__SLL_U64" "__SLL_F32" "__SLL_F64"]
@@ -384,6 +385,7 @@
 	(+ output_executable_args ["-b" "-d" "-D" "-O" "-x" "5" "-n" "-N" "clib/" "-R" "-B" COMMAND_MARKER_OUTPUT COMMAND_MARKER_INPUT])
 	(+ output_executable_args ["-b" "-n" "-N" "clib/" "-R" "-B" COMMAND_MARKER_OUTPUT COMMAND_MARKER_INPUT])
 	(+ output_executable_args ["-c" "-R" "-I" "build/lib" "-I" COMMAND_MARKER_INCLUDE "-o" "build/lib/" COMMAND_MARKER_INPUT])
+	(+ "build/sys_lib/<name>-" version sys$LIBRARY_EXTENSION)
 	<
 		"darwin" "src/ext/<name>/platform/linux/"
 		"linux" "src/ext/<name>/platform/linux/"

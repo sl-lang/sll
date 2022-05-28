@@ -137,12 +137,9 @@
 			})
 		)
 		(? err (<- util$fail_and_exit))
-		(= output_library (+
-			"build/"
+		(= output_library (<- string$replace config$EXTENSION_OUTPUT_FILE_PATH
+			"<name>"
 			name
-			"-"
-			config$VERSION
-			sys$LIBRARY_EXTENSION
 		))
 		(<- log$log "    Linking files...")
 		(? (<- _execute_command command_list$LINK_COMMAND output_files (+ command_list$OUTPUT_LINK_PREFIX output_library)) (<- util$fail_and_exit))
