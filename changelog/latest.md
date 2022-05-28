@@ -1,4 +1,4 @@
-# Sll [0.7.19] - Ongoing
+# Sll [0.7.19] - 2022-05-28
 
 ## Added
 
@@ -6,6 +6,7 @@
 - CLI option to specify the number of optimization rounds: `-x` or `--optimization-rounds`
 - Compilation data optimizer
 - Implemented `sll_optimization_round_count_t` and `sll_optimize_source_file`
+- More tests ([#8])
 
 ## Changed
 
@@ -24,5 +25,6 @@
 - Duplicated functions: `sll_array_from_length` and `sll_array_join`
 - Unused functions: `sll_create_string` and `sll_create_object_string`
 
-[0.7.19]: https://github.com/sl-lang/sll/compare/sll-v0.7.18...main
+[0.7.19]: https://github.com/sl-lang/sll/compare/sll-v0.7.18...sll-v0.7.19
+[#8]: https://github.com/sl-lang/sll/issues/8
 [#75]: https://github.com/sl-lang/sll/issues/75
