@@ -1,0 +1,36 @@
+(---
+	"@test/_common.sll"
+	"array.sll"
+	"types.sll"
+)
+
+
+
+(= test_no_operands (,,,
+	(= arr [])
+	(-> (= i 0) (< i 10)
+		(= j i)
+		(++ i)
+		(? (=== j 5) (<<<))
+		(<- array$push arr j)
+	)
+	(<- expect arr [0 1 2 3 4 6 7 8 9])
+))
+
+(= test_multple_operands (,,,
+	(= arr [])
+	(-> (= i 0) (< i 10)
+		(= j i)
+		(++ i)
+		(? (=== j 5) (<<< j 'a' 58))
+		(<- array$push arr j)
+	)
+	(<- expect arr [0 1 2 3 4 6 7 8 9])
+))
+
+
+
+(<- run "Continue operator (<<<)" (,,,
+	(<- test_no_operands)
+	(<- test_multple_operands)
+))
