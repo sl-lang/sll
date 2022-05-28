@@ -46,7 +46,7 @@
 - [ ] `symbols/test_bit_rshift.sll` (`>>`)
 - [ ] `symbols/test_bit_xor.sll` (`^`)
 - [x] `symbols/test_bool.sll` (`!!`)
-- [ ] `symbols/test_break.sll` (`@`)
+- [x] `symbols/test_break.sll` (`@`)
 - [ ] `symbols/test_call.sll` (`<-`)
 - [ ] `symbols/test_call_array.sll` (`<-*`)
 - [ ] `symbols/test_cast.sll` (`::`)
