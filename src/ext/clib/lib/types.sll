@@ -5,35 +5,155 @@
 
 
 
+(# FLAG_INTEGER FLAG_CONST FLAG_SIGNED FLAG_POINTER)
+
 (= clib_type (&:
 	(,,, dt
-		(@@ dt$name)
+		(? dt$_str (@@ dt$_str))
+		(= string "")
+		(? (& dt$flags FLAG_CONST) (= string (+ string "const ")))
+		(? (&&
+			(!== dt$size 1)
+			(=== (& dt$flags (| FLAG_INTEGER FLAG_SIGNED FLAG_POINTER)) FLAG_INTEGER)
+		) (= string (+ string "unsigned ")))
+		(= string (+ string dt$name))
+		(= dt$_str string)
+		(@@ string)
 	) @@string@@
 	(~ int_type) size
 	(~ string_type) name
+	(~ int_type) flags
+	(~ object_type) ref_type
+	string_type _str
 ))
 
 (= clib_types_module_type (&:
 	(~ clib_type) bool
 	(~ clib_type) char
+	(~ clib_type) double
+	(~ clib_type) float
+	(~ clib_type) int
+	(~ clib_type) long
+	(~ clib_type) long_int
+	(~ clib_type) long_long
+	(~ clib_type) long_long_int
+	(~ clib_type) short
+	(~ clib_type) short_int
+	(~ clib_type) signed_char
+	(~ clib_type) signed_int
+	(~ clib_type) signed_long
+	(~ clib_type) signed_long_int
+	(~ clib_type) signed_long_long
+	(~ clib_type) signed_long_long_int
+	(~ clib_type) signed_short
+	(~ clib_type) signed_short_int
 	(~ clib_type) unsigned_char
+	(~ clib_type) unsigned_int
+	(~ clib_type) unsigned_long
+	(~ clib_type) unsigned_long_int
+	(~ clib_type) unsigned_long_long
+	(~ clib_type) unsigned_long_long_int
+	(~ clib_type) unsigned_short
+	(~ clib_type) unsigned_short_int
+	(~ clib_type) void*
+	(~ int_type) FLAG_CONST
+	(~ int_type) FLAG_FLOAT
+	(~ int_type) FLAG_INTEGER
+	(~ int_type) FLAG_POINTER
+	(~ int_type) FLAG_SIGNED
 ))
 
 
 
+(= FLAG_FLOAT 0)
+(= FLAG_INTEGER 1)
+(= FLAG_SIGNED 2)
+(= FLAG_POINTER 4)
+(= FLAG_CONST 8)
+
 (= bool (. clib_type
 	1
 	"bool"
+	FLAG_INTEGER
 ))
 
 (= char (. clib_type
 	8
 	"char"
+	(| FLAG_INTEGER FLAG_SIGNED)
 ))
 
 (= unsigned_char (. clib_type
 	8
-	"unsigned char"
+	"char"
+	FLAG_INTEGER
+))
+
+(= short_int (. clib_type
+	16
+	"short int"
+	(| FLAG_INTEGER FLAG_SIGNED)
+))
+
+(= unsigned_short_int (. clib_type
+	16
+	"short int"
+	FLAG_INTEGER
+))
+
+(= int (. clib_type
+	32
+	"int"
+	(| FLAG_INTEGER FLAG_SIGNED)
+))
+
+(= unsigned_int (. clib_type
+	32
+	"int"
+	FLAG_INTEGER
+))
+
+(= long_int (. clib_type
+	32
+	"long int"
+	(| FLAG_INTEGER FLAG_SIGNED)
+))
+
+(= unsigned_long_int (. clib_type
+	32
+	"long int"
+	FLAG_INTEGER
+))
+
+(= long_long_int (. clib_type
+	64
+	"long long int"
+	(| FLAG_INTEGER FLAG_SIGNED)
+))
+
+(= unsigned_long_long_int (. clib_type
+	64
+	"long long int"
+	FLAG_INTEGER
+))
+
+(= float (. clib_type
+	32
+	"float"
+	0
+))
+
+(= double (. clib_type
+	64
+	"double"
+	0
+))
+
+(= void* (. clib_type
+	0
+	"void*"
+	FLAG_POINTER
+	nil
 ))
 
 
@@ -41,6 +161,36 @@
 (= clib_types (. clib_types_module_type
 	bool
 	char
+	double
+	float
+	int
+	long_int
+	long_int
+	long_long_int
+	long_long_int
+	short_int
+	short_int
+	char
+	int
+	long_int
+	long_int
+	long_long_int
+	long_long_int
+	short_int
+	short_int
 	unsigned_char
+	unsigned_int
+	unsigned_long_int
+	unsigned_long_int
+	unsigned_long_long_int
+	unsigned_long_long_int
+	unsigned_short_int
+	unsigned_short_int
+	void*
+	FLAG_CONST
+	FLAG_FLOAT
+	FLAG_INTEGER
+	FLAG_POINTER
+	FLAG_SIGNED
 ))
 (## clib_types)
