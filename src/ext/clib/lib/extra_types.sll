@@ -31,6 +31,48 @@
 	(~ clib_types$clib_type) uint_least8_t
 	(~ clib_types$clib_type) uintmax_t
 	(~ clib_types$clib_type) uintptr_t
+	(~ int_type) INT16_MAX
+	(~ int_type) INT16_MIN
+	(~ int_type) INT32_MAX
+	(~ int_type) INT32_MIN
+	(~ int_type) INT64_MAX
+	(~ int_type) INT64_MIN
+	(~ int_type) INT8_MAX
+	(~ int_type) INT8_MIN
+	(~ int_type) INT_FAST16_MAX
+	(~ int_type) INT_FAST16_MIN
+	(~ int_type) INT_FAST32_MAX
+	(~ int_type) INT_FAST32_MIN
+	(~ int_type) INT_FAST64_MAX
+	(~ int_type) INT_FAST64_MIN
+	(~ int_type) INT_FAST8_MAX
+	(~ int_type) INT_FAST8_MIN
+	(~ int_type) INT_LEAST16_MAX
+	(~ int_type) INT_LEAST16_MIN
+	(~ int_type) INT_LEAST32_MAX
+	(~ int_type) INT_LEAST32_MIN
+	(~ int_type) INT_LEAST64_MAX
+	(~ int_type) INT_LEAST64_MIN
+	(~ int_type) INT_LEAST8_MAX
+	(~ int_type) INT_LEAST8_MIN
+	(~ int_type) INTMAX_MAX
+	(~ int_type) INTMAX_MIN
+	(~ int_type) INTPTR_MAX
+	(~ int_type) INTPTR_MIN
+	(~ int_type) UINT16_MAX
+	(~ int_type) UINT32_MAX
+	(~ int_type) UINT64_MAX
+	(~ int_type) UINT8_MAX
+	(~ int_type) UINT_FAST16_MAX
+	(~ int_type) UINT_FAST32_MAX
+	(~ int_type) UINT_FAST64_MAX
+	(~ int_type) UINT_FAST8_MAX
+	(~ int_type) UINT_LEAST16_MAX
+	(~ int_type) UINT_LEAST32_MAX
+	(~ int_type) UINT_LEAST64_MAX
+	(~ int_type) UINT_LEAST8_MAX
+	(~ int_type) UINTMAX_MAX
+	(~ int_type) UINTPTR_MAX
 ))
 
 
@@ -64,5 +106,47 @@
 	clib_types$unsigned_char
 	clib_types$unsigned_long_long_int
 	clib_types$unsigned_long_long_int
+	32767
+	-32768
+	2147483647
+	-2147483648
+	9223372036854775807
+	-9223372036854775808
+	127
+	-128
+	32767
+	-32768
+	2147483647
+	-2147483648
+	9223372036854775807
+	-9223372036854775808
+	127
+	-128
+	32767
+	-32768
+	2147483647
+	-2147483648
+	9223372036854775807
+	-9223372036854775808
+	127
+	-128
+	9223372036854775807
+	-9223372036854775808
+	9223372036854775807
+	-9223372036854775808
+	65535
+	4294967295
+	18446744073709551615
+	255
+	65535
+	4294967295
+	18446744073709551615
+	255
+	65535
+	4294967295
+	18446744073709551615
+	255
+	18446744073709551615
+	18446744073709551615
 ))
 (## clib_extra_types)
