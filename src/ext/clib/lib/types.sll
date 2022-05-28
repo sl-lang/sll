@@ -5,11 +5,42 @@
 
 
 
+(= clib_type (&:
+	(,,, dt
+		(@@ dt$name)
+	) @@string@@
+	(~ int_type) size
+	(~ string_type) name
+))
+
 (= clib_types_module_type (&:
+	(~ clib_type) bool
+	(~ clib_type) char
+	(~ clib_type) unsigned_char
+))
+
+
+
+(= bool (. clib_type
+	1
+	"bool"
+))
+
+(= char (. clib_type
+	8
+	"char"
+))
+
+(= unsigned_char (. clib_type
+	8
+	"unsigned char"
 ))
 
 
 
 (= clib_types (. clib_types_module_type
+	bool
+	char
+	unsigned_char
 ))
 (## clib_types)

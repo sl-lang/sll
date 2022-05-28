@@ -152,16 +152,15 @@
 			"<name>"
 			name
 		))
-		(= module_files (<- path$list_dir module_file_root false))
+		(= module_files (<- path$list_dir module_file_root true))
 		(<- log$log "      Found " ($ module_files) " files")
 		(<- log$log "    Compiling files...")
 		(? (<- _execute_command config$EXTENSION_MODULE_COMPILATION_COMMAND module_files nil nil [
-			"-I" module_file_root
 			"-I" (+ name '|' module_file_root)
 			"-I" (+ name "|build/lib/")
 		]) (<- util$fail_and_exit))
 		(= output_files ([> (= i 0) (< i ($ module_files))
-			(= file_path (: module_files i))
+			(= file_path (: (<- path$split (: module_files i)) 1))
 			(++ i)
 			(? (=== (: file_path 0) '_') (<<<))
 			(+ "build/lib/" file_path ".slc")
