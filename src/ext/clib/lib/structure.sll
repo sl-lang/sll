@@ -1,0 +1,15 @@
+(---
+	"clib/_load_library.sll"
+	"types.sll"
+)
+
+
+
+(= clib_structure_module_type (&:
+))
+
+
+
+(= clib_structure (. clib_structure_module_type
+))
+(## clib_structure)
