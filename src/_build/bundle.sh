@@ -4,4 +4,7 @@ if [ "$(uname -s)" == "Darwin" ]; then
 else
 	platform="linux"
 fi
-zip -9 "$platform.zip" build/sll "build/sll-$(cat build/version).so" build/sll.h $(find build -name "*.slb" -type f -and -not -path "build/_sll_runtime*/*" -or -name "*.*" -path "build/sys_lib/*")
+(
+	cd build||exit
+	zip -9 "../$platform.zip" sll "sll-$(cat version).so" sll.h $(find . -name "*.slb" -type f -and -not -path "./_sll_runtime*/*" -or -name "*.*" -path "./sys_lib/*")
+)
