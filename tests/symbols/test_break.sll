@@ -1,0 +1,31 @@
+(---
+	"@test/_common.sll"
+	"types.sll"
+)
+
+
+
+(= test_no_operands (,,,
+	(= i 0)
+	(-> nil (< i 10)
+		(? (=== i 5) (@))
+		(++ i)
+	)
+	(<- expect i 5)
+))
+
+(= test_multple_operands (,,,
+	(= i 0)
+	(-> nil (< i 10)
+		(? (=== i 5) (@ i 'a' 58))
+		(++ i)
+	)
+	(<- expect i 5)
+))
+
+
+
+(<- run "Break operator (@)" (,,,
+	(<- test_no_operands)
+	(<- test_multple_operands)
+))
