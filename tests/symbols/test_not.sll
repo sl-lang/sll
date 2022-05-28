@@ -134,7 +134,7 @@
 		(= vec (: TEST_VECTORS i))
 		(-> (= j 0) (< j ($ TEST_VECTORS))
 			(= vec2 (: TEST_VECTORS i))
-			(<- expect (! vec$input vec2$input) vec$output [vec$input])
+			(<- expect (! vec$input vec2$input) vec$output [vec$input vec2$input])
 			(++ j)
 		)
 		(++ i)
@@ -143,7 +143,7 @@
 
 
 
-(<- run "Boolean predicate inversion operator (!)" (,,,
+(<- run "Inverse boolean predicate operator (!)" (,,,
 	(<- test_no_operands)
 	(<- test_one_operand)
 	(<- test_multple_operands)

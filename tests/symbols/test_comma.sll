@@ -32,7 +32,7 @@
 (= test_multple_operands (,,,
 	(-> (= i 0) (< i ($ TEST_VALUES))
 		(-> (= j 0) (< j ($ TEST_VALUES))
-			(<- expect (, (: TEST_VALUES j) (: TEST_VALUES i)) (: TEST_VALUES i) [(: TEST_VALUES i) (: TEST_VALUES j)])
+			(<- expect (, (: TEST_VALUES j) (: TEST_VALUES i)) (: TEST_VALUES i) [(: TEST_VALUES j) (: TEST_VALUES i)])
 			(++ j)
 		)
 		(++ i)

@@ -1,0 +1,82 @@
+(---
+	"@test/_common.sll"
+	"types.sll"
+)
+
+
+
+(= test_vector_type (&:
+	object_type input
+	object_type output
+))
+
+
+
+(= TEST_VECTORS [
+	(. test_vector_type
+		0
+		-1
+	)
+	(. test_vector_type
+		0b101010
+		-43
+	)
+	(. test_vector_type
+		123.456
+		-124.456
+	)
+	(. test_vector_type
+		'X'
+		'\xa7'
+	)
+	(. test_vector_type
+		-1.2+0.5i
+		0.2-1.5i
+	)
+	(. test_vector_type
+		"\xac\x8b\x8d\x96\x91\x98\xd1"
+		"String."
+	)
+	(. test_vector_type
+		[568 -0.6i "ABC"]
+		[-569 -1.0-0.3999999999999999i "\xbe\xbd\xbc"]
+	)
+	(. test_vector_type
+		<"key" "ABC" "key2" 45>
+		<"key" "\xbe\xbd\xbc" "key2" -46>
+	)
+])
+
+
+
+(= test_no_operands (,,,
+	(<- expect (~) 0)
+))
+
+(= test_one_operand (,,,
+	(-> (= i 0) (< i ($ TEST_VECTORS))
+		(= vec (: TEST_VECTORS i))
+		(<- expect (~ vec$input) vec$output [vec$input])
+		(++ i)
+	)
+))
+
+(= test_multple_operands (,,,
+	(-> (= i 0) (< i ($ TEST_VECTORS))
+		(= vec (: TEST_VECTORS i))
+		(-> (= j 0) (< j ($ TEST_VECTORS))
+			(= vec2 (: TEST_VECTORS i))
+			(<- expect (~ vec$input vec2$input) vec$output [vec$input vec2$input])
+			(++ j)
+		)
+		(++ i)
+	)
+))
+
+
+
+(<- run "Bitwise NOT operator (~)" (,,,
+	(<- test_no_operands)
+	(<- test_one_operand)
+	(<- test_multple_operands)
+))

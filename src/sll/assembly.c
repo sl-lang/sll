@@ -1173,18 +1173,18 @@ static const sll_node_t* _generate_on_stack(const sll_node_t* o,assembly_generat
 		case SLL_NODE_TYPE_INLINE_IF:
 			{
 				sll_arg_count_t l=o->data.arg_count;
+				o++;
 				if (!l){
-					GENERATE_OPCODE(g_dt,SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_ZERO);
-					PUSH;
-					return o+1;
-				}
-				if (l==1){
-					o=_generate(o+1,g_dt);
 					GENERATE_OPCODE(g_dt,SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_ZERO);
 					PUSH;
 					return o;
 				}
-				o++;
+				if (l==1){
+					o=_generate(o,g_dt);
+					GENERATE_OPCODE(g_dt,SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_ZERO);
+					PUSH;
+					return o;
+				}
 				assembly_instruction_label_t e=NEXT_LABEL(g_dt);
 				sll_bool_t end=l&1;
 				l>>=1;
@@ -1210,8 +1210,13 @@ static const sll_node_t* _generate_on_stack(const sll_node_t* o,assembly_generat
 		case SLL_NODE_TYPE_BIT_NOT:
 			{
 				sll_arg_count_t l=o->data.arg_count;
-				SLL_ASSERT(l);
-				o=_generate_on_stack(o+1,g_dt);
+				o++;
+				if (!l){
+					GENERATE_OPCODE(g_dt,SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_ZERO);
+					PUSH;
+					return o;
+				}
+				o=_generate_on_stack(o,g_dt);
 				GENERATE_OPCODE(g_dt,SLL_ASSEMBLY_INSTRUCTION_TYPE_INV);
 				l--;
 				while (l){

@@ -92,10 +92,11 @@
 		(+ " (Input: " (<- string$str (: extra 0)) ")")
 		""
 	))
+	(= flt_err (|| flt_err 1e-6))
 	(? (||
 			(!== (:? result) (:? value))
-			(?: (=== (:? value) float_type)
-				(> (<- math$abs (- value result)) flt_err)
+			(?:
+				(|| (=== (:? value) float_type) (=== (:? value) complex_type)) (> (<- math$abs (- value result)) flt_err)
 				(!== result value)
 			)
 		)

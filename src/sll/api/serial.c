@@ -518,7 +518,8 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_error_t sll_encode_object(sll_file_t* f,sl
 				sll_file_write_char(f,k->data.char_,&err);
 				break;
 			case SLL_OBJECT_TYPE_COMPLEX:
-				SLL_UNIMPLEMENTED();
+				sll_file_write(f,&(k->data.complex_),sizeof(sll_complex_t),&err);
+				break;
 			case SLL_OBJECT_TYPE_STRING:
 				err=sll_encode_string(f,&(k->data.string));
 				break;

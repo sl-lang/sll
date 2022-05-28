@@ -1,4 +1,5 @@
 #include <sll/_internal/common.h>
+#include <sll/_internal/complex.h>
 #include <sll/_internal/operator.h>
 #include <sll/array.h>
 #include <sll/common.h>
@@ -81,6 +82,11 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_sub(sll_object_t* a
 			return sll_float_to_object(a->data.char_-b->data.float_);
 		case COMBINED_TYPE_CC:
 			return SLL_FROM_CHAR(a->data.char_-b->data.char_);
+		case COMBINED_TYPE_DD:
+			{
+				sll_complex_t o=COMPLEX_SUB(a->data.complex_,b->data.complex_);
+				return sll_complex_to_object(&o);
+			}
 		case COMBINED_TYPE_SI:
 		case COMBINED_TYPE_SF:
 		case COMBINED_TYPE_SC:
