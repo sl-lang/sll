@@ -2,6 +2,7 @@
 	"_internal.sll"
 	"array.sll"
 	"date.sll"
+	"error.sll"
 	"map.sll"
 	"path.sll"
 	"string.sll"
@@ -110,14 +111,14 @@
 		(= sz (: chk 0))
 		(= h (>> chk 1))
 	})
-	(@@ (<- (... "sll:sys_load_library")
+	(@@ (<- error$from_internal (<- (... "sll:sys_load_library")
 		fp
 		sz
 		(: h 0)
 		(: h 1)
 		(: h 2)
 		(: h 3)
-	))
+	)))
 )
 
 (= remove_env (,,, k

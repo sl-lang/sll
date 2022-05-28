@@ -13,6 +13,7 @@
 #include <sll/common.h>
 #include <sll/data.h>
 #include <sll/environment.h>
+#include <sll/error.h>
 #include <sll/file.h>
 #include <sll/gc.h>
 #include <sll/init.h>
@@ -142,21 +143,24 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_sys_get_version(sll_array_t* out){
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_bool_t sll_api_sys_load_library(const sll_string_t* path,sll_size_t sz,__SLL_U64 h0,__SLL_U64 h1,__SLL_U64 h2,__SLL_U64 h3){
-	if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_LOAD_LIBRARY)||path->length>=SLL_API_MAX_FILE_PATH_LENGTH){
-		return 0;
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_sys_load_library(const sll_string_t* path,sll_size_t sz,__SLL_U64 h0,__SLL_U64 h1,__SLL_U64 h2,__SLL_U64 h3){
+	if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_LOAD_LIBRARY)){
+		return SLL_ERROR_FROM_SANDBOX(SLL_SANDBOX_FLAG_DISABLE_LOAD_LIBRARY);
+	}
+	if (path->length>=SLL_API_MAX_FILE_PATH_LENGTH){
+		return SLL_ERROR_TOO_LONG;
 	}
 	sll_string_t lib_name;
 	sll_string_from_pointer(path->data+sll_path_split(path),&lib_name);
 	sll_audit(SLL_CHAR("sll.sys.library.load"),SLL_CHAR("ss"),path,&lib_name);
 	if (!sll_platform_path_exists(path->data)){
 		sll_free_string(&lib_name);
-		return 0;
+		return SLL_ERROR_NO_FILE_PATH;
 	}
 	for (sll_array_length_t i=0;i<_sys_lhl;i++){
 		if (STRING_EQUAL(&((*(_sys_lh+i))->name),&lib_name)){
 			sll_free_string(&lib_name);
-			return 1;
+			return SLL_NO_ERROR;
 		}
 	}
 	if (sz){
@@ -204,15 +208,17 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_bool_t sll_api_sys_load_lib
 			return 0;
 		}
 	}
-	sll_library_handle_t h=sll_platform_load_library(path->data,NULL);
+	sll_error_t err;
+	sll_library_handle_t h=sll_platform_load_library(path->data,&err);
 	if (!h){
 		sll_free_string(&lib_name);
-		return 0;
+		return err;
 	}
 	sll_bool_t (*fn)(sll_version_t)=sll_platform_lookup_symbol(h,SLL_ABI_NAME(SLL_ABI_INIT));
 	if (!fn||!fn(SLL_VERSION)){
 		SLL_CRITICAL_ERROR(sll_platform_unload_library(h));
 		sll_free_string(&lib_name);
+		SLL_UNIMPLEMENTED();
 		return 0;
 	}
 	_sys_lhl++;
@@ -225,7 +231,7 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_bool_t sll_api_sys_load_lib
 		sll_register_cleanup(_cleanup_vm_data,SLL_CLEANUP_TYPE_VM);
 		_sys_vm_init=1;
 	}
-	return 1;
+	return SLL_NO_ERROR;
 }
 
 

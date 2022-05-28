@@ -33,18 +33,18 @@
 
 #define GET_PTR(type_) (arg_output->type==ARG_OUTPUT_TYPE_C?va_arg(*(arg_output->data.c),type_*):(type_*)_get_ptr_array(arg_output,sizeof(type_)))
 
-#define ENSURE_TYPE(var,name) \
+#define ENSURE_TYPE(var,name,arg_state) \
 	if (var->type!=SLL_OBJECT_TYPE_##name){ \
 		var=sll_operator_cast(var,sll_static_int[SLL_OBJECT_TYPE_##name]); \
-		if (!*arg_state){ \
-			*arg_state=sll_allocate_stack(sizeof(arg_state_t)+sizeof(sll_object_t*)); \
-			(*arg_state)->length=1; \
+		if (!(arg_state)){ \
+			(arg_state)=sll_allocate_stack(sizeof(arg_state_t)+sizeof(sll_object_t*)); \
+			(arg_state)->length=1; \
 		} \
 		else{ \
-			(*arg_state)->length++; \
-			*arg_state=sll_reallocate(*arg_state,sizeof(arg_state_t)+(*arg_state)->length*sizeof(sll_object_t*)); \
+			(arg_state)->length++; \
+			(arg_state)=sll_reallocate((arg_state),sizeof(arg_state_t)+(arg_state)->length*sizeof(sll_object_t*)); \
 		} \
-		(*arg_state)->data[(*arg_state)->length-1]=var; \
+		(arg_state)->data[(arg_state)->length-1]=var; \
 	} \
 
 #define PARSE_INT(size) \
@@ -88,7 +88,7 @@
 		*GET_PTR(sll_arg_count_t)=obj->data.array.length; \
 		for (sll_arg_count_t i=0;i<obj->data.array.length;i++){ \
 			sll_object_t* k=obj->data.array.data[i]; \
-			ENSURE_TYPE(k,name); \
+			ENSURE_TYPE(k,name,*arg_state); \
 			*(dt+i)=&(k->data.field); \
 		} \
 		SLL_RELEASE(obj); \
@@ -100,7 +100,7 @@
 			*var=SLL_ACQUIRE_STATIC_INT(0); \
 		} \
 		else{ \
-			ENSURE_TYPE(arg,name); \
+			ENSURE_TYPE(arg,name,*arg_state); \
 			*var=arg; \
 		} \
 		return; \
@@ -113,7 +113,7 @@
 		init(*var); \
 	} \
 	else{ \
-		ENSURE_TYPE(arg,name); \
+		ENSURE_TYPE(arg,name,*arg_state); \
 		*var=&(arg->data.field); \
 	}
 
@@ -349,7 +349,7 @@ static void _parse_map(sll_object_t* arg,arg_parse_flags_t flags,arg_state_t** a
 static void _parse_object(sll_object_t* arg,arg_parse_flags_t flags,arg_state_t** arg_state,arg_output_t* arg_output){
 	if (flags&PARSE_ARGS_FLAG_ARRAY){
 		if (flags&PARSE_ARGS_FLAG_REF){
-			ENSURE_TYPE(arg,ARRAY);
+			ENSURE_TYPE(arg,ARRAY,*arg_state);
 			*GET_PTR(sll_object_t*)=arg;
 			return;
 		}
@@ -516,7 +516,18 @@ sll_arg_state_t _parse_args_raw(const sll_char_t* format,sll_object_t*const* arg
 				case 'z':
 					SLL_UNIMPLEMENTED();
 				case 's':
-					SLL_UNIMPLEMENTED();
+					{
+						sll_string_t** dt=sll_allocate(arg_count*sizeof(sll_string_t*));
+						*GET_PTR(sll_string_t**)=dt;
+						*GET_PTR(sll_arg_count_t)=arg_count;
+						while (arg_count){
+							arg_count--;
+							sll_object_t* obj=*(args+arg_count);
+							ENSURE_TYPE(obj,STRING,st);
+							*(dt+arg_count)=&(obj->data.string);
+						}
+						break;
+					}
 				case 'y':
 					SLL_UNIMPLEMENTED();
 				case 'a':

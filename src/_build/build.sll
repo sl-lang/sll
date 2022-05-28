@@ -155,7 +155,11 @@
 		(= module_files (<- path$list_dir module_file_root false))
 		(<- log$log "      Found " ($ module_files) " files")
 		(<- log$log "    Compiling files...")
-		(? (<- _execute_command config$EXTENSION_MODULE_COMPILATION_COMMAND module_files nil nil module_file_root) (<- util$fail_and_exit))
+		(? (<- _execute_command config$EXTENSION_MODULE_COMPILATION_COMMAND module_files nil nil [
+			"-I" module_file_root
+			"-I" (+ name '|' module_file_root)
+			"-I" (+ name "|build/lib/")
+		]) (<- util$fail_and_exit))
 		(= output_files ([> (= i 0) (< i ($ module_files))
 			(= file_path (: module_files i))
 			(++ i)
