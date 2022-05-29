@@ -200,7 +200,7 @@ extern void sll_api_weakref_set_callback_data(void);
 
 
 
-static const sll_internal_function_descriptor_t _ifunc_data_ptr[]={
+static const sll_internal_function_descriptor_t _internal_function_table[]={
 	{
 		SLL_CHAR("sll:array_count"),
 		sll_api_array_count,
@@ -1165,5 +1165,5 @@ static const sll_internal_function_descriptor_t _ifunc_data_ptr[]={
 
 
 
-__SLL_EXTERNAL const sll_internal_function_descriptor_t* sll_builtin_internal_function_data=(const sll_internal_function_descriptor_t*)(&_ifunc_data_ptr);
+__SLL_EXTERNAL const sll_internal_function_descriptor_t* sll_builtin_internal_function_data=(const sll_internal_function_descriptor_t*)(&_internal_function_table);
 __SLL_EXTERNAL const sll_function_index_t sll_builtin_internal_function_count=192;

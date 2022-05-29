@@ -1,12 +1,13 @@
+#include <clib/library.h>
 #include <sll.h>
 
 
 
 static const sll_internal_function_descriptor_t _internal_function_table[]={
 	{
-		SLL_CHAR("clib:null"),
-		NULL,
-		SLL_CHAR("")
+		SLL_CHAR("clib:get_sll_library_handle"),
+		clib_api_get_sll_library_handle,
+		SLL_CHAR("|Q")
 	}
 };
 
