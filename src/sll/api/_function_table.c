@@ -1064,7 +1064,7 @@ static const sll_internal_function_descriptor_t _internal_function_table[]={
 	{
 		SLL_CHAR("sll:thread_increase_barrier"),
 		sll_api_thread_increase_barrier,
-		SLL_CHAR("D|i")
+		SLL_CHAR("D|D")
 	},
 	{
 		SLL_CHAR("sll:thread_release_lock"),
@@ -1079,7 +1079,7 @@ static const sll_internal_function_descriptor_t _internal_function_table[]={
 	{
 		SLL_CHAR("sll:thread_reset_barrier"),
 		sll_api_thread_reset_barrier,
-		SLL_CHAR("D|i")
+		SLL_CHAR("D|D")
 	},
 	{
 		SLL_CHAR("sll:thread_restart"),

@@ -81,7 +81,7 @@ _error:
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_thread_increase_barrier(sll_barrier_index_t bid){
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_barrier_counter_t sll_api_thread_increase_barrier(sll_barrier_index_t bid){
 	return (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_THREADS)?0:sll_barrier_increase(bid));
 }
 
@@ -99,7 +99,7 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_bool_t sll_api_thread_relea
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_thread_reset_barrier(sll_barrier_index_t bid){
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_barrier_counter_t sll_api_thread_reset_barrier(sll_barrier_index_t bid){
 	return (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_THREADS)?0:sll_barrier_reset(bid));
 }
 
