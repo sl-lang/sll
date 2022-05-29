@@ -176,8 +176,8 @@
 			(= output_file_path (+ "build/lib/" (>> file_path ($ module_file_root))))
 			(<- path$mkdir output_file_path)
 			(? (<- _execute_command config$EXTENSION_MODULE_COMPILATION_COMMAND (: grouped_module_files file_path) output_file_path nil [
-				"-I" (+ name '|' module_file_root)
 				"-I" (+ name "|build/lib/")
+				"-I" (+ name '|' module_file_root)
 			]) (<- util$fail_and_exit))
 			(++ i)
 		)
