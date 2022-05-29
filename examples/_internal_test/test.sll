@@ -642,4 +642,4 @@ abc` '\n')
 (:> thr$return_value "\n" "")
 
 (--- "clib/types.sll" "clib/stdint.sll")
-(:> clib_types '\n' clib_stdint.h '\n')
+(:> clib_types '\n' stdint.h '\n')

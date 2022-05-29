@@ -2,7 +2,7 @@
 
 
 
-(= clib_stdint.h_module_type (&:
+(= stdint.h_module_type (&:
 	(~ clib_types$clib_type) int16_t
 	(~ clib_types$clib_type) int32_t
 	(~ clib_types$clib_type) int64_t
@@ -77,7 +77,7 @@
 
 
 
-(= clib_stdint.h (. clib_stdint.h_module_type
+(= stdint.h (. stdint.h_module_type
 	clib_types$short_int
 	clib_types$int
 	clib_types$long_long_int
@@ -149,4 +149,4 @@
 	18446744073709551615
 	18446744073709551615
 ))
-(## clib_stdint.h)
+(## stdint.h)
