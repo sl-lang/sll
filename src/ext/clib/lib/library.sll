@@ -3,9 +3,14 @@
 	"map.sll"
 	"path.sll"
 	"string.sll"
+	"sys.sll"
 	"types.sll"
 	"weakref.sll"
 )
+
+
+
+(# unload)
 
 
 
@@ -16,6 +21,9 @@
 			"<%s@unloaded>"
 		) dt$file_path dt$_handle))
 	) @@string@@
+	(,,, dt
+		(<- unload dt)
+	) @@delete@@
 	(~ string_type) file_path
 	int_type _handle
 ))
@@ -29,7 +37,12 @@
 
 
 
-(= _lib_map <>)
+(= _lib_map <
+	sys$LIBRARY (. clib_library_type
+		sys$LIBRARY
+		(<- (... "clib:get_sll_library_handle"))
+	)
+>)
 
 
 
@@ -58,6 +71,7 @@
 (= unload (,,, lib
 	(? (! lib) (@@ false))
 	(= lib (:: lib clib_library_type))
+	(? (! lib$_handle) (@@ false))
 	(<- map$remove _lib_map lib$file_path)
 	(= handle lib$_handle)
 	(= lib$_handle 0)
