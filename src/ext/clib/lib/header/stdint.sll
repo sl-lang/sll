@@ -59,6 +59,9 @@
 	(~ int_type) INTMAX_MIN
 	(~ int_type) INTPTR_MAX
 	(~ int_type) INTPTR_MIN
+	(~ int_type) PTRDIFF_MAX
+	(~ int_type) PTRDIFF_MIN
+	(~ int_type) SIZE_MAX
 	(~ int_type) UINT16_MAX
 	(~ int_type) UINT32_MAX
 	(~ int_type) UINT64_MAX
@@ -73,6 +76,10 @@
 	(~ int_type) UINT_LEAST8_MAX
 	(~ int_type) UINTMAX_MAX
 	(~ int_type) UINTPTR_MAX
+	(~ int_type) WCHAR_MAX
+	(~ int_type) WCHAR_MIN
+	(~ int_type) WINT_MAX
+	(~ int_type) WINT_MIN
 ))
 
 
@@ -134,6 +141,9 @@
 	-9223372036854775808
 	9223372036854775807
 	-9223372036854775808
+	9223372036854775807
+	-9223372036854775808
+	18446744073709551615
 	65535
 	4294967295
 	18446744073709551615
@@ -148,5 +158,9 @@
 	255
 	18446744073709551615
 	18446744073709551615
+	2147483647
+	-2147483648
+	4294967295
+	0
 ))
 (## stdint.h)
