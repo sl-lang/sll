@@ -229,7 +229,7 @@
 (= output_library (+ "build/sll-" version sys$LIBRARY_EXTENSION))
 
 (= output_executable_args (+
-	[(<- path$absolute (+ "build/sll" sys$EXECUTABLE_EXTENSION))]
+	[(+ (<- path$get_cwd) "/build/sll" sys$EXECUTABLE_EXTENSION)]
 	(* ["-v"] options$VERBOSE)
 ))
 

@@ -54,7 +54,6 @@
 		config$COMMAND_MARKER_OUTPUT
 		output
 	) (|| options [])))
-	(:> args '\n')
 	(@@ (<- util$execute args))
 ))
 
