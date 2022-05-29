@@ -84,6 +84,7 @@
 	(~ int_type) FLAG_INTEGER
 	(~ int_type) FLAG_POINTER
 	(~ int_type) FLAG_SIGNED
+	(~ func_type) pointer
 ))
 
 
@@ -172,6 +173,16 @@
 
 
 
+(= pointer (,,, type
+	(@@ (. clib_type
+		64
+		FLAG_POINTER
+		type
+	))
+))
+
+
+
 (= clib_types (. clib_types_module_type
 	clib_type
 	bool
@@ -210,5 +221,6 @@
 	FLAG_INTEGER
 	FLAG_POINTER
 	FLAG_SIGNED
+	pointer
 ))
 (## clib_types)
