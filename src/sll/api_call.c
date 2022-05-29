@@ -33,6 +33,9 @@ sll_object_t* _call_api_func(sll_function_index_t fn,sll_object_t*const* al,sll_
 	sll_float_t ret_f=_call_api_func_assembly(&ret,dt->_registers,bf,dt->_arg_count,dt->function);
 	sll_object_t* o;
 	if ((dt->_return_value&RETURN_VALUE_FLAG_ERROR)&&ret_f){
+		if (RETURN_VALUE_GET_TYPE(dt->_return_value)=='b'||RETURN_VALUE_GET_TYPE(dt->_return_value)=='B'||RETURN_VALUE_GET_TYPE(dt->_return_value)=='W'||RETURN_VALUE_GET_TYPE(dt->_return_value)=='D'||RETURN_VALUE_GET_TYPE(dt->_return_value)=='Q'||RETURN_VALUE_GET_TYPE(dt->_return_value)=='i'){
+			ret.error=~ret.error;
+		}
 		o=sll_int_to_object(ret.error);
 	}
 	else{
