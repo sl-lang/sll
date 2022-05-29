@@ -1,8 +1,10 @@
+#include <sll/_internal/common.h>
 #include <sll/_internal/error.h>
 #include <sll/api/sys.h>
 #include <sll/common.h>
 #include <sll/error.h>
 #include <sll/platform/library.h>
+#include <sll/platform/path.h>
 #include <sll/string.h>
 #include <sll/types.h>
 #include <dlfcn.h>
@@ -11,11 +13,16 @@
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_library_handle_t sll_platform_load_library(const sll_char_t* fp,sll_error_t* err){
 	ERROR_PTR_RESET;
-	void* o=dlopen((char*)fp,RTLD_NOW);
-	if (!o){
+	if (!fp){
+		void* out=dlopen((char*)(sll_library_file_path->data),RTLD_NOW|RTLD_GLOBAL|RTLD_NOLOAD);
+		SLL_CRITICAL(!dlclose(out));
+		return out;
+	}
+	void* out=dlopen((char*)fp,RTLD_NOW);
+	if (!out){
 		ERROR_PTR(sll_error_from_string_pointer(SLL_CHAR(dlerror())));
 	}
-	return o;
+	return out;
 }
 
 

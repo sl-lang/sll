@@ -1,5 +1,6 @@
 #include <windows.h>
 #include <sll/_internal/error.h>
+#include <sll/_internal/platform.h>
 #include <sll/api/sys.h>
 #include <sll/common.h>
 #include <sll/platform/library.h>
@@ -10,11 +11,14 @@
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_library_handle_t sll_platform_load_library(const sll_char_t* fp,sll_error_t* err){
 	ERROR_PTR_RESET;
-	HMODULE o=LoadLibraryExA(fp,NULL,0);
-	if (!o){
+	if (!fp){
+		return _win_dll_handle;
+	}
+	HMODULE out=LoadLibraryExA(fp,NULL,0);
+	if (!out){
 		ERROR_PTR_SYSTEM;
 	}
-	return o;
+	return out;
 }
 
 

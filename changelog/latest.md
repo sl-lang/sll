@@ -8,6 +8,7 @@
 
 ## Changed
 
+- Current dynamic library handle can be obtained by calling `sll_platform_load_library` with a `NULL` file path argument
 - Fixed CLI output when supplied a directory
 
 ## Removed
