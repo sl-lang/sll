@@ -6,8 +6,12 @@
 
 
 (= stddef.h_module_type (&:
-	(~ clib_types$clib_type) size_t
+	(~ clib_types$clib_type) max_align_t
 	(~ clib_types$clib_type) ptrdiff_t
+	(~ clib_types$clib_type) size_t
+	(~ clib_types$clib_type) ssize_t
+	(~ clib_types$clib_type) wchar_t
+	(~ clib_types$clib_type) wint_t
 	(~ object_type) NULL
 ))
 
@@ -16,6 +20,10 @@
 (= stddef.h (. stddef.h_module_type
 	clib_types$unsigned_long_long_int
 	clib_types$long_long_int
+	clib_types$unsigned_long_long_int
+	clib_types$long_long_int
+	clib_types$int
+	clib_types$unsigned_int
 	nil
 ))
 (## stddef.h)

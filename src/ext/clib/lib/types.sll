@@ -34,7 +34,7 @@
 			> dt$size)
 		)))
 		(?
-			(=== (& dt$flags (| FLAG_POINTER FLAG_CONST)) (| FLAG_POINTER FLAG_CONST)) (= string (+ string "const"))
+			(=== (& dt$flags (| FLAG_POINTER FLAG_CONST)) (| FLAG_POINTER FLAG_CONST)) (= string (+ string " const"))
 			(& dt$flags FLAG_POINTER) (= string (+ string '*'))
 		)
 		(= dt$_str string)
@@ -56,6 +56,7 @@
 	(~ clib_type) float
 	(~ clib_type) int
 	(~ clib_type) long
+	(~ clib_type) long_double
 	(~ clib_type) long_int
 	(~ clib_type) long_long
 	(~ clib_type) long_long_int
@@ -181,6 +182,7 @@
 	float
 	int
 	int
+	double
 	int
 	long_long_int
 	long_long_int
