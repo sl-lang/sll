@@ -1,5 +1,6 @@
 (---
 	"audit.sll"
+	"error.sll"
 	"map.sll"
 	"string.sll"
 	"types.sll"
@@ -311,6 +312,10 @@
 			sem
 		]
 	))
+	(? (< tid 0) {
+		(<- (... "sll:thread_delete_semaphore") sem)
+		(@@ (<- error$from_internal (~ tid)))
+	})
 	(= o (. thread_type
 		tid
 		STATE_RUNNING

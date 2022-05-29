@@ -21,12 +21,13 @@
  * \name sll_api_thread_create
  * \group thread-api
  * \desc Docs!
- * \api i#a|i
+ * \api i#a|~D
  * \arg sll_integer_t fn
  * \arg const sll_array_t* args
- * \ret sll_integer_t
+ * \arg sll_thread_index_t* out
+ * \ret sll_error_t
  */
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_thread_create(sll_integer_t fn,const sll_array_t* args);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_thread_create(sll_integer_t fn,const sll_array_t* args,sll_thread_index_t* out);
 
 
 

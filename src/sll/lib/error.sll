@@ -1,11 +1,11 @@
 (---
 	"_file.sll"
 	"_internal.sll"
+	"_thread.sll"
 	"array.sll"
 	"audit.sll"
 	"error_codes.sll"
 	"string.sll"
-	"thread.sll"
 	"types.sll"
 	"vm.sll"
 )
@@ -230,7 +230,7 @@
 	(= pop (:: pop int_type))
 	(= call_stack (<- (... "sll:error_get_call_stack")
 		(?: (< pop 0) 1 (+ pop 1))
-		(?: (=== (:? thr) thread$thread_type) thr$id (!.))
+		(?: thr thr$id (!.))
 	))
 	(@@ ([> (= i 0) (< i ($ call_stack))
 		(= k (: call_stack i))

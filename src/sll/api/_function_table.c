@@ -1019,7 +1019,7 @@ static const sll_internal_function_descriptor_t _internal_function_table[]={
 	{
 		SLL_CHAR("sll:thread_create"),
 		sll_api_thread_create,
-		SLL_CHAR("i#a|i")
+		SLL_CHAR("i#a|~D")
 	},
 	{
 		SLL_CHAR("sll:thread_create_barrier"),
