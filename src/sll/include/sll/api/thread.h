@@ -35,10 +35,11 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_thread_cr
  * \name sll_api_thread_create_barrier
  * \group thread-api
  * \desc Docs!
- * \api |i
- * \ret sll_integer_t
+ * \api |~D
+ * \arg sll_barrier_index_t* out
+ * \ret sll_error_t
  */
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_thread_create_barrier(void);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_thread_create_barrier(sll_barrier_index_t* out);
 
 
 
@@ -47,10 +48,11 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_thread_cr
  * \name sll_api_thread_create_lock
  * \group thread-api
  * \desc Docs!
- * \api |i
- * \ret sll_integer_t
+ * \api |~D
+ * \arg sll_lock_index_t* out
+ * \ret sll_error_t
  */
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_thread_create_lock(void);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_thread_create_lock(sll_lock_index_t* out);
 
 
 
@@ -59,11 +61,12 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_thread_cr
  * \name sll_api_thread_create_semaphore
  * \group thread-api
  * \desc Docs!
- * \api D|i
+ * \api D|~D
  * \arg sll_semaphore_counter_t cnt
- * \ret sll_integer_t
+ * \arg sll_lock_index_t* out
+ * \ret sll_error_t
  */
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_thread_create_semaphore(sll_semaphore_counter_t cnt);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_thread_create_semaphore(sll_semaphore_counter_t cnt,sll_lock_index_t* out);
 
 
 

@@ -3,6 +3,7 @@
 #include <sll/array.h>
 #include <sll/barrier.h>
 #include <sll/common.h>
+#include <sll/error.h>
 #include <sll/gc.h>
 #include <sll/lock.h>
 #include <sll/new_object.h>
@@ -24,20 +25,32 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_thread_cr
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_thread_create_barrier(void){
-	return (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_THREADS)?-1:sll_barrier_create());
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_thread_create_barrier(sll_barrier_index_t* out){
+	if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_THREADS)){
+		return SLL_ERROR_FROM_SANDBOX(SLL_SANDBOX_FLAG_DISABLE_THREADS);
+	}
+	*out=sll_barrier_create();
+	return SLL_NO_ERROR;
 }
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_thread_create_lock(void){
-	return (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_THREADS)?-1:sll_lock_create());
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_thread_create_lock(sll_lock_index_t* out){
+	if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_THREADS)){
+		return SLL_ERROR_FROM_SANDBOX(SLL_SANDBOX_FLAG_DISABLE_THREADS);
+	}
+	*out=sll_lock_create();
+	return SLL_NO_ERROR;
 }
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_thread_create_semaphore(sll_semaphore_counter_t cnt){
-	return (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_THREADS)?-1:sll_semaphore_create(cnt));
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_thread_create_semaphore(sll_semaphore_counter_t cnt,sll_semaphore_index_t* out){
+	if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_THREADS)){
+		return SLL_ERROR_FROM_SANDBOX(SLL_SANDBOX_FLAG_DISABLE_THREADS);
+	}
+	*out=sll_semaphore_create(cnt);
+	return SLL_NO_ERROR;
 }
 
 

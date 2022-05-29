@@ -175,15 +175,19 @@
 ))
 
 (= create_barrier (,,,
-	(@@ (. lock_type
-		(<- (... "sll:thread_create_barrier"))
+	(= id (<- (... "sll:thread_create_barrier")))
+	(? (< id 0) (@@ (<- error$from_internal (~ id))))
+	(@@ (. barrier_type
+		id
 		0
 	))
 ))
 
 (= create_lock (,,,
+	(= id (<- (... "sll:thread_create_lock")))
+	(? (< id 0) (@@ (<- error$from_internal (~ id))))
 	(@@ (. lock_type
-		(<- (... "sll:thread_create_lock"))
+		id
 		-1
 	))
 ))
@@ -191,8 +195,10 @@
 (= create_semaphore (,,, c
 	(= c (:: c int_type))
 	(? (<= c 0) (@@ nil))
+	(= id (<- (... "sll:thread_create_semaphore") c))
+	(? (< id 0) (@@ (<- error$from_internal (~ id))))
 	(@@ (. semaphore_type
-		(<- (... "sll:thread_create_semaphore") c)
+		id
 		c
 		c
 	))

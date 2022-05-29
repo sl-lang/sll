@@ -1024,17 +1024,17 @@ static const sll_internal_function_descriptor_t _internal_function_table[]={
 	{
 		SLL_CHAR("sll:thread_create_barrier"),
 		sll_api_thread_create_barrier,
-		SLL_CHAR("|i")
+		SLL_CHAR("|~D")
 	},
 	{
 		SLL_CHAR("sll:thread_create_lock"),
 		sll_api_thread_create_lock,
-		SLL_CHAR("|i")
+		SLL_CHAR("|~D")
 	},
 	{
 		SLL_CHAR("sll:thread_create_semaphore"),
 		sll_api_thread_create_semaphore,
-		SLL_CHAR("D|i")
+		SLL_CHAR("D|~D")
 	},
 	{
 		SLL_CHAR("sll:thread_delete"),
