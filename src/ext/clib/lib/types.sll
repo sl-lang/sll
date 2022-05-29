@@ -47,6 +47,8 @@
 	(~ type_type) clib_type
 	(~ clib_type) bool
 	(~ clib_type) char
+	(~ clib_type) char*
+	(~ clib_type) const_char*
 	(~ clib_type) const_void
 	(~ clib_type) const_void*
 	(~ clib_type) double
@@ -111,6 +113,11 @@
 	(| FLAG_INTEGER FLAG_SIGNED)
 ))
 
+(= const_har (. clib_type
+	8
+	(| FLAG_INTEGER FLAG_SIGNED FLAG_CONST)
+))
+
 (= unsigned_char (. clib_type
 	8
 	FLAG_INTEGER
@@ -156,6 +163,18 @@
 	0
 ))
 
+(= char* (. clib_type
+	64
+	FLAG_POINTER
+	char
+))
+
+(= const_char* (. clib_type
+	64
+	FLAG_POINTER
+	const_char
+))
+
 (= void* (. clib_type
 	64
 	FLAG_POINTER
@@ -184,6 +203,8 @@
 	clib_type
 	bool
 	char
+	char*
+	const_char*
 	const_void
 	const_void*
 	double
