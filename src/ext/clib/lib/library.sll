@@ -1,14 +1,23 @@
 (---
 	"clib/_load_library.sll"
+	"map.sll"
+	"path.sll"
+	"string.sll"
 	"types.sll"
+	"weakref.sll"
 )
 
 
 
 (= clib_library_type (&:
-	(~ string_type) name
+	(,,, dt
+		(@@ (<- string$format (?: dt$_handle
+			"<%s@%.16llx>"
+			"<%s@unloaded>"
+		) dt$file_path dt$_handle))
+	) @@string@@
 	(~ string_type) file_path
-	(~ int_type) _handle
+	int_type _handle
 ))
 
 (= clib_library_module_type (&:
@@ -20,8 +29,24 @@
 
 
 
-(= load (,,,
-	(@@ nil)
+(= _lib_map <>)
+
+
+
+(= load (,,, file_path
+	(= file_path (<- path$absolute file_path))
+	(= lib (<- weakref$get (: _lib_map file_path)))
+	(? (!== lib weakref$WEAKREF_NO_OBJECT) (@@ lib))
+	(= handle (<- (... "clib:load_library")
+		file_path
+	))
+	(? (! handle) (@@ nil))
+	(= lib (. clib_library_type
+		file_path
+		handle
+	))
+	(= (: _lib_map file_path) (<- weakref$ref lib))
+	(@@ lib)
 ))
 
 (= lookup_symbol (,,, lib
@@ -31,9 +56,14 @@
 ))
 
 (= unload (,,, lib
-	(? (! lib) (@@ nil))
+	(? (! lib) (@@ false))
 	(= lib (:: lib clib_library_type))
-	(@@ nil)
+	(<- map$remove _lib_map lib$file_path)
+	(= handle lib$_handle)
+	(= lib$_handle 0)
+	(@@ (<- (... "clib:unload_library")
+		handle
+	))
 ))
 
 
