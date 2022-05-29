@@ -17,8 +17,8 @@
 (= clib_library_type (&:
 	(,,, dt
 		(@@ (<- string$format (?: dt$_handle
-			"<%s@%.16llx>"
-			"<%s@unloaded>"
+			"<%s at %#.16llx>"
+			"<%s at (unloaded)>"
 		) dt$file_path dt$_handle))
 	) @@string@@
 	(,,, dt
@@ -30,6 +30,7 @@
 
 (= clib_library_module_type (&:
 	(~ type_type) clib_library_type
+	(~ clib_library_type) SLL_LIBRARY
 	(~ func_type) load
 	(~ func_type) lookup_symbol
 	(~ func_type) unload
@@ -37,11 +38,13 @@
 
 
 
+(= SLL_LIBRARY (. clib_library_type
+	sys$LIBRARY
+	(<- (... "clib:get_sll_library_handle"))
+))
+
 (= _lib_map <
-	sys$LIBRARY (. clib_library_type
-		sys$LIBRARY
-		(<- (... "clib:get_sll_library_handle"))
-	)
+	sys$LIBRARY (<- weakref$ref SLL_LIBRARY)
 >)
 
 
@@ -84,6 +87,7 @@
 
 (= clib_library (. clib_library_module_type
 	clib_library_type
+	SLL_LIBRARY
 	load
 	lookup_symbol
 	unload

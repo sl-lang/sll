@@ -641,5 +641,6 @@ abc` '\n')
 (<- thread$join thr)
 (:> thr$return_value "\n" "")
 
-(--- "clib/types.sll" "clib/header/stdint.sll")
-(:> clib_types '\n' stdint.h '\n')
+(--- "clib/library.sll")
+
+(:> clib_library$SLL_LIBRARY '\n')
