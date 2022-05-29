@@ -644,3 +644,6 @@ abc` '\n')
 (--- "clib/library.sll")
 
 (:> clib_library$SLL_LIBRARY '\n')
+
+(= lib (<- clib_library$load "unknown/library/file.dll"))
+(:> lib '\n')

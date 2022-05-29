@@ -1,5 +1,6 @@
 (---
 	"clib/_load_library.sll"
+	"error.sll"
 	"map.sll"
 	"path.sll"
 	"string.sll"
@@ -56,7 +57,7 @@
 	(= handle (<- (... "clib:load_library")
 		file_path
 	))
-	(? (! handle) (@@ nil))
+	(? (< handle 0) (@@ (<- error$from_internal (~ handle))))
 	(= lib (. clib_library_type
 		file_path
 		handle
