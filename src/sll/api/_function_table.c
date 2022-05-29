@@ -714,7 +714,7 @@ static const sll_internal_function_descriptor_t _internal_function_table[]={
 	{
 		SLL_CHAR("sll:process_get_pid"),
 		sll_api_process_get_pid,
-		SLL_CHAR("|i")
+		SLL_CHAR("|D")
 	},
 	{
 		SLL_CHAR("sll:process_join"),
