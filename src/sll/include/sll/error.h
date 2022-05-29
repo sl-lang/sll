@@ -1,5 +1,7 @@
 #ifndef __SLL_ERROR_H__
 #define __SLL_ERROR_H__ 1
+#include <sll/common.h>
+#include <sll/string.h>
 #include <sll/types.h>
 /**
  * \flags group
@@ -103,6 +105,18 @@
 
 /**
  * \flags macro var
+ * \name SLL_ERROR_STRING
+ * \group error
+ * \subgroup error-type
+ * \desc Docs!
+ * \type sll_error_t
+ */
+#define SLL_ERROR_STRING 8
+
+
+
+/**
+ * \flags macro var
  * \name SLL_UNMAPPED_SYSTEM_ERROR
  * \group error
  * \desc Docs!
@@ -196,6 +210,18 @@
 
 
 /**
+ * \flags func macro
+ * \name SLL_ERROR_FROM_STRING_POINTER
+ * \group error
+ * \desc Docs!
+ * \arg void* pointer
+ * \ret sll_error_t
+ */
+#define SLL_ERROR_FROM_STRING_POINTER(pointer) SLL_ERROR_FROM_EXTRA(SLL_ERROR_STRING,(pointer))
+
+
+
+/**
  * \flags macro var
  * \name SLL_NO_ERROR
  * \group error
@@ -214,6 +240,30 @@
  * \type __SLL_U64
  */
 typedef __SLL_U64 sll_error_t;
+
+
+
+/**
+ * \flags check_output func
+ * \name sll_error_from_string_pointer
+ * \group file
+ * \desc Docs!
+ * \arg const sll_char_t* string
+ * \ret sll_error_t
+ */
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_error_t sll_error_from_string_pointer(const sll_char_t* string);
+
+
+
+/**
+ * \flags check_output func
+ * \name sll_error_get_string_pointer
+ * \group file
+ * \desc Docs!
+ * \arg sll_error_t err
+ * \ret const sll_char_t*
+ */
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT const sll_char_t* sll_error_get_string_pointer(sll_error_t err);
 
 
 

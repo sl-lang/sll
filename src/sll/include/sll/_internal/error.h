@@ -16,6 +16,8 @@
 #define DATA_IF_ERROR_PTR(x,v) (err&&*err!=SLL_NO_ERROR?(v):(x))
 #define ZERO_IF_ERROR_PTR(x) DATA_IF_ERROR_PTR((x),0)
 
+#define ERROR_STRING_POINTER_TABLE_SIZE 32
+
 
 
 #endif

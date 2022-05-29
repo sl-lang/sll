@@ -230,6 +230,7 @@
 (= version (<- _read_version))
 
 (= output_library (+ "build/sll-" version sys$LIBRARY_EXTENSION))
+(= output_library_lib (+ "build/sll-" version ".lib"))
 
 (= output_executable_args (+
 	[(+ (<- path$get_cwd) "/build/sll" sys$EXECUTABLE_EXTENSION)]
@@ -343,42 +344,42 @@
 	<
 		"darwin" (. platform_extension_command_list_type
 			["gcc" "-fno-exceptions" "-fno-stack-protector" "-fdiagnostics-color=always" "-fPIC" "-c" "-fvisibility=hidden" "-Wall" "-g" "-O0" "-Werror" "-I" "build" "-I" COMMAND_MARKER_INCLUDE "-o" COMMAND_MARKER_OUTPUT COMMAND_MARKER_INPUT]
-			["gcc" "-fno-exceptions" "-fno-stack-protector" "-fdiagnostics-color=always" "-shared" "-fPIC" "-fvisibility=hidden" "-Wall" "-Werror" "-g" "-O0" "-o" COMMAND_MARKER_OUTPUT COMMAND_MARKER_INPUT]
+			["gcc" "-fno-exceptions" "-fno-stack-protector" "-fdiagnostics-color=always" "-shared" "-fPIC" "-fvisibility=hidden" "-Wall" "-Werror" "-g" "-O0" output_library "-o" COMMAND_MARKER_OUTPUT COMMAND_MARKER_INPUT]
 			nil
 			""
 			""
 		)
 		"darwin_release" (. platform_extension_command_list_type
 			["gcc" "-fno-exceptions" "-fno-stack-protector" "-fdiagnostics-color=always" "-fPIC" "-c" "-fvisibility=hidden" "-Wall" "-O3" "-Werror" "-I" "build" "-I" COMMAND_MARKER_INCLUDE "-o" COMMAND_MARKER_OUTPUT COMMAND_MARKER_INPUT]
-			["gcc" "-fno-exceptions" "-fno-stack-protector" "-fdiagnostics-color=always" "-shared" "-fPIC" "-fvisibility=hidden" "-Wall" "-O3" "-Werror" "-o" COMMAND_MARKER_OUTPUT COMMAND_MARKER_INPUT]
+			["gcc" "-fno-exceptions" "-fno-stack-protector" "-fdiagnostics-color=always" "-shared" "-fPIC" "-fvisibility=hidden" "-Wall" "-O3" "-Werror" output_library "-o" COMMAND_MARKER_OUTPUT COMMAND_MARKER_INPUT]
 			nil
 			""
 			""
 		)
 		"linux" (. platform_extension_command_list_type
 			["gcc" "-fno-exceptions" "-fno-stack-protector" "-fdiagnostics-color=always" "-fPIC" "-c" "-fvisibility=hidden" "-Wall" "-g" "-O0" "-Werror" "-I" "build" "-I" COMMAND_MARKER_INCLUDE "-mavx" "-mavx2" "-o" COMMAND_MARKER_OUTPUT COMMAND_MARKER_INPUT]
-			["gcc" "-fno-exceptions" "-fno-stack-protector" "-fdiagnostics-color=always" "-shared" "-fPIC" "-fvisibility=hidden" "-Wall" "-Werror" "-g" "-O0" "-mavx" "-mavx2" "-o" COMMAND_MARKER_OUTPUT COMMAND_MARKER_INPUT]
+			["gcc" "-fno-exceptions" "-fno-stack-protector" "-fdiagnostics-color=always" "-shared" "-fPIC" "-fvisibility=hidden" "-Wall" "-Werror" "-g" "-O0" "-mavx" "-mavx2" output_library "-o" COMMAND_MARKER_OUTPUT COMMAND_MARKER_INPUT]
 			nil
 			""
 			""
 		)
 		"linux_release" (. platform_extension_command_list_type
 			(+ ["gcc" "-fno-exceptions" "-fno-stack-protector" "-fdiagnostics-color=always" "-fPIC" "-c" "-fvisibility=hidden" "-Wall" "-O3" "-Werror" "-I" "build" "-I" COMMAND_MARKER_INCLUDE "-mavx" "-mavx2" "-o" COMMAND_MARKER_OUTPUT COMMAND_MARKER_INPUT] (* ["-g"] options$DEBUG))
-			(+ ["gcc" "-fno-exceptions" "-fno-stack-protector" "-fdiagnostics-color=always" "-shared" "-fPIC" "-fvisibility=hidden" "-Wall" "-O3" "-Werror" "-mavx" "-mavx2" "-o" COMMAND_MARKER_OUTPUT COMMAND_MARKER_INPUT] (* ["-g"] options$DEBUG))
+			(+ ["gcc" "-fno-exceptions" "-fno-stack-protector" "-fdiagnostics-color=always" "-shared" "-fPIC" "-fvisibility=hidden" "-Wall" "-O3" "-Werror" "-mavx" "-mavx2" output_library "-o" COMMAND_MARKER_OUTPUT COMMAND_MARKER_INPUT] (* ["-g"] options$DEBUG))
 			(* ["strip" COMMAND_MARKER_OUTPUT "-s" "-R" ".note.*" "-R" ".comment"] (! options$DEBUG))
 			""
 			""
 		)
 		"windows" (. platform_extension_command_list_type
-			["cl.exe" "/c" "/permissive-" "/Zc:preprocessor" "/std:c11" "/Wv:18" "/GS" "/utf-8" "/W3" "/Zc:wchar_t" "/Gm-" "/sdl" "/Zc:inline" "/fp:precise" "/D" "_DEBUG" "/errorReport:none" "/WX" "/Zc:forScope" "/Gd" "/Oi" "/EHsc" "/nologo" "/diagnostics:column" "/Zi" "/Od" "/RTC1" "/MDd" "/I" "build" "/I" COMMAND_MARKER_INCLUDE "/Fdbuild/sll.pdb" COMMAND_MARKER_OUTPUT COMMAND_MARKER_INPUT]
-			["link.exe" COMMAND_MARKER_OUTPUT "/DLL" "/DYNAMICBASE" "/MACHINE:X64" "/ERRORREPORT:none" "/NOLOGO" "/TLBID:1" "/WX" "/DEBUG" "/INCREMENTAL:NO" "/RELEASE" "/PDB:build/sll.pdb" COMMAND_MARKER_INPUT]
+			["cl.exe" "/c" "/permissive-" "/Zc:preprocessor" "/std:c11" "/Wv:18" "/GS" "/utf-8" "/W3" "/Zc:wchar_t" "/Gm-" "/sdl" "/Zc:inline" "/fp:precise" "/D" "_DEBUG" "/errorReport:none" "/WX" "/Zc:forScope" "/Gd" "/Oi" "/EHsc" "/nologo" "/diagnostics:column" "/Zi" "/Od" "/RTC1" "/MDd" "/I" "build" "/I" COMMAND_MARKER_INCLUDE "/Fdbuild/ext.pdb" COMMAND_MARKER_OUTPUT COMMAND_MARKER_INPUT]
+			["link.exe" COMMAND_MARKER_OUTPUT "/DLL" "/DYNAMICBASE" "/MACHINE:X64" "/ERRORREPORT:none" "/NOLOGO" "/TLBID:1" "/WX" "/DEBUG" "/INCREMENTAL:NO" "/RELEASE" "/PDB:build/ext.pdb" output_library_lib COMMAND_MARKER_INPUT]
 			nil
 			"/Fo"
 			"/OUT:"
 		)
 		"windows_release" (. platform_extension_command_list_type
 			["cl.exe" "/c" "/permissive-" "/Zc:preprocessor" "/std:c11" "/Wv:18" "/GS" "/utf-8" "/W3" "/Zc:wchar_t" "/Gm-" "/sdl" "/Zc:inline" "/fp:precise" "/D" "NDEBUG" "/errorReport:none" "/WX" "/Zc:forScope" "/Gd" "/Oi" "/EHsc" "/nologo" "/diagnostics:column" "/GL" "/Gy" "/O2" "/MD" "/I" "build" "/I" COMMAND_MARKER_INCLUDE COMMAND_MARKER_OUTPUT COMMAND_MARKER_INPUT]
-			["link.exe" COMMAND_MARKER_OUTPUT "/DLL" "/DYNAMICBASE" "/MACHINE:X64" "/ERRORREPORT:none" "/NOLOGO" "/TLBID:1" "/WX" "/LTCG" "/OPT:NOREF" "/INCREMENTAL:NO" "/RELEASE" COMMAND_MARKER_INPUT]
+			["link.exe" COMMAND_MARKER_OUTPUT "/DLL" "/DYNAMICBASE" "/MACHINE:X64" "/ERRORREPORT:none" "/NOLOGO" "/TLBID:1" "/WX" "/LTCG" "/OPT:NOREF" "/INCREMENTAL:NO" "/RELEASE" output_library_lib COMMAND_MARKER_INPUT]
 			nil
 			"/Fo"
 			"/OUT:"

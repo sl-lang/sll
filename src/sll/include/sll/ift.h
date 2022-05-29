@@ -189,7 +189,7 @@ __SLL_EXTERNAL sll_function_index_t sll_register_internal_function(sll_internal_
 
 /**
  * \flags func
- * \name sll_register_internal_functionss
+ * \name sll_register_internal_functions
  * \group ift
  * \desc Docs!
  * \arg sll_internal_function_table_t* internal_function_table

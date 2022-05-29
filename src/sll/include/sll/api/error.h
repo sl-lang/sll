@@ -27,4 +27,17 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_error_get_call_stack(sll_call_stack_s
 
 
 
+/**
+ * \flags func
+ * \name sll_api_error_get_error_string
+ * \group error-api
+ * \desc Docs!
+ * \api Q|s
+ * \arg sll_error_t err
+ * \arg sll_string_t* out
+ */
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_error_get_error_string(sll_error_t err,sll_string_t* out);
+
+
+
 #endif

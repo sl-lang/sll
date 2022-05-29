@@ -28,6 +28,7 @@ extern void sll_api_date_get_time_zone(void);
 extern void sll_api_date_merge(void);
 extern void sll_api_date_split(void);
 extern void sll_api_error_get_call_stack(void);
+extern void sll_api_error_get_error_string(void);
 extern void sll_api_file_close(void);
 extern void sll_api_file_copy(void);
 extern void sll_api_file_delete(void);
@@ -314,6 +315,11 @@ static const sll_internal_function_descriptor_t _ifunc_data_ptr[]={
 		SLL_CHAR("sll:error_get_call_stack"),
 		sll_api_error_get_call_stack,
 		SLL_CHAR("DD|a")
+	},
+	{
+		SLL_CHAR("sll:error_get_error_string"),
+		sll_api_error_get_error_string,
+		SLL_CHAR("Q|s")
 	},
 	{
 		SLL_CHAR("sll:file_close"),
@@ -1160,4 +1166,4 @@ static const sll_internal_function_descriptor_t _ifunc_data_ptr[]={
 
 
 __SLL_EXTERNAL const sll_internal_function_descriptor_t* sll_builtin_internal_function_data=(const sll_internal_function_descriptor_t*)(&_ifunc_data_ptr);
-__SLL_EXTERNAL const sll_function_index_t sll_builtin_internal_function_count=191;
+__SLL_EXTERNAL const sll_function_index_t sll_builtin_internal_function_count=192;

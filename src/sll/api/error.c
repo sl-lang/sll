@@ -3,6 +3,7 @@
 #include <sll/array.h>
 #include <sll/audit.h>
 #include <sll/common.h>
+#include <sll/error.h>
 #include <sll/gc.h>
 #include <sll/new_object.h>
 #include <sll/static_object.h>
@@ -23,4 +24,17 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_error_get_call_stack(sll_call_stack_s
 	sll_object_t* o=sll_new_object(SLL_CHAR("{S#(hh)}"),c_st->data,c_st->length-pop,sizeof(const sll_call_stack_frame_t),SLL_OFFSETOF(sll_call_stack_frame_t,name),sll_instruction_to_location,SLL_OFFSETOF(sll_call_stack_frame_t,_instruction_index),SLL_OFFSETOF(sll_call_stack_frame_t,_instruction_index),SLL_OFFSETOF(sll_call_stack_frame_t,_stack_offset));
 	*out=o->data.array;
 	SLL_CRITICAL(sll_destroy_object(o));
+}
+
+
+
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_error_get_error_string(sll_error_t err,sll_string_t* out){
+	SLL_INIT_STRING(out);
+	if (SLL_ERROR_GET_TYPE(err)!=SLL_ERROR_FLAG_SLL||SLL_ERROR_GET_VALUE(err)!=SLL_ERROR_STRING){
+		return;
+	}
+	const sll_char_t* ptr=sll_error_get_string_pointer(err);
+	if (ptr){
+		sll_string_from_pointer(ptr,out);
+	}
 }

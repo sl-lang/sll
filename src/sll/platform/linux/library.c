@@ -1,8 +1,9 @@
 #include <sll/_internal/error.h>
 #include <sll/api/sys.h>
 #include <sll/common.h>
-#include <sll/platform/library.h>
 #include <sll/error.h>
+#include <sll/platform/library.h>
+#include <sll/string.h>
 #include <sll/types.h>
 #include <dlfcn.h>
 
@@ -12,7 +13,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_library_handle_t sll_platform_load_library
 	ERROR_PTR_RESET;
 	void* o=dlopen((char*)fp,RTLD_NOW);
 	if (!o){
-		ERROR_PTR_SYSTEM;
+		ERROR_PTR(sll_error_from_string_pointer(SLL_CHAR(dlerror())));
 	}
 	return o;
 }
@@ -26,5 +27,5 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT void* sll_platform_lookup_symbol(sll_library_h
 
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_error_t sll_platform_unload_library(sll_library_handle_t h){
-	return (dlclose(h)?sll_platform_get_error():SLL_NO_ERROR);
+	return (dlclose(h)?sll_error_from_string_pointer(SLL_CHAR(dlerror())):SLL_NO_ERROR);
 }
