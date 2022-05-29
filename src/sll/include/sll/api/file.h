@@ -44,12 +44,12 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_bool_t sll_api_file_close(s
  * \name sll_api_file_copy
  * \group file-api
  * \desc Docs!
- * \api #s#s|i
+ * \api #s#s|Q
  * \arg const sll_string_t* src
  * \arg const sll_string_t* dst
- * \ret sll_integer_t
+ * \ret sll_error_t
  */
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_file_copy(const sll_string_t* src,const sll_string_t* dst);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_file_copy(const sll_string_t* src,const sll_string_t* dst);
 
 
 
@@ -58,11 +58,11 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_file_copy
  * \name sll_api_file_delete
  * \group file-api
  * \desc Docs!
- * \api #s|i
+ * \api #s|Q
  * \arg const sll_string_t* path
- * \ret sll_integer_t
+ * \ret sll_error_t
  */
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_file_delete(const sll_string_t* path);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_file_delete(const sll_string_t* path);
 
 
 

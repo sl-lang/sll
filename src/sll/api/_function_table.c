@@ -329,12 +329,12 @@ static const sll_internal_function_descriptor_t _internal_function_table[]={
 	{
 		SLL_CHAR("sll:file_copy"),
 		sll_api_file_copy,
-		SLL_CHAR("#s#s|i")
+		SLL_CHAR("#s#s|Q")
 	},
 	{
 		SLL_CHAR("sll:file_delete"),
 		sll_api_file_delete,
-		SLL_CHAR("#s|i")
+		SLL_CHAR("#s|Q")
 	},
 	{
 		SLL_CHAR("sll:file_flush"),
