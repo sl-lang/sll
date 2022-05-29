@@ -87,9 +87,9 @@ typedef __SLL_U8 sll_process_creation_flags_t;
  * \desc Docs!
  * \api #s|i
  * \arg const sll_string_t* cmd
- * \ret sll_integer_t
+ * \ret sll_error_t
  */
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_process_execute_shell(const sll_string_t* cmd);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_process_execute_shell(const sll_string_t* cmd);
 
 
 
@@ -98,10 +98,10 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_process_e
  * \name sll_api_process_get_pid
  * \group process-api
  * \desc Docs!
- * \api |i
- * \ret sll_integer_t
+ * \api |D
+ * \ret sll_pid_t
  */
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_process_get_pid(void);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_pid_t sll_api_process_get_pid(void);
 
 
 

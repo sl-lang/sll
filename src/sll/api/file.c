@@ -136,19 +136,20 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_bool_t sll_api_file_flush(s
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_file_from_data(const sll_string_t* data,sll_file_flags_t flags){
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_file_from_data(const sll_string_t* data,sll_file_flags_t flags,sll_file_handle_t* out){
 	if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_FILE_IO)&&!sll_get_sandbox_flag(SLL_SANDBOX_FLAG_ENABLE_BUFFER_FILES)){
-		return ~SLL_ERROR_FROM_SANDBOX(SLL_SANDBOX_FLAG_DISABLE_FILE_IO);
+		return SLL_ERROR_FROM_SANDBOX(SLL_SANDBOX_FLAG_DISABLE_FILE_IO);
 	}
 	void* ptr=sll_allocate(data->length);
 	sll_copy_data(data->data,data->length,ptr);
 	sll_file_t f;
 	sll_file_from_data(ptr,data->length,(sll_file_flags_t)(flags&(SLL_FILE_FLAG_READ|SLL_FILE_FLAG_WRITE|SLL_FILE_FLAG_APPEND|SLL_FILE_FLAG_NO_BUFFER)),&f);
-	sll_integer_t h=_alloc_file();
+	sll_file_handle_t h=_alloc_file();
 	sll_copy_data(&f,sizeof(sll_file_t),&((*(_file_fl+h))->data.struct_));
 	(*(_file_fl+h))->is_pointer=0;
 	(*(_file_fl+h))->data_pointer=ptr;
-	return h;
+	*out=h;
+	return SLL_NO_ERROR;
 }
 
 
@@ -179,24 +180,25 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_file_inc_handle(sll_file_handle_t fh)
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_file_open(const sll_string_t* path,sll_file_flags_t flags){
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_file_open(const sll_string_t* path,sll_file_flags_t flags,sll_file_handle_t* out){
 	if (path->length>SLL_API_MAX_FILE_PATH_LENGTH){
-		return ~SLL_ERROR_TOO_LONG;
+		return SLL_ERROR_TOO_LONG;
 	}
 	if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_FILE_IO)){
-		return ~SLL_ERROR_FROM_SANDBOX(SLL_SANDBOX_FLAG_DISABLE_FILE_IO);
+		return SLL_ERROR_FROM_SANDBOX(SLL_SANDBOX_FLAG_DISABLE_FILE_IO);
 	}
 	flags&=SLL_FILE_FLAG_READ|SLL_FILE_FLAG_WRITE|SLL_FILE_FLAG_APPEND|SLL_FILE_FLAG_NO_BUFFER|SLL_FILE_FLUSH_ON_NEWLINE;
 	sll_audit(SLL_CHAR("sll.file.open"),SLL_CHAR("sh"),path,flags);
 	sll_file_t f;
 	sll_error_t err=sll_file_open(path->data,flags,&f);
 	if (err!=SLL_NO_ERROR){
-		return ~err;
+		return err;
 	}
 	sll_file_handle_t fh=_alloc_file();
 	sll_copy_data(&f,sizeof(sll_file_t),&((*(_file_fl+fh))->data.struct_));
 	(*(_file_fl+fh))->is_pointer=0;
-	return fh;
+	*out=fh;
+	return SLL_NO_ERROR;
 }
 
 
@@ -256,7 +258,7 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_file_read_c
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_file_rename(const sll_string_t* src,const sll_string_t* dst){
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_file_rename(const sll_string_t* src,const sll_string_t* dst){
 	if (src->length>SLL_API_MAX_FILE_PATH_LENGTH||dst->length>SLL_API_MAX_FILE_PATH_LENGTH){
 		return SLL_ERROR_TOO_LONG;
 	}
@@ -269,7 +271,7 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_file_rena
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_file_std_handle(sll_char_t id){
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_file_std_handle(sll_char_t id,sll_file_handle_t* out){
 	if (!_file_cleanup){
 		sll_register_cleanup(_release_data,SLL_CLEANUP_TYPE_VM);
 		_file_cleanup=1;
@@ -277,38 +279,39 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_file_std_
 	sll_file_t* p=NULL;
 	if (!id){
 		if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_FILE_IO)&&!sll_get_sandbox_flag(SLL_SANDBOX_FLAG_ENABLE_STDIN_IO)){
-			return ~SLL_ERROR_FROM_SANDBOX(SLL_SANDBOX_FLAG_DISABLE_FILE_IO);
+			return SLL_ERROR_FROM_SANDBOX(SLL_SANDBOX_FLAG_DISABLE_FILE_IO);
 		}
 		p=sll_current_vm_config->in;
 	}
 	else if (id==1){
 		if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_FILE_IO)&&!sll_get_sandbox_flag(SLL_SANDBOX_FLAG_ENABLE_STDOUT_IO)){
-			return ~SLL_ERROR_FROM_SANDBOX(SLL_SANDBOX_FLAG_DISABLE_FILE_IO);
+			return SLL_ERROR_FROM_SANDBOX(SLL_SANDBOX_FLAG_DISABLE_FILE_IO);
 		}
 		p=sll_current_vm_config->out;
 	}
 	else{
 		if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_FILE_IO)){
-			return ~SLL_ERROR_FROM_SANDBOX(SLL_SANDBOX_FLAG_DISABLE_FILE_IO);
+			return SLL_ERROR_FROM_SANDBOX(SLL_SANDBOX_FLAG_DISABLE_FILE_IO);
 		}
 		p=sll_current_vm_config->err;
 	}
 	sll_file_handle_t fh=_alloc_file();
 	(*(_file_fl+fh))->data.pointer=p;
 	(*(_file_fl+fh))->is_pointer=1;
-	return fh;
+	*out=fh;
+	return SLL_NO_ERROR;
 }
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_file_write(sll_file_handle_t fh,const sll_string_t* data){
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_file_write(sll_file_handle_t fh,const sll_string_t* data,sll_size_t* out){
 	if (fh>=_file_fll||!(*(_file_fl+fh))){
-		return ~SLL_ERROR_UNKNOWN_FD;
+		return SLL_ERROR_UNKNOWN_FD;
 	}
 	extended_file_t* ef=*(_file_fl+fh);
 	sll_error_t err;
-	sll_size_t o=sll_file_write((ef->is_pointer?ef->data.pointer:&(ef->data.struct_)),data->data,data->length*sizeof(sll_char_t),&err);
-	return (!o&&err!=SLL_NO_ERROR?~err:o*sizeof(sll_char_t));
+	*out=sll_file_write((ef->is_pointer?ef->data.pointer:&(ef->data.struct_)),data->data,data->length*sizeof(sll_char_t),&err);
+	return err;
 }
 
 

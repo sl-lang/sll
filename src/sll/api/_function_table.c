@@ -344,7 +344,7 @@ static const sll_internal_function_descriptor_t _internal_function_table[]={
 	{
 		SLL_CHAR("sll:file_from_data"),
 		sll_api_file_from_data,
-		SLL_CHAR("#sB|i")
+		SLL_CHAR("#sB|~D")
 	},
 	{
 		SLL_CHAR("sll:file_get_buffer"),
@@ -364,7 +364,7 @@ static const sll_internal_function_descriptor_t _internal_function_table[]={
 	{
 		SLL_CHAR("sll:file_open"),
 		sll_api_file_open,
-		SLL_CHAR("#sB|i")
+		SLL_CHAR("#sB|~D")
 	},
 	{
 		SLL_CHAR("sll:file_peek"),
@@ -384,17 +384,17 @@ static const sll_internal_function_descriptor_t _internal_function_table[]={
 	{
 		SLL_CHAR("sll:file_rename"),
 		sll_api_file_rename,
-		SLL_CHAR("#s#s|i")
+		SLL_CHAR("#s#s|Q")
 	},
 	{
 		SLL_CHAR("sll:file_std_handle"),
 		sll_api_file_std_handle,
-		SLL_CHAR("c|i")
+		SLL_CHAR("c|~D")
 	},
 	{
 		SLL_CHAR("sll:file_write"),
 		sll_api_file_write,
-		SLL_CHAR("D#s|i")
+		SLL_CHAR("D#s|~Q")
 	},
 	{
 		SLL_CHAR("sll:hash_md5"),
@@ -679,7 +679,7 @@ static const sll_internal_function_descriptor_t _internal_function_table[]={
 	{
 		SLL_CHAR("sll:path_mkdir"),
 		sll_api_path_mkdir,
-		SLL_CHAR("#sb|i")
+		SLL_CHAR("#sb|Q")
 	},
 	{
 		SLL_CHAR("sll:path_relative"),
@@ -689,12 +689,12 @@ static const sll_internal_function_descriptor_t _internal_function_table[]={
 	{
 		SLL_CHAR("sll:path_set_cwd"),
 		sll_api_path_set_cwd,
-		SLL_CHAR("#s|i")
+		SLL_CHAR("#s|Q")
 	},
 	{
 		SLL_CHAR("sll:path_size"),
 		sll_api_path_size,
-		SLL_CHAR("#s|i")
+		SLL_CHAR("#s|Q")
 	},
 	{
 		SLL_CHAR("sll:path_split"),

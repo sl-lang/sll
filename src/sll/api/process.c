@@ -33,7 +33,7 @@ static const bitmap_t _process_quote_chars[4]={
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_process_execute_shell(const sll_string_t* cmd){
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_process_execute_shell(const sll_string_t* cmd){
 	if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_PROCESS_API)){
 		return SLL_ERROR_FROM_SANDBOX(SLL_SANDBOX_FLAG_DISABLE_PROCESS_API);
 	}
@@ -44,11 +44,8 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_process_e
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_process_get_pid(void){
-	if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_PROCESS_API)){
-		return -1;
-	}
-	return sll_platform_get_pid();
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_pid_t sll_api_process_get_pid(void){
+	return (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_PROCESS_API)?0:sll_platform_get_pid());
 }
 
 

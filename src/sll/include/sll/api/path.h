@@ -128,12 +128,12 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_path_list_d
  * \name sll_api_path_mkdir
  * \group path-api
  * \desc Docs!
- * \api #sb|i
+ * \api #sb|Q
  * \arg const sll_string_t* path
  * \arg sll_bool_t all
- * \ret sll_integer_t
+ * \ret sll_error_t
  */
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_path_mkdir(const sll_string_t* path,sll_bool_t all);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_path_mkdir(const sll_string_t* path,sll_bool_t all);
 
 
 
@@ -156,11 +156,11 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_path_relative(const sll_string_t* pat
  * \name sll_api_path_set_cwd
  * \group json-api
  * \desc Docs!
- * \api #s|i
+ * \api #s|Q
  * \arg const sll_string_t* path
- * \ret sll_integer_t
+ * \ret sll_error_t
  */
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_path_set_cwd(const sll_string_t* path);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_path_set_cwd(const sll_string_t* path);
 
 
 
@@ -169,11 +169,12 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_path_set_
  * \name sll_api_path_size
  * \group path-api
  * \desc Docs!
- * \api #s|i
+ * \api #s|Q
  * \arg const sll_string_t* path
- * \ret sll_integer_t
+ * \arg sll_size_t* out
+ * \ret sll_error_t
  */
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_path_size(const sll_string_t* path);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_path_size(const sll_string_t* path,sll_size_t* out);
 
 
 

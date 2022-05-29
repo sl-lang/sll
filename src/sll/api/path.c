@@ -146,7 +146,7 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_path_list_d
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_path_mkdir(const sll_string_t* path,sll_bool_t all){
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_path_mkdir(const sll_string_t* path,sll_bool_t all){
 	if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_PATH_API)){
 		return SLL_ERROR_FROM_SANDBOX(SLL_SANDBOX_FLAG_DISABLE_PATH_API);
 	}
@@ -166,7 +166,7 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_path_relative(const sll_string_t* pat
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_path_set_cwd(const sll_string_t* path){
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_path_set_cwd(const sll_string_t* path){
 	if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_PATH_API)){
 		return SLL_ERROR_FROM_SANDBOX(SLL_SANDBOX_FLAG_DISABLE_PATH_API);
 	}
@@ -176,20 +176,17 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_path_set_
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_path_size(const sll_string_t* path){
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_path_size(const sll_string_t* path,sll_size_t* out){
 	if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_PATH_API)){
-		return 0;
+		return SLL_ERROR_FROM_SANDBOX(SLL_SANDBOX_FLAG_DISABLE_PATH_API);
 	}
 	sll_error_t err;
 	sll_file_descriptor_t fd=sll_platform_file_open(path->data,SLL_FILE_FLAG_READ,&err);
 	if (fd!=SLL_UNKNOWN_FILE_DESCRIPTOR){
-		sll_size_t o=sll_platform_file_size(fd,&err);
+		*out=sll_platform_file_size(fd,&err);
 		SLL_CRITICAL_ERROR(sll_platform_file_close(fd));
-		if (o||err==SLL_NO_ERROR){
-			return o;
-		}
 	}
-	return ~err;
+	return err;
 }
 
 
