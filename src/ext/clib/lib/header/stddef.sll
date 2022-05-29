@@ -1,14 +1,21 @@
-(--- "clib/types.sll")
+(---
+	"clib/types.sll"
+	"types.sll"
+)
 
 
 
 (= stddef.h_module_type (&:
-
+	(~ clib_types$clib_type) size_t
+	(~ clib_types$clib_type) ptrdiff_t
+	(~ object_type) NULL
 ))
 
 
 
 (= stddef.h (. stddef.h_module_type
-
+	clib_types$unsigned_long_long_int
+	clib_types$long_long_int
+	nil
 ))
 (## stddef.h)
