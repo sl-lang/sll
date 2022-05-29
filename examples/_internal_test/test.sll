@@ -611,7 +611,7 @@
 
 (:> [0.0i 0b111i 1e4-3e4i +5.4] "\n")
 
-(<- sys$set_sandbox_flags "no-path")
+; (<- sys$set_sandbox_flags "no-path")
 
 (:> (<- path$mkdir "abc/abc/abc") "\n")
 
@@ -645,5 +645,10 @@ abc` '\n')
 
 (:> clib_library$SLL_LIBRARY '\n')
 
-(= lib (<- clib_library$load "unknown/library/file.dll"))
-(:> lib '\n')
+(:> (<- clib_library$load "unknown/library/file.dll") '\n')
+
+(= libc (<- clib_library$load (?: (=== sys$PLATFORM "windows")
+	"msvcrt.dll"
+	"libc.so.6"
+)))
+(:> libc '\n')

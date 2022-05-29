@@ -49,7 +49,8 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_path_absolute(const sll_string_t* pat
 		return;
 	}
 	sll_char_t bf[SLL_API_MAX_FILE_PATH_LENGTH];
-	sll_string_from_pointer_length(bf,sll_platform_absolute_path(path->data,bf,SLL_API_MAX_FILE_PATH_LENGTH),out);
+	sll_string_length_t bfl=sll_platform_absolute_path(path->data,bf,SLL_API_MAX_FILE_PATH_LENGTH);
+	sll_string_from_pointer_length(bf,bfl,out);
 }
 
 
