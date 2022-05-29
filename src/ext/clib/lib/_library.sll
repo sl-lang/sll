@@ -20,7 +20,6 @@
 	(,,, dt
 		(? (! dt$_handle) (@@ false))
 		(<- map$remove _lib_map dt$file_path)
-		(:> "XXX" dt '\n')
 		(<- (... "clib:unload_library") dt$_handle)
 	) @@delete@@
 	(~ string_type) file_path
