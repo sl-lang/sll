@@ -722,7 +722,15 @@ _read_file_argument:
 		}
 	}
 	if (fpl+sll==1){
-		_cli_flags|=CLI_FLAG_SINGLE_OUTPUT;
+		if (!o_fp){
+			_cli_flags|=CLI_FLAG_SINGLE_OUTPUT;
+		}
+		else{
+			sll_char_t last=o_fp[sll_string_length(o_fp)-1];
+			if (last!='\\'&&last!='/'){
+				_cli_flags|=CLI_FLAG_SINGLE_OUTPUT;
+			}
+		}
 	}
 	sll_bundle_t bundle;
 	if (_cli_flags&SLL_CLI_FLAG_GENERATE_BUNDLE){

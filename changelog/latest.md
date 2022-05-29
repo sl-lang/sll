@@ -5,6 +5,10 @@
 - C interface library: `clib` ([#286])
 - Tests ([#285])
 
+## Changed
+
+- Fixed CLI output when supplied a directory
+
 ## Removed
 
 - Deprecated `apt-key` is no longer used for repository keys

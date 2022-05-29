@@ -1,0 +1,14 @@
+(--- "clib/types.sll")
+
+
+
+(= stddef.h_module_type (&:
+
+))
+
+
+
+(= stddef.h (. stddef.h_module_type
+
+))
+(## stddef.h)
