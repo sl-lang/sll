@@ -137,14 +137,20 @@
 			})
 		)
 		(? err (<- util$fail_and_exit))
+		(= temporary_output_library (<- string$replace config$EXTENSION_TEMPORARY_OUTPUT_FILE_PATH
+			"<name>"
+			name
+		))
 		(= output_library (<- string$replace config$EXTENSION_OUTPUT_FILE_PATH
 			"<name>"
 			name
 		))
 		(<- log$log "    Linking files...")
-		(? (<- _execute_command command_list$LINK_COMMAND output_files (+ command_list$OUTPUT_LINK_PREFIX output_library)) (<- util$fail_and_exit))
+		(? (<- _execute_command command_list$LINK_COMMAND output_files (+ command_list$OUTPUT_LINK_PREFIX temporary_output_library)) (<- util$fail_and_exit))
 		(<- log$log "    Executing post-link command...")
-		(? (<- _execute_command command_list$POST_LINK_COMMAND nil output_library) (<- util$fail_and_exit))
+		(? (<- _execute_command command_list$POST_LINK_COMMAND nil temporary_output_library) (<- util$fail_and_exit))
+		(<- log$log "    Copying library from '" temporary_output_library "' to '" output_library "'...")
+		(<- file$rename temporary_output_library output_library)
 		(<- log$log "  Compiling extension module '" name "'...")
 		(<- log$log "    Listing module files...")
 		(= module_file_root (<- string$replace

@@ -82,6 +82,7 @@
 	(~ map_type) EXTENSION_PLATFORM_SOURCE_FILE_PATH
 	(~ array_type) EXTENSION_PREPROCESSOR_DEFINITIONS
 	(~ string_type) EXTENSION_ROOT_SOURCE_FILE_PATH
+	(~ string_type) EXTENSION_TEMPORARY_OUTPUT_FILE_PATH
 	(~ array_type) HASHLIST_FILE_EXTENSIONS
 	(~ string_type) HASHLIST_FILE_PATH
 	(~ string_type) HASHLIST_ROOT_SOURCE_FILE_PATH
@@ -394,6 +395,7 @@
 	>
 	ext_defines
 	"src/ext/<name>/"
+	(+ "build/<name>-" version sys$LIBRARY_EXTENSION)
 	[".asm" ".c" ".h" ".inc"]
 	"build/.files"
 	"src/"
