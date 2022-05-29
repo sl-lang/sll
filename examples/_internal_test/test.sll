@@ -652,3 +652,5 @@ abc` '\n')
 	"libc.so.6"
 )))
 (:> libc '\n')
+(= printf (<- clib_library$lookup_symbol libc "printf"))
+(:> printf '\n')

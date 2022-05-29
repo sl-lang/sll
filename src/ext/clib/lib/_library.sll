@@ -1,0 +1,33 @@
+(---
+	"map.sll"
+	"string.sll"
+	"types.sll"
+)
+
+
+
+(= _lib_map <>)
+
+
+
+(= clib_library_type (&:
+	(,,, dt
+		(@@ (<- string$format (?: dt$_handle
+			"<%s at %#.16llx>"
+			"<%s at (unloaded)>"
+		) dt$file_path dt$_handle))
+	) @@string@@
+	(,,, dt
+		(? (! dt$_handle) (@@ false))
+		(<- map$remove _lib_map dt$file_path)
+		(:> "XXX" dt '\n')
+		(<- (... "clib:unload_library") dt$_handle)
+	) @@delete@@
+	(~ string_type) file_path
+	(~ map_type) symbols
+	int_type _handle
+))
+
+
+
+(## _lib_map clib_library_type)

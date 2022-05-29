@@ -13,11 +13,16 @@ static const sll_internal_function_descriptor_t _internal_function_table[]={
 		SLL_CHAR("clib:load_library"),
 		clib_api_load_library,
 		SLL_CHAR("#s|~Q")
+	},
+	{
+		SLL_CHAR("clib:lookup_symbol"),
+		clib_api_lookup_symbol,
+		SLL_CHAR("Q#s|Q")
 	}
 };
 
 
 
 const sll_internal_function_descriptor_t* clib_internal_function_data=(const sll_internal_function_descriptor_t*)(&_internal_function_table);
-const sll_function_index_t clib_internal_function_count=2;
+const sll_function_index_t clib_internal_function_count=3;
 

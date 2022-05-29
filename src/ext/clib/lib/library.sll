@@ -1,5 +1,7 @@
 (---
+	"clib/_library.sll"
 	"clib/_load_library.sll"
+	"clib/function.sll"
 	"error.sll"
 	"map.sll"
 	"path.sll"
@@ -10,24 +12,6 @@
 )
 
 
-
-(# unload)
-
-
-
-(= clib_library_type (&:
-	(,,, dt
-		(@@ (<- string$format (?: dt$_handle
-			"<%s at %#.16llx>"
-			"<%s at (unloaded)>"
-		) dt$file_path dt$_handle))
-	) @@string@@
-	(,,, dt
-		(<- unload dt)
-	) @@delete@@
-	(~ string_type) file_path
-	int_type _handle
-))
 
 (= clib_library_module_type (&:
 	(~ type_type) clib_library_type
@@ -41,12 +25,11 @@
 
 (= SLL_LIBRARY (. clib_library_type
 	sys$LIBRARY
+	<>
 	(<- (... "clib:get_sll_library_handle"))
 ))
 
-(= _lib_map <
-	sys$LIBRARY (<- weakref$ref SLL_LIBRARY)
->)
+(= (: _lib_map sys$LIBRARY) (<- weakref$ref SLL_LIBRARY))
 
 
 
@@ -59,16 +42,33 @@
 	(? (< handle 0) (@@ (<- error$from_internal (~ handle))))
 	(= lib (. clib_library_type
 		file_path
+		<>
 		handle
 	))
 	(= (: _lib_map file_path) (<- weakref$ref lib))
 	(@@ lib)
 ))
 
-(= lookup_symbol (,,, lib
+(= lookup_symbol (,,, lib name
 	(? (! lib) (@@ nil))
 	(= lib (:: lib clib_library_type))
-	(@@ nil)
+	(= name (:: name string_type))
+	(? (|: lib$symbols name) (@@ (: lib$symbols name)))
+	(= addr (<- (... "clib:lookup_symbol")
+		lib$_handle
+		name
+	))
+	(? (! addr) {
+		(= (: lib$symbols name) nil)
+		(@@ nil)
+	})
+	(= symbol (. clib_function$clib_function_type
+		name
+		addr
+		lib
+	))
+	(= (: lib$symbols name) symbol)
+	(@@ symbol)
 ))
 
 (= unload (,,, lib

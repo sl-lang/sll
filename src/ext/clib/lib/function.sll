@@ -1,14 +1,19 @@
 (---
+	"clib/_library.sll"
 	"clib/_load_library.sll"
-	"clib/library.sll"
+	"string.sll"
 	"types.sll"
 )
 
 
 
 (= clib_function_type (&:
+	(,,, dt
+		(@@ (<- string$format "<%s:%s at %#.16llx>" dt$library$file_path dt$name dt$address))
+	) @@string@@
 	(~ string_type) name
-	(~ clib_library$clib_library_type) library
+	(~ int_type) address
+	(~ clib_library_type) library
 ))
 
 (= clib_function_module_type (&:
