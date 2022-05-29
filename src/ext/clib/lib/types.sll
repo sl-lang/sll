@@ -113,7 +113,7 @@
 	(| FLAG_INTEGER FLAG_SIGNED)
 ))
 
-(= const_har (. clib_type
+(= const_char (. clib_type
 	8
 	(| FLAG_INTEGER FLAG_SIGNED FLAG_CONST)
 ))
