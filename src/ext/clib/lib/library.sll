@@ -5,7 +5,14 @@
 
 
 
+(= clib_library_type (&:
+	(~ string_type) name
+	(~ string_type) file_path
+	(~ int_type) _handle
+))
+
 (= clib_library_module_type (&:
+	(~ type_type) clib_library_type
 	(~ func_type) load
 	(~ func_type) lookup_symbol
 	(~ func_type) unload
@@ -17,17 +24,22 @@
 	(@@ nil)
 ))
 
-(= lookup_symbol (,,,
+(= lookup_symbol (,,, lib
+	(? (! lib) (@@ nil))
+	(= lib (:: lib clib_library_type))
 	(@@ nil)
 ))
 
-(= unload (,,,
+(= unload (,,, lib
+	(? (! lib) (@@ nil))
+	(= lib (:: lib clib_library_type))
 	(@@ nil)
 ))
 
 
 
 (= clib_library (. clib_library_module_type
+	clib_library_type
 	load
 	lookup_symbol
 	unload
