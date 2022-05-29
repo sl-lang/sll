@@ -39,12 +39,16 @@
 	)
 ))
 
-(= _execute_command (,,, args input output options include_file_path
+(= _execute_command (,,, args input output options include_file_path name
 	(? (! args) (@@))
 	(= args (+ (<- _replace_marker
 		(<- _replace_marker
 			(<- _replace_marker
-				args
+				(<- _replace_marker
+					args
+					config$COMMAND_MARKER_NAME
+					name
+				)
 				config$COMMAND_MARKER_INCLUDE
 				include_file_path
 			)
@@ -190,9 +194,9 @@
 		(= cwd (<- path$get_cwd))
 		(<- path$set_cwd "build/lib/")
 		(<- log$log "    Generating bundle...")
-		(? (<- _execute_command config$EXTENSION_MODULE_BUNDLE_GENERATION_COMMAND output_files (+ name ".slb")) (<- util$fail_and_exit))
+		(? (<- _execute_command config$EXTENSION_MODULE_BUNDLE_GENERATION_COMMAND output_files (+ name ".slb") nil nil (+ name '/')) (<- util$fail_and_exit))
 		(<- log$log "    Generating debug bundle...")
-		(? (<- _execute_command config$EXTENSION_MODULE_DEBUG_BUNDLE_GENERATION_COMMAND output_files (+ "../lib_debug/" name ".slb")) (<- util$fail_and_exit))
+		(? (<- _execute_command config$EXTENSION_MODULE_DEBUG_BUNDLE_GENERATION_COMMAND output_files (+ "../lib_debug/" name ".slb") nil nil (+ name '/')) (<- util$fail_and_exit))
 		(<- log$log "    Removing compilation files...")
 		(-> (= i 0) (< i ($ module_files))
 			(= file_path (+ (>> (: module_files i) ($ module_file_root)) ".slc"))

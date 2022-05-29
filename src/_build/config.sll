@@ -13,6 +13,7 @@
 
 (= COMMAND_MARKER_INCLUDE (. (&:)))
 (= COMMAND_MARKER_INPUT (. (&:)))
+(= COMMAND_MARKER_NAME (. (&:)))
 (= COMMAND_MARKER_OUTPUT (. (&:)))
 
 (= cli_options_types (&:
@@ -64,6 +65,7 @@
 	(~ map_type) CLI_COMMANDS
 	(~ (:? COMMAND_MARKER_INCLUDE)) COMMAND_MARKER_INCLUDE
 	(~ (:? COMMAND_MARKER_INPUT)) COMMAND_MARKER_INPUT
+	(~ (:? COMMAND_MARKER_NAME)) COMMAND_MARKER_NAME
 	(~ (:? COMMAND_MARKER_OUTPUT)) COMMAND_MARKER_OUTPUT
 	(~ map_type) COMMANDS
 	(~ map_type) DEBUGGER_COMMAND
@@ -272,6 +274,7 @@
 	>
 	COMMAND_MARKER_INCLUDE
 	COMMAND_MARKER_INPUT
+	COMMAND_MARKER_NAME
 	COMMAND_MARKER_OUTPUT
 	<
 		"darwin" (. platform_command_list_type
@@ -384,9 +387,9 @@
 	"src/ext/"
 	"src/ext/<name>/include/"
 	"src/ext/<name>/lib/"
-	(+ output_executable_args ["-b" "-d" "-D" "-O" "-x" "5" "-N" "clib/" "-R" "-B" COMMAND_MARKER_OUTPUT COMMAND_MARKER_INPUT])
+	(+ output_executable_args ["-b" "-d" "-D" "-O" "-x" "5" "-N" COMMAND_MARKER_NAME "-R" "-B" COMMAND_MARKER_OUTPUT COMMAND_MARKER_INPUT])
 	(+ output_executable_args ["-c" "-R" COMMAND_MARKER_INCLUDE "-o" COMMAND_MARKER_OUTPUT COMMAND_MARKER_INPUT])
-	(+ output_executable_args ["-b" "-N" "clib/" "-R" "-B" COMMAND_MARKER_OUTPUT COMMAND_MARKER_INPUT])
+	(+ output_executable_args ["-b" "-N" COMMAND_MARKER_NAME "-R" "-B" COMMAND_MARKER_OUTPUT COMMAND_MARKER_INPUT])
 	(+ "build/sys_lib/<name>-" version sys$LIBRARY_EXTENSION)
 	<
 		"darwin" "src/ext/<name>/platform/linux/"
