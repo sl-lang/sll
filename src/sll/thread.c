@@ -39,6 +39,8 @@ void _thread_deinit(void){
 		if (thr->state==THREAD_STATE_TERMINATED){
 			SLL_RELEASE(thr->return_value);
 		}
+		sll_gc_remove_root(thr->stack);
+		sll_gc_remove_root(thr->tls);
 		SLL_CRITICAL_ERROR(sll_platform_free_page(thr,THREAD_SIZE));
 	}
 	while (_scheduler_allocator_cache_pool_len){
@@ -89,11 +91,14 @@ sll_thread_index_t _thread_new(void){
 	}
 	thread_data_t* n=ptr;
 	n->stack=PTR(ADDR(ptr)+sizeof(thread_data_t)+sll_current_vm_config->call_stack_size*sizeof(sll_call_stack_frame_t)+sll_current_runtime_data->assembly_data->tls_variable_count*sizeof(sll_object_t*));
+	n->stack[0]=NULL;
+	sll_gc_add_root(n->stack,sll_current_vm_config->stack_size);
 	n->tls=PTR(ADDR(ptr)+sizeof(thread_data_t)+sll_current_vm_config->call_stack_size*sizeof(sll_call_stack_frame_t));
 	sll_static_int[0]->rc+=sll_current_runtime_data->assembly_data->tls_variable_count;
 	for (sll_variable_index_t i=0;i<sll_current_runtime_data->assembly_data->tls_variable_count;i++){
 		*(n->tls+i)=sll_static_int[0];
 	}
+	sll_gc_add_root(n->tls,sll_current_runtime_data->assembly_data->tls_variable_count);
 	n->instruction_index=0;
 	n->stack_index=0;
 	n->wait=SLL_UNKNOWN_THREAD_INDEX;
@@ -213,6 +218,8 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_thread_delete(sll_thread_index_
 		_scheduler_allocator_cache_pool_len++;
 	}
 	else{
+		sll_gc_remove_root(thr->stack);
+		sll_gc_remove_root(thr->tls);
 		SLL_CRITICAL_ERROR(sll_platform_free_page(thr,THREAD_SIZE));
 	}
 	SLL_CRITICAL(sll_platform_lock_release(_thread_lock));

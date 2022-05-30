@@ -285,6 +285,16 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_destroy_object(sll_object_t* ob
 
 
 
+__SLL_EXTERNAL void sll_gc_add_root(sll_object_t*const* pointer,sll_size_t length){
+}
+
+
+
+__SLL_EXTERNAL void sll_gc_remove_root(sll_object_t*const* pointer){
+}
+
+
+
 __SLL_EXTERNAL void sll_release_object(sll_object_t* object){
 	SLL_RELEASE(object);
 }

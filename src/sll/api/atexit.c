@@ -28,6 +28,7 @@ static void _cleanup_data(void){
 
 
 static void _delete_atexit_function(atexit_function_t* af){
+	sll_gc_remove_root(af->args);
 	while (af->arg_count){
 		af->arg_count--;
 		SLL_RELEASE(af->args[af->arg_count]);
@@ -73,6 +74,7 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_atexit_register(sll_integer_t fn,sll_
 		SLL_ACQUIRE(*(args+i));
 		af->args[i]=*(args+i);
 	}
+	sll_gc_add_root(af->args,len);
 	*(_atexit_data+_atexit_data_len-1)=af;
 	SLL_CRITICAL(sll_platform_lock_release(_atexit_lock));
 }

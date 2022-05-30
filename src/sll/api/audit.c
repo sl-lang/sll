@@ -26,7 +26,9 @@ static void _call_user_cb(const sll_string_t* nm,const sll_array_t* arg){
 		STRING_TO_OBJECT(nm),
 		sll_array_to_object(arg)
 	};
+	sll_gc_add_root(dt,2);
 	SLL_RELEASE(sll_execute_function(_audit_cb,dt,2,EXECUTE_FUNCTION_NO_AUDIT_TERMINATE));
+	sll_gc_remove_root(dt);
 	SLL_RELEASE(dt[0]);
 	SLL_RELEASE(dt[1]);
 }

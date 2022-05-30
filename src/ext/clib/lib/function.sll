@@ -21,11 +21,25 @@
 
 (= clib_function_module_type (&:
 	(~ type_type) clib_function_type
+	(~ func_type) call
+))
+
+
+
+(= call (,,, func @@args@@
+	(? (! func) (@@ nil))
+	(= func (:: func clib_function_type))
+	(-> (= i 0) (< i ($ func$arguments))
+		(= (: func$arguments i) (:: (: func$arguments i) clib_types$clib_type))
+		(++ i)
+	)
+	(@@ nil)
 ))
 
 
 
 (= clib_function (. clib_function_module_type
 	clib_function_type
+	call
 ))
 (## clib_function)
