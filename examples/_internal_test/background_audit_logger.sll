@@ -9,25 +9,17 @@
 
 
 (= logger_file (<- file$open "build/audit_log.txt" "w"))
-(= nm_l (:: audit$BUILTIN_EVENTS map_key_type))
 (= max_len 0)
-(-> (= i 0) (< i ($ nm_l))
-	(= len ($ (: nm_l i)))
-	(? (> len max_len)
-		(= max_len len)
-	)
-	(++ i)
-)
-(= max_len (+ max_len 2))
 
 
 
 (<- audit$register (,,, nm args
+	(? (> ($ nm) max_len) (= max_len ($ nm)))
 	(<- file$write logger_file (+
 		(<- string$pad_left (+
 			nm
 			':'
-		) max_len)
+		) (+ max_len 2))
 		(<- string$str args)
 		'\n'
 	))

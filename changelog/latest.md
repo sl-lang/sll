@@ -3,6 +3,7 @@
 ## Added
 
 - C interface library: `clib` ([#286])
+- Implemented `audit$register_event`
 - Implemented `SLL_ERROR_STRING`, `sll_error_from_string_pointer`, `sll_error_get_string_pointer` and `error$ERROR_STRING`
 - Tests ([#285])
 
@@ -10,6 +11,7 @@
 
 - Current dynamic library handle can be obtained by calling `sll_platform_load_library` with a `NULL` file path argument
 - Fixed CLI output when supplied a directory
+- Renamed `audit$BUILTIN_EVENTS` to `audit$EVENT_ARGUMENTS`
 - Thread, lock, barrier and semaphore creation functions now return error objects
 
 ## Removed

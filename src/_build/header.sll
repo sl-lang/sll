@@ -377,6 +377,7 @@ static const sll_char_t ` name `_END[]={
 				(= str (+ str (<- _format_type arg$type arg$name)))
 				(++ j)
 			)
+			(? (& symbol$flags documentation$FLAG_VAR_ARG) (= str (+ str ",...")))
 		} {
 			(= str (+ str "void"))
 		})

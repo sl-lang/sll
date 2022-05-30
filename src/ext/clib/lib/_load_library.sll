@@ -1,4 +1,5 @@
 (---
+	"audit.sll"
 	"path.sll"
 	"string.sll"
 	"sys.sll"
@@ -16,3 +17,7 @@
 	(:> "Error while loading library '" library_file_path "':\n" err '\n')
 	(<- thread$exit 1)
 })
+
+(<- audit$register_event "clib.library.load" "path" "handle")
+(<- audit$register_event "clib.library.lookup" "handle" "name" "address")
+(<- audit$register_event "clib.library.unlookup" "handle")

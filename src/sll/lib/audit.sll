@@ -6,15 +6,16 @@
 
 
 (= audit_module_type (&:
-	(~ map_type) BUILTIN_EVENTS
+	(~ map_type) EVENT_ARGUMENTS
 	(~ func_type) audit
 	(~ func_type) register
+	(~ func_type) register_event
 	(~ func_type) unregister
 ))
 
 
 
-(= BUILTIN_EVENTS <
+(= EVENT_ARGUMENTS <
 	"sll.cli.start" ["arguments"]
 	"sll.error.backtrace" ["thread"]
 	"sll.error.create" ["type" "data" "backtrace"]
@@ -50,7 +51,7 @@
 
 
 (= _call_user_cb (,,, name raw
-	(= keys (: BUILTIN_EVENTS name))
+	(= keys (: EVENT_ARGUMENTS name))
 	(= data ({> (= i 0) (< i ($ keys))
 		(= k (: keys i))
 		(= v (: raw i))
@@ -69,6 +70,16 @@
 	(<- array$push _cb_list (:: fn func_type))
 ))
 
+(= register_event (,,, name @@args@@
+	(? (|: EVENT_ARGUMENTS name) (@@ false))
+	(= (: EVENT_ARGUMENTS name) ([> (= i 0) (< i ($ @@args@@))
+		(= arg (: @@args@@ i))
+		(++ i)
+		(:: arg string_type)
+	))
+	(@@ true)
+))
+
 (= unregister (,,, fn
 	(<- array$remove _cb_list (:: fn func_type))
 ))
@@ -80,9 +91,10 @@
 
 
 (= audit (. audit_module_type
-	BUILTIN_EVENTS
+	EVENT_ARGUMENTS
 	audit
 	register
+	register_event
 	unregister
 ))
 (## audit)
