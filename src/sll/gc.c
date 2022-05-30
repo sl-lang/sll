@@ -81,7 +81,6 @@ __SLL_EXTERNAL void sll__gc_error(sll_object_t* object){
 
 __SLL_EXTERNAL void sll__release_object_internal(sll_object_t* object){
 	SLL_ASSERT(!object->rc);
-	SLL_ASSERT(!object->_ptr);
 	if (object->_flags&GC_FLAG_HAS_WEAKREF){
 		object->rc++;
 		_weakref_delete(object);
