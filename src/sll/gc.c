@@ -119,6 +119,9 @@ __SLL_EXTERNAL void sll__release_object_internal(sll_object_t* object){
 		}
 		sll_deallocate(object->data.fields);
 	}
+	if (object->_ptr){
+		SLL_UNIMPLEMENTED();
+	}
 	object->_flags=0;
 	if (_gc_fast_object_pool.space){
 		_gc_fast_object_pool.data[_gc_fast_object_pool.write]=object;
@@ -281,7 +284,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_destroy_object(sll_object_t* ob
 	}
 	*((sll_object_type_t*)(&(object->type)))=SLL_OBJECT_TYPE_INT;
 	sll__release_object_internal(object);
-	 return 1;
+	return 1;
 }
 
 
