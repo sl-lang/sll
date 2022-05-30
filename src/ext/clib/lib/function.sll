@@ -1,6 +1,7 @@
 (---
 	"clib/_library.sll"
 	"clib/_load_library.sll"
+	"clib/types.sll"
 	"string.sll"
 	"types.sll"
 )
@@ -14,6 +15,8 @@
 	(~ string_type) name
 	(~ int_type) address
 	(~ clib_library_type) library
+	array_type arguments
+	clib_types$clib_type
 ))
 
 (= clib_function_module_type (&:

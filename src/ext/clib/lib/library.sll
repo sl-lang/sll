@@ -77,6 +77,8 @@
 		name
 		addr
 		lib
+		[]
+		clib_types$int
 	))
 	(= (: lib$symbols name) symbol)
 	(@@ symbol)
