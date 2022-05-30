@@ -81,6 +81,7 @@ __SLL_EXTERNAL void sll__gc_error(sll_object_t* object){
 
 __SLL_EXTERNAL void sll__release_object_internal(sll_object_t* object){
 	SLL_ASSERT(!object->rc);
+	SLL_ASSERT(!object->_ptr);
 	if (object->_flags&GC_FLAG_HAS_WEAKREF){
 		object->rc++;
 		_weakref_delete(object);
@@ -266,6 +267,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_create_object(sll_object_typ
 		o->_flags=0;
 	}
 	o->rc=1;
+	o->_ptr=NULL;
 	*((sll_object_type_t*)(&(o->type)))=type;
 	return o;
 }
