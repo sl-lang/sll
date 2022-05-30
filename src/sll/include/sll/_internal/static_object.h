@@ -9,10 +9,10 @@
 
 
 
-#define STATIC_INT_OBJECT(v) static sll_object_t _int_##v##_static_data={1,SLL_OBJECT_TYPE_INT,0,{.int_=(v)}}
-#define STATIC_NEG_INT_OBJECT(v) static sll_object_t _int_neg_##v##_static_data={1,SLL_OBJECT_TYPE_INT,0,{.int_=-(v)}}
-#define STATIC_CHAR_OBJECT(v) static sll_object_t _char_##v##_static_data={1,SLL_OBJECT_TYPE_CHAR,0,{.char_=(sll_char_t)(v)}}
-#define STATIC_OBJECT(nm,t,f,v) static sll_object_t _##nm##_static_data={1,t,0,{.f=v}};__SLL_EXTERNAL sll_object_t* sll_static_##nm=&_##nm##_static_data
+#define STATIC_INT_OBJECT(v) static sll_object_t _int_##v##_static_data={1,SLL_OBJECT_TYPE_INT,0,NULL,{.int_=(v)}}
+#define STATIC_NEG_INT_OBJECT(v) static sll_object_t _int_neg_##v##_static_data={1,SLL_OBJECT_TYPE_INT,0,NULL,{.int_=-(v)}}
+#define STATIC_CHAR_OBJECT(v) static sll_object_t _char_##v##_static_data={1,SLL_OBJECT_TYPE_CHAR,0,NULL,{.char_=(sll_char_t)(v)}}
+#define STATIC_OBJECT(nm,t,f,v) static sll_object_t _##nm##_static_data={1,t,0,NULL,{.f=v}};__SLL_EXTERNAL sll_object_t* sll_static_##nm=&_##nm##_static_data
 
 
 
