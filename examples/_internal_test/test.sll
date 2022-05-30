@@ -654,3 +654,5 @@ abc` '\n')
 (:> libc '\n')
 (= printf (<- clib_library$lookup_symbol libc "printf"))
 (:> printf '\n')
+
+(:> (<- clib_library$get_loaded_libraries) '\n')

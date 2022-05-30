@@ -16,6 +16,7 @@
 (= clib_library_module_type (&:
 	(~ type_type) clib_library_type
 	(~ clib_library_type) SLL_LIBRARY
+	(~ func_type) get_loaded_libraries
 	(~ func_type) load
 	(~ func_type) lookup_symbol
 	(~ func_type) unload
@@ -32,6 +33,16 @@
 (= (: _lib_map sys$LIBRARY) (<- weakref$ref SLL_LIBRARY))
 
 
+
+(= get_loaded_libraries (,,,
+	(= data (:: _lib_map map_value_type))
+	(@@ ([> (= i 0) (< i ($ data))
+		(= lib (<- weakref$get (: data i)))
+		(++ i)
+		(? (=== lib weakref$WEAKREF_NO_OBJECT) (<<<))
+		lib
+	))
+))
 
 (= load (,,, file_path
 	(= lib (<- weakref$get (: _lib_map file_path)))
@@ -88,6 +99,7 @@
 (= clib_library (. clib_library_module_type
 	clib_library_type
 	SLL_LIBRARY
+	get_loaded_libraries
 	load
 	lookup_symbol
 	unload
