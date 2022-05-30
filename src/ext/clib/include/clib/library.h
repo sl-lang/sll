@@ -17,4 +17,8 @@ __CLIB_API_CALL void* clib_api_lookup_symbol(sll_library_handle_t lib,const sll_
 
 
 
+__CLIB_API_CALL sll_bool_t clib_api_unload_library(sll_library_handle_t lib);
+
+
+
 #endif

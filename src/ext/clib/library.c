@@ -21,3 +21,9 @@ __CLIB_API_CALL sll_error_t clib_api_load_library(const sll_string_t* path,sll_l
 __CLIB_API_CALL void* clib_api_lookup_symbol(sll_library_handle_t lib,const sll_string_t* name){
 	return sll_platform_lookup_symbol(lib,name->data);
 }
+
+
+
+__CLIB_API_CALL sll_bool_t clib_api_unload_library(sll_library_handle_t lib){
+	return sll_platform_unload_library(lib)==SLL_NO_ERROR;
+}
