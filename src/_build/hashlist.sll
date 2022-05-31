@@ -130,7 +130,8 @@
 	(-> (= i 0) (< i ($ files))
 		(= file_path (: files i))
 		(++ i)
-		(? (! (|: config$HASHLIST_FILE_EXTENSIONS (>> file_path (<- string$index_reverse file_path '.')))) (<<<))
+		(= ext (>> file_path (<- string$index_reverse file_path '.')))
+		(? (! (|: config$HASHLIST_FILE_EXTENSIONS ext)) (<<<))
 		(= new_hash (<- util$hash_file file_path))
 		(= file_path (<- util$get_output_file_path file_path))
 		(<- array$push current_file_list file_path)
@@ -144,7 +145,7 @@
 		})
 		(? (||
 			(!== state$hash new_hash)
-			(! (<- path$exists file_path))
+			(&& (!== ext ".c") (! (<- path$exists file_path)))
 		) (= state$state STATE_UPDATE))
 		(= state$hash new_hash)
 	)
