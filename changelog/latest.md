@@ -4,7 +4,7 @@
 
 - C interface library: `clib` ([#286])
 - Implemented `audit$register_event`
-- Implemented `sll_gc_add_root`, `sll_gc_add_roots`, `sll_gc_remove_root` and `sll_gc_remove_roots` ([#287])
+- Implemented `sll_gc_add_root`, `sll_gc_add_roots`, `sll_gc_collect`, `sll_gc_remove_root` and `sll_gc_remove_roots` ([#287])
 - Implemented `SLL_ERROR_STRING`, `sll_error_from_string_pointer`, `sll_error_get_string_pointer` and `error$ERROR_STRING`
 - Tests ([#285])
 

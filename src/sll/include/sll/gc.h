@@ -139,6 +139,17 @@ __SLL_EXTERNAL void sll_gc_add_roots(sll_object_t*const* pointer,sll_size_t leng
 
 /**
  * \flags func
+ * \name sll_gc_collect
+ * \group gc
+ * \desc Docs!
+ * \arg void
+ */
+__SLL_EXTERNAL void sll_gc_collect(void);
+
+
+
+/**
+ * \flags func
  * \name sll_gc_remove_root
  * \group gc
  * \desc Docs!

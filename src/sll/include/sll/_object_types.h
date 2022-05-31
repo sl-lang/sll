@@ -144,7 +144,7 @@ typedef union _SLL_OBJECT_DATA{
 	sll_map_t map;
 	sll_object_field_t* fields;
 	sll_object_ptr_t _next_object;
-    sll_array_length_t _pool_index;
+	sll_array_length_t _pool_index;
 } sll_object_data_t;
 
 
@@ -164,7 +164,7 @@ typedef struct _SLL_OBJECT{
 	sll_reference_count_t rc;
 	const sll_object_type_t type;
 	__SLL_U32 _flags;
-    __SLL_U64 _data;
+	__SLL_U64 _data;
 	sll_object_data_t data;
 } sll_object_t;
 

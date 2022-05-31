@@ -123,7 +123,7 @@ __SLL_EXTERNAL void sll__release_object_internal(sll_object_t* object){
 		}
 		sll_deallocate(object->data.fields);
 	}
-	if (object->_data){
+	if (GC_GET_PREV_OBJECT(object)||GC_GET_NEXT_OBJECT(object)){
 		SLL_UNIMPLEMENTED();
 	}
 	object->_flags=0;
@@ -305,6 +305,12 @@ __SLL_EXTERNAL void sll_gc_add_root(sll_object_t* object){
 
 
 __SLL_EXTERNAL void sll_gc_add_roots(sll_object_t*const* pointer,sll_size_t length){
+}
+
+
+
+__SLL_EXTERNAL void sll_gc_collect(void){
+	SLL_UNIMPLEMENTED();
 }
 
 
