@@ -42,6 +42,36 @@ static sll_time_t _gc_garbage_collector_time=GC_GARBAGE_COLLECTION_INTERVAL;
 
 
 
+static void _mark_objects(sll_object_t* object){
+	SLL_ASSERT(object->rc);
+	if (GC_GET_SIGNATURE(object)==_gc_root_data.signature){
+		return;
+	}
+	GC_SET_SIGNATURE(object);
+	if (object->type==SLL_OBJECT_TYPE_ARRAY){
+		for (sll_array_length_t i=0;i<object->data.array.length;i++){
+			_mark_objects(object->data.array.data[i]);
+		}
+	}
+	else if (object->type==SLL_OBJECT_TYPE_MAP){
+		for (sll_map_length_t i=0;i<(object->data.map.length<<1);i++){
+			_mark_objects(object->data.map.data[i]);
+		}
+	}
+	else if (object->type>SLL_MAX_OBJECT_TYPE&&object->type<SLL_OBJECT_TYPE_OBJECT&&sll_current_runtime_data&&object->type<=sll_current_runtime_data->type_table->length+SLL_MAX_OBJECT_TYPE){
+		const sll_object_type_data_t* dt=*(sll_current_runtime_data->type_table->data+object->type-SLL_MAX_OBJECT_TYPE-1);
+		sll_object_field_t* p=object->data.fields;
+		for (sll_arg_count_t i=0;i<dt->field_count;i++){
+			if (dt->fields[i].type>SLL_OBJECT_TYPE_CHAR){
+				_mark_objects(p->any);
+			}
+			p++;
+		}
+	}
+}
+
+
+
 void _gc_release_data(void){
 	sll_gc_collect();
 	SLL_ASSERT(!_gc_root_data.single);
@@ -315,6 +345,9 @@ __SLL_EXTERNAL void sll_gc_add_root(sll_object_t* object){
 
 
 __SLL_EXTERNAL void sll_gc_add_roots(sll_object_t*const* pointer,sll_size_t length){
+	if (!length){
+		return;
+	}
 	SLL_CRITICAL(!(length>>GC_ROOTS_LENGTH_SHIFT));
 	_gc_root_data.multiple=sll_reallocate(_gc_root_data.multiple,(_gc_root_data.multiple_length+1)*sizeof(__SLL_U64));
 	*(_gc_root_data.multiple+_gc_root_data.multiple_length)=GC_ENCODE_ROOT(pointer,length);
@@ -328,7 +361,17 @@ __SLL_EXTERNAL void sll_gc_collect(void){
 	_gc_root_data.signature=!_gc_root_data.signature;
 	sll_object_t* object=_gc_root_data.single;
 	while (object){
+		_mark_objects(object);
 		object=GC_GET_NEXT_OBJECT(object);
+	}
+	for (sll_size_t i=0;i<_gc_root_data.multiple_length;i++){
+		sll_object_t*const* pointer=GC_GET_ROOT(*(_gc_root_data.multiple+i));
+		sll_size_t length=GC_GET_LENGTH(*(_gc_root_data.multiple+i));
+		while (length&&*pointer&&(*pointer)->rc){
+			_mark_objects(*pointer);
+			length--;
+			pointer++;
+		}
 	}
 }
 

@@ -213,13 +213,13 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_thread_delete(sll_thread_index_
 		SLL_RELEASE(*(thr->tls+i));
 	}
 	SLL_ASSERT(!thr->stack_index);
+	sll_gc_remove_roots(thr->stack);
+	sll_gc_remove_roots(thr->tls);
 	if (_scheduler_allocator_cache_pool_len<THREAD_ALLOCATOR_CACHE_POOL_SIZE){
 		_scheduler_allocator_cache_pool[_scheduler_allocator_cache_pool_len]=thr;
 		_scheduler_allocator_cache_pool_len++;
 	}
 	else{
-		sll_gc_remove_roots(thr->stack);
-		sll_gc_remove_roots(thr->tls);
 		SLL_CRITICAL_ERROR(sll_platform_free_page(thr,THREAD_SIZE));
 	}
 	SLL_CRITICAL(sll_platform_lock_release(_thread_lock));

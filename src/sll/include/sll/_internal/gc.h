@@ -62,7 +62,9 @@
 #define GC_ROOTS_LENGTH_SHIFT (64-GC_ROOTS_POINTER_SHIFT)
 #define GC_ENCODE_ROOT(data,length) ((length)|((ADDR(data)>>3)<<GC_ROOTS_LENGTH_SHIFT))
 #define GC_GET_ROOT(data) ((sll_object_t*const*)PTR(((data)>>GC_ROOTS_LENGTH_SHIFT)<<3))
+#define GC_GET_LENGTH(data) ((sll_size_t)((data)&((1<<GC_ROOTS_LENGTH_SHIFT)-1)))
 
+#define GC_GET_SIGNATURE(o) (!!((o)->_flags&0x20))
 #define GC_SET_SIGNATURE(o) \
 	do{ \
 		(o)->_flags=((o)->_flags&0xffffffdf)|(_gc_root_data.signature<<5); \
