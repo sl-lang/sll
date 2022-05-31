@@ -41,6 +41,7 @@ void _thread_deinit(void){
 		}
 		sll_gc_remove_roots(thr->stack);
 		sll_gc_remove_roots(thr->tls);
+		sll_gc_remove_roots(&(thr->return_value));
 		SLL_CRITICAL_ERROR(sll_platform_free_page(thr,THREAD_SIZE));
 	}
 	while (_scheduler_allocator_cache_pool_len){
@@ -103,6 +104,7 @@ sll_thread_index_t _thread_new(void){
 	n->stack_index=0;
 	n->wait=SLL_UNKNOWN_THREAD_INDEX;
 	n->return_value=NULL;
+	sll_gc_add_roots(&(n->return_value),1);
 	n->call_stack.data=PTR(ADDR(ptr)+sizeof(thread_data_t));
 	n->call_stack.length=0;
 	n->sandbox=(_scheduler_current_thread_index==SLL_UNKNOWN_THREAD_INDEX?_sandbox_flags:_scheduler_current_thread->sandbox);
@@ -215,6 +217,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_thread_delete(sll_thread_index_
 	SLL_ASSERT(!thr->stack_index);
 	sll_gc_remove_roots(thr->stack);
 	sll_gc_remove_roots(thr->tls);
+	sll_gc_remove_roots(&(thr->return_value));
 	if (_scheduler_allocator_cache_pool_len<THREAD_ALLOCATOR_CACHE_POOL_SIZE){
 		_scheduler_allocator_cache_pool[_scheduler_allocator_cache_pool_len]=thr;
 		_scheduler_allocator_cache_pool_len++;

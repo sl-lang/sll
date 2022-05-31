@@ -117,7 +117,7 @@ void _gc_release_data(void){
 
 
 __SLL_EXTERNAL void sll__gc_error(sll_object_t* object){
-	SLL_CRITICAL_ERROR(object->rc);
+	SLL_CRITICAL(object->rc);
 }
 
 
@@ -434,20 +434,24 @@ __SLL_EXTERNAL void sll_gc_remove_root(sll_object_t* object){
 
 
 __SLL_EXTERNAL void sll_gc_remove_roots(sll_object_t*const* pointer){
-	sll_size_t i=0;
-	while (i<_gc_root_data.multiple_length){
-		if (GC_GET_ROOT(*(_gc_root_data.multiple+i))==pointer){
-			i++;
-			while (i<_gc_root_data.multiple_length){
-				*(_gc_root_data.multiple+i-1)=*(_gc_root_data.multiple+i);
-				i++;
-			}
-			_gc_root_data.multiple_length=i-1;
-			_gc_root_data.multiple=sll_reallocate(_gc_root_data.multiple,_gc_root_data.multiple_length*sizeof(__SLL_U64));
-			return;
+	if (!_gc_root_data.multiple_length){
+		return;
+	}
+	sll_size_t i=_gc_root_data.multiple_length;
+	do{
+		i--;
+		if (GC_GET_ROOT(*(_gc_root_data.multiple+i))!=pointer){
+			continue;
 		}
 		i++;
-	}
+		while (i<_gc_root_data.multiple_length){
+			*(_gc_root_data.multiple+i-1)=*(_gc_root_data.multiple+i);
+			i++;
+		}
+		_gc_root_data.multiple_length=i-1;
+		_gc_root_data.multiple=sll_reallocate(_gc_root_data.multiple,_gc_root_data.multiple_length*sizeof(__SLL_U64));
+		return;
+	} while (i);
 }
 
 
