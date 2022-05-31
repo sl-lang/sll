@@ -145,7 +145,7 @@
 		})
 		(? (||
 			(!== state$hash new_hash)
-			(&& (!== ext ".c") (! (<- path$exists file_path)))
+			(&& (!== ext ".h") (! (<- path$exists file_path)))
 		) (= state$state STATE_UPDATE))
 		(= state$hash new_hash)
 	)
