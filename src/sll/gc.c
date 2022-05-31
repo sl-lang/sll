@@ -39,15 +39,17 @@ static gc_root_data_t _gc_root_data={
 	0
 };
 static sll_time_t _gc_garbage_collector_time=GC_GARBAGE_COLLECTION_INTERVAL;
+static sll_bool_t _gc_garbage_collector_enable=1;
 
 
 
 static void _mark_objects(sll_object_t* object){
 	SLL_ASSERT(object->rc);
-	if (GC_GET_SIGNATURE(object)==_gc_root_data.signature){
+	if ((object->_flags&GC_FLAG_STATIC)||GC_GET_SIGNATURE(object)==_gc_root_data.signature){
 		return;
 	}
 	GC_SET_SIGNATURE(object);
+	GC_MEMORY_PAGE_HEADER(object)->garbage_cnt--;
 	if (object->type==SLL_OBJECT_TYPE_ARRAY){
 		for (sll_array_length_t i=0;i<object->data.array.length;i++){
 			_mark_objects(object->data.array.data[i]);
@@ -73,6 +75,7 @@ static void _mark_objects(sll_object_t* object){
 
 
 void _gc_release_data(void){
+	_gc_garbage_collector_enable=1;
 	sll_gc_collect();
 	SLL_ASSERT(!_gc_root_data.single);
 	while (_gc_fast_object_pool.space!=GC_FAST_OBJECT_POOL_SIZE){
@@ -83,8 +86,8 @@ void _gc_release_data(void){
 	SLL_ASSERT(_gc_fast_object_pool.read==_gc_fast_object_pool.write);
 	sll_bool_t err=0;
 	while (_gc_page_ptr){
-		sll_object_t* c=(sll_object_t*)(ADDR(_gc_page_ptr)+sizeof(gc_page_header_t));
 		if (_gc_page_ptr->cnt){
+			sll_object_t* c=(sll_object_t*)(ADDR(_gc_page_ptr)+sizeof(gc_page_header_t));
 			void* e=PTR(ADDR(_gc_page_ptr)+sizeof(gc_page_header_t)+(GC_MEMORY_PAGE_SIZE-sizeof(gc_page_header_t))/sizeof(sll_object_t)*sizeof(sll_object_t));
 			while (PTR(c)<e){
 				if (c->rc){
@@ -129,6 +132,8 @@ __SLL_EXTERNAL void sll__release_object_internal(sll_object_t* object){
 			return;
 		}
 	}
+	sll_bool_t gc_state=_gc_garbage_collector_enable;
+	_gc_garbage_collector_enable=0;
 	if (object->type==SLL_OBJECT_TYPE_STRING){
 		sll_free_string(&(object->data.string));
 	}
@@ -142,12 +147,15 @@ __SLL_EXTERNAL void sll__release_object_internal(sll_object_t* object){
 		if (sll_current_runtime_data&&object->type<=sll_current_runtime_data->type_table->length+SLL_MAX_OBJECT_TYPE){
 			const sll_object_type_data_t* dt=*(sll_current_runtime_data->type_table->data+object->type-SLL_MAX_OBJECT_TYPE-1);
 			if (_scheduler_current_thread_index!=SLL_UNKNOWN_THREAD_INDEX&&dt->functions[SLL_OBJECT_FUNC_DELETE]){
+				_gc_garbage_collector_enable=1;
 				object->rc++;
 				SLL_RELEASE(sll_execute_function(dt->functions[SLL_OBJECT_FUNC_DELETE],&object,1,0));
 				object->rc--;
 				if (object->rc){
+					_gc_garbage_collector_enable=gc_state;
 					return;
 				}
+				_gc_garbage_collector_enable=0;
 			}
 			sll_object_field_t* p=object->data.fields;
 			for (sll_arg_count_t i=0;i<dt->field_count;i++){
@@ -167,6 +175,7 @@ __SLL_EXTERNAL void sll__release_object_internal(sll_object_t* object){
 		_gc_fast_object_pool.data[_gc_fast_object_pool.write]=object;
 		_gc_fast_object_pool.write=(_gc_fast_object_pool.write+1)&(GC_FAST_OBJECT_POOL_SIZE-1);
 		_gc_fast_object_pool.space--;
+		_gc_garbage_collector_enable=gc_state;
 		return;
 	}
 	gc_page_header_t* pg=GC_MEMORY_PAGE_HEADER(object);
@@ -245,10 +254,13 @@ __SLL_EXTERNAL void sll__release_object_internal(sll_object_t* object){
 		_gc_object_pool_len=i;
 	}
 _check_garbage_collect:
-	if (!_gc_garbage_collector_time){
-		sll_gc_collect();
+	if (gc_state){
+		if (!_gc_garbage_collector_time){
+			sll_gc_collect();
+		}
+		_gc_garbage_collector_time--;
 	}
-	_gc_garbage_collector_time--;
+	_gc_garbage_collector_enable=gc_state;
 }
 
 
@@ -358,6 +370,14 @@ __SLL_EXTERNAL void sll_gc_add_roots(sll_object_t*const* pointer,sll_size_t leng
 
 __SLL_EXTERNAL void sll_gc_collect(void){
 	_gc_garbage_collector_time=GC_GARBAGE_COLLECTION_INTERVAL;
+	gc_page_header_t* page=_gc_page_ptr;
+	if (!page){
+		return;
+	}
+	do{
+		page->garbage_cnt=page->cnt>>1;
+		page=page->next;
+	} while (page);
 	_gc_root_data.signature=!_gc_root_data.signature;
 	sll_object_t* object=_gc_root_data.single;
 	while (object){
@@ -373,6 +393,25 @@ __SLL_EXTERNAL void sll_gc_collect(void){
 			pointer++;
 		}
 	}
+	page=_gc_page_ptr;
+	do{
+		sll_size_t cnt=page->garbage_cnt;
+		if (cnt){
+			sll_object_t* c=(sll_object_t*)(ADDR(page)+sizeof(gc_page_header_t));
+			void* e=PTR(ADDR(page)+sizeof(gc_page_header_t)+(GC_MEMORY_PAGE_SIZE-sizeof(gc_page_header_t))/sizeof(sll_object_t)*sizeof(sll_object_t));
+			while (PTR(c)<e){
+				if (c->rc&&GC_GET_SIGNATURE(c)!=_gc_root_data.signature){
+					cnt--;
+					SLL_RELEASE(c);
+					if (!cnt){
+						break;
+					}
+				}
+				c++;
+			}
+		}
+		page=page->next;
+	} while (page);
 }
 
 

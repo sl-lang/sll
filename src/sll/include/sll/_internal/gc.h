@@ -12,6 +12,7 @@
 
 #define GC_FLAG_HAS_WEAKREF 1
 #define GC_FLAG_IN_FAST_POOL 2
+#define GC_FLAG_STATIC 4
 
 #define GC_MEMORY_PAGE_SIZE_SHIFT 15
 #define GC_MEMORY_PAGE_SIZE (1ull<<GC_MEMORY_PAGE_SIZE_SHIFT)
@@ -28,7 +29,7 @@
 	do{ \
 		gc_page_header_t* __pg=(pg); \
 		__pg->cnt+=2; \
-		if (__pg->cnt>=GC_PAGE_HEADER_DEALLOCATION_THRESHOLD){ \
+		if (__pg->cnt>=(GC_PAGE_HEADER_DEALLOCATION_THRESHOLD<<1)){ \
 			__pg->cnt|=1; \
 		} \
 	} while (0)

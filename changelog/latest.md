@@ -12,6 +12,7 @@
 
 - Current dynamic library handle can be obtained by calling `sll_platform_load_library` with a `NULL` file path argument
 - Fixed CLI output when supplied a directory
+- Fixed memory leaks caused by circular references ([#287])
 - Renamed `audit$BUILTIN_EVENTS` to `audit$EVENT_ARGUMENTS`
 - Thread, lock, barrier and semaphore creation functions now return error objects
 

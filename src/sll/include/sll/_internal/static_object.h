@@ -1,6 +1,7 @@
 #ifndef __SLL__INTERNAL_STATIC_OBJECT_H__
 #define __SLL__INTERNAL_STATIC_OBJECT_H__ 1
 #include <sll/_internal/common.h>
+#include <sll/_internal/gc.h>
 #include <sll/common.h>
 #include <sll/gc.h>
 #include <sll/object.h>
@@ -9,10 +10,10 @@
 
 
 
-#define STATIC_INT_OBJECT(v) static sll_object_t _int_##v##_static_data={1,SLL_OBJECT_TYPE_INT,0,0,{.int_=(v)}}
-#define STATIC_NEG_INT_OBJECT(v) static sll_object_t _int_neg_##v##_static_data={1,SLL_OBJECT_TYPE_INT,0,0,{.int_=-(v)}}
-#define STATIC_CHAR_OBJECT(v) static sll_object_t _char_##v##_static_data={1,SLL_OBJECT_TYPE_CHAR,0,0,{.char_=(sll_char_t)(v)}}
-#define STATIC_OBJECT(nm,t,f,v) static sll_object_t _##nm##_static_data={1,t,0,0,{.f=v}};__SLL_EXTERNAL sll_object_t* sll_static_##nm=&_##nm##_static_data
+#define STATIC_INT_OBJECT(v) static sll_object_t _int_##v##_static_data={1,SLL_OBJECT_TYPE_INT,GC_FLAG_STATIC,0,{.int_=(v)}}
+#define STATIC_NEG_INT_OBJECT(v) static sll_object_t _int_neg_##v##_static_data={1,SLL_OBJECT_TYPE_INT,GC_FLAG_STATIC,0,{.int_=-(v)}}
+#define STATIC_CHAR_OBJECT(v) static sll_object_t _char_##v##_static_data={1,SLL_OBJECT_TYPE_CHAR,GC_FLAG_STATIC,0,{.char_=(sll_char_t)(v)}}
+#define STATIC_OBJECT(nm,t,f,v) static sll_object_t _##nm##_static_data={1,t,GC_FLAG_STATIC,0,{.f=v}};__SLL_EXTERNAL sll_object_t* sll_static_##nm=&_##nm##_static_data
 
 
 
