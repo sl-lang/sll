@@ -119,10 +119,21 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_destroy_object(sll_object_t* ob
  * \name sll_gc_add_root
  * \group gc
  * \desc Docs!
+ * \arg sll_object_t* object
+ */
+__SLL_EXTERNAL void sll_gc_add_root(sll_object_t* object);
+
+
+
+/**
+ * \flags func
+ * \name sll_gc_add_roots
+ * \group gc
+ * \desc Docs!
  * \arg sll_object_t*const* pointer
  * \arg sll_size_t length
  */
-__SLL_EXTERNAL void sll_gc_add_root(sll_object_t*const* pointer,sll_size_t length);
+__SLL_EXTERNAL void sll_gc_add_roots(sll_object_t*const* pointer,sll_size_t length);
 
 
 
@@ -131,9 +142,20 @@ __SLL_EXTERNAL void sll_gc_add_root(sll_object_t*const* pointer,sll_size_t lengt
  * \name sll_gc_remove_root
  * \group gc
  * \desc Docs!
+ * \arg sll_object_t* object
+ */
+__SLL_EXTERNAL void sll_gc_remove_root(sll_object_t* object);
+
+
+
+/**
+ * \flags func
+ * \name sll_gc_remove_roots
+ * \group gc
+ * \desc Docs!
  * \arg sll_object_t*const* pointer
  */
-__SLL_EXTERNAL void sll_gc_remove_root(sll_object_t*const* pointer);
+__SLL_EXTERNAL void sll_gc_remove_roots(sll_object_t*const* pointer);
 
 
 

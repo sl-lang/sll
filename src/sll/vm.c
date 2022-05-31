@@ -238,7 +238,7 @@ void _release_var_data(void){
 	sll_object_t** obj=_vm_var_data;
 	_vm_var_data=NULL;
 	if (sll_current_runtime_data->assembly_data->variable_count){
-		sll_gc_remove_root(obj);
+		sll_gc_remove_roots(obj);
 		for (sll_variable_index_t i=0;i<sll_current_runtime_data->assembly_data->variable_count;i++){
 			SLL_RELEASE(*(obj+i));
 		}
@@ -259,7 +259,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_code_t sll_execute_assembly(const s
 	for (sll_variable_index_t i=0;i<assembly_data->variable_count;i++){
 		*(_vm_var_data+i)=sll_static_int[0];
 	}
-	sll_gc_add_root(_vm_var_data,assembly_data->variable_count);
+	sll_gc_add_roots(_vm_var_data,assembly_data->variable_count);
 	sll_internal_function_table_t ift;
 	sll_clone_internal_function_table(vm_config->internal_function_table,&ift);
 	sll_object_type_table_t tt=SLL_INIT_OBJECT_TYPE_TABLE_STRUCT;

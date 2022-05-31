@@ -18,7 +18,7 @@ static void _cleanup_data(void){
 	if (!_weakref_no_object_ret){
 		return;
 	}
-	sll_gc_remove_root(&_weakref_no_object_ret);
+	sll_gc_remove_root(_weakref_no_object_ret);
 	SLL_RELEASE(_weakref_no_object_ret);
 	_weakref_no_object_ret=NULL;
 }
@@ -48,7 +48,7 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_weakref__init(sll_object_t* no_obj,sl
 	}
 	SLL_ACQUIRE(no_obj);
 	_weakref_no_object_ret=no_obj;
-	sll_gc_add_root(&_weakref_no_object_ret,1);
+	sll_gc_add_root(_weakref_no_object_ret);
 	_weakref_cb_func=fn;
 	sll_register_cleanup(_cleanup_data,SLL_CLEANUP_TYPE_VM);
 }
