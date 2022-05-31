@@ -142,7 +142,10 @@
 			))
 			(= (: _hash_map file_path) state)
 		})
-		(? (!== state$hash new_hash) (= state$state STATE_UPDATE))
+		(? (||
+			(!== state$hash new_hash)
+			(! (<- path$exists file_path))
+		) (= state$state STATE_UPDATE))
 		(= state$hash new_hash)
 	)
 	(<- _write_hash_list)
