@@ -250,10 +250,12 @@ void _release_var_data(void){
 	sll_object_t** obj=_vm_var_data;
 	_vm_var_data=NULL;
 	if (sll_current_runtime_data->assembly_data->variable_count){
-		for (sll_variable_index_t i=0;i<sll_current_runtime_data->assembly_data->variable_count;i++){
+		sll_variable_index_t i=sll_current_runtime_data->assembly_data->variable_count;
+		do{
+			i--;
 			SLL_RELEASE(*(obj+i));
 			*(obj+i)=NULL;
-		}
+		} while (i);
 		sll_gc_remove_roots(obj);
 		SLL_CRITICAL_ERROR(sll_platform_free_page(obj,SLL_ROUND_PAGE(sll_current_runtime_data->assembly_data->variable_count*sizeof(sll_object_t*))));
 	}
