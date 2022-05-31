@@ -63,10 +63,16 @@
 #define GC_ENCODE_ROOT(data,length) ((length)|((ADDR(data)>>3)<<GC_ROOTS_LENGTH_SHIFT))
 #define GC_GET_ROOT(data) ((sll_object_t*const*)PTR(((data)>>GC_ROOTS_LENGTH_SHIFT)<<3))
 
+#define GC_SET_SIGNATURE(o) \
+	do{ \
+		(o)->_flags=((o)->_flags&0xffffffdf)|(_gc_root_data.signature<<5); \
+	} while (0)
+
 
 
 typedef struct _GC_PAGE_HEADER{
 	sll_size_t cnt;
+	sll_size_t garbage_cnt;
 	struct _GC_PAGE_HEADER* prev;
 	struct _GC_PAGE_HEADER* next;
 } gc_page_header_t;
@@ -86,6 +92,7 @@ typedef struct _GC_ROOT_DATA{
 	sll_object_t* single;
 	__SLL_U64* multiple;
 	sll_size_t multiple_length;
+	sll_bool_t signature;
 } gc_root_data_t;
 
 

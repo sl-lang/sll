@@ -35,6 +35,7 @@ static gc_fast_object_pool_t _gc_fast_object_pool={
 static gc_root_data_t _gc_root_data={
 	NULL,
 	NULL,
+	0,
 	0
 };
 static sll_time_t _gc_garbage_collector_time=GC_GARBAGE_COLLECTION_INTERVAL;
@@ -281,8 +282,8 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_create_object(sll_object_typ
 		GC_PAGE_HEADER_INCREASE(GC_MEMORY_PAGE_HEADER(o));
 		o->_flags=0;
 	}
+	GC_SET_SIGNATURE(o);
 	o->rc=1;
-	o->_data=0;
 	*((sll_object_type_t*)(&(o->type)))=type;
 	return o;
 }
@@ -324,6 +325,11 @@ __SLL_EXTERNAL void sll_gc_add_roots(sll_object_t*const* pointer,sll_size_t leng
 
 __SLL_EXTERNAL void sll_gc_collect(void){
 	_gc_garbage_collector_time=GC_GARBAGE_COLLECTION_INTERVAL;
+	_gc_root_data.signature=!_gc_root_data.signature;
+	sll_object_t* object=_gc_root_data.single;
+	while (object){
+		object=GC_GET_NEXT_OBJECT(object);
+	}
 }
 
 
