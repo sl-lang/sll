@@ -56,7 +56,12 @@
 		(o)->_data=0; \
 	} while (0)
 
-#define GC_GARBAGE_COLLECTION_INTERVAL 4096
+#define GC_GARBAGE_COLLECTION_INTERVAL 256
+
+#define GC_ROOTS_POINTER_SHIFT 45
+#define GC_ROOTS_LENGTH_SHIFT (64-GC_ROOTS_POINTER_SHIFT)
+#define GC_ENCODE_ROOT(data,length) ((length)|((ADDR(data)>>3)<<GC_ROOTS_LENGTH_SHIFT))
+#define GC_GET_ROOT(data) ((sll_object_t*const*)PTR(((data)>>GC_ROOTS_LENGTH_SHIFT)<<3))
 
 
 
@@ -78,7 +83,9 @@ typedef struct _GC_FAST_OBJECT_POOL{
 
 
 typedef struct _GC_ROOT_DATA{
-	sll_object_t* single_root;
+	sll_object_t* single;
+	__SLL_U64* multiple;
+	sll_size_t multiple_length;
 } gc_root_data_t;
 
 

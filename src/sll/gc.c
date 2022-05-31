@@ -33,14 +33,17 @@ static gc_fast_object_pool_t _gc_fast_object_pool={
 	.space=GC_FAST_OBJECT_POOL_SIZE
 };
 static gc_root_data_t _gc_root_data={
-	NULL
+	NULL,
+	NULL,
+	0
 };
 static sll_time_t _gc_garbage_collector_time=GC_GARBAGE_COLLECTION_INTERVAL;
 
 
 
 void _gc_release_data(void){
-	SLL_ASSERT(!_gc_root_data.single_root);
+	sll_gc_collect();
+	SLL_ASSERT(!_gc_root_data.single);
 	while (_gc_fast_object_pool.space!=GC_FAST_OBJECT_POOL_SIZE){
 		GC_PAGE_HEADER_DECREASE(GC_MEMORY_PAGE_HEADER(_gc_fast_object_pool.data[_gc_fast_object_pool.read]));
 		_gc_fast_object_pool.read=(_gc_fast_object_pool.read+1)&(GC_FAST_OBJECT_POOL_SIZE-1);
@@ -301,16 +304,20 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_destroy_object(sll_object_t* ob
 
 __SLL_EXTERNAL void sll_gc_add_root(sll_object_t* object){
 	GC_SET_PREV_OBJECT(object,NULL);
-	GC_SET_NEXT_OBJECT(object,_gc_root_data.single_root);
-	if (_gc_root_data.single_root){
-		GC_SET_PREV_OBJECT(_gc_root_data.single_root,object);
+	GC_SET_NEXT_OBJECT(object,_gc_root_data.single);
+	if (_gc_root_data.single){
+		GC_SET_PREV_OBJECT(_gc_root_data.single,object);
 	}
-	_gc_root_data.single_root=object;
+	_gc_root_data.single=object;
 }
 
 
 
 __SLL_EXTERNAL void sll_gc_add_roots(sll_object_t*const* pointer,sll_size_t length){
+	SLL_CRITICAL(!(length>>GC_ROOTS_LENGTH_SHIFT));
+	_gc_root_data.multiple=sll_reallocate(_gc_root_data.multiple,(_gc_root_data.multiple_length+1)*sizeof(__SLL_U64));
+	*(_gc_root_data.multiple+_gc_root_data.multiple_length)=GC_ENCODE_ROOT(pointer,length);
+	_gc_root_data.multiple_length++;
 }
 
 
@@ -324,8 +331,8 @@ __SLL_EXTERNAL void sll_gc_collect(void){
 __SLL_EXTERNAL void sll_gc_remove_root(sll_object_t* object){
 	sll_object_t* prev=GC_GET_PREV_OBJECT(object);
 	sll_object_t* next=GC_GET_NEXT_OBJECT(object);
-	if (_gc_root_data.single_root==object){
-		_gc_root_data.single_root=(prev?prev:next);
+	if (_gc_root_data.single==object){
+		_gc_root_data.single=(prev?prev:next);
 	}
 	if (prev){
 		GC_SET_NEXT_OBJECT(prev,next);
@@ -339,6 +346,20 @@ __SLL_EXTERNAL void sll_gc_remove_root(sll_object_t* object){
 
 
 __SLL_EXTERNAL void sll_gc_remove_roots(sll_object_t*const* pointer){
+	sll_size_t i=0;
+	while (i<_gc_root_data.multiple_length){
+		if (GC_GET_ROOT(*(_gc_root_data.multiple+i))==pointer){
+			i++;
+			while (i<_gc_root_data.multiple_length){
+				*(_gc_root_data.multiple+i-1)=*(_gc_root_data.multiple+i);
+				i++;
+			}
+			_gc_root_data.multiple_length=i-1;
+			_gc_root_data.multiple=sll_reallocate(_gc_root_data.multiple,_gc_root_data.multiple_length*sizeof(__SLL_U64));
+			return;
+		}
+		i++;
+	}
 }
 
 
