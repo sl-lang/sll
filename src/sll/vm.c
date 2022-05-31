@@ -238,10 +238,11 @@ void _release_var_data(void){
 	sll_object_t** obj=_vm_var_data;
 	_vm_var_data=NULL;
 	if (sll_current_runtime_data->assembly_data->variable_count){
-		sll_gc_remove_roots(obj);
 		for (sll_variable_index_t i=0;i<sll_current_runtime_data->assembly_data->variable_count;i++){
 			SLL_RELEASE(*(obj+i));
+			*(obj+i)=NULL;
 		}
+		sll_gc_remove_roots(obj);
 		SLL_CRITICAL_ERROR(sll_platform_free_page(obj,SLL_ROUND_PAGE(sll_current_runtime_data->assembly_data->variable_count*sizeof(sll_object_t*))));
 	}
 }
@@ -526,8 +527,10 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_wait_thread(sll_thread_index
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_LOOKUP:
 				{
 					sll_object_t* n=sll_operator_cast(*(thr->stack+thr->stack_index-1),sll_static_int[SLL_OBJECT_TYPE_STRING]);
+					sll_gc_add_root(n);
 					SLL_RELEASE(*(thr->stack+thr->stack_index-1));
 					sll_function_index_t i=sll_lookup_internal_function(sll_current_runtime_data->internal_function_table,n->data.string.data);
+					sll_gc_remove_root(n);
 					SLL_RELEASE(n);
 					*(thr->stack+thr->stack_index-1)=(i==SLL_UNKNOWN_INTERNAL_FUNCTION_INDEX?SLL_ACQUIRE_STATIC_INT(0):sll_int_to_object(~((sll_integer_t)i)));
 					break;
