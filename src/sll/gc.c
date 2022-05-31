@@ -45,7 +45,7 @@ static sll_bool_t _gc_garbage_collector_enable=1;
 
 static void _mark_objects(sll_object_t* object){
 	SLL_ASSERT(object->rc);
-	if ((object->_flags&GC_FLAG_STATIC)||GC_GET_SIGNATURE(object)==_gc_root_data.signature){
+	if ((object->_flags&GC_FLAG_STATIC)||GC_CHECK_SIGNATURE(object)){
 		return;
 	}
 	GC_SET_SIGNATURE(object);
@@ -400,7 +400,7 @@ __SLL_EXTERNAL void sll_gc_collect(void){
 			sll_object_t* c=(sll_object_t*)(ADDR(page)+sizeof(gc_page_header_t));
 			void* e=PTR(ADDR(page)+sizeof(gc_page_header_t)+(GC_MEMORY_PAGE_SIZE-sizeof(gc_page_header_t))/sizeof(sll_object_t)*sizeof(sll_object_t));
 			while (PTR(c)<e){
-				if (c->rc&&GC_GET_SIGNATURE(c)!=_gc_root_data.signature){
+				if (c->rc&&!GC_CHECK_SIGNATURE(c)){
 					cnt--;
 					SLL_RELEASE(c);
 					if (!cnt){
