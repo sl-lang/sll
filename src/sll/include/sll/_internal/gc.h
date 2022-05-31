@@ -36,6 +36,25 @@
 		(pg)->cnt-=2; \
 	} while (0)
 
+#define GC_GET_PREV_OBJECT(o) ((sll_object_t*)PTR(((o)->_data&0x1fffffffffffull)<<3))
+#define GC_GET_NEXT_OBJECT(o) ((sll_object_t*)PTR((((o)->_flags>>6)|(((o)->_data>>45)<<26))<<3))
+#define GC_SET_PREV_OBJECT(o,prev) \
+	do{ \
+		SLL_ASSERT((ADDR(prev)&0xfffffffffff8ull)==ADDR(prev)); \
+		(o)->_data=((o)->_data&0xffffe00000000000ull)|(ADDR(prev)>>3); \
+	} while (0)
+#define GC_SET_NEXT_OBJECT(o,next) \
+	do{ \
+		SLL_ASSERT((ADDR(next)&0xfffffffffff8ull)==ADDR(next)); \
+		(o)->_flags=((o)->_flags&0x3f)|(ADDR(next)<<3); \
+		(o)->_data=((o)->_data&0x1fffffffffffull)|((ADDR(next)<<16)&0xffffe00000000000ull); \
+	} while (0)
+#define GC_CLEAR_OBJECTS(o) \
+	do{ \
+		(o)->_flags&=0x3f; \
+		(o)->_data=0; \
+	} while (0)
+
 
 
 typedef struct _GC_PAGE_HEADER{
@@ -52,6 +71,12 @@ typedef struct _GC_FAST_OBJECT_POOL{
 	__SLL_U8 write;
 	__SLL_U8 space;
 } gc_fast_object_pool_t;
+
+
+
+typedef struct _GC_ROOT_DATA{
+	sll_object_t* single_root;
+} gc_root_data_t;
 
 
 

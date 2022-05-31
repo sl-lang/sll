@@ -31,10 +31,14 @@ static gc_fast_object_pool_t _gc_fast_object_pool={
 	.write=0,
 	.space=GC_FAST_OBJECT_POOL_SIZE
 };
+static gc_root_data_t _gc_root_data={
+	NULL
+};
 
 
 
 void _gc_release_data(void){
+	SLL_ASSERT(!_gc_root_data.single_root);
 	while (_gc_fast_object_pool.space!=GC_FAST_OBJECT_POOL_SIZE){
 		GC_PAGE_HEADER_DECREASE(GC_MEMORY_PAGE_HEADER(_gc_fast_object_pool.data[_gc_fast_object_pool.read]));
 		_gc_fast_object_pool.read=(_gc_fast_object_pool.read+1)&(GC_FAST_OBJECT_POOL_SIZE-1);
@@ -119,7 +123,7 @@ __SLL_EXTERNAL void sll__release_object_internal(sll_object_t* object){
 		}
 		sll_deallocate(object->data.fields);
 	}
-	if (object->_ptr){
+	if (object->_data){
 		SLL_UNIMPLEMENTED();
 	}
 	object->_flags=0;
@@ -269,7 +273,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_create_object(sll_object_typ
 		o->_flags=0;
 	}
 	o->rc=1;
-	o->_ptr=NULL;
+	o->_data=0;
 	*((sll_object_type_t*)(&(o->type)))=type;
 	return o;
 }
@@ -290,6 +294,12 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_destroy_object(sll_object_t* ob
 
 
 __SLL_EXTERNAL void sll_gc_add_root(sll_object_t* object){
+	GC_SET_PREV_OBJECT(object,NULL);
+	GC_SET_NEXT_OBJECT(object,_gc_root_data.single_root);
+	if (_gc_root_data.single_root){
+		GC_SET_PREV_OBJECT(_gc_root_data.single_root,object);
+	}
+	_gc_root_data.single_root=object;
 }
 
 
@@ -300,6 +310,18 @@ __SLL_EXTERNAL void sll_gc_add_roots(sll_object_t*const* pointer,sll_size_t leng
 
 
 __SLL_EXTERNAL void sll_gc_remove_root(sll_object_t* object){
+	sll_object_t* prev=GC_GET_PREV_OBJECT(object);
+	sll_object_t* next=GC_GET_NEXT_OBJECT(object);
+	if (_gc_root_data.single_root==object){
+		_gc_root_data.single_root=(prev?prev:next);
+	}
+	if (prev){
+		GC_SET_NEXT_OBJECT(prev,next);
+	}
+	if (next){
+		GC_SET_PREV_OBJECT(next,prev);
+	}
+	GC_CLEAR_OBJECTS(object);
 }
 
 

@@ -29,14 +29,14 @@ static sll_object_t* _json_false=NULL;
 
 
 static void _release_data(void){
-	SLL_RELEASE(_json_null);
 	sll_gc_remove_root(_json_null);
+	SLL_RELEASE(_json_null);
 	_json_null=NULL;
-	SLL_RELEASE(_json_true);
 	sll_gc_remove_root(_json_true);
+	SLL_RELEASE(_json_true);
 	_json_true=NULL;
-	SLL_RELEASE(_json_false);
 	sll_gc_remove_root(_json_false);
+	SLL_RELEASE(_json_false);
 	_json_false=NULL;
 }
 
@@ -466,9 +466,6 @@ static void _stringify_object(sll_object_t* o,sll_string_t* s){
 __SLL_EXTERNAL __SLL_API_CALL void sll_api_json__init(sll_object_t* null_obj,sll_object_t* true_obj,sll_object_t* false_obj){
 	if (!_json_null){
 		sll_register_cleanup(_release_data,SLL_CLEANUP_TYPE_VM);
-		sll_gc_add_root(_json_null);
-		sll_gc_add_root(_json_true);
-		sll_gc_add_root(_json_false);
 	}
 	else{
 		_release_data();
@@ -479,6 +476,9 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_json__init(sll_object_t* null_obj,sll
 	_json_null=null_obj;
 	_json_true=true_obj;
 	_json_false=false_obj;
+	sll_gc_add_root(_json_null);
+	sll_gc_add_root(_json_true);
+	sll_gc_add_root(_json_false);
 }
 
 
