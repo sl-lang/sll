@@ -1,6 +1,7 @@
 #ifndef __SLL__INTERNAL_GC_H__
 #define __SLL__INTERNAL_GC_H__ 1
 #include <sll/_internal/common.h>
+#include <sll/_size_types.h>
 #include <sll/types.h>
 
 
@@ -46,7 +47,7 @@
 #define GC_SET_NEXT_OBJECT(o,next) \
 	do{ \
 		SLL_ASSERT((ADDR(next)&0xfffffffffff8ull)==ADDR(next)); \
-		(o)->_flags=((o)->_flags&0x3f)|(ADDR(next)<<3); \
+		(o)->_flags=((o)->_flags&0x3f)|((__SLL_U32)(ADDR(next)<<3)); \
 		(o)->_data=((o)->_data&0x1fffffffffffull)|((ADDR(next)<<16)&0xffffe00000000000ull); \
 	} while (0)
 #define GC_CLEAR_OBJECTS(o) \
@@ -54,6 +55,8 @@
 		(o)->_flags&=0x3f; \
 		(o)->_data=0; \
 	} while (0)
+
+#define GC_GARBAGE_COLLECTION_INTERVAL 4096
 
 
 

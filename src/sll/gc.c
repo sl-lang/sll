@@ -4,6 +4,7 @@
 #include <sll/_internal/scheduler.h>
 #include <sll/_internal/weakref.h>
 #include <sll/api/string.h>
+#include <sll/api/time.h>
 #include <sll/array.h>
 #include <sll/common.h>
 #include <sll/data.h>
@@ -34,6 +35,7 @@ static gc_fast_object_pool_t _gc_fast_object_pool={
 static gc_root_data_t _gc_root_data={
 	NULL
 };
+static sll_time_t _gc_garbage_collector_time=GC_GARBAGE_COLLECTION_INTERVAL;
 
 
 
@@ -141,7 +143,7 @@ __SLL_EXTERNAL void sll__release_object_internal(sll_object_t* object){
 			object->data._pool_index=_gc_object_pool_len;
 			_gc_object_pool[_gc_object_pool_len]=object;
 			_gc_object_pool_len++;
-			return;
+			goto _check_garbage_collect;
 		}
 		object->data._next_object.next=_gc_next_object;
 		object->data._next_object.prev=NULL;
@@ -149,7 +151,7 @@ __SLL_EXTERNAL void sll__release_object_internal(sll_object_t* object){
 			_gc_next_object->data._next_object.prev=object;
 		}
 		_gc_next_object=object;
-		return;
+		goto _check_garbage_collect;
 	}
 	object->data._next_object.next=NULL;
 	object->data._next_object.prev=NULL;
@@ -197,18 +199,22 @@ __SLL_EXTERNAL void sll__release_object_internal(sll_object_t* object){
 		}
 		SLL_CRITICAL_ERROR(sll_platform_free_page(pg,GC_MEMORY_PAGE_SIZE));
 	}
-	if (!pool_shift){
-		return;
-	}
-	sll_array_length_t i=0;
-	for (sll_array_length_t j=0;j<_gc_object_pool_len;j++){
-		if (_gc_object_pool[j]){
-			_gc_object_pool[i]=_gc_object_pool[j];
-			_gc_object_pool[i]->data._pool_index=i;
-			i++;
+	if (pool_shift){
+		sll_array_length_t i=0;
+		for (sll_array_length_t j=0;j<_gc_object_pool_len;j++){
+			if (_gc_object_pool[j]){
+				_gc_object_pool[i]=_gc_object_pool[j];
+				_gc_object_pool[i]->data._pool_index=i;
+				i++;
+			}
 		}
+		_gc_object_pool_len=i;
 	}
-	_gc_object_pool_len=i;
+_check_garbage_collect:
+	if (!_gc_garbage_collector_time){
+		sll_gc_collect();
+	}
+	_gc_garbage_collector_time--;
 }
 
 
@@ -310,7 +316,7 @@ __SLL_EXTERNAL void sll_gc_add_roots(sll_object_t*const* pointer,sll_size_t leng
 
 
 __SLL_EXTERNAL void sll_gc_collect(void){
-	SLL_UNIMPLEMENTED();
+	_gc_garbage_collector_time=GC_GARBAGE_COLLECTION_INTERVAL;
 }
 
 
