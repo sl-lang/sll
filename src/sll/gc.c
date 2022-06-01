@@ -75,7 +75,7 @@ static void _mark_objects(sll_object_t* object){
 
 
 void _gc_release_data(void){
-	_gc_garbage_collector_enable=1;
+	SLL_ASSERT(_gc_garbage_collector_enable);
 	sll_gc_collect();
 	SLL_ASSERT(!_gc_root_data.single);
 	while (_gc_fast_object_pool.space!=GC_FAST_OBJECT_POOL_SIZE){
