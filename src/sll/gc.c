@@ -48,7 +48,7 @@ static void _mark_objects(sll_object_t* object){
 	if ((object->_flags&GC_FLAG_STATIC)||GC_MARKED(object)){
 		return;
 	}
-	GC_SET_SIGNATURE(object);
+	GC_SET_MARKED(object);
 	GC_MEMORY_PAGE_HEADER(object)->garbage_cnt--;
 	if (object->type==SLL_OBJECT_TYPE_ARRAY){
 		for (sll_array_length_t i=0;i<object->data.array.length;i++){
@@ -325,7 +325,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_create_object(sll_object_typ
 		GC_PAGE_HEADER_INCREASE(GC_MEMORY_PAGE_HEADER(o));
 		o->_flags=0;
 	}
-	GC_SET_SIGNATURE(o);
+	GC_SET_MARKED(o);
 	o->rc=1;
 	*((sll_object_type_t*)(&(o->type)))=type;
 	return o;
