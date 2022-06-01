@@ -145,7 +145,7 @@
 		})
 		(? (||
 			(!== state$hash new_hash)
-			(&& (!== ext ".h") (! (<- path$exists file_path)))
+			(&& (! (|: config$HASHLIST_INCLUDE_FILE_EXTENSIONS ext)) (! (<- path$exists file_path)))
 		) (= state$state STATE_UPDATE))
 		(= state$hash new_hash)
 	)
