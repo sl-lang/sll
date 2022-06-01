@@ -2,6 +2,7 @@
 #define __SLL__INTERNAL_GC_H__ 1
 #include <sll/_internal/common.h>
 #include <sll/_size_types.h>
+#include <sll/api/time.h>
 #include <sll/types.h>
 
 
@@ -65,10 +66,10 @@
 #define GC_GET_ROOT(data) ((sll_object_t*const*)PTR(((data)>>GC_ROOTS_LENGTH_SHIFT)<<3))
 #define GC_GET_LENGTH(data) ((sll_size_t)((data)&((1<<GC_ROOTS_LENGTH_SHIFT)-1)))
 
-#define GC_IS_MARKED(o) ((((o)->_flags>>5)&1)==_gc_root_data.signature)
+#define GC_IS_MARKED(o) ((((o)->_flags>>5)&1)==_gc_garbage_collector.signature)
 #define GC_SET_MARKED(o) \
 	do{ \
-		(o)->_flags=((o)->_flags&0xffffffdf)|(_gc_root_data.signature<<5); \
+		(o)->_flags=((o)->_flags&0xffffffdf)|(_gc_garbage_collector.signature<<5); \
 	} while (0)
 
 
@@ -91,12 +92,14 @@ typedef struct _GC_FAST_OBJECT_POOL{
 
 
 
-typedef struct _GC_ROOT_DATA{
+typedef struct _GC_GARBAGE_COLLECTOR_DATA{
 	sll_object_t* single;
 	__SLL_U64* multiple;
 	sll_size_t multiple_length;
+	sll_time_t time;
 	sll_bool_t signature;
-} gc_root_data_t;
+	sll_bool_t enabled;
+} gc_garbage_collector_data_t;
 
 
 
