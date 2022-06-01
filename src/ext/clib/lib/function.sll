@@ -29,7 +29,12 @@
 
 (= _cast_arguments (,,, func
 	(-> (= i 0) (< i ($ func$arguments))
-		(= (: func$arguments i) (:: (: func$arguments i) clib_types$clib_type))
+		(= arg (:: (: func$arguments i) clib_types$clib_type))
+		(? (=== arg clib_types$void){
+			(:> "Inavlid argument type 'void'!")
+			(<- thread$exit 1)
+		})
+		(= (: func$arguments i) arg)
 		(++ i)
 	)
 ))

@@ -55,7 +55,6 @@
 	(~ clib_type) char
 	(~ clib_type) char*
 	(~ clib_type) const_char*
-	(~ clib_type) const_void
 	(~ clib_type) const_void*
 	(~ clib_type) double
 	(~ clib_type) float
@@ -296,7 +295,6 @@
 	char
 	char*
 	const_char*
-	const_void
 	const_void*
 	double
 	float
