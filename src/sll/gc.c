@@ -78,6 +78,7 @@ void _gc_release_data(void){
 	SLL_ASSERT(_gc_garbage_collector_enable);
 	sll_gc_collect();
 	SLL_ASSERT(!_gc_root_data.single);
+	SLL_ASSERT(!_gc_root_data.multiple_length);
 	while (_gc_fast_object_pool.space!=GC_FAST_OBJECT_POOL_SIZE){
 		GC_PAGE_HEADER_DECREASE(GC_MEMORY_PAGE_HEADER(_gc_fast_object_pool.data[_gc_fast_object_pool.read]));
 		_gc_fast_object_pool.read=(_gc_fast_object_pool.read+1)&(GC_FAST_OBJECT_POOL_SIZE-1);
