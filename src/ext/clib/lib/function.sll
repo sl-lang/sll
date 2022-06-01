@@ -31,7 +31,7 @@
 	(-> (= i 0) (< i ($ func$arguments))
 		(= arg (:: (: func$arguments i) clib_types$clib_type))
 		(? (=== arg clib_types$void){
-			(:> "Inavlid argument type 'void'!")
+			(:> "Invalid argument type: void\n")
 			(<- thread$exit 1)
 		})
 		(= (: func$arguments i) arg)
