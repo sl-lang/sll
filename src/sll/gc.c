@@ -34,7 +34,7 @@ static gc_fast_object_pool_t _gc_fast_object_pool={
 	.write=0,
 	.space=GC_FAST_OBJECT_POOL_SIZE
 };
-static gc_garbage_collector_data_t _gc_garbage_collector={
+static gc_data_t _gc_data={
 	NULL,
 	NULL,
 	0,
@@ -77,10 +77,10 @@ static void _mark_objects(sll_object_t* object){
 
 
 void _gc_release_data(void){
-	SLL_ASSERT(_gc_garbage_collector.enabled);
+	SLL_ASSERT(_gc_data.enabled);
 	sll_gc_collect();
-	SLL_ASSERT(!_gc_garbage_collector.single);
-	SLL_ASSERT(!_gc_garbage_collector.multiple_length);
+	SLL_ASSERT(!_gc_data.single);
+	SLL_ASSERT(!_gc_data.multiple_length);
 	while (_gc_fast_object_pool.space!=GC_FAST_OBJECT_POOL_SIZE){
 		GC_PAGE_HEADER_DECREASE(GC_MEMORY_PAGE_HEADER(_gc_fast_object_pool.data[_gc_fast_object_pool.read]));
 		_gc_fast_object_pool.read=(_gc_fast_object_pool.read+1)&(GC_FAST_OBJECT_POOL_SIZE-1);
@@ -135,8 +135,8 @@ __SLL_EXTERNAL void sll__release_object_internal(sll_object_t* object){
 			return;
 		}
 	}
-	sll_bool_t gc_state=_gc_garbage_collector.enabled;
-	_gc_garbage_collector.enabled=0;
+	sll_bool_t gc_state=_gc_data.enabled;
+	_gc_data.enabled=0;
 	if (object->type==SLL_OBJECT_TYPE_STRING){
 		sll_free_string(&(object->data.string));
 	}
@@ -150,15 +150,15 @@ __SLL_EXTERNAL void sll__release_object_internal(sll_object_t* object){
 		if (sll_current_runtime_data&&object->type<=sll_current_runtime_data->type_table->length+SLL_MAX_OBJECT_TYPE){
 			const sll_object_type_data_t* dt=*(sll_current_runtime_data->type_table->data+object->type-SLL_MAX_OBJECT_TYPE-1);
 			if (_scheduler_current_thread_index!=SLL_UNKNOWN_THREAD_INDEX&&dt->functions[SLL_OBJECT_FUNC_DELETE]){
-				_gc_garbage_collector.enabled=1;
+				_gc_data.enabled=1;
 				object->rc++;
 				SLL_RELEASE(sll_execute_function(dt->functions[SLL_OBJECT_FUNC_DELETE],&object,1,0));
 				object->rc--;
 				if (object->rc){
-					_gc_garbage_collector.enabled=gc_state;
+					_gc_data.enabled=gc_state;
 					return;
 				}
-				_gc_garbage_collector.enabled=0;
+				_gc_data.enabled=0;
 			}
 			sll_object_field_t* p=object->data.fields;
 			for (sll_arg_count_t i=0;i<dt->field_count;i++){
@@ -178,7 +178,7 @@ __SLL_EXTERNAL void sll__release_object_internal(sll_object_t* object){
 		_gc_fast_object_pool.data[_gc_fast_object_pool.write]=object;
 		_gc_fast_object_pool.write=(_gc_fast_object_pool.write+1)&(GC_FAST_OBJECT_POOL_SIZE-1);
 		_gc_fast_object_pool.space--;
-		_gc_garbage_collector.enabled=gc_state;
+		_gc_data.enabled=gc_state;
 		return;
 	}
 	gc_page_header_t* pg=GC_MEMORY_PAGE_HEADER(object);
@@ -258,12 +258,12 @@ __SLL_EXTERNAL void sll__release_object_internal(sll_object_t* object){
 	}
 _check_garbage_collect:
 	if (gc_state){
-		if (!_gc_garbage_collector.time){
+		if (!_gc_data.time){
 			sll_gc_collect();
 		}
-		_gc_garbage_collector.time--;
+		_gc_data.time--;
 	}
-	_gc_garbage_collector.enabled=gc_state;
+	_gc_data.enabled=gc_state;
 }
 
 
@@ -350,11 +350,11 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_destroy_object(sll_object_t* ob
 
 __SLL_EXTERNAL void sll_gc_add_root(sll_object_t* object){
 	GC_SET_PREV_OBJECT(object,NULL);
-	GC_SET_NEXT_OBJECT(object,_gc_garbage_collector.single);
-	if (_gc_garbage_collector.single){
-		GC_SET_PREV_OBJECT(_gc_garbage_collector.single,object);
+	GC_SET_NEXT_OBJECT(object,_gc_data.single);
+	if (_gc_data.single){
+		GC_SET_PREV_OBJECT(_gc_data.single,object);
 	}
-	_gc_garbage_collector.single=object;
+	_gc_data.single=object;
 }
 
 
@@ -364,15 +364,15 @@ __SLL_EXTERNAL void sll_gc_add_roots(sll_object_t*const* pointer,sll_size_t leng
 		return;
 	}
 	SLL_CRITICAL(!(length>>GC_ROOTS_LENGTH_SHIFT));
-	_gc_garbage_collector.multiple=sll_reallocate(_gc_garbage_collector.multiple,(_gc_garbage_collector.multiple_length+1)*sizeof(__SLL_U64));
-	*(_gc_garbage_collector.multiple+_gc_garbage_collector.multiple_length)=GC_ENCODE_ROOT(pointer,length);
-	_gc_garbage_collector.multiple_length++;
+	_gc_data.multiple=sll_reallocate(_gc_data.multiple,(_gc_data.multiple_length+1)*sizeof(__SLL_U64));
+	*(_gc_data.multiple+_gc_data.multiple_length)=GC_ENCODE_ROOT(pointer,length);
+	_gc_data.multiple_length++;
 }
 
 
 
 __SLL_EXTERNAL void sll_gc_collect(void){
-	_gc_garbage_collector.time=GC_GARBAGE_COLLECTION_INTERVAL;
+	_gc_data.time=GC_GARBAGE_COLLECTION_INTERVAL;
 	gc_page_header_t* page=_gc_memory_page_data.root;
 	if (!page){
 		return;
@@ -381,15 +381,15 @@ __SLL_EXTERNAL void sll_gc_collect(void){
 		page->garbage_cnt=page->cnt>>1;
 		page=page->next;
 	} while (page);
-	_gc_garbage_collector.signature=!_gc_garbage_collector.signature;
-	sll_object_t* object=_gc_garbage_collector.single;
+	_gc_data.signature=!_gc_data.signature;
+	sll_object_t* object=_gc_data.single;
 	while (object){
 		_mark_objects(object);
 		object=GC_GET_NEXT_OBJECT(object);
 	}
-	for (sll_size_t i=0;i<_gc_garbage_collector.multiple_length;i++){
-		sll_object_t*const* pointer=GC_GET_ROOT(*(_gc_garbage_collector.multiple+i));
-		sll_size_t length=GC_GET_LENGTH(*(_gc_garbage_collector.multiple+i));
+	for (sll_size_t i=0;i<_gc_data.multiple_length;i++){
+		sll_object_t*const* pointer=GC_GET_ROOT(*(_gc_data.multiple+i));
+		sll_size_t length=GC_GET_LENGTH(*(_gc_data.multiple+i));
 		while (length&&*pointer&&(*pointer)->rc){
 			_mark_objects(*pointer);
 			length--;
@@ -422,8 +422,8 @@ __SLL_EXTERNAL void sll_gc_collect(void){
 __SLL_EXTERNAL void sll_gc_remove_root(sll_object_t* object){
 	sll_object_t* prev=GC_GET_PREV_OBJECT(object);
 	sll_object_t* next=GC_GET_NEXT_OBJECT(object);
-	if (_gc_garbage_collector.single==object){
-		_gc_garbage_collector.single=(prev?prev:next);
+	if (_gc_data.single==object){
+		_gc_data.single=(prev?prev:next);
 	}
 	if (prev){
 		GC_SET_NEXT_OBJECT(prev,next);
@@ -437,22 +437,22 @@ __SLL_EXTERNAL void sll_gc_remove_root(sll_object_t* object){
 
 
 __SLL_EXTERNAL void sll_gc_remove_roots(sll_object_t*const* pointer){
-	if (!_gc_garbage_collector.multiple_length){
+	if (!_gc_data.multiple_length){
 		return;
 	}
-	sll_size_t i=_gc_garbage_collector.multiple_length;
+	sll_size_t i=_gc_data.multiple_length;
 	do{
 		i--;
-		if (GC_GET_ROOT(*(_gc_garbage_collector.multiple+i))!=pointer){
+		if (GC_GET_ROOT(*(_gc_data.multiple+i))!=pointer){
 			continue;
 		}
 		i++;
-		while (i<_gc_garbage_collector.multiple_length){
-			*(_gc_garbage_collector.multiple+i-1)=*(_gc_garbage_collector.multiple+i);
+		while (i<_gc_data.multiple_length){
+			*(_gc_data.multiple+i-1)=*(_gc_data.multiple+i);
 			i++;
 		}
-		_gc_garbage_collector.multiple_length=i-1;
-		_gc_garbage_collector.multiple=sll_reallocate(_gc_garbage_collector.multiple,_gc_garbage_collector.multiple_length*sizeof(__SLL_U64));
+		_gc_data.multiple_length=i-1;
+		_gc_data.multiple=sll_reallocate(_gc_data.multiple,_gc_data.multiple_length*sizeof(__SLL_U64));
 		return;
 	} while (i);
 }
