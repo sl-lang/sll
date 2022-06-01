@@ -660,3 +660,5 @@ abc` '\n')
 (= time$arguments [])
 (= time$return clib_types$unsigned_long_long_int)
 (:> (<- clib_function$declaration time) ";\n")
+
+(:> (<- clib_function$call time) '\n')

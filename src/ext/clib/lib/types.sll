@@ -1,4 +1,7 @@
-(--- "types.sll")
+(---
+	"thread.sll"
+	"types.sll"
+)
 
 
 
@@ -40,6 +43,9 @@
 	(~ int_type) size
 	(~ int_type) flags
 	(~ object_type) ref_type
+	(~ func_type) _decode
+	(~ func_type) _encode
+	(~ object_type) _default
 	string_type _str
 ))
 
@@ -93,98 +99,180 @@
 (= FLAG_POINTER 4)
 (= FLAG_CONST 8)
 
+
+
+(= _decode_not_supported (,,,
+	(:> "Decodingof the current type is not suppored!")
+	(<- thread$exit 1)
+))
+
+(= _encode_not_supported (,,,
+	(:> "Encodingof the current type is not suppored!")
+	(<- thread$exit 1)
+))
+
+
+
 (= void (. clib_type
 	0
 	0
+	nil
+	_decode_not_supported
+	_encode_not_supported
+	nil
 ))
 
 (= const_void (. clib_type
 	0
 	FLAG_CONST
+	nil
+	_decode_not_supported
+	_encode_not_supported
+	nil
 ))
 
 (= bool (. clib_type
 	1
 	FLAG_INTEGER
+	nil
+	_decode_not_supported
+	_encode_not_supported
+	0
 ))
 
 (= char (. clib_type
 	8
 	(| FLAG_INTEGER FLAG_SIGNED)
+	nil
+	_decode_not_supported
+	_encode_not_supported
+	0
 ))
 
 (= const_char (. clib_type
 	8
 	(| FLAG_INTEGER FLAG_SIGNED FLAG_CONST)
+	nil
+	_decode_not_supported
+	_encode_not_supported
+	0
 ))
 
 (= unsigned_char (. clib_type
 	8
 	FLAG_INTEGER
+	nil
+	_decode_not_supported
+	_encode_not_supported
+	0
 ))
 
 (= short_int (. clib_type
 	16
 	(| FLAG_INTEGER FLAG_SIGNED)
+	nil
+	_decode_not_supported
+	_encode_not_supported
+	0
 ))
 
 (= unsigned_short_int (. clib_type
 	16
 	FLAG_INTEGER
+	nil
+	_decode_not_supported
+	_encode_not_supported
+	0
 ))
 
 (= int (. clib_type
 	32
 	(| FLAG_INTEGER FLAG_SIGNED)
+	nil
+	_decode_not_supported
+	_encode_not_supported
+	0
 ))
 
 (= unsigned_int (. clib_type
 	32
 	FLAG_INTEGER
+	nil
+	_decode_not_supported
+	_encode_not_supported
+	0
 ))
 
 (= long_long_int (. clib_type
 	64
 	(| FLAG_INTEGER FLAG_SIGNED)
+	nil
+	_decode_not_supported
+	_encode_not_supported
+	0
 ))
 
 (= unsigned_long_long_int (. clib_type
 	64
 	FLAG_INTEGER
+	nil
+	_decode_not_supported
+	_encode_not_supported
+	0
 ))
 
 (= float (. clib_type
 	32
 	0
+	nil
+	_decode_not_supported
+	_encode_not_supported
+	0.0
 ))
 
 (= double (. clib_type
 	64
 	0
+	nil
+	_decode_not_supported
+	_encode_not_supported
+	0.0
 ))
 
 (= char* (. clib_type
 	64
 	FLAG_POINTER
 	char
+	_decode_not_supported
+	_encode_not_supported
+	nil
 ))
 
 (= const_char* (. clib_type
 	64
 	FLAG_POINTER
 	const_char
+	_decode_not_supported
+	_encode_not_supported
+	nil
 ))
 
 (= void* (. clib_type
 	64
 	FLAG_POINTER
 	void
+	_decode_not_supported
+	_encode_not_supported
+	nil
 ))
 
 (= const_void* (. clib_type
 	64
 	FLAG_POINTER
 	const_void
+	_decode_not_supported
+	_encode_not_supported
+	nil
 ))
 
 
@@ -194,6 +282,9 @@
 		64
 		FLAG_POINTER
 		type
+		_decode_not_supported
+		_encode_not_supported
+		nil
 	))
 ))
 

@@ -27,20 +27,34 @@
 
 
 
-(= call (,,, func @@args@@
-	(? (! func) (@@ nil))
-	(= func (:: func clib_function_type))
+(= _cast_arguments (,,, func
 	(-> (= i 0) (< i ($ func$arguments))
 		(= (: func$arguments i) (:: (: func$arguments i) clib_types$clib_type))
 		(++ i)
 	)
-	(--- "thread.sll")(:> "Unimplemented!\n")(<- thread$exit 1)
-	(@@ nil)
+))
+
+(= call (,,, func @@call_args@@
+	(? (! func) (@@ nil))
+	(= func (:: func clib_function_type))
+	(<- _cast_arguments func)
+	(@@ (<- func$return_value$_decode (<- (... "clib:call_function")
+		func$address
+		([> (= i 0) (< i ($ func$arguments))
+			(= arg (: func$arguments i))
+			(++ i)
+			(?: (< i ($ @@call_args@@))
+				(<- arg$_encode (: @@call_args@@ i))
+				(: arg$_default)
+			)
+		)
+	))
 ))
 
 (= declaration (,,, func
 	(? (! func) (@@ nil))
 	(= func (:: func clib_function_type))
+	(<- _cast_arguments func)
 	(= out "")
 	(@@ (+
 		(:: func$return string_type)
