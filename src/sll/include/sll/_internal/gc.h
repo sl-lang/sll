@@ -83,10 +83,11 @@ typedef struct _GC_PAGE_HEADER{
 
 
 
-typedef struct _GC_PAGE_POOL{
+typedef struct _GC_MEMORY_PAGE_DATA{
+	gc_page_header_t* root;
 	gc_page_header_t* data[GC_PAGE_POOL_SIZE];
 	sll_array_length_t length;
-} gc_page_pool_t;
+} gc_memory_page_data_t;
 
 
 
