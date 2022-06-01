@@ -641,7 +641,7 @@ abc` '\n')
 (<- thread$join thr)
 (:> thr$return_value "\n" "")
 
-(--- "clib/library.sll")
+(--- "clib/library.sll" "clib/function.sll" "clib/types.sll")
 
 (:> clib_library$SLL_LIBRARY '\n')
 
@@ -652,7 +652,11 @@ abc` '\n')
 	"libc.so.6"
 )))
 (:> libc '\n')
-(= printf (<- clib_library$lookup_symbol libc "printf"))
-(:> printf '\n')
+(= time (<- clib_library$lookup_symbol libc "time"))
+(:> time '\n')
 
 (:> (<- clib_library$get_loaded_libraries) '\n')
+
+(= time$arguments [])
+(= time$return clib_types$unsigned_long_long_int)
+(:> (<- clib_function$declaration time) ";\n")

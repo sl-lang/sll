@@ -16,12 +16,13 @@
 	(~ int_type) address
 	(~ clib_library_type) library
 	array_type arguments
-	clib_types$clib_type
+	clib_types$clib_type return
 ))
 
 (= clib_function_module_type (&:
 	(~ type_type) clib_function_type
 	(~ func_type) call
+	(~ func_type) declaration
 ))
 
 
@@ -33,7 +34,25 @@
 		(= (: func$arguments i) (:: (: func$arguments i) clib_types$clib_type))
 		(++ i)
 	)
+	(--- "thread.sll")(:> "Unimplemented!\n")(<- thread$exit 1)
 	(@@ nil)
+))
+
+(= declaration (,,, func
+	(? (! func) (@@ nil))
+	(= func (:: func clib_function_type))
+	(= out "")
+	(@@ (+
+		(:: func$return string_type)
+		' '
+		func$name
+		'('
+		(?: func$arguments
+			(<- string$join func$arguments ',')
+			"void"
+		)
+		')'
+	))
 ))
 
 
@@ -41,5 +60,6 @@
 (= clib_function (. clib_function_module_type
 	clib_function_type
 	call
+	declaration
 ))
 (## clib_function)
