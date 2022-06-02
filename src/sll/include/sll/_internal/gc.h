@@ -75,12 +75,16 @@
 #define GC_RELEASE_CHECK_ZERO_REF(o) \
 	do{ \
 		sll_object_t* __o=(o); \
-		if (!__o->rc&&!_gc_data.cleanup_in_progress){ \
-			sll__gc_error(__o); \
-		} \
-		__o->rc--; \
 		if (!__o->rc){ \
-			sll__release_object_internal(__o); \
+			if (!_gc_data.cleanup_in_progress){ \
+				sll__gc_error(__o); \
+			} \
+		} \
+		else{ \
+			__o->rc--; \
+			if (!__o->rc){ \
+				sll__release_object_internal(__o); \
+			} \
 		} \
 	} while (0)
 
