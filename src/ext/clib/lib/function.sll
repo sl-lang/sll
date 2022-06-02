@@ -17,17 +17,25 @@
 	(~ clib_library_type) library
 	array_type arguments
 	clib_types$clib_type return
+	int_type calling_convenction
 ))
 
 (= clib_function_module_type (&:
 	(~ type_type) clib_function_type
+	(~ int_type) CALLING_CONVENCTION_MSVC_X64
+	(~ int_type) CALLING_CONVENCTION_POSIX
 	(~ func_type) call
 	(~ func_type) declaration
 ))
 
 
 
-(= _cast_arguments (,,, func
+(= CALLING_CONVENCTION_MSVC_X64 0)
+(= CALLING_CONVENCTION_POSIX 1)
+
+
+
+(= _prepare_data (,,, func
 	(-> (= i 0) (< i ($ func$arguments))
 		(= arg (:: (: func$arguments i) clib_types$clib_type))
 		(? (=== arg clib_types$void){
@@ -37,12 +45,19 @@
 		(= (: func$arguments i) arg)
 		(++ i)
 	)
+	(? (! (|: [
+		CALLING_CONVENCTION_MSVC_X64
+		CALLING_CONVENCTION_POSIX
+	] func$calling_convenction)) {
+		(:> "Unknown calling convenction: " func$calling_convenction '\n')
+		(<- thread$exit 1)
+	})
 ))
 
 (= call (,,, func @@call_args@@
 	(? (! func) (@@ nil))
 	(= func (:: func clib_function_type))
-	(<- _cast_arguments func)
+	(<- _prepare_data func)
 	(@@ (<- func$return_value$_decode (<- (... "clib:call_function")
 		func$address
 		([> (= i 0) (< i ($ func$arguments))
@@ -59,11 +74,17 @@
 (= declaration (,,, func
 	(? (! func) (@@ nil))
 	(= func (:: func clib_function_type))
-	(<- _cast_arguments func)
-	(= out "")
+	(<- _prepare_data func)
 	(@@ (+
 		(:: func$return string_type)
 		' '
+		(?: (&&
+			(!== sys$PLATFORM "windows")
+			(=== func$calling_convenction CALLING_CONVENCTION_MSVC_X64)
+		)
+			"__attribute__((ms_abi)) "
+			""
+		)
 		func$name
 		'('
 		(?: func$arguments
@@ -78,6 +99,8 @@
 
 (= clib_function (. clib_function_module_type
 	clib_function_type
+	CALLING_CONVENCTION_MSVC_X64
+	CALLING_CONVENCTION_POSIX
 	call
 	declaration
 ))
