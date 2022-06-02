@@ -14,6 +14,7 @@
 - Fixed CLI output when supplied a directory
 - Fixed issues with constant rebuilding of assembly files
 - Fixed memory leaks caused by circular references ([#287])
+- Fixed stringification of circular references
 - Renamed `audit$BUILTIN_EVENTS` to `audit$EVENT_ARGUMENTS`
 - Thread, lock, barrier and semaphore creation functions now return error objects
 

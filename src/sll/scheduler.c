@@ -172,8 +172,10 @@ sll_return_code_t _scheduler_run(void){
 	sll_object_t* rc_o=sll_operator_cast(_thread_get(0)->return_value,sll_static_int[SLL_OBJECT_TYPE_INT]);
 	sll_return_code_t o=(sll_return_code_t)(rc_o->data.int_);
 	SLL_RELEASE(rc_o);
+	sll_gc_collect();
 	_cleanup_vm_exit_tables();
 	_release_var_data();
+	sll_gc_collect();
 	SLL_CRITICAL_ERROR(sll_platform_set_cpu(SLL_CPU_ANY));
 	cpu_dt=_scheduler_data_base;
 	for (sll_cpu_t i=0;i<_scheduler_load_balancer.length;i++){

@@ -1,3 +1,4 @@
+#include <sll/_internal/api_string.h>
 #include <sll/_internal/common.h>
 #include <sll/_internal/string.h>
 #include <sll/allocator.h>
@@ -91,12 +92,38 @@ static void _write_char(sll_char_t c,sll_string_t* o){
 
 
 
-static void _object_to_string(sll_object_t* a,sll_string_t* o){
+static void _object_to_string(sll_object_t* a,sll_string_t* o,address_list_t* addr_list){
 	if (!a->rc){
 		sll_string_increase(o,17);
 		sll_copy_string(SLL_CHAR("<released object>"),o->data+o->length);
 		o->length+=17;
 		return;
+	}
+	address_list_t new_addr_list={
+		ADDR(a),
+		addr_list
+	};
+	while (addr_list){
+		if (ADDR(a)==addr_list->addr){
+			sll_string_increase(o,20);
+			o->data[o->length]='%';
+			o->length++;
+			o->data[o->length]='%';
+			o->length++;
+			__SLL_U32 i=64;
+			do{
+				i-=4;
+				sll_char_t v=(ADDR(a)>>i)&15;
+				o->data[o->length]=v+(v>9?87:48);
+				o->length++;
+			} while (i);
+			o->data[o->length]='%';
+			o->length++;
+			o->data[o->length]='%';
+			o->length++;
+			return;
+		}
+		addr_list=addr_list->next;
 	}
 	switch (a->type){
 		case SLL_OBJECT_TYPE_INT:
@@ -188,7 +215,7 @@ static void _object_to_string(sll_object_t* a,sll_string_t* o){
 					o->data[o->length]=' ';
 					o->length++;
 				}
-				_object_to_string(*(a->data.array.data+i),o);
+				_object_to_string(*(a->data.array.data+i),o,&new_addr_list);
 			}
 			sll_string_increase(o,1);
 			o->data[o->length]=']';
@@ -204,7 +231,7 @@ static void _object_to_string(sll_object_t* a,sll_string_t* o){
 					o->data[o->length]=' ';
 					o->length++;
 				}
-				_object_to_string(*(a->data.map.data+i),o);
+				_object_to_string(*(a->data.map.data+i),o,&new_addr_list);
 			}
 			sll_string_increase(o,1);
 			o->data[o->length]='>';
@@ -221,13 +248,15 @@ static void _object_to_string(sll_object_t* a,sll_string_t* o){
 				const sll_object_type_data_t* dt=*(sll_current_runtime_data->type_table->data+a->type-SLL_MAX_OBJECT_TYPE-1);
 				if (dt->functions[SLL_OBJECT_FUNC_STRING]){
 					sll_object_t* v=sll_execute_function(dt->functions[SLL_OBJECT_FUNC_STRING],&a,1,0);
-					sll_object_t* str=sll_operator_cast(v,sll_static_int[SLL_OBJECT_TYPE_STRING]);
-					SLL_RELEASE(v);
-					sll_string_increase(o,str->data.string.length);
-					sll_copy_data(str->data.string.data,str->data.string.length,o->data+o->length);
-					o->length+=str->data.string.length;
-					SLL_RELEASE(str);
-					return;
+					if (v){
+						sll_object_t* str=sll_operator_cast(v,sll_static_int[SLL_OBJECT_TYPE_STRING]);
+						SLL_RELEASE(v);
+						sll_string_increase(o,str->data.string.length);
+						sll_copy_data(str->data.string.data,str->data.string.length,o->data+o->length);
+						o->length+=str->data.string.length;
+						SLL_RELEASE(str);
+						return;
+					}
 				}
 				sll_string_increase(o,3);
 				sll_copy_string(SLL_CHAR("<&:"),o->data+o->length);
@@ -268,7 +297,7 @@ static void _object_to_string(sll_object_t* a,sll_string_t* o){
 							SLL_ACQUIRE(tmp);
 							break;
 					}
-					_object_to_string(tmp,o);
+					_object_to_string(tmp,o,&new_addr_list);
 					SLL_RELEASE(tmp);
 					p++;
 				}
@@ -304,7 +333,7 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_string_convert(sll_object_t*const* ar
 			out->length+=v->data.string.length;
 		}
 		else{
-			_object_to_string(*(args+i),out);
+			_object_to_string(*(args+i),out,NULL);
 		}
 	}
 	sll_allocator_move((void**)(&(out->data)),SLL_MEMORY_MOVE_DIRECTION_FROM_STACK);

@@ -5,12 +5,11 @@
 #include <sll/_internal/weakref.h>
 #include <sll/api/string.h>
 #include <sll/api/time.h>
-#include <sll/array.h>
+#include <sll/allocator.h>
 #include <sll/common.h>
 #include <sll/data.h>
 #include <sll/file.h>
 #include <sll/gc.h>
-#include <sll/map.h>
 #include <sll/memory.h>
 #include <sll/object.h>
 #include <sll/platform/memory.h>
@@ -40,7 +39,8 @@ static gc_data_t _gc_data={
 	0,
 	GC_GARBAGE_COLLECTION_INTERVAL,
 	0,
-	1
+	1,
+	0
 };
 
 
@@ -141,10 +141,16 @@ __SLL_EXTERNAL void sll__release_object_internal(sll_object_t* object){
 		sll_free_string(&(object->data.string));
 	}
 	else if (object->type==SLL_OBJECT_TYPE_ARRAY||object->type==SLL_OBJECT_TYPE_MAP_KEYS||object->type==SLL_OBJECT_TYPE_MAP_VALUES){
-		sll_free_array(&(object->data.array));
+		for (sll_array_length_t i=0;i<object->data.array.length;i++){
+			GC_RELEASE_CHECK_ZERO_REF(object->data.array.data[i]);
+		}
+		sll_allocator_release(object->data.array.data);
 	}
 	else if (object->type==SLL_OBJECT_TYPE_MAP){
-		sll_free_map(&(object->data.map));
+		for (sll_map_length_t j=0;j<(object->data.map.length<<1);j++){
+			GC_RELEASE_CHECK_ZERO_REF(*(object->data.map.data+j));
+		}
+		sll_deallocate(object->data.map.data);
 	}
 	else if (object->type>SLL_MAX_OBJECT_TYPE&&object->type<SLL_OBJECT_TYPE_OBJECT){
 		if (sll_current_runtime_data&&object->type<=sll_current_runtime_data->type_table->length+SLL_MAX_OBJECT_TYPE){
@@ -163,7 +169,7 @@ __SLL_EXTERNAL void sll__release_object_internal(sll_object_t* object){
 			sll_object_field_t* p=object->data.fields;
 			for (sll_arg_count_t i=0;i<dt->field_count;i++){
 				if (dt->fields[i].type>SLL_OBJECT_TYPE_CHAR){
-					SLL_RELEASE(p->any);
+					GC_RELEASE_CHECK_ZERO_REF(p->any);
 				}
 				p++;
 			}
@@ -257,7 +263,7 @@ __SLL_EXTERNAL void sll__release_object_internal(sll_object_t* object){
 		_gc_object_pool.length=i;
 	}
 _check_garbage_collect:
-	if (gc_state){
+	if (gc_state&&!_gc_data.cleanup_in_progress){
 		if (!_gc_data.time){
 			sll_gc_collect();
 		}
@@ -377,6 +383,7 @@ __SLL_EXTERNAL void sll_gc_collect(void){
 	if (!page){
 		return;
 	}
+	_gc_data.cleanup_in_progress=1;
 	do{
 		page->garbage_cnt=page->cnt>>1;
 		page=page->next;
@@ -415,6 +422,7 @@ __SLL_EXTERNAL void sll_gc_collect(void){
 		}
 		page=page->next;
 	} while (page);
+	_gc_data.cleanup_in_progress=0;
 }
 
 

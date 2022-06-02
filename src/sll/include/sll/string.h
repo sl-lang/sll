@@ -187,7 +187,7 @@
  * \name sll_free_string
  * \group string
  * \desc Docs!
- * \arg sll_string_t* sstring
+ * \arg sll_string_t* string
  */
 __SLL_EXTERNAL void sll_free_string(sll_string_t* string);
 
