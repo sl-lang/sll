@@ -240,9 +240,13 @@ static void _object_to_string(sll_object_t* a,sll_string_t* o,address_list_t* ad
 		default:
 			{
 				if (!sll_current_runtime_data||a->type>sll_current_runtime_data->type_table->length+SLL_MAX_OBJECT_TYPE){
-					sll_string_increase(o,13);
-					sll_copy_string(SLL_CHAR("<custom-type>"),o->data+o->length);
-					o->length+=13;
+					sll_string_increase(o,3);
+					sll_copy_string(SLL_CHAR("<&:"),o->data+o->length);
+					o->length+=3;
+					_write_int(a->type,o);
+					sll_string_increase(o,5);
+					sll_copy_string(SLL_CHAR(" ...>"),o->data+o->length);
+					o->length+=5;
 					return;
 				}
 				const sll_object_type_data_t* dt=*(sll_current_runtime_data->type_table->data+a->type-SLL_MAX_OBJECT_TYPE-1);
