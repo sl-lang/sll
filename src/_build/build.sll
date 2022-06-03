@@ -137,8 +137,8 @@
 			(<- log$log "      " file_path)
 			(? (?: (=== (>> file_path (<- string$index_reverse file_path '.')) ".asm")
 				(||
-					(<- _execute_command command_list$NASM_COMPILATION_COMMAND file_path output_file_path include_file_path)
-					(<- _execute_command command_list$NASM_POST_COMPILATION_COMMAND file_path output_file_path include_file_path)
+					(<- _execute_command command_list$NASM_COMPILATION_COMMAND file_path output_file_path nil include_file_path)
+					(<- _execute_command command_list$NASM_POST_COMPILATION_COMMAND file_path output_file_path nil include_file_path)
 				)
 				(<- _execute_command command_list$COMPILATION_COMMAND file_path (+ command_list$OUTPUT_PREFIX output_file_path) options include_file_path)
 			) {
