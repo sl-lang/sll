@@ -463,9 +463,6 @@ sll_arg_state_t _parse_args_raw(const sll_char_t* format,sll_object_t*const* arg
 		}
 		format++;
 	}
-	if (tmp[0]=='Q'&&tmp[1]=='#'&&tmp[2]=='O'){
-		asm("int $3":::"memory");
-	}
 	while (*format){
 		sll_char_t type=*format;
 		format++;
