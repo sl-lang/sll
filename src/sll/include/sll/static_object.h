@@ -83,7 +83,7 @@ __SLL_EXTERNAL extern sll_object_t* sll_static_int[256];
  * \name sll_static_negative_int
  * \group static-object
  * \desc Docs!
- * \type sll_object_t**
+ * \type sll_object_t*[16]
  */
 __SLL_EXTERNAL extern sll_object_t* sll_static_negative_int[16];
 
@@ -127,7 +127,7 @@ __SLL_EXTERNAL extern sll_object_t* sll_static_float_half;
  * \name sll_static_char
  * \group static-object
  * \desc Docs!
- * \type sll_object_t**
+ * \type sll_object_t*[256]
  */
 __SLL_EXTERNAL extern sll_object_t* sll_static_char[256];
 
