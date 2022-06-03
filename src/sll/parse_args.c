@@ -486,9 +486,6 @@ sll_arg_state_t _parse_args_raw(const sll_char_t* format,sll_object_t*const* arg
 			}
 			format++;
 		}
-		if (tmp[0]=='Q'&&tmp[1]=='#'&&tmp[2]=='O'){
-			asm("int $3":::"memory");
-		}
 		var_arg_idx--;
 		if (!var_arg_idx){
 			if (flags&(PARSE_ARGS_FLAG_ARRAY|PARSE_ARGS_FLAG_REF)){
