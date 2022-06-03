@@ -356,7 +356,7 @@ static const sll_char_t ` name `_END[]={
 	(<- log$log "    Generating variables...")
 	(-> (= i 0) (< i ($ variables))
 		(= symbol (: variables i))
-		(<- file$write fh (: config$LIBRARY_HEADER_EXTERNAL sys$PLATFORM) "extern " symbol$type$type ' ' symbol$name ";\n")
+		(<- file$write fh (: config$LIBRARY_HEADER_EXTERNAL sys$PLATFORM) "extern " (<- _format_type symbol$type$type symbol$name) ";\n")
 		(++ i)
 	)
 	(<- log$log "    Generating functions...")

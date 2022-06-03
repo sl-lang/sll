@@ -72,7 +72,7 @@
  * \name sll_static_int
  * \group static-object
  * \desc Docs!
- * \type sll_object_t**
+ * \type sll_object_t*[256]
  */
 __SLL_EXTERNAL extern sll_object_t* sll_static_int[256];
 

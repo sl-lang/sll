@@ -65,9 +65,9 @@
 #define PARSE_TYPE(type,name,field,init) \
 	if (flags&PARSE_ARGS_FLAG_ARRAY){ \
 		if (flags&PARSE_ARGS_FLAG_REF){ \
-			SLL_UNIMPLEMENTED(); \
+			SLL_ASSERT(!'A'); \
 		} \
-		SLL_UNIMPLEMENTED(); \
+		SLL_ASSERT(!'B'); \
 	} \
 	type* var=GET_PTR(type); \
 	if (!arg){ \
@@ -463,6 +463,9 @@ sll_arg_state_t _parse_args_raw(const sll_char_t* format,sll_object_t*const* arg
 		}
 		format++;
 	}
+	if (tmp[0]=='Q'&&tmp[1]=='#'&&tmp[2]=='O'){
+		asm("int $3":::"memory");
+	}
 	while (*format){
 		sll_char_t type=*format;
 		format++;
@@ -485,6 +488,9 @@ sll_arg_state_t _parse_args_raw(const sll_char_t* format,sll_object_t*const* arg
 				break;
 			}
 			format++;
+		}
+		if (tmp[0]=='Q'&&tmp[1]=='#'&&tmp[2]=='O'){
+			asm("int $3":::"memory");
 		}
 		var_arg_idx--;
 		if (!var_arg_idx){

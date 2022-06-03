@@ -1,9 +1,15 @@
+#include <clib/function.h>
 #include <clib/library.h>
 #include <sll.h>
 
 
 
 static const sll_internal_function_descriptor_t _internal_function_table[]={
+	{
+		SLL_CHAR("clib:call_function"),
+		clib_api_call_function,
+		SLL_CHAR("Q#o!|O")
+	},
 	{
 		SLL_CHAR("clib:get_sll_library_handle"),
 		clib_api_get_sll_library_handle,
@@ -29,5 +35,5 @@ static const sll_internal_function_descriptor_t _internal_function_table[]={
 
 
 const sll_internal_function_descriptor_t* clib_internal_function_data=(const sll_internal_function_descriptor_t*)(&_internal_function_table);
-const sll_function_index_t clib_internal_function_count=4;
+const sll_function_index_t clib_internal_function_count=5;
 
