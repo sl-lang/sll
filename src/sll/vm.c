@@ -1203,6 +1203,7 @@ _load_new_thread:;
 						*(thr->stack+thr->stack_index)=NULL;
 					}
 					sll_thread_index_t idx=_scheduler_current_thread_index;
+					sll_gc_remove_root(ret);
 					_thread_terminate(ret);
 					SLL_RELEASE(ret);
 					if (idx==thread_index){

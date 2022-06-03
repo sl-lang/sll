@@ -1,6 +1,6 @@
 [BITS 64]
-section .text
-default rel
+[SECTION .text]
+[DEFAULT rel]
 
 
 
@@ -9,17 +9,10 @@ default rel
 %else
 %define __SYMBOL(nm) nm
 %endif
-%define __EXTERNAL_SYMBOL(nm) QWORD [__SYMBOL(nm) wrt ..got]
 
 
 
-extern __SYMBOL(sll_static_int)
-
-
-
-global __SYMBOL(clib_api_call_function)
-__SYMBOL(clib_api_call_function):
-	mov rax, __EXTERNAL_SYMBOL(sll_static_int)
-	mov rax, QWORD [rax]
-	add QWORD [rax], 1
+global __SYMBOL(_call_function)
+__SYMBOL(_call_function):
+	mov rax, 12345
 	ret

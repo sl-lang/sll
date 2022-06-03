@@ -101,12 +101,12 @@
 
 
 (= _decode_not_supported (,,,
-	(:> "Decodingof the current type is not suppored!")
+	(:> "Decoding of the current type is not suppored!\n")
 	(<- thread$exit 1)
 ))
 
 (= _encode_not_supported (,,,
-	(:> "Encodingof the current type is not suppored!")
+	(:> "Encoding of the current type is not suppored!\n")
 	(<- thread$exit 1)
 ))
 
