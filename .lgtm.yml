@@ -10,6 +10,7 @@ queries:
   - exclude: cpp/equality-on-floats
   - exclude: cpp/long-switch
   - exclude: cpp/poorly-documented-function
+  - exclude: cpp/suspicious-pointer-scaling
   - exclude: cpp/use-of-goto
 extraction:
   cpp:
