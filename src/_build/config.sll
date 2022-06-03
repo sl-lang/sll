@@ -88,7 +88,7 @@
 	(~ array_type) HASHLIST_FILE_EXTENSIONS
 	(~ string_type) HASHLIST_FILE_PATH
 	(~ array_type) HASHLIST_INCLUDE_FILE_EXTENSIONS
-	(~ string_type) HASHLIST_ROOT_SOURCE_FILE_PATH
+	(~ array_type) HASHLIST_ROOT_SOURCE_FILE_PATH
 	(~ string_type) INCLUDE_ROOT_DIRECTORY_PATH
 	(~ map_type) LIBRARY_HEADER_API_CALL
 	(~ map_type) LIBRARY_HEADER_CHECK_OUTPUT
@@ -404,7 +404,7 @@
 	[".asm" ".c" ".h" ".inc"]
 	"build/.files"
 	[".h" ".inc"]
-	"src/"
+	["build/" "src/"]
 	"src/sll/include/"
 	<
 		"darwin" "__attribute__((ms_abi)) "

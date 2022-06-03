@@ -56,15 +56,11 @@
 	(-> (= i 0) (< i ($ data))
 		(= line (<- string$trim (: data i)))
 		(? (<- string$starts line include_prefix) {
-			(= include_file_path (+
+			(= line (>> (<- string$trim (: line 9 -1)) 1))
+			(= include_file_path (+ (?: (=== line "sll.h")
+				"build/"
 				config$INCLUDE_ROOT_DIRECTORY_PATH
-				(>>
-					(<- string$trim
-						(: line 9 -1)
-					)
-					1
-				)
-			))
+			) line))
 			(? (&&
 				(<- path$exists include_file_path)
 				(=== (<- _check_file_state (<- util$get_output_file_path include_file_path)) STATE_UPDATE)
@@ -125,7 +121,11 @@
 	})
 	(<- log$log "    Loaded " ($ _hash_map) " hashes")
 	(<- log$log "  Checking for file changes...")
-	(= files (<- path$list_dir config$HASHLIST_ROOT_SOURCE_FILE_PATH true))
+	(= files [])
+	(-> (= i 0) (< i ($ config$HASHLIST_ROOT_SOURCE_FILE_PATH))
+		(<- array$extend files (<- path$list_dir (: config$HASHLIST_ROOT_SOURCE_FILE_PATH i) true))
+		(++ i)
+	)
 	(= current_file_list [])
 	(-> (= i 0) (< i ($ files))
 		(= file_path (: files i))
