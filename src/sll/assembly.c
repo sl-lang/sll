@@ -1060,7 +1060,21 @@ static const sll_node_t* _generate_on_stack(const sll_node_t* o,assembly_generat
 				if (l==1){
 					return _generate_on_stack(o,g_dt);
 				}
-				SLL_UNIMPLEMENTED();
+				assembly_instruction_label_t e=NEXT_LABEL(g_dt);
+				while (1){
+					l--;
+					o=_generate_on_stack(o,g_dt);
+					if (!l){
+						break;
+					}
+					GENERATE_OPCODE(g_dt,SLL_ASSEMBLY_INSTRUCTION_TYPE_DUP);
+					GENERATE_OPCODE_WITH_LABEL(g_dt,SLL_ASSEMBLY_INSTRUCTION_TYPE_JZ,e);
+					GENERATE_OPCODE(g_dt,SLL_ASSEMBLY_INSTRUCTION_TYPE_POP_TWO);
+					POP;
+				}
+				DEFINE_LABEL(g_dt,e);
+				PUSH;
+				return o;
 			}
 		case SLL_NODE_TYPE_OR:
 			{

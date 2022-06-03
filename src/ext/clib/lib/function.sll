@@ -78,13 +78,10 @@
 	(@@ (+
 		(:: func$return string_type)
 		' '
-		(?: (&&
+		(* "__attribute__((ms_abi)) " (&&
 			(!== sys$PLATFORM "windows")
 			(=== func$calling_convenction CALLING_CONVENCTION_MSVC_X64)
-		)
-			"__attribute__((ms_abi)) "
-			""
-		)
+		))
 		func$name
 		'('
 		(?: func$arguments
