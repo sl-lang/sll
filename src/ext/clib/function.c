@@ -4,6 +4,6 @@
 
 
 
-__CLIB_API_CALL sll_object_t* clib_api_call_function(void* address,sll_object_t*const* args,sll_arg_count_t arg_count){
+__CLIB_API_CALL sll_object_t* clib_api_call_function(void* address,sll_array_t* args){
 	return sll_int_to_object(_call_function());
 }
