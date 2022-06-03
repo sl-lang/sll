@@ -2,6 +2,7 @@
 
 ## Added
 
+- Ability to use assembly in extension modules
 - C interface library: `clib` ([#286])
 - Implemented `audit$register_event`
 - Implemented `sll_gc_add_root`, `sll_gc_add_roots`, `sll_gc_collect`, `sll_gc_remove_root` and `sll_gc_remove_roots` ([#287])
