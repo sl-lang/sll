@@ -80,8 +80,8 @@
 		[]
 		clib_types$int
 		(?: (=== sys$PLATFORM "windows")
-			clib_function$CALLING_CONVENCTION_MSVC_X64
-			clib_function$CALLING_CONVENCTION_POSIX
+			clib_function$CALLING_CONVENCTION_MICROSOFT_X64
+			clib_function$CALLING_CONVENCTION_SYSTEM_V_AMD64_ABI
 		)
 	))
 	(= (: lib$symbols name) symbol)

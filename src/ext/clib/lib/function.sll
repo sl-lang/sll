@@ -22,16 +22,16 @@
 
 (= clib_function_module_type (&:
 	(~ type_type) clib_function_type
-	(~ int_type) CALLING_CONVENCTION_MSVC_X64
-	(~ int_type) CALLING_CONVENCTION_POSIX
+	(~ int_type) CALLING_CONVENCTION_MICROSOFT_X64
+	(~ int_type) CALLING_CONVENCTION_SYSTEM_V_AMD64_ABI
 	(~ func_type) call
 	(~ func_type) declaration
 ))
 
 
 
-(= CALLING_CONVENCTION_MSVC_X64 0)
-(= CALLING_CONVENCTION_POSIX 1)
+(= CALLING_CONVENCTION_MICROSOFT_X64 0)
+(= CALLING_CONVENCTION_SYSTEM_V_AMD64_ABI 1)
 
 
 
@@ -46,8 +46,8 @@
 		(++ i)
 	)
 	(? (! (|: [
-		CALLING_CONVENCTION_MSVC_X64
-		CALLING_CONVENCTION_POSIX
+		CALLING_CONVENCTION_MICROSOFT_X64
+		CALLING_CONVENCTION_SYSTEM_V_AMD64_ABI
 	] func$calling_convenction)) {
 		(:> "Unknown calling convenction: " func$calling_convenction '\n')
 		(<- thread$exit 1)
@@ -80,7 +80,7 @@
 		(:: func$return string_type)
 		(* " __attribute__((ms_abi))" (&&
 			(!== sys$PLATFORM "windows")
-			(=== func$calling_convenction CALLING_CONVENCTION_MSVC_X64)
+			(=== func$calling_convenction CALLING_CONVENCTION_MICROSOFT_X64)
 		))
 		' '
 		func$name
@@ -97,8 +97,8 @@
 
 (= clib_function (. clib_function_module_type
 	clib_function_type
-	CALLING_CONVENCTION_MSVC_X64
-	CALLING_CONVENCTION_POSIX
+	CALLING_CONVENCTION_MICROSOFT_X64
+	CALLING_CONVENCTION_SYSTEM_V_AMD64_ABI
 	call
 	declaration
 ))
