@@ -7,6 +7,6 @@ if not exist build\_sll_runtime_windows (
 	del /f /q build\_sll_runtime_windows\windows.zip
 )
 if not exist build\_build_script.sla (
-	build\_sll_runtime_windows\sll.exe src\_build\main.sll -I "@build-script|src\_build" -r -R -a -o build/_build_script
+	build\_sll_runtime_windows\sll.exe src\_build\main.sll -I "@build-script|src\_build" -O -x 5 -r -R -a -o build/_build_script
 )
 build\_sll_runtime_windows\sll.exe build\_build_script.sla -A %*
