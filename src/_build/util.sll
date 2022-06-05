@@ -78,14 +78,18 @@
 		_obj_file_prefix
 		(<- string$replace
 			(<- string$replace
-				(<- path$absolute
-					(:: file_path string_type)
+				(<- string$replace
+					(<- path$absolute
+						(:: file_path string_type)
+					)
+					'\\'
+					'/'
 				)
-				'\\'
 				'/'
+				'$'
 			)
-			'/'
-			'$'
+			':'
+			'@'
 		)
 		".o"
 	))
@@ -95,8 +99,8 @@
 	(@@ (<- string$replace
 		(<- string$replace
 			(: file_path ($ _obj_file_prefix) -2)
+			'@'
 			':'
-			""
 		)
 		'$'
 		'/'
