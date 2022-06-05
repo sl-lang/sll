@@ -93,7 +93,11 @@
 
 (= get_source_file_path (,,, file_path
 	(@@ (<- string$replace
-		(: file_path ($ _obj_file_prefix) -2)
+		(<- string$replace
+			(: file_path ($ _obj_file_prefix) -2)
+			':'
+			""
+		)
 		'$'
 		'/'
 	))
