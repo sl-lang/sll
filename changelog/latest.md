@@ -7,7 +7,6 @@
 ## Changed
 
 - Build script compilation now uses optimization
-- Build script now uses full releases instead of nightly builds
 
 ## Removed
 

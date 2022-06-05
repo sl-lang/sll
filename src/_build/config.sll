@@ -400,9 +400,9 @@
 	"src/ext/"
 	"src/ext/<name>/include/"
 	"src/ext/<name>/lib/"
-	(+ output_executable_args ["-b" "-v" "-B" COMMAND_MARKER_OUTPUT "-d" "-D" "-E" "-N" COMMAND_MARKER_NAME "-O" "-R" "-x" "5" COMMAND_MARKER_INPUT])
-	(+ output_executable_args ["-c" "-v" "-E" "-o" COMMAND_MARKER_OUTPUT "-R" COMMAND_MARKER_INCLUDE COMMAND_MARKER_INPUT])
-	(+ output_executable_args ["-b" "-v" "-B" COMMAND_MARKER_OUTPUT "-E" "-N" COMMAND_MARKER_NAME "-R" COMMAND_MARKER_INPUT])
+	(+ output_executable_args ["-b" "-v" "-B" COMMAND_MARKER_OUTPUT "-d" "-D" "-N" COMMAND_MARKER_NAME "-O" "-R" "-x" "5" COMMAND_MARKER_INPUT])
+	(+ output_executable_args ["-c" "-v" "-o" COMMAND_MARKER_OUTPUT "-R" COMMAND_MARKER_INCLUDE COMMAND_MARKER_INPUT])
+	(+ output_executable_args ["-b" "-v" "-B" COMMAND_MARKER_OUTPUT "-N" COMMAND_MARKER_NAME "-R" COMMAND_MARKER_INPUT])
 	(+ "build/sys_lib/<name>-" version sys$LIBRARY_EXTENSION)
 	<
 		"darwin" "src/ext/<name>/platform/linux/"

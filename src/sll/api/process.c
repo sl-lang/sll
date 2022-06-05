@@ -95,8 +95,14 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_process_start(const sll_array_t* args
 	sll_free_string(&exe_fp);
 	for (sll_array_length_t i=1;i<args->length;i++){
 		n=sll_operator_cast(args->data[i],sll_static_int[SLL_OBJECT_TYPE_STRING]);
-		*(raw_args+i)=sll_allocate((n->data.string.length+1)*sizeof(sll_char_t));
-		sll_copy_data(n->data.string.data,n->data.string.length+1,*(raw_args+i));
+		sll_bool_t trailing_slash=(n->data.string.data[n->data.string.length-1]=='\\');
+		sll_char_t* ptr=sll_allocate((n->data.string.length+trailing_slash+1)*sizeof(sll_char_t));
+		sll_copy_data(n->data.string.data,n->data.string.length+1,ptr);
+		if (trailing_slash){
+			*(ptr+n->data.string.length)='\\';
+			*(ptr+n->data.string.length+1)=0;
+		}
+		*(raw_args+i)=ptr;
 		SLL_RELEASE(n);
 	}
 	*(raw_args+args->length)=NULL;
