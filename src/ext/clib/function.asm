@@ -6,8 +6,16 @@
 
 %ifdef __SLL_BUILD_DARWIN
 %define __SYMBOL(nm) _ %+ nm
+%define __CALL(nm) nm wrt ..plt
+%define __EXTERN(nm) extern nm
+%elifdef __SLL_BUILD_WINDOWS
+%define __SYMBOL(nm) nm
+%define __CALL(nm) QWORD [__imp_ %+ nm]
+%define __EXTERN(nm) extern __imp_ %+ nm
 %else
 %define __SYMBOL(nm) nm
+%define __CALL(nm) nm wrt ..plt
+%define __EXTERN(nm) extern nm
 %endif
 
 
@@ -18,8 +26,8 @@
 
 
 
-extern __SYMBOL(sll_int_to_object)
-extern __SYMBOL(sll_float_to_object)
+__EXTERN(sll_int_to_object)
+__EXTERN(sll_float_to_object)
 %ifdef __SLL_BUILD_WINDOWS
 extern __chkstk
 %endif
@@ -132,10 +140,12 @@ __SYMBOL(clib_api_call_function):
 
 	; rax - Integer return value
 	; xmm0 - Floating-point return value
-	jnz __SYMBOL(sll_float_to_object) wrt ..plt
+	jnz ._return_float
 %ifdef __SLL_BUILD_WINDOWS
 	mov rcx, rax
 %else
 	mov rdi, rax
 %endif
-	jmp __SYMBOL(sll_int_to_object) wrt ..plt
+	jmp __CALL(sll_int_to_object)
+._return_float:
+	jmp __CALL(sll_float_to_object)
