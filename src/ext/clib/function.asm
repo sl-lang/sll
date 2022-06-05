@@ -50,7 +50,6 @@ __SYMBOL(clib_api_call_function):
 	mov QWORD [rbp+16], rcx
 	mov QWORD [rbp+24], rdx
 	mov QWORD [rbp+32], r8
-	mov QWORD [rbp+40], r9
 %endif
 
 	; rbx - Return type
