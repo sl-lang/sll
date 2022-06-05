@@ -7,6 +7,7 @@
 ## Changed
 
 - Build script compilation now uses optimization
+- Fixed issue with backslash escaping in `sll_api_process_start`
 
 ## Removed
 
