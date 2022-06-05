@@ -49,6 +49,7 @@ static sll_bool_t _cli_enable_file_lookup=0;
 static sll_cli_path_resolver_t _cli_resolver_table[CLI_PATH_RESOLVER_TABLE_SIZE];
 static sll_array_length_t _cli_resolver_table_size=0;
 static sll_optimization_round_count_t _cli_optimization_count=1;
+static sll_bool_t _cli_had_warning;
 
 
 
@@ -58,10 +59,12 @@ static sll_bool_t _import_file(const sll_string_t* path,sll_compilation_data_t* 
 	if (res==SLL_LOOKUP_RESULT_ASSEMBLY){
 		sll_free_assembly_data(&(res_data.data.assembly_data));
 		SLL_WARN(SLL_CHAR("Importing assembly into compiled programs is not allowed"));
+		_cli_had_warning=1;
 		return 0;
 	}
 	if (res==SLL_LOOKUP_RESULT_EMPTY){
 		SLL_WARN("Unable to find file '%s'",path->data);
+		_cli_had_warning=1;
 		return 0;
 	}
 	*out=res_data.data.compilation_data;
@@ -264,6 +267,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_code_t sll_cli_main(sll_array_lengt
 	sll_init();
 	sll_return_code_t ec=0;
 	_cli_flags=0;
+	_cli_had_warning=0;
 	_check_release_mode(argc,argv);
 	_cli_bundle_list=NULL;
 	_cli_bundle_list_len=0;
@@ -373,6 +377,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_code_t sll_cli_main(sll_array_lengt
 				sll_cli_path_resolver_t cb=sll_platform_lookup_symbol(lh,SLL_ABI_NAME(SLL_ABI_PATH_RESOLVER_RESOLVE));
 				if (!cb){
 					SLL_WARN("Unable to load library '%s'",e);
+					_cli_had_warning=1;
 					SLL_CRITICAL_ERROR(sll_platform_unload_library(lh));
 				}
 				else{
@@ -388,6 +393,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_code_t sll_cli_main(sll_array_lengt
 			}
 			else{
 				SLL_WARN("Unable to load library '%s'",e);
+				_cli_had_warning=1;
 			}
 		}
 		else if (nm=='h'||sll_string_compare_pointer(e,SLL_CHAR("--help"))==SLL_COMPARE_RESULT_EQUAL){
@@ -482,6 +488,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_code_t sll_cli_main(sll_array_lengt
 				sll_audit_callback_t cb=sll_platform_lookup_symbol(lh,SLL_ABI_NAME(SLL_ABI_AUDIT_CALL));
 				if (!cb){
 					SLL_WARN("Unable to load library '%s'",e);
+					_cli_had_warning=1;
 					SLL_CRITICAL_ERROR(sll_platform_unload_library(lh));
 				}
 				else{
@@ -498,6 +505,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_code_t sll_cli_main(sll_array_lengt
 			}
 			else{
 				SLL_WARN("Unable to load library '%s'",e);
+				_cli_had_warning=1;
 			}
 		}
 		else if (nm=='n'||sll_string_compare_pointer(e,SLL_CHAR("--names-only"))==SLL_COMPARE_RESULT_EQUAL){
@@ -594,6 +602,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_code_t sll_cli_main(sll_array_lengt
 			}
 			else{
 				SLL_WARN(SLL_CHAR("Ignoring unknown Sandbox Flag '%s'"),e);
+				_cli_had_warning=1;
 			}
 		}
 		else if (nm=='v'||sll_string_compare_pointer(e,SLL_CHAR("--verbose"))==SLL_COMPARE_RESULT_EQUAL){
@@ -627,6 +636,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_code_t sll_cli_main(sll_array_lengt
 			goto _skip_warning;
 _skip_int_read:;
 			SLL_WARN("Ignoring non-integer count '%s'",argv[i]);
+			_cli_had_warning=1;
 _skip_warning:;
 		}
 		else if (nm=='X'||sll_string_compare_pointer(e,SLL_CHAR("--disable-audit"))==SLL_COMPARE_RESULT_EQUAL){
@@ -635,6 +645,7 @@ _skip_warning:;
 		else if (nm!='r'&&sll_string_compare_pointer(e,SLL_CHAR("--release-mode"))!=SLL_COMPARE_RESULT_EQUAL){
 			if (*e=='-'){
 				SLL_WARN("Ignroing unknown switch '%s'",e);
+				_cli_had_warning=1;
 			}
 			else{
 _read_file_argument:
@@ -756,6 +767,7 @@ _read_file_argument:
 			}
 			else{
 				SLL_WARN("Unable to find file '%s'",tmp.data);
+				_cli_had_warning=1;
 				sll_init_compilation_data(tmp.data,&compilation_data);
 			}
 			sll_free_string(&tmp);
@@ -924,6 +936,7 @@ _read_file_argument:
 		}
 		if (!bf[0]){
 			SLL_WARN(SLL_CHAR("No bundle output path supplied"));
+			_cli_had_warning=1;
 			sll_free_bundle(&bundle);
 			goto _cleanup;
 		}
