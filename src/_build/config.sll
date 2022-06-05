@@ -400,9 +400,9 @@
 	"src/ext/"
 	"src/ext/<name>/include/"
 	"src/ext/<name>/lib/"
-	(+ output_executable_args ["-b" "-d" "-D" "-O" "-x" "5" "-N" COMMAND_MARKER_NAME "-R" "-B" COMMAND_MARKER_OUTPUT COMMAND_MARKER_INPUT])
-	(+ output_executable_args ["-c" "-R" COMMAND_MARKER_INCLUDE "-o" COMMAND_MARKER_OUTPUT COMMAND_MARKER_INPUT])
-	(+ output_executable_args ["-b" "-N" COMMAND_MARKER_NAME "-R" "-B" COMMAND_MARKER_OUTPUT COMMAND_MARKER_INPUT])
+	(+ output_executable_args ["-E" "-b" "-d" "-D" "-O" "-x" "5" "-N" COMMAND_MARKER_NAME "-R" "-B" COMMAND_MARKER_OUTPUT COMMAND_MARKER_INPUT])
+	(+ output_executable_args ["-E" "-c" "-R" COMMAND_MARKER_INCLUDE "-o" COMMAND_MARKER_OUTPUT COMMAND_MARKER_INPUT])
+	(+ output_executable_args ["-E" "-b" "-N" COMMAND_MARKER_NAME "-R" "-B" COMMAND_MARKER_OUTPUT COMMAND_MARKER_INPUT])
 	(+ "build/sys_lib/<name>-" version sys$LIBRARY_EXTENSION)
 	<
 		"darwin" "src/ext/<name>/platform/linux/"
@@ -433,9 +433,9 @@
 		"windows" "__declspec(dllimport) "
 	>
 	"build/sll.h"
-	(+ output_executable_args ["-b" "-d" "-D" "-O" "-x" "5" "-n" "-N" "/" "-R" "-B" "build/lib/stdlib.slb" COMMAND_MARKER_INPUT])
-	(+ output_executable_args ["-c" "-R" "-I" "build/lib" "-I" "src/sll/lib" "-o" "build/lib/" COMMAND_MARKER_INPUT])
-	(+ output_executable_args ["-b" "-n" "-N" "/" "-R" "-B" "build/lib_debug/stdlib.slb" COMMAND_MARKER_INPUT])
+	(+ output_executable_args ["-E" "-b" "-d" "-D" "-O" "-x" "5" "-n" "-N" "/" "-R" "-B" "build/lib/stdlib.slb" COMMAND_MARKER_INPUT])
+	(+ output_executable_args ["-E" "-c" "-R" "-I" "build/lib" "-I" "src/sll/lib" "-o" "build/lib/" COMMAND_MARKER_INPUT])
+	(+ output_executable_args ["-E" "-b" "-n" "-N" "/" "-R" "-B" "build/lib_debug/stdlib.slb" COMMAND_MARKER_INPUT])
 	"src/sll/data/operator_parser.txt"
 	"src/sll/include/sll/generated/operator_parser.h"
 	"src/sll/data/optimizer.txt"

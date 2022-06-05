@@ -1,7 +1,6 @@
 (---
 	"_file.sll"
 	"_internal.sll"
-	"_thread.sll"
 	"array.sll"
 	"audit.sll"
 	"error_codes.sll"

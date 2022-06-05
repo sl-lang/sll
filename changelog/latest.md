@@ -1,5 +1,9 @@
 # Sll [0.7.21] - Ongoing
 
+## Added
+
+- CLI option to treat warnings as errors: `-E` or `--enable-errors`
+
 ## Changed
 
 - Build script compilation now uses optimization

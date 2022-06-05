@@ -205,13 +205,25 @@
 
 /**
  * \flags macro var
+ * \name SLL_CLI_FLAG_ENABLE_ERRORS
+ * \group cli
+ * \subgroup cli-flag
+ * \desc Docs!
+ * \type __SLL_U32
+ */
+#define SLL_CLI_FLAG_ENABLE_ERRORS 32768
+
+
+
+/**
+ * \flags macro var
  * \name SLL_CLI_FLAG_RESERVED0
  * \group cli
  * \subgroup cli-flag
  * \desc Internally used as `CLI_FLAG_SINGLE_OUTPUT`
  * \type __SLL_U32
  */
-#define SLL_CLI_FLAG_RESERVED0 32768
+#define SLL_CLI_FLAG_RESERVED0 65536
 
 
 

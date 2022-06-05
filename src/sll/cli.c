@@ -359,6 +359,9 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_code_t sll_cli_main(sll_array_lengt
 		else if (nm=='e'||sll_string_compare_pointer(e,SLL_CHAR("--expand-file-paths"))==SLL_COMPARE_RESULT_EQUAL){
 			_cli_flags|=SLL_CLI_FLAG_EXPAND_PATH;
 		}
+		else if (nm=='E'||sll_string_compare_pointer(e,SLL_CHAR("--enable-errors"))==SLL_COMPARE_RESULT_EQUAL){
+			_cli_flags|=SLL_CLI_FLAG_ENABLE_ERRORS;
+		}
 		else if (nm=='f'||sll_string_compare_pointer(e,SLL_CHAR("--file"))==SLL_COMPARE_RESULT_EQUAL){
 			i++;
 			if (i==argc){
@@ -710,6 +713,9 @@ _read_file_argument:
 		if (_cli_flags&SLL_CLI_FLAG_STRIP_NAMES){
 			SLL_LOG("  Function name stripping");
 		}
+		if (_cli_flags&SLL_CLI_FLAG_ENABLE_ERRORS){
+			SLL_LOG("  Errors");
+		}
 		SLL_LOG("Include path:");
 		for (sll_array_length_t j=0;j<_cli_bundle_list_len;j++){
 			SLL_LOG("  '%s' (bundle)",(*(_cli_bundle_list+j))->name);
@@ -767,7 +773,10 @@ _read_file_argument:
 			}
 			else{
 				SLL_WARN("Unable to find file '%s'",tmp.data);
-				_cli_had_warning=1;
+				if (_cli_flags&SLL_CLI_FLAG_ENABLE_ERRORS){
+					ec=1;
+					goto _cleanup;
+				}
 				sll_init_compilation_data(tmp.data,&compilation_data);
 			}
 			sll_free_string(&tmp);
@@ -786,6 +795,16 @@ _read_file_argument:
 			sll_file_close(&f);
 			SLL_LOG("Input successfully read.");
 			sll_set_argument(0,SLL_CHAR("@console"));
+		}
+		if (_cli_had_warning&&(_cli_flags&SLL_CLI_FLAG_ENABLE_ERRORS)){
+			if (generated_type==SLL_LOOKUP_RESULT_COMPILED_OBJECT){
+				sll_free_compilation_data(&compilation_data);
+			}
+			else{
+				sll_free_assembly_data(&assembly_data);
+			}
+			ec=1;
+			goto _cleanup;
 		}
 		_cli_enable_file_lookup=0;
 		if (generated_type==SLL_LOOKUP_RESULT_COMPILED_OBJECT){

@@ -9,6 +9,7 @@ Options:
   -d, --strip-names -> Remove function and type names
   -D, --strip-debug -> Remove source code line number data
   -e, --expand-file-paths -> Expand file paths
+  -E, --enable-errors -> Treat warnings as error
   -f <file>, --file <file> -> Treat <file> as input file (Useful for files starting with a dash ('-'))
   -F <resolver_library>, --file-path-resolver <resolver_library> -> Load path resolver library <resolver_library>
   -h, --help -> Print this message
