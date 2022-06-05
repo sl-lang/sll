@@ -14,5 +14,5 @@
 
 global __SYMBOL(_call_function)
 __SYMBOL(_call_function):
-	mov rax, 12345
+	xor rax, rax
 	ret
