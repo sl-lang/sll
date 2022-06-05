@@ -2,6 +2,7 @@
 	"clib/_library.sll"
 	"clib/_load_library.sll"
 	"clib/types.sll"
+	"array.sll"
 	"string.sll"
 	"types.sll"
 )
@@ -67,7 +68,8 @@
 		)
 	))
 	(@@ (<- func$return$_decode (<- (... "clib:call_function")
-		func$address
+		(| func$address (<< func$calling_convenction 63))
+		(! (& func$return$flags (| clib_types$FLAG_INTEGER clib_types$FLAG_POINTER)))
 		args
 	)))
 ))
@@ -86,7 +88,7 @@
 		func$name
 		'('
 		(?: func$arguments
-			(<- string$join func$arguments ',')
+			(<- string$join ',' func$arguments)
 			"void"
 		)
 		')'

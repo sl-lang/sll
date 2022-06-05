@@ -657,8 +657,8 @@ abc` '\n')
 
 (:> (<- clib_library$get_loaded_libraries) '\n')
 
-(= time$arguments [])
+(= time$arguments [clib_types$void*])
 (= time$return clib_types$unsigned_long_long_int)
 (:> (<- clib_function$declaration time) ";\n")
 
-(:> (<- clib_function$call time) '\n')
+(:> (<- clib_function$call time nil) '\n')

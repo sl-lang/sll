@@ -8,7 +8,7 @@ static const sll_internal_function_descriptor_t _internal_function_table[]={
 	{
 		SLL_CHAR("clib:call_function"),
 		clib_api_call_function,
-		SLL_CHAR("Q#a|o")
+		SLL_CHAR("Qb#a|o")
 	},
 	{
 		SLL_CHAR("clib:get_sll_library_handle"),
