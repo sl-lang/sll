@@ -6,8 +6,8 @@
 
 %ifdef __SLL_BUILD_DARWIN
 %define __SYMBOL(nm) _ %+ nm
-%define __CALL(nm) nm wrt ..plt
-%define __EXTERN(nm) extern nm
+%define __CALL(nm) _ %+ nm
+%define __EXTERN(nm) extern _ %+ nm
 %elifdef __SLL_BUILD_WINDOWS
 %define __SYMBOL(nm) nm
 %define __CALL(nm) QWORD [__imp_ %+ nm]
