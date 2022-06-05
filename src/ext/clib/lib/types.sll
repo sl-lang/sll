@@ -110,6 +110,34 @@
 	(<- thread$exit 1)
 ))
 
+(= _convert_from_char (,,, arg
+	(@@ (:: arg char_type int_type))
+))
+
+(= _convert_from_float (,,, arg
+	(@@ (:: arg float_type))
+))
+
+(= _convert_bypass (,,, arg
+	(@@ arg)
+))
+
+(= _convert_to_bool (,,, arg
+	(@@ (!! arg))
+))
+
+(= _convert_to_char (,,, arg
+	(@@ (:: (& arg 0xff) char_type))
+))
+
+(= _convert_to_short (,,, arg
+	(@@ (?: arg (~ (& (~ arg) 0xffff)) arg))
+))
+
+(= _convert_to_int (,,, arg
+	(@@ (?: arg (~ (& (~ arg) 0xffffffff)) arg))
+))
+
 
 
 (= void (. clib_type
@@ -134,8 +162,8 @@
 	1
 	FLAG_INTEGER
 	nil
-	_decode_not_supported
-	_encode_not_supported
+	_convert_to_bool
+	_convert_to_bool
 	0
 ))
 
@@ -143,8 +171,8 @@
 	8
 	(| FLAG_INTEGER FLAG_SIGNED)
 	nil
-	_decode_not_supported
-	_encode_not_supported
+	_convert_to_char
+	_convert_from_char
 	0
 ))
 
@@ -152,8 +180,8 @@
 	8
 	(| FLAG_INTEGER FLAG_SIGNED FLAG_CONST)
 	nil
-	_decode_not_supported
-	_encode_not_supported
+	_convert_to_char
+	_convert_from_char
 	0
 ))
 
@@ -161,8 +189,8 @@
 	8
 	FLAG_INTEGER
 	nil
-	_decode_not_supported
-	_encode_not_supported
+	_convert_to_char
+	_convert_from_char
 	0
 ))
 
@@ -170,7 +198,7 @@
 	16
 	(| FLAG_INTEGER FLAG_SIGNED)
 	nil
-	_decode_not_supported
+	_convert_to_short
 	_encode_not_supported
 	0
 ))
@@ -179,7 +207,7 @@
 	16
 	FLAG_INTEGER
 	nil
-	_decode_not_supported
+	_convert_to_short
 	_encode_not_supported
 	0
 ))
@@ -188,7 +216,7 @@
 	32
 	(| FLAG_INTEGER FLAG_SIGNED)
 	nil
-	_decode_not_supported
+	_convert_to_int
 	_encode_not_supported
 	0
 ))
@@ -197,7 +225,7 @@
 	32
 	FLAG_INTEGER
 	nil
-	_decode_not_supported
+	_convert_to_int
 	_encode_not_supported
 	0
 ))
@@ -206,7 +234,7 @@
 	64
 	(| FLAG_INTEGER FLAG_SIGNED)
 	nil
-	_decode_not_supported
+	_convert_bypass
 	_encode_not_supported
 	0
 ))
@@ -215,7 +243,7 @@
 	64
 	FLAG_INTEGER
 	nil
-	_decode_not_supported
+	_convert_bypass
 	_encode_not_supported
 	0
 ))
@@ -224,8 +252,8 @@
 	32
 	0
 	nil
-	_decode_not_supported
-	_encode_not_supported
+	_convert_bypass
+	_convert_from_float
 	0.0
 ))
 
@@ -233,8 +261,8 @@
 	64
 	0
 	nil
-	_decode_not_supported
-	_encode_not_supported
+	_convert_bypass
+	_convert_from_float
 	0.0
 ))
 

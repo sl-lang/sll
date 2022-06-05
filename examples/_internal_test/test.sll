@@ -647,12 +647,13 @@ abc` '\n')
 
 (:> (<- clib_library$load "unknown/library/file.dll") '\n')
 
-(= libc (<- clib_library$load (?: (=== sys$PLATFORM "windows")
-	"msvcrt.dll"
-	"libc.so.6"
-)))
-(:> libc '\n')
-(= time (<- clib_library$lookup_symbol libc "time"))
+(= c_stdlib (<- clib_library$load (: <
+	"darwin" "libSystem.dylib"
+	"linux" "libc.so.6"
+	"windows" "msvcrt.dll"
+> sys$PLATFORM)))
+(:> c_stdlib '\n')
+(= time (<- clib_library$lookup_symbol c_stdlib "time"))
 (:> time '\n')
 
 (:> (<- clib_library$get_loaded_libraries) '\n')
