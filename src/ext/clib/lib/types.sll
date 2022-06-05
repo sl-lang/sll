@@ -1,4 +1,5 @@
 (---
+	"error.sll"
 	"thread.sll"
 	"types.sll"
 )
@@ -118,6 +119,42 @@
 	(@@ (:: arg float_type))
 ))
 
+(= _convert_from_short (,,, arg
+	(= arg (:: arg int_type))
+	(@@ (?: (|| (< arg -0x8000) (> arg 0x7fff))
+		(<- error$create erro$ERROR_OUT_OF_RANGE arg -0x8000 0x7fff)
+		arg
+	)
+))
+
+(= _convert_from_unsigned_short (,,, arg
+	(= arg (:: arg int_type))
+	(@@ (?: (|| (< arg 0) (> arg 0xffff))
+		(<- error$create erro$ERROR_OUT_OF_RANGE arg 0 0xffff)
+		arg
+	)
+))
+
+(= _convert_from_int (,,, arg
+	(= arg (:: arg int_type))
+	(@@ (?: (|| (< arg -0x80000000) (> arg 0x7fffffff))
+		(<- error$create erro$ERROR_OUT_OF_RANGE arg -0x80000000 0x7fffffff)
+		arg
+	)
+))
+
+(= _convert_from_unsigned_int (,,, arg
+	(= arg (:: arg int_type))
+	(@@ (?: (|| (< arg 0) (> arg 0xffffffff))
+		(<- error$create erro$ERROR_OUT_OF_RANGE arg 0 0xffffffff)
+		arg
+	)
+))
+
+(= _convert_from_long_long_int (,,, arg
+	(@@ (:: arg int_type))
+))
+
 (= _convert_bypass (,,, arg
 	(@@ arg)
 ))
@@ -134,8 +171,16 @@
 	(@@ (?: arg (~ (& (~ arg) 0xffff)) arg))
 ))
 
+(= _convert_to_unsigned_short (,,, arg
+	(@@ (& arg 0xffff))
+))
+
 (= _convert_to_int (,,, arg
 	(@@ (?: arg (~ (& (~ arg) 0xffffffff)) arg))
+))
+
+(= _convert_to_unsigned_int (,,, arg
+	(@@ (& arg 0xffffffff))
 ))
 
 
@@ -199,7 +244,7 @@
 	(| FLAG_INTEGER FLAG_SIGNED)
 	nil
 	_convert_to_short
-	_encode_not_supported
+	_convert_from_short
 	0
 ))
 
@@ -207,8 +252,8 @@
 	16
 	FLAG_INTEGER
 	nil
-	_convert_to_short
-	_encode_not_supported
+	_convert_to_unsigned_short
+	_convert_from_unsigned_short
 	0
 ))
 
@@ -217,7 +262,7 @@
 	(| FLAG_INTEGER FLAG_SIGNED)
 	nil
 	_convert_to_int
-	_encode_not_supported
+	_convert_from_int
 	0
 ))
 
@@ -225,8 +270,8 @@
 	32
 	FLAG_INTEGER
 	nil
-	_convert_to_int
-	_encode_not_supported
+	_convert_to_unsigned_int
+	_convert_from_unsigned_int
 	0
 ))
 
@@ -235,7 +280,7 @@
 	(| FLAG_INTEGER FLAG_SIGNED)
 	nil
 	_convert_bypass
-	_encode_not_supported
+	_convert_from_long_long_int
 	0
 ))
 
@@ -244,7 +289,7 @@
 	FLAG_INTEGER
 	nil
 	_convert_bypass
-	_encode_not_supported
+	_convert_from_long_long_int
 	0
 ))
 
