@@ -663,3 +663,8 @@ abc` '\n')
 (:> (<- clib_function$declaration time) ";\n")
 
 (:> (<- clib_function$call time nil) '\n')
+
+(= puts (<- clib_library$lookup_symbol c_stdlib "puts"))
+(= puts$arguments [clib_types$const_char*])
+(:> puts '\n')
+(<- clib_function$call puts "String!")

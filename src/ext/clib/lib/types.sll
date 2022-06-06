@@ -155,6 +155,14 @@
 	(@@ (:: arg int_type))
 ))
 
+(= _convert_from_void* (,,, arg
+	(?? (:? arg)
+		int_type (@@ arg)
+		char_type (@@ (:: argg int_type))
+	)
+	(<- _encode_not_supported)
+))
+
 (= _convert_bypass (,,, arg
 	(@@ arg)
 ))
@@ -334,7 +342,7 @@
 	FLAG_POINTER
 	void
 	_decode_not_supported
-	_encode_not_supported
+	_convert_from_void*
 	nil
 ))
 
@@ -343,7 +351,7 @@
 	FLAG_POINTER
 	const_void
 	_decode_not_supported
-	_encode_not_supported
+	_convert_from_void*
 	nil
 ))
 

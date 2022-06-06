@@ -62,17 +62,18 @@
 	(<- _prepare_data func)
 	(= args ([> (= i 0) (< i ($ func$arguments))
 		(= arg (: func$arguments i))
-		(++ i)
-		(?: (< i ($ @@call_args@@))
-			(<- arg$_encode (: @@call_args@@ i))
+		(= value (?: (< i ($ @@call_args@@))
+			(<- arg$_encode (: @@call_args@@ i) arg)
 			(: arg$_default)
-		)
+		))
+		(++ i)
+		value
 	))
 	(@@ (<- func$return$_decode (<- (... "clib:call_function")
 		(| func$address (<< func$calling_convenction 63))
 		(! (& func$return$flags (| clib_types$FLAG_INTEGER clib_types$FLAG_POINTER)))
 		args
-	)))
+	) arg))
 ))
 
 (= declaration (,,, func
