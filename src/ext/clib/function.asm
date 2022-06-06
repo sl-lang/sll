@@ -7,15 +7,15 @@
 %ifdef __SLL_BUILD_DARWIN
 %define __SYMBOL(nm) _ %+ nm
 %define __CALL(nm) _ %+ nm
-%define __EXTERN(nm) extern _ %+ nm
+%define __EXTERNAL(nm) extern _ %+ nm
 %elifdef __SLL_BUILD_WINDOWS
 %define __SYMBOL(nm) nm
 %define __CALL(nm) QWORD [__imp_ %+ nm]
-%define __EXTERN(nm) extern __imp_ %+ nm
+%define __EXTERNAL(nm) extern __imp_ %+ nm
 %else
 %define __SYMBOL(nm) nm
 %define __CALL(nm) nm wrt ..plt
-%define __EXTERN(nm) extern nm
+%define __EXTERNAL(nm) extern nm
 %endif
 
 
@@ -26,8 +26,8 @@
 
 
 
-__EXTERN(sll_int_to_object)
-__EXTERN(sll_float_to_object)
+__EXTERNAL(sll_int_to_object)
+__EXTERNAL(sll_float_to_object)
 %ifdef __SLL_BUILD_WINDOWS
 extern __chkstk
 %endif
@@ -37,7 +37,7 @@ extern __chkstk
 global __SYMBOL(clib_api_call_function)
 __SYMBOL(clib_api_call_function):
 	; rcx - Function pointer
-	; rdx - Return type
+	; rdx - Return typ
 	; r8 - Argument array
 	push rbp
 	mov rbp, rsp
@@ -82,6 +82,7 @@ __SYMBOL(clib_api_call_function):
 	; rcx - Function pointer
 	; rdx - Stack pointer for arguments
 	; r8 - Argument array / Argument object pointer
+	; r9 - Object pointer
 	mov eax, sll_array_t.length(r8)
 	test eax, eax
 	jz ._no_args
