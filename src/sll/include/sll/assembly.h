@@ -1792,12 +1792,10 @@ typedef struct _SLL_ASSEMBLY_INSTRUCTION{
  * \desc Docs!
  * \arg sll_instruction_index_t instruction_index
  * \arg sll_arg_count_t arg_count
- * \arg sll_string_index_t name_string_index
  */
 typedef struct _SLL_ASSEMBLY_FUNCTION{
 	sll_instruction_index_t instruction_index;
 	sll_arg_count_t arg_count;
-	sll_string_index_t name_string_index;
 } sll_assembly_function_t;
 
 

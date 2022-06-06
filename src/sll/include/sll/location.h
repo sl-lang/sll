@@ -63,7 +63,7 @@
 
 
 /**
- * \flags check_output func
+ * \flags func
  * \name sll_get_location
  * \group location
  * \desc Docs!
@@ -73,7 +73,7 @@
  * \arg sll_string_index_t* function_string_index
  * \ret sll_file_offset_t
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_file_offset_t sll_get_location(const sll_assembly_data_t* assembly_data,sll_instruction_index_t instruction_index,sll_string_index_t* file_path_string_index,sll_string_index_t* function_string_index);
+__SLL_EXTERNAL sll_file_offset_t sll_get_location(const sll_assembly_data_t* assembly_data,sll_instruction_index_t instruction_index,sll_string_index_t* file_path_string_index,sll_string_index_t* function_string_index);
 
 
 

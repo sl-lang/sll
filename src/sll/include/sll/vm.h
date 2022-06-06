@@ -68,13 +68,11 @@ typedef __SLL_U16 sll_call_stack_size_t;
  * \name sll_call_stack_frame_t
  * \group vm
  * \desc Docs!
- * \arg const sll_char_t* name
  * \arg sll_instruction_index_t _instruction_index
  * \arg sll_stack_offset_t _stack_offset
  * \arg void* _variable_memory_offset
  */
 typedef struct _SLL_CALL_STACK_FRAME{
-	const sll_char_t* name;
 	sll_instruction_index_t _instruction_index;
 	sll_stack_offset_t _stack_offset;
 	void* _variable_memory_offset;

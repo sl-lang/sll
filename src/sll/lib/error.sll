@@ -17,8 +17,7 @@
 ))
 
 (= call_stack_type (&:
-	(~ string_type) name
-	(~ vm$location_type) return
+	(~ vm$location_type) location
 	(~ call_stack_raw_type) raw
 ))
 
@@ -164,11 +163,11 @@
 
 
 (= _get_error_backtrace (,,,
-	(= call_stack (<- (... "sll:error_get_call_stack") 1 (!.)))
+	(= call_stack (<- (... "sll:error_get_call_stack") 0 (!.)))
 	(@@ ([> (= i 0) (< i ($ call_stack))
 		(= k (: call_stack i))
 		(++ i)
-		(:: (: k 1) vm$location_type)
+		(:: (: k 0) vm$location_type)
 	))
 ))
 
@@ -228,7 +227,7 @@
 (= get_call_stack (,,, pop thr
 	(= pop (:: pop int_type))
 	(= call_stack (<- (... "sll:error_get_call_stack")
-		(?: (< pop 0) 1 (+ pop 1))
+		(?: (< pop 0) 0 pop)
 		(?: thr thr$id (!.))
 	))
 	(@@ ([> (= i 0) (< i ($ call_stack))

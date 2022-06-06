@@ -209,7 +209,6 @@ __SLL_EXTERNAL void sll_write_assembly(const sll_assembly_data_t* assembly_data,
 	for (sll_function_index_t i=0;i<assembly_data->function_table.length;i++){
 		SLL_CRITICAL_ERROR(sll_encode_integer(out,(assembly_data->function_table.data+i)->instruction_index));
 		SLL_CRITICAL_ERROR(sll_encode_integer(out,(assembly_data->function_table.data+i)->arg_count));
-		SLL_CRITICAL_ERROR(sll_encode_integer(out,(assembly_data->function_table.data+i)->name_string_index));
 	}
 	SLL_CRITICAL_ERROR(sll_encode_integer(out,assembly_data->string_table.length));
 	for (sll_string_index_t i=0;i<assembly_data->string_table.length;i++){

@@ -235,7 +235,6 @@ void _call_function(thread_data_t* thr,sll_function_index_t fn,sll_arg_count_t a
 	}
 	if (fr){
 		SLL_ASSERT(thr->call_stack.length<=sll_current_vm_config->call_stack_size);
-		(thr->call_stack.data+thr->call_stack.length)->name=(sll_current_runtime_data->assembly_data->string_table.data+af->name_string_index)->data;
 		(thr->call_stack.data+thr->call_stack.length)->_instruction_index=thr->instruction_index;
 		(thr->call_stack.data+thr->call_stack.length)->_stack_offset=thr->stack_index-SLL_ASSEMBLY_FUNCTION_GET_ARGUMENT_COUNT(af);
 		(thr->call_stack.data+thr->call_stack.length)->_variable_memory_offset=PTR(ADDR(thr->stack+(thr->call_stack.data+thr->call_stack.length)->_stack_offset)-ADDR(_vm_var_data+sll_current_runtime_data->assembly_data->variable_count));

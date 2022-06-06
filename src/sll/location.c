@@ -1,3 +1,4 @@
+#include <sll/_internal/common.h>
 #include <sll/assembly.h>
 #include <sll/common.h>
 #include <sll/gc.h>
@@ -10,10 +11,14 @@
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_file_offset_t sll_get_location(const sll_assembly_data_t* assembly_data,sll_instruction_index_t instruction_index,sll_string_index_t* file_path_string_index,sll_string_index_t* function_string_index){
+__SLL_EXTERNAL sll_file_offset_t sll_get_location(const sll_assembly_data_t* assembly_data,sll_instruction_index_t instruction_index,sll_string_index_t* file_path_string_index,sll_string_index_t* function_string_index){
 	if (instruction_index>=assembly_data->instruction_count){
-		*file_path_string_index=0;
-		*function_string_index=SLL_MAX_STRING_INDEX;
+		if (file_path_string_index){
+			*file_path_string_index=0;
+		}
+		if (function_string_index){
+			*function_string_index=SLL_MAX_STRING_INDEX;
+		}
 		return 0;
 	}
 	sll_instruction_index_t c=0;
@@ -36,8 +41,12 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_file_offset_t sll_get_location(const sll_a
 			o_ln=SLL_DEBUG_LINE_DATA_GET_DATA(assembly_data->debug_data.data+i);
 		}
 	}
-	*file_path_string_index=o_fp;
-	*function_string_index=o_fn;
+	if (file_path_string_index){
+		*file_path_string_index=o_fp;
+	}
+	if (function_string_index){
+		*function_string_index=o_fn;
+	}
 	return o_ln+1;
 }
 
@@ -53,7 +62,9 @@ __SLL_EXTERNAL void sll_get_name(sll_object_t* object,sll_string_t* out){
 			}
 		}
 		else if (object->data.int_&&object->data.int_<=sll_current_runtime_data->assembly_data->function_table.length){
-			sll_string_clone(sll_current_runtime_data->assembly_data->string_table.data+(sll_current_runtime_data->assembly_data->function_table.data+object->data.int_-1)->name_string_index,out);
+			sll_string_index_t nm_idx;
+			sll_get_location(sll_current_runtime_data->assembly_data,(sll_current_runtime_data->assembly_data->function_table.data+object->data.int_-1)->instruction_index,NULL,&nm_idx);
+			sll_string_clone(sll_current_runtime_data->assembly_data->string_table.data+nm_idx,out);
 		}
 	}
 	else{

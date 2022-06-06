@@ -84,7 +84,7 @@ static void _parse_json_string(sll_json_parser_state_t* p,sll_string_t* o){
 				o->data[o->length]=v&0xff;
 			}
 			else{
-				o->data[o->length]=c;
+				SLL_UNIMPLEMENTED();
 			}
 		}
 		o->length++;

@@ -2198,6 +2198,7 @@ __SLL_EXTERNAL void sll_generate_assembly(const sll_source_file_t* source_file,s
 	out->function_table.length=source_file->function_table.length;
 	out->function_table.data=sll_allocate(source_file->function_table.length*sizeof(sll_assembly_function_t));
 	sll_function_index_t fn_n=0;
+	sll_string_index_t* assembly_function_names=sll_allocate_stack(source_file->function_table.length*sizeof(sll_string_index_t));
 	for (sll_function_index_t i=0;i<source_file->function_table.length;i++){
 		const sll_function_t* k=*(source_file->function_table.data+i);
 		sll_assembly_instruction_t* ai=_acquire_next_instruction(out);
@@ -2208,10 +2209,10 @@ __SLL_EXTERNAL void sll_generate_assembly(const sll_source_file_t* source_file,s
 			sll_string_t str;
 			sll_string_format(SLL_CHAR("@%u"),&str,fn_n);
 			fn_n++;
-			(out->function_table.data+i)->name_string_index=sll_add_string(&(out->string_table),&str);
+			*(assembly_function_names+i)=sll_add_string(&(out->string_table),&str);
 		}
 		else{
-			(out->function_table.data+i)->name_string_index=k->name_string_index;
+			*(assembly_function_names+i)=k->name_string_index;
 		}
 		if (*(fn_vc+i)){
 			ai=_acquire_next_instruction(out);
@@ -2274,13 +2275,10 @@ __SLL_EXTERNAL void sll_generate_assembly(const sll_source_file_t* source_file,s
 	}
 	strint_map_data_t sm={
 		(out->string_table.length>>6)+1,
-		sll_allocate(((out->string_table.length>>6)+1)*sizeof(bitmap_t))
+		sll_zero_allocate(((out->string_table.length>>6)+1)*sizeof(bitmap_t))
 	};
-	for (sll_string_index_t i=0;i<sm.map_length;i++){
-		*(sm.map_data+i)=0;
-	}
 	for (sll_function_index_t i=0;i<out->function_table.length;i++){
-		sll_string_index_t j=(out->function_table.data+i)->name_string_index;
+		sll_string_index_t j=*(assembly_function_names+i);
 		*(sm.map_data+(j>>6))|=1ull<<(j&63);
 	}
 	ai=out->first_instruction;
@@ -2343,7 +2341,7 @@ _remove_nop:
 					l_dbg_ii=i;
 				}
 				(out->debug_data.data+dbg_i)->delta_instruction_index=i-l_dbg_ii;
-				SLL_DEBUG_LINE_DATA_SET_DATA(out->debug_data.data+dbg_i,(out->function_table.data+ASSEMBLY_INSTRUCTION_MISC_FIELD_GET(ai))->name_string_index,SLL_DEBUG_LINE_DATA_FLAG_FUNC);
+				SLL_DEBUG_LINE_DATA_SET_DATA(out->debug_data.data+dbg_i,*(assembly_function_names+ASSEMBLY_INSTRUCTION_MISC_FIELD_GET(ai)),SLL_DEBUG_LINE_DATA_FLAG_FUNC);
 				dbg_i++;
 				f_off=(fn_ln+ASSEMBLY_INSTRUCTION_MISC_FIELD_GET(ai))->line;
 				(out->debug_data.data+dbg_i)->delta_instruction_index=0;
@@ -2377,6 +2375,7 @@ _remove_nop:
 		}
 	}
 	sll_deallocate(fn_ln);
+	sll_deallocate(assembly_function_names);
 	out->debug_data.data=sll_reallocate(out->debug_data.data,dbg_i*sizeof(sll_debug_line_data_t));
 	out->debug_data.length=dbg_i;
 	sm.new_indicies=sll_allocate(out->string_table.length*sizeof(sll_string_index_t));
@@ -2407,9 +2406,6 @@ _remove_nop:
 	if (l){
 		out->string_table.length-=l;
 		out->string_table.data=sll_reallocate(out->string_table.data,out->string_table.length*sizeof(sll_string_t));
-	}
-	for (sll_function_index_t i=0;i<out->function_table.length;i++){
-		(out->function_table.data+i)->name_string_index=*(sm.new_indicies+(out->function_table.data+i)->name_string_index);
 	}
 	for (sll_debug_data_length_t i=0;i<out->debug_data.length;i++){
 		if ((out->debug_data.data+i)->line&(SLL_DEBUG_LINE_DATA_FLAG_FILE|SLL_DEBUG_LINE_DATA_FLAG_FUNC)){

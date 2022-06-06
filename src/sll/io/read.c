@@ -241,7 +241,6 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_load_assembly(sll_file_t* file,
 	for (sll_function_index_t i=0;i<out->function_table.length;i++){
 		CHECK_ERROR(file,(out->function_table.data+i)->instruction_index,sll_instruction_index_t);
 		CHECK_ERROR(file,(out->function_table.data+i)->arg_count,sll_arg_count_t);
-		CHECK_ERROR(file,(out->function_table.data+i)->name_string_index,sll_string_index_t);
 	}
 	CHECK_ERROR(file,out->string_table.length,sll_string_index_t);
 	out->string_table.data=sll_allocate(out->string_table.length*sizeof(sll_string_t));
