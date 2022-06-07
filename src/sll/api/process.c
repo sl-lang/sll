@@ -50,20 +50,20 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_pid_t sll_api_process_get_p
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL void sll_api_process_join(const sll_string_t*const* args,sll_arg_count_t len,sll_string_t* out){
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_process_join(const sll_string_t*const* args,sll_arg_count_t arg_count,sll_string_t* out){
 	if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_PROCESS_API)){
 		SLL_INIT_STRING(out);
 		return;
 	}
-	sll_char_t** dt=sll_allocate_stack(len*sizeof(sll_char_t*));
-	for (sll_array_length_t i=0;i<len;i++){
+	sll_char_t** dt=sll_allocate_stack(arg_count*sizeof(sll_char_t*));
+	for (sll_array_length_t i=0;i<arg_count;i++){
 		const sll_string_t* str=*(args+i);
 		sll_char_t* p=sll_allocate_stack(str->length);
 		sll_copy_data(str->data,str->length,p);
 		*(dt+i)=p;
 	}
 	sll_process_join_args((const sll_char_t*const*)dt,out);
-	for (sll_array_length_t i=0;i<len;i++){
+	for (sll_array_length_t i=0;i<arg_count;i++){
 		sll_deallocate(*(dt+i));
 	}
 	sll_deallocate(dt);

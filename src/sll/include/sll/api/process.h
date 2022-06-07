@@ -113,10 +113,10 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_pid_t sll_api_process_get_p
  * \desc Docs!
  * \api #s+|s
  * \arg const sll_string_t*const* args
- * \arg sll_arg_count_t len
+ * \arg sll_arg_count_t arg_count
  * \arg sll_string_t* out
  */
-__SLL_EXTERNAL __SLL_API_CALL void sll_api_process_join(const sll_string_t*const* args,sll_arg_count_t len,sll_string_t* out);
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_process_join(const sll_string_t*const* args,sll_arg_count_t arg_count,sll_string_t* out);
 
 
 
