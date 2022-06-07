@@ -30,27 +30,27 @@ static const sll_char_t _base64_index_map[256]={
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_base64_decode(const sll_string_t* str,sll_string_t* out){
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_base64_decode(const sll_string_t* string,sll_string_t* out){
 	SLL_INIT_STRING(out);
-	if (!str->length){
+	if (!string->length){
 		return SLL_NO_ERROR;
 	}
-	if (str->length&3){
+	if (string->length&3){
 		return SLL_ERROR_BASE64_PADDING;
 	}
-	sll_string_length_t p=sll_string_count_right(str,'=');
+	sll_string_length_t p=sll_string_count_right(string,'=');
 	if (p>2){
 		return SLL_ERROR_BASE64_PADDING;
 	}
-	sll_string_create(((str->length*3)>>2)-p,out);
+	sll_string_create(((string->length*3)>>2)-p,out);
 	sll_string_length_t i=0;
 	sll_string_length_t j=0;
-	sll_string_length_t l=(str->length-p)&0xfffffffc;
+	sll_string_length_t l=(string->length-p)&0xfffffffc;
 	while (i<l){
-		sll_char_t v0=_base64_index_map[str->data[i]];
-		sll_char_t v1=_base64_index_map[str->data[i+1]];
-		sll_char_t v2=_base64_index_map[str->data[i+2]];
-		sll_char_t v3=_base64_index_map[str->data[i+3]];
+		sll_char_t v0=_base64_index_map[string->data[i]];
+		sll_char_t v1=_base64_index_map[string->data[i+1]];
+		sll_char_t v2=_base64_index_map[string->data[i+2]];
+		sll_char_t v3=_base64_index_map[string->data[i+3]];
 		if ((v0|v1|v2|v3)>>6){
 			sll_string_length_t idx=i;
 			if (v0!=64){
@@ -74,9 +74,9 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_base64_deco
 		j+=3;
 	}
 	if (p==1){
-		sll_char_t v0=_base64_index_map[str->data[i]];
-		sll_char_t v1=_base64_index_map[str->data[i+1]];
-		sll_char_t v2=_base64_index_map[str->data[i+2]];
+		sll_char_t v0=_base64_index_map[string->data[i]];
+		sll_char_t v1=_base64_index_map[string->data[i+1]];
+		sll_char_t v2=_base64_index_map[string->data[i+2]];
 		if ((v0|v1|v2)>>6){
 			sll_string_length_t idx=i;
 			if (v0!=64){
@@ -94,8 +94,8 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_base64_deco
 		out->data[j+1]=(v1<<4)|(v2>>2);
 	}
 	else if (p==2){
-		sll_char_t v0=_base64_index_map[str->data[i]];
-		sll_char_t v1=_base64_index_map[str->data[i+1]];
+		sll_char_t v0=_base64_index_map[string->data[i]];
+		sll_char_t v1=_base64_index_map[string->data[i+1]];
 		if ((v0|v1)>>6){
 			sll_free_string(out);
 			return SLL_ERROR_FROM_EXTRA(SLL_ERROR_BASE64_CHARACTER,i+(v0!=64));
@@ -108,34 +108,34 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_base64_deco
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL void sll_api_base64_encode(const sll_string_t* str,sll_string_t* out){
-	if (!str->length){
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_base64_encode(const sll_string_t* string,sll_string_t* out){
+	if (!string->length){
 		SLL_INIT_STRING(out);
 		return;
 	}
-	sll_string_length_t p=(3-(str->length%3))%3;
-	sll_string_create(((str->length+p)<<2)/3,out);
+	sll_string_length_t p=(3-(string->length%3))%3;
+	sll_string_create(((string->length+p)<<2)/3,out);
 	sll_string_length_t i=0;
 	sll_string_length_t j=0;
-	if (str->length>2){
+	if (string->length>2){
 		do{
-			out->data[j]=_base64_alphabet[str->data[i]>>2];
-			out->data[j+1]=_base64_alphabet[((str->data[i]<<4)&0x3f)|(str->data[i+1]>>4)];
-			out->data[j+2]=_base64_alphabet[((str->data[i+1]<<2)&0x3f)|(str->data[i+2]>>6)];
-			out->data[j+3]=_base64_alphabet[str->data[i+2]&0x3f];
+			out->data[j]=_base64_alphabet[string->data[i]>>2];
+			out->data[j+1]=_base64_alphabet[((string->data[i]<<4)&0x3f)|(string->data[i+1]>>4)];
+			out->data[j+2]=_base64_alphabet[((string->data[i+1]<<2)&0x3f)|(string->data[i+2]>>6)];
+			out->data[j+3]=_base64_alphabet[string->data[i+2]&0x3f];
 			i+=3;
 			j+=4;
-		} while (i<str->length-2);
+		} while (i<string->length-2);
 	}
 	if (p==1){
-		out->data[j]=_base64_alphabet[str->data[i]>>2];
-		out->data[j+1]=_base64_alphabet[((str->data[i]<<4)&0x3f)|(str->data[i+1]>>4)];
-		out->data[j+2]=_base64_alphabet[(str->data[i+1]<<2)&0x3f];
+		out->data[j]=_base64_alphabet[string->data[i]>>2];
+		out->data[j+1]=_base64_alphabet[((string->data[i]<<4)&0x3f)|(string->data[i+1]>>4)];
+		out->data[j+2]=_base64_alphabet[(string->data[i+1]<<2)&0x3f];
 		out->data[j+3]='=';
 	}
 	else if (p==2){
-		out->data[j]=_base64_alphabet[str->data[i]>>2];
-		out->data[j+1]=_base64_alphabet[(str->data[i]<<4)&0x3f];
+		out->data[j]=_base64_alphabet[string->data[i]>>2];
+		out->data[j+1]=_base64_alphabet[(string->data[i]<<4)&0x3f];
 		out->data[j+2]='=';
 		out->data[j+3]='=';
 	}

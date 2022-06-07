@@ -20,10 +20,10 @@
  * \desc Docs!
  * \api DD|a
  * \arg sll_call_stack_size_t pop
- * \arg sll_thread_index_t tid
+ * \arg sll_thread_index_t thread_index
  * \arg sll_array_t* out
  */
-__SLL_EXTERNAL __SLL_API_CALL void sll_api_error_get_call_stack(sll_call_stack_size_t pop,sll_thread_index_t tid,sll_array_t* out);
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_error_get_call_stack(sll_call_stack_size_t pop,sll_thread_index_t thread_index,sll_array_t* out);
 
 
 

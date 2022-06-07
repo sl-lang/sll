@@ -19,9 +19,9 @@
  * \group array-api
  * \desc Docs!
  * \api i|
- * \arg sll_integer_t cb
+ * \arg sll_integer_t callback
  */
-__SLL_EXTERNAL __SLL_API_CALL void sll_api_audit__init(sll_integer_t cb);
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_audit__init(sll_integer_t callback);
 
 
 
@@ -32,11 +32,11 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_audit__init(sll_integer_t cb);
  * \desc Docs!
  * \api #s#so!|
  * \arg const sll_string_t* name
- * \arg const sll_string_t* fmt
+ * \arg const sll_string_t* format
  * \arg sll_object_t*const* args
- * \arg sll_arg_count_t len
+ * \arg sll_arg_count_t arg_count
  */
-__SLL_EXTERNAL __SLL_API_CALL void sll_api_audit_audit(const sll_string_t* name,const sll_string_t* fmt,sll_object_t*const* args,sll_arg_count_t len);
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_audit_audit(const sll_string_t* name,const sll_string_t* format,sll_object_t*const* args,sll_arg_count_t arg_count);
 
 
 

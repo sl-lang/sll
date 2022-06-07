@@ -59,12 +59,12 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_date_split(sll_float_t time,sll_array
 
 
 
-__SLL_EXTERNAL void sll_date_from_time(sll_float_t time,const sll_time_zone_t* tz,sll_date_t* o){
+__SLL_EXTERNAL void sll_date_from_time(sll_float_t time,const sll_time_zone_t* time_zone,sll_date_t* o){
 	// Based on http://howardhinnant.github.io/date_algorithms.html#civil_from_days
-	if (!tz){
-		tz=sll_utc_time_zone;
+	if (!time_zone){
+		time_zone=sll_utc_time_zone;
 	}
-	o->time_zone=*tz;
+	o->time_zone=*time_zone;
 	time+=o->time_zone.offset*60;
 	sll_float_t hms=sll_math_mod(time,86400)+(time<0?86400:0);
 	o->second=sll_math_mod(hms,60);
@@ -109,8 +109,8 @@ __SLL_EXTERNAL void sll_date_from_time(sll_float_t time,const sll_time_zone_t* t
 
 
 
-__SLL_EXTERNAL void sll_date_from_time_ns(sll_time_t time,const sll_time_zone_t* tz,sll_date_t* o){
-	sll_date_from_time(time*1e-9,tz,o);
+__SLL_EXTERNAL void sll_date_from_time_ns(sll_time_t time,const sll_time_zone_t* time_zone,sll_date_t* o){
+	sll_date_from_time(time*1e-9,time_zone,o);
 }
 
 

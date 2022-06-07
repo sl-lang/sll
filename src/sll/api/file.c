@@ -69,26 +69,26 @@ static sll_file_handle_t _alloc_file(void){
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_bool_t sll_api_file_close(sll_file_handle_t fh){
-	if (fh>=_file_fll||!(*(_file_fl+fh))){
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_bool_t sll_api_file_close(sll_file_handle_t handle){
+	if (handle>=_file_fll||!(*(_file_fl+handle))){
 		return 0;
 	}
-	(*(_file_fl+fh))->rc--;
-	if ((*(_file_fl+fh))->rc){
+	(*(_file_fl+handle))->rc--;
+	if ((*(_file_fl+handle))->rc){
 		return 1;
 	}
-	if ((*(_file_fl+fh))->data_pointer){
-		sll_deallocate((*(_file_fl+fh))->data_pointer);
+	if ((*(_file_fl+handle))->data_pointer){
+		sll_deallocate((*(_file_fl+handle))->data_pointer);
 	}
-	if ((*(_file_fl+fh))->is_pointer){
-		sll_file_close((*(_file_fl+fh))->data.pointer);
+	if ((*(_file_fl+handle))->is_pointer){
+		sll_file_close((*(_file_fl+handle))->data.pointer);
 	}
 	else{
-		sll_file_close(&((*(_file_fl+fh))->data.struct_));
+		sll_file_close(&((*(_file_fl+handle))->data.struct_));
 	}
-	sll_deallocate(*(_file_fl+fh));
-	*(_file_fl+fh)=NULL;
-	if (fh==_file_fll-1){
+	sll_deallocate(*(_file_fl+handle));
+	*(_file_fl+handle)=NULL;
+	if (handle==_file_fll-1){
 		do{
 			_file_fll--;
 		} while (_file_fll&&!(_file_fl+_file_fll-1));
@@ -125,11 +125,11 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_file_delete
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_bool_t sll_api_file_flush(sll_file_handle_t fh){
-	if (fh>=_file_fll||!(*(_file_fl+fh))){
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_bool_t sll_api_file_flush(sll_file_handle_t handle){
+	if (handle>=_file_fll||!(*(_file_fl+handle))){
 		return 0;
 	}
-	extended_file_t* ef=*(_file_fl+fh);
+	extended_file_t* ef=*(_file_fl+handle);
 	sll_file_flush((ef->is_pointer?ef->data.pointer:&(ef->data.struct_)));
 	return 1;
 }
@@ -154,12 +154,12 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_file_from_d
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL void sll_api_file_get_buffer(sll_file_handle_t fh,sll_string_t* out){
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_file_get_buffer(sll_file_handle_t handle,sll_string_t* out){
 	SLL_INIT_STRING(out);
-	if (fh>=_file_fll||!(*(_file_fl+fh))){
+	if (handle>=_file_fll||!(*(_file_fl+handle))){
 		return;
 	}
-	extended_file_t* ef=*(_file_fl+fh);
+	extended_file_t* ef=*(_file_fl+handle);
 	sll_file_get_buffer((ef->is_pointer?ef->data.pointer:&(ef->data.struct_)),out);
 }
 
@@ -171,11 +171,11 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_file_get_temp_path(sll_string_t* out)
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL void sll_api_file_inc_handle(sll_file_handle_t fh){
-	if (fh>=_file_fll||!(*(_file_fl+fh))){
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_file_inc_handle(sll_file_handle_t handle){
+	if (handle>=_file_fll||!(*(_file_fl+handle))){
 		return;
 	}
-	(*(_file_fl+fh))->rc++;
+	(*(_file_fl+handle))->rc++;
 }
 
 
@@ -194,20 +194,20 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_file_open(c
 	if (err!=SLL_NO_ERROR){
 		return err;
 	}
-	sll_file_handle_t fh=_alloc_file();
-	sll_copy_data(&f,sizeof(sll_file_t),&((*(_file_fl+fh))->data.struct_));
-	(*(_file_fl+fh))->is_pointer=0;
-	*out=fh;
+	sll_file_handle_t handle=_alloc_file();
+	sll_copy_data(&f,sizeof(sll_file_t),&((*(_file_fl+handle))->data.struct_));
+	(*(_file_fl+handle))->is_pointer=0;
+	*out=handle;
 	return SLL_NO_ERROR;
 }
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_file_peek(sll_file_handle_t fh,sll_char_t* out){
-	if (fh>=_file_fll||!(*(_file_fl+fh))){
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_file_peek(sll_file_handle_t handle,sll_char_t* out){
+	if (handle>=_file_fll||!(*(_file_fl+handle))){
 		return SLL_ERROR_UNKNOWN_FD;
 	}
-	extended_file_t* ef=*(_file_fl+fh);
+	extended_file_t* ef=*(_file_fl+handle);
 	sll_error_t err;
 	sll_read_char_t o=sll_file_peek_char((ef->is_pointer?ef->data.pointer:&(ef->data.struct_)),&err);
 	if (o==SLL_END_OF_DATA){
@@ -219,11 +219,11 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_file_peek(s
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_file_read(sll_file_handle_t fh,sll_string_length_t size,sll_string_t* out){
-	if (fh>=_file_fll||!(*(_file_fl+fh))){
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_file_read(sll_file_handle_t handle,sll_string_length_t size,sll_string_t* out){
+	if (handle>=_file_fll||!(*(_file_fl+handle))){
 		return SLL_ERROR_UNKNOWN_FD;
 	}
-	extended_file_t* ef=*(_file_fl+fh);
+	extended_file_t* ef=*(_file_fl+handle);
 	sll_file_t* f=(ef->is_pointer?ef->data.pointer:&(ef->data.struct_));
 	if (!size){
 		return sll_file_read_all(f,out);
@@ -242,11 +242,11 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_file_read(s
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_file_read_char(sll_file_handle_t fh,sll_char_t* out){
-	if (fh>=_file_fll||!(*(_file_fl+fh))){
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_file_read_char(sll_file_handle_t handle,sll_char_t* out){
+	if (handle>=_file_fll||!(*(_file_fl+handle))){
 		return SLL_ERROR_UNKNOWN_FD;
 	}
-	extended_file_t* ef=*(_file_fl+fh);
+	extended_file_t* ef=*(_file_fl+handle);
 	sll_error_t err;
 	sll_read_char_t c=sll_file_read_char((ef->is_pointer?ef->data.pointer:&(ef->data.struct_)),&err);
 	if (c==SLL_END_OF_DATA){
@@ -295,20 +295,20 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_file_std_ha
 		}
 		p=sll_current_vm_config->err;
 	}
-	sll_file_handle_t fh=_alloc_file();
-	(*(_file_fl+fh))->data.pointer=p;
-	(*(_file_fl+fh))->is_pointer=1;
-	*out=fh;
+	sll_file_handle_t handle=_alloc_file();
+	(*(_file_fl+handle))->data.pointer=p;
+	(*(_file_fl+handle))->is_pointer=1;
+	*out=handle;
 	return SLL_NO_ERROR;
 }
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_file_write(sll_file_handle_t fh,const sll_string_t* data,sll_size_t* out){
-	if (fh>=_file_fll||!(*(_file_fl+fh))){
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_file_write(sll_file_handle_t handle,const sll_string_t* data,sll_size_t* out){
+	if (handle>=_file_fll||!(*(_file_fl+handle))){
 		return SLL_ERROR_UNKNOWN_FD;
 	}
-	extended_file_t* ef=*(_file_fl+fh);
+	extended_file_t* ef=*(_file_fl+handle);
 	sll_error_t err;
 	*out=sll_file_write((ef->is_pointer?ef->data.pointer:&(ef->data.struct_)),data->data,data->length*sizeof(sll_char_t),&err);
 	return err;
@@ -316,11 +316,11 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_file_write(
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_file_t* sll_file_from_handle(sll_file_handle_t fh){
-	if (fh>=_file_fll||!(*(_file_fl+fh))){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_file_t* sll_file_from_handle(sll_file_handle_t handle){
+	if (handle>=_file_fll||!(*(_file_fl+handle))){
 		return NULL;
 	}
-	extended_file_t* ef=*(_file_fl+fh);
+	extended_file_t* ef=*(_file_fl+handle);
 	return (ef->is_pointer?ef->data.pointer:&(ef->data.struct_));
 }
 
