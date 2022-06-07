@@ -18,10 +18,10 @@
  * \group int-api
  * \desc Docs!
  * \api i|s
- * \arg sll_integer_t n
+ * \arg sll_integer_t number
  * \arg sll_string_t* out
  */
-__SLL_EXTERNAL __SLL_API_CALL void sll_api_int_to_bin(sll_integer_t n,sll_string_t* out);
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_int_to_bin(sll_integer_t number,sll_string_t* out);
 
 
 
@@ -31,10 +31,10 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_int_to_bin(sll_integer_t n,sll_string
  * \group int-api
  * \desc Docs!
  * \api i|s
- * \arg sll_integer_t n
+ * \arg sll_integer_t number
  * \arg sll_string_t* out
  */
-__SLL_EXTERNAL __SLL_API_CALL void sll_api_int_to_dec(sll_integer_t n,sll_string_t* out);
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_int_to_dec(sll_integer_t number,sll_string_t* out);
 
 
 
@@ -44,10 +44,10 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_int_to_dec(sll_integer_t n,sll_string
  * \group int-api
  * \desc Docs!
  * \api i|s
- * \arg sll_integer_t n
+ * \arg sll_integer_t number
  * \arg sll_string_t* out
  */
-__SLL_EXTERNAL __SLL_API_CALL void sll_api_int_to_hex(sll_integer_t n,sll_string_t* out);
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_int_to_hex(sll_integer_t number,sll_string_t* out);
 
 
 
@@ -57,10 +57,10 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_int_to_hex(sll_integer_t n,sll_string
  * \group int-api
  * \desc Docs!
  * \api i|s
- * \arg sll_integer_t n
+ * \arg sll_integer_t number
  * \arg sll_string_t* out
  */
-__SLL_EXTERNAL __SLL_API_CALL void sll_api_int_to_oct(sll_integer_t n,sll_string_t* out);
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_int_to_oct(sll_integer_t number,sll_string_t* out);
 
 
 
