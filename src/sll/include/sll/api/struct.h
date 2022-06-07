@@ -17,10 +17,10 @@
  * \group struct-api
  * \desc Docs!
  * \api Q|f
- * \arg __SLL_U64 v
+ * \arg __SLL_U64 value
  * \ret sll_float_t
  */
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_float_t sll_api_struct_double_from_bits(__SLL_U64 v);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_float_t sll_api_struct_double_from_bits(__SLL_U64 value);
 
 
 
@@ -30,10 +30,10 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_float_t sll_api_struct_doub
  * \group struct-api
  * \desc Docs!
  * \api D|f
- * \arg __SLL_U32 v
+ * \arg __SLL_U32 value
  * \ret sll_float_t
  */
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_float_t sll_api_struct_float_from_bits(__SLL_U32 v);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_float_t sll_api_struct_float_from_bits(__SLL_U32 value);
 
 
 
@@ -43,10 +43,10 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_float_t sll_api_struct_floa
  * \group struct-api
  * \desc Docs!
  * \api f|Q
- * \arg sll_float_t v
+ * \arg sll_float_t value
  * \ret __SLL_U64
  */
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT __SLL_U64 sll_api_struct_double_to_bits(sll_float_t v);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT __SLL_U64 sll_api_struct_double_to_bits(sll_float_t value);
 
 
 
@@ -56,10 +56,10 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT __SLL_U64 sll_api_struct_double
  * \group struct-api
  * \desc Docs!
  * \api f|D
- * \arg sll_float_t v
+ * \arg sll_float_t value
  * \ret __SLL_U32
  */
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT __SLL_U32 sll_api_struct_float_to_bits(sll_float_t v);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT __SLL_U32 sll_api_struct_float_to_bits(sll_float_t value);
 
 
 
