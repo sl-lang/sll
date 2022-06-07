@@ -18,11 +18,11 @@
  * \group atexit-api
  * \desc Docs!
  * \api io!|
- * \arg sll_integer_t fn
+ * \arg sll_integer_t function
  * \arg sll_object_t*const* args
- * \arg sll_arg_count_t len
+ * \arg sll_arg_count_t arg_count
  */
-__SLL_EXTERNAL __SLL_API_CALL void sll_api_atexit_register(sll_integer_t fn,sll_object_t*const* args,sll_arg_count_t len);
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_atexit_register(sll_integer_t function,sll_object_t*const* args,sll_arg_count_t arg_count);
 
 
 
@@ -32,10 +32,10 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_atexit_register(sll_integer_t fn,sll_
  * \api i|b
  * \group atexit-api
  * \desc Docs!
- * \arg sll_integer_t fn
+ * \arg sll_integer_t function
  * \ret sll_bool_t
  */
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_bool_t sll_api_atexit_unregister(sll_integer_t fn);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_bool_t sll_api_atexit_unregister(sll_integer_t function);
 
 
 
