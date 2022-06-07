@@ -42,35 +42,35 @@ static void _release_data(void){
 
 
 
-static void _parse_json_string(sll_json_parser_state_t* p,sll_string_t* o){
-	STRING_INIT_STACK(o);
+static void _parse_json_string(sll_json_parser_state_t* p,sll_string_t* out){
+	STRING_INIT_STACK(out);
 	sll_char_t c=**p;
 	(*p)++;
 	while (c!='\"'){
-		sll_string_increase(o,1);
+		sll_string_increase(out,1);
 		if (c!='\\'){
-			o->data[o->length]=c;
+			out->data[out->length]=c;
 		}
 		else{
 			c=**p;
 			(*p)++;
 			if (c=='b'){
-				o->data[o->length]=8;
+				out->data[out->length]=8;
 			}
 			else if (c=='f'){
-				o->data[o->length]=12;
+				out->data[out->length]=12;
 			}
 			else if (c=='n'){
-				o->data[o->length]=10;
+				out->data[out->length]=10;
 			}
 			else if (c=='r'){
-				o->data[o->length]=13;
+				out->data[out->length]=13;
 			}
 			else if (c=='t'){
-				o->data[o->length]=9;
+				out->data[out->length]=9;
 			}
 			else if (c=='v'){
-				o->data[o->length]=11;
+				out->data[out->length]=11;
 			}
 			else if (c=='u'){
 				sll_wide_char_t v=0;
@@ -81,18 +81,18 @@ static void _parse_json_string(sll_json_parser_state_t* p,sll_string_t* o){
 				if (v>255){
 					SLL_UNIMPLEMENTED();
 				}
-				o->data[o->length]=v&0xff;
+				out->data[out->length]=v&0xff;
 			}
 			else{
 				SLL_UNIMPLEMENTED();
 			}
 		}
-		o->length++;
+		out->length++;
 		c=**p;
 		(*p)++;
 	}
-	sll_allocator_move((void**)(&(o->data)),SLL_MEMORY_MOVE_DIRECTION_FROM_STACK);
-	sll_string_calculate_checksum(o);
+	sll_allocator_move((void**)(&(out->data)),SLL_MEMORY_MOVE_DIRECTION_FROM_STACK);
+	sll_string_calculate_checksum(out);
 }
 
 
