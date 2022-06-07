@@ -34,12 +34,12 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_object_t* sll_api_sort_quic
  * \name sll_quicksort
  * \group sort-api
  * \desc Docs!
- * \arg sll_object_t** a
- * \arg sll_array_length_t l
+ * \arg sll_object_t** elements
+ * \arg sll_array_length_t length
  * \arg sll_compare_result_t cmp
- * \arg sll_integer_t fn
+ * \arg sll_integer_t key_fn
  */
-__SLL_EXTERNAL void sll_quicksort(sll_object_t** a,sll_array_length_t l,sll_compare_result_t cmp,sll_integer_t fn);
+__SLL_EXTERNAL void sll_quicksort(sll_object_t** elements,sll_array_length_t length,sll_compare_result_t cmp,sll_integer_t key_fn);
 
 
 
