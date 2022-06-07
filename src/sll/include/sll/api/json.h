@@ -289,10 +289,10 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_json__init(sll_object_t* null_obj,sll
  * \group json-api
  * \desc Docs!
  * \api #s|o
- * \arg const sll_string_t* str
+ * \arg const sll_string_t* string
  * \ret sll_object_t*
  */
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_object_t* sll_api_json_parse(const sll_string_t* str);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_object_t* sll_api_json_parse(const sll_string_t* string);
 
 
 
@@ -326,10 +326,10 @@ __SLL_EXTERNAL void sll_free_json_object(sll_json_object_t* json);
  * \group json-api
  * \desc Docs!
  * \arg sll_json_object_t* json
- * \arg const sll_string_t* k
+ * \arg const sll_string_t* key
  * \ret sll_json_object_t*
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_json_object_t* sll_json_get_by_key(sll_json_object_t* json,const sll_string_t* k);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_json_object_t* sll_json_get_by_key(sll_json_object_t* json,const sll_string_t* key);
 
 
 
@@ -339,10 +339,10 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_json_object_t* sll_json_get_by_key(sll_jso
  * \group json-api
  * \desc Docs!
  * \arg sll_json_parser_state_t* p
- * \arg sll_json_object_t* o
+ * \arg sll_json_object_t* out
  * \ret sll_bool_t
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_json_parse(sll_json_parser_state_t* p,sll_json_object_t* o);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_json_parse(sll_json_parser_state_t* p,sll_json_object_t* out);
 
 
 

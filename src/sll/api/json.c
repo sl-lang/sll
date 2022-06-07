@@ -483,8 +483,8 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_json__init(sll_object_t* null_obj,sll
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_object_t* sll_api_json_parse(const sll_string_t* str){
-	sll_json_parser_state_t p=str->data;
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_object_t* sll_api_json_parse(const sll_string_t* string){
+	sll_json_parser_state_t p=string->data;
 	sll_object_t* o=_parse_json_as_object(&p);
 	if (o){
 		return o;
@@ -525,11 +525,11 @@ __SLL_EXTERNAL void sll_free_json_object(sll_json_object_t* json){
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_json_object_t* sll_json_get_by_key(sll_json_object_t* json,const sll_string_t* k){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_json_object_t* sll_json_get_by_key(sll_json_object_t* json,const sll_string_t* key){
 	SLL_ASSERT(json->type==SLL_JSON_OBJECT_TYPE_MAP);
 	for (sll_json_map_length_t i=0;i<json->data.map.length;i++){
 		sll_json_map_keypair_t* e=json->data.map.data+i;
-		if (STRING_EQUAL(&(e->key),k)){
+		if (STRING_EQUAL(&(e->key),key)){
 			return &(e->value);
 		}
 	}
@@ -538,7 +538,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_json_object_t* sll_json_get_by_key(sll_jso
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_json_parse(sll_json_parser_state_t* p,sll_json_object_t* o){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_json_parse(sll_json_parser_state_t* p,sll_json_object_t* out){
 	sll_char_t c=**p;
 	(*p)++;
 	while (c==' '||c=='\t'||c=='\n'||c=='\r'){
@@ -546,9 +546,9 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_json_parse(sll_json_parser_stat
 		(*p)++;
 	}
 	if (c=='{'){
-		o->type=SLL_JSON_OBJECT_TYPE_MAP;
-		o->data.map.length=0;
-		o->data.map.data=NULL;
+		out->type=SLL_JSON_OBJECT_TYPE_MAP;
+		out->data.map.length=0;
+		out->data.map.data=NULL;
 		while (1){
 			c=**p;
 			(*p)++;
@@ -562,9 +562,9 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_json_parse(sll_json_parser_stat
 				c=**p;
 				(*p)++;
 			}
-			o->data.map.length++;
-			o->data.map.data=sll_reallocate(o->data.map.data,o->data.map.length*sizeof(sll_json_map_keypair_t));
-			sll_json_map_keypair_t* k=o->data.map.data+o->data.map.length-1;
+			out->data.map.length++;
+			out->data.map.data=sll_reallocate(out->data.map.data,out->data.map.length*sizeof(sll_json_map_keypair_t));
+			sll_json_map_keypair_t* k=out->data.map.data+out->data.map.length-1;
 			_parse_json_string(p,&(k->key));
 			c=**p;
 			(*p)++;
@@ -590,9 +590,9 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_json_parse(sll_json_parser_stat
 		}
 	}
 	if (c=='['){
-		o->type=SLL_JSON_OBJECT_TYPE_ARRAY;
-		o->data.array.length=0;
-		o->data.array.data=NULL;
+		out->type=SLL_JSON_OBJECT_TYPE_ARRAY;
+		out->data.array.length=0;
+		out->data.array.data=NULL;
 		while (c==' '||c=='\t'||c=='\n'||c=='\r'){
 			c=**p;
 			(*p)++;
@@ -602,9 +602,9 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_json_parse(sll_json_parser_stat
 			return 1;
 		}
 		while (1){
-			o->data.array.length++;
-			o->data.array.data=sll_reallocate(o->data.array.data,o->data.array.length*sizeof(sll_json_object_t));
-			if (!sll_json_parse(p,o->data.array.data+o->data.array.length-1)){
+			out->data.array.length++;
+			out->data.array.data=sll_reallocate(out->data.array.data,out->data.array.length*sizeof(sll_json_object_t));
+			if (!sll_json_parse(p,out->data.array.data+out->data.array.length-1)){
 				return 0;
 			}
 			c=**p;
@@ -622,23 +622,23 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_json_parse(sll_json_parser_stat
 		}
 	}
 	if (c=='\"'){
-		o->type=SLL_JSON_OBJECT_TYPE_STRING;
-		_parse_json_string(p,&(o->data.string));
+		out->type=SLL_JSON_OBJECT_TYPE_STRING;
+		_parse_json_string(p,&(out->data.string));
 		return 1;
 	}
 	if (c=='t'&&**p=='r'&&*((*p)+1)=='u'&&*((*p)+2)=='e'){
 		(*p)+=3;
-		o->type=SLL_JSON_OBJECT_TYPE_TRUE;
+		out->type=SLL_JSON_OBJECT_TYPE_TRUE;
 		return 1;
 	}
 	if (c=='f'&&**p=='a'&&*((*p)+1)=='l'&&*((*p)+2)=='s'&&*((*p)+3)=='e'){
 		(*p)+=4;
-		o->type=SLL_JSON_OBJECT_TYPE_FALSE;
+		out->type=SLL_JSON_OBJECT_TYPE_FALSE;
 		return 1;
 	}
 	if (c=='n'&&**p=='u'&&*((*p)+1)=='l'&&*((*p)+2)=='l'){
 		(*p)+=3;
-		o->type=SLL_JSON_OBJECT_TYPE_NULL;
+		out->type=SLL_JSON_OBJECT_TYPE_NULL;
 		return 1;
 	}
 	if ((c<48||c>57)&&c!='.'&&c!='e'&&c!='E'&&c!='-'&&c!='+'){
@@ -646,12 +646,12 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_json_parse(sll_json_parser_stat
 	}
 	json_number_t n;
 	if (_parse_number(c,p,&n)==JSON_NUMBER_INT){
-		o->type=SLL_JSON_OBJECT_TYPE_INTEGER;
-		o->data.int_=n.int_;
+		out->type=SLL_JSON_OBJECT_TYPE_INTEGER;
+		out->data.int_=n.int_;
 	}
 	else{
-		o->type=SLL_JSON_OBJECT_TYPE_FLOAT;
-		o->data.float_=n.float_;
+		out->type=SLL_JSON_OBJECT_TYPE_FLOAT;
+		out->data.float_=n.float_;
 	}
 	return 1;
 }
