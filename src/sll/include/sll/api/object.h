@@ -19,12 +19,12 @@
  * \group object-api
  * \desc Docs!
  * \api #so!|o
- * \arg const sll_string_t* fmt
+ * \arg const sll_string_t* format
  * \arg sll_object_t*const* args
- * \arg sll_arg_count_t len
+ * \arg sll_arg_count_t lenngth
  * \ret sll_object_t*
  */
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_object_t* sll_api_object_new(const sll_string_t* fmt,sll_object_t*const* args,sll_arg_count_t len);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_object_t* sll_api_object_new(const sll_string_t* format,sll_object_t*const* args,sll_arg_count_t lenngth);
 
 
 
