@@ -77,10 +77,10 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_thread_crea
  * \group thread-api
  * \desc Docs!
  * \api D|b
- * \arg sll_thread_index_t tid
+ * \arg sll_thread_index_t thread_index
  * \ret sll_bool_t
  */
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_bool_t sll_api_thread_delete(sll_thread_index_t tid);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_bool_t sll_api_thread_delete(sll_thread_index_t thread_index);
 
 
 
@@ -90,10 +90,10 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_bool_t sll_api_thread_delet
  * \group thread-api
  * \desc Docs!
  * \api D|b
- * \arg sll_barrier_index_t bid
+ * \arg sll_barrier_index_t barrier_index
  * \ret sll_bool_t
  */
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_bool_t sll_api_thread_delete_barrier(sll_barrier_index_t bid);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_bool_t sll_api_thread_delete_barrier(sll_barrier_index_t barrier_index);
 
 
 
@@ -103,10 +103,10 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_bool_t sll_api_thread_delet
  * \group thread-api
  * \desc Docs!
  * \api D|b
- * \arg sll_lock_index_t lid
+ * \arg sll_lock_index_t lock_index
  * \ret sll_bool_t
  */
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_bool_t sll_api_thread_delete_lock(sll_lock_index_t lid);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_bool_t sll_api_thread_delete_lock(sll_lock_index_t lock_index);
 
 
 
@@ -116,10 +116,10 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_bool_t sll_api_thread_delet
  * \group thread-api
  * \desc Docs!
  * \api D|b
- * \arg sll_semaphore_index_t sid
+ * \arg sll_semaphore_index_t sempahore_index
  * \ret sll_bool_t
  */
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_bool_t sll_api_thread_delete_semaphore(sll_semaphore_index_t sid);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_bool_t sll_api_thread_delete_semaphore(sll_semaphore_index_t sempahore_index);
 
 
 
@@ -129,10 +129,10 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_bool_t sll_api_thread_delet
  * \group thread-api
  * \desc Docs!
  * \api D|a
- * \arg sll_thread_index_t tid
+ * \arg sll_thread_index_t thread_index
  * \arg sll_array_t* out
  */
-__SLL_EXTERNAL __SLL_API_CALL void sll_api_thread_get_internal_data(sll_thread_index_t tid,sll_array_t* out);
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_thread_get_internal_data(sll_thread_index_t thread_index,sll_array_t* out);
 
 
 
@@ -142,10 +142,10 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_thread_get_internal_data(sll_thread_i
  * \group thread-api
  * \desc Docs!
  * \api D|D
- * \arg sll_barrier_index_t bid
+ * \arg sll_barrier_index_t barrier_index
  * \ret sll_barrier_counter_t
  */
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_barrier_counter_t sll_api_thread_increase_barrier(sll_barrier_index_t bid);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_barrier_counter_t sll_api_thread_increase_barrier(sll_barrier_index_t barrier_index);
 
 
 
@@ -155,10 +155,10 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_barrier_counter_t sll_api_t
  * \group thread-api
  * \desc Docs!
  * \api D|b
- * \arg sll_lock_index_t lid
+ * \arg sll_lock_index_t lock_index
  * \ret sll_bool_t
  */
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_bool_t sll_api_thread_release_lock(sll_lock_index_t lid);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_bool_t sll_api_thread_release_lock(sll_lock_index_t lock_index);
 
 
 
@@ -168,10 +168,10 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_bool_t sll_api_thread_relea
  * \group thread-api
  * \desc Docs!
  * \api D|b
- * \arg sll_semaphore_index_t sid
+ * \arg sll_semaphore_index_t sempahore_index
  * \ret sll_bool_t
  */
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_bool_t sll_api_thread_release_semaphore(sll_semaphore_index_t sid);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_bool_t sll_api_thread_release_semaphore(sll_semaphore_index_t sempahore_index);
 
 
 
@@ -181,10 +181,10 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_bool_t sll_api_thread_relea
  * \group thread-api
  * \desc Docs!
  * \api D|D
- * \arg sll_barrier_index_t bid
+ * \arg sll_barrier_index_t barrier_index
  * \ret sll_barrier_counter_t
  */
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_barrier_counter_t sll_api_thread_reset_barrier(sll_barrier_index_t bid);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_barrier_counter_t sll_api_thread_reset_barrier(sll_barrier_index_t barrier_index);
 
 
 
@@ -194,10 +194,10 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_barrier_counter_t sll_api_t
  * \group thread-api
  * \desc Docs!
  * \api D|b
- * \arg sll_thread_index_t tid
+ * \arg sll_thread_index_t thread_index
  * \ret sll_bool_t
  */
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_bool_t sll_api_thread_restart(sll_thread_index_t tid);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_bool_t sll_api_thread_restart(sll_thread_index_t thread_index);
 
 
 
@@ -207,10 +207,10 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_bool_t sll_api_thread_resta
  * \group thread-api
  * \desc Docs!
  * \api D|b
- * \arg sll_thread_index_t tid
+ * \arg sll_thread_index_t thread_index
  * \ret sll_bool_t
  */
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_bool_t sll_api_thread_suspend(sll_thread_index_t tid);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_bool_t sll_api_thread_suspend(sll_thread_index_t thread_index);
 
 
 
