@@ -2238,7 +2238,7 @@ __SLL_EXTERNAL void sll_generate_assembly(const sll_source_file_t* source_file,s
 	sll_deallocate(g_dt.identifier_map.long_identifier_map);
 	sll_deallocate(g_dt.identifier_remove_data.long_);
 	sll_assembly_instruction_t* ai=out->first_instruction;
-	sll_assembly_instruction_t* st[5]={
+	sll_assembly_instruction_t* stack[5]={
 		&_assembly_nop,
 		&_assembly_nop,
 		&_assembly_nop,
@@ -2262,12 +2262,12 @@ __SLL_EXTERNAL void sll_generate_assembly(const sll_source_file_t* source_file,s
 			}
 			continue;
 		}
-		st[4]=st[3];
-		st[3]=st[2];
-		st[2]=st[1];
-		st[1]=st[0];
-		st[0]=ai;
-		_optimize_assembly(st,&_assembly_nop);
+		stack[4]=stack[3];
+		stack[3]=stack[2];
+		stack[2]=stack[1];
+		stack[1]=stack[0];
+		stack[0]=ai;
+		_optimize_assembly(stack,&_assembly_nop);
 		ai++;
 		if (SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(ai)==SLL_ASSEMBLY_INSTRUCTION_TYPE_CHANGE_STACK){
 			ai=ai->data._next_instruction;

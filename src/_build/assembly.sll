@@ -24,8 +24,8 @@
 (= _parse_object (,,, str
 	(= str (<- string$split (<- string$lower_case str) '.'))
 	(@@ (?: (=== ($ str) 1)
-		(+ "SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(st[" (: str 0) "])")
-		(+ "st[" (: str 0) "]->data." (<- string$trim (: str 1)))
+		(+ "SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(stack[" (: str 0) "])")
+		(+ "stack[" (: str 0) "]->data." (<- string$trim (: str 1)))
 	))
 ))
 
@@ -53,7 +53,7 @@
 		(= expr (<- string$split (<- string$trim (: code i)) '='))
 		(++ i)
 		(? (&& (> ($ expr) 1) (=== (: (: expr 1) 0) '#')) {
-			(<- file$write fh (>> (: expr 1) 1) "(st[" (: expr 0) "]);\n")
+			(<- file$write fh (>> (: expr 1) 1) "(stack[" (: expr 0) "]);\n")
 			(<<<)
 		})
 		(? (=== (: (: expr 0) 0) '$'){
@@ -63,8 +63,8 @@
 		} {
 			(= obj (<- string$split (<- string$lower_case (: expr 0)) '.'))
 			(? (=== ($ obj) 1)
-				(<- file$write fh "st[" (: obj 0) "]->type=")
-				(<- file$write fh "st[" (: obj 0) "]->data." (<- string$trim (: obj 1)) "=")
+				(<- file$write fh "stack[" (: obj 0) "]->type=")
+				(<- file$write fh "stack[" (: obj 0) "]->data." (<- string$trim (: obj 1)) "=")
 			)
 			(<- file$write fh (<- _parse_value (: expr 1)) ";\n")
 		})
@@ -162,7 +162,7 @@
 
 
 
-static __SLL_FORCE_INLINE void _optimize_assembly(sll_assembly_instruction_t** st,sll_assembly_instruction_t* nop){
+static __SLL_FORCE_INLINE void _optimize_assembly(sll_assembly_instruction_t** stack,sll_assembly_instruction_t* nop){
 `)
 	(= shifts [])
 	(<- _generate_node fh root 1 shifts)
@@ -174,13 +174,13 @@ _shift_` shift `:
 `)
 		(-> (= j 0) (< j shift)
 			(<- file$write fh
-`	st[` j `]->type=ASSEMBLY_INSTRUCTION_TYPE_NOP;
+`	stack[` j `]->type=ASSEMBLY_INSTRUCTION_TYPE_NOP;
 `)
 			(++ j)
 		)
 		(-> (= j 0) (< j (- config$ASSEMBLY_OPTIMIZER_STACK_SIZE 1))
 			(<- file$write fh
-`	st[` j `]=` (?: (< (+ j shift) config$ASSEMBLY_OPTIMIZER_STACK_SIZE) (+ "st[" (+ j shift) "]") "nop") `;
+`	stack[` j `]=` (?: (< (+ j shift) config$ASSEMBLY_OPTIMIZER_STACK_SIZE) (+ "stack[" (+ j shift) "]") "nop") `;
 `)
 			(++ j)
 		)
