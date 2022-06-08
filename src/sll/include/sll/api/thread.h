@@ -63,11 +63,11 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_thread_crea
  * \group thread-api
  * \desc Docs!
  * \api D|~D
- * \arg sll_semaphore_counter_t cnt
+ * \arg sll_semaphore_counter_t count
  * \arg sll_lock_index_t* out
  * \ret sll_error_t
  */
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_thread_create_semaphore(sll_semaphore_counter_t cnt,sll_lock_index_t* out);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_thread_create_semaphore(sll_semaphore_counter_t count,sll_lock_index_t* out);
 
 
 
