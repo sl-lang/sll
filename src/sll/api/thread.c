@@ -15,11 +15,11 @@
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_thread_create(sll_integer_t fn,const sll_array_t* args,sll_thread_index_t* out){
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_thread_create(sll_integer_t function,const sll_array_t* args,sll_thread_index_t* out){
 	if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_THREADS)){
 		return SLL_ERROR_FROM_SANDBOX(SLL_SANDBOX_FLAG_DISABLE_THREADS);
 	}
-	*out=sll_thread_create(fn,args->data,args->length);
+	*out=sll_thread_create(function,args->data,args->length);
 	return (sll_thread_start(*out)?SLL_NO_ERROR:SLL_UNMAPPED_SYSTEM_ERROR|SLL_ERROR_FLAG_SYSTEM);
 }
 

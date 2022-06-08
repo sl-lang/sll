@@ -171,10 +171,10 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_sys_set_sandbox_flag(sll_sandbox_flag
  * \name sll_set_argument
  * \group sys-api
  * \desc Docs!
- * \arg sll_array_length_t i
- * \arg const sll_char_t* a
+ * \arg sll_array_length_t index
+ * \arg const sll_char_t* value
  */
-__SLL_EXTERNAL void sll_set_argument(sll_array_length_t i,const sll_char_t* a);
+__SLL_EXTERNAL void sll_set_argument(sll_array_length_t index,const sll_char_t* value);
 
 
 
@@ -183,9 +183,9 @@ __SLL_EXTERNAL void sll_set_argument(sll_array_length_t i,const sll_char_t* a);
  * \name sll_set_argument_count
  * \group sys-api
  * \desc Docs!
- * \arg sll_array_length_t ac
+ * \arg sll_array_length_t value
  */
-__SLL_EXTERNAL void sll_set_argument_count(sll_array_length_t ac);
+__SLL_EXTERNAL void sll_set_argument_count(sll_array_length_t value);
 
 
 

@@ -261,18 +261,18 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_sys_set_sandbox_flag(sll_sandbox_flag
 
 
 
-__SLL_EXTERNAL void sll_set_argument(sll_array_length_t i,const sll_char_t* a){
-	if (i>=_sys_argc){
+__SLL_EXTERNAL void sll_set_argument(sll_array_length_t index,const sll_char_t* value){
+	if (index>=_sys_argc){
 		return;
 	}
-	sll_free_string(_sys_argv+i);
-	sll_string_from_pointer(a,_sys_argv+i);
+	sll_free_string(_sys_argv+index);
+	sll_string_from_pointer(value,_sys_argv+index);
 }
 
 
 
-__SLL_EXTERNAL void sll_set_argument_count(sll_array_length_t ac){
-	SLL_ASSERT(ac>0);
+__SLL_EXTERNAL void sll_set_argument_count(sll_array_length_t arg_count){
+	SLL_ASSERT(arg_count>0);
 	if (_sys_argv){
 		for (sll_array_length_t i=0;i<_sys_argc;i++){
 			sll_free_string(_sys_argv+i);
@@ -283,9 +283,9 @@ __SLL_EXTERNAL void sll_set_argument_count(sll_array_length_t ac){
 		sll_register_cleanup(_cleanup_data,SLL_CLEANUP_TYPE_GLOBAL);
 		_sys_init=1;
 	}
-	_sys_argc=ac;
-	_sys_argv=sll_allocate(ac*sizeof(sll_string_t));
-	for (sll_array_length_t i=0;i<ac;i++){
+	_sys_argc=arg_count;
+	_sys_argv=sll_allocate(arg_count*sizeof(sll_string_t));
+	for (sll_array_length_t i=0;i<arg_count;i++){
 		SLL_INIT_STRING(_sys_argv+i);
 	}
 }
