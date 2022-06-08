@@ -42,21 +42,21 @@ static void _call_user_array(sll_weak_reference_t wr,sll_object_t* obj,void* arg
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL void sll_api_weakref__init(sll_object_t* no_obj,sll_integer_t fn){
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_weakref__init(sll_object_t* no_object,sll_integer_t callback){
 	if (_weakref_no_object_ret){
 		return;
 	}
-	SLL_ACQUIRE(no_obj);
-	_weakref_no_object_ret=no_obj;
+	SLL_ACQUIRE(no_object);
+	_weakref_no_object_ret=no_object;
 	sll_gc_add_root(_weakref_no_object_ret);
-	_weakref_cb_func=fn;
+	_weakref_cb_func=callback;
 	sll_register_cleanup(_cleanup_data,SLL_CLEANUP_TYPE_VM);
 }
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_weak_reference_t sll_api_weakref_create(sll_object_t* obj){
-	return sll_weakref_create(obj);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_weak_reference_t sll_api_weakref_create(sll_object_t* object){
+	return sll_weakref_create(object);
 }
 
 
@@ -79,6 +79,6 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_object_t* sll_api_weakref_g
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL void sll_api_weakref_set_callback_data(sll_weak_reference_t wr,sll_object_t* cb){
-	sll_weakref_set_callback(wr,_call_user_array,cb);
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_weakref_set_callback_data(sll_weak_reference_t wr,sll_object_t* callback){
+	sll_weakref_set_callback(wr,_call_user_array,callback);
 }
