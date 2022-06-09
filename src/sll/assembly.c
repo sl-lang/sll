@@ -2287,22 +2287,22 @@ __SLL_EXTERNAL void sll_generate_assembly(const sll_source_file_t* source_file,s
 	sll_file_offset_t f_off=0;
 	sll_string_index_t f_idx=0;
 	sll_instruction_index_t l_dbg_ii=0;
-	sll_assembly_instruction_t* s=ai;
+	sll_assembly_instruction_t* src_ai=ai;
 	sll_instruction_index_t* lbl=sll_allocate(g_dt.next_label*sizeof(sll_instruction_index_t));
 	file_line_t* fn_ln=sll_allocate(source_file->function_table.length*sizeof(file_line_t));
 	{
 		sll_instruction_index_t i=0;
 		while (i<out->instruction_count){
-			if (s->type==ASSEMBLY_INSTRUCTION_TYPE_NOP){
+			if (src_ai->type==ASSEMBLY_INSTRUCTION_TYPE_NOP){
 _remove_nop:
-				s++;
-				if (SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(s)==SLL_ASSEMBLY_INSTRUCTION_TYPE_CHANGE_STACK){
-					s=s->data._next_instruction;
+				src_ai++;
+				if (SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(src_ai)==SLL_ASSEMBLY_INSTRUCTION_TYPE_CHANGE_STACK){
+					src_ai=src_ai->data._next_instruction;
 				}
 				out->instruction_count--;
 				continue;
 			}
-			*ai=*s;
+			*ai=*src_ai;
 			if (ai->type==SLL_ASSEMBLY_INSTRUCTION_TYPE_LOADS||ai->type==SLL_ASSEMBLY_INSTRUCTION_TYPE_LOOKUP_STR||ai->type==SLL_ASSEMBLY_INSTRUCTION_TYPE_PRINT_STR||ai->type==SLL_ASSEMBLY_INSTRUCTION_TYPE_RET_STR){
 				*(sm.map_data+(ai->data.string_index>>6))|=1ull<<(ai->data.string_index&63);
 			}
@@ -2351,7 +2351,7 @@ _remove_nop:
 				goto _remove_nop;
 			}
 			else if (ai->type==ASSEMBLY_INSTRUCTION_TYPE_LABEL_TARGET){
-				sll_assembly_instruction_t* tmp=s+1;
+				sll_assembly_instruction_t* tmp=src_ai+1;
 				while (SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(tmp)==ASSEMBLY_INSTRUCTION_TYPE_NOP||SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(tmp)==ASSEMBLY_INSTRUCTION_TYPE_DBG||SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(tmp)==ASSEMBLY_INSTRUCTION_TYPE_DBG_FUNC||SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(tmp)==SLL_ASSEMBLY_INSTRUCTION_TYPE_CHANGE_STACK){
 					tmp=(SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(tmp)==SLL_ASSEMBLY_INSTRUCTION_TYPE_CHANGE_STACK?tmp->data._next_instruction:tmp+1);
 				}
@@ -2367,9 +2367,9 @@ _remove_nop:
 			if (SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(ai)==SLL_ASSEMBLY_INSTRUCTION_TYPE_CHANGE_STACK){
 				ai=ai->data._next_instruction;
 			}
-			s++;
-			if (SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(s)==SLL_ASSEMBLY_INSTRUCTION_TYPE_CHANGE_STACK){
-				s=s->data._next_instruction;
+			src_ai++;
+			if (SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(src_ai)==SLL_ASSEMBLY_INSTRUCTION_TYPE_CHANGE_STACK){
+				src_ai=src_ai->data._next_instruction;
 			}
 			i++;
 		}
