@@ -30,7 +30,7 @@
 	(@@ (<- (... "sll:struct_double_from_bits") (|
 		(& f$mantissa 0xfffffffffffff)
 		(<< (& (+ f$exponent 1023) 0x7ff) 52)
-		(<< (!! (- f$sign 1)) 63)
+		(<< (- f$sign 1) 63)
 	)))
 ))
 
