@@ -445,11 +445,8 @@ __SLL_EXTERNAL void sll_gc_remove_root(sll_object_t* object){
 
 
 __SLL_EXTERNAL void sll_gc_remove_roots(sll_object_t*const* pointer){
-	if (!_gc_data.multiple_length){
-		return;
-	}
 	sll_size_t i=_gc_data.multiple_length;
-	do{
+	while (i){
 		i--;
 		if (GC_GET_ROOT(*(_gc_data.multiple+i))!=pointer){
 			continue;
@@ -462,7 +459,7 @@ __SLL_EXTERNAL void sll_gc_remove_roots(sll_object_t*const* pointer){
 		_gc_data.multiple_length=i-1;
 		_gc_data.multiple=sll_reallocate(_gc_data.multiple,_gc_data.multiple_length*sizeof(__SLL_U64));
 		return;
-	} while (i);
+	}
 }
 
 
