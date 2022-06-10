@@ -7,6 +7,7 @@
 ## Changed
 
 - Build script compilation now uses optimization
+- Fixed `sll_object_get_field`, `sll_object_set_field` and `sll_object_to_array` to use the provided type table
 - Fixed issue with backslash escaping in `sll_api_process_start`
 - Funcion `sll_get_location` now accepts `NULL` arguments
 - Renamed `call_stack_type$return` to `call_stack_type$location`

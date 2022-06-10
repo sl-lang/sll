@@ -157,33 +157,6 @@ static void _init_struct(const sll_object_type_table_t* type_table,sll_object_t*
 
 
 
-static sll_arg_count_t _get_offset(const sll_object_type_data_t* type_descriptor,const sll_string_t* field_name){
-	if (!type_descriptor->field_count){
-		return SLL_MAX_ARG_COUNT;
-	}
-	if (type_descriptor->field_count==1){
-		return (STRING_EQUAL(field_name,&(type_descriptor->fields->name))?0:SLL_MAX_ARG_COUNT);
-	}
-	sll_arg_count_t i=GET_HASH_TABLE_OFFSET(type_descriptor,field_name);
-	sll_arg_count_t l=type_descriptor->_hash_table_bit_mask+1;
-	do{
-		sll_arg_count_t j=type_descriptor->_hash_table[i];
-		if (j!=SLL_MAX_ARG_COUNT&&STRING_EQUAL(field_name,&(type_descriptor->fields[j].name))){
-			return j;
-		}
-		l--;
-		if (!i){
-			i=type_descriptor->_hash_table_bit_mask;
-		}
-		else{
-			i--;
-		}
-	} while (l);
-	return SLL_MAX_ARG_COUNT;
-}
-
-
-
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_type_t sll_add_type(sll_object_type_table_t* type_table,sll_object_t*const* object_data,sll_arg_count_t field_count,const sll_string_t* name){
 	sll_object_type_data_t* n=sll_allocate(sizeof(sll_object_type_data_t)+field_count*sizeof(sll_object_type_data_field_t));
 	if (name){
@@ -352,7 +325,36 @@ __SLL_EXTERNAL void sll_free_object_type_list(sll_object_type_table_t* type_tabl
 
 
 
-__SLL_EXTERNAL void sll_get_type_name(sll_object_type_table_t* type_table,sll_object_type_t type,sll_string_t* out){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_arg_count_t sll_get_offset(const sll_object_type_table_t* type_table,sll_object_type_t type,const sll_string_t* field_name){
+	SLL_ASSERT(type>SLL_MAX_OBJECT_TYPE);
+	const sll_object_type_data_t* type_descriptor=*(type_table->data+type-SLL_MAX_OBJECT_TYPE-1);
+	if (!type_descriptor->field_count){
+		return SLL_MAX_ARG_COUNT;
+	}
+	if (type_descriptor->field_count==1){
+		return (STRING_EQUAL(field_name,&(type_descriptor->fields->name))?0:SLL_MAX_ARG_COUNT);
+	}
+	sll_arg_count_t i=GET_HASH_TABLE_OFFSET(type_descriptor,field_name);
+	sll_arg_count_t l=type_descriptor->_hash_table_bit_mask+1;
+	do{
+		sll_arg_count_t j=type_descriptor->_hash_table[i];
+		if (j!=SLL_MAX_ARG_COUNT&&STRING_EQUAL(field_name,&(type_descriptor->fields[j].name))){
+			return j;
+		}
+		l--;
+		if (!i){
+			i=type_descriptor->_hash_table_bit_mask;
+		}
+		else{
+			i--;
+		}
+	} while (l);
+	return SLL_MAX_ARG_COUNT;
+}
+
+
+
+__SLL_EXTERNAL void sll_get_type_name(const sll_object_type_table_t* type_table,sll_object_type_t type,sll_string_t* out){
 	switch (type){
 		case SLL_OBJECT_TYPE_INT:
 			sll_string_clone(&_object_int_type_str,out);
@@ -422,13 +424,12 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_object_clone(const sll_objec
 
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_object_get_field(const sll_object_type_table_t* type_table,sll_object_t* object,const sll_string_t* field_name){
-	const sll_object_type_data_t* dt=*(sll_current_runtime_data->type_table->data+object->type-SLL_MAX_OBJECT_TYPE-1);
-	sll_arg_count_t off=_get_offset(dt,field_name);
+	sll_arg_count_t off=sll_get_offset(type_table,object->type,field_name);
 	if (off==SLL_MAX_ARG_COUNT){
 		return SLL_ACQUIRE_STATIC_INT(0);
 	}
 	sll_object_field_t* v=object->data.fields+off;
-	switch (dt->fields[off].type){
+	switch ((*(type_table->data+object->type-SLL_MAX_OBJECT_TYPE-1))->fields[off].type){
 		case SLL_OBJECT_TYPE_INT:
 			return sll_int_to_object(v->int_);
 		case SLL_OBJECT_TYPE_FLOAT:
@@ -443,11 +444,11 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_object_get_field(const sll_o
 
 
 __SLL_EXTERNAL void sll_object_set_field(const sll_object_type_table_t* type_table,sll_object_t* object,const sll_string_t* field_name,sll_object_t* value){
-	const sll_object_type_data_t* dt=*(sll_current_runtime_data->type_table->data+object->type-SLL_MAX_OBJECT_TYPE-1);
-	sll_arg_count_t off=_get_offset(dt,field_name);
+	sll_arg_count_t off=sll_get_offset(type_table,object->type,field_name);
 	if (off==SLL_MAX_ARG_COUNT){
 		return;
 	}
+	const sll_object_type_data_t* dt=*(type_table->data+object->type-SLL_MAX_OBJECT_TYPE-1);
 	if (dt->fields[off].read_only){
 		return;
 	}
@@ -462,7 +463,7 @@ __SLL_EXTERNAL void sll_object_set_field(const sll_object_type_table_t* type_tab
 __SLL_EXTERNAL void sll_object_to_array(const sll_object_type_table_t* type_table,sll_object_t* object,sll_array_t* out){
 	sll_object_type_t t=object->type;
 	SLL_ASSERT(t>SLL_MAX_OBJECT_TYPE&&t-SLL_MAX_OBJECT_TYPE-1<type_table->length);
-	const sll_object_type_data_t* dt=*(sll_current_runtime_data->type_table->data+object->type-SLL_MAX_OBJECT_TYPE-1);
+	const sll_object_type_data_t* dt=*(type_table->data+object->type-SLL_MAX_OBJECT_TYPE-1);
 	sll_array_create(dt->field_count,out);
 	sll_object_field_t* v=object->data.fields;
 	for (sll_arg_count_t i=0;i<dt->field_count;i++){

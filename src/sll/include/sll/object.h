@@ -313,6 +313,20 @@ __SLL_EXTERNAL void sll_free_object_type_list(sll_object_type_table_t* type_tabl
 
 
 /**
+ * \flags check_output func
+ * \name sll_get_offset
+ * \group object
+ * \desc Docs!
+ * \arg const sll_object_type_table_t* type_table
+ * \arg sll_object_type_t type
+ * \arg const sll_string_t* field_name
+ * \ret sll_arg_count_t
+ */
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_arg_count_t sll_get_offset(const sll_object_type_table_t* type_table,sll_object_type_t type,const sll_string_t* field_name);
+
+
+
+/**
  * \flags func
  * \name sll_get_type_name
  * \group object
@@ -321,7 +335,7 @@ __SLL_EXTERNAL void sll_free_object_type_list(sll_object_type_table_t* type_tabl
  * \arg sll_object_type_t type
  * \arg sll_string_t* out
  */
-__SLL_EXTERNAL void sll_get_type_name(sll_object_type_table_t* type_table,sll_object_type_t type,sll_string_t* out);
+__SLL_EXTERNAL void sll_get_type_name(const sll_object_type_table_t* type_table,sll_object_type_t type,sll_string_t* out);
 
 
 
