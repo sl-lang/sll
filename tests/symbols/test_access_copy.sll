@@ -1,0 +1,46 @@
+(---
+	"@test/_common.sll"
+	"types.sll"
+)
+
+
+
+(= test_integer (,,,
+	(<- expect (: 58) 58)
+	(<- expect (: false) false)
+	(<- expect (: -410) -410)
+))
+
+(= test_float (,,,
+	(<- expect (: 12904.4565) 12904.4565)
+	(<- expect (: -48e190) -48e190)
+))
+
+(= test_char (,,,
+	(<- expect (: 'X') 'X')
+	(<- expect (: '\x01') '\x01')
+))
+
+(= test_complex (,,,
+	(<- expect (: 12.0-67.0i) 12.0-67.0i)
+	(<- expect (: 0.5+0.5i) 0.5+0.5i)
+))
+
+(= test_string (,,,
+	(= str "Abcdefg")
+	(= str_cpy (: str))
+	(<- expect str_cpy str)
+	(= (: str_cpy 0) '\x00')
+	(<- expect str_cpy "\x00bcdefg")
+	(<- expect str "Abcdefg")
+))
+
+
+
+(<- run "Access Copy (:)" (,,,
+	(<- test_integer)
+	(<- test_float)
+	(<- test_char)
+	(<- test_complex)
+	(<- test_string)
+))
