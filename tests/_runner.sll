@@ -112,6 +112,9 @@
 
 
 
+(? (<- path$exists "build/test_results.json")
+	(<- file$delete "build/test_results.json")
+)
 (? (: (<- process$start (<- build_command)) "return_code") {
 	(? GH_ACTIONS {
 		(:> "::error file=tests/_runner.sll,title=Test runner::Child process crashed while executing test cases\n")
