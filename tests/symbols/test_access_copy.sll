@@ -35,6 +35,46 @@
 	(<- expect str "Abcdefg")
 ))
 
+(= test_array (,,,
+	(= arr [1 2 3 4 5])
+	(= arr_cpy (: arr))
+	(<- expect arr_cpy arr)
+	(= (: arr_cpy 0) "String!")
+	(<- expect arr_cpy ["String!" 2 3 4 5])
+	(<- expect arr [1 2 3 4 5])
+))
+
+(= test_map (,,,
+	(= map <0 'a' 1 'b' 2 'c' 3 'd' 4 'e'>)
+	(= map_cpy (: map))
+	(<- expect map_cpy map)
+	(= (: map_cpy 2) "key-2")
+	(<- expect map_cpy <0 'a' 1 'b' 2 "key-2" 3 'd' 4 'e'>)
+	(<- expect map <0 'a' 1 'b' 2 'c' 3 'd' 4 'e'>)
+))
+
+(= test_custom_type (,,,
+	(= type_type (&:
+		int_type number
+		(~ string_type) string
+	))
+	(= type (. type_type
+		12345
+		"example-string"
+	))
+	(= type_cpy (: type))
+	(<- expect type_cpy type)
+	(= type_cpy$number -9876)
+	(<- expect type_cpy (. type_type
+		-9876
+		"example-string"
+	))
+	(<- expect type (. type_type
+		12345
+		"example-string"
+	))
+))
+
 
 
 (<- run "Access Copy (:)" (,,,
@@ -43,4 +83,7 @@
 	(<- test_char)
 	(<- test_complex)
 	(<- test_string)
+	(<- test_array)
+	(<- test_map)
+	(<- test_custom_type)
 ))
