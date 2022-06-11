@@ -77,7 +77,7 @@
 
 
 
-(<- run "Access Copy (:)" (,,,
+(<- run "Access copy (:)" (,,,
 	(<- test_integer)
 	(<- test_float)
 	(<- test_char)

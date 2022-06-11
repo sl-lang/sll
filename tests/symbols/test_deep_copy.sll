@@ -1,0 +1,94 @@
+(---
+	"@test/_common.sll"
+	"map.sll"
+	"sort.sll"
+	"types.sll"
+)
+
+
+
+(= test_integer (,,,
+	(<- expect (:! 58) 58)
+	(<- expect (:! false) false)
+	(<- expect (:! -410) -410)
+))
+
+(= test_float (,,,
+	(<- expect (:! 12904.4565) 12904.4565)
+	(<- expect (:! -48e190) -48e190)
+))
+
+(= test_char (,,,
+	(<- expect (:! 'X') 'X')
+	(<- expect (:! '\x01') '\x01')
+))
+
+(= test_complex (,,,
+	(<- expect (:! 12.0-67.0i) 12.0-67.0i)
+	(<- expect (:! 0.5+0.5i) 0.5+0.5i)
+))
+
+(= test_string (,,,
+	(= str "Abcdefg")
+	(= str_cpy (:! str))
+	(<- expect str_cpy str)
+	(= (: str_cpy 0) '\x00')
+	(<- expect str_cpy "\x00bcdefg")
+	(<- expect str "Abcdefg")
+))
+
+(= test_array (,,,
+	(= arr [1 2 3 4 5 <"Abc" '3' "Defghi" '6' "unwanted-key" -999999999>])
+	(= arr_cpy (:! arr))
+	(<- expect arr_cpy arr)
+	(= (: arr_cpy 0) "String!")
+	(<- map$remove (: arr_cpy 5) "unwanted-key")
+	(<- expect arr_cpy ["String!" 2 3 4 5 <"Abc" '3' "Defghi" '6'>])
+	(<- expect arr [1 2 3 4 5 <"Abc" '3' "Defghi" '6' "unwanted-key" -999999999>])
+))
+
+(= test_map (,,,
+	(= map <0 'a' 1 'b' 2 'c' 3 'd' 4 [-2 -5 -3 -4 -1]>)
+	(= map_cpy (:! map))
+	(<- expect map_cpy map)
+	(= (: map_cpy 2) "key-2")
+	(<- sort$sort (: map_cpy 4) false true)
+	(<- expect map_cpy <0 'a' 1 'b' 2 "key-2" 3 'd' 4 [-5 -4 -3 -2 -1]>)
+	(<- expect map <0 'a' 1 'b' 2 'c' 3 'd' 4 [-2 -5 -3 -4 -1]>)
+))
+
+(= test_custom_type (,,,
+	(= type_type (&:
+		int_type number
+		string_type string
+	))
+	(= type (. type_type
+		12345
+		"example-string"
+	))
+	(= type_cpy (:! type))
+	(<- expect type_cpy type)
+	(= type_cpy$number -9876)
+	(= (: type_cpy$string 7) '!')
+	(<- expect type_cpy (. type_type
+		-9876
+		"example!string"
+	))
+	(<- expect type (. type_type
+		12345
+		"example-string"
+	))
+))
+
+
+
+(<- run "Deep copy (:!)" (,,,
+	(<- test_integer)
+	(<- test_float)
+	(<- test_char)
+	(<- test_complex)
+	(<- test_string)
+	(<- test_array)
+	(<- test_map)
+	(<- test_custom_type)
+))
