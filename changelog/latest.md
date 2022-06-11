@@ -1,4 +1,4 @@
-# Sll [0.7.21] - Ongoing
+# Sll [0.7.21] - 2022-06-11
 
 ## Added
 
@@ -17,4 +17,4 @@
 - Call stack frames no longer contain the name of the function
 - Verbose output from module compilation
 
-[0.7.21]: https://github.com/sl-lang/sll/compare/sll-v0.7.20...main
+[0.7.21]: https://github.com/sl-lang/sll/compare/sll-v0.7.20...sll-v0.7.21
