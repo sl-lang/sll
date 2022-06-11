@@ -1,5 +1,7 @@
 (---
 	"@test/_common.sll"
+	"map.sll"
+	"sort.sll"
 	"types.sll"
 )
 
@@ -36,27 +38,29 @@
 ))
 
 (= test_array (,,,
-	(= arr [1 2 3 4 5])
+	(= arr [1 2 3 4 5 <"Abc" '3' "Defghi" '6' "unwanted-key" -999999999>])
 	(= arr_cpy (: arr))
 	(<- expect arr_cpy arr)
 	(= (: arr_cpy 0) "String!")
-	(<- expect arr_cpy ["String!" 2 3 4 5])
-	(<- expect arr [1 2 3 4 5])
+	(<- map$remove (: arr_cpy 5) "unwanted-key")
+	(<- expect arr_cpy ["String!" 2 3 4 5 <"Abc" '3' "Defghi" '6'>])
+	(<- expect arr [1 2 3 4 5 <"Abc" '3' "Defghi" '6'>])
 ))
 
 (= test_map (,,,
-	(= map <0 'a' 1 'b' 2 'c' 3 'd' 4 'e'>)
+	(= map <0 'a' 1 'b' 2 'c' 3 'd' 4 [-2 -5 -3 -4 -1]>)
 	(= map_cpy (: map))
 	(<- expect map_cpy map)
 	(= (: map_cpy 2) "key-2")
-	(<- expect map_cpy <0 'a' 1 'b' 2 "key-2" 3 'd' 4 'e'>)
-	(<- expect map <0 'a' 1 'b' 2 'c' 3 'd' 4 'e'>)
+	(<- sort$sort (: map_cpy 4) false true)
+	(<- expect map_cpy <0 'a' 1 'b' 2 "key-2" 3 'd' 4 [-5 -4 -3 -2 -1]>)
+	(<- expect map <0 'a' 1 'b' 2 'c' 3 'd' 4 [-5 -4 -3 -2 -1]>)
 ))
 
 (= test_custom_type (,,,
 	(= type_type (&:
 		int_type number
-		(~ string_type) string
+		string_type string
 	))
 	(= type (. type_type
 		12345
@@ -65,13 +69,14 @@
 	(= type_cpy (: type))
 	(<- expect type_cpy type)
 	(= type_cpy$number -9876)
+	(= (: type_cpy$string 7) '!')
 	(<- expect type_cpy (. type_type
 		-9876
-		"example-string"
+		"example!string"
 	))
 	(<- expect type (. type_type
 		12345
-		"example-string"
+		"example!string"
 	))
 ))
 

@@ -404,12 +404,14 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_object_clone(const sll_objec
 			case SLL_OBJECT_TYPE_FLOAT:
 				dst->float_=src->float_;
 				break;
+			default:
+				if (deep){
+					dst->any=sll_operator_copy(src->any,deep);
+					break;
+				}
 			case SLL_OBJECT_TYPE_COMPLEX:
 				SLL_ACQUIRE(src->any);
 				dst->any=src->any;
-				break;
-			default:
-				dst->any=sll_operator_copy(src->any,deep);
 				break;
 		}
 		src++;
