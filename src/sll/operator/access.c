@@ -44,8 +44,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_access(sll_object_t
 	else if (sll_current_runtime_data&&b->type==SLL_OBJECT_TYPE_STRING&&a->type>SLL_MAX_OBJECT_TYPE&&a->type<=sll_current_runtime_data->type_table->length+SLL_MAX_OBJECT_TYPE){
 		return sll_object_get_field(sll_current_runtime_data->type_table,a,&(b->data.string));
 	}
-	SLL_ACQUIRE(a);
-	return a;
+	return SLL_ACQUIRE_STATIC_INT(0);
 }
 
 

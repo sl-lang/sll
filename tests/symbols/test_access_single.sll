@@ -1,0 +1,79 @@
+(---
+	"@test/_common.sll"
+	"map.sll"
+	"sort.sll"
+	"types.sll"
+)
+
+
+
+(= test_integer (,,,
+	(<- expect (: 58 12) nil)
+	(<- expect (: false -1) nil)
+	(<- expect (: -410 0) nil)
+))
+
+(= test_float (,,,
+	(<- expect (: 12904.4565 33) nil)
+	(<- expect (: -48e190 -1) nil)
+))
+
+(= test_char (,,,
+	(<- expect (: 'X' 2) nil)
+	(<- expect (: '\x01' -5) nil)
+))
+
+(= test_complex (,,,
+	(<- expect (: 12.0-67.0i 1111) nil)
+	(<- expect (: 0.5+0.5i 0) nil)
+))
+
+(= test_string (,,,
+	(<- expect (: "Abcdefg" 0) 'A')
+	(<- expect (: "Abcdefg" 3) 'd')
+	(<- expect (: "Abcdefg" -2) 'f')
+	(<- expect (: "Abcdefg" -1.0+58.0i) nil)
+))
+
+(= test_array (,,,
+	(<- expect (: [2 'A' 5.5+5.5i] 0) 2)
+	(<- expect (: [2 'A' 5.5+5.5i] 2) 5.5+5.5i)
+	(<- expect (: [2 'A' 5.5+5.5i] -3) 2)
+	(<- expect (: [2 'A' 5.5+5.5i] "key") nil)
+))
+
+(= test_map (,,,
+	(<- expect (: <'X' 88 0.5 "float" 1234567890 [5 4 3 2 1]> 0) nil)
+	(<- expect (: <'X' 88 0.5 "float" 1234567890 [5 4 3 2 1]> 'X') 88)
+	(<- expect (: <'X' 88 0.5 "float" 1234567890 [5 4 3 2 1]> 1234567890) [5 4 3 2 1])
+	(<- expect (: <'X' 88 0.5 "float" 1234567890 [5 4 3 2 1]> 0.5-111.0i) nil)
+))
+
+(= test_custom_type (,,,
+	(= type_type (&:
+		int_type number
+		string_type string
+	))
+	(= type (. type_type
+		12345
+		"example-string"
+	))
+	(<- expect (: type "number") 12345)
+	(<- expect (: type 35) nil)
+	(<- expect (: type 63824.549) nil)
+	(<- expect (: type "string") "example-string")
+	(<- expect (: type "stringA") nil)
+))
+
+
+
+(<- run "Access single (:)" (,,,
+	(<- test_integer)
+	(<- test_float)
+	(<- test_char)
+	(<- test_complex)
+	(<- test_string)
+	(<- test_array)
+	(<- test_map)
+	(<- test_custom_type)
+))
