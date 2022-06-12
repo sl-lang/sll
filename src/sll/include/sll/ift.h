@@ -123,9 +123,9 @@ typedef struct _SLL_INTERNAL_FUNCTION_TABLE_DESCRIPTOR{
  * \name sll_builtin_internal_functions
  * \group ift
  * \desc Docs!
- * \type const sll_internal_function_table_descriptor_t
+ * \type const sll_internal_function_table_descriptor_t*
  */
-__SLL_EXTERNAL extern const sll_internal_function_table_descriptor_t sll_builtin_internal_functions;
+__SLL_EXTERNAL extern const sll_internal_function_table_descriptor_t* sll_builtin_internal_functions;
 
 
 

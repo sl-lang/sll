@@ -231,6 +231,10 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_sys_load_li
 		sll_register_cleanup(_cleanup_vm_data,SLL_CLEANUP_TYPE_VM);
 		_sys_vm_init=1;
 	}
+	const sll_internal_function_table_descriptor_t*const* ift_desc=sll_platform_lookup_symbol(h,SLL_ABI_NAME(SLL_ABI_INTERNAL_FUNCTION_TABLE_DESCRIPTOR));
+	if (ift_desc&&*ift_desc){
+		sll_register_internal_functions(sll_current_runtime_data->internal_function_table,(*ift_desc)->data,(*ift_desc)->length);
+	}
 	return SLL_NO_ERROR;
 }
 

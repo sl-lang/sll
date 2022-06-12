@@ -1,3 +1,4 @@
+#include <clib/common.h>
 #include <clib/function.h>
 #include <clib/library.h>
 #include <sll.h>
@@ -34,6 +35,11 @@ static const sll_internal_function_descriptor_t _internal_function_table[]={
 
 
 
-const sll_internal_function_descriptor_t* clib_internal_function_data=(const sll_internal_function_descriptor_t*)(&_internal_function_table);
-const sll_function_index_t clib_internal_function_count=5;
+static const sll_internal_function_table_descriptor_t _internal_function_table_descriptor_data={
+	(const sll_internal_function_descriptor_t*)(&_internal_function_table),
+	5
+};
 
+
+
+__CLIB_EXTERNAL const sll_internal_function_table_descriptor_t* SLL_ABI_INTERNAL_FUNCTION_TABLE_DESCRIPTOR=&_internal_function_table_descriptor_data;

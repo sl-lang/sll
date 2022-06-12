@@ -67,6 +67,17 @@
 
 /**
  * \flags macro var
+ * \name SLL_ABI_INTERNAL_FUNCTION_TABLE_DESCRIPTOR
+ * \group abi
+ * \desc Docs!
+ * \type __identifier__
+ */
+#define SLL_ABI_INTERNAL_FUNCTION_TABLE_DESCRIPTOR __sll_ift
+
+
+
+/**
+ * \flags macro var
  * \name SLL_ABI_PATH_RESOLVER_DEINIT
  * \group abi
  * \desc Docs!
