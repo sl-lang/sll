@@ -318,7 +318,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_code_t sll_cli_main(sll_array_lengt
 	sll_library_handle_t* path_resolver_list=NULL;
 	sll_array_length_t path_resolver_list_len=0;
 	sll_create_internal_function_table(&_cli_ift);
-	sll_register_internal_functions(&_cli_ift,sll_builtin_internal_function_data,sll_builtin_internal_function_count);
+	sll_register_internal_functions(&_cli_ift,sll_builtin_internal_functions.data,sll_builtin_internal_functions.length);
 	const sll_char_t* b_nm=NULL;
 	const sll_char_t* b_o_fp=NULL;
 	const sll_char_t* o_fp=NULL;

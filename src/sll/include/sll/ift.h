@@ -104,24 +104,28 @@ typedef struct _SLL_INTERNAL_FUNCTION_DESCRIPTOR{
 
 
 /**
- * \flags var
- * \name sll_builtin_internal_function_data
+ * \flags type
+ * \name sll_internal_function_table_descriptor_t
  * \group ift
  * \desc Docs!
- * \type const sll_internal_function_descriptor_t*
+ * \arg const sll_internal_function_descriptor_t* data
+ * \arg sll_function_index_t length
  */
-__SLL_EXTERNAL extern const sll_internal_function_descriptor_t* sll_builtin_internal_function_data;
+typedef struct _SLL_INTERNAL_FUNCTION_TABLE_DESCRIPTOR{
+   const sll_internal_function_descriptor_t* data;
+    sll_function_index_t length;
+} sll_internal_function_table_descriptor_t;
 
 
 
 /**
  * \flags var
- * \name sll_builtin_internal_function_count
+ * \name sll_builtin_internal_functions
  * \group ift
  * \desc Docs!
- * \type const sll_function_index_t
+ * \type const sll_internal_function_table_descriptor_t
  */
-__SLL_EXTERNAL extern const sll_function_index_t sll_builtin_internal_function_count;
+__SLL_EXTERNAL extern const sll_internal_function_table_descriptor_t sll_builtin_internal_functions;
 
 
 

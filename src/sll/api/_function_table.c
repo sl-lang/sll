@@ -1165,5 +1165,7 @@ static const sll_internal_function_descriptor_t _internal_function_table[]={
 
 
 
-__SLL_EXTERNAL const sll_internal_function_descriptor_t* sll_builtin_internal_function_data=(const sll_internal_function_descriptor_t*)(&_internal_function_table);
-__SLL_EXTERNAL const sll_function_index_t sll_builtin_internal_function_count=192;
+__SLL_EXTERNAL const sll_internal_function_table_descriptor_t sll_builtin_internal_functions={
+	(const sll_internal_function_descriptor_t*)(&_internal_function_table),
+	192
+};
