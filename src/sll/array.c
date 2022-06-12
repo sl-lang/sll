@@ -625,12 +625,13 @@ __SLL_EXTERNAL void sll_array_reverse(const sll_array_t* array,sll_array_t* out)
 __SLL_EXTERNAL void sll_array_select(const sll_array_t* array,sll_integer_t start,sll_integer_t end,sll_integer_t step,sll_array_t* out){
 	WRAP_ARRAY_INDEX_VAR(start,array->length);
 	WRAP_ARRAY_INDEX_VAR(end,array->length);
-	SLL_INIT_ARRAY(out);
 	if (!array->length||start==end||!step||(start<=end&&start>=array->length)||(end<=start&&end>=array->length)){
+		SLL_INIT_ARRAY(out);
 		return;
 	}
 	if (start<end){
 		if (step<0){
+			sll_array_select(array,0,start,1,out);
 			return;
 		}
 		if (start+step>=array->length){
@@ -653,6 +654,7 @@ __SLL_EXTERNAL void sll_array_select(const sll_array_t* array,sll_integer_t star
 	}
 	else{
 		if (step>0){
+			sll_array_select(array,start,array->length-1,1,out);
 			return;
 		}
 		step=-step;

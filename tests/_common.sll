@@ -69,7 +69,7 @@
 		(:> "+")
 	} {
 		(:> "-")
-		(= loc (: (: (<- error$get_call_stack) -3) "location"))
+		(= loc (: (: (<- error$get_call_stack) -2) "location"))
 		(= error_data (:! error_data))
 		(= (: error_data "group") func_group)
 		(= (: error_data "file") loc$file)

@@ -1759,12 +1759,13 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_string_secure_equal(const sll_s
 __SLL_EXTERNAL void sll_string_select(const sll_string_t* string,sll_integer_t start,sll_integer_t end,sll_integer_t step,sll_string_t* out){
 	WRAP_ARRAY_INDEX_VAR(start,string->length);
 	WRAP_ARRAY_INDEX_VAR(end,string->length);
-	SLL_INIT_STRING(out);
 	if (!string->length||start==end||!step||(start<=end&&start>=string->length)||(end<=start&&end>=string->length)){
+		SLL_INIT_STRING(out);
 		return;
 	}
 	if (start<end){
 		if (step<0){
+			sll_string_select(string,0,start,1,out);
 			return;
 		}
 		if (start+step>=string->length){
@@ -1791,6 +1792,7 @@ __SLL_EXTERNAL void sll_string_select(const sll_string_t* string,sll_integer_t s
 	}
 	else{
 		if (step>0){
+			sll_string_select(string,start,string->length-1,1,out);
 			return;
 		}
 		step=-step;
