@@ -6,6 +6,7 @@
 
 ## Changed
 
+- Fixed array and string underflow indexing
 - Fixed shallow object copy in `sll_object_clone`
 - Non-containter object access now returns `nil`
 
