@@ -1,0 +1,85 @@
+(---
+	"@test/_common.sll"
+	"types.sll"
+)
+
+
+
+(= test_integer (,,,
+	(<- expect (: 58 12 'A') nil)
+	(<- expect (: false -1 894) nil)
+	(<- expect (: -410 0 [5 4 3 2 1]) nil)
+))
+
+(= test_float (,,,
+	(<- expect (: 12904.4565 33 true) nil)
+	(<- expect (: -48e190 -1 <1 'A' 2 'B' 3 'C'>) nil)
+))
+
+(= test_char (,,,
+	(<- expect (: 'X' 2 78.9-123.456i) nil)
+	(<- expect (: '\x01' -5 '\x01') nil)
+))
+
+(= test_complex (,,,
+	(<- expect (: 12.0-67.0i 1111 '\x50') nil)
+	(<- expect (: 0.5+0.5i 0 "P") nil)
+))
+
+(= test_string (,,,
+	(<- expect (: "Abcdefg" 0 0) "")
+	(<- expect (: "Abcdefg" 1 3) "bc")
+	(<- expect (: "Abcdefg" 1 -3) "bcd")
+	(<- expect (: "Abcdefg" -2 5) "")
+	(<- expect (: "Abcdefg" -4 -2) "de")
+	(<- expect (: "Abcdefg" -2 -4) "")
+	(<- expect (: "Abcdefg" -1.0+58.0i 5) nil)
+	(<- expect (: "Abcdefg" -3 0.0005e4i) nil)
+))
+
+(= test_array (,,,
+	(<- expect (: [2 'A' 5.5+5.5i "x,y,z,w" 123.456e78] 0 0) [])
+	(<- expect (: [2 'A' 5.5+5.5i "x,y,z,w" 123.456e78] 1 3) ['A' 5.5+5.5i])
+	(<- expect (: [2 'A' 5.5+5.5i "x,y,z,w" 123.456e78] 0 -2) [2 'A' 5.5+5.5i])
+	(<- expect (: [2 'A' 5.5+5.5i "x,y,z,w" 123.456e78] -2 5) ["x,y,z,w" 123.456e78])
+	(<- expect (: [2 'A' 5.5+5.5i "x,y,z,w" 123.456e78] -4 -2) ['A' 5.5+5.5i])
+	(<- expect (: [2 'A' 5.5+5.5i "x,y,z,w" 123.456e78] -2 -4) [])
+	(<- expect (: [2 'A' 5.5+5.5i "x,y,z,w" 123.456e78]	 -1.0+58.0i 5) nil)
+	(<- expect (: [2 'A' 5.5+5.5i "x,y,z,w" 123.456e78]	 -3 0.0005e4i) nil)
+))
+
+(= test_map (,,,
+	(<- expect (: <'X' 88 0.5 "float" 1234567890 [5 4 3 2 1]> 0 2) nil)
+	(<- expect (: <'X' 88 0.5 "float" 1234567890 [5 4 3 2 1]> 'X' string_type) nil)
+	(<- expect (: <'X' 88 0.5 "float" 1234567890 [5 4 3 2 1]> "float" 1234567890) nil)
+	(<- expect (: <'X' 88 0.5 "float" 1234567890 [5 4 3 2 1]> 0.5-111.0i .5) nil)
+))
+
+(= test_custom_type (,,,
+	(= type_type (&:
+		int_type number
+		string_type string
+	))
+	(= type (. type_type
+		12345
+		"example-string"
+	))
+	(<- expect (: type "number" 1234567890) nil)
+	(<- expect (: type 35 "key") nil)
+	(<- expect (: type 63824.549 [-5 -4 -3 -2 -1]) nil)
+	(<- expect (: type "string" "string") nil)
+	(<- expect (: type "stringA" 1212121212) nil)
+))
+
+
+
+(<- run "Access double (:)" (,,,
+	(<- test_integer)
+	(<- test_float)
+	(<- test_char)
+	(<- test_complex)
+	(<- test_string)
+	(<- test_array)
+	(<- test_map)
+	(<- test_custom_type)
+))

@@ -1,7 +1,5 @@
 (---
 	"@test/_common.sll"
-	"map.sll"
-	"sort.sll"
 	"types.sll"
 )
 
