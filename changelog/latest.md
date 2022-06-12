@@ -4,6 +4,7 @@
 
 - Implemented `sll_internal_function_table_descriptor_t`
 - Internal function descriptors located in `SLL_ABI_INTERNAL_FUNCTION_TABLE_DESCRIPTOR` are now automatically loaded upon initialization
+- More tests ([#285])
 
 ## Changed
 
