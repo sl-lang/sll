@@ -409,10 +409,10 @@ static const sll_node_t* _print_node_internal(const sll_source_file_t* source_fi
 		case SLL_NODE_TYPE_BIT_NOT:
 			sll_file_write_char(out,'~',NULL);
 			break;
-		case SLL_NODE_TYPE_BIT_RSHIFT:
+		case SLL_NODE_TYPE_BIT_RIGHT_SHIFT:
 			PRINT_STATIC_STRING(">>",out);
 			break;
-		case SLL_NODE_TYPE_BIT_LSHIFT:
+		case SLL_NODE_TYPE_BIT_LEFT_SHIFT:
 			PRINT_STATIC_STRING("<<",out);
 			break;
 		case SLL_NODE_TYPE_LESS:

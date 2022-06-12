@@ -254,8 +254,8 @@ void _unneeded_result(sll_arg_count_t* arg_count,sll_node_t* node){
 		case SLL_NODE_TYPE_BIT_OR:
 		case SLL_NODE_TYPE_BIT_XOR:
 		case SLL_NODE_TYPE_BIT_NOT:
-		case SLL_NODE_TYPE_BIT_RSHIFT:
-		case SLL_NODE_TYPE_BIT_LSHIFT:
+		case SLL_NODE_TYPE_BIT_RIGHT_SHIFT:
+		case SLL_NODE_TYPE_BIT_LEFT_SHIFT:
 		case SLL_NODE_TYPE_LENGTH:
 		case SLL_NODE_TYPE_ACCESS:
 		case SLL_NODE_TYPE_DEEP_COPY:

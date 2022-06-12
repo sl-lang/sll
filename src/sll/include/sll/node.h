@@ -515,25 +515,25 @@
 
 /**
  * \flags macro var
- * \name SLL_NODE_TYPE_BIT_RSHIFT
+ * \name SLL_NODE_TYPE_BIT_RIGHT_SHIFT
  * \group node
  * \subgroup node-type
  * \desc Docs!
  * \type sll_node_type_t
  */
-#define SLL_NODE_TYPE_BIT_RSHIFT 40
+#define SLL_NODE_TYPE_BIT_RIGHT_SHIFT 40
 
 
 
 /**
  * \flags macro var
- * \name SLL_NODE_TYPE_BIT_LSHIFT
+ * \name SLL_NODE_TYPE_BIT_LEFT_SHIFT
  * \group node
  * \subgroup node-type
  * \desc Docs!
  * \type sll_node_type_t
  */
-#define SLL_NODE_TYPE_BIT_LSHIFT 41
+#define SLL_NODE_TYPE_BIT_LEFT_SHIFT 41
 
 
 

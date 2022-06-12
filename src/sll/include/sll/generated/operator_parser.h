@@ -138,7 +138,7 @@ static __SLL_FORCE_INLINE sll_read_char_t _operator_parser(sll_node_t* o,sll_rea
 			o->type=SLL_NODE_TYPE_CALL;
 		}
 		else if (str[0]=='<'&&str[1]=='<'){
-			o->type=SLL_NODE_TYPE_BIT_LSHIFT;
+			o->type=SLL_NODE_TYPE_BIT_LEFT_SHIFT;
 		}
 		else if (str[0]=='<'&&str[1]=='='){
 			o->type=SLL_NODE_TYPE_LESS_EQUAL;
@@ -157,7 +157,7 @@ static __SLL_FORCE_INLINE sll_read_char_t _operator_parser(sll_node_t* o,sll_rea
 			o->type=SLL_NODE_TYPE_MORE_EQUAL;
 		}
 		else if (str[0]=='>'&&str[1]=='>'){
-			o->type=SLL_NODE_TYPE_BIT_RSHIFT;
+			o->type=SLL_NODE_TYPE_BIT_RIGHT_SHIFT;
 		}
 		else if (str[0]=='?'&&str[1]==':'){
 			o->type=SLL_NODE_TYPE_INLINE_IF;

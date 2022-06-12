@@ -43,7 +43,7 @@ $ length
 < less
 <- call
 <-* call_array
-<< bit_lshift
+<< bit_left_shift
 <<< continue
 <= less_equal
 = assign
@@ -53,7 +53,7 @@ $ length
 >- while $loop
 >< loop
 >= more_equal
->> bit_rshift
+>> bit_right_shift
 ? if
 ?: inline_if
 ?? switch
