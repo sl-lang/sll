@@ -38,6 +38,17 @@ __SLL_EXTERNAL extern const sll_string_t* sll_platform_string;
 
 
 /**
+ * \flags func macro
+ * \name SLL_RANDOM_BITS
+ * \group platform
+ * \desc Docs!
+ * \arg __any__ x
+ */
+#define SLL_RANDOM_BITS(x) sll_platform_random(&(x),sizeof(x))
+
+
+
+/**
  * \flags check_output func
  * \name sll_platform_get_error
  * \group platform

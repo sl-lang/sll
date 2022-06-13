@@ -203,7 +203,7 @@ _skip_next:;
 		n->_hash_table=PTR(ADDR(n)+sizeof(sll_object_type_data_t)+field_count*sizeof(sll_object_type_data_field_t));
 		sll_set_memory(n->_hash_table,n->_hash_table_bit_mask*sizeof(sll_arg_count_t),0xff);
 		n->_hash_table_bit_mask--;
-		sll_platform_random(&(n->_rng),sizeof(__SLL_U64));
+		SLL_RANDOM_BITS(n->_rng);
 		if (!(n->_rng>>6)){
 			n->_rng|=64;
 		}

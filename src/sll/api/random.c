@@ -14,7 +14,7 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_float_t sll_api_random_get_
 		return 0;
 	}
 	sll_size_t v;
-	sll_platform_random(&v,sizeof(sll_size_t));
+	SLL_RANDOM_BITS(v);
 	v&=0xfffffffffffffull;
 	sll_size_t l=FIND_LAST_SET_BIT(v);
 	f64_data_t o={
@@ -34,7 +34,7 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_random_ge
 	sll_size_t m=0xffffffffffffffffull>>(63-FIND_LAST_SET_BIT(v));
 	sll_size_t o;
 	do{
-		sll_platform_random(&o,sizeof(sll_size_t));
+		SLL_RANDOM_BITS(o);
 		o&=m;
 	} while (o>v);
 	return min+o;
@@ -55,7 +55,7 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_random_get_string(sll_string_length_t
 	}
 	for (sll_string_length_t i=0;i<len;i++){
 		while (out->data[i]<min||out->data[i]>max){
-			sll_platform_random(out->data+i,sizeof(sll_char_t));
+			SLL_RANDOM_BITS(out->data[i]);
 		}
 	}
 	sll_string_calculate_checksum(out);
