@@ -1,5 +1,6 @@
 #include <sll/_internal/common.h>
 #include <sll/_internal/error.h>
+#include <sll/_size_types.h>
 #include <sll/api/path.h>
 #include <sll/api/sys.h>
 #include <sll/common.h>
@@ -9,7 +10,9 @@
 #include <sll/string.h>
 #include <sll/types.h>
 #include <dlfcn.h>
-#ifndef __SLL_BUILD_DARWIN
+#ifdef __SLL_BUILD_DARWIN
+#include <mach-o/dyld.h>
+#else
 #include <link.h>
 #endif
 
@@ -18,13 +21,18 @@
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_length_t sll_platform_get_library_file_path(sll_library_handle_t h,sll_char_t* fp,sll_string_length_t fpl,sll_error_t* err){
 	ERROR_PTR_RESET;
 #ifdef __SLL_BUILD_DARWIN
-	Dl_info info;
-	if (dladdr(h,&info)&&info.dli_fname){
-		sll_string_length_t l=sll_string_length((const sll_char_t*)(info.dli_fname));
+	for (__SLL_U32 i=0;i<_dyld_image_count();i++){
+		const char* path=_dyld_get_image_name(i);
+		void* handle=dlopen(path,RTLD_LAZY|RTLD_NOLOAD);
+		dlclose(handle);
+		if ((ADDR(handle)&0xfffffffffffffffcull)!=(ADDR(h)&0xfffffffffffffffcull)){
+			continue;
+		}
+		sll_string_length_t l=sll_string_length((const sll_char_t*)path);
 		if (l>=fpl){
 			l=fpl-1;
 		}
-		sll_copy_data(info.dli_fname,l,fp);
+		sll_copy_data(path,l,fp);
 		fp[l]=0;
 		return l;
 	}
