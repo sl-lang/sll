@@ -19,7 +19,7 @@ static const sll_internal_function_descriptor_t _internal_function_table[]={
 	{
 		SLL_CHAR("clib:load_library"),
 		clib_api_load_library,
-		SLL_CHAR("#s|~Q")
+		SLL_CHAR("#s|~a")
 	},
 	{
 		SLL_CHAR("clib:lookup_symbol"),

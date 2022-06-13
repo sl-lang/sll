@@ -10,10 +10,15 @@ __CLIB_API_CALL sll_library_handle_t clib_api_get_sll_library_handle(void){
 
 
 
-__CLIB_API_CALL sll_error_t clib_api_load_library(const sll_string_t* path,sll_library_handle_t* out){
+__CLIB_API_CALL sll_error_t clib_api_load_library(const sll_string_t* path,sll_array_t* out){
 	sll_error_t err;
-	*out=sll_platform_load_library(path->data,&err);
-	sll_audit(SLL_CHAR("clib.library.load"),SLL_CHAR("si"),path,*out);
+	sll_library_handle_t lib=sll_platform_load_library(path->data,&err);
+	sll_audit(SLL_CHAR("clib.library.load"),SLL_CHAR("si"),path,lib);
+	if (err==SLL_NO_ERROR){
+		sll_char_t bf[SLL_API_MAX_FILE_PATH_LENGTH];
+		sll_string_length_t len=sll_platform_get_library_file_path(lib,bf,SLL_API_MAX_FILE_PATH_LENGTH,&err);
+		sll_new_object_array(SLL_CHAR("iS"),out,lib,bf,len);
+	}
 	return err;
 }
 

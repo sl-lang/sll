@@ -11,7 +11,24 @@
 
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_length_t sll_platform_get_library_file_path(sll_library_handle_t h,sll_char_t* fp,sll_string_length_t fpl,sll_error_t* err){
-	SLL_UNIMPLEMENTED();
+	ERROR_PTR_RESET;
+	sll_char_t bf[SLL_API_MAX_FILE_PATH_LENGTH];
+	sll_string_length_t len=GetModuleFileNameA((HMODULE)h,bf,SLL_API_MAX_FILE_PATH_LENGTH);
+	if (GetLastError()!=ERROR_SUCCESS){
+		ERROR_PTR_SYSTEM;
+		len=0;
+		if (fpl){
+			fp[0]=0;
+		}
+	}
+	else{
+		if (len>=fpl){
+			len=fpl-1;
+		}
+		sll_copy_data(bf,len,fp);
+		fp[len]=0;
+	}
+	return len;
 }
 
 
