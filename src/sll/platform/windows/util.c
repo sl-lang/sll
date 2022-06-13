@@ -72,8 +72,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_error_t sll_platform_get_error(void){
 		case ERROR_PATH_NOT_FOUND:
 		case ERROR_INVALID_DRIVE:
 		case ERROR_NO_MORE_FILES:
-		case ERROR_BAD_NETPATH:
-		case ERROR_BAD_NET_NAME:
+		case ERROR_MOD_NOT_FOUND:
 		case ERROR_BAD_PATHNAME:
 		case ERROR_FILENAME_EXCED_RANGE:
 			return ENOENT|err;
