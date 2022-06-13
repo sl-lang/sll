@@ -1,5 +1,6 @@
 #include <sll/_internal/common.h>
 #include <sll/_internal/error.h>
+#include <sll/api/path.h>
 #include <sll/api/sys.h>
 #include <sll/common.h>
 #include <sll/error.h>
@@ -8,6 +9,23 @@
 #include <sll/string.h>
 #include <sll/types.h>
 #include <dlfcn.h>
+
+
+
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_length_t sll_platform_get_library_file_path(sll_library_handle_t h,sll_char_t* fp,sll_string_length_t fpl,sll_error_t* err){
+	ERROR_PTR_RESET;
+	sll_char_t bf[SLL_API_MAX_FILE_PATH_LENGTH]={0};
+	if (!dlinfo(h,RTLD_DI_ORIGIN,bf)){
+		sll_string_length_t l=sll_string_length(bf);
+		if (l>=fpl){
+			l=fpl-1;
+		}
+		sll_copy_data(bf,l,fp);
+		return l;
+	}
+	ERROR_PTR(sll_error_from_string_pointer(SLL_CHAR(dlerror())));
+	return 0;
+}
 
 
 

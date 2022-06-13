@@ -1,11 +1,18 @@
 #include <windows.h>
 #include <sll/_internal/error.h>
 #include <sll/_internal/platform.h>
+#include <sll/api/path.h>
 #include <sll/api/sys.h>
 #include <sll/common.h>
 #include <sll/platform/library.h>
 #include <sll/error.h>
 #include <sll/types.h>
+
+
+
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_length_t sll_platform_get_library_file_path(sll_library_handle_t h,sll_char_t* fp,sll_string_length_t fpl,sll_error_t* err){
+	SLL_UNIMPLEMENTED();
+}
 
 
 

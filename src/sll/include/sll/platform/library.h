@@ -27,6 +27,22 @@ typedef void* sll_library_handle_t;
 
 /**
  * \flags check_output func
+ * \name sll_platform_get_library_file_path
+ * \group platform
+ * \subgroup platform-lib
+ * \desc Docs!
+ * \arg sll_library_handle_t h
+ * \arg sll_char_t* fp
+ * \arg sll_string_length_t fpl
+ * \arg sll_error_t* err
+ * \ret sll_string_length_t
+ */
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_length_t sll_platform_get_library_file_path(sll_library_handle_t h,sll_char_t* fp,sll_string_length_t fpl,sll_error_t* err);
+
+
+
+/**
+ * \flags check_output func
  * \name sll_platform_load_library
  * \group platform
  * \subgroup platform-lib
