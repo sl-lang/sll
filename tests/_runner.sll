@@ -5,6 +5,7 @@
 	"math.sll"
 	"path.sll"
 	"process.sll"
+	"sort.sll"
 	"string.sll"
 	"sys.sll"
 	"thread.sll"
@@ -23,6 +24,7 @@
 		"-I" "@test|tests"
 	])
 	(= list (<- path$list_dir "tests" true))
+	(<- sort$sort list false true)
 	(-> (= i 0) (< i ($ list))
 		(= fp (: list i))
 		(++ i)
