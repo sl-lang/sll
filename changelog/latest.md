@@ -8,6 +8,7 @@
 - Implemented `SLL_RANDOM_BITS`
 - Internal function descriptors located in `SLL_ABI_INTERNAL_FUNCTION_TABLE_DESCRIPTOR` are now automatically loaded upon initialization
 - More tests ([#285])
+- New audit event: `clib.library.load.error`
 
 ## Changed
 

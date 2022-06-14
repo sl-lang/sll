@@ -16,12 +16,13 @@ __CLIB_API_CALL sll_error_t clib_api_library_load(const sll_string_t* path,sll_a
 	if (err==SLL_NO_ERROR){
 		sll_char_t bf[SLL_API_MAX_FILE_PATH_LENGTH];
 		sll_string_length_t len=sll_platform_get_library_file_path(lib,bf,SLL_API_MAX_FILE_PATH_LENGTH,&err);
-		sll_new_object_array(SLL_CHAR("iS"),out,lib,bf,len);
-		sll_audit(SLL_CHAR("clib.library.load"),SLL_CHAR("siS"),path,lib,bf,len);
+		if (err==SLL_NO_ERROR){
+			sll_new_object_array(SLL_CHAR("iS"),out,lib,bf,len);
+			sll_audit(SLL_CHAR("clib.library.load"),SLL_CHAR("siS"),path,lib,bf,len);
+			return SLL_NO_ERROR;
+		}
 	}
-	else{
-		sll_audit(SLL_CHAR("clib.library.load"),SLL_CHAR("s0Z"),path);
-	}
+	sll_audit(SLL_CHAR("clib.library.load.error"),SLL_CHAR("si"),path,err);
 	return err;
 }
 
