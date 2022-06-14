@@ -54,6 +54,18 @@
 	))
 ))
 
+(= _gen_char (,,, @@args@@
+	(= bounds (<- _parse_bounds
+		@@args@@
+		0
+		255
+	))
+	(@@ (<- random$get_char
+		(: bounds 0)
+		(: bounds 1)
+	))
+))
+
 (= _gen_type (,,,
 	(@@ (<-
 		(<-
@@ -61,6 +73,7 @@
 			[
 				_gen_int
 				_gen_float
+				_gen_char
 			]
 		)
 	))
@@ -71,6 +84,7 @@
 (= FUNCTION_MAP <
 	'i' _gen_int
 	'f' _gen_float
+	'c' _gen_char
 	'*' _gen_type
 >)
 
