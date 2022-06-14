@@ -1,0 +1,108 @@
+(---
+	"array.sll"
+	"random.sll"
+	"thread.sll"
+	"types.sll"
+)
+
+
+
+(= RANDOM_OBJECT_COUNT 32)
+
+(= BOUNDARY (. (&:)))
+
+
+
+(= _parse_bounds (,,, data min max
+	(?? ($ data)
+		0 (@@ [min max])
+		1 (@@ [min (: data 0)])
+		(@@ [
+			(?: (=== (: data 0) BOUNDARY)
+				min
+				(: data 0)
+			)
+			(?: (=== (: data 1) BOUNDARY)
+				-max
+				(: data 1)
+			)
+		])
+	)
+))
+
+(= _gen_int (,,, @@args@@
+	(= bounds (<- _parse_bounds
+		@@args@@
+		-0x8000000000000000
+		0x7fffffffffffffff
+	))
+	(@@ (<- random$get_int
+		(: bounds 0)
+		(: bounds 1)
+	))
+))
+
+(= _gen_float (,,, @@args@@
+	(= bounds (<- _parse_bounds
+		@@args@@
+		-1e38
+		1e38
+	))
+	(@@ (<- random$get_float
+		(: bounds 0)
+		(: bounds 1)
+	))
+))
+
+(= _gen_type (,,,
+	(@@ (<-
+		(<-
+			random$choice
+			[
+				_gen_int
+				_gen_float
+			]
+		)
+	))
+))
+
+
+
+(= FUNCTION_MAP <
+	'i' _gen_int
+	'f' _gen_float
+	'*' _gen_type
+>)
+
+
+
+(= get (,,, fmt @@args@@
+	(= fmt (:: fmt string_type))
+	(@@ ([> (= i 0) (< i ($ fmt))
+		(= fn (: FUNCTION_MAP (: fmt i)))
+		(? (! fn) {
+			(:> "Unknown random input format code '" (: fmt i) "'!\n")
+			(<- thread$exit 1)
+		})
+		(= value (<-* fn
+			(|| (: @@args@@ i) [])
+		))
+		(++ i)
+		value
+	))
+))
+
+(= get_not_all_type (,,, fmt common_type @@args@@
+	(<- array$unshift @@args@@ fmt)
+	(><
+		(= data (<-* get @@args@@))
+		(-> (= i 0) (< i ($ data))
+			(? (!== (:? (: data i)) common_type) (@@ data))
+			(++ i)
+		)
+	)
+))
+
+
+
+(## BOUNDARY RANDOM_OBJECT_COUNT get get_not_all_type)

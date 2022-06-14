@@ -1,5 +1,6 @@
 (---
 	"@test/_common.sll"
+	"@test/_random.sll"
 	"types.sll"
 )
 

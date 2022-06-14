@@ -1022,9 +1022,9 @@ _cleanup_jump_table:;
 								thr->stack_index++;
 								SLL_ACQUIRE(tos->data.array.data[j]);
 							}
+							_call_function(thr,(sll_function_index_t)(i-1),tos->data.array.length,1);
 							sll_gc_remove_root(tos);
 							SLL_RELEASE(tos);
-							_call_function(thr,(sll_function_index_t)(i-1),ai->data.arg_count,1);
 							RELOAD_THREAD_DATA;
 							continue;
 						}
