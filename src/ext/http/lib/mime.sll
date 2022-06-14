@@ -6,6 +6,7 @@
 
 
 (= http_mime_module_type (&:
+	(~ string_type) DEFAULT_EXTENSION
 	(~ string_type) DEFAULT_MIME_TYPE
 	(~ string_type) EXTENSION_TO_MIME_TYPE
 	(~ string_type) MIME_TYPE_TO_EXTENSION
@@ -15,6 +16,7 @@
 
 
 
+(= DEFAULT_EXTENSION "bin")
 (= DEFAULT_MIME_TYPE "application/octet-stream")
 
 (= EXTENSION_TO_MIME_TYPE <
@@ -172,10 +174,10 @@
 
 
 
-(= get_extension (,,, type
+(= get_extension (,,, mime_type
 	(@@ (||
-		(: MIME_TYPE_TO_EXTENSION (:: type string_type))
-		"txt"
+		(: MIME_TYPE_TO_EXTENSION (:: mime_type string_type))
+		DEFAULT_EXTENSION
 	))
 ))
 
@@ -189,6 +191,7 @@
 
 
 (= http_mime (. http_mime_module_type
+	DEFAULT_EXTENSION
 	DEFAULT_MIME_TYPE
 	EXTENSION_TO_MIME_TYPE
 	MIME_TYPE_TO_EXTENSION

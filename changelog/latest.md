@@ -2,6 +2,7 @@
 
 ## Added
 
+- Implemented `http/mime$DEFAULT_EXTENSION`
 - Implemented `sll_internal_function_table_descriptor_t`
 - Implemented `sll_platform_get_library_file_path`
 - Implemented `SLL_RANDOM_BITS`
@@ -10,7 +11,7 @@
 
 ## Changed
 
-- CLib library names are now absolute file paths to modules
+- CLib library names are now absolute file paths
 - Fixed array and string underflow indexing
 - Fixed shallow object copy in `sll_object_clone`
 - Merged `sll_builtin_internal_function_data` and `sll_builtin_internal_function_count` into `sll_builtin_internal_functions`
