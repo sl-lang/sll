@@ -5,7 +5,7 @@
 
 
 
-__CLIB_API_CALL sll_object_t* clib_api_call_function(void* address,sll_bool_t return_type,const sll_array_t* args);
+__CLIB_API_CALL sll_object_t* clib_api_function_call(void* address,sll_bool_t return_type,const sll_array_t* args);
 
 
 

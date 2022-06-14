@@ -8,27 +8,27 @@
 static const sll_internal_function_descriptor_t _internal_function_table[]={
 	{
 		SLL_CHAR("clib:function_call"),
-		clib_api_call_function,
+		clib_api_function_call,
 		SLL_CHAR("Qb#a|o")
 	},
 	{
 		SLL_CHAR("clib:library_get_sll_handle"),
-		clib_api_get_sll_library_handle,
+		clib_api_library_get_sll_handle,
 		SLL_CHAR("|Q")
 	},
 	{
 		SLL_CHAR("clib:library_load"),
-		clib_api_load_library,
+		clib_api_library_load,
 		SLL_CHAR("#s|~a")
 	},
 	{
 		SLL_CHAR("clib:library_lookup_symbol"),
-		clib_api_lookup_symbol,
+		clib_api_library_lookup_symbol,
 		SLL_CHAR("Q#s|Q")
 	},
 	{
 		SLL_CHAR("clib:library_unload"),
-		clib_api_lookup_symbol,
+		clib_api_library_unload,
 		SLL_CHAR("Q|b")
 	}
 };

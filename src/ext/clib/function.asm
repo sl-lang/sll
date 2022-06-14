@@ -34,8 +34,8 @@ extern __chkstk
 
 
 
-global __SYMBOL(clib_api_call_function)
-__SYMBOL(clib_api_call_function):
+global __SYMBOL(clib_api_function_call)
+__SYMBOL(clib_api_function_call):
 	; rcx - Function pointer
 	; rdx - Return typ
 	; r8 - Argument array

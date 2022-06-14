@@ -11,6 +11,7 @@
 
 ## Changed
 
+- Audit event `clib.library.load` now contains a `module_path` argument
 - CLib library names are now absolute file paths
 - Fixed array and string underflow indexing
 - Fixed shallow object copy in `sll_object_clone`

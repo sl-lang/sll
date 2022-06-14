@@ -18,6 +18,6 @@
 	(<- thread$exit 1)
 })
 
-(<- audit$register_event "clib.library.load" "path" "handle")
+(<- audit$register_event "clib.library.load" "path" "handle" "module_path")
 (<- audit$register_event "clib.library.lookup" "handle" "name" "address")
 (<- audit$register_event "clib.library.unlookup" "handle")
