@@ -170,16 +170,18 @@
 
 
 
-(= get_ext (,,, t
-	(= o (: TYPE_TO_EXT (:: t string_type)))
-	(@@ (?: (=== o nil) "txt" o))
+(= get_ext (,,, type
+	(@@ (||
+		(: TYPE_TO_EXT (:: type string_type))
+		"txt"
+	))
 ))
 
-(= get_type (,,, fp
-	(= o (: EXT_TO_TYPE
-		(: fp (+ (<- string$index_reverse fp '.') 1) ($ fp))
+(= get_type (,,, file_path
+	(@@ (||
+		(: EXT_TO_TYPE (>> file_path (+ (<- string$index_reverse file_path '.') 1)))
+		DEFAULT_TYPE
 	))
-	(@@ (?: (=== o nil) DEFAULT_TYPE o))
 ))
 
 
