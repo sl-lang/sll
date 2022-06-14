@@ -69,7 +69,7 @@
 		(++ i)
 		value
 	))
-	(@@ (<- func$return$_decode (<- (... "clib:call_function")
+	(@@ (<- func$return$_decode (<- (... "clib:function_call")
 		(| func$address (<< func$calling_convenction 63))
 		(! (& func$return$flags (| clib_types$FLAG_INTEGER clib_types$FLAG_POINTER)))
 		args

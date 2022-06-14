@@ -27,7 +27,7 @@
 (= SLL_LIBRARY (. clib_library_type
 	sys$LIBRARY
 	<>
-	(<- (... "clib:get_sll_library_handle"))
+	(<- (... "clib:library_get_sll_handle"))
 ))
 
 (= (: _lib_map sys$LIBRARY) (<- weakref$ref SLL_LIBRARY))
@@ -47,7 +47,7 @@
 (= load (,,, file_path
 	(= lib (<- weakref$get (: _lib_map file_path)))
 	(? (!== lib weakref$WEAKREF_NO_OBJECT) (@@ lib))
-	(= handle (<- (... "clib:load_library")
+	(= handle (<- (... "clib:library_load")
 		file_path
 	))
 	(? (=== (:? handle) int_type) (@@ (<- error$from_internal handle)))
@@ -65,7 +65,7 @@
 	(= lib (:: lib clib_library_type))
 	(= name (:: name string_type))
 	(? (|: lib$symbols name) (@@ (: lib$symbols name)))
-	(= addr (<- (... "clib:lookup_symbol")
+	(= addr (<- (... "clib:library_lookup_symbol")
 		lib$_handle
 		name
 	))
@@ -95,7 +95,7 @@
 	(<- map$remove _lib_map lib$file_path)
 	(= handle lib$_handle)
 	(= lib$_handle 0)
-	(@@ (<- (... "clib:unload_library")
+	(@@ (<- (... "clib:library_unload")
 		handle
 	))
 ))
