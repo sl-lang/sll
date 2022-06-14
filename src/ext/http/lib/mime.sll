@@ -5,7 +5,7 @@
 
 
 
-(= mime_module_type (&:
+(= http_mime_module_type (&:
 	(~ string_type) DEFAULT_MIME_TYPE
 	(~ string_type) EXTENSION_TO_MIME_TYPE
 	(~ string_type) MIME_TYPE_TO_EXTENSION
