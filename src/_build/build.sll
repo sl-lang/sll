@@ -8,6 +8,7 @@
 	"log.sll"
 	"path.sll"
 	"process.sll"
+	"sort.sll"
 	"string.sll"
 	"sys.sll"
 	"types.sll"
@@ -65,8 +66,9 @@
 (= build_extensions (,,,
 	(<- log$log "Compiling extensions...")
 	(<- log$log "  Listing extensions...")
-	(= extensions (<- path$list_dir config$EXTENSION_DIRECTORY_FILE_PATH false ))
-	(<- log$log "    Found " ($ extensions) " extension" (?: (=== ($ extensions) 1) "" "s"))
+	(= extensions (<- path$list_dir config$EXTENSION_DIRECTORY_FILE_PATH false))
+	(<- sort$sort extensions false true)
+	(<- log$log "    Found " ($ extensions) " extensions")
 	(-> (= extension_index 0) (< extension_index ($ extensions))
 		(= name (: extensions extension_index))
 		(++ extension_index)
@@ -107,60 +109,62 @@
 			fp
 		))
 		(<- log$log "      Found " ($ files) " files")
-		(<- log$log "    Aggregating preprocessor definitions...")
-		(= options [])
-		(-> (= i 0) (< i ($ config$EXTENSION_PREPROCESSOR_DEFINITIONS))
-			(<- array$extend options [
-				(: config$PREPROCESSOR_DEFINITION_PREFIX sys$PLATFORM)
-				(: config$EXTENSION_PREPROCESSOR_DEFINITIONS i)
-			])
-			(++ i)
-		)
-		(= include_file_path (<- string$replace
-			config$EXTENSION_INCLUDE_FILE_PATH
-			"<name>"
-			name
-		))
-		(= command_list (: config$EXTENSION_COMMANDS (+
-			sys$PLATFORM
-			(* "_release" config$OPTIONS$RELEASE)
-		)))
-		(= output_files [])
-		(<- log$log "    Compiling files...")
-		(= err false)
-		(-> (= i 0) (< i ($ files))
-			(= file_path (: files i))
-			(++ i)
-			(= output_file_path (<- util$get_output_file_path file_path))
-			(<- array$push output_files output_file_path)
-			(? (! (<- hashlist$check output_file_path)) (<<<))
-			(<- log$log "      " file_path)
-			(? (?: (=== (>> file_path (<- string$index_reverse file_path '.')) ".asm")
-				(||
-					(<- _execute_command command_list$NASM_COMPILATION_COMMAND file_path output_file_path nil include_file_path)
-					(<- _execute_command command_list$NASM_POST_COMPILATION_COMMAND file_path output_file_path nil include_file_path)
-				)
-				(<- _execute_command command_list$COMPILATION_COMMAND file_path (+ command_list$OUTPUT_PREFIX output_file_path) options include_file_path)
-			) {
-				(<- hashlist$fail output_file_path)
-				(= err true)
-			})
-		)
-		(? err (<- util$fail_and_exit))
-		(= temporary_output_library (<- string$replace config$EXTENSION_TEMPORARY_OUTPUT_FILE_PATH
-			"<name>"
-			name
-		))
-		(= output_library (<- string$replace config$EXTENSION_OUTPUT_FILE_PATH
-			"<name>"
-			name
-		))
-		(<- log$log "    Linking files...")
-		(? (<- _execute_command command_list$LINK_COMMAND output_files (+ command_list$OUTPUT_LINK_PREFIX temporary_output_library)) (<- util$fail_and_exit))
-		(<- log$log "    Executing post-link command...")
-		(? (<- _execute_command command_list$POST_LINK_COMMAND nil temporary_output_library) (<- util$fail_and_exit))
-		(<- log$log "    Copying library from '" temporary_output_library "' to '" output_library "'...")
-		(<- file$rename temporary_output_library output_library)
+		(? files {
+			(<- log$log "    Aggregating preprocessor definitions...")
+			(= options [])
+			(-> (= i 0) (< i ($ config$EXTENSION_PREPROCESSOR_DEFINITIONS))
+				(<- array$extend options [
+					(: config$PREPROCESSOR_DEFINITION_PREFIX sys$PLATFORM)
+					(: config$EXTENSION_PREPROCESSOR_DEFINITIONS i)
+				])
+				(++ i)
+			)
+			(= include_file_path (<- string$replace
+				config$EXTENSION_INCLUDE_FILE_PATH
+				"<name>"
+				name
+			))
+			(= command_list (: config$EXTENSION_COMMANDS (+
+				sys$PLATFORM
+				(* "_release" config$OPTIONS$RELEASE)
+			)))
+			(= output_files [])
+			(<- log$log "    Compiling files...")
+			(= err false)
+			(-> (= i 0) (< i ($ files))
+				(= file_path (: files i))
+				(++ i)
+				(= output_file_path (<- util$get_output_file_path file_path))
+				(<- array$push output_files output_file_path)
+				(? (! (<- hashlist$check output_file_path)) (<<<))
+				(<- log$log "      " file_path)
+				(? (?: (=== (>> file_path (<- string$index_reverse file_path '.')) ".asm")
+					(||
+						(<- _execute_command command_list$NASM_COMPILATION_COMMAND file_path output_file_path nil include_file_path)
+						(<- _execute_command command_list$NASM_POST_COMPILATION_COMMAND file_path output_file_path nil include_file_path)
+					)
+					(<- _execute_command command_list$COMPILATION_COMMAND file_path (+ command_list$OUTPUT_PREFIX output_file_path) options include_file_path)
+				) {
+					(<- hashlist$fail output_file_path)
+					(= err true)
+				})
+			)
+			(? err (<- util$fail_and_exit))
+			(= temporary_output_library (<- string$replace config$EXTENSION_TEMPORARY_OUTPUT_FILE_PATH
+				"<name>"
+				name
+			))
+			(= output_library (<- string$replace config$EXTENSION_OUTPUT_FILE_PATH
+				"<name>"
+				name
+			))
+			(<- log$log "    Linking files...")
+			(? (<- _execute_command command_list$LINK_COMMAND output_files (+ command_list$OUTPUT_LINK_PREFIX temporary_output_library)) (<- util$fail_and_exit))
+			(<- log$log "    Executing post-link command...")
+			(? (<- _execute_command command_list$POST_LINK_COMMAND nil temporary_output_library) (<- util$fail_and_exit))
+			(<- log$log "    Copying library from '" temporary_output_library "' to '" output_library "'...")
+			(<- file$rename temporary_output_library output_library)
+		})
 		(<- log$log "  Compiling extension module '" name "'...")
 		(<- log$log "    Listing module files...")
 		(= module_file_root (<- string$replace

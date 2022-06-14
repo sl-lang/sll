@@ -4,16 +4,19 @@
 	"atexit.sll"
 	"audit.sll"
 	"base64.sll"
+	"clib/function.sll"
+	"clib/library.sll"
+	"clib/types.sll"
 	"date.sll"
 	"error.sll"
 	"file.sll"
 	"hash.sll"
 	"hmac.sll"
+	"http/mime.sll"
 	"int.sll"
 	"json.sll"
 	"log.sll"
 	"math.sll"
-	"mime.sll"
 	"object.sll"
 	"path.sll"
 	"process.sll"
@@ -640,8 +643,6 @@ abc` '\n')
 )))
 (<- thread$join thr)
 (:> thr$return_value "\n" "")
-
-(--- "clib/library.sll" "clib/function.sll" "clib/types.sll")
 
 (:> clib_library$SLL_LIBRARY '\n')
 

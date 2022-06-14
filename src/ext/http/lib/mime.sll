@@ -6,17 +6,18 @@
 
 
 (= mime_module_type (&:
-	(~ string_type) DEFAULT_TYPE
-	(~ string_type) EXT_TO_TYPE
-	(~ string_type) TYPE_TO_EXT
-	(~ func_type) get_ext
-	(~ func_type) get_type
+	(~ string_type) DEFAULT_MIME_TYPE
+	(~ string_type) EXTENSION_TO_MIME_TYPE
+	(~ string_type) MIME_TYPE_TO_EXTENSION
+	(~ func_type) get_extension
+	(~ func_type) get_mime_type
 ))
 
 
 
-(= DEFAULT_TYPE "text/plain")
-(= EXT_TO_TYPE <
+(= DEFAULT_MIME_TYPE "application/octet-stream")
+
+(= EXTENSION_TO_MIME_TYPE <
 	"3g2" "video/3gpp2"
 	"3gp" "video/3gpp"
 	"7z" "application/x-7z-compressed"
@@ -92,7 +93,8 @@
 	"xul" "application/vnd.mozilla.xul+xml"
 	"zip" "application/zip"
 >)
-(= TYPE_TO_EXT <
+
+(= MIME_TYPE_TO_EXTENSION <
 	"application/epub+zip" "epub"
 	"application/gzip" "gz"
 	"application/java-archive" "jar"
@@ -170,27 +172,27 @@
 
 
 
-(= get_ext (,,, type
+(= get_extension (,,, type
 	(@@ (||
-		(: TYPE_TO_EXT (:: type string_type))
+		(: MIME_TYPE_TO_EXTENSION (:: type string_type))
 		"txt"
 	))
 ))
 
-(= get_type (,,, file_path
+(= get_mime_type (,,, file_path
 	(@@ (||
-		(: EXT_TO_TYPE (>> file_path (+ (<- string$index_reverse file_path '.') 1)))
-		DEFAULT_TYPE
+		(: EXTENSION_TO_MIME_TYPE (>> file_path (+ (<- string$index_reverse file_path '.') 1)))
+		DEFAULT_MIME_TYPE
 	))
 ))
 
 
 
-(= mime (. mime_module_type
-	DEFAULT_TYPE
-	EXT_TO_TYPE
-	TYPE_TO_EXT
-	get_ext
-	get_type
+(= http_mime (. http_mime_module_type
+	DEFAULT_MIME_TYPE
+	EXTENSION_TO_MIME_TYPE
+	MIME_TYPE_TO_EXTENSION
+	get_extension
+	get_mime_type
 ))
-(## mime)
+(## http_mime)

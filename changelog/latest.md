@@ -14,6 +14,7 @@
 - Fixed array and string underflow indexing
 - Fixed shallow object copy in `sll_object_clone`
 - Merged `sll_builtin_internal_function_data` and `sll_builtin_internal_function_count` into `sll_builtin_internal_functions`
+- Moved the `mime.sll` file to the `http` extension module
 - Non-containter object access now returns `nil`
 
 [0.7.22]: https://github.com/sl-lang/sll/compare/sll-v0.7.21...main
