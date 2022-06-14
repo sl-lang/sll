@@ -10,6 +10,7 @@
 
 ## Changed
 
+- CLib library names are now absolute file paths to modules
 - Fixed array and string underflow indexing
 - Fixed shallow object copy in `sll_object_clone`
 - Merged `sll_builtin_internal_function_data` and `sll_builtin_internal_function_count` into `sll_builtin_internal_functions`
