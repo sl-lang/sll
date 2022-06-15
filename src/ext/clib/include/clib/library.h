@@ -9,7 +9,7 @@ __CLIB_API_CALL sll_library_handle_t clib_api_library_get_sll_handle(void);
 
 
 
-__CLIB_API_CALL sll_error_t clib_api_library_load(const sll_string_t* path,sll_library_handle_t* out);
+__CLIB_API_CALL sll_error_t clib_api_library_load(const sll_string_t* name,sll_library_handle_t* out);
 
 
 

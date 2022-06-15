@@ -44,19 +44,19 @@
 	))
 ))
 
-(= load (,,, file_path
-	(= lib (<- weakref$get (: _lib_map file_path)))
+(= load (,,, name
+	(= lib (<- weakref$get (: _lib_map name)))
 	(? (!== lib weakref$WEAKREF_NO_OBJECT) (@@ lib))
 	(= handle (<- (... "clib:library_load")
-		file_path
+		name
 	))
 	(? (=== (:? handle) int_type) (@@ (<- error$from_internal handle)))
 	(= lib (. clib_library_type
-		(|| (: handle 1) file_path)
+		(|| (: handle 1) name)
 		<>
 		(: handle 0)
 	))
-	(= (: _lib_map file_path) (<- weakref$ref lib))
+	(= (: _lib_map lib$file_path) (<- weakref$ref lib))
 	(@@ lib)
 ))
 

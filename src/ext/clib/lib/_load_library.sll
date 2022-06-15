@@ -18,7 +18,7 @@
 	(<- thread$exit 1)
 })
 
-(<- audit$register_event "clib.library.load" "path" "handle" "module_path")
-(<- audit$register_event "clib.library.load.error" "path" "error")
+(<- audit$register_event "clib.library.load" "name" "handle" "module_path")
+(<- audit$register_event "clib.library.load.error" "name" "error")
 (<- audit$register_event "clib.library.lookup" "handle" "name" "address")
 (<- audit$register_event "clib.library.unlookup" "handle")
