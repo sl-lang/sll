@@ -1231,7 +1231,7 @@ _load_new_thread:;
 						break;
 					}
 					sll_string_length_t l=(sz>SLL_MAX_STRING_LENGTH?SLL_MAX_STRING_LENGTH:(sll_string_length_t)sz);
-					if ((f->flags&SLL_FILE_FLAG_ASYNC)&&!sll_file_data_available(f)){
+					if (!sll_file_data_available(f)){
 						thr->instruction_index++;
 						NEXT_INSTRUCTION;
 						thr->_last_instruction=ai;
@@ -1274,7 +1274,7 @@ _load_new_thread:;
 						thr->stack_index++;
 						break;
 					}
-					if ((f->flags&SLL_FILE_FLAG_ASYNC)&&!sll_file_data_available(f)){
+					if (!sll_file_data_available(f)){
 						thr->instruction_index++;
 						NEXT_INSTRUCTION;
 						thr->_last_instruction=ai;
