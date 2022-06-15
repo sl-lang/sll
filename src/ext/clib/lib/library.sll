@@ -89,15 +89,15 @@
 ))
 
 (= unload (,,, lib
-	(? (! lib) (@@ false))
+	(? (! lib) (@@ nil))
 	(= lib (:: lib clib_library_type))
-	(? (! lib$_handle) (@@ false))
+	(? (! lib$_handle) (@@ nil))
 	(<- map$remove _lib_map lib$file_path)
 	(= handle lib$_handle)
 	(= lib$_handle 0)
-	(@@ (<- (... "clib:library_unload")
+	(@@ (<- error$from_internal (<- (... "clib:library_unload")
 		handle
-	))
+	)))
 ))
 
 

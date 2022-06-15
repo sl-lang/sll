@@ -17,6 +17,7 @@
 - Fixed array and string underflow indexing
 - Fixed shallow object copy in `sll_object_clone`
 - Fixed variable argument calling in the VM
+- Function `clib/library$unload` now return an error or `nil`
 - Merged `sll_builtin_internal_function_data` and `sll_builtin_internal_function_count` into `sll_builtin_internal_functions`
 - Moved the `mime.sll` file to the `http` extension module
 - Non-containter object access now returns `nil`

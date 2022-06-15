@@ -29,7 +29,7 @@ static const sll_internal_function_descriptor_t _internal_function_table[]={
 	{
 		SLL_CHAR("clib:library_unload"),
 		clib_api_library_unload,
-		SLL_CHAR("Q|b")
+		SLL_CHAR("Q|Q")
 	}
 };
 
