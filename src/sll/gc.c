@@ -466,7 +466,7 @@ __SLL_EXTERNAL void sll_gc_remove_root(sll_object_t* object){
 		object->_flags&=~GC_FLAG_IN_FAST_ROOT_POOL;
 		SLL_ASSERT(_gc_root_data.fast[object->_data]==object);
 		_gc_root_data.fast[object->_data]=GC_FAST_ROOT_SET_NEXT_INDEX(_gc_root_data.fast_empty_index);
-		_gc_root_data.fast_empty_index=object->_data;
+		_gc_root_data.fast_empty_index=(fast_root_index_t)(object->_data);
 		_gc_root_data.fast_count--;
 		object->_data=0;
 		return;
