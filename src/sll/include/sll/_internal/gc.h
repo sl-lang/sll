@@ -14,6 +14,7 @@
 #define GC_FLAG_HAS_WEAKREF 1
 #define GC_FLAG_IN_FAST_POOL 2
 #define GC_FLAG_STATIC 4
+#define GC_FLAG_IN_FAST_ROOT_POOL 8
 
 #define GC_MEMORY_PAGE_SIZE_SHIFT 15
 #define GC_MEMORY_PAGE_SIZE (1ull<<GC_MEMORY_PAGE_SIZE_SHIFT)
@@ -66,10 +67,10 @@
 #define GC_GET_ROOT(data) ((sll_object_t*const*)PTR(((data)>>GC_ROOTS_LENGTH_SHIFT)<<3))
 #define GC_GET_LENGTH(data) ((sll_size_t)((data)&((1<<GC_ROOTS_LENGTH_SHIFT)-1)))
 
-#define GC_IS_MARKED(o) ((((o)->_flags>>5)&1)==_gc_data.signature)
+#define GC_IS_MARKED(o) ((((o)->_flags>>5)&1)==_gc_data.object_marker_signature)
 #define GC_SET_MARKED(o) \
 	do{ \
-		(o)->_flags=((o)->_flags&0xffffffdf)|(_gc_data.signature<<5); \
+		(o)->_flags=((o)->_flags&0xffffffdf)|(_gc_data.object_marker_signature<<5); \
 	} while (0)
 
 #define GC_RELEASE_CHECK_ZERO_REF(o) \
@@ -87,6 +88,8 @@
 			} \
 		} \
 	} while (0)
+
+#define GC_FAST_ROOT_DATA_COUNT 512
 
 
 
@@ -123,12 +126,19 @@ typedef struct _GC_FAST_OBJECT_POOL{
 
 
 
-typedef struct _GC_DATA{
+typedef struct _GC_ROOT_DATA{
 	sll_object_t* single;
 	__SLL_U64* multiple;
 	sll_size_t multiple_length;
+	sll_object_t* fast[GC_FAST_ROOT_DATA_COUNT];
+	sll_array_length_t fast_count;
+} gc_root_data_t;
+
+
+
+typedef struct _GC_DATA{
 	sll_time_t time;
-	sll_bool_t signature;
+	sll_bool_t object_marker_signature;
 	sll_bool_t enabled;
 	sll_bool_t cleanup_in_progress;
 } gc_data_t;

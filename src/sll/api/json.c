@@ -476,9 +476,9 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_json__init(sll_object_t* null_obj,sll
 	_json_null=null_obj;
 	_json_true=true_obj;
 	_json_false=false_obj;
-	sll_gc_add_root(_json_null);
-	sll_gc_add_root(_json_true);
-	sll_gc_add_root(_json_false);
+	sll_gc_add_root(_json_null,0);
+	sll_gc_add_root(_json_true,0);
+	sll_gc_add_root(_json_false,0);
 }
 
 

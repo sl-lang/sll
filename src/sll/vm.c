@@ -93,7 +93,7 @@
 		thr->stack_index--; \
 		sll_object_t** tos=(SLL_ASSEMBLY_INSTRUCTION_FLAG_IS_RELATIVE(ai)?VAR_REF(ai->data.variable):thr->stack+thr->stack_index-1); \
 		sll_object_t* a=*(thr->stack+thr->stack_index); \
-		sll_gc_add_root(a); \
+		sll_gc_add_root(a,1); \
 		*(thr->stack+thr->stack_index)=NULL; \
 		sll_object_t* n=nm(*tos,a); \
 		SLL_RELEASE(*tos); \
@@ -107,10 +107,10 @@
 		thr->stack_index-=2; \
 		sll_object_t** tos=(SLL_ASSEMBLY_INSTRUCTION_FLAG_IS_RELATIVE(ai)?VAR_REF(ai->data.variable):thr->stack+thr->stack_index-1); \
 		sll_object_t* a=*(thr->stack+thr->stack_index); \
-		sll_gc_add_root(a); \
+		sll_gc_add_root(a,1); \
 		*(thr->stack+thr->stack_index)=NULL; \
 		sll_object_t* b=*(thr->stack+thr->stack_index+1); \
-		sll_gc_add_root(b); \
+		sll_gc_add_root(b,1); \
 		*(thr->stack+thr->stack_index+1)=NULL; \
 		sll_object_t* n=nm(*tos,a,b); \
 		SLL_RELEASE(*tos); \
@@ -126,13 +126,13 @@
 		thr->stack_index-=3; \
 		sll_object_t** tos=(SLL_ASSEMBLY_INSTRUCTION_FLAG_IS_RELATIVE(ai)?VAR_REF(ai->data.variable):thr->stack+thr->stack_index-1); \
 		sll_object_t* a=*(thr->stack+thr->stack_index); \
-		sll_gc_add_root(a); \
+		sll_gc_add_root(a,1); \
 		*(thr->stack+thr->stack_index)=NULL; \
 		sll_object_t* b=*(thr->stack+thr->stack_index+1); \
-		sll_gc_add_root(b); \
+		sll_gc_add_root(b,1); \
 		*(thr->stack+thr->stack_index+1)=NULL; \
 		sll_object_t* c=*(thr->stack+thr->stack_index+2); \
-		sll_gc_add_root(c); \
+		sll_gc_add_root(c,1); \
 		*(thr->stack+thr->stack_index+2)=NULL; \
 		sll_object_t* n=nm(*tos,a,b,c); \
 		SLL_RELEASE(*tos); \
@@ -540,7 +540,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_wait_thread(sll_thread_index
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_LOOKUP:
 				{
 					sll_object_t* n=sll_operator_cast(*(thr->stack+thr->stack_index-1),sll_static_int[SLL_OBJECT_TYPE_STRING]);
-					sll_gc_add_root(n);
+					sll_gc_add_root(n,1);
 					SLL_RELEASE(*(thr->stack+thr->stack_index-1));
 					sll_function_index_t i=sll_lookup_internal_function(sll_current_runtime_data->internal_function_table,n->data.string.data);
 					sll_gc_remove_root(n);
@@ -588,7 +588,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_wait_thread(sll_thread_index
 					thr->stack_index-=ai->data.array_length<<1;
 					sll_stack_offset_t i=thr->stack_index-1;
 					sll_object_t* cnd=*(thr->stack+thr->stack_index-1);
-					sll_gc_add_root(cnd);
+					sll_gc_add_root(cnd,1);
 					*(thr->stack+thr->stack_index-1)=NULL;
 					sll_integer_t cnd_v;
 					if (cnd->type==SLL_OBJECT_TYPE_INT){
@@ -799,7 +799,7 @@ _cleanup_jump_table:;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_NAMEOF_TYPE:
 				{
 					sll_object_t* t=sll_operator_cast(*(thr->stack+thr->stack_index-1),sll_static_int[SLL_OBJECT_TYPE_INT]);
-					sll_gc_add_root(t);
+					sll_gc_add_root(t,1);
 					SLL_RELEASE(*(thr->stack+thr->stack_index-1));
 					sll_object_t* tos=sll_create_object(SLL_OBJECT_TYPE_STRING);
 					sll_get_type_name(sll_current_runtime_data->type_table,(t->data.int_<0||t->data.int_>sll_current_runtime_data->type_table->length+SLL_MAX_OBJECT_TYPE?SLL_OBJECT_TYPE_INT:(sll_object_type_t)(t->data.int_)),&(tos->data.string));
@@ -875,7 +875,7 @@ _cleanup_jump_table:;
 					thr->stack_index--;
 					sll_object_t* tos=*(thr->stack+thr->stack_index);
 					*(thr->stack+thr->stack_index)=NULL;
-					sll_gc_add_root(tos);
+					sll_gc_add_root(tos,1);
 					if (!sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_FILE_IO)||sll_get_sandbox_flag(SLL_SANDBOX_FLAG_ENABLE_STDOUT_IO)){
 						if (tos->type==SLL_OBJECT_TYPE_STRING){
 							sll_file_write(sll_current_vm_config->out,tos->data.string.data,tos->data.string.length*sizeof(sll_char_t),NULL);
@@ -906,7 +906,7 @@ _cleanup_jump_table:;
 				{
 					thr->stack_index--;
 					sll_object_t* tos=*(thr->stack+thr->stack_index);
-					sll_gc_add_root(tos);
+					sll_gc_add_root(tos,1);
 					*(thr->stack+thr->stack_index)=NULL;
 					if (tos->type==SLL_OBJECT_TYPE_INT){
 						sll_integer_t i=tos->data.int_;
@@ -916,7 +916,7 @@ _cleanup_jump_table:;
 							sll_function_index_t j=(sll_function_index_t)(~i);
 							if (j<sll_current_runtime_data->internal_function_table->length){
 								sll_object_t* n=_call_api_func(j,thr->stack+thr->stack_index-ai->data.arg_count,ai->data.arg_count);
-								sll_gc_add_root(n);
+								sll_gc_add_root(n,1);
 								for (sll_arg_count_t k=0;k<ai->data.arg_count;k++){
 									thr->stack_index--;
 									SLL_RELEASE(*(thr->stack+thr->stack_index));
@@ -976,7 +976,7 @@ _cleanup_jump_table:;
 					sll_function_index_t i=(sll_function_index_t)(~ai->data.int_);
 					if (i<sll_current_runtime_data->internal_function_table->length){
 						sll_object_t* n=_call_api_func(i,thr->stack+thr->stack_index-1,1);
-						sll_gc_add_root(n);
+						sll_gc_add_root(n,1);
 						SLL_RELEASE(*(thr->stack+thr->stack_index-1));
 						sll_gc_remove_root(n);
 						*(thr->stack+thr->stack_index-1)=n;
@@ -995,14 +995,14 @@ _cleanup_jump_table:;
 				{
 					thr->stack_index--;
 					sll_object_t* tos=*(thr->stack+thr->stack_index);
-					sll_gc_add_root(tos);
+					sll_gc_add_root(tos,1);
 					*(thr->stack+thr->stack_index)=NULL;
 					if (tos->type==SLL_OBJECT_TYPE_INT){
 						sll_integer_t i=tos->data.int_;
 						sll_gc_remove_root(tos);
 						SLL_RELEASE(tos);
 						tos=sll_operator_cast(*(thr->stack+thr->stack_index-1),sll_static_int[SLL_OBJECT_TYPE_ARRAY]);
-						sll_gc_add_root(tos);
+						sll_gc_add_root(tos,1);
 						if (i<0){
 							sll_function_index_t j=(sll_function_index_t)(~i);
 							if (j<sll_current_runtime_data->internal_function_table->length){
@@ -1046,7 +1046,7 @@ _cleanup_jump_table:;
 _return:;
 				{
 					sll_object_t* tmp=*(thr->stack+thr->stack_index-1);
-					sll_gc_add_root(tmp);
+					sll_gc_add_root(tmp,1);
 					SLL_ACQUIRE(tmp);
 					if (!thr->call_stack.length){
 						while (thr->stack_index){
@@ -1194,7 +1194,7 @@ _load_new_thread:;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_THREAD_EXIT:
 				{
 					sll_object_t* ret=*(thr->stack+thr->stack_index-1);
-					sll_gc_add_root(ret);
+					sll_gc_add_root(ret,1);
 					SLL_ACQUIRE(ret);
 					while (thr->stack_index){
 						thr->stack_index--;

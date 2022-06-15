@@ -48,7 +48,7 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_weakref__init(sll_object_t* no_object
 	}
 	SLL_ACQUIRE(no_object);
 	_weakref_no_object_ret=no_object;
-	sll_gc_add_root(_weakref_no_object_ret);
+	sll_gc_add_root(_weakref_no_object_ret,0);
 	_weakref_cb_func=callback;
 	sll_register_cleanup(_cleanup_data,SLL_CLEANUP_TYPE_VM);
 }

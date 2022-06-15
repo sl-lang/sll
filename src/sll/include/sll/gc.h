@@ -120,8 +120,9 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_destroy_object(sll_object_t* ob
  * \group gc
  * \desc Docs!
  * \arg sll_object_t* object
+ * \arg sll_bool_t fast
  */
-__SLL_EXTERNAL void sll_gc_add_root(sll_object_t* object);
+__SLL_EXTERNAL void sll_gc_add_root(sll_object_t* object,sll_bool_t fast);
 
 
 
