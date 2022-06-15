@@ -32,6 +32,11 @@
 
 (= (: _lib_map sys$LIBRARY) (<- weakref$ref SLL_LIBRARY))
 
+(= _default_abi (?: (=== sys$PLATFORM "windows")
+	clib_function$CALLING_CONVENCTION_MICROSOFT_X64
+	clib_function$CALLING_CONVENCTION_SYSTEM_V_AMD64_ABI
+))
+
 
 
 (= get_loaded_libraries (,,,
@@ -79,10 +84,7 @@
 		lib
 		[]
 		clib_types$int
-		(?: (=== sys$PLATFORM "windows")
-			clib_function$CALLING_CONVENCTION_MICROSOFT_X64
-			clib_function$CALLING_CONVENCTION_SYSTEM_V_AMD64_ABI
-		)
+		_default_abi
 	))
 	(= (: lib$symbols name) symbol)
 	(@@ symbol)
