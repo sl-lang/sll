@@ -3,6 +3,7 @@
 ## Added
 
 - Implemented `http/mime$DEFAULT_EXTENSION`
+- Implemented `SLL_FILE_FLAG_SOCKET`
 - Implemented `sll_internal_function_table_descriptor_t`
 - Implemented `sll_platform_get_library_file_path`
 - Implemented `SLL_RANDOM_BITS`
