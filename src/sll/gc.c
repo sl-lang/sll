@@ -3,6 +3,7 @@
 #include <sll/_internal/platform.h>
 #include <sll/_internal/scheduler.h>
 #include <sll/_internal/weakref.h>
+#include <sll/_size_types.h>
 #include <sll/api/string.h>
 #include <sll/api/time.h>
 #include <sll/allocator.h>
@@ -179,7 +180,7 @@ __SLL_EXTERNAL void sll__release_object_internal(sll_object_t* object){
 		}
 		sll_deallocate(object->data.fields);
 	}
-	if (GC_GET_PREV_OBJECT(object)||GC_GET_NEXT_OBJECT(object)){
+	if ((object->_flags&GC_FLAG_IN_FAST_ROOT_POOL)||GC_GET_PREV_OBJECT(object)||GC_GET_NEXT_OBJECT(object)){
 		SLL_UNIMPLEMENTED();
 	}
 	object->_flags=0;
@@ -359,9 +360,14 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_destroy_object(sll_object_t* ob
 
 __SLL_EXTERNAL void sll_gc_add_root(sll_object_t* object,sll_bool_t fast){
 	if (fast&&_gc_root_data.fast_count<GC_FAST_ROOT_DATA_COUNT){
-		_gc_root_data.fast[_gc_root_data.fast_count]=object;
 		_gc_root_data.fast_count++;
+		sll_array_length_t i=0;
+		while (_gc_root_data.fast[i]){
+			i++;
+		}
+		_gc_root_data.fast[i]=object;
 		object->_flags|=GC_FLAG_IN_FAST_ROOT_POOL;
+		object->_data=i;
 		return;
 	}
 	GC_SET_PREV_OBJECT(object,NULL);
@@ -398,8 +404,14 @@ __SLL_EXTERNAL void sll_gc_collect(void){
 		page=page->next;
 	} while (page);
 	_gc_data.object_marker_signature=!_gc_data.object_marker_signature;
-	for (sll_array_length_t i=0;i<_gc_root_data.fast_count;i++){
-		_mark_objects(_gc_root_data.fast[i]);
+	if (_gc_root_data.fast_count){
+		fast_root_index_t i=_gc_root_data.fast_count;
+		for (fast_root_index_t j=0;i&&j<GC_FAST_ROOT_DATA_COUNT;j++){
+			if (_gc_root_data.fast[j]){
+				_mark_objects(_gc_root_data.fast[j]);
+				i--;
+			}
+		}
 	}
 	sll_object_t* object=_gc_root_data.single;
 	while (object){
@@ -441,21 +453,12 @@ __SLL_EXTERNAL void sll_gc_collect(void){
 
 __SLL_EXTERNAL void sll_gc_remove_root(sll_object_t* object){
 	if (object->_flags&GC_FLAG_IN_FAST_ROOT_POOL){
-		sll_array_length_t i=0;
-		while (i<_gc_root_data.fast_count){
-			if (_gc_root_data.fast[i]==object){
-				object->_flags&=~GC_FLAG_IN_FAST_ROOT_POOL;
-				i++;
-				while (i<_gc_root_data.fast_count){
-					_gc_root_data.fast[i-1]=_gc_root_data.fast[i];
-					i++;
-				}
-				_gc_root_data.fast_count--;
-				return;
-			}
-			i++;
-		}
-		SLL_UNREACHABLE();
+		object->_flags&=~GC_FLAG_IN_FAST_ROOT_POOL;
+		SLL_ASSERT(_gc_root_data.fast[object->_data]==object);
+		_gc_root_data.fast[object->_data]=NULL;
+		_gc_root_data.fast_count--;
+		object->_data=0;
+		return;
 	}
 	sll_object_t* prev=GC_GET_PREV_OBJECT(object);
 	sll_object_t* next=GC_GET_NEXT_OBJECT(object);

@@ -93,6 +93,10 @@
 
 
 
+typedef __SLL_U16 fast_root_index_t;
+
+
+
 typedef struct _GC_PAGE_HEADER{
 	sll_size_t cnt;
 	sll_size_t garbage_cnt;
@@ -131,7 +135,7 @@ typedef struct _GC_ROOT_DATA{
 	__SLL_U64* multiple;
 	sll_size_t multiple_length;
 	sll_object_t* fast[GC_FAST_ROOT_DATA_COUNT];
-	sll_array_length_t fast_count;
+	fast_root_index_t fast_count;
 } gc_root_data_t;
 
 
