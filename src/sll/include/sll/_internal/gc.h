@@ -91,7 +91,7 @@
 
 #define GC_FAST_ROOT_DATA_COUNT 512
 #define GC_FAST_ROOT_IS_OBJECT(x) (!(ADDR(x)&1))
-#define GC_FAST_ROOT_GET_NEXT_INDEX(x) (ADDR(x)>>1)
+#define GC_FAST_ROOT_GET_NEXT_INDEX(x) ((fast_root_index_t)(ADDR(x)>>1))
 #define GC_FAST_ROOT_SET_NEXT_INDEX(i) PTR(((i)<<1)|1)
 
 
