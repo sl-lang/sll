@@ -90,6 +90,9 @@
 	} while (0)
 
 #define GC_FAST_ROOT_DATA_COUNT 512
+#define GC_FAST_ROOT_IS_OBJECT(x) (!(ADDR(x)&1))
+#define GC_FAST_ROOT_GET_NEXT_INDEX(x) (ADDR(x)>>1)
+#define GC_FAST_ROOT_SET_NEXT_INDEX(i) PTR(((i)<<1)|1)
 
 
 
@@ -136,6 +139,7 @@ typedef struct _GC_ROOT_DATA{
 	sll_size_t multiple_length;
 	sll_object_t* fast[GC_FAST_ROOT_DATA_COUNT];
 	fast_root_index_t fast_count;
+	fast_root_index_t fast_empty_index;
 } gc_root_data_t;
 
 

@@ -38,7 +38,8 @@ static gc_root_data_t _gc_root_data={
 	NULL,
 	NULL,
 	0,
-	.fast_count=0
+	.fast_count=0,
+	.fast_empty_index=__SLL_U16_MAX
 };
 static gc_data_t _gc_data={
 	GC_GARBAGE_COLLECTION_INTERVAL,
@@ -360,14 +361,23 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_destroy_object(sll_object_t* ob
 
 __SLL_EXTERNAL void sll_gc_add_root(sll_object_t* object,sll_bool_t fast){
 	if (fast&&_gc_root_data.fast_count<GC_FAST_ROOT_DATA_COUNT){
-		_gc_root_data.fast_count++;
-		sll_array_length_t i=0;
-		while (_gc_root_data.fast[i]){
-			i++;
+		if (_gc_root_data.fast_empty_index==__SLL_U16_MAX){
+			_gc_root_data.fast_empty_index=0;
+			for (fast_root_index_t i=0;i<GC_FAST_ROOT_DATA_COUNT-1;i++){
+				_gc_root_data.fast[i]=GC_FAST_ROOT_SET_NEXT_INDEX(i+1);
+			}
+			_gc_root_data.fast[GC_FAST_ROOT_DATA_COUNT-1]=NULL;
 		}
-		_gc_root_data.fast[i]=object;
+		object->_data=_gc_root_data.fast_empty_index;
+		void* nxt=_gc_root_data.fast[object->_data];
+		if (!nxt){
+			_gc_root_data.fast_empty_index=GC_FAST_ROOT_DATA_COUNT;
+		}
+		else{
+			_gc_root_data.fast_empty_index=GC_FAST_ROOT_GET_NEXT_INDEX(nxt);
+		}
+		_gc_root_data.fast[object->_data]=object;
 		object->_flags|=GC_FLAG_IN_FAST_ROOT_POOL;
-		object->_data=i;
 		return;
 	}
 	GC_SET_PREV_OBJECT(object,NULL);
@@ -407,7 +417,7 @@ __SLL_EXTERNAL void sll_gc_collect(void){
 	if (_gc_root_data.fast_count){
 		fast_root_index_t i=_gc_root_data.fast_count;
 		for (fast_root_index_t j=0;i&&j<GC_FAST_ROOT_DATA_COUNT;j++){
-			if (_gc_root_data.fast[j]){
+			if (GC_FAST_ROOT_IS_OBJECT(_gc_root_data.fast[j])){
 				_mark_objects(_gc_root_data.fast[j]);
 				i--;
 			}
@@ -455,7 +465,8 @@ __SLL_EXTERNAL void sll_gc_remove_root(sll_object_t* object){
 	if (object->_flags&GC_FLAG_IN_FAST_ROOT_POOL){
 		object->_flags&=~GC_FLAG_IN_FAST_ROOT_POOL;
 		SLL_ASSERT(_gc_root_data.fast[object->_data]==object);
-		_gc_root_data.fast[object->_data]=NULL;
+		_gc_root_data.fast[object->_data]=GC_FAST_ROOT_SET_NEXT_INDEX(_gc_root_data.fast_empty_index);
+		_gc_root_data.fast_empty_index=object->_data;
 		_gc_root_data.fast_count--;
 		object->_data=0;
 		return;
