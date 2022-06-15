@@ -15,8 +15,8 @@
 - Audit event `clib.library.load` now contains a `module_path` argument
 - CLib library names are now absolute file paths
 - Fixed array and string underflow indexing
+- Fixed calling variable argument function via array in the VM
 - Fixed shallow object copy in `sll_object_clone`
-- Fixed variable argument calling in the VM
 - Function `clib/library$unload` now return an error or `nil`
 - Merged `sll_builtin_internal_function_data` and `sll_builtin_internal_function_count` into `sll_builtin_internal_functions`
 - Moved the `mime.sll` file to the `http` extension module
