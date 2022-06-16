@@ -1,3 +1,4 @@
+#include <sll/_internal/common.h>
 #include <sll/_internal/error.h>
 #include <sll/_internal/platform.h>
 #include <sll/common.h>
@@ -18,6 +19,7 @@
 
 
 static void* _execute_wrapper(void* p){
+	UNPOISON(p,sizeof(execute_wrapper_data_t));
 	execute_wrapper_data_t dt=*((execute_wrapper_data_t*)p);
 	sem_post((sem_t*)(dt.lock));
 	dt.function(dt.arg);
