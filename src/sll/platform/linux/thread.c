@@ -78,6 +78,8 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_internal_thread_index_t sll_platform_start
 	};
 	int pthread_err=pthread_create(&o,&attr,_execute_wrapper,&dt);
 	if (pthread_err){
+		sem_close(dt.lock);
+		sem_unlink("/__sll_execute_wrapper_sync");
 		ERROR_PTR(pthread_err|SLL_ERROR_FLAG_SYSTEM);
 		return SLL_UNKNOWN_INTERNAL_THREAD_INDEX;
 	}

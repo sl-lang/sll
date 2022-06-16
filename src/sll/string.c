@@ -325,10 +325,12 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_compare_result_t sll_string_compare_map(co
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_compare_result_t sll_string_compare_pointer(const sll_char_t* a,const sll_char_t* b){
 	if ((ADDR(a)&7)&&(ADDR(b)&7)){
+		sll_bool_t inv=0;
 		if ((ADDR(a)&7)<(ADDR(b)&7)){
 			const sll_char_t* t=a;
 			a=b;
 			b=t;
+			inv=1;
 		}
 		sll_string_length_t i=8-(ADDR(a)&7);
 		do{
@@ -342,6 +344,11 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_compare_result_t sll_string_compare_pointe
 			b++;
 			i--;
 		} while (i);
+		if (inv){
+			const sll_char_t* t=a;
+			a=b;
+			b=t;
+		}
 	}
 	const wide_data_t* ap=(const wide_data_t*)a;
 	const wide_data_t* bp=(const wide_data_t*)b;
