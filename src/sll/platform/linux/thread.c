@@ -18,12 +18,12 @@
 
 
 
-static void* _execute_wrapper(void* p){
+static void* _execute_wrapper(execute_wrapper_data_t* p){
 	UNPOISON(p,sizeof(execute_wrapper_data_t));
-	execute_wrapper_data_t dt=*((execute_wrapper_data_t*)p);
-	UNPOISON(dt.lock,sizeof(sem_t));
-	sem_post((sem_t*)(dt.lock));
-	dt.function(dt.arg);
+	sll_internal_thread_function_t fn=p->function;
+	void* arg=p->arg;
+	sem_post((sem_t*)(p->lock));
+	fn(arg);
 	return NULL;
 }
 
@@ -72,14 +72,13 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_error_t sll_platform_set_cpu(sll_cpu_t cpu
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_internal_thread_index_t sll_platform_start_thread(sll_internal_thread_function_t fn,void* arg,sll_error_t* err){
 	ERROR_PTR_RESET;
 	pthread_t o;
-	pthread_attr_t attr;
-	pthread_attr_init(&attr);
 	execute_wrapper_data_t dt={
 		fn,
 		arg,
 		sem_open("/__sll_execute_wrapper_sync",O_CREAT,S_IRUSR|S_IWUSR,0)
 	};
-	int pthread_err=pthread_create(&o,&attr,_execute_wrapper,&dt);
+	UNPOISON(&dt,sizeof(execute_wrapper_data_t));
+	int pthread_err=pthread_create(&o,NULL,(void* (*)(void*))_execute_wrapper,&dt);
 	if (pthread_err){
 		sem_close(dt.lock);
 		sem_unlink("/__sll_execute_wrapper_sync");

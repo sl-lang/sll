@@ -67,7 +67,7 @@
 #define ADDR(x) ((addr_t)(x))
 #define PTR(x) ((void*)(addr_t)(x))
 
-#ifdef __SANITIZE_ADDRESS__
+#ifdef __SLL_BUILD_FUZZER
 extern void __asan_unpoison_memory_region(const volatile void*,size_t);
 #define UNPOISON(a,v) __asan_unpoison_memory_region((a),(v))
 #else

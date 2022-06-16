@@ -317,7 +317,7 @@
 			""
 		)
 		"linux_clang" (. platform_command_list_type
-			(+ ["clang" "-fno-exceptions" "-fno-stack-protector" "-fdiagnostics-color=always" "-fPIC" "-c" "-fvisibility=hidden" "-Wall" "-g" "-O0" "-Werror" "-I" "src/sll/include" "-mavx" "-mavx2" "-o" COMMAND_MARKER_OUTPUT COMMAND_MARKER_INPUT] (* ["-fsanitize=address,undefined,fuzzer-no-link" "-fsanitize-recover=address,undefined" "-fno-omit-frame-pointer" "-fno-common" "-O1"] options$FUZZER))
+			(+ ["clang" "-fno-exceptions" "-fno-stack-protector" "-fdiagnostics-color=always" "-fPIC" "-c" "-fvisibility=hidden" "-Wall" "-g" "-O0" "-Werror" "-I" "src/sll/include" "-mavx" "-mavx2" "-o" COMMAND_MARKER_OUTPUT COMMAND_MARKER_INPUT] (* ["-fsanitize=address,undefined,fuzzer-no-link" "-fsanitize-recover=address,undefined" "-fno-omit-frame-pointer" "-fno-common" "-O1" "-D" "__SLL_BUILD_FUZZER"] options$FUZZER))
 			["nasm" "-I" "src/sll/include" "-D__SLL_BUILD_LINUX" "-DDEBUG_BUILD" "-o" COMMAND_MARKER_OUTPUT "-O0" "-Wall" "-Werror" "-gdwarf" "-f" "elf64" COMMAND_MARKER_INPUT]
 			["strip" "-x" "-o" COMMAND_MARKER_OUTPUT COMMAND_MARKER_OUTPUT]
 			(+ ["clang" "-fno-exceptions" "-fno-stack-protector" "-fdiagnostics-color=always" "-shared" "-fPIC" "-fvisibility=hidden" "-Wall" "-Werror" "-g" "-O0" "-mavx" "-mavx2" "-o" output_library COMMAND_MARKER_INPUT "-lm" "-ldl" "-pthread"] (* ["-fsanitize=address,undefined,fuzzer-no-link" "-fsanitize-recover=address,undefined"] options$FUZZER))
@@ -460,8 +460,8 @@
 	ext_defines
 	"src/ext/<name>/"
 	(+ "build/<name>-" version sys$LIBRARY_EXTENSION)
-	["clang" "src/fuzzer/main.c" "-g" "-I" "build/" "-O1" "-fsanitize=address,fuzzer" "-fsanitize-recover=address,undefined" "-Werror" "-Wall" "-o" "build/fuzzer" output_library]
-	["build/fuzzer" "build/fuzzer_data/" "-fork=16" "-max_len=16384" "-artifact_prefix=build/fuzzer_output/" "-timeout=5" "-ignore_crashes=1" "-max_total_time=60"]
+	["clang" "src/fuzzer/main.c" "-g" "-I" "build/" "-O1" "-fsanitize=address,fuzzer" "-fsanitize-recover=address,undefined" "-D" "_GNU_SOURCE" "-Werror" "-Wall" "-o" "build/fuzzer" output_library]
+	["build/fuzzer" "build/fuzzer_data/" "-fork=16" "-max_len=16384" "-artifact_prefix=build/fuzzer_output/" "-timeout=5" "-ignore_crashes=1" "-max_total_time=300"]
 	[".asm" ".c" ".h" ".inc"]
 	"build/.files"
 	[".h" ".inc"]

@@ -1,3 +1,4 @@
+#include <dlfcn.h>
 #include <fcntl.h>
 #include <sll.h>
 #include <stdint.h>
@@ -12,14 +13,16 @@
 
 
 
-extern const char* __asan_get_report_description(void);
-extern void __sanitizer_set_report_fd(void*);
-extern void __asan_set_error_report_callback(void (*)(const char*));
 extern size_t __asan_get_report_access_size(void);
 extern int __asan_get_report_access_type(void);
 extern void* __asan_get_report_address(void);
+extern const char* __asan_get_report_description(void);
+extern void* __asan_get_report_pc(void);
 extern const char* __asan_locate_address(void*,char*,size_t,void**,size_t*);
 extern void* __asan_region_is_poisoned(void*,size_t);
+extern void __asan_set_error_report_callback(void (*)(const char*));
+extern void __sanitizer_set_report_fd(void*);
+extern int __sanitizer_get_module_and_offset_for_pc(void*,char*,size_t,void**);
 
 
 
@@ -49,6 +52,20 @@ static void _process_error(const char* err_str){
 		snprintf(fp,128,"build/fuzzer_output/asan_%u.txt",getpid());
 		asan_output_file=fopen(fp,"w");
 	}
+	// if (!strcmp(__asan_get_report_description(),"stack-buffer-underflow")){
+	// 	// char name[256];
+	// 	// void* region;
+	// 	// size_t region_size;
+	// 	// const char* type=__asan_locate_address(__asan_get_report_pc(),name,256,&region,&region_size);
+	// 	// fprintf(asan_output_file,"[%s] %p -> %s %p %zu\n",type,__asan_get_report_pc(),name,region,region_size);
+	// 	// void* offset;
+	// 	// int type=__sanitizer_get_module_and_offset_for_pc(__asan_get_report_pc(),name,256,&offset);
+	// 	// fprintf(asan_output_file,"[%d] %p: %s, %p\n",type,__asan_get_report_pc(),name,offset);
+	// 	Dl_info info;
+	// 	int res=dladdr(__asan_get_report_pc(),&info);
+	// 	fprintf(asan_output_file,"[%d] %p: %s (%p)\n",res,__asan_get_report_pc(),info.dli_sname,NULL);
+	// 	fflush(asan_output_file);
+	// }
 	fprintf(asan_output_file,"%s\n",err_str);
 	fflush(asan_output_file);
 }
