@@ -269,6 +269,8 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_code_t sll_cli_main(sll_array_lengt
 	_cli_flags=0;
 	_cli_had_warning=0;
 	_check_release_mode(argc,argv);
+	_cli_include_list=NULL;
+	_cli_include_list_len=0;
 	_cli_bundle_list=NULL;
 	_cli_bundle_list_len=0;
 	cli_include_dir_t* inc=_alloc_include_dir();

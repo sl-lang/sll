@@ -8,7 +8,7 @@
 
 
 const char* __asan_default_options(void){
-  return "halt_on_error=0:log_path=build/fuzzer_output/asan";
+	return "halt_on_error=0:log_path=build/fuzzer_output/asan:report_globals=0";
 }
 
 

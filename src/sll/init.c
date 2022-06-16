@@ -112,6 +112,7 @@ __SLL_EXTERNAL void sll_deinit(void){
 	if (!_init_init){
 		return;
 	}
+	_init_init=0;
 	while (_init_exit_table_size){
 		_init_exit_table_size--;
 		_init_exit_table[_init_exit_table_size]();
@@ -134,7 +135,6 @@ __SLL_EXTERNAL void sll_deinit(void){
 	_deinit_platform();
 	_memory_deinit();
 	_sandbox_flags=0;
-	_init_init=0;
 }
 
 
