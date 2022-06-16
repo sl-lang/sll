@@ -21,6 +21,7 @@
 static void* _execute_wrapper(void* p){
 	UNPOISON(p,sizeof(execute_wrapper_data_t));
 	execute_wrapper_data_t dt=*((execute_wrapper_data_t*)p);
+	UNPOISON(dt.lock,sizeof(sem_t));
 	sem_post((sem_t*)(dt.lock));
 	dt.function(dt.arg);
 	return NULL;
