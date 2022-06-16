@@ -32,6 +32,7 @@
 	(?: config$OPTIONS$RELEASE "_release" "")
 	(?: (|| config$OPTIONS$DEBUG (! config$OPTIONS$RELEASE)) "_debug" "")
 	(?: config$OPTIONS$CLANG "_clang" "")
+	(?: config$OPTIONS$CLANG "_fuzzer" "")
 	'_'
 ))
 

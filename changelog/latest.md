@@ -3,6 +3,7 @@
 ## Added
 
 - *\[Linux only\]* Build script option to build using Clang: `--clang`
+- *\[Linux only\]* Build script option to enable fuzzing: `--fuzzer` (Requires `--clang`)
 - Implemented `http/mime$DEFAULT_EXTENSION`
 - Implemented `SLL_FILE_FLAG_SOCKET`
 - Implemented `sll_internal_function_table_descriptor_t`
