@@ -127,6 +127,7 @@
 			(= command_list (: config$EXTENSION_COMMANDS (+
 				sys$PLATFORM
 				(* "_release" config$OPTIONS$RELEASE)
+				(* "_clang" config$OPTIONS$CLANG)
 			)))
 			(= output_files [])
 			(<- log$log "    Compiling files...")
@@ -285,6 +286,7 @@
 	(= command_list (: config$COMMANDS (+
 		sys$PLATFORM
 		(* "_release" config$OPTIONS$RELEASE)
+		(* "_clang" config$OPTIONS$CLANG)
 	)))
 	(= output_files [])
 	(<- log$log "  Compiling files...")
@@ -316,7 +318,10 @@
 
 (= build_sll_cli (,,,
 	(<- log$log "Compiling CLI...")
-	(= command_list (: config$CLI_COMMANDS sys$PLATFORM))
+	(= command_list (: config$CLI_COMMANDS (+
+		sys$PLATFORM
+		(* "_clang" config$OPTIONS$CLANG)
+	)))
 	(<- log$log "  Executing pre-compilation command...")
 	(? (<- _execute_command command_list$PRE_COMPILATION_COMMAND nil nil) (<- util$fail_and_exit))
 	(<- log$log "  Compiling files...")

@@ -18,6 +18,7 @@
 - CLib library names are now absolute file paths
 - Fixed array and string underflow indexing
 - Fixed calling variable argument function via array in the VM
+- Fixed checksum calculation in `sll_string_duplicate`
 - Fixed shallow object copy in `sll_object_clone`
 - Function `clib/library$unload` now return an error or `nil`
 - Merged `sll_builtin_internal_function_data` and `sll_builtin_internal_function_count` into `sll_builtin_internal_functions`

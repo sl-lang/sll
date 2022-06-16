@@ -214,7 +214,7 @@ __SLL_EXTERNAL void sll_string_calculate_checksum(sll_string_t* string){
 		l--;
 		p++;
 	}
-	string->checksum=(sll_string_length_t)(c^(c>>32));
+	string->checksum=(sll_string_checksum_t)(c^(c>>32));
 }
 
 
@@ -379,12 +379,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_compare_result_t sll_string_compare_pointe
 
 __SLL_EXTERNAL void sll_string_concat(const sll_string_t* a,const sll_string_t* b,sll_string_t* out){
 	if (!a->length){
-		if (!b->length){
-			SLL_INIT_STRING(out);
-		}
-		else{
-			sll_string_clone(b,out);
-		}
+		sll_string_clone(b,out);
 		return;
 	}
 	if (!b->length){
@@ -428,6 +423,7 @@ __SLL_EXTERNAL void sll_string_concat(const sll_string_t* a,const sll_string_t* 
 		}
 	}
 	out->checksum=a->checksum^ROTATE_BITS(b->checksum,(a->length&3)<<3);
+	sll_string_calculate_checksum(out);
 }
 
 
@@ -633,10 +629,10 @@ __SLL_EXTERNAL void sll_string_duplicate(const sll_string_t* string,sll_integer_
 		}
 	}
 	count+=extra;
-	wide_data_t c=0;
 	if (i<count){
-		const wide_data_t* ap=(const wide_data_t*)(out->data+(string->length&7?8-(string->length&7):0));
+		const wide_data_t* ap=(const wide_data_t*)(out->data+((string->length&7)?8-(string->length&7):0));
 		i>>=3;
+		wide_data_t c=0;
 		for (sll_string_length_t j=0;j<i;j++){
 			c^=*(op+j);
 		}
@@ -653,14 +649,11 @@ __SLL_EXTERNAL void sll_string_duplicate(const sll_string_t* string,sll_integer_
 		}
 		*(op+i)=(*(ap+j))&((1ull<<((out->length&7)<<3))-1);
 		c^=*(op+i);
+		out->checksum=(sll_string_length_t)(c^(c>>32));
 	}
 	else{
-		SLL_STRING_FORMAT_PADDING(out->data,out->length);
-		for (sll_string_length_t j=0;j<(i>>3);j++){
-			c^=*(op+j);
-		}
+		sll_string_calculate_checksum(out);
 	}
-	out->checksum=(sll_string_length_t)(c^(c>>32));
 }
 
 

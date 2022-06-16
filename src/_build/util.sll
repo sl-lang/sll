@@ -31,6 +31,7 @@
 	sys$PLATFORM
 	(?: config$OPTIONS$RELEASE "_release" "")
 	(?: (|| config$OPTIONS$DEBUG (! config$OPTIONS$RELEASE)) "_debug" "")
+	(?: config$OPTIONS$CLANG "_clang" "")
 	'_'
 ))
 
