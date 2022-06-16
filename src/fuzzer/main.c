@@ -47,26 +47,19 @@ static void _process_error(const char* err_str){
 	if (!__asan_get_report_access_type()&&__asan_get_report_access_size()==8&&!strcmp(__asan_get_report_description(),"global-buffer-overflow")&&(!__asan_region_is_poisoned(__asan_get_report_address(),1)||!__asan_region_is_poisoned(((char*)__asan_get_report_address())-1,1))){
 		return;
 	}
+	if (!strcmp(__asan_get_report_description(),"stack-buffer-underflow")||!strcmp(__asan_get_report_description(),"unknown-crash")){
+		Dl_info info;
+		if (dladdr(__asan_get_report_pc(),&info)&&info.dli_sname&&!strcmp(info.dli_sname,"_execute_wrapper")){
+			return;
+		}
+	}
 	if (!asan_output_file){
 		char fp[128];
 		snprintf(fp,128,"build/fuzzer_output/asan_%u.txt",getpid());
 		asan_output_file=fopen(fp,"w");
 	}
-	// if (!strcmp(__asan_get_report_description(),"stack-buffer-underflow")){
-	// 	// char name[256];
-	// 	// void* region;
-	// 	// size_t region_size;
-	// 	// const char* type=__asan_locate_address(__asan_get_report_pc(),name,256,&region,&region_size);
-	// 	// fprintf(asan_output_file,"[%s] %p -> %s %p %zu\n",type,__asan_get_report_pc(),name,region,region_size);
-	// 	// void* offset;
-	// 	// int type=__sanitizer_get_module_and_offset_for_pc(__asan_get_report_pc(),name,256,&offset);
-	// 	// fprintf(asan_output_file,"[%d] %p: %s, %p\n",type,__asan_get_report_pc(),name,offset);
-	// 	Dl_info info;
-	// 	int res=dladdr(__asan_get_report_pc(),&info);
-	// 	fprintf(asan_output_file,"[%d] %p: %s (%p)\n",res,__asan_get_report_pc(),info.dli_sname,NULL);
-	// 	fflush(asan_output_file);
-	// }
-	fprintf(asan_output_file,"%s\n",err_str);
+	fputs(err_str,asan_output_file);
+	fputc('\n',asan_output_file);
 	fflush(asan_output_file);
 }
 

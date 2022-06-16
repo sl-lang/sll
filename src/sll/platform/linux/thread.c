@@ -18,7 +18,12 @@
 
 
 
-static void* _execute_wrapper(execute_wrapper_data_t* p){
+#ifdef __SLL_BUILD_FUZZER
+__SLL_EXTERNAL
+#else
+static
+#endif
+void* _execute_wrapper(execute_wrapper_data_t* p){
 	UNPOISON(p,sizeof(execute_wrapper_data_t));
 	sll_internal_thread_function_t fn=p->function;
 	void* arg=p->arg;
