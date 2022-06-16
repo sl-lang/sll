@@ -1298,21 +1298,21 @@ __SLL_EXTERNAL void sll_string_join_char(sll_char_t char_,sll_object_t*const* ob
 
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_length_t sll_string_length(const sll_char_t* pointer){
-	addr_t o=ADDR(pointer);
+	addr_t base=ADDR(pointer);
 	while (ADDR(pointer)&7){
 		if (!(*pointer)){
-			return (sll_string_length_t)(ADDR(pointer)-o);
+			return (sll_string_length_t)(ADDR(pointer)-base);
 		}
 		pointer++;
 	}
-	const wide_data_t* p=(const wide_data_t*)pointer;
-	ASSUME_ALIGNED(p,3,0);
+	const wide_data_t* pointer64=(const wide_data_t*)pointer;
+	ASSUME_ALIGNED(pointer64,3,0);
 	while (1){
-		wide_data_t v=((*p)-0x101010101010101ull)&0x8080808080808080ull&(~(*p));
+		wide_data_t v=((*pointer64)-0x101010101010101ull)&0x8080808080808080ull&(~(*pointer64));
 		if (v){
-			return (sll_string_length_t)(ADDR(p)+(FIND_FIRST_SET_BIT(v)>>3)-o);
+			return (sll_string_length_t)(ADDR(pointer64)+(FIND_FIRST_SET_BIT(v)>>3)-base);
 		}
-		p++;
+		pointer64++;
 	}
 }
 
