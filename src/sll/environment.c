@@ -4,7 +4,6 @@
 #include <sll/_internal/string.h>
 #include <sll/common.h>
 #include <sll/environment.h>
-#include <sll/init.h>
 #include <sll/memory.h>
 #include <sll/platform/environment.h>
 #include <sll/platform/lock.h>
@@ -14,20 +13,13 @@
 
 
 
-#define LOCK_ENV \
-	do{ \
-		if (!_env_lock){ \
-			_env_lock=sll_platform_lock_create(NULL); \
-			sll_register_cleanup(_cleanup_env,SLL_CLEANUP_TYPE_GLOBAL); \
-		} \
-		SLL_CRITICAL_ERROR(sll_platform_lock_acquire(_env_lock)); \
-	} while (0)
+#define LOCK_ENV SLL_CRITICAL_ERROR(sll_platform_lock_acquire(_env_lock))
 #define UNLOCK_ENV SLL_CRITICAL(sll_platform_lock_release(_env_lock))
 
 
 
 static sll_environment_t _env_data={NULL,0};
-static sll_lock_handle_t _env_lock=NULL;
+static sll_lock_handle_t _env_lock;
 static __STATIC_STRING(_env_path_var_name,"PATH");
 static sll_search_path_t _env_path;
 
@@ -38,15 +30,9 @@ __SLL_EXTERNAL const sll_search_path_t* sll_environment_path=&_env_path;
 
 
 
-static void _cleanup_env(void){
-	SLL_CRITICAL(sll_platform_lock_delete(_env_lock));
-	_env_lock=NULL;
-	sll_free_search_path(&_env_path);
-}
-
-
-
 void _deinit_environment(void){
+	SLL_CRITICAL(sll_platform_lock_delete(_env_lock));
+	sll_free_search_path(&_env_path);
 	for (sll_environment_length_t i=0;i<sll_environment->length;i++){
 		const sll_environment_variable_t* kv=*(sll_environment->data+i);
 		sll_free_string((sll_string_t*)(&(kv->key)));
@@ -65,6 +51,7 @@ void _init_environment(void){
 		sll_environment_variable_t* kv=(sll_environment_variable_t*)(*(sll_environment->data+i));
 		sll_string_upper_case(NULL,(sll_string_t*)(&(kv->key)));
 	}
+	_env_lock=sll_platform_lock_create(NULL);
 	sll_string_t tmp;
 	sll_string_from_pointer(SLL_CHAR("path"),&tmp);
 	sll_search_path_from_environment(&tmp,&_env_path);

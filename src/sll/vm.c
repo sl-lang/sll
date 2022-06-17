@@ -93,13 +93,13 @@
 		thr->stack_index--; \
 		sll_object_t** tos=(SLL_ASSEMBLY_INSTRUCTION_FLAG_IS_RELATIVE(ai)?VAR_REF(ai->data.variable):thr->stack+thr->stack_index-1); \
 		sll_object_t* a=*(thr->stack+thr->stack_index); \
-		sll_gc_add_root(a,1); \
 		*(thr->stack+thr->stack_index)=NULL; \
+		sll_gc_add_root(a,1); \
 		sll_object_t* n=nm(*tos,a); \
 		SLL_RELEASE(*tos); \
+		*tos=n; \
 		sll_gc_remove_root(a); \
 		SLL_RELEASE(a); \
-		*tos=n; \
 		break; \
 	}
 #define OPERATOR_INSTRUCTION_TERNARY(nm) \
@@ -107,18 +107,18 @@
 		thr->stack_index-=2; \
 		sll_object_t** tos=(SLL_ASSEMBLY_INSTRUCTION_FLAG_IS_RELATIVE(ai)?VAR_REF(ai->data.variable):thr->stack+thr->stack_index-1); \
 		sll_object_t* a=*(thr->stack+thr->stack_index); \
-		sll_gc_add_root(a,1); \
 		*(thr->stack+thr->stack_index)=NULL; \
 		sll_object_t* b=*(thr->stack+thr->stack_index+1); \
-		sll_gc_add_root(b,1); \
 		*(thr->stack+thr->stack_index+1)=NULL; \
+		sll_gc_add_root(a,1); \
+		sll_gc_add_root(b,1); \
 		sll_object_t* n=nm(*tos,a,b); \
 		SLL_RELEASE(*tos); \
-		sll_gc_remove_root(a); \
-		SLL_RELEASE(a); \
-		sll_gc_remove_root(b); \
-		SLL_RELEASE(b); \
 		*tos=n; \
+		sll_gc_remove_root(a); \
+		sll_gc_remove_root(b); \
+		SLL_RELEASE(a); \
+		SLL_RELEASE(b); \
 		break; \
 	}
 #define OPERATOR_INSTRUCTION_QUATERNARY(nm) \
@@ -126,23 +126,23 @@
 		thr->stack_index-=3; \
 		sll_object_t** tos=(SLL_ASSEMBLY_INSTRUCTION_FLAG_IS_RELATIVE(ai)?VAR_REF(ai->data.variable):thr->stack+thr->stack_index-1); \
 		sll_object_t* a=*(thr->stack+thr->stack_index); \
-		sll_gc_add_root(a,1); \
 		*(thr->stack+thr->stack_index)=NULL; \
 		sll_object_t* b=*(thr->stack+thr->stack_index+1); \
-		sll_gc_add_root(b,1); \
 		*(thr->stack+thr->stack_index+1)=NULL; \
 		sll_object_t* c=*(thr->stack+thr->stack_index+2); \
-		sll_gc_add_root(c,1); \
 		*(thr->stack+thr->stack_index+2)=NULL; \
+		sll_gc_add_root(a,1); \
+		sll_gc_add_root(b,1); \
+		sll_gc_add_root(c,1); \
 		sll_object_t* n=nm(*tos,a,b,c); \
 		SLL_RELEASE(*tos); \
-		sll_gc_remove_root(a); \
-		SLL_RELEASE(a); \
-		sll_gc_remove_root(b); \
-		SLL_RELEASE(b); \
-		sll_gc_remove_root(c); \
-		SLL_RELEASE(c); \
 		*tos=n; \
+		sll_gc_remove_root(a); \
+		sll_gc_remove_root(b); \
+		sll_gc_remove_root(c); \
+		SLL_RELEASE(a); \
+		SLL_RELEASE(b); \
+		SLL_RELEASE(c); \
 		break; \
 	}
 

@@ -86,6 +86,7 @@ void _gc_release_data(void){
 	sll_gc_collect();
 	SLL_ASSERT(!_gc_root_data.single);
 	SLL_ASSERT(!_gc_root_data.multiple_length);
+	SLL_ASSERT(!_gc_root_data.fast_count);
 	while (_gc_fast_object_pool.space!=GC_FAST_OBJECT_POOL_SIZE){
 		GC_PAGE_HEADER_DECREASE(GC_MEMORY_PAGE_HEADER(_gc_fast_object_pool.data[_gc_fast_object_pool.read]));
 		_gc_fast_object_pool.read=(_gc_fast_object_pool.read+1)&(GC_FAST_OBJECT_POOL_SIZE-1);
@@ -361,6 +362,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_destroy_object(sll_object_t* ob
 
 __SLL_EXTERNAL void sll_gc_add_root(sll_object_t* object,sll_bool_t fast){
 	if (fast&&_gc_root_data.fast_count<GC_FAST_ROOT_DATA_COUNT){
+		_gc_root_data.fast_count++;
 		if (_gc_root_data.fast_empty_index==__SLL_U16_MAX){
 			_gc_root_data.fast_empty_index=0;
 			for (fast_root_index_t i=0;i<GC_FAST_ROOT_DATA_COUNT-1;i++){
