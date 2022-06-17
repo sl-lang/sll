@@ -21,6 +21,7 @@
 	(~ int_type) COVERAGE
 	(~ int_type) DEBUG
 	(~ int_type) FUZZER
+	(~ int_type) FUZZER_DEBUG
 	(~ int_type) RELEASE
 	(~ int_type) RUN
 	(~ int_type) TEST
@@ -159,6 +160,7 @@
 	(|: sys$ARGV "--coverage")
 	(|: sys$ARGV "--debug")
 	(&& clang (|: sys$ARGV "--fuzzer"))
+	(|: sys$ARGV "--fuzzer-debug")
 	(|: sys$ARGV "--release")
 	(|: sys$ARGV "--run")
 	(|: sys$ARGV "--test")

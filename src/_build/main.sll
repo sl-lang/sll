@@ -17,6 +17,21 @@
 
 
 
+(? config$OPTIONS$FUZZER_DEBUG {
+	(= file_path nil)
+	(-> (= i 1) (< i ($ sys$ARGV))
+		(= arg (: sys$ARGV i))
+		(? (!== (: arg 0 2) "--") {
+			(= file_path arg)
+			(@)
+		})
+		(++ i)
+	)
+	(? file_path {
+		(<- util$execute (+ (: config$DEBUGGER_COMMAND sys$PLATFORM) ["build/sll_fuzzer" file_path]))
+	})
+	(@@)
+})
 (<- file$write
 	(<- file$open "build/version" "w")
 	config$VERSION

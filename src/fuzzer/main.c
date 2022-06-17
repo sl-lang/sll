@@ -6,6 +6,12 @@
 
 
 
+const char* __lsan_default_options(void){
+	return "verbosity=1:log_threads=1";
+}
+
+
+
 int LLVMFuzzerTestOneInput(const sll_char_t* data,size_t size){
 	if (!size){
 		return 0;
