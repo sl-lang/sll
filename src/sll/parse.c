@@ -924,13 +924,13 @@ _skip_export:;
 			}
 		}
 	}
+_return_node:;
 	if (!o){
 		o=_acquire_next_node(source_file);
 		o->type=SLL_NODE_TYPE_INT;
 		o->data.int_=0;
 		return;
 	}
-_return_node:;
 	if (o->type==SLL_NODE_TYPE_ASSIGN&&ac==1&&extra_compilation_data->new_variable_data->length){
 		sll_node_t* id=o+1;
 		while (id->type==SLL_NODE_TYPE_NOP||id->type==SLL_NODE_TYPE_DBG||id->type==SLL_NODE_TYPE_CHANGE_STACK){

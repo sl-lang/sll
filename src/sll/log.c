@@ -113,6 +113,7 @@ void _log_release_data(void){
 	}
 	sll_deallocate(_log_file_data);
 	_log_file_data=NULL;
+	_log_default=0;
 }
 
 
