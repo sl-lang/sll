@@ -14,6 +14,7 @@
 - More tests ([#285])
 - New audit event: `clib.library.load.error`
 - Object refernece counter now has to be masked with `SLL_OBJECT_REFERENCE_COUNTER_MASK` upon access
+- Objects can now be part of multiple GC roots
 - Temporary GC roots can now be added by flagging the `fast` argument in `sll_gc_add_root`
 
 ## Changed

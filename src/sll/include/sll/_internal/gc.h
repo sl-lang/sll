@@ -94,9 +94,11 @@
 #define GC_FAST_ROOT_GET_NEXT_INDEX(x) ((fast_root_index_t)(ADDR(x)>>1))
 #define GC_FAST_ROOT_SET_NEXT_INDEX(i) PTR(((i)<<1)|1)
 
-#define GC_IS_ANY_ROOT(x) (!!((x)->rc>>48))
-#define GC_DECREASE_ROOT(x) ((x)->rc-=0x1000000000000ull)
-#define GC_INCREASE_ROOT(x) ((x)->rc+=0x1000000000000ull)
+#define GC_ROOT_COUNTER_SHIFT 48
+
+#define GC_IS_ANY_ROOT(x) (!!((x)->rc>>GC_ROOT_COUNTER_SHIFT))
+#define GC_DECREASE_ROOT(x) ((x)->rc-=1ull<<GC_ROOT_COUNTER_SHIFT)
+#define GC_INCREASE_ROOT(x) ((x)->rc+=1ull<<GC_ROOT_COUNTER_SHIFT)
 
 
 
