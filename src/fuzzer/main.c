@@ -6,8 +6,8 @@
 
 
 
-const char* __lsan_default_options(void){
-	return "verbosity=1:log_threads=1";
+__attribute__((used)) int __lsan_is_turned_off(void){
+	return 1;
 }
 
 
