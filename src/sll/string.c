@@ -324,6 +324,18 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_compare_result_t sll_string_compare_map(co
 
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_compare_result_t sll_string_compare_pointer(const sll_char_t* a,const sll_char_t* b){
+#ifdef __SLL_BUILD_FUZZER
+	while (1){
+		if (*a!=*b){
+			return (*a>*b?SLL_COMPARE_RESULT_ABOVE:SLL_COMPARE_RESULT_BELOW);
+		}
+		if (!(*a)){
+			return SLL_COMPARE_RESULT_EQUAL;
+		}
+		a++;
+		b++;
+	}
+#else
 	if ((ADDR(a)&7)&&(ADDR(b)&7)){
 		sll_bool_t inv=0;
 		if ((ADDR(a)&7)<(ADDR(b)&7)){
@@ -380,6 +392,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_compare_result_t sll_string_compare_pointe
 		ap++;
 		bp++;
 	}
+#endif
 }
 
 
@@ -816,6 +829,11 @@ __SLL_EXTERNAL void sll_string_from_pointer_length(const sll_char_t* pointer,sll
 	}
 	out->length=length;
 	out->data=sll_allocator_init(SLL_STRING_ALIGN_LENGTH(length)*sizeof(sll_char_t));
+#ifdef __SLL_BUILD_FUZZER
+	INIT_PADDING(out->data,length);
+	sll_copy_data(pointer,length,out->data);
+	sll_string_calculate_checksum(out);
+#else
 	const wide_data_t* a=(const wide_data_t*)pointer;
 	wide_data_t* b=(wide_data_t*)(out->data);
 	STRING_DATA_PTR(b);
@@ -851,6 +869,7 @@ __SLL_EXTERNAL void sll_string_from_pointer_length(const sll_char_t* pointer,sll
 	*b=(*a)&((1ull<<(length<<3))-1);
 	c^=*b;
 	out->checksum=(sll_string_length_t)(c^(c>>32));
+#endif
 }
 
 
@@ -1306,6 +1325,12 @@ __SLL_EXTERNAL void sll_string_join_char(sll_char_t char_,sll_object_t*const* ob
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_length_t sll_string_length(const sll_char_t* pointer){
 	addr_t base=ADDR(pointer);
+#ifdef __SLL_BUILD_FUZZER
+	while (*pointer){
+		pointer++;
+	}
+	return (sll_string_length_t)(ADDR(pointer)-base);
+#else
 	while (ADDR(pointer)&7){
 		if (!(*pointer)){
 			return (sll_string_length_t)(ADDR(pointer)-base);
@@ -1321,6 +1346,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_length_t sll_string_length(const sl
 		}
 		pointer64++;
 	}
+#endif
 }
 
 
