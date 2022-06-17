@@ -48,7 +48,7 @@ static sll_internal_function_table_t _cli_ift;
 static sll_bool_t _cli_enable_file_lookup=0;
 static sll_cli_path_resolver_t _cli_resolver_table[CLI_PATH_RESOLVER_TABLE_SIZE];
 static sll_array_length_t _cli_resolver_table_size=0;
-static sll_optimization_round_count_t _cli_optimization_count=1;
+static sll_optimization_round_count_t _cli_optimization_count;
 static sll_bool_t _cli_had_warning;
 
 
@@ -267,12 +267,13 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_code_t sll_cli_main(sll_array_lengt
 	sll_init();
 	sll_return_code_t ec=0;
 	_cli_flags=0;
-	_cli_had_warning=0;
 	_check_release_mode(argc,argv);
 	_cli_include_list=NULL;
 	_cli_include_list_len=0;
 	_cli_bundle_list=NULL;
 	_cli_bundle_list_len=0;
+	_cli_optimization_count=1;
+	_cli_had_warning=0;
 	cli_include_dir_t* inc=_alloc_include_dir();
 	SLL_INIT_STRING(&(inc->name));
 	SLL_INIT_STRING(&(inc->path));
