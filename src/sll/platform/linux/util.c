@@ -21,8 +21,10 @@ static __STATIC_STRING(_linux_platform_str,
 	"linux"
 #endif
 );
+#ifndef __SLL_BUILD_FUZZER
 static unsigned int _linux_csr;
 static struct termios _linux_stdin_cfg;
+#endif
 
 
 
@@ -31,15 +33,19 @@ __SLL_EXTERNAL const sll_string_t* sll_platform_string=&_linux_platform_str;
 
 
 
+#ifndef __SLL_BUILD_FUZZER
 static void _exception_handler(int sig,siginfo_t* si,void* arg){
 	_force_exit_platform();
 }
+#endif
 
 
 
 void _deinit_platform(void){
+#ifndef __SLL_BUILD_FUZZER
 	_mm_setcsr(_linux_csr);
 	tcsetattr(STDIN_FILENO,TCSANOW,&_linux_stdin_cfg);
+#endif
 }
 
 
@@ -58,6 +64,7 @@ void _init_platform(void){
 	Dl_info fn_dt;
 	SLL_ASSERT(dladdr(_init_platform,&fn_dt));
 	dlclose(dlopen(fn_dt.dli_fname,RTLD_NOW|RTLD_GLOBAL|RTLD_NOLOAD));
+#ifndef __SLL_BUILD_FUZZER
 	_linux_csr=_mm_getcsr();
 	_mm_setcsr(_linux_csr|CSR_REGISTER_FLAGS);
 	if (!tcgetattr(STDIN_FILENO,&_linux_stdin_cfg)){
@@ -71,6 +78,7 @@ void _init_platform(void){
 		.sa_flags=SA_SIGINFO|SA_NODEFER|SA_RESTART
 	};
 	sigaction(SIGSEGV,&sa,NULL);
+#endif
 	_linux_cpu=sysconf(_SC_NPROCESSORS_ONLN);
 }
 
