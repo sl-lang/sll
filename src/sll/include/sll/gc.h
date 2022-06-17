@@ -15,6 +15,29 @@
 
 
 /**
+ * \flags macro var
+ * \name SLL_OBJECT_REFERENCE_COUNTER_MASK
+ * \group gc
+ * \desc Docs!
+ * \type sll_reference_count_t
+ */
+#define SLL_OBJECT_REFERENCE_COUNTER_MASK 0xffffffffffffull
+
+
+
+/**
+ * \flags func macro
+ * \name SLL_GET_OBJECT_REFERENCE_COUNTER
+ * \group gc
+ * \desc Docs!
+ * \arg sll_object_t* o
+ * \ret sll_reference_count_t
+ */
+#define SLL_GET_OBJECT_REFERENCE_COUNTER(o) ((o)->rc&SLL_OBJECT_REFERENCE_COUNTER_MASK)
+
+
+
+/**
  * \flags func macro
  * \name SLL_ACQUIRE
  * \group gc

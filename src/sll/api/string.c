@@ -93,7 +93,7 @@ static void _write_char(sll_char_t c,sll_string_t* o){
 
 
 static void _object_to_string(sll_object_t* a,sll_string_t* o,address_list_t* addr_list){
-	if (!a->rc){
+	if (!SLL_GET_OBJECT_REFERENCE_COUNTER(a)){
 		sll_string_increase(o,17);
 		sll_copy_string(SLL_CHAR("<released object>"),o->data+o->length);
 		o->length+=17;

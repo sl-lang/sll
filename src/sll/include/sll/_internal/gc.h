@@ -76,14 +76,14 @@
 #define GC_RELEASE_CHECK_ZERO_REF(o) \
 	do{ \
 		sll_object_t* __o=(o); \
-		if (!__o->rc){ \
+		if (!SLL_GET_OBJECT_REFERENCE_COUNTER(__o)){ \
 			if (!_gc_data.cleanup_in_progress){ \
 				sll__gc_error(__o); \
 			} \
 		} \
 		else{ \
 			__o->rc--; \
-			if (!__o->rc){ \
+			if (!SLL_GET_OBJECT_REFERENCE_COUNTER(__o)){ \
 				sll__release_object_internal(__o); \
 			} \
 		} \
@@ -93,6 +93,10 @@
 #define GC_FAST_ROOT_IS_OBJECT(x) (x&&!(ADDR(x)&1))
 #define GC_FAST_ROOT_GET_NEXT_INDEX(x) ((fast_root_index_t)(ADDR(x)>>1))
 #define GC_FAST_ROOT_SET_NEXT_INDEX(i) PTR(((i)<<1)|1)
+
+#define GC_IS_ANY_ROOT(x) (!!((x)->rc>>48))
+#define GC_DECREASE_ROOT(x) ((x)->rc-=0x1000000000000ull)
+#define GC_INCREASE_ROOT(x) ((x)->rc+=0x1000000000000ull)
 
 
 

@@ -61,7 +61,7 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_reference_count_t sll_api_v
 		return 0;
 	}
 	sll_audit(SLL_CHAR("sll.vm.ref"),SLL_CHAR("O"),object);
-	return object->rc;
+	return SLL_GET_OBJECT_REFERENCE_COUNTER(object);
 }
 
 
