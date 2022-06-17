@@ -707,12 +707,10 @@ _create_int:
 			}
 			else{
 _parse_identifier:
-				if (!rewind_bf_l){
-					while (char_=='$'){
-						char_=sll_file_read_char(file,NULL);
-						if (char_==SLL_END_OF_DATA){
-							goto _return_node;
-						}
+				while (char_=='$'){
+					char_=sll_file_read_char(file,NULL);
+					if (char_==SLL_END_OF_DATA){
+						goto _return_node;
 					}
 				}
 				sll_string_t str;

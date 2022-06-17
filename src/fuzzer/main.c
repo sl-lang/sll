@@ -12,10 +12,13 @@ __attribute__((used)) int __lsan_is_turned_off(void){
 
 
 
+__attribute__((used)) const char* __asan_default_options(void){
+	return "log_path=stderr:handle_abort=1";
+}
+
+
+
 int LLVMFuzzerTestOneInput(const sll_char_t* data,size_t size){
-	if (!size){
-		return 0;
-	}
 	sll_char_t bf[MAX_INPUT_LENGTH];
 	size=(size>MAX_INPUT_LENGTH-1?MAX_INPUT_LENGTH-1:size);
 	sll_copy_data(data,size,bf);
