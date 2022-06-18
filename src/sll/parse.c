@@ -380,18 +380,19 @@ static void _read_object_internal(sll_file_t* file,sll_source_file_t* source_fil
 				arg->type=SLL_NODE_TYPE_CHAR;
 				arg->data.char_=0;
 				unsigned int err=_read_single_char(file,&(arg->data.char_));
-				if (err!=1){
-					if (err||arg->data.char_!='\''){
-						sll_char_t tmp;
-						do{
-							err=_read_single_char(file,&tmp);
-							if (err==1){
-								break;
-							}
-						} while (err||tmp!='\'');
-					}
-					char_=sll_file_read_char(file,NULL);
+				if (err==1){
+					goto _return_node;
 				}
+				if (err||arg->data.char_!='\''){
+					sll_char_t tmp;
+					do{
+						err=_read_single_char(file,&tmp);
+						if (err==1){
+							goto _return_node;
+						}
+					} while (err||tmp!='\'');
+				}
+				char_=sll_file_read_char(file,NULL);
 			}
 			else if (char_=='"'){
 				arg->type=SLL_NODE_TYPE_STRING;
@@ -401,7 +402,7 @@ static void _read_object_internal(sll_file_t* file,sll_source_file_t* source_fil
 					sll_string_increase(&s,1);
 					unsigned int err=_read_single_char(file,s.data+s.length);
 					if (err==1||(!err&&s.data[s.length]=='"')){
-						break;
+						goto _return_node;
 					}
 					s.length++;
 				}
@@ -421,11 +422,11 @@ static void _read_object_internal(sll_file_t* file,sll_source_file_t* source_fil
 				while (1){
 					char_=sll_file_read_char(file,NULL);
 					if (char_==SLL_END_OF_DATA){
-						break;
+						goto _return_node;
 					}
 					if (char_=='`'){
 						if (sll_file_peek_char(file,NULL)!='`'){
-							break;
+							goto _return_node;
 						}
 						char_=sll_file_read_char(file,NULL);
 					}

@@ -28,6 +28,7 @@
 - Fixed incorrect return value from function `sll_string_compare_pointer`
 - Fixed internal thread creation in `sll_platform_start_thread`
 - Fixed invalid identifier parsing
+- Fixed multiple edge case parsing scenarios
 - Fixed null pointer dereference during parsing
 - Fixed shallow object copy in `sll_object_clone`
 - Fixed VM initialization bug
