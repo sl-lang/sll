@@ -1,4 +1,4 @@
-# Sll [0.7.22] - Ongoing
+# Sll [0.7.22] - 2022-06-18
 
 ## Added
 
@@ -37,5 +37,5 @@
 - Moved the `mime.sll` file to the `http` extension module
 - Non-containter object access now returns `nil`
 
-[0.7.22]: https://github.com/sl-lang/sll/compare/sll-v0.7.21...main
+[0.7.22]: https://github.com/sl-lang/sll/compare/sll-v0.7.21...sll-v0.7.22
 [#285]: https://github.com/sl-lang/sll/issues/285

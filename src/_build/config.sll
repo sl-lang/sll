@@ -254,7 +254,7 @@
 	"src/sll/data/assembly_optimizer.txt"
 	"src/sll/include/sll/generated/assembly_optimizer.h"
 	5
-	["build/lib/" "build/lib_debug/" "build/sys_lib/" "build/web/" "build/fuzzer_output/"]
+	["build/lib/" "build/lib_debug/" "build/sys_lib/" "build/web/"]
 	["build/lib/" "build/lib_debug/" "build/sys_lib/" "build/objects/"]
 	build_time
 	"src/sll/lib/"
