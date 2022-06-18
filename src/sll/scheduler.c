@@ -40,7 +40,9 @@ __SLL_TLS thread_data_t* _scheduler_current_thread;
 
 static void _cpu_core_worker(void* dt){
 	_scheduler_internal_thread_index=(sll_cpu_t)ADDR(dt);
+#ifndef __SLL_BUILD_FUZZER
 	SLL_CRITICAL_ERROR(sll_platform_set_cpu(_scheduler_internal_thread_index));
+#endif
 	if (_scheduler_internal_thread_index){
 		return;
 	}

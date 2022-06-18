@@ -1,6 +1,7 @@
 (---
 	"@build-script/config.sll"
 	"array.sll"
+	"base64.sll"
 	"file.sll"
 	"hash.sll"
 	"log.sll"
@@ -18,6 +19,7 @@
 (= util_module_type (&:
 	(~ func_type) create_output_dir
 	(~ func_type) execute
+	(~ func_type) execute_debug_fuzzer
 	(~ func_type) fail_and_exit
 	(~ func_type) get_output_file_path
 	(~ func_type) get_source_file_path
@@ -69,6 +71,46 @@
 
 (= execute (,,, args
 	(@@ (!! (: (<- process$start (:: args array_type)) "return_code"))
+))
+
+(= execute_debug_fuzzer (,,,
+	(= file_path nil)
+	(-> (= i 1) (< i ($ sys$ARGV))
+		(= arg (: sys$ARGV i))
+		(? (!== (: arg 0 2) "--") {
+			(= file_path arg)
+			(@)
+		})
+		(++ i)
+	)
+	(? (||
+		(! file_path)
+		(! (<- path$exists file_path))
+	) (@@))
+	(= data (<- string$split
+		(<- file$read
+			(<- file$open file_path "r")
+		)
+		'\n'
+	))
+	(= args ["build/sll_debug_fuzzer"])
+	(-> (= i 0) (< i ($ data))
+		(= line (: data i))
+		(++ i)
+		(? (!== (: line 0 5) "$$$$$") (<<<))
+		(<- array$push args (<- base64$decode
+			(<- string$trim
+				(:
+					(<- string$split
+						line
+						':'
+					)
+					1
+				)
+			)
+		))
+	)
+	(<- util$execute (+ (: config$DEBUGGER_COMMAND sys$PLATFORM) args))
 ))
 
 (= fail_and_exit (,,,
@@ -125,6 +167,7 @@
 (= util (. util_module_type
 	create_output_dir
 	execute
+	execute_debug_fuzzer
 	fail_and_exit
 	get_output_file_path
 	get_source_file_path

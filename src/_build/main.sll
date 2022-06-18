@@ -10,52 +10,15 @@
 	"@build-script/optimizer.sll"
 	"@build-script/util.sll"
 	"@build-script/website.sll"
-	"array.sll"
-	"base64.sll"
 	"file.sll"
 	"path.sll"
-	"string.sll"
 	"sys.sll"
 )
 
 
 
 (? config$OPTIONS$FUZZER_DEBUG {
-	(= file_path nil)
-	(-> (= i 1) (< i ($ sys$ARGV))
-		(= arg (: sys$ARGV i))
-		(? (!== (: arg 0 2) "--") {
-			(= file_path arg)
-			(@)
-		})
-		(++ i)
-	)
-	(? file_path {
-		(= data (<- string$split
-			(<- file$read
-				(<- file$open file_path "r")
-			)
-			'\n'
-		))
-		(= args ["build/sll_debug_fuzzer"])
-		(-> (= i 0) (< i ($ data))
-			(= line (: data i))
-			(++ i)
-			(? (!== (: line 0 5) "$$$$$") (<<<))
-			(<- array$push args (<- base64$decode
-				(<- string$trim
-					(:
-						(<- string$split
-							line
-							':'
-						)
-						1
-					)
-				)
-			))
-		)
-		(<- util$execute (+ (: config$DEBUGGER_COMMAND sys$PLATFORM) args))
-	})
+	(<- util$execute_debug_fuzzer)
 	(@@)
 })
 (<- file$write

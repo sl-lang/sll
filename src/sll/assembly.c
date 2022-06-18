@@ -1909,8 +1909,10 @@ static const sll_node_t* _generate(const sll_node_t* o,assembly_generator_data_t
 			{
 				sll_assembly_instruction_type_t ai_t=(o->type==SLL_NODE_TYPE_INC?SLL_ASSEMBLY_INSTRUCTION_TYPE_INC:SLL_ASSEMBLY_INSTRUCTION_TYPE_DEC);
 				sll_arg_count_t l=o->data.arg_count;
-				SLL_ASSERT(l);
 				o++;
+				if (!l){
+					return o;
+				}
 				while (o->type==SLL_NODE_TYPE_NOP||o->type==SLL_NODE_TYPE_DBG||o->type==SLL_NODE_TYPE_CHANGE_STACK){
 					GENERATE_DEBUG_DATA(g_dt,o);
 					o=(o->type==SLL_NODE_TYPE_CHANGE_STACK?o->data._next_node:o+1);
