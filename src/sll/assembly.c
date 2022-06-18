@@ -1716,9 +1716,29 @@ static const sll_node_t* _generate(const sll_node_t* o,assembly_generator_data_t
 				return o;
 			}
 		case SLL_NODE_TYPE_AND:
-			SLL_UNIMPLEMENTED();
+			{
+				sll_arg_count_t l=o->data.arg_count;
+				o++;
+				if (!l){
+					return o;
+				}
+				if (l==1){
+					return _generate(o,g_dt);
+				}
+				SLL_UNIMPLEMENTED();
+			}
 		case SLL_NODE_TYPE_OR:
-			SLL_UNIMPLEMENTED();
+			{
+				sll_arg_count_t l=o->data.arg_count;
+				o++;
+				if (!l){
+					return o;
+				}
+				if (l==1){
+					return _generate(o,g_dt);
+				}
+				SLL_UNIMPLEMENTED();
+			}
 		case SLL_NODE_TYPE_ASSIGN:
 			return _generate_assign(o,g_dt,0);
 		case SLL_NODE_TYPE_FUNC:
