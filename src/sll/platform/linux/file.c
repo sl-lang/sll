@@ -18,6 +18,15 @@
 
 
 
+#ifdef __SLL_BUILD_FUZZER
+static int _fuzzer_fileno=STDERR_FILENO;
+__SLL_EXTERNAL void __sll_fuzzer_set_fd(int fd){
+	_fuzzer_fileno=fd;
+}
+#endif
+
+
+
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_platform_file_async_read(sll_file_descriptor_t fd){
 	struct stat bf;
 	if (fstat(FROM_HANDLE(fd),&bf)==-1){
@@ -116,6 +125,9 @@ sll_file_descriptor_t sll_platform_get_default_stream_descriptor(sll_char_t t){
 	if (t==SLL_PLATFORM_STREAM_INPUT){
 		return TO_HANDLE(dup(STDIN_FILENO));
 	}
+#ifdef __SLL_BUILD_FUZZER
+	return TO_HANDLE(dup(_fuzzer_fileno));
+#endif
 	if (t==SLL_PLATFORM_STREAM_OUTPUT){
 		return TO_HANDLE(dup(STDOUT_FILENO));
 	}
