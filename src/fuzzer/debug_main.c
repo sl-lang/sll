@@ -18,12 +18,11 @@ int main(int argc,const char*const* argv){
 	argv++;
 	argc--;
 	while (argc){
-		const sll_char_t* args[3]={
+		const sll_char_t* args[2]={
 			SLL_CHAR("-s"),
-			SLL_CHAR(*argv),
-			SLL_CHAR("-v")
+			SLL_CHAR(*argv)
 		};
-		(void)sll_cli_main(3,args);
+		(void)sll_cli_main(2,args);
 		argv++;
 		argc--;
 	}

@@ -99,11 +99,10 @@ int LLVMFuzzerTestOneInput(const sll_char_t* data,sll_size_t size){
 	size=(size>MAX_INPUT_LENGTH-1?MAX_INPUT_LENGTH-1:size);
 	sll_copy_data(data,size,bf);
 	bf[size]=0;
-	const sll_char_t* args[3]={
+	const sll_char_t* args[2]={
 		SLL_CHAR("-s"),
-		bf,
-		SLL_CHAR("-v")
+		bf
 	};
-	(void)sll_cli_main(3,args);
+	(void)sll_cli_main(2,args);
 	return 0;
 }

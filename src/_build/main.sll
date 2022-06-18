@@ -54,7 +54,6 @@
 				)
 			))
 		)
-		(:> args '\n')
 		(<- util$execute (+ (: config$DEBUGGER_COMMAND sys$PLATFORM) args))
 	})
 	(@@)

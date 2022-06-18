@@ -751,6 +751,9 @@ _parse_identifier:
 							break;
 						}
 					} while (char_=='$');
+					if (!str.length&&char_==SLL_END_OF_DATA){
+						goto _return_node;
+					}
 					if (char_>8&&(char_<14||char_==' '||char_=='('||char_==')'||char_==';'||char_=='<'||char_=='>'||char_=='['||char_==']'||char_=='{'||char_=='}')){
 						goto _normal_identifier;
 					}
