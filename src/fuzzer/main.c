@@ -38,7 +38,7 @@ static void _write_error(const char* error){
 
 
 static void _write_input(const sll_char_t* data,sll_size_t size){
-	fprintf(_output_file,"[%llu]: ",size);
+	fprintf(_output_file,"$$$$$ [%llu]: ",size);
 	sll_string_length_t i=0;
 	if (size>2){
 		do{
@@ -80,7 +80,7 @@ const char* __asan_default_options(void){
 
 
 int LLVMFuzzerInitialize(int* argc,const char*** argv){
-	snprintf(_output_file_path,SLL_API_MAX_FILE_PATH_LENGTH,"build/fuzzer_output/asan.%u",getpid());
+	snprintf(_output_file_path,SLL_API_MAX_FILE_PATH_LENGTH,"build/fuzzer_output/%u",getpid());
 	_output_file=fopen(_output_file_path,"a");
 	__asan_set_error_report_callback(_write_error);
 	__sll_fuzzer_set_fd(fileno(_output_file));
