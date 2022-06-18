@@ -268,7 +268,9 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_code_t sll_execute_assembly(const s
 	}
 	_vm_instruction_count=0;
 	sll_current_vm_config=vm_config;// lgtm [cpp/stack-address-escape]
-	_vm_var_data=sll_platform_allocate_page(SLL_ROUND_PAGE(assembly_data->variable_count*sizeof(sll_object_t*)),0,NULL);
+	if (assembly_data->variable_count){
+		_vm_var_data=sll_platform_allocate_page(SLL_ROUND_PAGE(assembly_data->variable_count*sizeof(sll_object_t*)),0,NULL);
+	}
 	sll_static_int[0]->rc+=assembly_data->variable_count;
 	for (sll_variable_index_t i=0;i<assembly_data->variable_count;i++){
 		*(_vm_var_data+i)=sll_static_int[0];
