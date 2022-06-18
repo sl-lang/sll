@@ -110,7 +110,7 @@
 			)
 		))
 	)
-	(<- util$execute (+ (: config$DEBUGGER_COMMAND sys$PLATFORM) args))
+	(<- execute (+ (: config$DEBUGGER_COMMAND sys$PLATFORM) args))
 ))
 
 (= fail_and_exit (,,,

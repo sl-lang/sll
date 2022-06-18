@@ -1759,8 +1759,10 @@ static const sll_node_t* _generate(const sll_node_t* o,assembly_generator_data_t
 		case SLL_NODE_TYPE_INLINE_IF:
 			{
 				sll_arg_count_t l=o->data.arg_count;
-				SLL_ASSERT(l);
 				o++;
+				if (!l){
+					return o;
+				}
 				if (l==1){
 					return _generate(o,g_dt);
 				}
