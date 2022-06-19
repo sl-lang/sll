@@ -1948,23 +1948,30 @@ static const sll_node_t* _generate(const sll_node_t* o,assembly_generator_data_t
 					GENERATE_DEBUG_DATA(g_dt,o);
 					o=(o->type==SLL_NODE_TYPE_CHANGE_STACK?o->data._next_node:o+1);
 				}
-				SLL_ASSERT(o->type==SLL_NODE_TYPE_IDENTIFIER);
-				sll_assembly_instruction_t* ai=_acquire_next_instruction(g_dt->assembly_data);
-				ai->type=ai_t|SLL_ASSEMBLY_INSTRUCTION_FLAG_INPLACE;
-				if (SLL_IDENTIFIER_GET_ARRAY_ID(o->data.identifier_index)==SLL_MAX_SHORT_IDENTIFIER_LENGTH){
-					if (*(g_dt->identifier_remove_data.long_+SLL_IDENTIFIER_GET_ARRAY_INDEX(o->data.identifier_index))==o){
-						SLL_UNIMPLEMENTED();
+				if (o->type==SLL_NODE_TYPE_IDENTIFIER){
+					sll_assembly_instruction_t* ai=_acquire_next_instruction(g_dt->assembly_data);
+					ai->type=ai_t|SLL_ASSEMBLY_INSTRUCTION_FLAG_INPLACE;
+					if (SLL_IDENTIFIER_GET_ARRAY_ID(o->data.identifier_index)==SLL_MAX_SHORT_IDENTIFIER_LENGTH){
+						if (*(g_dt->identifier_remove_data.long_+SLL_IDENTIFIER_GET_ARRAY_INDEX(o->data.identifier_index))==o){
+							SLL_UNIMPLEMENTED();
+						}
+						ai->data.variable=(g_dt->identifier_map.long_identifier_map+SLL_IDENTIFIER_GET_ARRAY_INDEX(o->data.identifier_index))->variable;
 					}
-					ai->data.variable=(g_dt->identifier_map.long_identifier_map+SLL_IDENTIFIER_GET_ARRAY_INDEX(o->data.identifier_index))->variable;
-				}
-				else{
-					if (*(g_dt->identifier_remove_data.short_[SLL_IDENTIFIER_GET_ARRAY_ID(o->data.identifier_index)]+SLL_IDENTIFIER_GET_ARRAY_INDEX(o->data.identifier_index))==o){
-						SLL_UNIMPLEMENTED();
+					else{
+						if (*(g_dt->identifier_remove_data.short_[SLL_IDENTIFIER_GET_ARRAY_ID(o->data.identifier_index)]+SLL_IDENTIFIER_GET_ARRAY_INDEX(o->data.identifier_index))==o){
+							SLL_UNIMPLEMENTED();
+						}
+						ai->data.variable=(g_dt->identifier_map.short_identifier_map[SLL_IDENTIFIER_GET_ARRAY_ID(o->data.identifier_index)]+SLL_IDENTIFIER_GET_ARRAY_INDEX(o->data.identifier_index))->variable;
 					}
-					ai->data.variable=(g_dt->identifier_map.short_identifier_map[SLL_IDENTIFIER_GET_ARRAY_ID(o->data.identifier_index)]+SLL_IDENTIFIER_GET_ARRAY_INDEX(o->data.identifier_index))->variable;
+					l--;
+					o++;
 				}
-				l--;
-				o++;
+				else if (o->type==SLL_NODE_TYPE_ACCESS){
+					SLL_UNIMPLEMENTED();
+				}
+				else if (o->type==SLL_NODE_TYPE_VAR_ACCESS){
+					SLL_UNIMPLEMENTED();
+				}
 				while (l){
 					l--;
 					o=_generate(o,g_dt);
