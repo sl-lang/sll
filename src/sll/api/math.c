@@ -1,6 +1,7 @@
 #include <sll/_internal/common.h>
 #include <sll/_internal/complex.h>
 #include <sll/_internal/intrinsics.h>
+#include <sll/_internal/parse_args.h>
 #include <sll/_internal/util.h>
 #include <sll/api/math.h>
 #include <sll/array.h>
@@ -165,37 +166,56 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_size_t sll_api_math_combina
 
 
 __SLL_EXTERNAL __SLL_API_CALL void sll_api_math_copy_sign(const sll_number_t* a,const sll_number_t* b,sll_number_t* out){
-	if (a->type==b->type){
-		SLL_UNIMPLEMENTED();
-	}
 	out->type=a->type;
-	if (a->type==SLL_PARSE_ARGS_TYPE_INT){
-		sll_integer_t neg=((a->data.int_^b->data.int_)<0);
-		out->data.int_=(a->data.int_^(-neg))+neg;
-	}
-	else if (a->type==SLL_PARSE_ARGS_TYPE_FLOAT){
-		f64_data_t dt_a={
-			.value=a->data.float_
-		};
-		f64_data_t dt_b={
-			.value=b->data.float_
-		};
-		dt_a.data=(dt_a.data&0x7fffffffffffffffull)|(dt_b.data&0x8000000000000000ull);
-		out->data.float_=dt_a.value;
-	}
-	else{
-		f64_data_t dt_a={
-			.value=a->data.complex_.real
-		};
-		f64_data_t dt_b={
-			.value=b->data.complex_.real
-		};
-		dt_a.data=(dt_a.data&0x7fffffffffffffffull)|(dt_b.data&0x8000000000000000ull);
-		out->data.complex_.real=dt_a.value;
-		dt_a.value=a->data.complex_.imag;
-		dt_b.value=b->data.complex_.imag;
-		dt_a.data=(dt_a.data&0x7fffffffffffffffull)|(dt_b.data&0x8000000000000000ull);
-		out->data.complex_.imag=dt_a.value;
+	switch (PARSE_ARGS_TYPE_COMBINE(a->type,b->type)){
+		case PARSE_ARGS_TYPE_COMBINE(SLL_PARSE_ARGS_TYPE_INT,SLL_PARSE_ARGS_TYPE_INT):
+			{
+				sll_integer_t neg=((a->data.int_^b->data.int_)<0);
+				out->data.int_=(a->data.int_^(-neg))+neg;
+				break;
+			}
+		case PARSE_ARGS_TYPE_COMBINE(SLL_PARSE_ARGS_TYPE_INT,SLL_PARSE_ARGS_TYPE_FLOAT):
+			SLL_UNIMPLEMENTED();
+		case PARSE_ARGS_TYPE_COMBINE(SLL_PARSE_ARGS_TYPE_INT,SLL_PARSE_ARGS_TYPE_COMPLEX):
+			SLL_UNIMPLEMENTED();
+		case PARSE_ARGS_TYPE_COMBINE(SLL_PARSE_ARGS_TYPE_FLOAT,SLL_PARSE_ARGS_TYPE_INT):
+			SLL_UNIMPLEMENTED();
+		case PARSE_ARGS_TYPE_COMBINE(SLL_PARSE_ARGS_TYPE_FLOAT,SLL_PARSE_ARGS_TYPE_FLOAT):
+			{
+				f64_data_t dt_a={
+					.value=a->data.float_
+				};
+				f64_data_t dt_b={
+					.value=b->data.float_
+				};
+				dt_a.data=(dt_a.data&0x7fffffffffffffffull)|(dt_b.data&0x8000000000000000ull);
+				out->data.float_=dt_a.value;
+				break;
+			}
+		case PARSE_ARGS_TYPE_COMBINE(SLL_PARSE_ARGS_TYPE_FLOAT,SLL_PARSE_ARGS_TYPE_COMPLEX):
+			SLL_UNIMPLEMENTED();
+		case PARSE_ARGS_TYPE_COMBINE(SLL_PARSE_ARGS_TYPE_COMPLEX,SLL_PARSE_ARGS_TYPE_INT):
+			SLL_UNIMPLEMENTED();
+		case PARSE_ARGS_TYPE_COMBINE(SLL_PARSE_ARGS_TYPE_COMPLEX,SLL_PARSE_ARGS_TYPE_FLOAT):
+			SLL_UNIMPLEMENTED();
+		case PARSE_ARGS_TYPE_COMBINE(SLL_PARSE_ARGS_TYPE_COMPLEX,SLL_PARSE_ARGS_TYPE_COMPLEX):
+			{
+				f64_data_t dt_a={
+					.value=a->data.complex_.real
+				};
+				f64_data_t dt_b={
+					.value=b->data.complex_.real
+				};
+				dt_a.data=(dt_a.data&0x7fffffffffffffffull)|(dt_b.data&0x8000000000000000ull);
+				out->data.complex_.real=dt_a.value;
+				dt_a.value=a->data.complex_.imag;
+				dt_b.value=b->data.complex_.imag;
+				dt_a.data=(dt_a.data&0x7fffffffffffffffull)|(dt_b.data&0x8000000000000000ull);
+				out->data.complex_.imag=dt_a.value;
+				break;
+			}
+		default:
+			SLL_UNREACHABLE();
 	}
 }
 

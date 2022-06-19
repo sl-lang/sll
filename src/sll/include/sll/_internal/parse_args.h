@@ -16,6 +16,8 @@
 #define PARSE_ARGS_FLAG_CONST 4
 #define PARSE_ARGS_FLAG_NULL 8
 
+#define PARSE_ARGS_TYPE_COMBINE(a,b) (((a)<<8)|(b))
+
 
 
 typedef __SLL_U8 arg_parse_flags_t;
