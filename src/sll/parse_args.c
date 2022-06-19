@@ -1,6 +1,7 @@
 #include <sll/_internal/api_call.h>
 #include <sll/_internal/common.h>
 #include <sll/_internal/parse_args.h>
+#include <sll/_internal/static_object.h>
 #include <sll/_size_types.h>
 #include <sll/array.h>
 #include <sll/common.h>
@@ -33,18 +34,20 @@
 
 #define GET_PTR(type_) (arg_output->type==ARG_OUTPUT_TYPE_C?va_arg(*(arg_output->data.c),type_*):(type_*)_get_ptr_array(arg_output,sizeof(type_)))
 
+#define SAVE_OBJECT(obj,arg_state) \
+	if (!(arg_state)){ \
+		(arg_state)=sll_allocate_stack(sizeof(arg_state_t)+sizeof(sll_object_t*)); \
+		(arg_state)->length=1; \
+	} \
+	else{ \
+		(arg_state)->length++; \
+		(arg_state)=sll_reallocate((arg_state),sizeof(arg_state_t)+(arg_state)->length*sizeof(sll_object_t*)); \
+	} \
+	(arg_state)->data[(arg_state)->length-1]=obj;
 #define ENSURE_TYPE(var,name,arg_state) \
 	if (var->type!=SLL_OBJECT_TYPE_##name){ \
 		var=sll_operator_cast(var,sll_static_int[SLL_OBJECT_TYPE_##name]); \
-		if (!(arg_state)){ \
-			(arg_state)=sll_allocate_stack(sizeof(arg_state_t)+sizeof(sll_object_t*)); \
-			(arg_state)->length=1; \
-		} \
-		else{ \
-			(arg_state)->length++; \
-			(arg_state)=sll_reallocate((arg_state),sizeof(arg_state_t)+(arg_state)->length*sizeof(sll_object_t*)); \
-		} \
-		(arg_state)->data[(arg_state)->length-1]=var; \
+		SAVE_OBJECT(var,arg_state); \
 	} \
 
 #define PARSE_INT(size) \
@@ -110,7 +113,9 @@
 		*var=NULL; \
 	} \
 	else if (!arg){ \
-		init(*var); \
+		arg=init; \
+		SAVE_OBJECT(arg,*arg_state); \
+		*var=&(arg->data.field); \
 	} \
 	else{ \
 		ENSURE_TYPE(arg,name,*arg_state); \
@@ -300,7 +305,7 @@ static void _parse_int_or_float_or_complex(sll_object_t* arg,arg_parse_flags_t f
 
 
 static void _parse_string(sll_object_t* arg,arg_parse_flags_t flags,arg_state_t** arg_state,arg_output_t* arg_output){
-	PARSE_TYPE_PTR(sll_string_t,STRING,string,SLL_INIT_STRING);
+	PARSE_TYPE_PTR(sll_string_t,STRING,string,EMPTY_STRING_TO_OBJECT());
 }
 
 
@@ -335,13 +340,13 @@ static void _parse_char_or_string(sll_object_t* arg,arg_parse_flags_t flags,arg_
 
 
 static void _parse_array(sll_object_t* arg,arg_parse_flags_t flags,arg_state_t** arg_state,arg_output_t* arg_output){
-	PARSE_TYPE_PTR(sll_array_t,ARRAY,array,SLL_INIT_ARRAY);
+	PARSE_TYPE_PTR(sll_array_t,ARRAY,array,sll_array_length_to_object(0));
 }
 
 
 
 static void _parse_map(sll_object_t* arg,arg_parse_flags_t flags,arg_state_t** arg_state,arg_output_t* arg_output){
-	PARSE_TYPE_PTR(sll_map_t,MAP,map,SLL_INIT_MAP);
+	PARSE_TYPE_PTR(sll_map_t,MAP,map,sll_map_length_to_object(0));
 }
 
 
