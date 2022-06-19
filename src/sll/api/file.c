@@ -70,6 +70,7 @@ static sll_file_handle_t _alloc_file(void){
 
 
 __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_bool_t sll_api_file_close(sll_file_handle_t handle){
+	handle--;
 	if (handle>=_file_fll||!(*(_file_fl+handle))){
 		return 0;
 	}
@@ -126,6 +127,7 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_file_delete
 
 
 __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_bool_t sll_api_file_flush(sll_file_handle_t handle){
+	handle--;
 	if (handle>=_file_fll||!(*(_file_fl+handle))){
 		return 0;
 	}
@@ -148,7 +150,7 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_file_from_d
 	sll_copy_data(&f,sizeof(sll_file_t),&((*(_file_fl+h))->data.struct_));
 	(*(_file_fl+h))->is_pointer=0;
 	(*(_file_fl+h))->data_pointer=ptr;
-	*out=h;
+	*out=h+1;
 	return SLL_NO_ERROR;
 }
 
@@ -156,6 +158,7 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_file_from_d
 
 __SLL_EXTERNAL __SLL_API_CALL void sll_api_file_get_buffer(sll_file_handle_t handle,sll_string_t* out){
 	SLL_INIT_STRING(out);
+	handle--;
 	if (handle>=_file_fll||!(*(_file_fl+handle))){
 		return;
 	}
@@ -172,6 +175,7 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_file_get_temp_path(sll_string_t* out)
 
 
 __SLL_EXTERNAL __SLL_API_CALL void sll_api_file_inc_handle(sll_file_handle_t handle){
+	handle--;
 	if (handle>=_file_fll||!(*(_file_fl+handle))){
 		return;
 	}
@@ -197,13 +201,14 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_file_open(c
 	sll_file_handle_t handle=_alloc_file();
 	sll_copy_data(&f,sizeof(sll_file_t),&((*(_file_fl+handle))->data.struct_));
 	(*(_file_fl+handle))->is_pointer=0;
-	*out=handle;
+	*out=handle+1;
 	return SLL_NO_ERROR;
 }
 
 
 
 __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_file_peek(sll_file_handle_t handle,sll_char_t* out){
+	handle--;
 	if (handle>=_file_fll||!(*(_file_fl+handle))){
 		return SLL_ERROR_UNKNOWN_FD;
 	}
@@ -220,6 +225,7 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_file_peek(s
 
 
 __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_file_read(sll_file_handle_t handle,sll_string_length_t size,sll_string_t* out){
+	handle--;
 	if (handle>=_file_fll||!(*(_file_fl+handle))){
 		return SLL_ERROR_UNKNOWN_FD;
 	}
@@ -243,6 +249,7 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_file_read(s
 
 
 __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_file_read_char(sll_file_handle_t handle,sll_char_t* out){
+	handle--;
 	if (handle>=_file_fll||!(*(_file_fl+handle))){
 		return SLL_ERROR_UNKNOWN_FD;
 	}
@@ -298,13 +305,14 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_file_std_ha
 	sll_file_handle_t handle=_alloc_file();
 	(*(_file_fl+handle))->data.pointer=p;
 	(*(_file_fl+handle))->is_pointer=1;
-	*out=handle;
+	*out=handle+1;
 	return SLL_NO_ERROR;
 }
 
 
 
 __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_file_write(sll_file_handle_t handle,const sll_string_t* data,sll_size_t* out){
+	handle--;
 	if (handle>=_file_fll||!(*(_file_fl+handle))){
 		return SLL_ERROR_UNKNOWN_FD;
 	}
@@ -317,6 +325,7 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_file_write(
 
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_file_t* sll_file_from_handle(sll_file_handle_t handle){
+	handle--;
 	if (handle>=_file_fll||!(*(_file_fl+handle))){
 		return NULL;
 	}
@@ -330,5 +339,5 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_file_handle_t sll_file_to_handle(sll_file_
 	sll_file_handle_t o=_alloc_file();
 	(*(_file_fl+o))->data.pointer=f;
 	(*(_file_fl+o))->is_pointer=1;
-	return o;
+	return o+1;
 }
