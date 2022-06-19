@@ -596,9 +596,13 @@ static const sll_node_t* _generate_jump(const sll_node_t* o,assembly_generator_d
 static const sll_node_t* _generate_call(const sll_node_t* o,assembly_generator_data_t* g_dt){
 	SLL_ASSERT(o->type==SLL_NODE_TYPE_CALL);
 	sll_arg_count_t ac=o->data.arg_count;
-	sll_arg_count_t l=ac;
-	SLL_ASSERT(l);
 	const sll_node_t* fn=o+1;
+	if (!ac){
+		GENERATE_OPCODE(g_dt,SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_ZERO);
+		PUSH;
+		return fn;
+	}
+	sll_arg_count_t l=ac;
 	o=sll_skip_node_const(fn);
 	l--;
 	while (l){
@@ -1634,11 +1638,16 @@ static const sll_node_t* _generate_on_stack(const sll_node_t* o,assembly_generat
 	}
 	sll_arg_count_t l=o->data.arg_count;
 	sll_assembly_instruction_type_t t=o->type+(SLL_ASSEMBLY_INSTRUCTION_TYPE_ADD-SLL_NODE_TYPE_ADD);
-	SLL_ASSERT(l);
-	if (l==1){
-		return _generate_on_stack(o+1,g_dt);
+	o++;
+	if (!l){
+		GENERATE_OPCODE(g_dt,SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_ZERO);
+		PUSH;
+		return o+1;
 	}
-	o=_generate_on_stack(o+1,g_dt);
+	if (l==1){
+		return _generate_on_stack(o,g_dt);
+	}
+	o=_generate_on_stack(o,g_dt);
 	l--;
 	while (l){
 		l--;
