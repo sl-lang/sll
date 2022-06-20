@@ -38,7 +38,7 @@ static void _write_error(const char* error){
 
 
 static void _write_input(const sll_char_t* data,sll_size_t size){
-	fprintf(_output_file,"$$$$$ [%llu]: ",size);
+	fprintf(_output_file,"\n$$$$$ [%llu]: ",size);
 	sll_string_length_t i=0;
 	if (size>2){
 		do{
