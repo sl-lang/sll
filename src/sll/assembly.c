@@ -1828,13 +1828,16 @@ static const sll_node_t* _generate(const sll_node_t* o,assembly_generator_data_t
 		case SLL_NODE_TYPE_SWITCH:
 			{
 				sll_arg_count_t l=o->data.arg_count;
-				SLL_ASSERT(l);
-				if (l==1){
-					return _generate(o+1,g_dt);
-				}
 				const sll_node_t* r=o;
 				sll_bool_t d=!(o->data.arg_count&1);
-				o=_generate_on_stack(o+1,g_dt);
+				o++;
+				if (!l){
+					return o;
+				}
+				if (l==1){
+					return _generate(o,g_dt);
+				}
+				o=_generate_on_stack(o,g_dt);
 				l=(l-1)>>1;
 				node_label_t* m=sll_allocate((l+1)*sizeof(node_label_t));
 				sll_arg_count_t i=0;
