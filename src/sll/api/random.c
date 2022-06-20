@@ -13,6 +13,14 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_float_t sll_api_random_get_
 	if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_RANDOM)){
 		return 0;
 	}
+	if (max<min){
+		sll_float_t tmp=min;
+		min=max;
+		max=tmp;
+	}
+	else if (min==max){
+		return min;
+	}
 	sll_size_t v;
 	SLL_RANDOM_BITS(v);
 	v&=0xfffffffffffffull;
@@ -29,7 +37,14 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_random_ge
 	if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_RANDOM)){
 		return 0;
 	}
-	SLL_ASSERT(min<max);
+	if (max<min){
+		sll_integer_t tmp=min;
+		min=max;
+		max=tmp;
+	}
+	else if (min==max){
+		return min;
+	}
 	sll_size_t v=(sll_size_t)(max-min);
 	sll_size_t m=0xffffffffffffffffull>>(63-FIND_LAST_SET_BIT(v));
 	sll_size_t o;
@@ -47,8 +62,17 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_random_get_string(sll_string_length_t
 		SLL_INIT_STRING(out);
 		return;
 	}
-	SLL_ASSERT(min<max);
 	sll_string_create(len,out);
+	if (max<min){
+		sll_char_t tmp=min;
+		min=max;
+		max=tmp;
+	}
+	else if (min==max){
+		sll_set_memory(out->data,len,min);
+		sll_string_calculate_checksum(out);
+		return;
+	}
 	sll_platform_random(out->data,len);
 	if (!min&&max==255){
 		return;
