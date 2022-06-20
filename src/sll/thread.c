@@ -195,7 +195,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_thread_index_t sll_thread_create(sll_integ
 
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_thread_delete(sll_thread_index_t thread_index){
-	if (thread_index>=_thread_len){
+	if (!thread_index||thread_index>=_thread_len){
 		return 0;
 	}
 	thread_data_t* thr=*(_thread_data+thread_index);

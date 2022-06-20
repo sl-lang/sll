@@ -320,9 +320,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_execute_function(sll_integer
 			_scheduler_set_thread(s_tid);
 		}
 	}
-	if (!sll_thread_delete(tid)){
-		SLL_UNREACHABLE();
-	}
+	SLL_CRITICAL(sll_thread_delete(tid));
 	return o;
 }
 
