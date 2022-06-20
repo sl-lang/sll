@@ -368,7 +368,7 @@ static void _parse_object(sll_object_t* arg,arg_parse_flags_t flags,arg_state_t*
 		}
 		SLL_UNIMPLEMENTED();
 	}
-	*GET_PTR(sll_object_t*)=(arg?arg:SLL_ACQUIRE_STATIC_INT(0));
+	*GET_PTR(sll_object_t*)=(arg?arg:sll_static_int[0]);
 }
 
 
