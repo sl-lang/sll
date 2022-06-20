@@ -361,6 +361,9 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_destroy_object(sll_object_t* ob
 
 
 __SLL_EXTERNAL void sll_gc_add_root(sll_object_t* object,sll_bool_t fast){
+	if (object->_flags&GC_FLAG_STATIC){
+		return;
+	}
 	if (GC_IS_ANY_ROOT(object)){
 		GC_INCREASE_ROOT(object);
 		if (!fast&&(object->_flags&GC_FLAG_IN_FAST_ROOT_POOL)){
@@ -472,6 +475,9 @@ __SLL_EXTERNAL void sll_gc_collect(void){
 
 
 __SLL_EXTERNAL void sll_gc_remove_root(sll_object_t* object){
+	if (object->_flags&GC_FLAG_STATIC){
+		return;
+	}
 	SLL_ASSERT(GC_IS_ANY_ROOT(object));
 	GC_DECREASE_ROOT(object);
 	if (GC_IS_ANY_ROOT(object)){

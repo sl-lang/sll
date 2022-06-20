@@ -67,7 +67,7 @@
 #define GC_GET_ROOT(data) ((sll_object_t*const*)PTR(((data)>>GC_ROOTS_LENGTH_SHIFT)<<3))
 #define GC_GET_LENGTH(data) ((sll_size_t)((data)&((1<<GC_ROOTS_LENGTH_SHIFT)-1)))
 
-#define GC_IS_MARKED(o) ((((o)->_flags>>5)&1)==_gc_data.object_marker_signature)
+#define GC_IS_MARKED(o) (((o)->_flags&GC_FLAG_STATIC)||(((o)->_flags>>5)&1)==_gc_data.object_marker_signature)
 #define GC_SET_MARKED(o) \
 	do{ \
 		(o)->_flags=((o)->_flags&0xffffffdf)|(_gc_data.object_marker_signature<<5); \
