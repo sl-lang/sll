@@ -361,13 +361,14 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_destroy_object(sll_object_t* ob
 
 
 __SLL_EXTERNAL void sll_gc_add_root(sll_object_t* object,sll_bool_t fast){
-	GC_INCREASE_ROOT(object);
 	if (GC_IS_ANY_ROOT(object)){
+		GC_INCREASE_ROOT(object);
 		if (!fast&&(object->_flags&GC_FLAG_IN_FAST_ROOT_POOL)){
 			SLL_UNIMPLEMENTED();
 		}
 		return;
 	}
+	GC_INCREASE_ROOT(object);
 	if (fast&&_gc_root_data.fast_count<GC_FAST_ROOT_DATA_COUNT){
 		_gc_root_data.fast_count++;
 		if (_gc_root_data.fast_empty_index==__SLL_U16_MAX){
