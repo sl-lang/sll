@@ -1295,12 +1295,16 @@ static const sll_node_t* _generate_on_stack(const sll_node_t* o,assembly_generat
 		case SLL_NODE_TYPE_ACCESS:
 			{
 				sll_arg_count_t ac=o->data.arg_count;
+				o++;
+				if (!ac){
+					GENERATE_OPCODE(g_dt,SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_ZERO);
+					PUSH;
+					return o;
+				}
 				sll_arg_count_t l=ac;
-				SLL_ASSERT(l);
 				if (l>4){
 					l=4;
 				}
-				o++;
 				while (l){
 					l--;
 					o=_generate_on_stack(o,g_dt);
