@@ -312,11 +312,14 @@ static const sll_node_t* _generate_sequential_jump(const sll_node_t* o,assembly_
 
 static const sll_node_t* _generate_cond_jump(const sll_node_t* o,assembly_generator_data_t* g_dt,assembly_instruction_label_t lbl,sll_assembly_instruction_type_t t){
 	sll_arg_count_t l=o->data.arg_count;
-	SLL_ASSERT(l);
-	if (l==1){
-		return _generate(o+1,g_dt);
+	o++;
+	if (!l){
+		return o;
 	}
-	o=_generate_on_stack(o+1,g_dt);
+	if (l==1){
+		return _generate(o,g_dt);
+	}
+	o=_generate_on_stack(o,g_dt);
 	l-=2;
 	while (l){
 		l--;
@@ -2067,7 +2070,6 @@ static const sll_node_t* _generate(const sll_node_t* o,assembly_generator_data_t
 			{
 				sll_assembly_instruction_type_t ai_t=(o->type-SLL_NODE_TYPE_THREAD_WAIT+SLL_ASSEMBLY_INSTRUCTION_TYPE_THREAD_WAIT);
 				sll_arg_count_t l=o->data.arg_count;
-				SLL_ASSERT(l);
 				o++;
 				if (!l){
 					return o;
