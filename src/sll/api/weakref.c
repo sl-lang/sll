@@ -3,6 +3,7 @@
 #include <sll/gc.h>
 #include <sll/init.h>
 #include <sll/object.h>
+#include <sll/static_object.h>
 #include <sll/types.h>
 #include <sll/vm.h>
 #include <sll/weakref.h>
@@ -73,8 +74,11 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_object_t* sll_api_weakref_g
 		SLL_ACQUIRE(o);
 		return o;
 	}
-	SLL_ACQUIRE(_weakref_no_object_ret);
-	return _weakref_no_object_ret;
+	if (_weakref_no_object_ret){
+		SLL_ACQUIRE(_weakref_no_object_ret);
+		return _weakref_no_object_ret;
+	}
+	return SLL_ACQUIRE_STATIC_INT(0);
 }
 
 
