@@ -51,7 +51,7 @@ __SLL_EXTERNAL sll_bool_t sll_audit_enable(sll_bool_t enable){
 
 
 __SLL_EXTERNAL void sll_audit_list(const sll_char_t* name,const sll_char_t* format,sll_var_arg_list_t* va){
-	if (!_audit_enable){
+	if (!_audit_enable||!name){
 		return;
 	}
 	sll_string_t nm_s;

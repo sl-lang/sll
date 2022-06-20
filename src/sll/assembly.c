@@ -743,7 +743,7 @@ static const sll_node_t* _generate_assign(const sll_node_t* o,assembly_generator
 		POP_N(vl+1);
 		l-=2;
 	}
-	else{
+	else if (io->type==SLL_NODE_TYPE_ACCESS&&io->data.arg_count>=2){
 		o++;
 		while (o->type==SLL_NODE_TYPE_NOP||o->type==SLL_NODE_TYPE_DBG||o->type==SLL_NODE_TYPE_CHANGE_STACK){
 			GENERATE_DEBUG_DATA(g_dt,o);

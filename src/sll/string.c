@@ -1324,6 +1324,9 @@ __SLL_EXTERNAL void sll_string_join_char(sll_char_t char_,sll_object_t*const* ob
 
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_length_t sll_string_length(const sll_char_t* pointer){
+	if (!pointer){
+		return 0;
+	}
 	addr_t base=ADDR(pointer);
 #ifdef __SLL_BUILD_FUZZER
 	while (*pointer){
