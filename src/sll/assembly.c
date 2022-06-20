@@ -631,9 +631,14 @@ static const sll_node_t* _generate_call(const sll_node_t* o,assembly_generator_d
 static const sll_node_t* _generate_call_array(const sll_node_t* o,assembly_generator_data_t* g_dt){
 	SLL_ASSERT(o->type==SLL_NODE_TYPE_CALL_ARRAY);
 	sll_arg_count_t ac=o->data.arg_count;
+	o++;
+	if (!ac){
+		GENERATE_OPCODE(g_dt,SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_ZERO);
+		PUSH;
+		return o;
+	}
 	sll_arg_count_t l=ac;
-	SLL_ASSERT(l);
-	const sll_node_t* fn=o+1;
+	const sll_node_t* fn=o;
 	o=sll_skip_node_const(fn);
 	l--;
 	if (!l){
