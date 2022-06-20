@@ -85,6 +85,11 @@
 		if (flags&PARSE_ARGS_FLAG_REF){ \
 			SLL_UNIMPLEMENTED(); \
 		} \
+		if (!arg){ \
+			*GET_PTR(type_**)=NULL; \
+			*GET_PTR(sll_arg_count_t)=0; \
+			return; \
+		} \
 		sll_object_t* obj=sll_operator_cast(arg,sll_static_int[SLL_OBJECT_TYPE_ARRAY]); \
 		type_** dt=sll_allocate(obj->data.array.length*sizeof(type_*)); \
 		*GET_PTR(type_**)=dt; \
