@@ -290,6 +290,7 @@ static void _read_object_internal(sll_file_t* file,sll_source_file_t* source_fil
 				f_off=source_file->_stack.offset-1;
 				src=extra_compilation_data->non_function_scope;
 				o->data.function.function_index=source_file->function_table.length;
+				source_file->function_table.length++;
 			}
 			if ((o->type>=SLL_NODE_TYPE_IF&&o->type<=SLL_NODE_TYPE_LOOP)||o->type==SLL_NODE_TYPE_FUNC||o->type==SLL_NODE_TYPE_INLINE_FUNC||(o->type>=SLL_NODE_TYPE_FOR_ARRAY&&o->type<=SLL_NODE_TYPE_WHILE_MAP)){
 				new_scope_data.scope=source_file->_next_scope;
@@ -982,7 +983,6 @@ _return_node:;
 			arg++;
 		}
 		o->data.function.arg_count=ac-i;
-		source_file->function_table.length++;
 		source_file->function_table.data=sll_reallocate(source_file->function_table.data,source_file->function_table.length*sizeof(sll_function_t*));
 		sll_function_t* f=sll_allocate(sizeof(sll_function_t)+i*sizeof(sll_identifier_index_t));
 		f->offset=f_off;

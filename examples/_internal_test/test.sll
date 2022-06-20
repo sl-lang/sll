@@ -664,3 +664,9 @@ abc` '\n')
 (:> (<- clib_function$declaration time) ";\n")
 
 (:> (<- clib_function$call time nil) '\n')
+
+(<- (,,,
+	(<- (,,,
+		(:> "Nested!\n")
+	))
+))
