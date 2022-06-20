@@ -59,11 +59,11 @@
 #define SLL_RELEASE(object) \
 	do{ \
 		sll_object_t* __o=(object); \
-		if (!__o->rc){ \
+		if (!SLL_GET_OBJECT_REFERENCE_COUNTER(__o)){ \
 			sll__gc_error(__o); \
 		} \
 		__o->rc--; \
-		if (!__o->rc){ \
+		if (!SLL_GET_OBJECT_REFERENCE_COUNTER(__o)){ \
 			sll__release_object_internal(__o); \
 		} \
 	} while (0)
@@ -72,7 +72,7 @@
 	do{ \
 		sll_object_t* __o=(object); \
 		__o->rc--; \
-		if (!__o->rc){ \
+		if (!SLL_GET_OBJECT_REFERENCE_COUNTER(__o)){ \
 			sll__release_object_internal(__o); \
 		} \
 	} while (0)

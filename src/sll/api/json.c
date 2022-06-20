@@ -471,13 +471,13 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_json__init(sll_object_t* null_obj,sll
 		_release_data();
 	}
 	SLL_ACQUIRE(null_obj);
-	SLL_ACQUIRE(true_obj);
-	SLL_ACQUIRE(false_obj);
 	_json_null=null_obj;
-	_json_true=true_obj;
-	_json_false=false_obj;
 	sll_gc_add_root(_json_null,0);
+	SLL_ACQUIRE(true_obj);
+	_json_true=true_obj;
 	sll_gc_add_root(_json_true,0);
+	SLL_ACQUIRE(false_obj);
+	_json_false=false_obj;
 	sll_gc_add_root(_json_false,0);
 }
 
