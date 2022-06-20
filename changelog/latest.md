@@ -3,9 +3,11 @@
 ## Changed
 
 - File handels now start from `1` to avoid linking `nil` with `stdin`
+- Fixed `json$parse` with no arguments
 - Fixed GC root assignment
 - Fixed nested function definitions
 - Fixed weakref API global state access
+- Object cretion symol now works with complex numbers
 - Root thread can no longer be deleted
 - Static objects are no loner added as GC roots
 - String length of a `nil` pointer returned by `sll_string_length` is now equal to `0`

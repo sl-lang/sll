@@ -265,7 +265,23 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_create_object_type(const sll
 		case SLL_OBJECT_TYPE_CHAR:
 			return (arg_count?sll_operator_cast(*args,sll_static_int[SLL_OBJECT_TYPE_CHAR]):SLL_FROM_CHAR(0));
 		case SLL_OBJECT_TYPE_COMPLEX:
-			SLL_UNIMPLEMENTED();
+			{
+				if (!arg_count){
+					return SLL_ACQUIRE_STATIC(complex_zero);
+				}
+				if (arg_count==1){
+					return sll_operator_cast(*args,sll_static_int[SLL_OBJECT_TYPE_COMPLEX]);
+				}
+				sll_object_t* real=sll_operator_cast(*args,sll_static_int[SLL_OBJECT_TYPE_FLOAT]);
+				sll_object_t* imag=sll_operator_cast(*(args+1),sll_static_int[SLL_OBJECT_TYPE_FLOAT]);
+				sll_complex_t v={
+					real->data.float_,
+					imag->data.float_
+				};
+				SLL_RELEASE(real);
+				SLL_RELEASE(imag);
+				return sll_complex_to_object(&v);
+			}
 		case SLL_OBJECT_TYPE_STRING:
 			return (arg_count?sll_operator_cast(*args,sll_static_int[SLL_OBJECT_TYPE_STRING]):EMPTY_STRING_TO_OBJECT());
 		case SLL_OBJECT_TYPE_ARRAY:
