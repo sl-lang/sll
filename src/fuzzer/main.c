@@ -25,19 +25,17 @@ static void _cleanup_data(void){
 	if (!_has_error){
 		unlink(_output_file_path);
 	}
-	else{
-		char new_path[SLL_API_MAX_FILE_PATH_LENGTH];
-		snprintf(new_path,SLL_API_MAX_FILE_PATH_LENGTH,"build/fuzzer_output/%u",getpid());
-		rename(_output_file_path,new_path);
-	}
 }
 
 
 
 static void _write_error(const char* error){
 	fputs(error,_output_file);
-	fflush(_output_file);
 	_has_error=1;
+	char new_path[SLL_API_MAX_FILE_PATH_LENGTH];
+	snprintf(new_path,SLL_API_MAX_FILE_PATH_LENGTH,"build/fuzzer_output/%u",getpid());
+	rename(_output_file_path,new_path);
+	fclose(_output_file);
 }
 
 
