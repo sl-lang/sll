@@ -6,6 +6,7 @@
 #include <sll/common.h>
 #include <sll/data.h>
 #include <sll/environment.h>
+#include <sll/init.h>
 #include <sll/memory.h>
 #include <sll/platform/path.h>
 #include <sll/platform/util.h>

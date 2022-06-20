@@ -2,6 +2,7 @@
 #include <sll/_internal/platform.h>
 #include <sll/_internal/static_string.h>
 #include <sll/common.h>
+#include <sll/init.h>
 #include <sll/types.h>
 #include <dlfcn.h>
 #include <errno.h>
