@@ -25,6 +25,11 @@ static void _cleanup_data(void){
 	if (!_has_error){
 		unlink(_output_file_path);
 	}
+	else{
+		char new_path[SLL_API_MAX_FILE_PATH_LENGTH];
+		snprintf(new_path,SLL_API_MAX_FILE_PATH_LENGTH,"build/fuzzer_output/%u",getpid());
+		rename(_output_file_path,new_path);
+	}
 }
 
 
@@ -80,7 +85,7 @@ const char* __asan_default_options(void){
 
 
 int LLVMFuzzerInitialize(int* argc,const char*** argv){
-	snprintf(_output_file_path,SLL_API_MAX_FILE_PATH_LENGTH,"build/fuzzer_output/%u",getpid());
+	snprintf(_output_file_path,SLL_API_MAX_FILE_PATH_LENGTH,"/tmp/sll_fuzzer_%u",getpid());
 	_output_file=fopen(_output_file_path,"a");
 	__asan_set_error_report_callback(_write_error);
 	__sll_fuzzer_set_fd(fileno(_output_file));
