@@ -1050,6 +1050,8 @@ static const sll_node_t* _generate_on_stack(const sll_node_t* o,assembly_generat
 		case SLL_NODE_TYPE_INC:
 		case SLL_NODE_TYPE_DEC:
 		case SLL_NODE_TYPE_RETURN:
+		case SLL_NODE_TYPE_BREAK:
+		case SLL_NODE_TYPE_CONTINUE:
 		case SLL_NODE_TYPE_OPERATION_LIST:
 			o=_generate(o,g_dt);
 			GENERATE_OPCODE(g_dt,SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_ZERO);
@@ -1569,10 +1571,6 @@ static const sll_node_t* _generate_on_stack(const sll_node_t* o,assembly_generat
 				_generate_loop_end(g_dt,&lg_dt);
 				return o;
 			}
-		case SLL_NODE_TYPE_BREAK:
-			SLL_UNIMPLEMENTED();
-		case SLL_NODE_TYPE_CONTINUE:
-			SLL_UNIMPLEMENTED();
 		case SLL_NODE_TYPE_REF:
 		case SLL_NODE_TYPE_READ_BLOCKING_CHAR:
 			{

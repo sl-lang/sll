@@ -12,10 +12,10 @@
 
 
 __SLL_EXTERNAL sll_file_offset_t sll_get_location(const sll_assembly_data_t* assembly_data,sll_instruction_index_t instruction_index,sll_string_index_t* file_path_string_index,sll_string_index_t* function_string_index){
-	sll_file_offset_t o_ln=(assembly_data->string_table.length?0:SLL_MAX_STRING_INDEX);
+	sll_string_index_t o_fp=(assembly_data->string_table.length?0:SLL_MAX_STRING_INDEX);
 	if (instruction_index>=assembly_data->instruction_count){
 		if (file_path_string_index){
-			*file_path_string_index=o_ln;
+			*file_path_string_index=o_fp;
 		}
 		if (function_string_index){
 			*function_string_index=SLL_MAX_STRING_INDEX;
@@ -23,8 +23,8 @@ __SLL_EXTERNAL sll_file_offset_t sll_get_location(const sll_assembly_data_t* ass
 		return 0;
 	}
 	sll_instruction_index_t c=0;
+	sll_file_offset_t o_ln=0;
 	sll_string_index_t o_fn=SLL_MAX_STRING_INDEX;
-	sll_string_index_t o_fp=0;
 	for (sll_debug_data_length_t i=0;i<assembly_data->debug_data.length;i++){
 		c+=(assembly_data->debug_data.data+i)->delta_instruction_index;
 		if (c>instruction_index){
