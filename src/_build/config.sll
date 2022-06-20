@@ -465,7 +465,7 @@
 	(+ "build/<name>-" version sys$LIBRARY_EXTENSION)
 	["clang" "src/fuzzer/main.c" "-g" "-I" "build/" "-O0" "-fsanitize=address,fuzzer" "-fsanitize-recover=all"  "-Werror" "-Wall" "-o" "build/sll_fuzzer" output_library]
 	["clang" "src/fuzzer/debug_main.c" "-g" "-I" "build/" "-O1" "-fsanitize=address" "-fsanitize-recover=all"  "-Werror" "-Wall" "-o" "build/sll_debug_fuzzer" output_library]
-	["build/sll_fuzzer" "build/fuzzer_data/" "-fork=16" "-max_len=16384" "-artifact_prefix=build/fuzzer_output/" "-timeout=5" "-ignore_crashes=1" (+
+	["build/sll_fuzzer" "build/fuzzer_data/" "-fork=16" "-max_len=16384" "-artifact_prefix=build/fuzzer_output/" "-timeout=1" "-ignore_crashes=1" (+
 		"-max_total_time="
 		(<- sys$get_env "SLL_FUZZER_TIME" 60)
 	)]

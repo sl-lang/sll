@@ -5,6 +5,7 @@
 - File handels now start from `1` to avoid linking `nil` with `stdin`
 - Fixed `json$parse` with no arguments
 - Fixed GC root assignment
+- Fixed multiple assembly generation bugs
 - Fixed nested function definitions
 - Fixed weakref API global state access
 - Object cretion symol now works with complex numbers
