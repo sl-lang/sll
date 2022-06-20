@@ -48,7 +48,7 @@ static __STATIC_STRING_CODE(_linux_executable_fp,{
 });
 static __STATIC_STRING_CODE(_linux_library_fp,{
 	Dl_info dt;
-	if (!dladdr(&_linux_library_fp,&dt)){
+	if (!dladdr(sll_init,&dt)){
 		SLL_INIT_STRING(out);
 		return;
 	}

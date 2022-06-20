@@ -62,7 +62,7 @@ __SLL_NO_RETURN void _force_exit_platform(void){
 
 void _init_platform(void){
 	Dl_info fn_dt;
-	SLL_ASSERT(dladdr(_init_platform,&fn_dt));
+	SLL_ASSERT(dladdr(sll_init,&fn_dt));
 	dlclose(dlopen(fn_dt.dli_fname,RTLD_NOW|RTLD_GLOBAL|RTLD_NOLOAD));
 #ifndef __SLL_BUILD_FUZZER
 	_linux_csr=_mm_getcsr();

@@ -279,10 +279,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_code_t sll_cli_main(sll_array_lengt
 	SLL_INIT_STRING(&(inc->path));
 	SLL_ASSERT(sll_library_file_path->length<SLL_API_MAX_FILE_PATH_LENGTH);
 	_cli_lib_path_len=sll_library_file_path->length;
-	while (sll_library_file_path->data[_cli_lib_path_len]!='/'&&sll_library_file_path->data[_cli_lib_path_len]!='\\'){
-		if (!_cli_lib_path_len){
-			break;
-		}
+	while (_cli_lib_path_len&&sll_library_file_path->data[_cli_lib_path_len]!='/'&&sll_library_file_path->data[_cli_lib_path_len]!='\\'){
 		_cli_lib_path_len--;
 	}
 	_cli_lib_path_len++;
