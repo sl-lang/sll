@@ -322,7 +322,10 @@ static void _parse_char_or_string(sll_object_t* arg,arg_parse_flags_t flags,arg_
 	}
 	sll_char_string_t* var=GET_PTR(sll_char_string_t);
 	if (!arg){
-		SLL_UNIMPLEMENTED();
+		arg=EMPTY_STRING_TO_OBJECT();
+		SAVE_OBJECT(arg,*arg_state);
+		var->type=SLL_PARSE_ARGS_TYPE_STRING;
+		var->data.string=&(arg->data.string);
 	}
 	else if (arg->type==SLL_OBJECT_TYPE_CHAR){
 		var->type=SLL_PARSE_ARGS_TYPE_CHAR;
