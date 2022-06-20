@@ -383,34 +383,40 @@ static const sll_node_t* _generate_jump(const sll_node_t* o,assembly_generator_d
 	NOT_FIELD(o);
 	switch (o->type){
 		case SLL_NODE_TYPE_INT:
-			if ((!!(o->data.int_))^inv){
+			if ((!!o->data.int_)^inv){
 				GENERATE_OPCODE_WITH_LABEL(g_dt,SLL_ASSEMBLY_INSTRUCTION_TYPE_JMP,lbl);
 			}
 			return o+1;
 		case SLL_NODE_TYPE_FLOAT:
-			if ((!!(o->data.float_))^inv){
+			if ((!!o->data.float_)^inv){
 				GENERATE_OPCODE_WITH_LABEL(g_dt,SLL_ASSEMBLY_INSTRUCTION_TYPE_JMP,lbl);
 			}
 			return o+1;
 		case SLL_NODE_TYPE_CHAR:
-			if ((!!(o->data.char_))^inv){
+			if ((!!o->data.char_)^inv){
 				GENERATE_OPCODE_WITH_LABEL(g_dt,SLL_ASSEMBLY_INSTRUCTION_TYPE_JMP,lbl);
 			}
 			return o+1;
 		case SLL_NODE_TYPE_COMPLEX:
-			if (((!!(o->data.complex_.real))|(!!(o->data.complex_.imag)))^inv){
+			if (((!!o->data.complex_.real)|(!!o->data.complex_.imag))^inv){
 				GENERATE_OPCODE_WITH_LABEL(g_dt,SLL_ASSEMBLY_INSTRUCTION_TYPE_JMP,lbl);
 			}
 			return o+1;
 		case SLL_NODE_TYPE_STRING:
-			if ((!!((g_dt->source_file->string_table.data+o->data.string_index)->length))^inv){
+			if ((!!(g_dt->source_file->string_table.data+o->data.string_index)->length)^inv){
 				GENERATE_OPCODE_WITH_LABEL(g_dt,SLL_ASSEMBLY_INSTRUCTION_TYPE_JMP,lbl);
 			}
 			return o+1;
 		case SLL_NODE_TYPE_ARRAY:
-			SLL_UNIMPLEMENTED();
+			if ((!!o->data.array_length)^inv){
+				GENERATE_OPCODE_WITH_LABEL(g_dt,SLL_ASSEMBLY_INSTRUCTION_TYPE_JMP,lbl);
+			}
+			return o+1;
 		case SLL_NODE_TYPE_MAP:
-			SLL_UNIMPLEMENTED();
+			if ((!!o->data.map_length)^inv){
+				GENERATE_OPCODE_WITH_LABEL(g_dt,SLL_ASSEMBLY_INSTRUCTION_TYPE_JMP,lbl);
+			}
+			return o+1;
 		case SLL_NODE_TYPE_IDENTIFIER:
 			_generate_identifier(o,g_dt);
 			GENERATE_OPCODE_WITH_LABEL(g_dt,(inv?SLL_ASSEMBLY_INSTRUCTION_TYPE_JZ:SLL_ASSEMBLY_INSTRUCTION_TYPE_JNZ),lbl);
