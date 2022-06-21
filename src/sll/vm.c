@@ -178,7 +178,7 @@
 			ai=_get_instruction_at_offset(sll_current_runtime_data->assembly_data,thr->instruction_index); \
 		} \
 	} while (0)
-#define VAR_REF(v) ((sll_object_t**)PTR(ADDR(_vm_var_data+SLL_ASSEMBLY_VARIABLE_GET_INDEX(v))+(SLL_ASSEMBLY_VARIABLE_GET_INDEX(v)>=sll_current_runtime_data->assembly_data->variable_count)*func_var_off+SLL_ASSEMBLY_VARIABLE_IS_TLS(v)*tls_var_off))
+#define VAR_REF(v) ((sll_object_t**)PTR(ADDR(_vm_var_data+SLL_ASSEMBLY_VARIABLE_GET_INDEX(v))+(!SLL_ASSEMBLY_VARIABLE_IS_TLS(v)&&SLL_ASSEMBLY_VARIABLE_GET_INDEX(v)>=sll_current_runtime_data->assembly_data->variable_count)*func_var_off+SLL_ASSEMBLY_VARIABLE_IS_TLS(v)*tls_var_off))
 
 
 
