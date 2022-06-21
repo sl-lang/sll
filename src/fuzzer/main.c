@@ -17,6 +17,7 @@ extern void __sll_fuzzer_set_fd(int);
 static const char* _base64_alphabet="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 static FILE* _output_file;
 static char _output_file_path[SLL_API_MAX_FILE_PATH_LENGTH];
+static char _base_cwd[SLL_API_MAX_FILE_PATH_LENGTH];
 static sll_bool_t _has_error=0;
 
 
@@ -85,6 +86,7 @@ int LLVMFuzzerInitialize(int* argc,const char*** argv){
 	__asan_set_error_report_callback(_write_error);
 	__sll_fuzzer_set_fd(fileno(_output_file));
 	atexit(_cleanup_data);
+	getcwd(_base_cwd,SLL_API_MAX_FILE_PATH_LENGTH);
 	return 0;
 }
 
@@ -94,6 +96,7 @@ int LLVMFuzzerTestOneInput(const sll_char_t* data,sll_size_t size){
 	if (!size){
 		return 0;
 	}
+	chdir(_base_cwd);
 	_write_input(data,size);
 	sll_char_t bf[MAX_INPUT_LENGTH];
 	size=(size>MAX_INPUT_LENGTH-1?MAX_INPUT_LENGTH-1:size);

@@ -9,6 +9,7 @@
 - Fixed multiple assembly generation bugs
 - Fixed nested function definitions
 - Fixed weakref API global state access
+- Fuzzers now restore the current working directory to prevent global state changing crashes
 - Object cretion symol now works with complex numbers
 - Root thread can no longer be deleted
 - Static objects are no loner added as GC roots
