@@ -244,7 +244,13 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_cast(sll_object_t* 
 		case COMBINED_TYPE_MC:
 			return SLL_FROM_CHAR(a->data.map.length);
 		case COMBINED_TYPE_MD:
-			SLL_UNIMPLEMENTED();
+			{
+				sll_complex_t v={
+					a->data.map.length,
+					0
+				};
+				return sll_complex_to_object(&v);
+			}
 		case COMBINED_TYPE_MA:
 			{
 				sll_object_t* o=sll_create_object(SLL_OBJECT_TYPE_ARRAY);
