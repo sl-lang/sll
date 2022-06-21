@@ -1752,10 +1752,17 @@ static const sll_node_t* _generate(const sll_node_t* o,assembly_generator_data_t
 				if (!l){
 					return o;
 				}
-				if (l==1){
-					return _generate(o,g_dt);
+				assembly_instruction_label_t end=NEXT_LABEL(g_dt);
+				l--;
+				while (l){
+					l--;
+					o=_generate_on_stack(o,g_dt);
+					POP;
+					GENERATE_OPCODE_WITH_LABEL(g_dt,SLL_ASSEMBLY_INSTRUCTION_TYPE_JZ,end);
 				}
-				SLL_UNIMPLEMENTED();
+				o=_generate(o,g_dt);
+				DEFINE_LABEL(g_dt,end);
+				return o;
 			}
 		case SLL_NODE_TYPE_OR:
 			{
@@ -1764,10 +1771,17 @@ static const sll_node_t* _generate(const sll_node_t* o,assembly_generator_data_t
 				if (!l){
 					return o;
 				}
-				if (l==1){
-					return _generate(o,g_dt);
+				assembly_instruction_label_t end=NEXT_LABEL(g_dt);
+				l--;
+				while (l){
+					l--;
+					o=_generate_on_stack(o,g_dt);
+					POP;
+					GENERATE_OPCODE_WITH_LABEL(g_dt,SLL_ASSEMBLY_INSTRUCTION_TYPE_JNZ,end);
 				}
-				SLL_UNIMPLEMENTED();
+				o=_generate(o,g_dt);
+				DEFINE_LABEL(g_dt,end);
+				return o;
 			}
 		case SLL_NODE_TYPE_ASSIGN:
 			return _generate_assign(o,g_dt,0);
