@@ -680,7 +680,7 @@ static const sll_node_t* _generate_inline_function(const sll_node_t* o,assembly_
 
 
 
-static const sll_node_t* _generate_assign(const sll_node_t* o,assembly_generator_data_t* g_dt,sll_bool_t st){
+static const sll_node_t* _generate_assign(const sll_node_t* o,assembly_generator_data_t* g_dt,sll_bool_t stack){
 	sll_arg_count_t l=o->data.arg_count;
 	o++;
 	if (!l){
@@ -705,7 +705,7 @@ static const sll_node_t* _generate_assign(const sll_node_t* o,assembly_generator
 			return o;
 		}
 		o=_generate_on_stack(o+1,g_dt);
-		if (st){
+		if (stack){
 			SLL_UNIMPLEMENTED();
 		}
 		sll_assembly_instruction_t* ai=_acquire_next_instruction(g_dt->assembly_data);
@@ -741,7 +741,7 @@ static const sll_node_t* _generate_assign(const sll_node_t* o,assembly_generator
 			io_l--;
 		} while (io_l);
 		o=_generate_on_stack(io,g_dt);
-		if (st){
+		if (stack){
 			SLL_UNIMPLEMENTED();
 		}
 		sll_assembly_instruction_t* ai=_acquire_next_instruction(g_dt->assembly_data);
@@ -788,7 +788,7 @@ static const sll_node_t* _generate_assign(const sll_node_t* o,assembly_generator
 			o=_generate(o,g_dt);
 		}
 		o=_generate_on_stack(o,g_dt);
-		if (st){
+		if (stack){
 			SLL_UNIMPLEMENTED();
 		}
 		sll_assembly_instruction_t* ai=_acquire_next_instruction(g_dt->assembly_data);
@@ -802,6 +802,9 @@ static const sll_node_t* _generate_assign(const sll_node_t* o,assembly_generator
 		}
 		POP_N(pop);
 		l-=2;
+	}
+	else if (stack){
+		SLL_UNIMPLEMENTED();
 	}
 	while (l){
 		l--;
