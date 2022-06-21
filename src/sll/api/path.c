@@ -132,7 +132,7 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_path_list_d
 	sll_audit(SLL_CHAR("sll.path.dir.list"),SLL_CHAR("su"),path,recursive);
 	sll_string_t* dt=NULL;
 	sll_error_t err;
-	sll_array_length_t len=(recursive?sll_platform_list_directory_recursive:sll_platform_list_directory)(path->data,&dt,&err);
+	sll_array_length_t len=(recursive?sll_platform_list_directory_recursive:sll_platform_list_directory)((path->length?path->data:SLL_CHAR(".")),&dt,&err);
 	if (err!=SLL_NO_ERROR){
 		return err;
 	}
