@@ -4,6 +4,7 @@
 
 - File handels now start from `1` to avoid linking `nil` with `stdin`
 - Fixed `json$parse` with no arguments
+- Fixed `nil` pointer dereference in `sll_api_process_join`
 - Fixed GC root assignment
 - Fixed multiple assembly generation bugs
 - Fixed nested function definitions
