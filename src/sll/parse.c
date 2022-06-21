@@ -287,7 +287,6 @@ static void _read_object_internal(sll_file_t* file,sll_source_file_t* source_fil
 			char_=_operator_parser(o,char_,&fl,source_file,file);
 			const scope_data_t* src=scope_data;
 			if (o->type==SLL_NODE_TYPE_FUNC){
-				f_off=source_file->_stack.offset-1;
 				src=extra_compilation_data->non_function_scope;
 				o->data.function.function_index=source_file->function_table.length;
 				source_file->function_table.length++;
@@ -307,6 +306,7 @@ static void _read_object_internal(sll_file_t* file,sll_source_file_t* source_fil
 				o=_acquire_next_node(source_file);
 				switch (char_){
 					case '(':
+						f_off=source_file->_stack.offset-1;
 						o->type=NODE_TYPE_UNKNOWN;
 						break;
 					case '[':
