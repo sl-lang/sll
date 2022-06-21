@@ -1,4 +1,5 @@
 #include <sll.h>
+#include <unistd.h>
 
 
 
@@ -15,6 +16,8 @@ const char* __asan_default_options(void){
 
 
 int main(int argc,const char*const* argv){
+	char cwd[SLL_API_MAX_FILE_PATH_LENGTH];
+	getcwd(cwd,SLL_API_MAX_FILE_PATH_LENGTH);
 	argv++;
 	argc--;
 	while (argc){
@@ -25,6 +28,7 @@ int main(int argc,const char*const* argv){
 		(void)sll_cli_main(2,args);
 		argv++;
 		argc--;
+		chdir(cwd);
 	}
 	return 0;
 }
