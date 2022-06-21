@@ -537,6 +537,8 @@ static const sll_node_t* _generate_jump(const sll_node_t* o,assembly_generator_d
 		case SLL_NODE_TYPE_WHILE:
 		case SLL_NODE_TYPE_LOOP:
 		case SLL_NODE_TYPE_RETURN:
+		case SLL_NODE_TYPE_BREAK:
+		case SLL_NODE_TYPE_CONTINUE:
 		case SLL_NODE_TYPE_OPERATION_LIST:
 			o=_generate(o,g_dt);
 			if (inv){
@@ -573,10 +575,6 @@ static const sll_node_t* _generate_jump(const sll_node_t* o,assembly_generator_d
 				POP2;
 				return o;
 			}
-		case SLL_NODE_TYPE_BREAK:
-			SLL_UNIMPLEMENTED();
-		case SLL_NODE_TYPE_CONTINUE:
-			SLL_UNIMPLEMENTED();
 		case SLL_NODE_TYPE_REF:
 			SLL_UNIMPLEMENTED();
 		case SLL_NODE_TYPE_COMMA:
