@@ -2123,8 +2123,11 @@ static const sll_node_t* _generate(const sll_node_t* o,assembly_generator_data_t
 				sll_assembly_instruction_type_t ai_t=o->type-SLL_NODE_TYPE_THREAD_BARRIER_EQ+SLL_ASSEMBLY_INSTRUCTION_TYPE_THREAD_BARRIER_EQ;
 				sll_arg_count_t l=o->data.arg_count;
 				o++;
-				if (l<2){
-					return (l?_generate(o,g_dt):o);
+				if (!l){
+					return o;
+				}
+				if (l==1){
+					return _generate(o,g_dt);
 				}
 				o=_generate_on_stack(_generate_on_stack(o,g_dt),g_dt);
 				l-=2;
@@ -2137,7 +2140,22 @@ static const sll_node_t* _generate(const sll_node_t* o,assembly_generator_data_t
 				return o;
 			}
 		case SLL_NODE_TYPE_READ_BLOCKING_CHAR:
-			SLL_UNIMPLEMENTED();
+			{
+				sll_arg_count_t l=o->data.arg_count;
+				o++;
+				if (!l){
+					return o;
+				}
+				o=_generate_on_stack(o,g_dt);
+				l--;
+				while (l){
+					l--;
+					o=_generate(o,g_dt);
+				}
+				GENERATE_OPCODE(g_dt,SLL_ASSEMBLY_INSTRUCTION_TYPE_READ_BLOCKING_CHAR);
+				POP;
+				return o;
+			}
 	}
 	sll_arg_count_t l=o->data.arg_count;
 	o++;
