@@ -1455,12 +1455,7 @@ static const sll_node_t* _generate_on_stack(const sll_node_t* o,assembly_generat
 				sll_arg_count_t l=o->data.arg_count;
 				o++;
 				if (!l){
-					if (o->type==SLL_NODE_TYPE_TYPEOF){
-						GENERATE_OPCODE(g_dt,SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_ZERO);
-					}
-					else{
-						SLL_UNIMPLEMENTED();
-					}
+					GENERATE_OPCODE(g_dt,(o->type==SLL_NODE_TYPE_TYPEOF?SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_ZERO:SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_EMPTY_STRING));
 					PUSH;
 					return o;
 				}
@@ -2364,7 +2359,7 @@ __SLL_EXTERNAL void sll_generate_assembly(const sll_source_file_t* source_file,s
 		stack[2]=stack[1];
 		stack[1]=stack[0];
 		stack[0]=ai;
-		_optimize_assembly(stack,&_assembly_nop);
+		_optimize_assembly(out,stack,&_assembly_nop);
 		ai++;
 		if (SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(ai)==SLL_ASSEMBLY_INSTRUCTION_TYPE_CHANGE_STACK){
 			ai=ai->data._next_instruction;

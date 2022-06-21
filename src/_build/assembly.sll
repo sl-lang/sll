@@ -20,6 +20,29 @@
 
 
 
+(= _split_with_scope (,,, str infix
+	(= out [])
+	(= i 0)
+	(= j 0)
+	(-> nil (<= j (- ($ str) ($ infix)))
+		(?
+			(<- string$starts (>> str j) infix) {
+				(<- array$push out (: str i j))
+				(= j (+ j ($ infix)))
+				(= i j)
+				(<<<)
+			}
+			(=== (: str j) '"') {
+				(>- nil (!== (: str j) '"')
+					(++ j)
+				)
+			}
+		)
+		(++ j)
+	)
+	(<- array$push out (>> str i))
+	(@@ out)
+))
 
 (= _parse_object (,,, str
 	(= str (<- string$split (<- string$lower_case str) '.'))
@@ -83,23 +106,41 @@
 		(= pfx "else ")
 		(= cond (: conditions i))
 		(= child (: node$children cond))
-		(= cond (<- string$split cond '='))
-		(= obj (<- _parse_object (: cond 0)))
-		(= values (: cond 1))
-		(= cmp_sign "==")
-		(= cmp_infix "||")
-		(? (=== (: values 0) '!') {
-			(= cmp_sign "!=")
-			(= cmp_infix "&&")
-			(= values (>> values 1))
-			(= pfx "")
+		(? (=== (: cond 0) '"') {
+			(= cond (: cond 1 -1))
+			(-> (= i 0) (< i ($ cond))
+				(? (=== (: cond i) '$') {
+					(= cond (+
+						(: cond 0 i)
+						"stack["
+						(: cond (+ i 1))
+						']'
+						(>> cond (+ i 2))
+					))
+					(= i (+ i 6))
+				})
+				(++ i)
+			)
+			(<- file$write fh cond)
+		} {
+			(= cond (<- string$split cond '='))
+			(= obj (<- _parse_object (: cond 0)))
+			(= values (: cond 1))
+			(= cmp_sign "==")
+			(= cmp_infix "||")
+			(? (=== (: values 0) '!') {
+				(= cmp_sign "!=")
+				(= cmp_infix "&&")
+				(= values (>> values 1))
+				(= pfx "")
+			})
+			(= values (<- string$split values '|'))
+			(-> (= j 0) (< j ($ values))
+				(? j (<- file$write fh cmp_infix))
+				(<- file$write fh obj cmp_sign (<- _parse_value (: values j)))
+				(++ j)
+			)
 		})
-		(= values (<- string$split values '|'))
-		(-> (= j 0) (< j ($ values))
-			(? j (<- file$write fh cmp_infix))
-			(<- file$write fh obj cmp_sign (<- _parse_value (: values j)))
-			(++ j)
-		)
 		(<- file$write fh "){\n")
 		(<- _generate_node fh child (+ indentation 1) shifts)
 		(<- file$write fh (* "\t" indentation) "}\n")
@@ -130,7 +171,7 @@
 		(= line (<- string$trim (: data i)))
 		(++ i)
 		(? (|| (! line) (=== (: line 0) ';')) (<<<))
-		(= line (<- string$split line "->"))
+		(= line (<- _split_with_scope line "->"))
 		(? (!== ($ line) 2) (<<<))
 		(= cond (<- string$split (: line 0) ','))
 		(= code (<- string$trim (: line 1)))
@@ -162,7 +203,7 @@
 
 
 
-static __SLL_FORCE_INLINE void _optimize_assembly(sll_assembly_instruction_t** stack,sll_assembly_instruction_t* nop){
+static __SLL_FORCE_INLINE void _optimize_assembly(sll_assembly_data_t* assembly_data,sll_assembly_instruction_t** stack,sll_assembly_instruction_t* nop){
 `)
 	(= shifts [])
 	(<- _generate_node fh root 1 shifts)

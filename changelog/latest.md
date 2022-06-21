@@ -1,5 +1,9 @@
 # Sll [0.7.23] - Ongoing
 
+## Added
+
+- Assembly instruction to push an empty string to the stack: `SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_EMPTY_STRING`
+
 ## Changed
 
 - File handels now start from `1` to avoid linking `nil` with `stdin`

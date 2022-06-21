@@ -6,7 +6,7 @@
 
 
 
-static __SLL_FORCE_INLINE void _optimize_assembly(sll_assembly_instruction_t** stack,sll_assembly_instruction_t* nop){
+static __SLL_FORCE_INLINE void _optimize_assembly(sll_assembly_data_t* assembly_data,sll_assembly_instruction_t** stack,sll_assembly_instruction_t* nop){
 	if (SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(stack[0])!=SLL_ASSEMBLY_INSTRUCTION_TYPE_CALL&&SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(stack[0])!=SLL_ASSEMBLY_INSTRUCTION_TYPE_PRINT&&SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(stack[0])!=SLL_ASSEMBLY_INSTRUCTION_TYPE_RET){
 		if (SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(stack[1])==SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_INT){
 			if (stack[1]->data.int_==-1){
@@ -187,6 +187,11 @@ static __SLL_FORCE_INLINE void _optimize_assembly(sll_assembly_instruction_t** s
 				stack[0]->type=SLL_ASSEMBLY_INSTRUCTION_TYPE_DEL;
 				stack[1]->type=SLL_ASSEMBLY_INSTRUCTION_TYPE_POP;
 			}
+		}
+	}
+	else if (SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(stack[0])==SLL_ASSEMBLY_INSTRUCTION_TYPE_LOADS){
+		if (!assembly_data->string_table.data[stack[0]->data.string_index].length){
+			stack[0]->type=SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_EMPTY_STRING;
 		}
 	}
 	return;

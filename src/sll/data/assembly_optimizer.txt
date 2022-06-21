@@ -45,3 +45,5 @@
 
 0=del, 1=store_pop, 0.variable=1.variable -> 0=del, 1=pop
 0=pop, 1=new_decl -> $2
+
+0=loads, "!assembly_data->string_table.data[$0->data.string_index].length" -> 0=push_empty_string

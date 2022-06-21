@@ -669,6 +669,9 @@ __SLL_EXTERNAL void sll_print_assembly(const sll_assembly_data_t* assembly_data,
 				PRINT_STATIC_STRING("PUSH c",out);
 				_print_int(ai->data.char_,out);
 				break;
+			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_EMPTY_STRING:
+				PRINT_STATIC_STRING("PUSH \"\"",out);
+				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_LABEL:
 				PRINT_STATIC_STRING("PUSH .",out);
 _print_jump:

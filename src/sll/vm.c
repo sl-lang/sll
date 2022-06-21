@@ -439,6 +439,10 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_wait_thread(sll_thread_index
 				*(thr->stack+thr->stack_index)=SLL_FROM_CHAR(ai->data.char_);
 				thr->stack_index++;
 				break;
+			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_EMPTY_STRING:
+				*(thr->stack+thr->stack_index)=EMPTY_STRING_TO_OBJECT();
+				thr->stack_index++;
+				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_LABEL:
 				*(thr->stack+thr->stack_index)=sll_int_to_object((SLL_ASSEMBLY_INSTRUCTION_FLAG_IS_RELATIVE(ai)?thr->instruction_index+ai->data.jump.target.rel:ai->data.jump.target.abs));
 				thr->stack_index++;
