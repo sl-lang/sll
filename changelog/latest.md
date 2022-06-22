@@ -3,6 +3,7 @@
 ## Added
 
 - Assembly instruction to push an empty string to the stack: `SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_EMPTY_STRING`
+- Implemented `path$relative`
 
 ## Changed
 
@@ -18,5 +19,9 @@
 - Root thread can no longer be deleted
 - Static objects are no loner added as GC roots
 - String length of a `nil` pointer returned by `sll_string_length` is now equal to `0`
+
+## Removed
+
+- Unimplemented functions `sll_api_path_relative` and `sll_path_relative`
 
 [0.7.23]: https://github.com/sl-lang/sll/compare/sll-v0.7.22...main

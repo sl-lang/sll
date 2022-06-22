@@ -1,6 +1,7 @@
 (---
 	"_internal.sll"
 	"error.sll"
+	"string.sll"
 	"types.sll"
 )
 
@@ -66,10 +67,28 @@
 ))
 
 (= relative (,,, path base
-	(? (|| (! path) (! base)) (@@ nil))
-	(@@ (<- (... "sll:path_relative")
+	(? (! path) (@@ nil))
+	(= path (<- absolute
 		(:: path string_type)
-		(?: (=== base nil) (<- get_cwd) (:: base string_type))
+	))
+	(= base (<- absolute
+		(:: (|| base (<- get_cwd)) string_type)
+	))
+	(? (=== path base) (@@ "."))
+	(= path (<- string$split path SEPARATOR))
+	(= base (<- string$split base SEPARATOR))
+	(= end (?: (< ($ path) ($ base))
+		($ path)
+		($ base)
+	))
+	(= i 0)
+	(-> nil (< i end)
+		(? (!== (: path i) (: base i)) (@))
+		(++ i)
+	)
+	(@@ (<-* join (+
+		(* [".."] (- ($ base) i))
+		(>> path i)
 	))
 ))
 

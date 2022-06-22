@@ -101,7 +101,6 @@ extern void sll_api_path_is_dir(void);
 extern void sll_api_path_join(void);
 extern void sll_api_path_list_dir(void);
 extern void sll_api_path_mkdir(void);
-extern void sll_api_path_relative(void);
 extern void sll_api_path_set_cwd(void);
 extern void sll_api_path_size(void);
 extern void sll_api_path_split(void);
@@ -682,11 +681,6 @@ static const sll_internal_function_descriptor_t _internal_function_table[]={
 		SLL_CHAR("#sb|Q")
 	},
 	{
-		SLL_CHAR("sll:path_relative"),
-		sll_api_path_relative,
-		SLL_CHAR("#s#s|s")
-	},
-	{
 		SLL_CHAR("sll:path_set_cwd"),
 		sll_api_path_set_cwd,
 		SLL_CHAR("#s|Q")
@@ -1167,7 +1161,7 @@ static const sll_internal_function_descriptor_t _internal_function_table[]={
 
 static const sll_internal_function_table_descriptor_t _internal_function_table_descriptor_data={
 	(const sll_internal_function_descriptor_t*)(&_internal_function_table),
-	192
+	191
 };
 
 

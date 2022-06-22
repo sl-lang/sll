@@ -138,20 +138,6 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_path_mkdir(
 
 
 /**
- * \flags func
- * \name sll_api_path_relative
- * \group path-api
- * \desc Docs!
- * \api #s#s|s
- * \arg const sll_string_t* path
- * \arg const sll_string_t* base
- * \arg sll_string_t* out
- */
-__SLL_EXTERNAL __SLL_API_CALL void sll_api_path_relative(const sll_string_t* path,const sll_string_t* base,sll_string_t* out);
-
-
-
-/**
  * \flags check_output func
  * \name sll_api_path_set_cwd
  * \group json-api
@@ -201,19 +187,6 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_path_split(const sll_string_t* path,s
  * \arg sll_array_t* out
  */
 __SLL_EXTERNAL __SLL_API_CALL void sll_api_path_split_drive(const sll_string_t* path,sll_array_t* out);
-
-
-
-/**
- * \flags func
- * \name sll_path_relative
- * \group path-api
- * \desc Docs!
- * \arg const sll_char_t* s
- * \arg const sll_char_t* b
- * \arg sll_string_t* o
- */
-__SLL_EXTERNAL void sll_path_relative(const sll_char_t* s,const sll_char_t* b,sll_string_t* o);
 
 
 

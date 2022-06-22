@@ -670,3 +670,5 @@ abc` '\n')
 		(:> "Nested!\n")
 	))
 ))
+
+(:> (<- path$relative "src/sll/gc.c" "src/_build") '\n')
