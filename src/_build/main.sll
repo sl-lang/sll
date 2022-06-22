@@ -43,13 +43,7 @@
 (<- build$build_modules)
 (<- build$build_extensions)
 (? config$OPTIONS$FUZZER {
-	(<- path$mkdir "build/fuzzer_data")
-	(<- path$mkdir "build/fuzzer_output")
-	(? (||
-		(<- util$execute config$FUZZER_COMPILATION_COMMAND)
-		(<- util$execute config$FUZZER_DEBUGGER_COMPILATION_COMMAND)
-		(<- util$execute config$FUZZER_EXECUTION_COMMAND)
-	)(<- util$fail_and_exit))
+	(<- util$execute_fuzzer)
 	(@@)
 })
 (= output_executable (+ "build/sll" sys$EXECUTABLE_EXTENSION))

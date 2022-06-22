@@ -20,6 +20,7 @@
 	(~ func_type) create_output_dir
 	(~ func_type) execute
 	(~ func_type) execute_debug_fuzzer
+	(~ func_type) execute_fuzzer
 	(~ func_type) fail_and_exit
 	(~ func_type) get_output_file_path
 	(~ func_type) get_source_file_path
@@ -113,6 +114,16 @@
 	(<- execute (+ (: config$DEBUGGER_COMMAND sys$PLATFORM) args))
 ))
 
+(= execute_fuzzer (,,,
+	(<- path$mkdir "build/fuzzer_data")
+	(<- path$mkdir "build/fuzzer_output")
+	(? (||
+		(<- execute config$FUZZER_COMPILATION_COMMAND)
+		(<- execute config$FUZZER_DEBUGGER_COMPILATION_COMMAND)
+		(<- execute config$FUZZER_EXECUTION_COMMAND)
+	) (<- thread$exit 1))
+))
+
 (= fail_and_exit (,,,
 	(<- thread$exit 1)
 ))
@@ -168,6 +179,7 @@
 	create_output_dir
 	execute
 	execute_debug_fuzzer
+	execute_fuzzer
 	fail_and_exit
 	get_output_file_path
 	get_source_file_path
