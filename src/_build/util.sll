@@ -123,7 +123,7 @@
 		(<- string$replace
 			(<- string$replace
 				(<- string$replace
-					(<- path$absolute
+					(<- path$relative
 						(:: file_path string_type)
 					)
 					'\\'
