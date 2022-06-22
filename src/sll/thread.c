@@ -93,18 +93,18 @@ sll_thread_index_t _thread_new(void){
 	thread_data_t* n=ptr;
 	n->stack=PTR(ADDR(ptr)+sizeof(thread_data_t)+sll_current_vm_config->call_stack_size*sizeof(sll_call_stack_frame_t)+sll_current_runtime_data->assembly_data->tls_variable_count*sizeof(sll_object_t*));
 	n->stack[0]=NULL;
-	sll_gc_add_roots(((thread_data_t*)ptr)->stack,sll_current_vm_config->stack_size);
+	sll_gc_add_roots(n->stack,sll_current_vm_config->stack_size);
 	n->tls=PTR(ADDR(ptr)+sizeof(thread_data_t)+sll_current_vm_config->call_stack_size*sizeof(sll_call_stack_frame_t));
 	sll_static_int[0]->rc+=sll_current_runtime_data->assembly_data->tls_variable_count;
 	for (sll_variable_index_t i=0;i<sll_current_runtime_data->assembly_data->tls_variable_count;i++){
 		*(n->tls+i)=sll_static_int[0];
 	}
-	sll_gc_add_roots(((thread_data_t*)ptr)->tls,sll_current_runtime_data->assembly_data->tls_variable_count);
+	sll_gc_add_roots(n->tls,sll_current_runtime_data->assembly_data->tls_variable_count);
 	n->instruction_index=0;
 	n->stack_index=0;
 	n->wait=SLL_UNKNOWN_THREAD_INDEX;
 	n->return_value=NULL;
-	sll_gc_add_roots(&(((thread_data_t*)ptr)->return_value),1);
+	sll_gc_add_roots(&(n->return_value),1);
 	n->call_stack.data=PTR(ADDR(ptr)+sizeof(thread_data_t));
 	n->call_stack.length=0;
 	n->sandbox=(_scheduler_current_thread_index==SLL_UNKNOWN_THREAD_INDEX?_sandbox_flags:_scheduler_current_thread->sandbox);
