@@ -943,7 +943,7 @@ __SLL_EXTERNAL void sll_string_increase(sll_string_t* string,sll_string_length_t
 		return;
 	}
 	length+=string->length;
-	if (SLL_STRING_ALIGN_LENGTH(length)>SLL_STRING_ALIGN_LENGTH(string->length)){
+	if (!string->length||SLL_STRING_ALIGN_LENGTH(length)>SLL_STRING_ALIGN_LENGTH(string->length)){
 		sll_allocator_resize((void**)(&(string->data)),SLL_STRING_ALIGN_LENGTH(length)*sizeof(sll_char_t));
 		SLL_STRING_FORMAT_PADDING(string->data,length);
 	}

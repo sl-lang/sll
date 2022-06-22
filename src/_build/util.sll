@@ -122,6 +122,25 @@
 		(<- execute config$FUZZER_DEBUGGER_COMPILATION_COMMAND)
 		(<- execute config$FUZZER_EXECUTION_COMMAND)
 	) (<- thread$exit 1))
+	(= files (<- path$list_dir "build/fuzzer_output"))
+	(-> (= i 0) (< i ($ files))
+		(= file_path (+
+			"build/fuzzer_output/"
+			(: files i)
+		))
+		(? (! (|:
+			(<- file$read
+				(<- file$open
+					file_path
+					"r"
+				)
+			)
+			config$FUZZER_ASAN_MARKER
+		)) {
+			(<- file$delete file_path)
+		})
+		(++ i)
+	)
 ))
 
 (= fail_and_exit (,,,
