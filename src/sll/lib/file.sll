@@ -138,7 +138,7 @@
 		flags
 	))
 	(? (< handle 0) {
-		(@@ (<- error$from_internal (~ handle) <"fp" path>))
+		(@@ (<- error$from_internal (~ handle) <"path" path>))
 	})
 	(@@ (. file_type
 		path
