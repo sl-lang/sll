@@ -135,7 +135,7 @@
 					"r"
 				)
 			)
-			config$FUZZER_ASAN_MARKER
+			config$FUZZER_ASAN_ERROR_MARKER
 		)) {
 			(<- file$delete file_path)
 		})
