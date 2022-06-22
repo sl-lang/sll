@@ -1059,6 +1059,12 @@ static const sll_node_t* _generate_on_stack(const sll_node_t* o,assembly_generat
 		case SLL_NODE_TYPE_RETURN:
 		case SLL_NODE_TYPE_BREAK:
 		case SLL_NODE_TYPE_CONTINUE:
+		case SLL_NODE_TYPE_THREAD_WAIT:
+		case SLL_NODE_TYPE_THREAD_LOCK:
+		case SLL_NODE_TYPE_THREAD_SEMAPHORE:
+		case SLL_NODE_TYPE_THREAD_BARRIER_EQ:
+		case SLL_NODE_TYPE_THREAD_BARRIER_GEQ:
+		case SLL_NODE_TYPE_THREAD_EXIT:
 		case SLL_NODE_TYPE_OPERATION_LIST:
 			o=_generate(o,g_dt);
 			GENERATE_OPCODE(g_dt,SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_ZERO);
@@ -1634,13 +1640,6 @@ static const sll_node_t* _generate_on_stack(const sll_node_t* o,assembly_generat
 				GENERATE_OPCODE(g_dt,SLL_ASSEMBLY_INSTRUCTION_TYPE_THREAD_ID);
 				return o;
 			}
-		case SLL_NODE_TYPE_THREAD_WAIT:
-		case SLL_NODE_TYPE_THREAD_LOCK:
-		case SLL_NODE_TYPE_THREAD_SEMAPHORE:
-		case SLL_NODE_TYPE_THREAD_BARRIER_EQ:
-		case SLL_NODE_TYPE_THREAD_BARRIER_GEQ:
-		case SLL_NODE_TYPE_THREAD_EXIT:
-			SLL_UNIMPLEMENTED();
 		case SLL_NODE_TYPE_READ_BLOCKING:
 			{
 				if (!o->data.arg_count){
