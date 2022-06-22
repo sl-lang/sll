@@ -802,7 +802,8 @@ static const sll_node_t* _generate_assign(const sll_node_t* o,assembly_generator
 		l-=2;
 	}
 	else if (stack){
-		SLL_UNIMPLEMENTED();
+		GENERATE_OPCODE(SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_ZERO);
+		PUSH;
 	}
 	while (l){
 		l--;
