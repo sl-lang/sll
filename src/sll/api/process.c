@@ -72,6 +72,10 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_process_join(const sll_string_t*const
 
 
 __SLL_EXTERNAL __SLL_API_CALL void sll_api_process_split(const sll_string_t* args,sll_array_t* out){
+	if (!args){
+		SLL_INIT_ARRAY(out);
+		return;
+	}
 	SLL_UNIMPLEMENTED();
 }
 
