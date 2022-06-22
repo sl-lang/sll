@@ -176,6 +176,9 @@ __SLL_EXTERNAL void sll_array_create_zero(sll_array_length_t length,sll_array_t*
 
 
 __SLL_EXTERNAL void sll_array_duplicate(const sll_array_t* array,sll_integer_t count,sll_array_length_t extra,sll_array_t* out){
+	if (!array->length){
+		SLL_INIT_ARRAY(out);
+	}
 	SLL_ASSERT(extra<array->length);
 	sll_bool_t r=0;
 	if (count<0){
@@ -184,7 +187,7 @@ __SLL_EXTERNAL void sll_array_duplicate(const sll_array_t* array,sll_integer_t c
 	}
 	sll_array_length_t m=(sll_array_length_t)count;
 	if (!count){
-		if (!extra||!array->length){
+		if (!extra){
 			SLL_INIT_ARRAY(out);
 			return;
 		}
