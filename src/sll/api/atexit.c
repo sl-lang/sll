@@ -2,6 +2,7 @@
 #include <sll/_internal/common.h>
 #include <sll/_internal/vm.h>
 #include <sll/common.h>
+#include <sll/data.h>
 #include <sll/gc.h>
 #include <sll/init.h>
 #include <sll/memory.h>
@@ -70,10 +71,7 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_atexit_register(sll_integer_t functio
 	atexit_function_t* function_data=sll_allocate(sizeof(atexit_function_t)+arg_count*sizeof(sll_object_t*));
 	function_data->function=function;
 	function_data->arg_count=arg_count;
-	for (sll_arg_count_t i=0;i<arg_count;i++){
-		SLL_ACQUIRE(*(args+i));
-		function_data->args[i]=*(args+i);
-	}
+	sll_copy_objects(args,arg_count,function_data->args);
 	sll_gc_add_roots(function_data->args,arg_count);
 	*(_atexit_data+_atexit_data_len-1)=function_data;
 	SLL_CRITICAL(sll_platform_lock_release(_atexit_lock));
