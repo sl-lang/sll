@@ -7,7 +7,7 @@
 
 
 __SLL_EXTERNAL __SLL_API_CALL void sll_api_map_extend(sll_map_t* map,const sll_map_t* new){
-	SLL_UNIMPLEMENTED();
+	sll_map_join(NULL,new,map);
 }
 
 

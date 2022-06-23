@@ -319,6 +319,17 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_map_includes(const sll_map_t* m
 
 
 __SLL_EXTERNAL void sll_map_join(const sll_map_t* a,const sll_map_t* b,sll_map_t* out){
+	if (!a){
+		if (!b->length){
+			return;
+		}
+		if (!out->length){
+			sll_map_clone(b,out);
+			return;
+		}
+		out->length+=b->length;
+		SLL_UNIMPLEMENTED();
+	}
 	out->length=a->length+b->length;
 	if (!out->length){
 		out->data=NULL;
