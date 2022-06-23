@@ -406,24 +406,6 @@ __SLL_EXTERNAL void sll_array_or(const sll_array_t* a,const sll_array_t* b,sll_a
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_char_t sll_array_parse_char(const sll_array_t* array){
-	SLL_UNIMPLEMENTED();
-}
-
-
-
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_float_t sll_array_parse_float(const sll_array_t* array){
-	SLL_UNIMPLEMENTED();
-}
-
-
-
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_integer_t sll_array_parse_int(const sll_array_t* array){
-	SLL_UNIMPLEMENTED();
-}
-
-
-
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_array_pop(const sll_array_t* array,sll_array_t* out){
 	if (!array){
 		if (!out->length){

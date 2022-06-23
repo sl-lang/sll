@@ -209,14 +209,11 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_cast(sll_object_t* 
 				return o;
 			}
 		case COMBINED_TYPE_AI:
-			return sll_int_to_object(sll_array_parse_int(&(a->data.array)));
+			return sll_int_to_object(a->data.array.length);
 		case COMBINED_TYPE_AF:
-			return sll_float_to_object(sll_array_parse_float(&(a->data.array)));
+			return sll_float_to_object(a->data.array.length);
 		case COMBINED_TYPE_AC:
-			{
-				sll_char_t c=sll_array_parse_char(&(a->data.array));
-				return SLL_FROM_CHAR(c);
-			}
+			return SLL_FROM_CHAR(a->data.array.length&0xff);
 		case COMBINED_TYPE_AD:
 			SLL_UNIMPLEMENTED();
 		case COMBINED_TYPE_AS:
