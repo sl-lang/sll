@@ -54,15 +54,15 @@ __SLL_EXTERNAL void sll_audit_list(const sll_char_t* name,const sll_char_t* form
 	if (!_audit_enable||!name){
 		return;
 	}
-	sll_string_t nm_s;
-	sll_string_from_pointer(name,&nm_s);
-	sll_array_t arr;
-	sll_new_object_array_list(format,sll_string_length(format),va,&arr);
+	sll_string_t name_str;
+	sll_string_from_pointer(name,&name_str);
+	sll_array_t args;
+	sll_new_object_array_list(format,sll_string_length(format),va,&args);
 	for (sll_array_length_t i=0;i<_audit_cb_len;i++){
-		(*(_audit_cb+i))(&nm_s,&arr);
+		(*(_audit_cb+i))(&name_str,&args);
 	}
-	sll_free_array(&arr);
-	sll_free_string(&nm_s);
+	sll_free_array(&args);
+	sll_free_string(&name_str);
 }
 
 
