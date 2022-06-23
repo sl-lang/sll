@@ -108,7 +108,12 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_cast(sll_object_t* 
 		case COMBINED_TYPE_IC:
 			return SLL_FROM_CHAR((a->data.int_)&0xff);
 		case COMBINED_TYPE_ID:
-			SLL_UNIMPLEMENTED();
+			{
+				sll_complex_t v={
+					a->data.int_,
+				};
+				return sll_complex_to_object(&v);
+			}
 		case COMBINED_TYPE_IS:
 		case COMBINED_TYPE_FS:
 		case COMBINED_TYPE_DS:
