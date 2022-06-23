@@ -3,6 +3,7 @@
 #include <sll/_size_types.h>
 #include <sll/_string_types.h>
 #include <sll/common.h>
+#include <sll/gc.h>
 #include <sll/types.h>
 /**
  * \flags group
@@ -107,6 +108,19 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_contains_character(const void* 
  * \arg void* target
  */
 __SLL_EXTERNAL void sll_copy_data(const void* source,sll_size_t length,void* target);
+
+
+
+/**
+ * \flags func
+ * \name sll_copy_objects
+ * \group data
+ * \desc Docs!
+ * \arg sll_object_t*const* source
+ * \arg sll_size_t count
+ * \arg sll_object_t** target
+ */
+__SLL_EXTERNAL void sll_copy_objects(sll_object_t*const* source,sll_size_t count,sll_object_t** target);
 
 
 

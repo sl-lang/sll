@@ -179,10 +179,8 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_thread_index_t sll_thread_create(sll_integ
 	if (function&&function<=sll_current_runtime_data->assembly_data->function_table.length){
 		sll_thread_index_t o=_thread_new();
 		thread_data_t* thr=*(_thread_data+o);
-		for (;thr->stack_index<arg_count;thr->stack_index++){
-			*(thr->stack+thr->stack_index)=*(args+thr->stack_index);
-			SLL_ACQUIRE(*(args+thr->stack_index));
-		}
+		sll_copy_objects(args,arg_count,thr->stack);
+		thr->stack_index+=arg_count;
 		_call_function(thr,(sll_function_index_t)(function-1),arg_count,0);
 		return o;
 	}

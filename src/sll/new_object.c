@@ -336,12 +336,11 @@ static sll_object_t* _build_single(const sll_char_t** format,sll_string_length_t
 						return sll_array_to_object(NULL);
 					}
 					sll_object_t* o=sll_array_length_to_object(len);
-					while (len){
-						len--;
-						if (!(fl&NEW_OBJECT_FLAG_NO_ACQUIRE)){
-							SLL_ACQUIRE(*(ptr+len));
-						}
-						o->data.array.data[len]=*(ptr+len);
+					if (fl&NEW_OBJECT_FLAG_NO_ACQUIRE){
+						sll_copy_data(ptr,len*sizeof(sll_object_t),o->data.array.data);
+					}
+					else{
+						sll_copy_objects(ptr,len,o->data.array.data);
 					}
 					return o;
 				}

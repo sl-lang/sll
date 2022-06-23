@@ -5,6 +5,7 @@
 - Assembly instruction to push an empty string to the stack: `SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_EMPTY_STRING`
 - Fuzzer now removes timeout crashes caused by generated infinite loops
 - Implemented `path$relative`
+- Implemented `sll_copy_objects`
 - Implemented `SLL_ERROR_UNKNOWN_FUNCTION` and `error$ERROR_UNKNOWN_FUNCTION`
 
 ## Changed
