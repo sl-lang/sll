@@ -110,7 +110,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_cast(sll_object_t* 
 		case COMBINED_TYPE_ID:
 			{
 				sll_complex_t v={
-					a->data.int_,
+					(sll_float_t)a->data.int_,
 				};
 				return sll_complex_to_object(&v);
 			}
