@@ -578,7 +578,9 @@ static const sll_node_t* _generate_jump(const sll_node_t* o,assembly_generator_d
 		case SLL_NODE_TYPE_REF:
 			SLL_UNIMPLEMENTED();
 		case SLL_NODE_TYPE_COMMA:
-			SLL_UNIMPLEMENTED();
+			o=_generate_on_stack(o,g_dt);
+			GENERATE_OPCODE_WITH_LABEL(g_dt,(inv?SLL_ASSEMBLY_INSTRUCTION_TYPE_JZ:SLL_ASSEMBLY_INSTRUCTION_TYPE_JNZ),lbl);
+			return o;
 		case SLL_NODE_TYPE_THREAD_ID:
 			SLL_UNIMPLEMENTED();
 		case SLL_NODE_TYPE_THREAD_WAIT:
