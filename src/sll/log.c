@@ -29,21 +29,21 @@ static file_log_data_t* _get_file_index(const sll_char_t* fp){
 	sll_string_t fp_s;
 	sll_string_from_pointer(fp,&fp_s);
 	sll_string_length_t i=sll_path_split(&fp_s);
-	sll_string_t s;
-	sll_string_from_pointer_length(fp+i,fp_s.length-i,&s);
+	sll_string_t name_str;
+	sll_string_from_pointer_length(fp+i,fp_s.length-i,&name_str);
 	sll_free_string(&fp_s);
 	sll_array_length_t j=0;
 	for (;j<_log_file_data_len;j++){
 		file_log_data_t* k=*(_log_file_data+j);
-		if (STRING_EQUAL(&s,&(k->name))){
-			sll_free_string(&s);
+		if (STRING_EQUAL(&name_str,&(k->name))){
+			sll_free_string(&name_str);
 			return k;
 		}
 	}
 	_log_file_data_len++;
 	_log_file_data=sll_reallocate(_log_file_data,_log_file_data_len*sizeof(file_log_data_t*));
 	file_log_data_t* n=sll_allocate(sizeof(file_log_data_t));
-	sll_copy_data(&s,sizeof(sll_string_t),(sll_string_t*)(&(n->name)));
+	sll_copy_data(&name_str,sizeof(sll_string_t),(sll_string_t*)(&(n->name)));
 	n->data=NULL;
 	n->length=0;
 	n->flags=_log_default;
