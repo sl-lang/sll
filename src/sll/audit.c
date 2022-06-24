@@ -2,6 +2,7 @@
 #include <sll/array.h>
 #include <sll/audit.h>
 #include <sll/common.h>
+#include <sll/container.h>
 #include <sll/gc.h>
 #include <sll/memory.h>
 #include <sll/new_object.h>
@@ -13,16 +14,13 @@
 
 
 
-static sll_audit_callback_t* _audit_cb=NULL;
-static sll_array_length_t _audit_cb_len=0;
+static sll_container_t _audit_data=SLL_CONTAINER_INIT_STRUCT(sll_audit_callback_t);
 static sll_bool_t _audit_enable=1;
 
 
 
 void _audit_cleanup(void){
-	sll_deallocate(_audit_cb);
-	_audit_cb=NULL;
-	_audit_cb_len=0;
+	SLL_CONTAINER_CLEAR(&_audit_data);
 	_audit_enable=1;
 }
 
@@ -58,9 +56,9 @@ __SLL_EXTERNAL void sll_audit_list(const sll_char_t* name,const sll_char_t* form
 	sll_string_from_pointer(name,&name_str);
 	sll_array_t args;
 	sll_new_object_array_list(format,sll_string_length(format),va,&args);
-	for (sll_array_length_t i=0;i<_audit_cb_len;i++){
-		(*(_audit_cb+i))(&name_str,&args);
-	}
+	SLL_CONTAINER_ITER(&_audit_data,sll_audit_callback_t,{
+		container_element(&name_str,&args);
+	});
 	sll_free_array(&args);
 	sll_free_string(&name_str);
 }
@@ -68,26 +66,15 @@ __SLL_EXTERNAL void sll_audit_list(const sll_char_t* name,const sll_char_t* form
 
 
 __SLL_EXTERNAL void sll_audit_register_callback(sll_audit_callback_t callback){
-	_audit_cb_len++;
-	_audit_cb=sll_reallocate(_audit_cb,_audit_cb_len*sizeof(sll_audit_callback_t));
-	*(_audit_cb+_audit_cb_len-1)=callback;
+	SLL_CONTAINER_PUSH(&_audit_data,callback);
 }
 
 
 
 __SLL_EXTERNAL sll_bool_t sll_audit_unregister_callback(sll_audit_callback_t callback){
-	sll_array_length_t i=0;
-	sll_array_length_t j=0;
-	for (;j<_audit_cb_len;j++){
-		if (*(_audit_cb+j)!=callback){
-			*(_audit_cb+i)=*(_audit_cb+j);
-			i++;
-		}
-	}
-	if (i==j){
-		return 0;
-	}
-	_audit_cb_len=i;
-	_audit_cb=sll_reallocate(_audit_cb,_audit_cb_len*sizeof(sll_audit_callback_t));
-	return 1;
+	sll_bool_t o=0;
+	SLL_CONTAINER_FILTER(&_audit_data,sll_audit_callback_t,container_element==callback,{
+		o=1;
+	});
+	return o;
 }
