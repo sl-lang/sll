@@ -2,6 +2,7 @@
 #include <sll/_internal/common.h>
 #include <sll/_internal/vm.h>
 #include <sll/common.h>
+#include <sll/container.h>
 #include <sll/data.h>
 #include <sll/gc.h>
 #include <sll/init.h>
@@ -12,8 +13,7 @@
 
 
 
-static atexit_function_t** _atexit_data=NULL;
-static sll_array_length_t _atexit_data_len=0;
+static sll_container_t _atexit_data=SLL_CONTAINER_INIT_STRUCT(sizeof(atexit_function_t*));
 static sll_lock_handle_t _atexit_lock=NULL;
 static sll_bool_t _atexit_enable=1;
 
@@ -44,14 +44,11 @@ void _atexit_execute(void){
 		return;
 	}
 	_atexit_enable=0;
-	while (_atexit_data_len){
-		_atexit_data_len--;
-		atexit_function_t* function=*(_atexit_data+_atexit_data_len);
-		SLL_RELEASE(sll_execute_function(function->function,function->args,function->arg_count,EXECUTE_FUNCTION_NO_AUDIT_TERMINATE));
-		_delete_atexit_function(function);
-	}
-	sll_deallocate(_atexit_data);
-	_atexit_data=NULL;
+	SLL_CONTAINER_ITER(&_atexit_data,atexit_function_t*,{
+		SLL_RELEASE(sll_execute_function(container_element->function,container_element->args,container_element->arg_count,EXECUTE_FUNCTION_NO_AUDIT_TERMINATE));
+		_delete_atexit_function(container_element);
+	});
+	SLL_CONTAINER_CLEAR(&_atexit_data);
 	_atexit_enable=1;
 }
 
@@ -66,14 +63,12 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_atexit_register(sll_integer_t functio
 		sll_register_cleanup(_cleanup_data,SLL_CLEANUP_TYPE_GLOBAL);
 	}
 	SLL_CRITICAL_ERROR(sll_platform_lock_acquire(_atexit_lock));
-	_atexit_data_len++;
-	_atexit_data=sll_reallocate(_atexit_data,_atexit_data_len*sizeof(atexit_function_t*));
 	atexit_function_t* function_data=sll_allocate(sizeof(atexit_function_t)+arg_count*sizeof(sll_object_t*));
 	function_data->function=function;
 	function_data->arg_count=arg_count;
 	sll_copy_objects(args,arg_count,function_data->args);
 	sll_gc_add_roots(function_data->args,arg_count);
-	*(_atexit_data+_atexit_data_len-1)=function_data;
+	SLL_CONTAINER_PUSH(&_atexit_data,function_data);
 	SLL_CRITICAL(sll_platform_lock_release(_atexit_lock));
 }
 
@@ -85,20 +80,10 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_bool_t sll_api_atexit_unreg
 	}
 	SLL_CRITICAL_ERROR(sll_platform_lock_acquire(_atexit_lock));
 	sll_bool_t o=0;
-	sll_array_length_t i=0;
-	for (sll_array_length_t j=0;j<_atexit_data_len;j++){
-		atexit_function_t* function_data=*(_atexit_data+j);
-		if (function_data->function==function){
-			o=1;
-			_delete_atexit_function(function_data);
-		}
-		else{
-			*(_atexit_data+i)=function_data;
-			i++;
-		}
-	}
-	_atexit_data_len=i;
-	_atexit_data=sll_reallocate(_atexit_data,_atexit_data_len*sizeof(atexit_function_t*));
+	SLL_CONTAINER_FILTER(&_atexit_data,atexit_function_t*,container_element->function==function,{
+		o=1;
+		_delete_atexit_function(container_element);
+	});
 	SLL_CRITICAL(sll_platform_lock_release(_atexit_lock));
 	return o;
 }

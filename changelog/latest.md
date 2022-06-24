@@ -7,6 +7,7 @@
 - Implemented `path$relative`
 - Implemented `sll_copy_objects`
 - Implemented `SLL_ERROR_UNKNOWN_FUNCTION` and `error$ERROR_UNKNOWN_FUNCTION`
+- Implemented the container API: `sll_container_t`, `SLL_CONTAINER_CLEAR`, `SLL_CONTAINER_DEINIT`, `SLL_CONTAINER_FILTER`, `SLL_CONTAINER_INIT`, `SLL_CONTAINER_INIT_STRUCT`, `SLL_CONTAINER_ITER` and `SLL_CONTAINER_PUSH`
 
 ## Changed
 
