@@ -139,8 +139,8 @@
 		sll_handle_container_t* __c=(c); \
 		sll_size_t* __idx=(idx); \
 		if (__c->index!=0xffffffffffffffffull){ \
-			sll_size_t __i=__c->index; \
-			__c->index=((sll_size_t)(*(__c->data+__i)))&0x7fffffffffffffffull; \
+			sll_size_t __i=__c->index&0x7fffffffffffffffull; \
+			__c->index=(sll_size_t)(*(__c->data+__i)); \
 			*__idx=__i; \
 		} \
 		else{ \
@@ -213,6 +213,29 @@
 		__c->data=NULL; \
 		__c->size=0; \
 		__c->index=0xffffffffffffffffull; \
+	} while (0)
+
+
+
+/**
+ * \flags func macro
+ * \name SLL_HANDLE_CONTAINER_ITER
+ * \group container
+ * \desc Docs!
+ * \arg sll_handle_container_t* c
+ * \arg __type__ type
+ * \arg __code__ code
+ */
+#define SLL_HANDLE_CONTAINER_ITER(c,type,code) \
+	do{ \
+		sll_handle_container_t* __c=(c); \
+		for (sll_size_t __i=0;__i<__c->size;__i++){ \
+			type* container_element=(type*)(*(__c->data+__i)); \
+			if (((sll_size_t)container_element)>>63){ \
+				continue; \
+			} \
+			code; \
+		}; \
 	} while (0)
 
 
