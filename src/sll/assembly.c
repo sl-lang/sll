@@ -684,10 +684,14 @@ static const sll_node_t* _generate_assign(const sll_node_t* o,assembly_generator
 	sll_arg_count_t l=o->data.arg_count;
 	o++;
 	if (!l){
+		if (stack){
+			GENERATE_OPCODE(g_dt,SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_ZERO);
+			PUSH;
+		}
 		return o;
 	}
 	if (l==1){
-		return _generate(o,g_dt);
+		return (stack?_generate_on_stack:_generate)(o,g_dt);
 	}
 	while (o->type==SLL_NODE_TYPE_NOP||o->type==SLL_NODE_TYPE_DBG||o->type==SLL_NODE_TYPE_CHANGE_STACK){
 		GENERATE_DEBUG_DATA(g_dt,o);
