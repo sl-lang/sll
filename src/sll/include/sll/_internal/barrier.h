@@ -2,7 +2,6 @@
 #define __SLL__INTERNAL_BARRIER_H__ 1
 #include <sll/_internal/common.h>
 #include <sll/_internal/thread.h>
-#include <sll/_size_types.h>
 #include <sll/barrier.h>
 #include <sll/thread.h>
 #include <sll/types.h>

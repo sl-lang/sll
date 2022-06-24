@@ -2,20 +2,9 @@
 #define __SLL__INTERNAL_LOCK_H__ 1
 #include <sll/_internal/common.h>
 #include <sll/_internal/thread.h>
-#include <sll/_size_types.h>
 #include <sll/lock.h>
 #include <sll/thread.h>
 #include <sll/types.h>
-
-
-
-#define LOCK_UNUSED 0xfffffffe
-#define LOCK_GET_NEXT_ID(l) ((sll_lock_index_t)ADDR((l)->last))
-#define LOCK_SET_NEXT_ID(l,v) ((l)->last=PTR((sll_lock_index_t)(v)))
-
-
-
-typedef __SLL_U32 lock_list_length_t;
 
 
 
