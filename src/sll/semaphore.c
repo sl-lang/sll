@@ -31,7 +31,7 @@ void _semaphore_init(void){
 
 
 sll_bool_t _semaphore_wait(sll_integer_t sempahore_index){
-	if (sempahore_index<0||!SLL_HANDLE_CONTAINER_CHECK(&_semaphore_data,sempahore_index)){
+	if (sempahore_index<0||!SLL_HANDLE_CONTAINER_CHECK(&_semaphore_data,(sll_size_t)sempahore_index)){
 		return 0;
 	}
 	semaphore_t* data=*(_semaphore_data.data+sempahore_index);
