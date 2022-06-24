@@ -2,20 +2,9 @@
 #define __SLL__INTERNAL_SEMAPHORE_H__ 1
 #include <sll/_internal/common.h>
 #include <sll/_internal/thread.h>
-#include <sll/_size_types.h>
 #include <sll/semaphore.h>
 #include <sll/thread.h>
 #include <sll/types.h>
-
-
-
-#define SEMAPHORE_UNUSED 0xffffffff
-#define SEMAPHORE_GET_NEXT_ID(s) ((sll_semaphore_index_t)ADDR((s)->last))
-#define SEMAPHORE_SET_NEXT_ID(s,v) ((s)->last=PTR((sll_semaphore_index_t)(v)))
-
-
-
-typedef __SLL_U32 semaphore_list_length_t;
 
 
 
