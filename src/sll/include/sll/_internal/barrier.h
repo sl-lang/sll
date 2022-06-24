@@ -9,16 +9,6 @@
 
 
 
-#define BARRIER_UNUSED 0xffffffff
-#define BARRIER_GET_NEXT_ID(s) ((sll_barrier_index_t)ADDR((s)->last))
-#define BARRIER_SET_NEXT_ID(s,v) ((s)->last=PTR((sll_barrier_index_t)(v)))
-
-
-
-typedef __SLL_U32 barrier_list_length_t;
-
-
-
 typedef struct _BARRIER{
 	sll_barrier_counter_t count;
 	sll_thread_index_t first;

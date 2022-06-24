@@ -2,6 +2,7 @@
 #include <sll/_internal/scheduler.h>
 #include <sll/barrier.h>
 #include <sll/common.h>
+#include <sll/container.h>
 #include <sll/memory.h>
 #include <sll/platform/lock.h>
 #include <sll/scheduler.h>
@@ -10,10 +11,8 @@
 
 
 
+static sll_handle_container_t _barrier_data;
 static sll_lock_handle_t _barrier_lock;
-static barrier_t* _barrier_data;
-static sll_barrier_index_t _barrier_next;
-static barrier_list_length_t _barrier_len;
 
 
 
@@ -27,7 +26,7 @@ static void _queue_barrier(barrier_t* b){
 
 
 void _barrier_deinit(void){
-	sll_deallocate(_barrier_data);
+	SLL_HANDLE_CONTAINER_CLEAR(&_barrier_data);
 	SLL_CRITICAL(sll_platform_lock_delete(_barrier_lock));
 }
 
@@ -35,27 +34,26 @@ void _barrier_deinit(void){
 
 void _barrier_init(void){
 	_barrier_lock=sll_platform_lock_create(NULL);
-	_barrier_data=NULL;
-	_barrier_next=BARRIER_UNUSED;
-	_barrier_len=0;
+	SLL_HANDLE_CONTAINER_INIT(&_barrier_data);
 }
 
 
 
 sll_bool_t _barrier_wait(sll_integer_t barrier_index,sll_integer_t value,sll_bool_t greate_or_equal){
-	if (barrier_index<0||barrier_index>=_barrier_len||(_barrier_data+barrier_index)->count==BARRIER_UNUSED){
+	if (!SLL_HANDLE_CONTAINER_CHECK(&_barrier_data,barrier_index)){
 		return 0;
 	}
-	if ((_barrier_data+barrier_index)->count==value||(greate_or_equal&&(_barrier_data+barrier_index)->count>value)){
+	barrier_t* data=*(_barrier_data.data+barrier_index);
+	if (data->count==value||(greate_or_equal&&data->count>value)){
 		return 0;
 	}
-	if ((_barrier_data+barrier_index)->first==SLL_UNKNOWN_THREAD_INDEX){
-		(_barrier_data+barrier_index)->first=_scheduler_current_thread_index;
+	if (data->first==SLL_UNKNOWN_THREAD_INDEX){
+		data->first=_scheduler_current_thread_index;
 	}
 	else{
-		(_barrier_data+barrier_index)->last->next=_scheduler_current_thread_index;
+		data->last->next=_scheduler_current_thread_index;
 	}
-	(_barrier_data+barrier_index)->last=_scheduler_current_thread;
+	data->last=_scheduler_current_thread;
 	_scheduler_current_thread->next=SLL_UNKNOWN_THREAD_INDEX;
 	_scheduler_current_thread->state=THREAD_STATE_WAIT_BARRIER;
 	_scheduler_current_thread_index=SLL_UNKNOWN_THREAD_INDEX;
@@ -66,30 +64,24 @@ sll_bool_t _barrier_wait(sll_integer_t barrier_index,sll_integer_t value,sll_boo
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_barrier_index_t sll_barrier_create(void){
 	SLL_CRITICAL_ERROR(sll_platform_lock_acquire(_barrier_lock));
-	sll_barrier_index_t o=_barrier_next;
-	if (o==BARRIER_UNUSED){
-		o=_barrier_len;
-		_barrier_len++;
-		_barrier_data=sll_reallocate(_barrier_data,_barrier_len*sizeof(barrier_t));
-	}
-	else{
-		_barrier_next=BARRIER_GET_NEXT_ID(_barrier_data+o);
-	}
-	(_barrier_data+o)->count=0;
+	sll_size_t o;
+	SLL_HANDLE_CONTAINER_ALLOC(&_barrier_data,&o);
+	barrier_t* data=sll_allocate(sizeof(barrier_t));
+	*(_barrier_data.data+o)=data;
+	data->count=0;
 	SLL_CRITICAL(sll_platform_lock_release(_barrier_lock));
-	return o;
+	return (sll_barrier_index_t)o;
 }
 
 
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_barrier_delete(sll_barrier_index_t barrier_index){
-	if (barrier_index>=_barrier_len||(_barrier_data+barrier_index)->count==BARRIER_UNUSED){
+	if (!SLL_HANDLE_CONTAINER_CHECK(&_barrier_data,barrier_index)){
 		return 0;
 	}
 	SLL_CRITICAL_ERROR(sll_platform_lock_acquire(_barrier_lock));
-	(_barrier_data+barrier_index)->count=BARRIER_UNUSED;
-	BARRIER_SET_NEXT_ID(_barrier_data+barrier_index,_barrier_next);
-	_barrier_next=barrier_index;
+	sll_deallocate(*(_barrier_data.data+barrier_index));
+	SLL_HANDLE_CONTAINER_DEALLOC(&_barrier_data,barrier_index);
 	SLL_CRITICAL(sll_platform_lock_release(_barrier_lock));
 	return 1;
 }
@@ -97,23 +89,25 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_barrier_delete(sll_barrier_inde
 
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_barrier_counter_t sll_barrier_increase(sll_barrier_index_t barrier_index){
-	if (barrier_index>=_barrier_len||(_barrier_data+barrier_index)->count==BARRIER_UNUSED){
+	if (!SLL_HANDLE_CONTAINER_CHECK(&_barrier_data,barrier_index)){
 		return 0;
 	}
-	(_barrier_data+barrier_index)->count++;
-	_queue_barrier(_barrier_data+barrier_index);
-	return (_barrier_data+barrier_index)->count;
+	barrier_t* data=*(_barrier_data.data+barrier_index);
+	data->count++;
+	_queue_barrier(data);
+	return data->count;
 }
 
 
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_barrier_reset(sll_barrier_index_t barrier_index){
-	if (barrier_index>=_barrier_len||(_barrier_data+barrier_index)->count==BARRIER_UNUSED){
+	if (!SLL_HANDLE_CONTAINER_CHECK(&_barrier_data,barrier_index)){
 		return 0;
 	}
-	if ((_barrier_data+barrier_index)->count){
-		(_barrier_data+barrier_index)->count=0;
-		_queue_barrier(_barrier_data+barrier_index);
+	barrier_t* data=*(_barrier_data.data+barrier_index);
+	if (data->count){
+		data->count=0;
+		_queue_barrier(data);
 	}
 	return 1;
 }

@@ -13,7 +13,7 @@
 
 
 
-static sll_container_t _atexit_data=SLL_CONTAINER_INIT_STRUCT(sizeof(atexit_function_t*));
+static sll_container_t _atexit_data=SLL_CONTAINER_INIT_STRUCT;
 static sll_lock_handle_t _atexit_lock=NULL;
 static sll_bool_t _atexit_enable=1;
 

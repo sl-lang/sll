@@ -14,7 +14,7 @@
 
 
 
-static sll_container_t _audit_data=SLL_CONTAINER_INIT_STRUCT(sll_audit_callback_t);
+static sll_container_t _audit_data=SLL_CONTAINER_INIT_STRUCT;
 static sll_bool_t _audit_enable=1;
 
 

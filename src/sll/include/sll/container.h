@@ -13,21 +13,6 @@
 
 
 /**
- * \flags type
- * \name sll_container_t
- * \group container
- * \desc Docs!
- * \arg void** data
- * \arg sll_size_t size
- */
-typedef struct _SLL_CONTAINER{
-	void** data;
-	sll_size_t size;
-} sll_container_t;
-
-
-
-/**
  * \flags func macro
  * \name SLL_CONTAINER_CLEAR
  * \group container
@@ -35,23 +20,6 @@ typedef struct _SLL_CONTAINER{
  * \arg sll_container_t* c
  */
 #define SLL_CONTAINER_CLEAR(c) \
-	do{ \
-		sll_container_t* __c=(c); \
-		sll_allocator_release(__c->data); \
-		__c->data=NULL; \
-		__c->size&=0xff; \
-	} while (0)
-
-
-
-/**
- * \flags func macro
- * \name SLL_CONTAINER_DEINIT
- * \group container
- * \desc Docs!
- * \arg sll_container_t* c
- */
-#define SLL_CONTAINER_DEINIT(c) \
 	do{ \
 		sll_container_t* __c=(c); \
 		sll_allocator_release(__c->data); \
@@ -74,9 +42,8 @@ typedef struct _SLL_CONTAINER{
 #define SLL_CONTAINER_FILTER(c,type,check,delete) \
 	do{ \
 		sll_container_t* __c=(c); \
-		sll_size_t __sz=__c->size>>8; \
 		sll_size_t __i=0; \
-		for (sll_size_t __j=0;__j<__sz;__j++){ \
+		for (sll_size_t __j=0;__j<__c->size;__j++){ \
 			type container_element=(type)(*(__c->data+__j)); \
 			if (check){ \
 				delete; \
@@ -86,9 +53,9 @@ typedef struct _SLL_CONTAINER{
 				__i++; \
 			} \
 		}; \
-		if (__i!=__sz){ \
-			__c->size=(__i<<8)|(__c->size&0xff); \
-			sll_allocator_resize((void**)(&(__c->data)),__i*(__c->size&0xff)); \
+		if (__i!=__c->size){ \
+			__c->size=__i; \
+			sll_allocator_resize((void**)(&(__c->data)),__i*sizeof(type)); \
 		} \
 	} while (0)
 
@@ -100,25 +67,24 @@ typedef struct _SLL_CONTAINER{
  * \group container
  * \desc Docs!
  * \arg sll_container_t* c
- * \arg __type__ type
  */
-#define SLL_CONTAINER_INIT(c,type) \
+#define SLL_CONTAINER_INIT(c) \
 	do{ \
 		sll_container_t* __c=(c); \
 		__c->data=NULL; \
-		__c->size=sizeof(type)&0xff; \
+		__c->size=0; \
 	} while (0)
 
 
 
 /**
- * \flags func macro
+ * \flags macro var
  * \name SLL_CONTAINER_INIT_STRUCT
  * \group container
  * \desc Docs!
- * \arg __type__ type
+ * \type sll_container_t
  */
-#define SLL_CONTAINER_INIT_STRUCT(type) {NULL,sizeof(type)&0xff}
+#define SLL_CONTAINER_INIT_STRUCT {NULL,0}
 
 
 
@@ -134,8 +100,7 @@ typedef struct _SLL_CONTAINER{
 #define SLL_CONTAINER_ITER(c,type,code) \
 	do{ \
 		sll_container_t* __c=(c); \
-		sll_size_t __sz=__c->size>>8; \
-		for (sll_size_t __i=0;__i<__sz;__i++){ \
+		for (sll_size_t __i=0;__i<__c->size;__i++){ \
 			type container_element=(type)(*(__c->data+__i)); \
 			code; \
 		}; \
@@ -154,11 +119,144 @@ typedef struct _SLL_CONTAINER{
 #define SLL_CONTAINER_PUSH(c,elem) \
 	do{ \
 		sll_container_t* __c=(c); \
-		sll_size_t __i=(__c->size>>8)+1; \
-		sll_allocator_resize((void**)(&(__c->data)),__i*(__c->size&0xff)); \
-		*(__c->data+__i-1)=(void*)(elem); \
-		__c->size=(__i<<8)|(__c->size&0xff); \
+		__c->size++; \
+		sll_allocator_resize((void**)(&(__c->data)),__c->size*sizeof(elem)); \
+		*(__c->data+__c->size-1)=(void*)(elem); \
 	} while (0)
+
+
+
+/**
+ * \flags func macro
+ * \name SLL_HANDLE_CONTAINER_ALLOC
+ * \group container
+ * \desc Docs!
+ * \arg sll_handle_container_t* c
+ * \arg sll_size_t* idx
+ */
+#define SLL_HANDLE_CONTAINER_ALLOC(c,idx) \
+	do{ \
+		sll_handle_container_t* __c=(c); \
+		sll_size_t* __idx=(idx); \
+		if (__c->index!=0xffffffffffffffffull){ \
+			sll_size_t __i=__c->index; \
+			__c->index=((sll_size_t)(*(__c->data+__i)))&0x7fffffffffffffffull; \
+			*__idx=__i; \
+		} \
+		else{ \
+			*__idx=__c->size; \
+			__c->size++; \
+			sll_allocator_resize((void**)(&(__c->data)),__c->size*sizeof(void*)); \
+		} \
+	} while (0)
+
+
+
+/**
+ * \flags func macro
+ * \name SLL_HANDLE_CONTAINER_CHECK
+ * \group container
+ * \desc Docs!
+ * \arg sll_handle_container_t* c
+ * \arg sll_size_t index
+ */
+#define SLL_HANDLE_CONTAINER_CHECK(c,index) ((index)<(c)->size&&!(((sll_size_t)(*((c)->data+(index))))>>63))
+
+
+
+/**
+ * \flags func macro
+ * \name SLL_HANDLE_CONTAINER_CLEAR
+ * \group container
+ * \desc Docs!
+ * \arg sll_handle_container_t* c
+ */
+#define SLL_HANDLE_CONTAINER_CLEAR(c) \
+	do{ \
+		sll_handle_container_t* __c=(c); \
+		sll_allocator_release(__c->data); \
+		__c->data=NULL; \
+		__c->size=0; \
+		__c->index=0xffffffffffffffffull; \
+	} while (0)
+
+
+
+/**
+ * \flags func macro
+ * \name SLL_HANDLE_CONTAINER_DEALLOC
+ * \group container
+ * \desc Docs!
+ * \arg sll_handle_container_t* c
+ * \arg sll_size_t idx
+ */
+#define SLL_HANDLE_CONTAINER_DEALLOC(c,idx) \
+	do{ \
+		sll_handle_container_t* __c=(c); \
+		sll_size_t __i=(idx); \
+		*(__c->data+__i)=(void*)(__c->index|0x8000000000000000ull); \
+		__c->index=__i; \
+	} while (0)
+
+
+
+/**
+ * \flags func macro
+ * \name SLL_HANDLE_CONTAINER_INIT
+ * \group container
+ * \desc Docs!
+ * \arg sll_handle_container_t* c
+ */
+#define SLL_HANDLE_CONTAINER_INIT(c) \
+	do{ \
+		sll_handle_container_t* __c=(c); \
+		__c->data=NULL; \
+		__c->size=0; \
+		__c->index=0xffffffffffffffffull; \
+	} while (0)
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_HANDLE_CONTAINER_INIT_STRUCT
+ * \group container
+ * \desc Docs!
+ * \type sll_handle_container_t
+ */
+#define SLL_HANDLE_CONTAINER_INIT_STRUCT {NULL,0,0xffffffffffffffffull}
+
+
+
+/**
+ * \flags type
+ * \name sll_container_t
+ * \group container
+ * \desc Docs!
+ * \arg void** data
+ * \arg sll_size_t size
+ */
+typedef struct _SLL_CONTAINER{
+	void** data;
+	sll_size_t size;
+} sll_container_t;
+
+
+
+/**
+ * \flags type
+ * \name sll_handle_container_t
+ * \group container
+ * \desc Docs!
+ * \arg void** data
+ * \arg sll_size_t size
+ * \arg sll_size_t index
+ */
+typedef struct _SLL_HANDLE_CONTAINER{
+	void** data;
+	sll_size_t size;
+	sll_size_t index;
+} sll_handle_container_t;
 
 
 
