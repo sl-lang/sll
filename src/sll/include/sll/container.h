@@ -68,7 +68,8 @@ typedef struct _SLL_CONTAINER{
  * \desc Docs!
  * \arg sll_container_t* c
  * \arg __type__ type
- * \arg __code__ code
+ * \arg __code__ check
+ * \arg __code__ delete
  */
 #define SLL_CONTAINER_FILTER(c,type,check,delete) \
 	do{ \
