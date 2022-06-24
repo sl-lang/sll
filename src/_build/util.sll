@@ -120,8 +120,8 @@
 	(? (||
 		(<- execute config$FUZZER_COMPILATION_COMMAND)
 		(<- execute config$FUZZER_DEBUGGER_COMPILATION_COMMAND)
-		(<- execute config$FUZZER_EXECUTION_COMMAND)
 	) (<- thread$exit 1))
+	(<- execute config$FUZZER_EXECUTION_COMMAND)
 	(= files (<- path$list_dir "build/fuzzer_output"))
 	(-> (= i 0) (< i ($ files))
 		(= file_path (+
