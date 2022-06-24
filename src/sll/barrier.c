@@ -40,7 +40,7 @@ void _barrier_init(void){
 
 
 sll_bool_t _barrier_wait(sll_integer_t barrier_index,sll_integer_t value,sll_bool_t greate_or_equal){
-	if (!SLL_HANDLE_CONTAINER_CHECK(&_barrier_data,barrier_index)){
+	if (barrier_index<0||!SLL_HANDLE_CONTAINER_CHECK(&_barrier_data,(sll_size_t)barrier_index)){
 		return 0;
 	}
 	barrier_t* data=*(_barrier_data.data+barrier_index);
