@@ -63,16 +63,13 @@ static void _log_location(const sll_string_t* file_path,const sll_string_t* func
 	sll_file_write_char(sll_stdout,':',NULL);
 	SLL_ASSERT(line);
 	sll_char_t bf[20];
-	sll_string_length_t i=0;
+	sll_string_length_t i=20;
 	while (line){
-		bf[i]=line%10;
-		line/=10;
-		i++;
-	}
-	while (i){
 		i--;
-		sll_file_write_char(wf,bf[i]+48,NULL);
+		bf[i]=(line%10)+48;
+		line/=10;
 	}
+	sll_file_write(sll_stdout,bf+i,20-i,NULL);
 	sll_file_write_char(sll_stdout,'(',NULL);
 	sll_file_write(sll_stdout,func->data,func->length,NULL);
 	PRINT_STATIC_STRING(")] ",sll_stdout);
