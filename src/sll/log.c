@@ -2,7 +2,6 @@
 #include <sll/_internal/log.h>
 #include <sll/_internal/print.h>
 #include <sll/_internal/string.h>
-#include <sll/api/path.h>
 #include <sll/common.h>
 #include <sll/data.h>
 #include <sll/file.h>
@@ -26,24 +25,20 @@ static sll_array_length_t _log_file_data_len=0;
 
 
 static file_log_data_t* _get_file_index(const sll_char_t* fp){
-	sll_string_t fp_s;
-	sll_string_from_pointer(fp,&fp_s);
-	sll_string_length_t i=sll_path_split(&fp_s);
-	sll_string_t name_str;
-	sll_string_from_pointer_length(fp+i,fp_s.length-i,&name_str);
-	sll_free_string(&fp_s);
+	sll_string_t file_path_str;
+	sll_string_from_pointer(fp,&file_path_str);
 	sll_array_length_t j=0;
 	for (;j<_log_file_data_len;j++){
 		file_log_data_t* k=*(_log_file_data+j);
-		if (STRING_EQUAL(&name_str,&(k->name))){
-			sll_free_string(&name_str);
+		if (STRING_EQUAL(&file_path_str,&(k->name))){
+			sll_free_string(&file_path_str);
 			return k;
 		}
 	}
 	_log_file_data_len++;
 	_log_file_data=sll_reallocate(_log_file_data,_log_file_data_len*sizeof(file_log_data_t*));
 	file_log_data_t* n=sll_allocate(sizeof(file_log_data_t));
-	sll_copy_data(&name_str,sizeof(sll_string_t),(sll_string_t*)(&(n->name)));
+	sll_copy_data(&file_path_str,sizeof(sll_string_t),(sll_string_t*)(&(n->name)));
 	n->data=NULL;
 	n->length=0;
 	n->flags=_log_default;
@@ -54,20 +49,20 @@ static file_log_data_t* _get_file_index(const sll_char_t* fp){
 
 
 static function_log_data_t* _get_func_index(file_log_data_t* f_dt,const sll_char_t* fn){
-	sll_string_t s;
-	sll_string_from_pointer(fn,&s);
+	sll_string_t func_str;
+	sll_string_from_pointer(fn,&func_str);
 	sll_array_length_t i=0;
 	for (;i<f_dt->length;i++){
 		function_log_data_t* k=*(f_dt->data+i);
-		if (STRING_EQUAL(&s,&(k->name))){
-			sll_free_string(&s);
+		if (STRING_EQUAL(&func_str,&(k->name))){
+			sll_free_string(&func_str);
 			return k;
 		}
 	}
 	f_dt->length++;
 	f_dt->data=sll_reallocate(f_dt->data,f_dt->length*sizeof(function_log_data_t*));
 	function_log_data_t* n=sll_allocate(sizeof(function_log_data_t));
-	sll_copy_data(&s,sizeof(sll_string_t),(sll_string_t*)(&(n->name)));
+	sll_copy_data(&func_str,sizeof(sll_string_t),(sll_string_t*)(&(n->name)));
 	n->flags=f_dt->flags;
 	*(f_dt->data+i)=n;
 	return n;
