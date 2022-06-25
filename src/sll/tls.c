@@ -30,8 +30,8 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t** sll_tls_get(sll_tls_object_t* t
 	}
 _retry:;
 	sll_tls_object_length_t i=_scheduler_current_thread_index%tls->length;
-	sll_tls_object_length_t c=tls->length;
-	while (c){
+	sll_tls_object_length_t j=tls->length;
+	while (j){
 		sll_tls_value_t* v=tls->data+i;
 		if (!v->value){
 			v->thread_index=_scheduler_current_thread_index;
@@ -45,7 +45,7 @@ _retry:;
 		if (i==tls->length){
 			i=0;
 		}
-		c--;
+		j--;
 	}
 	tls->length++;
 	sll_tls_value_t* n_dt=sll_zero_allocate(tls->length*sizeof(sll_tls_value_t));
