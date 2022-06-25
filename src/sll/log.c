@@ -24,9 +24,9 @@ static sll_array_length_t _log_file_data_len=0;
 
 
 
-static file_log_data_t* _get_file_index(const sll_char_t* fp){
+static file_log_data_t* _get_file_index(const sll_char_t* file_path){
 	sll_string_t file_path_str;
-	sll_string_from_pointer(fp,&file_path_str);
+	sll_string_from_pointer(file_path,&file_path_str);
 	sll_array_length_t j=0;
 	for (;j<_log_file_data_len;j++){
 		file_log_data_t* k=*(_log_file_data+j);
@@ -48,38 +48,38 @@ static file_log_data_t* _get_file_index(const sll_char_t* fp){
 
 
 
-static function_log_data_t* _get_func_index(file_log_data_t* f_dt,const sll_char_t* fn){
+static function_log_data_t* _get_func_index(file_log_data_t* file_data,const sll_char_t* func){
 	sll_string_t func_str;
-	sll_string_from_pointer(fn,&func_str);
+	sll_string_from_pointer(func,&func_str);
 	sll_array_length_t i=0;
-	for (;i<f_dt->length;i++){
-		function_log_data_t* k=*(f_dt->data+i);
+	for (;i<file_data->length;i++){
+		function_log_data_t* k=*(file_data->data+i);
 		if (STRING_EQUAL(&func_str,&(k->name))){
 			sll_free_string(&func_str);
 			return k;
 		}
 	}
-	f_dt->length++;
-	f_dt->data=sll_reallocate(f_dt->data,f_dt->length*sizeof(function_log_data_t*));
+	file_data->length++;
+	file_data->data=sll_reallocate(file_data->data,file_data->length*sizeof(function_log_data_t*));
 	function_log_data_t* n=sll_allocate(sizeof(function_log_data_t));
 	sll_copy_data(&func_str,sizeof(sll_string_t),(sll_string_t*)(&(n->name)));
-	n->flags=f_dt->flags;
-	*(f_dt->data+i)=n;
+	n->flags=file_data->flags;
+	*(file_data->data+i)=n;
 	return n;
 }
 
 
 
-static void _log_location(const sll_string_t* fp,const sll_string_t* fn,sll_file_offset_t ln,sll_file_t* wf){
+static void _log_location(const sll_string_t* file_path,const sll_string_t* func,sll_file_offset_t line,sll_file_t* wf){
 	sll_file_write_char(sll_stdout,'[',NULL);
-	sll_file_write(sll_stdout,fp->data,fp->length,NULL);
+	sll_file_write(sll_stdout,file_path->data,file_path->length,NULL);
 	sll_file_write_char(sll_stdout,':',NULL);
-	SLL_ASSERT(ln);
+	SLL_ASSERT(line);
 	sll_char_t bf[20];
 	sll_string_length_t i=0;
-	while (ln){
-		bf[i]=ln%10;
-		ln/=10;
+	while (line){
+		bf[i]=line%10;
+		line/=10;
 		i++;
 	}
 	while (i){
@@ -87,7 +87,7 @@ static void _log_location(const sll_string_t* fp,const sll_string_t* fn,sll_file
 		sll_file_write_char(wf,bf[i]+48,NULL);
 	}
 	sll_file_write_char(sll_stdout,'(',NULL);
-	sll_file_write(sll_stdout,fn->data,fn->length,NULL);
+	sll_file_write(sll_stdout,func->data,func->length,NULL);
 	PRINT_STATIC_STRING(")] ",sll_stdout);
 }
 
