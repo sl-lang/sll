@@ -20,6 +20,7 @@
 - Fixed `json$parse` with no arguments
 - Fixed `nil` pointer dereference in `sll_api_process_join`
 - Fixed `sll_string_increase` with empty string argument
+- Fixed decoding of JSON strings
 - Fixed GC root assignment
 - Fixed multiple assembly generation bugs
 - Fixed nested function definitions

@@ -54,7 +54,10 @@ static void _parse_json_string(sll_json_parser_state_t* p,sll_string_t* out){
 		else{
 			c=**p;
 			(*p)++;
-			if (c=='b'){
+			if (c=='\\'||c=='\''||c=='"'){
+				out->data[out->length]=c;
+			}
+			else if (c=='b'){
 				out->data[out->length]=8;
 			}
 			else if (c=='f'){
