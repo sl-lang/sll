@@ -28,16 +28,10 @@ static sll_bool_t _file_cleanup=0;
 
 
 static void _release_data(void){
-	SLL_HANDLE_CONTAINER_ITER(&_file_data,extended_file_t,file,{
-		if (file->is_pointer){
-			sll_file_close(file->data.pointer);
-		}
-		else{
-			sll_file_close(&(file->data.struct_));
-		}
+	SLL_HANDLE_CONTAINER_ITER_CLEAR(&_file_data,extended_file_t,file,{
+		sll_file_close((file->is_pointer?file->data.pointer:&(file->data.struct_)));
 		sll_deallocate(file);
 	});
-	SLL_HANDLE_CONTAINER_CLEAR(&_file_data);
 	_file_cleanup=0;
 }
 
@@ -61,21 +55,16 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_bool_t sll_api_file_close(s
 	if (!SLL_HANDLE_CONTAINER_CHECK(&_file_data,handle)){
 		return 0;
 	}
-	extended_file_t* data=*(_file_data.data+handle);
-	data->rc--;
-	if (data->rc){
+	extended_file_t* file=*(_file_data.data+handle);
+	file->rc--;
+	if (file->rc){
 		return 1;
 	}
-	if (data->data_pointer){
-		sll_deallocate(data->data_pointer);
+	sll_file_close((file->is_pointer?file->data.pointer:&(file->data.struct_)));
+	if (file->data_pointer){
+		sll_deallocate(file->data_pointer);
 	}
-	if (data->is_pointer){
-		sll_file_close(data->data.pointer);
-	}
-	else{
-		sll_file_close(&(data->data.struct_));
-	}
-	sll_deallocate(data);
+	sll_deallocate(file);
 	SLL_HANDLE_CONTAINER_DEALLOC(&_file_data,handle);
 	return 1;
 }

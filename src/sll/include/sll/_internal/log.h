@@ -17,7 +17,6 @@ typedef struct _FUNCTION_LOG_DATA{
 typedef struct _FILE_LOG_DATA{
 	const sll_string_t name;
 	sll_container_t functions;
-	sll_array_length_t length;
 	sll_logger_flags_t flags;
 } file_log_data_t;
 

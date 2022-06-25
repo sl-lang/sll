@@ -44,11 +44,10 @@ void _atexit_execute(void){
 		return;
 	}
 	_atexit_enable=0;
-	SLL_CONTAINER_ITER(&_atexit_data,atexit_function_t*,func,{
+	SLL_CONTAINER_ITER_CLEAR(&_atexit_data,atexit_function_t*,func,{
 		SLL_RELEASE(sll_execute_function(func->function,func->args,func->arg_count,EXECUTE_FUNCTION_NO_AUDIT_TERMINATE));
 		_delete_atexit_function(func);
 	});
-	SLL_CONTAINER_CLEAR(&_atexit_data);
 	_atexit_enable=1;
 }
 

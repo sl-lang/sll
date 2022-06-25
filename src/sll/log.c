@@ -15,8 +15,8 @@
 
 
 
-static sll_logger_flags_t _log_default=0;
 static sll_container_t _log_data=SLL_CONTAINER_INIT_STRUCT;
+static sll_logger_flags_t _log_default=0;
 
 
 
@@ -32,7 +32,6 @@ static file_log_data_t* _get_file_data(const sll_char_t* file_path){
 	file_log_data_t* data=sll_allocate(sizeof(file_log_data_t));
 	sll_copy_data(&file_path_str,sizeof(sll_string_t),(sll_string_t*)(&(data->name)));
 	SLL_CONTAINER_INIT(&(data->functions));
-	data->length=0;
 	data->flags=_log_default;
 	SLL_CONTAINER_PUSH(&_log_data,data);
 	return data;
@@ -82,16 +81,14 @@ static void _log_location(const sll_string_t* file_path,const sll_string_t* func
 
 
 void _log_release_data(void){
-	SLL_CONTAINER_ITER(&_log_data,file_log_data_t*,file,{
+	SLL_CONTAINER_ITER_CLEAR(&_log_data,file_log_data_t*,file,{
 		sll_free_string((sll_string_t*)(&(file->name)));
-		SLL_CONTAINER_ITER(&(file->functions),function_log_data_t*,function,{
+		SLL_CONTAINER_ITER_CLEAR(&(file->functions),function_log_data_t*,function,{
 			sll_free_string((sll_string_t*)(&(function->name)));
 			sll_deallocate(function);
 		});
-		SLL_CONTAINER_CLEAR(&(file->functions));
 		sll_deallocate(file);
 	});
-	SLL_CONTAINER_CLEAR(&_log_data);
 	_log_default=0;
 }
 

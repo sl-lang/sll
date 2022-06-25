@@ -7,8 +7,8 @@
 - Implemented `path$relative`
 - Implemented `sll_copy_objects`
 - Implemented `SLL_ERROR_UNKNOWN_FUNCTION` and `error$ERROR_UNKNOWN_FUNCTION`
-- Implemented the container API: `SLL_CONTAINER_CLEAR`, `SLL_CONTAINER_FILTER`, `SLL_CONTAINER_INIT`, `SLL_CONTAINER_INIT_STRUCT`, `SLL_CONTAINER_ITER`, `SLL_CONTAINER_PUSH` and `sll_container_t`
-- Implemented the handle container API: `SLL_HANDLE_CONTAINER_ALLOC`, `SLL_HANDLE_CONTAINER_CHECK`, `SLL_HANDLE_CONTAINER_CLEAR`, `SLL_HANDLE_CONTAINER_DEALLOC`, `SLL_HANDLE_CONTAINER_INIT`, `SLL_HANDLE_CONTAINER_INIT_STRUCT`, `SLL_HANDLE_CONTAINER_ITER` and `sll_handle_container_t`
+- Implemented the container API: `SLL_CONTAINER_CLEAR`, `SLL_CONTAINER_FILTER`, `SLL_CONTAINER_INIT`, `SLL_CONTAINER_INIT_STRUCT`, `SLL_CONTAINER_ITER`, `SLL_CONTAINER_ITER_CLEAR`, `SLL_CONTAINER_PUSH` and `sll_container_t`
+- Implemented the handle container API: `SLL_HANDLE_CONTAINER_ALLOC`, `SLL_HANDLE_CONTAINER_CHECK`, `SLL_HANDLE_CONTAINER_CLEAR`, `SLL_HANDLE_CONTAINER_DEALLOC`, `SLL_HANDLE_CONTAINER_INIT`, `SLL_HANDLE_CONTAINER_INIT_STRUCT`, `SLL_HANDLE_CONTAINER_ITER`, `SLL_HANDLE_CONTAINER_ITER_CLEAR` and `sll_handle_container_t`
 
 ## Changed
 
@@ -22,6 +22,7 @@
 - Fixed nested function definitions
 - Fixed weakref API global state access
 - Fuzzers now restore the current working directory to prevent global state changing crashes
+- Logger now uses full file paths
 - Object creation symbol now works with complex numbers
 - Root thread can no longer be deleted
 - Static objects are no loner added as GC roots

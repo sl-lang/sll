@@ -112,6 +112,25 @@
 
 /**
  * \flags func macro
+ * \name SLL_CONTAINER_ITER_CLEAR
+ * \group container
+ * \desc Docs!
+ * \arg sll_container_t* c
+ * \arg __type__ type
+ * \arg __identifier__ var
+ * \arg __code__ code
+ */
+#define SLL_CONTAINER_ITER_CLEAR(c,type,var,code) \
+	do{ \
+		sll_container_t* __c_tmp=(c); \
+		SLL_CONTAINER_ITER(__c_tmp,type,var,code); \
+		SLL_CONTAINER_CLEAR(__c_tmp); \
+	} while (0)
+
+
+
+/**
+ * \flags func macro
  * \name SLL_CONTAINER_PUSH
  * \group container
  * \desc Docs!
@@ -239,6 +258,25 @@
 			} \
 			code; \
 		}; \
+	} while (0)
+
+
+
+/**
+ * \flags func macro
+ * \name SLL_HANDLE_CONTAINER_ITER_CLEAR
+ * \group container
+ * \desc Docs!
+ * \arg sll_handle_container_t* c
+ * \arg __type__ type
+ * \arg __identifier__ var
+ * \arg __code__ code
+ */
+#define SLL_HANDLE_CONTAINER_ITER_CLEAR(c,type,var,code) \
+	do{ \
+		sll_handle_container_t* __c_tmp=(c); \
+		SLL_HANDLE_CONTAINER_ITER(__c_tmp,type,var,code); \
+		SLL_HANDLE_CONTAINER_CLEAR(__c_tmp); \
 	} while (0)
 
 
