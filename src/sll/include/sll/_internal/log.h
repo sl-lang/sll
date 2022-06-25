@@ -7,18 +7,18 @@
 
 
 
-typedef struct _FUNCTION_LOG_DATA{
+typedef struct _LOG_FUNCTION_DATA{
 	const sll_string_t name;
 	sll_logger_flags_t flags;
-} function_log_data_t;
+} log_function_data_t;
 
 
 
-typedef struct _FILE_LOG_DATA{
+typedef struct _LOG_FILE_DATA{
 	const sll_string_t name;
 	sll_container_t functions;
 	sll_logger_flags_t flags;
-} file_log_data_t;
+} log_file_data_t;
 
 
 

@@ -20,16 +20,16 @@ static sll_logger_flags_t _log_default=0;
 
 
 
-static file_log_data_t* _get_file_data(const sll_char_t* file_path){
+static log_file_data_t* _get_file_data(const sll_char_t* file_path){
 	sll_string_t file_path_str;
 	sll_string_from_pointer(file_path,&file_path_str);
-	SLL_CONTAINER_ITER(&_log_data,file_log_data_t*,file,{
+	SLL_CONTAINER_ITER(&_log_data,log_file_data_t*,file,{
 		if (STRING_EQUAL(&file_path_str,&(file->name))){
 			sll_free_string(&file_path_str);
 			return file;
 		}
 	});
-	file_log_data_t* data=sll_allocate(sizeof(file_log_data_t));
+	log_file_data_t* data=sll_allocate(sizeof(log_file_data_t));
 	sll_copy_data(&file_path_str,sizeof(sll_string_t),(sll_string_t*)(&(data->name)));
 	SLL_CONTAINER_INIT(&(data->functions));
 	data->flags=_log_default;
@@ -39,17 +39,17 @@ static file_log_data_t* _get_file_data(const sll_char_t* file_path){
 
 
 
-static function_log_data_t* _get_function_data(file_log_data_t* file,const sll_char_t* func){
-	sll_string_t func_str;
-	sll_string_from_pointer(func,&func_str);
-	SLL_CONTAINER_ITER(&(file->functions),function_log_data_t*,function,{
-		if (STRING_EQUAL(&func_str,&(function->name))){
-			sll_free_string(&func_str);
+static log_function_data_t* _get_function_data(log_file_data_t* file,const sll_char_t* function_name){
+	sll_string_t function_name_str;
+	sll_string_from_pointer(function_name,&function_name_str);
+	SLL_CONTAINER_ITER(&(file->functions),log_function_data_t*,function,{
+		if (STRING_EQUAL(&function_name_str,&(function->name))){
+			sll_free_string(&function_name_str);
 			return function;
 		}
 	});
-	function_log_data_t* data=sll_allocate(sizeof(function_log_data_t));
-	sll_copy_data(&func_str,sizeof(sll_string_t),(sll_string_t*)(&(data->name)));
+	log_function_data_t* data=sll_allocate(sizeof(log_function_data_t));
+	sll_copy_data(&function_name_str,sizeof(sll_string_t),(sll_string_t*)(&(data->name)));
 	data->flags=file->flags;
 	SLL_CONTAINER_PUSH(&(file->functions),data);
 	return data;
@@ -81,9 +81,9 @@ static void _log_location(const sll_string_t* file_path,const sll_string_t* func
 
 
 void _log_release_data(void){
-	SLL_CONTAINER_ITER_CLEAR(&_log_data,file_log_data_t*,file,{
+	SLL_CONTAINER_ITER_CLEAR(&_log_data,log_file_data_t*,file,{
 		sll_free_string((sll_string_t*)(&(file->name)));
-		SLL_CONTAINER_ITER_CLEAR(&(file->functions),function_log_data_t*,function,{
+		SLL_CONTAINER_ITER_CLEAR(&(file->functions),log_function_data_t*,function,{
 			sll_free_string((sll_string_t*)(&(function->name)));
 			sll_deallocate(function);
 		});
@@ -95,8 +95,8 @@ void _log_release_data(void){
 
 
 __SLL_EXTERNAL sll_bool_t sll_log(const sll_char_t* file_path,const sll_char_t* function,sll_file_offset_t line,sll_bool_t is_warning,const sll_char_t* format,...){
-	file_log_data_t* f_dt=_get_file_data(file_path);
-	function_log_data_t* fn_dt=_get_function_data(f_dt,function);
+	log_file_data_t* f_dt=_get_file_data(file_path);
+	log_function_data_t* fn_dt=_get_function_data(f_dt,function);
 	if (!is_warning&&!(fn_dt->flags&SLL_LOG_FLAG_SHOW)){
 		return 0;
 	}
@@ -122,8 +122,8 @@ __SLL_EXTERNAL sll_bool_t sll_log_raw(const sll_char_t* file_path,const sll_char
 	if (!_log_default&&!_log_data.size){
 		return 0;
 	}
-	file_log_data_t* f_dt=_get_file_data(file_path);
-	function_log_data_t* fn_dt=_get_function_data(f_dt,function);
+	log_file_data_t* f_dt=_get_file_data(file_path);
+	log_function_data_t* fn_dt=_get_function_data(f_dt,function);
 	if (!is_warning&&!(fn_dt->flags&SLL_LOG_FLAG_SHOW)){
 		return 0;
 	}
@@ -143,7 +143,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_set_log_flags(const sll_char_t*
 		ptr=&_log_default;
 	}
 	else{
-		file_log_data_t* dt=_get_file_data(file_path);
+		log_file_data_t* dt=_get_file_data(file_path);
 		ptr=(function?&(_get_function_data(dt,function)->flags):&(dt->flags));
 	}
 	sll_logger_flags_t tmp=flags;
