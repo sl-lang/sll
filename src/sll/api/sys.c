@@ -137,7 +137,7 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_sys_get_version(sll_array_t* out){
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_sys_load_library(const sll_string_t* path,sll_size_t sz,__SLL_U64 h0,__SLL_U64 h1,__SLL_U64 h2,__SLL_U64 h3){
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_sys_load_library(const sll_string_t* path){
 	if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_LOAD_LIBRARY)){
 		return SLL_ERROR_FROM_SANDBOX(SLL_SANDBOX_FLAG_DISABLE_LOAD_LIBRARY);
 	}
@@ -157,51 +157,6 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_sys_load_li
 			return SLL_NO_ERROR;
 		}
 	});
-	if (sz){
-		sll_file_descriptor_t fd=sll_platform_file_open(path->data,SLL_FILE_FLAG_READ,NULL);
-		if (fd==SLL_UNKNOWN_FILE_DESCRIPTOR){
-			sll_free_string(&lib_name);
-			return 0;
-		}
-		sll_size_t f_sz=sll_platform_file_size(fd,NULL);
-		if (f_sz==SLL_NO_FILE_SIZE||f_sz!=sz){
-			SLL_CRITICAL_ERROR(sll_platform_file_close(fd));
-			sll_free_string(&lib_name);
-			return 0;
-		}
-		sll_sha256_data_t sha=SLL_INIT_SHA256_STRUCT;
-		sll_char_t bf[LIBRARY_HASH_BUFFER_SIZE];
-		sll_size_t off;
-		do{
-			off=sll_platform_file_read(fd,bf,LIBRARY_HASH_BUFFER_SIZE,NULL);
-			if (off==SLL_NO_FILE_SIZE){
-				SLL_CRITICAL_ERROR(sll_platform_file_close(fd));
-				sll_free_string(&lib_name);
-				return 0;
-			}
-			sll_hash_sha256(&sha,bf,off&0xffffffffffffffc0ll);
-		} while (off==LIBRARY_HASH_BUFFER_SIZE);
-		SLL_CRITICAL_ERROR(sll_platform_file_close(fd));
-		sll_char_t tmp[128];
-		sll_set_memory(tmp,128,0);
-		sll_copy_data(bf+(off&0xffffffffffffffc0ull),off&0x3f,tmp);
-		off&=0x3f;
-		sll_char_t tmp_off=(off<56?56:120);
-		tmp[off]=128;
-		tmp[tmp_off]=(sz>>53)&0xff;
-		tmp[tmp_off+1]=(sz>>45)&0xff;
-		tmp[tmp_off+2]=(sz>>37)&0xff;
-		tmp[tmp_off+3]=(sz>>29)&0xff;
-		tmp[tmp_off+4]=(sz>>21)&0xff;
-		tmp[tmp_off+5]=(sz>>13)&0xff;
-		tmp[tmp_off+6]=(sz>>5)&0xff;
-		tmp[tmp_off+7]=(sz<<3)&0xff;
-		sll_hash_sha256(&sha,tmp,(off<56?64:128));
-		if (((((__SLL_U64)sha.a)<<32)|sha.b)!=h0||((((__SLL_U64)sha.c)<<32)|sha.d)!=h1||((((__SLL_U64)sha.e)<<32)|sha.f)!=h2||((((__SLL_U64)sha.g)<<32)|sha.h)!=h3){
-			sll_free_string(&lib_name);
-			return 0;
-		}
-	}
 	sll_error_t err;
 	sll_library_handle_t h=sll_platform_load_library(path->data,&err);
 	if (!h){

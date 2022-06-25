@@ -993,7 +993,7 @@ static const sll_internal_function_descriptor_t _internal_function_table[]={
 	{
 		SLL_CHAR("sll:sys_load_library"),
 		sll_api_sys_load_library,
-		SLL_CHAR("#sQQQQQ|Q")
+		SLL_CHAR("#s|Q")
 	},
 	{
 		SLL_CHAR("sll:sys_remove_env"),

@@ -116,16 +116,11 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_sys_get_version(sll_array_t* out);
  * \name sll_api_sys_load_library
  * \group sys-api
  * \desc Docs!
- * \api #sQQQQQ|Q
+ * \api #s|Q
  * \arg const sll_string_t* path
- * \arg sll_size_t sz
- * \arg __SLL_U64 h0
- * \arg __SLL_U64 h1
- * \arg __SLL_U64 h2
- * \arg __SLL_U64 h3
  * \ret sll_error_t
  */
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_sys_load_library(const sll_string_t* path,sll_size_t sz,__SLL_U64 h0,__SLL_U64 h1,__SLL_U64 h2,__SLL_U64 h3);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_sys_load_library(const sll_string_t* path);
 
 
 
