@@ -49,7 +49,7 @@ __SLL_NO_RETURN void _force_exit_platform(void){
 void _init_platform(void){
 	HANDLE h=GetStdHandle(STD_INPUT_HANDLE);
 	GetConsoleMode(h,&_win_stdin_cm);
-	SetConsoleMode(h,_win_stdin_cm&(~(ENABLE_LINE_INPUT|ENABLE_ECHO_INPUT)));
+	SetConsoleMode(h,_win_stdin_cm&(~ENABLE_LINE_INPUT));
 	h=GetStdHandle(STD_OUTPUT_HANDLE);
 	GetConsoleMode(h,&_win_stdout_cm);
 	SetConsoleMode(h,_win_stdout_cm|ENABLE_PROCESSED_OUTPUT|ENABLE_WRAP_AT_EOL_OUTPUT|ENABLE_VIRTUAL_TERMINAL_PROCESSING);

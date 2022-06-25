@@ -71,7 +71,7 @@ void _init_platform(void){
 	if (!tcgetattr(STDIN_FILENO,&_linux_stdin_cfg)){
 		struct termios bf=_linux_stdin_cfg;
 		bf.c_iflag=(bf.c_iflag&(~INLCR))|ICRNL;
-		bf.c_lflag=(bf.c_lflag&(~(ICANON|ICRNL|ECHO|ECHOCTL|ECHOPRT)))|ISIG;
+		bf.c_lflag=(bf.c_lflag&(~ICANON))|ISIG;
 		tcsetattr(STDIN_FILENO,TCSANOW,&bf);
 	}
 	struct sigaction sa={
