@@ -2,6 +2,7 @@
 #define __SLL_API_SYS_H__ 1
 #include <sll/common.h>
 #include <sll/gc.h>
+#include <sll/platform/library.h>
 #include <sll/platform/thread.h>
 #include <sll/sandbox.h>
 #include <sll/string.h>
@@ -12,6 +13,21 @@
  * \group sys-api
  * \desc Docs!
  */
+
+
+
+/**
+ * \flags type
+ * \name sll_loaded_library_t
+ * \group sys-api
+ * \desc Docs!
+ * \arg const sll_string_t name
+ * \arg sll_library_handle_t handle
+ */
+typedef struct _SLL_LOADED_LIBRARY{
+	const sll_string_t name;
+	sll_library_handle_t handle;
+} sll_loaded_library_t;
 
 
 
@@ -158,6 +174,18 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_sys_set_env(const sll_string_t* key,c
  * \arg sll_sandbox_flag_t flag
  */
 __SLL_EXTERNAL __SLL_API_CALL void sll_api_sys_set_sandbox_flag(sll_sandbox_flag_t flag);
+
+
+
+/**
+ * \flags func
+ * \name sll_get_loaded_libraries
+ * \group sys-api
+ * \desc Docs!
+ * \arg sll_size_t* count
+ * \ret const sll_loaded_library_t*const*
+ */
+__SLL_EXTERNAL const sll_loaded_library_t*const* sll_get_loaded_libraries(sll_size_t* count);
 
 
 

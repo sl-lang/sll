@@ -1,5 +1,4 @@
 #include <sll/_internal/common.h>
-#include <sll/_internal/library.h>
 #include <sll/_internal/print.h>
 #include <sll/_internal/static_object.h>
 #include <sll/_internal/static_string.h>
@@ -60,7 +59,7 @@ static void _cleanup_data(void){
 
 
 static void _cleanup_vm_data(void){
-	SLL_CONTAINER_ITER_CLEAR(&_sys_library_data,library_t*,library,{
+	SLL_CONTAINER_ITER_CLEAR(&_sys_library_data,sll_loaded_library_t*,library,{
 		sll_free_string((sll_string_t*)&(library->name));
 		void (*fn)(void)=sll_platform_lookup_symbol(library->handle,SLL_ABI_NAME(SLL_ABI_DEINIT));
 		if (fn){
@@ -151,7 +150,7 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_sys_load_li
 		sll_free_string(&lib_name);
 		return SLL_ERROR_NO_FILE_PATH;
 	}
-	SLL_CONTAINER_ITER(&_sys_library_data,library_t*,library,{
+	SLL_CONTAINER_ITER(&_sys_library_data,sll_loaded_library_t*,library,{
 		if (STRING_EQUAL(&(library->name),&lib_name)){
 			sll_free_string(&lib_name);
 			return SLL_NO_ERROR;
@@ -170,7 +169,7 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_sys_load_li
 		SLL_UNIMPLEMENTED();
 		return 0;
 	}
-	library_t* data=sll_allocate(sizeof(library_t));
+	sll_loaded_library_t* data=sll_allocate(sizeof(sll_loaded_library_t));
 	sll_copy_data(&lib_name,sizeof(sll_string_t),(sll_string_t*)(&(data->name)));
 	data->handle=h;
 	SLL_CONTAINER_PUSH(&_sys_library_data,data);
@@ -208,6 +207,13 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_sys_set_env(const sll_string_t* key,c
 __SLL_EXTERNAL __SLL_API_CALL void sll_api_sys_set_sandbox_flag(sll_sandbox_flag_t flag){
 	sll_audit(SLL_CHAR("sll.sys.sandbox.set"),SLL_CHAR("u"),flag);
 	sll_set_sandbox_flag(flag);
+}
+
+
+
+__SLL_EXTERNAL const sll_loaded_library_t*const* sll_get_loaded_libraries(sll_size_t* count){
+	*count=_sys_library_data.size;
+	return (const sll_loaded_library_t*const*)(_sys_library_data.data);
 }
 
 

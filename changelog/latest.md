@@ -7,6 +7,7 @@
 - Implemented `path$relative`
 - Implemented `sll_copy_objects`
 - Implemented `SLL_ERROR_UNKNOWN_FUNCTION` and `error$ERROR_UNKNOWN_FUNCTION`
+- Implemented `sll_loaded_library_t` and `sll_get_loaded_libraries`
 - Implemented the container API: `SLL_CONTAINER_CLEAR`, `SLL_CONTAINER_FILTER`, `SLL_CONTAINER_INIT`, `SLL_CONTAINER_INIT_STRUCT`, `SLL_CONTAINER_ITER`, `SLL_CONTAINER_ITER_CLEAR`, `SLL_CONTAINER_PUSH` and `sll_container_t`
 - Implemented the handle container API: `SLL_HANDLE_CONTAINER_ALLOC`, `SLL_HANDLE_CONTAINER_CHECK`, `SLL_HANDLE_CONTAINER_CLEAR`, `SLL_HANDLE_CONTAINER_DEALLOC`, `SLL_HANDLE_CONTAINER_INIT`, `SLL_HANDLE_CONTAINER_INIT_STRUCT`, `SLL_HANDLE_CONTAINER_ITER`, `SLL_HANDLE_CONTAINER_ITER_CLEAR` and `sll_handle_container_t`
 
