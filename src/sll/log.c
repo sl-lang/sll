@@ -27,9 +27,9 @@ static sll_array_length_t _log_file_data_len=0;
 static file_log_data_t* _get_file_index(const sll_char_t* file_path){
 	sll_string_t file_path_str;
 	sll_string_from_pointer(file_path,&file_path_str);
-	sll_array_length_t j=0;
-	for (;j<_log_file_data_len;j++){
-		file_log_data_t* k=*(_log_file_data+j);
+	sll_array_length_t i=0;
+	for (;i<_log_file_data_len;i++){
+		file_log_data_t* k=*(_log_file_data+i);
 		if (STRING_EQUAL(&file_path_str,&(k->name))){
 			sll_free_string(&file_path_str);
 			return k;
@@ -42,7 +42,7 @@ static file_log_data_t* _get_file_index(const sll_char_t* file_path){
 	n->data=NULL;
 	n->length=0;
 	n->flags=_log_default;
-	*(_log_file_data+j)=n;
+	*(_log_file_data+i)=n;
 	return n;
 }
 
