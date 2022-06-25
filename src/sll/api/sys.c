@@ -46,13 +46,12 @@ static sll_bool_t _sys_vm_init=0;
 
 
 static void _cleanup_data(void){
-	if (_sys_argv){
-		for (sll_array_length_t i=0;i<_sys_argc;i++){
-			sll_free_string(_sys_argv+i);
-		}
-		sll_deallocate(_sys_argv);
-		_sys_argv=NULL;
+	while (_sys_argc){
+		_sys_argc--;
+		sll_free_string(_sys_argv+_sys_argc);
 	}
+	sll_deallocate(_sys_argv);
+	_sys_argv=NULL;
 	_sys_init=0;
 }
 

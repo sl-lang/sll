@@ -31,7 +31,7 @@ static void _call_user_array(sll_weak_reference_t wr,sll_object_t* obj,void* arg
 	if (!dt){
 		return;
 	}
-	sll_object_t* al[]={
+	sll_object_t* al[2]={
 		dt,
 		obj
 	};

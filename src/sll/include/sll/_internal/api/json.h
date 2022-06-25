@@ -1,5 +1,5 @@
-#ifndef __SLL__INTERNAL_JSON_H__
-#define __SLL__INTERNAL_JSON_H__ 1
+#ifndef __SLL__INTERNAL_API_JSON_H__
+#define __SLL__INTERNAL_API_JSON_H__ 1
 #include <sll/types.h>
 
 
