@@ -1,4 +1,4 @@
-#include <sll/_internal/atexit.h>
+#include <sll/_internal/api/atexit.h>
 #include <sll/_internal/sandbox.h>
 #include <sll/_internal/scheduler.h>
 #include <sll/_internal/vm.h>

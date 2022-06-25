@@ -7,8 +7,4 @@ void _audit_cleanup(void);
 
 
 
-void _audit_cleanup_api(void);
-
-
-
 #endif

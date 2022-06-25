@@ -1,6 +1,6 @@
+#include <sll/_internal/api/serial.h>
 #include <sll/_internal/common.h>
 #include <sll/_internal/error.h>
-#include <sll/_internal/serial.h>
 #include <sll/_internal/static_object.h>
 #include <sll/_internal/static_string.h>
 #include <sll/api/file.h>

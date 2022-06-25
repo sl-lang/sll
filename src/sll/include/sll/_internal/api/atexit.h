@@ -1,5 +1,5 @@
-#ifndef __SLL__INTERNAL_ATEXIT_H__
-#define __SLL__INTERNAL_ATEXIT_H__ 1
+#ifndef __SLL__INTERNAL_API_ATEXIT_H__
+#define __SLL__INTERNAL_API_ATEXIT_H__ 1
 #include <sll/gc.h>
 #include <sll/types.h>
 

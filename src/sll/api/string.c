@@ -1,4 +1,4 @@
-#include <sll/_internal/api_string.h>
+#include <sll/_internal/api/string.h>
 #include <sll/_internal/common.h>
 #include <sll/_internal/string.h>
 #include <sll/allocator.h>
