@@ -241,11 +241,14 @@
 	(= lib (+ "library-name" sys$LIBRARY_EXTENSION))
 	(= lib_path (+ sys$ROOT_PATH lib))
 	(<- sys$load_library lib_path)
-	(<- expect_audit_event "sll.sys.library.load" <
+	(<- expect_audit_event "sll.sys.library.load.error" <
 		"path" lib_path
 		"name" lib
+		"error" 1
 	>)
+	(<- expect_audit_event "sll.sys.library.load" nil)
 	(<- sys$load_library nil)
+	(<- expect_audit_event "sll.sys.library.load.error" nil)
 	(<- expect_audit_event "sll.sys.library.load" nil)
 ))
 
