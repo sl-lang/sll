@@ -1,4 +1,4 @@
-# Sll [0.7.23] - Ongoing
+# Sll [0.7.23] - 2022-06-25
 
 ## Added
 
@@ -37,4 +37,4 @@
 - Function `sys$load_library` no longer accepts hash-checking arguments
 - Unimplemented functions: `sll_array_parse_char`, `sll_array_parse_float`, `sll_array_parse_int`, `sll_api_path_relative` and `sll_path_relative`
 
-[0.7.23]: https://github.com/sl-lang/sll/compare/sll-v0.7.22...main
+[0.7.23]: https://github.com/sl-lang/sll/compare/sll-v0.7.22...sll-v0.7.23
