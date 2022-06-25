@@ -123,15 +123,15 @@ __SLL_EXTERNAL sll_bool_t sll_log(const sll_char_t* file_path,const sll_char_t* 
 	va_start(va,format);
 	sll_var_arg_list_t dt;
 	SLL_VAR_ARG_INIT_C(&dt,&va);
-	sll_string_t s;
-	sll_string_format_list(format,sll_string_length(format),&dt,&s);
+	sll_string_t str;
+	sll_string_format_list(format,sll_string_length(format),&dt,&str);
 	va_end(va);
 	if (!(fn_dt->flags&SLL_LOG_FLAG_NO_HEADER)){
 		_log_location(&(f_dt->name),&(fn_dt->name),line,sll_stdout);
 	}
-	sll_file_write(sll_stdout,s.data,s.length,NULL);
+	sll_file_write(sll_stdout,str.data,str.length,NULL);
 	sll_file_write_char(sll_stdout,'\n',NULL);
-	sll_free_string(&s);
+	sll_free_string(&str);
 	return 1;
 }
 
