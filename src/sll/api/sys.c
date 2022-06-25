@@ -11,6 +11,7 @@
 #include <sll/array.h>
 #include <sll/audit.h>
 #include <sll/common.h>
+#include <sll/container.h>
 #include <sll/data.h>
 #include <sll/environment.h>
 #include <sll/error.h>
@@ -39,8 +40,7 @@ static __STATIC_STRING(_sys_full_commit,SLL_VERSION_FULL_SHA);
 #endif
 static sll_array_length_t _sys_argc=0;
 static sll_string_t* _sys_argv=NULL;
-static library_t** _sys_lh=NULL;
-static sll_array_length_t _sys_lhl=0;
+static sll_container_t _sys_library_data=SLL_CONTAINER_INIT_STRUCT;
 static sll_bool_t _sys_init=0;
 static sll_bool_t _sys_vm_init=0;
 
@@ -60,21 +60,15 @@ static void _cleanup_data(void){
 
 
 static void _cleanup_vm_data(void){
-	if (_sys_lhl){
-		while (_sys_lhl){
-			_sys_lhl--;
-			library_t* l=*(_sys_lh+_sys_lhl);
-			sll_free_string((sll_string_t*)&(l->name));
-			void (*fn)(void)=sll_platform_lookup_symbol(l->handle,SLL_ABI_NAME(SLL_ABI_DEINIT));
-			if (fn){
-				fn();
-			}
-			SLL_CRITICAL_ERROR(sll_platform_unload_library(l->handle));
-			sll_deallocate(l);
+	SLL_CONTAINER_ITER_CLEAR(&_sys_library_data,library_t*,library,{
+		sll_free_string((sll_string_t*)&(library->name));
+		void (*fn)(void)=sll_platform_lookup_symbol(library->handle,SLL_ABI_NAME(SLL_ABI_DEINIT));
+		if (fn){
+			fn();
 		}
-		sll_deallocate(_sys_lh);
-		_sys_lh=NULL;
-	}
+		SLL_CRITICAL_ERROR(sll_platform_unload_library(library->handle));
+		sll_deallocate(library);
+	});
 	_sys_vm_init=0;
 }
 
@@ -157,12 +151,12 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_sys_load_li
 		sll_free_string(&lib_name);
 		return SLL_ERROR_NO_FILE_PATH;
 	}
-	for (sll_array_length_t i=0;i<_sys_lhl;i++){
-		if (STRING_EQUAL(&((*(_sys_lh+i))->name),&lib_name)){
+	SLL_CONTAINER_ITER(&_sys_library_data,library_t*,library,{
+		if (STRING_EQUAL(&(library->name),&lib_name)){
 			sll_free_string(&lib_name);
 			return SLL_NO_ERROR;
 		}
-	}
+	});
 	if (sz){
 		sll_file_descriptor_t fd=sll_platform_file_open(path->data,SLL_FILE_FLAG_READ,NULL);
 		if (fd==SLL_UNKNOWN_FILE_DESCRIPTOR){
@@ -221,12 +215,10 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_sys_load_li
 		SLL_UNIMPLEMENTED();
 		return 0;
 	}
-	_sys_lhl++;
-	_sys_lh=sll_reallocate(_sys_lh,_sys_lhl*sizeof(library_t*));
-	library_t* n=sll_allocate(sizeof(library_t));
-	sll_copy_data(&lib_name,sizeof(sll_string_t),(sll_string_t*)(&(n->name)));
-	n->handle=h;
-	*(_sys_lh+_sys_lhl-1)=n;
+	library_t* data=sll_allocate(sizeof(library_t));
+	sll_copy_data(&lib_name,sizeof(sll_string_t),(sll_string_t*)(&(data->name)));
+	data->handle=h;
+	SLL_CONTAINER_PUSH(&_sys_library_data,data);
 	if (!_sys_vm_init){
 		sll_register_cleanup(_cleanup_vm_data,SLL_CLEANUP_TYPE_VM);
 		_sys_vm_init=1;
