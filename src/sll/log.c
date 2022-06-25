@@ -57,7 +57,7 @@ static log_function_data_t* _get_function_data(log_file_data_t* file,const sll_c
 
 
 
-static void _log_location(const sll_string_t* file_path,const sll_string_t* func,sll_file_offset_t line,sll_file_t* wf){
+static void _log_location(const sll_string_t* file_path,const sll_string_t* function_name,sll_file_offset_t line,sll_file_t* wf){
 	sll_file_write_char(sll_stdout,'[',NULL);
 	sll_file_write(sll_stdout,file_path->data,file_path->length,NULL);
 	sll_file_write_char(sll_stdout,':',NULL);
@@ -71,7 +71,7 @@ static void _log_location(const sll_string_t* file_path,const sll_string_t* func
 	}
 	sll_file_write(sll_stdout,bf+i,20-i,NULL);
 	sll_file_write_char(sll_stdout,'(',NULL);
-	sll_file_write(sll_stdout,func->data,func->length,NULL);
+	sll_file_write(sll_stdout,function_name->data,function_name->length,NULL);
 	PRINT_STATIC_STRING(")] ",sll_stdout);
 }
 
@@ -91,10 +91,10 @@ void _log_release_data(void){
 
 
 
-__SLL_EXTERNAL sll_bool_t sll_log(const sll_char_t* file_path,const sll_char_t* function,sll_file_offset_t line,sll_bool_t is_warning,const sll_char_t* format,...){
-	log_file_data_t* f_dt=_get_file_data(file_path);
-	log_function_data_t* fn_dt=_get_function_data(f_dt,function);
-	if (!is_warning&&!(fn_dt->flags&SLL_LOG_FLAG_SHOW)){
+__SLL_EXTERNAL sll_bool_t sll_log(const sll_char_t* file_path,const sll_char_t* function_name,sll_file_offset_t line,sll_bool_t is_warning,const sll_char_t* format,...){
+	log_file_data_t* file=_get_file_data(file_path);
+	log_function_data_t* function=_get_function_data(file,function_name);
+	if (!is_warning&&!(function->flags&SLL_LOG_FLAG_SHOW)){
 		return 0;
 	}
 	va_list va;
@@ -104,8 +104,8 @@ __SLL_EXTERNAL sll_bool_t sll_log(const sll_char_t* file_path,const sll_char_t* 
 	sll_string_t str;
 	sll_string_format_list(format,sll_string_length(format),&dt,&str);
 	va_end(va);
-	if (!(fn_dt->flags&SLL_LOG_FLAG_NO_HEADER)){
-		_log_location(&(f_dt->name),&(fn_dt->name),line,sll_stdout);
+	if (!(function->flags&SLL_LOG_FLAG_NO_HEADER)){
+		_log_location(&(file->name),&(function->name),line,sll_stdout);
 	}
 	sll_file_write(sll_stdout,str.data,str.length,NULL);
 	sll_file_write_char(sll_stdout,'\n',NULL);
@@ -115,17 +115,17 @@ __SLL_EXTERNAL sll_bool_t sll_log(const sll_char_t* file_path,const sll_char_t* 
 
 
 
-__SLL_EXTERNAL sll_bool_t sll_log_raw(const sll_char_t* file_path,const sll_char_t* function,sll_file_offset_t line,sll_bool_t is_warning,const sll_string_t* string){
+__SLL_EXTERNAL sll_bool_t sll_log_raw(const sll_char_t* file_path,const sll_char_t* function_name,sll_file_offset_t line,sll_bool_t is_warning,const sll_string_t* string){
 	if (!_log_default&&!_log_data.size){
 		return 0;
 	}
-	log_file_data_t* f_dt=_get_file_data(file_path);
-	log_function_data_t* fn_dt=_get_function_data(f_dt,function);
-	if (!is_warning&&!(fn_dt->flags&SLL_LOG_FLAG_SHOW)){
+	log_file_data_t* file=_get_file_data(file_path);
+	log_function_data_t* function=_get_function_data(file,function_name);
+	if (!is_warning&&!(function->flags&SLL_LOG_FLAG_SHOW)){
 		return 0;
 	}
-	if (!(fn_dt->flags&SLL_LOG_FLAG_NO_HEADER)){
-		_log_location(&(f_dt->name),&(fn_dt->name),line,sll_stdout);
+	if (!(function->flags&SLL_LOG_FLAG_NO_HEADER)){
+		_log_location(&(file->name),&(function->name),line,sll_stdout);
 	}
 	sll_file_write(sll_stdout,string->data,string->length,NULL);
 	sll_file_write_char(sll_stdout,'\n',NULL);
@@ -134,14 +134,14 @@ __SLL_EXTERNAL sll_bool_t sll_log_raw(const sll_char_t* file_path,const sll_char
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_set_log_flags(const sll_char_t* file_path,const sll_char_t* function,sll_logger_flags_t flags,sll_bool_t state){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_set_log_flags(const sll_char_t* file_path,const sll_char_t* function_name,sll_logger_flags_t flags,sll_bool_t state){
 	sll_logger_flags_t* ptr;
 	if (!file_path){
 		ptr=&_log_default;
 	}
 	else{
-		log_file_data_t* dt=_get_file_data(file_path);
-		ptr=(function?&(_get_function_data(dt,function)->flags):&(dt->flags));
+		log_file_data_t* file=_get_file_data(file_path);
+		ptr=(function_name?&(_get_function_data(file,function_name)->flags):&(file->flags));
 	}
 	sll_logger_flags_t tmp=flags;
 	flags&=SLL_LOG_FLAG_SHOW|SLL_LOG_FLAG_NO_HEADER;

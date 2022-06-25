@@ -74,13 +74,13 @@ typedef __SLL_U8 sll_logger_flags_t;
  * \group log
  * \desc Docs!
  * \arg const sll_char_t* file_path
- * \arg const sll_char_t* function
+ * \arg const sll_char_t* function_name
  * \arg sll_file_offset_t line
  * \arg sll_bool_t is_warning
  * \arg const sll_char_t* format
  * \ret sll_bool_t
  */
-__SLL_EXTERNAL sll_bool_t sll_log(const sll_char_t* file_path,const sll_char_t* function,sll_file_offset_t line,sll_bool_t is_warning,const sll_char_t* format,...);
+__SLL_EXTERNAL sll_bool_t sll_log(const sll_char_t* file_path,const sll_char_t* function_name,sll_file_offset_t line,sll_bool_t is_warning,const sll_char_t* format,...);
 
 
 
@@ -90,13 +90,13 @@ __SLL_EXTERNAL sll_bool_t sll_log(const sll_char_t* file_path,const sll_char_t* 
  * \group log
  * \desc Docs!
  * \arg const sll_char_t* file_path
- * \arg const sll_char_t* function
+ * \arg const sll_char_t* function_name
  * \arg sll_file_offset_t line
  * \arg sll_bool_t is_warning
  * \arg const sll_string_t* string
  * \ret sll_bool_t
  */
-__SLL_EXTERNAL sll_bool_t sll_log_raw(const sll_char_t* file_path,const sll_char_t* function,sll_file_offset_t line,sll_bool_t is_warning,const sll_string_t* string);
+__SLL_EXTERNAL sll_bool_t sll_log_raw(const sll_char_t* file_path,const sll_char_t* function_name,sll_file_offset_t line,sll_bool_t is_warning,const sll_string_t* string);
 
 
 
@@ -106,12 +106,12 @@ __SLL_EXTERNAL sll_bool_t sll_log_raw(const sll_char_t* file_path,const sll_char
  * \group log
  * \desc Docs!
  * \arg const sll_char_t* file_path
- * \arg const sll_char_t* function
+ * \arg const sll_char_t* function_name
  * \arg sll_logger_flags_t flags
  * \arg sll_bool_t state
  * \ret sll_bool_t
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_set_log_flags(const sll_char_t* file_path,const sll_char_t* function,sll_logger_flags_t flags,sll_bool_t state);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_set_log_flags(const sll_char_t* file_path,const sll_char_t* function_name,sll_logger_flags_t flags,sll_bool_t state);
 
 
 
