@@ -3,6 +3,7 @@
 #include <sll/_internal/print.h>
 #include <sll/_internal/string.h>
 #include <sll/common.h>
+#include <sll/container.h>
 #include <sll/data.h>
 #include <sll/file.h>
 #include <sll/log.h>
@@ -19,53 +20,44 @@
 
 
 static sll_logger_flags_t _log_default=0;
-static file_log_data_t** _log_file_data=NULL;
-static sll_array_length_t _log_file_data_len=0;
+static sll_container_t _log_data=SLL_CONTAINER_INIT_STRUCT;
 
 
 
 static file_log_data_t* _get_file_index(const sll_char_t* file_path){
 	sll_string_t file_path_str;
 	sll_string_from_pointer(file_path,&file_path_str);
-	sll_array_length_t i=0;
-	for (;i<_log_file_data_len;i++){
-		file_log_data_t* k=*(_log_file_data+i);
-		if (STRING_EQUAL(&file_path_str,&(k->name))){
+	SLL_CONTAINER_ITER(&_log_data,file_log_data_t*,file,{
+		if (STRING_EQUAL(&file_path_str,&(file->name))){
 			sll_free_string(&file_path_str);
-			return k;
+			return file;
 		}
-	}
-	_log_file_data_len++;
-	_log_file_data=sll_reallocate(_log_file_data,_log_file_data_len*sizeof(file_log_data_t*));
-	file_log_data_t* n=sll_allocate(sizeof(file_log_data_t));
-	sll_copy_data(&file_path_str,sizeof(sll_string_t),(sll_string_t*)(&(n->name)));
-	n->data=NULL;
-	n->length=0;
-	n->flags=_log_default;
-	*(_log_file_data+i)=n;
-	return n;
+	});
+	file_log_data_t* data=sll_allocate(sizeof(file_log_data_t));
+	sll_copy_data(&file_path_str,sizeof(sll_string_t),(sll_string_t*)(&(data->name)));
+	SLL_CONTAINER_INIT(&(data->functions));
+	data->length=0;
+	data->flags=_log_default;
+	SLL_CONTAINER_PUSH(&_log_data,data);
+	return data;
 }
 
 
 
-static function_log_data_t* _get_func_index(file_log_data_t* file_data,const sll_char_t* func){
+static function_log_data_t* _get_func_index(file_log_data_t* file,const sll_char_t* func){
 	sll_string_t func_str;
 	sll_string_from_pointer(func,&func_str);
-	sll_array_length_t i=0;
-	for (;i<file_data->length;i++){
-		function_log_data_t* k=*(file_data->data+i);
-		if (STRING_EQUAL(&func_str,&(k->name))){
+	SLL_CONTAINER_ITER(&(file->functions),function_log_data_t*,function,{
+		if (STRING_EQUAL(&func_str,&(function->name))){
 			sll_free_string(&func_str);
-			return k;
+			return function;
 		}
-	}
-	file_data->length++;
-	file_data->data=sll_reallocate(file_data->data,file_data->length*sizeof(function_log_data_t*));
-	function_log_data_t* n=sll_allocate(sizeof(function_log_data_t));
-	sll_copy_data(&func_str,sizeof(sll_string_t),(sll_string_t*)(&(n->name)));
-	n->flags=file_data->flags;
-	*(file_data->data+i)=n;
-	return n;
+	});
+	function_log_data_t* data=sll_allocate(sizeof(function_log_data_t));
+	sll_copy_data(&func_str,sizeof(sll_string_t),(sll_string_t*)(&(data->name)));
+	data->flags=file->flags;
+	SLL_CONTAINER_PUSH(&(file->functions),data);
+	return data;
 }
 
 
@@ -94,20 +86,16 @@ static void _log_location(const sll_string_t* file_path,const sll_string_t* func
 
 
 void _log_release_data(void){
-	while (_log_file_data_len){
-		_log_file_data_len--;
-		file_log_data_t* k=*(_log_file_data+_log_file_data_len);
-		sll_free_string((sll_string_t*)(&(k->name)));
-		for (sll_arg_count_t i=0;i<k->length;i++){
-			function_log_data_t* e=*(k->data+i);
-			sll_free_string((sll_string_t*)(&(e->name)));
-			sll_deallocate(e);
-		}
-		sll_deallocate(k->data);
-		sll_deallocate(k);
-	}
-	sll_deallocate(_log_file_data);
-	_log_file_data=NULL;
+	SLL_CONTAINER_ITER(&_log_data,file_log_data_t*,file,{
+		sll_free_string((sll_string_t*)(&(file->name)));
+		SLL_CONTAINER_ITER(&(file->functions),function_log_data_t*,function,{
+			sll_free_string((sll_string_t*)(&(function->name)));
+			sll_deallocate(function);
+		});
+		SLL_CONTAINER_CLEAR(&(file->functions));
+		sll_deallocate(file);
+	});
+	SLL_CONTAINER_CLEAR(&_log_data);
 	_log_default=0;
 }
 
@@ -138,7 +126,7 @@ __SLL_EXTERNAL sll_bool_t sll_log(const sll_char_t* file_path,const sll_char_t* 
 
 
 __SLL_EXTERNAL sll_bool_t sll_log_raw(const sll_char_t* file_path,const sll_char_t* function,sll_file_offset_t line,sll_bool_t is_warning,const sll_string_t* string){
-	if (!_log_default&&!_log_file_data_len){
+	if (!_log_default&&!_log_data.size){
 		return 0;
 	}
 	file_log_data_t* f_dt=_get_file_index(file_path);
