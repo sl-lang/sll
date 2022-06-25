@@ -3,6 +3,8 @@
 ## Added
 
 - Assembly instruction to push an empty string to the stack: `SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_EMPTY_STRING`
+- Audit event `sll.sys.library.load.error`
+- CLib extension now has access to modules loaded by `sys$load_library`
 - Fuzzer now removes timeout crashes caused by generated infinite loops
 - Implemented `path$relative`
 - Implemented `sll_copy_objects`

@@ -12,6 +12,11 @@ static const sll_internal_function_descriptor_t _internal_function_table[]={
 		SLL_CHAR("Qb#a|o")
 	},
 	{
+		SLL_CHAR("clib:library_get_loaded_list"),
+		clib_api_library_get_loaded_list,
+		SLL_CHAR("|a")
+	},
+	{
 		SLL_CHAR("clib:library_get_sll_handle"),
 		clib_api_library_get_sll_handle,
 		SLL_CHAR("|Q")
@@ -37,7 +42,7 @@ static const sll_internal_function_descriptor_t _internal_function_table[]={
 
 static const sll_internal_function_table_descriptor_t _internal_function_table_descriptor_data={
 	(const sll_internal_function_descriptor_t*)(&_internal_function_table),
-	5
+	6
 };
 
 

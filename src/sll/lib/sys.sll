@@ -104,9 +104,15 @@
 
 (= load_library (,,, fp
 	(? (! fp) (@@ nil))
-	(@@ (<- error$from_internal (<- (... "sll:sys_load_library")
-		(:: fp string_type)
-	)))
+	(= fp (:: fp string_type))
+	(@@ (<- error$from_internal
+		(<- (... "sll:sys_load_library")
+			fp
+		)
+		<
+			"path" fp
+		>
+	))
 )
 
 (= remove_env (,,, k

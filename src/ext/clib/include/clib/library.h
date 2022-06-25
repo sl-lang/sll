@@ -5,6 +5,10 @@
 
 
 
+__CLIB_API_CALL void clib_api_library_get_loaded_list(sll_array_t* out);
+
+
+
 __CLIB_API_CALL sll_library_handle_t clib_api_library_get_sll_handle(void);
 
 
