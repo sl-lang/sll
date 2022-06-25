@@ -9,6 +9,13 @@
  * \group container
  * \desc Docs!
  */
+/**
+ * \flags subgroup
+ * \name Handle Container
+ * \group container
+ * \subgroup container-handle
+ * \desc Docs!
+ */
 
 
 
@@ -151,6 +158,7 @@
  * \flags func macro
  * \name SLL_HANDLE_CONTAINER_ALLOC
  * \group container
+ * \subgroup container-handle
  * \desc Docs!
  * \arg sll_handle_container_t* c
  * \arg sll_size_t* idx
@@ -177,6 +185,7 @@
  * \flags func macro
  * \name SLL_HANDLE_CONTAINER_CHECK
  * \group container
+ * \subgroup container-handle
  * \desc Docs!
  * \arg sll_handle_container_t* c
  * \arg sll_size_t index
@@ -189,6 +198,7 @@
  * \flags func macro
  * \name SLL_HANDLE_CONTAINER_CLEAR
  * \group container
+ * \subgroup container-handle
  * \desc Docs!
  * \arg sll_handle_container_t* c
  */
@@ -207,6 +217,7 @@
  * \flags func macro
  * \name SLL_HANDLE_CONTAINER_DEALLOC
  * \group container
+ * \subgroup container-handle
  * \desc Docs!
  * \arg sll_handle_container_t* c
  * \arg sll_size_t idx
@@ -225,6 +236,7 @@
  * \flags func macro
  * \name SLL_HANDLE_CONTAINER_INIT
  * \group container
+ * \subgroup container-handle
  * \desc Docs!
  * \arg sll_handle_container_t* c
  */
@@ -242,6 +254,7 @@
  * \flags func macro
  * \name SLL_HANDLE_CONTAINER_ITER
  * \group container
+ * \subgroup container-handle
  * \desc Docs!
  * \arg sll_handle_container_t* c
  * \arg __type__ type
@@ -266,6 +279,7 @@
  * \flags func macro
  * \name SLL_HANDLE_CONTAINER_ITER_CLEAR
  * \group container
+ * \subgroup container-handle
  * \desc Docs!
  * \arg sll_handle_container_t* c
  * \arg __type__ type
@@ -285,6 +299,7 @@
  * \flags macro var
  * \name SLL_HANDLE_CONTAINER_INIT_STRUCT
  * \group container
+ * \subgroup container-handle
  * \desc Docs!
  * \type sll_handle_container_t
  */
@@ -311,6 +326,7 @@ typedef struct _SLL_CONTAINER{
  * \flags type
  * \name sll_handle_container_t
  * \group container
+ * \subgroup container-handle
  * \desc Docs!
  * \arg void** data
  * \arg sll_size_t size
