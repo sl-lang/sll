@@ -44,9 +44,9 @@ void _atexit_execute(void){
 		return;
 	}
 	_atexit_enable=0;
-	SLL_CONTAINER_ITER(&_atexit_data,atexit_function_t*,{
-		SLL_RELEASE(sll_execute_function(container_element->function,container_element->args,container_element->arg_count,EXECUTE_FUNCTION_NO_AUDIT_TERMINATE));
-		_delete_atexit_function(container_element);
+	SLL_CONTAINER_ITER(&_atexit_data,atexit_function_t*,func,{
+		SLL_RELEASE(sll_execute_function(func->function,func->args,func->arg_count,EXECUTE_FUNCTION_NO_AUDIT_TERMINATE));
+		_delete_atexit_function(func);
 	});
 	SLL_CONTAINER_CLEAR(&_atexit_data);
 	_atexit_enable=1;
@@ -80,9 +80,9 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_bool_t sll_api_atexit_unreg
 	}
 	SLL_CRITICAL_ERROR(sll_platform_lock_acquire(_atexit_lock));
 	sll_bool_t o=0;
-	SLL_CONTAINER_FILTER(&_atexit_data,atexit_function_t*,container_element->function==function,{
+	SLL_CONTAINER_FILTER(&_atexit_data,atexit_function_t*,elem,elem->function==function,{
 		o=1;
-		_delete_atexit_function(container_element);
+		_delete_atexit_function(elem);
 	});
 	SLL_CRITICAL(sll_platform_lock_release(_atexit_lock));
 	return o;

@@ -28,14 +28,14 @@ static sll_bool_t _file_cleanup=0;
 
 
 static void _release_data(void){
-	SLL_HANDLE_CONTAINER_ITER(&_file_data,extended_file_t,{
-		if (container_element->is_pointer){
-			sll_file_close(container_element->data.pointer);
+	SLL_HANDLE_CONTAINER_ITER(&_file_data,extended_file_t,file,{
+		if (file->is_pointer){
+			sll_file_close(file->data.pointer);
 		}
 		else{
-			sll_file_close(&(container_element->data.struct_));
+			sll_file_close(&(file->data.struct_));
 		}
-		sll_deallocate(container_element);
+		sll_deallocate(file);
 	});
 	SLL_HANDLE_CONTAINER_CLEAR(&_file_data);
 	_file_cleanup=0;

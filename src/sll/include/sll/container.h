@@ -36,15 +36,16 @@
  * \desc Docs!
  * \arg sll_container_t* c
  * \arg __type__ type
+ * \arg __identifier__ var
  * \arg __code__ check
  * \arg __code__ delete
  */
-#define SLL_CONTAINER_FILTER(c,type,check,delete) \
+#define SLL_CONTAINER_FILTER(c,type,var,check,delete) \
 	do{ \
 		sll_container_t* __c=(c); \
 		sll_size_t __i=0; \
 		for (sll_size_t __j=0;__j<__c->size;__j++){ \
-			type container_element=(type)(*(__c->data+__j)); \
+			type var=(type)(*(__c->data+__j)); \
 			if (check){ \
 				delete; \
 			} \
@@ -95,13 +96,14 @@
  * \desc Docs!
  * \arg sll_container_t* c
  * \arg __type__ type
+ * \arg __identifier__ var
  * \arg __code__ code
  */
-#define SLL_CONTAINER_ITER(c,type,code) \
+#define SLL_CONTAINER_ITER(c,type,var,code) \
 	do{ \
 		sll_container_t* __c=(c); \
 		for (sll_size_t __i=0;__i<__c->size;__i++){ \
-			type container_element=(type)(*(__c->data+__i)); \
+			type var=(type)(*(__c->data+__i)); \
 			code; \
 		}; \
 	} while (0)
@@ -224,14 +226,15 @@
  * \desc Docs!
  * \arg sll_handle_container_t* c
  * \arg __type__ type
+ * \arg __identifier__ var
  * \arg __code__ code
  */
-#define SLL_HANDLE_CONTAINER_ITER(c,type,code) \
+#define SLL_HANDLE_CONTAINER_ITER(c,type,var,code) \
 	do{ \
 		sll_handle_container_t* __c=(c); \
 		for (sll_size_t __i=0;__i<__c->size;__i++){ \
-			type* container_element=(type*)(*(__c->data+__i)); \
-			if (((sll_size_t)container_element)>>63){ \
+			type* var=(type*)(*(__c->data+__i)); \
+			if (((sll_size_t)var)>>63){ \
 				continue; \
 			} \
 			code; \

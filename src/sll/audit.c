@@ -56,8 +56,8 @@ __SLL_EXTERNAL void sll_audit_list(const sll_char_t* name,const sll_char_t* form
 	sll_string_from_pointer(name,&name_str);
 	sll_array_t args;
 	sll_new_object_array_list(format,sll_string_length(format),va,&args);
-	SLL_CONTAINER_ITER(&_audit_data,sll_audit_callback_t,{
-		container_element(&name_str,&args);
+	SLL_CONTAINER_ITER(&_audit_data,sll_audit_callback_t,callback,{
+		callback(&name_str,&args);
 	});
 	sll_free_array(&args);
 	sll_free_string(&name_str);
@@ -73,7 +73,7 @@ __SLL_EXTERNAL void sll_audit_register_callback(sll_audit_callback_t callback){
 
 __SLL_EXTERNAL sll_bool_t sll_audit_unregister_callback(sll_audit_callback_t callback){
 	sll_bool_t o=0;
-	SLL_CONTAINER_FILTER(&_audit_data,sll_audit_callback_t,container_element==callback,{
+	SLL_CONTAINER_FILTER(&_audit_data,sll_audit_callback_t,elem,elem==callback,{
 		o=1;
 	});
 	return o;
