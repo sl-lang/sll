@@ -15,16 +15,12 @@
 
 
 
-#define SET_OR_CLEAR(data,flags,set) ((data)^=((-((sll_logger_flags_t)set))^(data))&(flags))
-
-
-
 static sll_logger_flags_t _log_default=0;
 static sll_container_t _log_data=SLL_CONTAINER_INIT_STRUCT;
 
 
 
-static file_log_data_t* _get_file_index(const sll_char_t* file_path){
+static file_log_data_t* _get_file_data(const sll_char_t* file_path){
 	sll_string_t file_path_str;
 	sll_string_from_pointer(file_path,&file_path_str);
 	SLL_CONTAINER_ITER(&_log_data,file_log_data_t*,file,{
@@ -44,7 +40,7 @@ static file_log_data_t* _get_file_index(const sll_char_t* file_path){
 
 
 
-static function_log_data_t* _get_func_index(file_log_data_t* file,const sll_char_t* func){
+static function_log_data_t* _get_function_data(file_log_data_t* file,const sll_char_t* func){
 	sll_string_t func_str;
 	sll_string_from_pointer(func,&func_str);
 	SLL_CONTAINER_ITER(&(file->functions),function_log_data_t*,function,{
@@ -102,8 +98,8 @@ void _log_release_data(void){
 
 
 __SLL_EXTERNAL sll_bool_t sll_log(const sll_char_t* file_path,const sll_char_t* function,sll_file_offset_t line,sll_bool_t is_warning,const sll_char_t* format,...){
-	file_log_data_t* f_dt=_get_file_index(file_path);
-	function_log_data_t* fn_dt=_get_func_index(f_dt,function);
+	file_log_data_t* f_dt=_get_file_data(file_path);
+	function_log_data_t* fn_dt=_get_function_data(f_dt,function);
 	if (!is_warning&&!(fn_dt->flags&SLL_LOG_FLAG_SHOW)){
 		return 0;
 	}
@@ -129,8 +125,8 @@ __SLL_EXTERNAL sll_bool_t sll_log_raw(const sll_char_t* file_path,const sll_char
 	if (!_log_default&&!_log_data.size){
 		return 0;
 	}
-	file_log_data_t* f_dt=_get_file_index(file_path);
-	function_log_data_t* fn_dt=_get_func_index(f_dt,function);
+	file_log_data_t* f_dt=_get_file_data(file_path);
+	function_log_data_t* fn_dt=_get_function_data(f_dt,function);
 	if (!is_warning&&!(fn_dt->flags&SLL_LOG_FLAG_SHOW)){
 		return 0;
 	}
@@ -145,21 +141,16 @@ __SLL_EXTERNAL sll_bool_t sll_log_raw(const sll_char_t* file_path,const sll_char
 
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_set_log_flags(const sll_char_t* file_path,const sll_char_t* function,sll_logger_flags_t flags,sll_bool_t state){
-	sll_logger_flags_t tmp=flags;
-	flags&=SLL_LOG_FLAG_SHOW|SLL_LOG_FLAG_NO_HEADER;
-	sll_bool_t o=(tmp==flags);
-	if (file_path){
-		file_log_data_t* dt=_get_file_index(file_path);
-		if (function){
-			function_log_data_t* fn_dt=_get_func_index(dt,function);
-			SET_OR_CLEAR(fn_dt->flags,flags,state);
-		}
-		else{
-			SET_OR_CLEAR(dt->flags,flags,state);
-		}
+	sll_logger_flags_t* ptr;
+	if (!file_path){
+		ptr=&_log_default;
 	}
 	else{
-		SET_OR_CLEAR(_log_default,flags,state);
+		file_log_data_t* dt=_get_file_data(file_path);
+		ptr=(function?&(_get_function_data(dt,function)->flags):&(dt->flags));
 	}
-	return o;
+	sll_logger_flags_t tmp=flags;
+	flags&=SLL_LOG_FLAG_SHOW|SLL_LOG_FLAG_NO_HEADER;
+	*ptr=(state?(*ptr)|flags:(*ptr)&(~flags));
+	return (tmp==flags);
 }
