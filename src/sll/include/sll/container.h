@@ -340,4 +340,15 @@ typedef struct _SLL_HANDLE_CONTAINER{
 
 
 
+/**
+ * \flags func
+ * \name sll_container_clear
+ * \group container
+ * \desc Docs!
+ * \arg sll_container_t* c
+ */
+__SLL_EXTERNAL void sll_container_clear(sll_container_t* c);
+
+
+
 #endif
