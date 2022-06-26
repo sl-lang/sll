@@ -114,7 +114,7 @@
 		for (sll_size_t __i=0;__i<__c->size;__i++){ \
 			type var=*(__ptr+__i); \
 			code; \
-		}; \
+		} \
 	} while (0)
 
 
@@ -285,7 +285,7 @@
 				continue; \
 			} \
 			code; \
-		}; \
+		} \
 	} while (0)
 
 
@@ -482,6 +482,19 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_handle_container_check(sll_hand
 
 /**
  * \flags func
+ * \name sll_handle_container_dealloc
+ * \group container
+ * \subgroup container-handle
+ * \desc Docs!
+ * \arg sll_handle_container_t* c
+ * \arg sll_size_t index
+ */
+__SLL_EXTERNAL void sll_handle_container_dealloc(sll_handle_container_t* c,sll_size_t index);
+
+
+
+/**
+ * \flags func
  * \name sll_handle_container_init
  * \group container
  * \subgroup container-handle
@@ -489,6 +502,32 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_handle_container_check(sll_hand
  * \arg sll_handle_container_t* c
  */
 __SLL_EXTERNAL void sll_handle_container_init(sll_handle_container_t* c);
+
+
+
+/**
+ * \flags func
+ * \name sll_handle_container_iter
+ * \group container
+ * \subgroup container-handle
+ * \desc Docs!
+ * \arg sll_handle_container_t* c
+ * \arg sll_container_callback_t callback
+ */
+__SLL_EXTERNAL void sll_handle_container_iter(sll_handle_container_t* c,sll_container_callback_t callback);
+
+
+
+/**
+ * \flags func
+ * \name sll_handle_container_iter_clear
+ * \group container
+ * \subgroup container-handle
+ * \desc Docs!
+ * \arg sll_handle_container_t* c
+ * \arg sll_container_callback_t callback
+ */
+__SLL_EXTERNAL void sll_handle_container_iter_clear(sll_handle_container_t* c,sll_container_callback_t callback);
 
 
 
