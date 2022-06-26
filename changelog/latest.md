@@ -2,7 +2,7 @@
 
 ## Added
 
-- Extended the container API to include macro-substitution-functions: `sll_container_clear`, `sll_container_filter`, `sll_container_init`, `sll_container_iter` and `sll_container_iter_clear`
+- Extended the container API to include macro-substitution-functions: `sll_container_clear`, `sll_container_filter`, `sll_container_init`, `sll_container_iter`, `sll_container_iter_clear` and `sll_container_push`
 - Implemented `sll_container_callback_t` and `sll_container_check_callback_t`
 
 ## Changed
