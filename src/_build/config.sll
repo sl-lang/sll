@@ -109,6 +109,9 @@
 	(~ string_type) OPERATOR_PARSER_CONFIG_FILE_PATH
 	(~ string_type) OPERATOR_PARSER_OUTPUT_FILE_PATH
 	(~ string_type) OPTIMIZER_CONFIG_FILE_PATH
+	(~ array_type) OPTIMIZER_IGNORED_NODE_TYPES
+	(~ string_type) OPTIMIZER_NODE_HEADER_FILE_PATH
+	(~ string_type) OPTIMIZER_NODE_TYPE_PREFIX
 	(~ string_type) OPTIMIZER_OUTPUT_FILE_PATH
 	(~ cli_options_types) OPTIONS
 	(~ map_type) PREPROCESSOR_DEFINITION_PREFIX
@@ -498,6 +501,14 @@
 	"src/sll/data/operator_parser.txt"
 	"src/sll/include/sll/generated/operator_parser.h"
 	"src/sll/data/optimizer.txt"
+	[
+		"SLL_NODE_TYPE_DBG"
+		"SLL_NODE_TYPE_CHANGE_STACK"
+		"SLL_NODE_TYPE_RESERVED0"
+		"SLL_NODE_TYPE_NOP"
+	]
+	"src/sll/include/sll/node.h"
+	"SLL_NODE_TYPE_"
 	"src/sll/include/sll/generated/optimizer.h"
 	options
 	<

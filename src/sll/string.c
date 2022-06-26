@@ -1554,7 +1554,34 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_float_t sll_string_parse_float(const sll_s
 
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_integer_t sll_string_parse_int(const sll_string_t* string){
-	SLL_UNIMPLEMENTED();
+	sll_bool_t neg=0;
+	sll_string_length_t i=0;
+	sll_char_t c=string->data[0];
+	if (c=='+'||c=='-'){
+		i=1;
+		neg=(c=='-');
+	}
+	else if (c<48||c>57){
+		return 0;
+	}
+	sll_integer_t o=0;
+	sll_string_length_t num_count=0;
+	while (i<string->length){
+		sll_char_t c=string->data[i];
+		i++;
+		if (c=='0'&&!o){
+			continue;
+		}
+		if (c<48||c>57){
+			break;
+		}
+		if (num_count==20){
+			return (neg?-0x8000000000000000ull:0x7fffffffffffffffull);
+		}
+		num_count++;
+		o=o*10+c-48;
+	}
+	return (neg?-o:o);
 }
 
 

@@ -17,6 +17,53 @@
 
 (= generate_optimizer (,,,
 	(<- log$log "Generating optimizer from '" config$OPTIMIZER_CONFIG_FILE_PATH "'...")
+	(<- log$log "  Loading node types from '" config$OPTIMIZER_NODE_HEADER_FILE_PATH "'...")
+	(= data (<- string$split
+		(<- file$read
+			(<- file$open
+				config$OPTIMIZER_NODE_HEADER_FILE_PATH
+				"r"
+			)
+		)
+		'\n'
+	))
+	; (= type_to_number <>)
+	; (-> (= i 0) (< i ($ data))
+	; 	(= line (: data i))
+	; 	(++ i)
+	; 	(? (! (<- string$starts line "#define")) (<<<))
+	; 	(= line (<- string$split
+	; 		(<- string$trim
+	; 			(>> line 7)
+	; 		)
+	; 		' '
+	; 	))
+	; 	(= name (: line 0))
+	; 	(? (||
+	; 		(! (<- string$starts name config$OPTIMIZER_NODE_TYPE_PREFIX))
+	; 		(|: config$OPTIMIZER_IGNORED_NODE_TYPES name)
+	; 	) (<<<))
+	; 	(=
+	; 		(:
+	; 			type_to_number
+	; 			(<- string$lower_case
+	; 				(>>
+	; 					name
+	; 					($ config$OPTIMIZER_NODE_TYPE_PREFIX)
+	; 				)
+	; 			)
+	; 		)
+	; 		(::
+	; 			(:
+	; 				line
+	; 				1
+	; 			)
+	; 			int_type
+	; 		)
+	; 	)
+	; )
+	; (:> type_to_number '\n')
+	; (--- "@build-script/util.sll")(<- util$fail_and_exit)
 	(<- log$log "  Reading configuration file...")
 	(= data (<- string$split
 		(<- file$read

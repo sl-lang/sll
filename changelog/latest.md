@@ -5,6 +5,7 @@
 - Extended the container API to include macro-substitution-functions: `sll_container_clear`, `sll_container_filter`, `sll_container_init`, `sll_container_iter`, `sll_container_iter_clear` and `sll_container_push`
 - Extended the handle container API to include macro-substitution-functions: `sll_handle_container_alloc`, `sll_handle_container_clear`, `sll_handle_container_check`, `sll_handle_container_dealloc`, `sll_handle_container_init`, `sll_handle_container_iter` and `sll_handle_container_iter_clear`
 - Implemented `sll_container_callback_t` and `sll_container_check_callback_t`
+- Implemented `sll_string_parse_int`
 
 ## Changed
 

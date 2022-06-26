@@ -1,8 +1,0 @@
-optimize_print
-optimize_assign
-optimize_loops
-optimize_generator_loops
-optimize_function
-optimize_internal_function
-optimize_comma
-optimize_operation_list
