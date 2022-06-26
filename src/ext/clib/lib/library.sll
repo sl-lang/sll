@@ -1,7 +1,7 @@
 (---
 	"clib/_library.sll"
 	"clib/_load_library.sll"
-	"clib/_setup_loaded_libraries.sll"
+	"clib/_setup_extension_libraries.sll"
 	"clib/function.sll"
 	"error.sll"
 	"map.sll"

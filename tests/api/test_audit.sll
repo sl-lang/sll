@@ -238,8 +238,8 @@
 ))
 
 (= test_event_sll.sys.library.load (,,,
-	(= lib_path (<- path$absolute (+
-		sys$ROOT_PATH
+	(= lib_path (+
+		(<- path$absolute sys$ROOT_PATH)
 		"library-name"
 		sys$LIBRARY_EXTENSION
 	))
