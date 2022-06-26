@@ -145,6 +145,10 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_sys_load_li
 	sll_char_t bf[SLL_API_MAX_FILE_PATH_LENGTH];
 	sll_string_t full_lib_path;
 	sll_string_from_pointer_length(bf,sll_platform_absolute_path(path->data,bf,SLL_API_MAX_FILE_PATH_LENGTH),&full_lib_path);
+	if (!full_lib_path.length){
+		sll_free_string(&full_lib_path);
+		sll_string_clone(path,&full_lib_path);
+	}
 	sll_error_t err;
 	if (!sll_platform_path_exists(path->data)){
 		err=SLL_ERROR_NO_FILE_PATH;
