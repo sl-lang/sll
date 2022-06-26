@@ -27,43 +27,29 @@
 		)
 		'\n'
 	))
-	; (= type_to_number <>)
-	; (-> (= i 0) (< i ($ data))
-	; 	(= line (: data i))
-	; 	(++ i)
-	; 	(? (! (<- string$starts line "#define")) (<<<))
-	; 	(= line (<- string$split
-	; 		(<- string$trim
-	; 			(>> line 7)
-	; 		)
-	; 		' '
-	; 	))
-	; 	(= name (: line 0))
-	; 	(? (||
-	; 		(! (<- string$starts name config$OPTIMIZER_NODE_TYPE_PREFIX))
-	; 		(|: config$OPTIMIZER_IGNORED_NODE_TYPES name)
-	; 	) (<<<))
-	; 	(=
-	; 		(:
-	; 			type_to_number
-	; 			(<- string$lower_case
-	; 				(>>
-	; 					name
-	; 					($ config$OPTIMIZER_NODE_TYPE_PREFIX)
-	; 				)
-	; 			)
-	; 		)
-	; 		(::
-	; 			(:
-	; 				line
-	; 				1
-	; 			)
-	; 			int_type
-	; 		)
-	; 	)
-	; )
-	; (:> type_to_number '\n')
-	; (--- "@build-script/util.sll")(<- util$fail_and_exit)
+	(= type_to_number ({> (= i 0) (< i ($ data))
+		(= line (: data i))
+		(++ i)
+		(? (! (<- string$starts line "#define")) (<<<))
+		(= line (<- string$split
+			(<- string$trim
+				(>> line 7)
+			)
+			' '
+		))
+		(= name (: line 0))
+		(? (||
+			(! (<- string$starts name config$OPTIMIZER_NODE_TYPE_PREFIX))
+			(|: config$OPTIMIZER_IGNORED_NODE_TYPES name)
+		) (<<<))
+		(<- string$lower_case
+			(>>
+				name
+				($ config$OPTIMIZER_NODE_TYPE_PREFIX)
+			)
+		)
+		(:: (: line 1) int_type)
+	))
 	(<- log$log "  Reading configuration file...")
 	(= data (<- string$split
 		(<- file$read
@@ -73,19 +59,6 @@
 			)
 		)
 		'\n'
-	))
-	(= init_and_deinit [])
-	(= pre_visit [])
-	(= data ([> (= i 0) (< i ($ data))
-		(= line (<- string$trim (: data i)))
-		(++ i)
-		(? (|| (! line) (=== (: line 0) '#')) (<<<))
-		(= line (<- string$split line ':'))
-		(= name (: line 0))
-		(= line (>> line 1))
-		(? (|: line "init")(<- array$push init_and_deinit name))
-		(? (|: line "pre_visit")(<- array$push pre_visit name))
-		name
 	))
 	(<- log$log "  Generating code in '" config$OPTIMIZER_OUTPUT_FILE_PATH "'...")
 	(= fh (<- file$open config$OPTIMIZER_OUTPUT_FILE_PATH "w"))

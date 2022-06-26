@@ -9,7 +9,6 @@
 
 ## Changed
 
-- Build script no longer uses nightly versions of Sll
 - Conditional arguments in `SLL_CONTAINER_FILTER` and `SLL_HANDLE_CONTAINER_FILTER` have been flipped to better reflect their meaning
 - Fixed incorrect pointer calculations in container functions
 - Reworked the optimizer
