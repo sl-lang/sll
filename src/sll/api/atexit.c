@@ -67,7 +67,7 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_atexit_register(sll_integer_t functio
 	function_data->arg_count=arg_count;
 	sll_copy_objects(args,arg_count,function_data->args);
 	sll_gc_add_roots(function_data->args,arg_count);
-	SLL_CONTAINER_PUSH(&_atexit_data,function_data);
+	SLL_CONTAINER_PUSH(&_atexit_data,atexit_function_t*,function_data);
 	SLL_CRITICAL(sll_platform_lock_release(_atexit_lock));
 }
 

@@ -33,7 +33,7 @@ static log_file_data_t* _get_file_data(const sll_char_t* file_path){
 	sll_copy_data(&file_path_str,sizeof(sll_string_t),(sll_string_t*)(&(data->name)));
 	SLL_CONTAINER_INIT(&(data->functions));
 	data->flags=_log_default;
-	SLL_CONTAINER_PUSH(&_log_data,data);
+	SLL_CONTAINER_PUSH(&_log_data,log_file_data_t*,data);
 	return data;
 }
 
@@ -51,7 +51,7 @@ static log_function_data_t* _get_function_data(log_file_data_t* file,const sll_c
 	log_function_data_t* data=sll_allocate(sizeof(log_function_data_t));
 	sll_copy_data(&function_name_str,sizeof(sll_string_t),(sll_string_t*)(&(data->name)));
 	data->flags=file->flags;
-	SLL_CONTAINER_PUSH(&(file->functions),data);
+	SLL_CONTAINER_PUSH(&(file->functions),log_function_data_t*,data);
 	return data;
 }
 

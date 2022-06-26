@@ -169,7 +169,7 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_sys_load_li
 	sll_loaded_library_t* data=sll_allocate(sizeof(sll_loaded_library_t));
 	sll_copy_data(&lib_name,sizeof(sll_string_t),(sll_string_t*)(&(data->name)));
 	data->handle=h;
-	SLL_CONTAINER_PUSH(&_sys_library_data,data);
+	SLL_CONTAINER_PUSH(&_sys_library_data,sll_loaded_library_t*,data);
 	sll_audit(SLL_CHAR("sll.sys.library.load"),SLL_CHAR("ssi"),path,&lib_name,h);
 	if (!_sys_vm_init){
 		sll_register_cleanup(_cleanup_vm_data,SLL_CLEANUP_TYPE_VM);

@@ -51,19 +51,20 @@
 	do{ \
 		sll_container_t* __c=(c); \
 		sll_size_t __i=0; \
+		type* __ptr=(type*)(__c->data); \
 		for (sll_size_t __j=0;__j<__c->size;__j++){ \
-			type var=(type)(*(__c->data+__j)); \
+			type var=*(__ptr+__j); \
 			if (!(check)){ \
 				delete; \
 			} \
 			else{ \
-				*(__c->data+__i)=*(__c->data+__j); \
+				*(__ptr+__i)=*(__ptr+__j); \
 				__i++; \
 			} \
-		}; \
+		} \
 		if (__i!=__c->size){ \
 			__c->size=__i; \
-			sll_allocator_resize((void**)(&(__c->data)),__i*sizeof(type)); \
+			sll_allocator_resize(&(__c->data),__i*sizeof(type)); \
 		} \
 	} while (0)
 
@@ -109,8 +110,9 @@
 #define SLL_CONTAINER_ITER(c,type,var,code) \
 	do{ \
 		sll_container_t* __c=(c); \
+		type* __ptr=(type*)(__c->data); \
 		for (sll_size_t __i=0;__i<__c->size;__i++){ \
-			type var=(type)(*(__c->data+__i)); \
+			type var=*(__ptr+__i); \
 			code; \
 		}; \
 	} while (0)
@@ -142,14 +144,15 @@
  * \group container
  * \desc Docs!
  * \arg sll_container_t* c
+ * \arg __type__ type
  * \arg __any__ elem
  */
-#define SLL_CONTAINER_PUSH(c,elem) \
+#define SLL_CONTAINER_PUSH(c,type,elem) \
 	do{ \
 		sll_container_t* __c=(c); \
 		__c->size++; \
-		sll_allocator_resize((void**)(&(__c->data)),__c->size*sizeof(elem)); \
-		*(__c->data+__c->size-1)=(void*)(elem); \
+		sll_allocator_resize(&(__c->data),__c->size*sizeof(type)); \
+		*(((type*)(__c->data))+__c->size-1)=(elem); \
 	} while (0)
 
 
@@ -312,11 +315,11 @@
  * \name sll_container_t
  * \group container
  * \desc Docs!
- * \arg void** data
+ * \arg void* data
  * \arg sll_size_t size
  */
 typedef struct _SLL_CONTAINER{
-	void** data;
+	void* data;
 	sll_size_t size;
 } sll_container_t;
 
@@ -420,6 +423,19 @@ __SLL_EXTERNAL void sll_container_iter(sll_container_t* c,sll_container_callback
  * \arg sll_container_callback_t callback
  */
 __SLL_EXTERNAL void sll_container_iter_clear(sll_container_t* c,sll_container_callback_t callback);
+
+
+
+/**
+ * \flags func
+ * \name sll_container_push
+ * \group container
+ * \desc Docs!
+ * \arg sll_container_t* c
+ * \arg const void* elem
+ * \arg sll_size_t elem_size
+ */
+__SLL_EXTERNAL void sll_container_push(sll_container_t* c,const void* elem,sll_size_t elem_size);
 
 
 

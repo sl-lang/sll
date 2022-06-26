@@ -66,7 +66,7 @@ __SLL_EXTERNAL void sll_audit_list(const sll_char_t* name,const sll_char_t* form
 
 
 __SLL_EXTERNAL void sll_audit_register_callback(sll_audit_callback_t callback){
-	SLL_CONTAINER_PUSH(&_audit_data,callback);
+	SLL_CONTAINER_PUSH(&_audit_data,sll_audit_callback_t,callback);
 }
 
 
