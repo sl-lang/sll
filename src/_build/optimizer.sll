@@ -48,65 +48,8 @@
 #include <sll/_internal/common.h>
 #include <sll/node.h>
 `)
-	(-> (= i 0) (< i ($ data))
-		(= name (: data i))
-		(<- file$write fh "#include <../optimizer/" name ".h>\n")
-		(++ i)
-	)
 	(<- file$write fh
 `
-
-
-static __SLL_FORCE_INLINE void _deinit_optimizer(sll_source_file_t* source_file){
-`)
-	(-> (= i 0) (< i ($ init_and_deinit))
-		(= name (: init_and_deinit i))
-		(<- file$write fh "\t__optimizer_deinit_" name "(source_file);\n")
-		(++ i)
-	)
-	(<- file$write fh
-`}
-
-
-
-static __SLL_FORCE_INLINE void _init_optimizer(sll_source_file_t* source_file){
-`)
-	(-> (= i 0) (< i ($ init_and_deinit))
-		(= name (: init_and_deinit i))
-		(<- file$write fh "\t__optimizer_init_" name "(source_file);\n")
-		(++ i)
-	)
-	(<- file$write fh
-`}
-
-
-
-static __SLL_FORCE_INLINE void _pre_visit_optimizer(sll_source_file_t* source_file,sll_node_t* node,sll_node_t* parent){
-`)
-	(-> (= i 0) (< i ($ pre_visit))
-		(= name (: pre_visit i))
-		(<- file$write fh '\t')
-		(++ i)
-		(? (!== i ($ data)) (<- file$write fh "node="))
-		(<- file$write fh "__optimizer_pre_" name "(source_file,node,parent);\n")
-	)
-	(<- file$write fh
-`}
-
-
-
-static __SLL_FORCE_INLINE void _visit_optimizer(sll_source_file_t* source_file,sll_node_t* node,sll_node_t*const* children,sll_node_t* parent){
-`)
-	(-> (= i 0) (< i ($ data))
-		(= name (: data i))
-		(<- file$write fh '\t')
-		(++ i)
-		(? (!== i ($ data)) (<- file$write fh "node="))
-		(<- file$write fh "__optimizer_" name "(source_file,node,children,parent);\n")
-	)
-	(<- file$write fh
-`}
-
 
 
 #endif

@@ -1,6 +1,6 @@
 #ifndef __SLL__INTERNAL_OPTIMIZER_H__
 #define __SLL__INTERNAL_OPTIMIZER_H__ 1
-#include <sll/_internal/common.h>
+#include <sll/_size_types.h>
 #include <sll/node.h>
 #include <sll/types.h>
 
@@ -11,34 +11,21 @@
 		(node)=((node)->type==SLL_NODE_TYPE_CHANGE_STACK?(node)->data._next_node:(node)+1); \
 	}
 
-#define REWIND_NODE(node) \
-	do{ \
-		(node)--; \
-		if ((node)->type==SLL_NODE_TYPE_CHANGE_STACK){ \
-			(node)=(node)->data._next_node; \
-		} \
-	} while (0)
 
-#define OPTIMIZER_FUNTION(name) static __SLL_FORCE_INLINE sll_node_t* __optimizer_##name(sll_source_file_t* source_file,sll_node_t* node,sll_node_t*const* children,sll_node_t* parent)
-#define OPTIMIZER_FUNTION_PRE_VISIT(name) static __SLL_FORCE_INLINE sll_node_t* __optimizer_pre_##name(sll_source_file_t* source_file,sll_node_t* node,sll_node_t* parent)
-#define OPTIMIZER_FUNTION_INIT(name) static __SLL_FORCE_INLINE void __optimizer_init_##name(sll_source_file_t* source_file)
-#define OPTIMIZER_FUNTION_DEINIT(name) static __SLL_FORCE_INLINE void __optimizer_deinit_##name(sll_source_file_t* source_file)
+
+typedef __SLL_U32 child_level_count_t;
 
 
 
-const sll_node_t* _node_to_object(const sll_source_file_t* source_file,const sll_node_t* node,sll_object_t** out);
+typedef __SLL_U32 child_count_t;
 
 
 
-sll_node_offset_t _object_size_as_node(sll_object_t* object);
-
-
-
-sll_node_t* _object_to_node(sll_source_file_t* source_file,sll_object_t* object,sll_node_t* node);
-
-
-
-void _unneeded_result(sll_arg_count_t* arg_count,sll_node_t* node);
+typedef struct __OPTIMIZER_NODE_CHILDREN_DATA{
+	sll_node_t* node;
+	struct __OPTIMIZER_NODE_CHILDREN_DATA* children;
+	child_count_t child_count;
+} optimizer_node_children_data_t;
 
 
 
