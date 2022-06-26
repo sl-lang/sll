@@ -254,6 +254,18 @@
 
 
 /**
+ * \flags macro var
+ * \name SLL_HANDLE_CONTAINER_INIT_STRUCT
+ * \group container
+ * \subgroup container-handle
+ * \desc Docs!
+ * \type sll_handle_container_t
+ */
+#define SLL_HANDLE_CONTAINER_INIT_STRUCT {NULL,0,0xffffffffffffffffull}
+
+
+
+/**
  * \flags func macro
  * \name SLL_HANDLE_CONTAINER_ITER
  * \group container
@@ -295,19 +307,6 @@
 		SLL_HANDLE_CONTAINER_ITER(__c_tmp,type,var,code); \
 		SLL_HANDLE_CONTAINER_CLEAR(__c_tmp); \
 	} while (0)
-
-
-
-/**
- * \flags macro var
- * \name SLL_HANDLE_CONTAINER_INIT_STRUCT
- * \group container
- * \subgroup container-handle
- * \desc Docs!
- * \type sll_handle_container_t
- */
-#define SLL_HANDLE_CONTAINER_INIT_STRUCT {NULL,0,0xffffffffffffffffull}
-
 
 
 /**
