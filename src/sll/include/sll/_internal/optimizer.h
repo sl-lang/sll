@@ -23,6 +23,10 @@ typedef __SLL_U32 child_count_t;
 
 
 
+typedef __SLL_U32 condition_count_t;
+
+
+
 typedef struct __OPTIMIZER_NODE_CHILDREN_DATA{
 	sll_node_t* node;
 	struct __OPTIMIZER_NODE_CHILDREN_DATA* children;
@@ -34,7 +38,7 @@ typedef struct __OPTIMIZER_NODE_CHILDREN_DATA{
 typedef struct __OPTIMIZER_NODE_DATA{
 	child_count_t required_child_levels[NODE_TYPE_COUNT];
 	void* conditions;
-	sll_array_length_t condition_count;
+	condition_count_t condition_count;
 } optimizer_node_data_t;
 
 
