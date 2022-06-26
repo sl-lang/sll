@@ -7,7 +7,6 @@
 
 
 
-
 static const sll_char_t* _error_string_pointer_table[ERROR_STRING_POINTER_TABLE_SIZE];
 static sll_array_length_t _error_string_pointer_table_index=0;
 
