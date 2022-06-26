@@ -1567,7 +1567,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_integer_t sll_string_parse_int(const sll_s
 	sll_integer_t o=0;
 	sll_string_length_t num_count=0;
 	while (i<string->length){
-		sll_char_t c=string->data[i];
+		c=string->data[i];
 		i++;
 		if (c=='0'&&!o){
 			continue;
