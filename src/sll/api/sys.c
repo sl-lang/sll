@@ -142,17 +142,18 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_sys_load_li
 	if (path->length>=SLL_API_MAX_FILE_PATH_LENGTH){
 		return SLL_ERROR_TOO_LONG;
 	}
-	sll_string_t lib_name;
-	sll_string_from_pointer(path->data+sll_path_split(path),&lib_name);
+	sll_char_t bf[SLL_API_MAX_FILE_PATH_LENGTH];
+	sll_string_t full_lib_path;
+	sll_string_from_pointer_length(bf,sll_platform_absolute_path(path->data,bf,SLL_API_MAX_FILE_PATH_LENGTH),&full_lib_path);
 	sll_error_t err;
 	if (!sll_platform_path_exists(path->data)){
 		err=SLL_ERROR_NO_FILE_PATH;
 		goto _error;
 	}
 	SLL_CONTAINER_ITER(&_sys_library_data,sll_loaded_library_t*,library,{
-		if (STRING_EQUAL(&(library->name),&lib_name)){
-			sll_audit(SLL_CHAR("sll.sys.library.load"),SLL_CHAR("ssi"),path,&lib_name,library->handle);
-			sll_free_string(&lib_name);
+		if (STRING_EQUAL(&(library->name),&full_lib_path)){
+			sll_audit(SLL_CHAR("sll.sys.library.load"),SLL_CHAR("ssi"),path,&full_lib_path,library->handle);
+			sll_free_string(&full_lib_path);
 			return SLL_NO_ERROR;
 		}
 	});
@@ -163,14 +164,14 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_sys_load_li
 	sll_bool_t (*fn)(sll_version_t)=sll_platform_lookup_symbol(h,SLL_ABI_NAME(SLL_ABI_INIT));
 	if (!fn||!fn(SLL_VERSION)){
 		SLL_CRITICAL_ERROR(sll_platform_unload_library(h));
-		sll_free_string(&lib_name);
+		sll_free_string(&full_lib_path);
 		SLL_UNIMPLEMENTED();
 	}
 	sll_loaded_library_t* data=sll_allocate(sizeof(sll_loaded_library_t));
-	sll_copy_data(&lib_name,sizeof(sll_string_t),(sll_string_t*)(&(data->name)));
+	sll_copy_data(&full_lib_path,sizeof(sll_string_t),(sll_string_t*)(&(data->name)));
 	data->handle=h;
 	SLL_CONTAINER_PUSH(&_sys_library_data,sll_loaded_library_t*,data);
-	sll_audit(SLL_CHAR("sll.sys.library.load"),SLL_CHAR("ssi"),path,&lib_name,h);
+	sll_audit(SLL_CHAR("sll.sys.library.load"),SLL_CHAR("si"),&full_lib_path,h);
 	if (!_sys_vm_init){
 		sll_register_cleanup(_cleanup_vm_data,SLL_CLEANUP_TYPE_VM);
 		_sys_vm_init=1;
@@ -181,8 +182,8 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_sys_load_li
 	}
 	return SLL_NO_ERROR;
 _error:
-	sll_audit(SLL_CHAR("sll.sys.library.load.error"),SLL_CHAR("ssi"),path,&lib_name,err);
-	sll_free_string(&lib_name);
+	sll_audit(SLL_CHAR("sll.sys.library.load.error"),SLL_CHAR("si"),&full_lib_path,err);
+	sll_free_string(&full_lib_path);
 	return err;
 }
 

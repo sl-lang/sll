@@ -1,0 +1,34 @@
+(---
+	"clib/_library.sll"
+	"clib/_load_library.sll"
+	"array.sll"
+	"audit.sll"
+	"weakref.sll"
+)
+
+
+
+(= _loaded_ext_libraries (<- (... "clib:library_get_loaded_list")))
+(= _ext_lib_objects [])
+(-> (= i 0) (< i ($ _loaded_ext_libraries))
+	(= data (: _loaded_ext_libraries i))
+	(= lib (. clib_library_type
+		(: data 0)
+		<>
+		(: data 1)
+	))
+	(= (: _lib_map (: data 0)) (<- weakref$ref lib))
+	(<- array$push _ext_lib_objects lib)
+	(++ i)
+)
+
+(<- audit$register (,,, name data
+	(? (!== name "sll.sys.library.load") (@@))
+	(= lib (. clib_library_type
+		data$path
+		<>
+		data$handle
+	))
+	(= (: _lib_map data$path) (<- weakref$ref lib))
+	(<- array$push _ext_lib_objects lib)
+))
