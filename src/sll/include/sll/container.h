@@ -341,6 +341,29 @@ typedef struct _SLL_HANDLE_CONTAINER{
 
 
 /**
+ * \flags func type
+ * \name sll_container_check_callback_t
+ * \group container
+ * \desc Docs!
+ * \arg void* elem
+ * \ret sll_bool_t
+ */
+typedef sll_bool_t (*sll_container_check_callback_t)(void* elem);
+
+
+
+/**
+ * \flags func type
+ * \name sll_container_delete_callback_t
+ * \group container
+ * \desc Docs!
+ * \arg void* elem
+ */
+typedef void (*sll_container_delete_callback_t)(void* elem);
+
+
+
+/**
  * \flags func
  * \name sll_container_clear
  * \group container
@@ -348,6 +371,20 @@ typedef struct _SLL_HANDLE_CONTAINER{
  * \arg sll_container_t* c
  */
 __SLL_EXTERNAL void sll_container_clear(sll_container_t* c);
+
+
+
+/**
+ * \flags func
+ * \name sll_container_filter
+ * \group container
+ * \desc Docs!
+ * \arg sll_container_t* c
+ * \arg sll_size_t elem_size
+ * \arg sll_container_check_callback_t check
+ * \arg sll_container_delete_callback_t delete
+ */
+__SLL_EXTERNAL void sll_container_filter(sll_container_t* c,sll_size_t elem_size,sll_container_check_callback_t check,sll_container_delete_callback_t delete);
 
 
 
