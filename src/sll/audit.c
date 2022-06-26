@@ -73,7 +73,7 @@ __SLL_EXTERNAL void sll_audit_register_callback(sll_audit_callback_t callback){
 
 __SLL_EXTERNAL sll_bool_t sll_audit_unregister_callback(sll_audit_callback_t callback){
 	sll_bool_t o=0;
-	SLL_CONTAINER_FILTER(&_audit_data,sll_audit_callback_t,elem,elem==callback,{
+	SLL_CONTAINER_FILTER(&_audit_data,sll_audit_callback_t,elem,elem!=callback,{
 		o=1;
 	});
 	return o;

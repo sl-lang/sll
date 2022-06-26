@@ -53,7 +53,7 @@
 		sll_size_t __i=0; \
 		for (sll_size_t __j=0;__j<__c->size;__j++){ \
 			type var=(type)(*(__c->data+__j)); \
-			if (check){ \
+			if (!(check)){ \
 				delete; \
 			} \
 			else{ \

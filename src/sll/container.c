@@ -15,7 +15,7 @@ __SLL_EXTERNAL void sll_container_filter(sll_container_t* c,sll_size_t elem_size
 	sll_size_t i=0;
 	for (sll_size_t j=0;j<c->size;j++){
 		void* var=c->data+j;
-		if (check(var)){
+		if (!check(var)){
 			delete(var);
 		}
 		else{
