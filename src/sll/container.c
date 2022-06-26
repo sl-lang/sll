@@ -70,6 +70,12 @@ __SLL_EXTERNAL void sll_handle_container_clear(sll_handle_container_t* c){
 
 
 
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_handle_container_check(sll_handle_container_t* c,sll_size_t index){
+	return SLL_HANDLE_CONTAINER_CHECK(c,index);
+}
+
+
+
 __SLL_EXTERNAL void sll_handle_container_init(sll_handle_container_t* c){
 	SLL_HANDLE_CONTAINER_INIT(c);
 }
