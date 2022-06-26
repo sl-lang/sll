@@ -441,4 +441,26 @@ __SLL_EXTERNAL void sll_container_push(sll_container_t* c,const void* elem,sll_s
 
 
 
+/**
+ * \flags func
+ * \name sll_handle_container_clear
+ * \group container
+ * \desc Docs!
+ * \arg sll_handle_container_t* c
+ */
+__SLL_EXTERNAL void sll_handle_container_clear(sll_handle_container_t* c);
+
+
+
+/**
+ * \flags func
+ * \name sll_handle_container_init
+ * \group container
+ * \desc Docs!
+ * \arg sll_handle_container_t* c
+ */
+__SLL_EXTERNAL void sll_handle_container_init(sll_handle_container_t* c);
+
+
+
 #endif

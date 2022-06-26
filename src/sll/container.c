@@ -61,3 +61,15 @@ __SLL_EXTERNAL void sll_container_push(sll_container_t* c,const void* elem,sll_s
 	sll_allocator_resize(&(c->data),c->size*elem_size);
 	sll_copy_data(elem,elem_size,PTR(ADDR(c->data)+(c->size-1)*elem_size));
 }
+
+
+
+__SLL_EXTERNAL void sll_handle_container_clear(sll_handle_container_t* c){
+	SLL_HANDLE_CONTAINER_CLEAR(c);
+}
+
+
+
+__SLL_EXTERNAL void sll_handle_container_init(sll_handle_container_t* c){
+	SLL_HANDLE_CONTAINER_INIT(c);
+}
