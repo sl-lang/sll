@@ -16,12 +16,12 @@ __SLL_EXTERNAL void sll_container_filter(sll_container_t* c,sll_size_t elem_size
 	SLL_ASSERT(elem_size);
 	sll_size_t i=0;
 	for (sll_size_t j=0;j<c->size;j++){
-		void* var=c->data+j*elem_size;
+		void* var=PTR(ADDR(c->data)+j*elem_size);
 		if (!check(var)){
 			delete(var);
 		}
 		else{
-			sll_copy_data(c->data+i*elem_size,elem_size,c->data+j*elem_size);
+			sll_copy_data(PTR(ADDR(c->data)+i*elem_size),elem_size,PTR(ADDR(c->data)+j*elem_size));
 			i++;
 		}
 	}
@@ -39,17 +39,17 @@ __SLL_EXTERNAL void sll_container_init(sll_container_t* c){
 
 
 
-__SLL_EXTERNAL void sll_container_iter(sll_container_t* c,sll_container_callback_t callback){
+__SLL_EXTERNAL void sll_container_iter(sll_container_t* c,sll_size_t elem_size,sll_container_callback_t callback){
 	for (sll_size_t i=0;i<c->size;i++){
-		callback(c->data+i);
+		callback(PTR(ADDR(c->data)+i*elem_size));
 	}
 }
 
 
 
-__SLL_EXTERNAL void sll_container_iter_clear(sll_container_t* c,sll_container_callback_t callback){
+__SLL_EXTERNAL void sll_container_iter_clear(sll_container_t* c,sll_size_t elem_size,sll_container_callback_t callback){
 	for (sll_size_t i=0;i<c->size;i++){
-		callback(c->data+i);
+		callback(PTR(ADDR(c->data)+i*elem_size));
 	}
 	SLL_CONTAINER_CLEAR(c);
 }

@@ -408,9 +408,10 @@ __SLL_EXTERNAL void sll_container_init(sll_container_t* c);
  * \group container
  * \desc Docs!
  * \arg sll_container_t* c
+ * \arg sll_size_t elem_size
  * \arg sll_container_callback_t callback
  */
-__SLL_EXTERNAL void sll_container_iter(sll_container_t* c,sll_container_callback_t callback);
+__SLL_EXTERNAL void sll_container_iter(sll_container_t* c,sll_size_t elem_size,sll_container_callback_t callback);
 
 
 
@@ -420,9 +421,10 @@ __SLL_EXTERNAL void sll_container_iter(sll_container_t* c,sll_container_callback
  * \group container
  * \desc Docs!
  * \arg sll_container_t* c
+ * \arg sll_size_t elem_size
  * \arg sll_container_callback_t callback
  */
-__SLL_EXTERNAL void sll_container_iter_clear(sll_container_t* c,sll_container_callback_t callback);
+__SLL_EXTERNAL void sll_container_iter_clear(sll_container_t* c,sll_size_t elem_size,sll_container_callback_t callback);
 
 
 
