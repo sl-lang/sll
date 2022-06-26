@@ -9,6 +9,11 @@
 
 
 
+(= optimizer_node_data_type (&:
+	array_type required_child_levels
+	array_type conditions
+))
+
 (= optimizer_module_type (&:
 	(~ func_type) generate_optimizer
 ))
@@ -60,16 +65,41 @@
 		)
 		'\n'
 	))
+	(= optimizer_data ([> (= i 0) (< i ($ type_to_number))
+		(++ i)
+		(. optimizer_node_data_type
+			(<- array$create ($ type_to_number))
+			[]
+		)
+	))
+	(:> optimizer_data '\n')
 	(<- log$log "  Generating code in '" config$OPTIMIZER_OUTPUT_FILE_PATH "'...")
 	(= fh (<- file$open config$OPTIMIZER_OUTPUT_FILE_PATH "w"))
 	(<- file$write fh
 `#ifndef __SLL_GENERATED_OPTIMIZER_H__
 #define __SLL_GENERATED_OPTIMIZER_H__ 1
-#include <sll/_internal/common.h>
-#include <sll/node.h>
+#include <sll/_internal/optimizer.h>
+
+
+
+static const optimizer_node_data_t _optimizer_data[]={
 `)
+	(-> (= i 0) (< i ($ optimizer_data))
+		(= data (: optimizer_data i))
+		(<- file$write fh
+`	{
+		{
+			` (<- string$join ",\n\t\t\t" data$required_child_levels) `
+		},
+		NULL,
+		` ($ data$conditions) `
+	},
+`)
+		(++ i)
+	)
 	(<- file$write fh
-`
+`};
+
 
 
 #endif
