@@ -442,9 +442,23 @@ __SLL_EXTERNAL void sll_container_push(sll_container_t* c,const void* elem,sll_s
 
 
 /**
+ * \flags check_output func
+ * \name sll_handle_container_alloc
+ * \group container
+ * \subgroup container-handle
+ * \desc Docs!
+ * \arg sll_handle_container_t* c
+ * \ret sll_size_t
+ */
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_size_t sll_handle_container_alloc(sll_handle_container_t* c);
+
+
+
+/**
  * \flags func
  * \name sll_handle_container_clear
  * \group container
+ * \subgroup container-handle
  * \desc Docs!
  * \arg sll_handle_container_t* c
  */
@@ -456,6 +470,7 @@ __SLL_EXTERNAL void sll_handle_container_clear(sll_handle_container_t* c);
  * \flags check_output func
  * \name sll_handle_container_check
  * \group container
+ * \subgroup container-handle
  * \desc Docs!
  * \arg sll_handle_container_t* c
  * \arg sll_size_t index
@@ -469,6 +484,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_handle_container_check(sll_hand
  * \flags func
  * \name sll_handle_container_init
  * \group container
+ * \subgroup container-handle
  * \desc Docs!
  * \arg sll_handle_container_t* c
  */

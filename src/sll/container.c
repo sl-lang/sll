@@ -64,6 +64,14 @@ __SLL_EXTERNAL void sll_container_push(sll_container_t* c,const void* elem,sll_s
 
 
 
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_size_t sll_handle_container_alloc(sll_handle_container_t* c){
+	sll_size_t out;
+	SLL_HANDLE_CONTAINER_ALLOC(c,&out);
+	return out;
+}
+
+
+
 __SLL_EXTERNAL void sll_handle_container_clear(sll_handle_container_t* c){
 	SLL_HANDLE_CONTAINER_CLEAR(c);
 }
