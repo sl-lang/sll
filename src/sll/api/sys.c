@@ -143,10 +143,12 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_sys_load_li
 		return SLL_ERROR_TOO_LONG;
 	}
 	sll_char_t bf[SLL_API_MAX_FILE_PATH_LENGTH];
+	sll_string_length_t bfl=sll_platform_absolute_path(path->data,bf,SLL_API_MAX_FILE_PATH_LENGTH);
 	sll_string_t full_lib_path;
-	sll_string_from_pointer_length(bf,sll_platform_absolute_path(path->data,bf,SLL_API_MAX_FILE_PATH_LENGTH),&full_lib_path);
-	if (!full_lib_path.length){
-		sll_free_string(&full_lib_path);
+	if (bfl){
+		sll_string_from_pointer_length(bf,bfl,&full_lib_path);
+	}
+	else{
 		sll_string_clone(path,&full_lib_path);
 	}
 	sll_error_t err;
@@ -156,7 +158,7 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_sys_load_li
 	}
 	SLL_CONTAINER_ITER(&_sys_library_data,sll_loaded_library_t*,library,{
 		if (STRING_EQUAL(&(library->name),&full_lib_path)){
-			sll_audit(SLL_CHAR("sll.sys.library.load"),SLL_CHAR("ssi"),path,&full_lib_path,library->handle);
+			sll_audit(SLL_CHAR("sll.sys.library.load"),SLL_CHAR("si"),&full_lib_path,library->handle);
 			sll_free_string(&full_lib_path);
 			return SLL_NO_ERROR;
 		}
