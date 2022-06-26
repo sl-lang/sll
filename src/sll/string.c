@@ -1576,7 +1576,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_integer_t sll_string_parse_int(const sll_s
 			break;
 		}
 		if (num_count==20){
-			return (neg?-0x8000000000000000ull:0x7fffffffffffffffull);
+			return (neg?-0x8000000000000000ll:0x7fffffffffffffffll);
 		}
 		num_count++;
 		o=o*10+c-48;
