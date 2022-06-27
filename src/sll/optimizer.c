@@ -36,8 +36,6 @@ static sll_node_t* _visit_node(sll_source_file_t* source_file,sll_node_t* node,o
 		case SLL_NODE_TYPE_IDENTIFIER:
 		case SLL_NODE_TYPE_FIELD:
 		case SLL_NODE_TYPE_FUNCTION_ID:
-			parent->children=NULL;
-			parent->child_count=0;
 			return node+1;
 		case SLL_NODE_TYPE_ARRAY:
 			child_count=node->data.array_length;
@@ -62,13 +60,14 @@ static sll_node_t* _visit_node(sll_source_file_t* source_file,sll_node_t* node,o
 			child_count=node->data.arg_count;
 			break;
 	}
-	optimizer_node_children_data_t* children=sll_allocate(child_count*sizeof(optimizer_node_children_data_t));
+	optimizer_node_children_data_t* children=sll_zero_allocate(child_count*sizeof(optimizer_node_children_data_t));
 	parent->children=children;
 	parent->child_count=child_count;
 	sll_node_t* child=node+1;
 	child_level_count_required=(child_level_count_required?child_level_count_required-1:0);
 	for (child_count_t i=0;i<child_count;i++){
 		SKIP_NODE_NOP(child);
+		(children+i)->child_type_bitmap[child->type>>5]|=1u<<(child->type&31);
 		child_level_count_t child_level_count=_optimizer_required_child_levels[(node->type<<OPTIMIZER_DATA_NODE_TYPE_SHIFT)|child->type];
 		child=_visit_node(source_file,child,children+i,(child_level_count>child_level_count_required?child_level_count:child_level_count_required));
 	}

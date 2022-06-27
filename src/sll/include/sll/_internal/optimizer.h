@@ -25,6 +25,7 @@ typedef struct __OPTIMIZER_NODE_CHILDREN_DATA{
 	sll_node_t* node;
 	struct __OPTIMIZER_NODE_CHILDREN_DATA* children;
 	child_count_t child_count;
+	__SLL_U32 child_type_bitmap[3];
 } optimizer_node_children_data_t;
 
 
