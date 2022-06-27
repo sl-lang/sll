@@ -1554,6 +1554,9 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_float_t sll_string_parse_float(const sll_s
 
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_integer_t sll_string_parse_int(const sll_string_t* string){
+	if (!string->length){
+		return 0;
+	}
 	sll_bool_t neg=0;
 	sll_string_length_t i=0;
 	sll_char_t c=string->data[0];

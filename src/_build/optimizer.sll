@@ -18,8 +18,14 @@
 ))
 
 (= node_condition_data_and_types_type (&:
-	array_type possible_nodes
-	node_condition_data_type data
+	(~ array_type) possible_nodes
+	(~ node_condition_data_type) data
+))
+
+(= node_type_and_range_type (&:
+	(~ int_type) node_type
+	(~ int_type) min
+	(~ int_type) max
 ))
 
 (= optimizer_module_type (&:
@@ -33,7 +39,13 @@
 
 
 (= _get_node_type (,,, type
-	(? (|: _type_to_number type) (@@ (: _type_to_number type)))
+	(= min 0)
+	(= max 0)
+	(? (|: _type_to_number type) (@@ (. node_type_and_range_type
+		(: _type_to_number type)
+		min
+		max
+	)))
 	(:> "Unknown node type: '" type "'\n")
 	(<- util$fail_and_exit)
 ))
@@ -55,6 +67,8 @@
 		))
 		(++ i)
 		(<- _get_node_type type)
+	) false false (,,, elem
+		(@@ elem$node_type)
 	)))
 ))
 
@@ -64,13 +78,18 @@
 	(-> (= i 0) (< i ($ condition))
 		(= step (: condition i))
 		(= possible_nodes (<- _get_possible_nodes step))
-		(= condition_obj (: out$children possible_nodes))
+		(= possible_node_types ([> (= j 0) (< j ($ possible_nodes))
+			(= data (: possible_nodes j))
+			(++ j)
+			data$node_type
+		))
+		(= condition_obj (: out$children possible_node_types))
 		(? (! condition_obj) {
 			(= condition_obj (. node_condition_data_type
 				<>
 				""
 			))
-			(= (: out$children possible_nodes) condition_obj)
+			(= (: out$children possible_node_types) condition_obj)
 		})
 		(= out condition_obj)
 		(++ i)
