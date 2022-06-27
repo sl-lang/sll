@@ -13,8 +13,8 @@
 
 
 (= node_condition_data_type (&:
-	map_type children
-	string_type code
+	(~ map_type) children
+	(~ string_type) code
 ))
 
 (= node_condition_data_and_types_type (&:
