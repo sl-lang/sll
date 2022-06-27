@@ -1,18 +1,20 @@
 (---
 	"@build-script/config.sll"
+	"@build-script/util.sll"
 	"array.sll"
 	"file.sll"
 	"log.sll"
 	"math.sll"
+	"sort.sll"
 	"string.sll"
 	"types.sll"
 )
 
 
 
-(= optimizer_node_data_type (&:
-	array_type required_child_levels
-	array_type conditions
+(= node_condition_data_type (&:
+	map_type children
+	string_type code
 ))
 
 (= optimizer_module_type (&:
@@ -20,6 +22,159 @@
 ))
 
 
+
+(= _type_to_number nil)
+
+
+
+(= _get_node_type (,,, type
+	(? (|: _type_to_number type) (@@ (: _type_to_number type)))
+	(:> "Unknown node type: '" type "'\n")
+	(<- util$fail_and_exit)
+))
+
+(= _get_possible_nodes (,,, format
+	(= format (<- string$trim format))
+	(? (||
+		(!== (: format 0) '{')
+		(!== (: format -1) '}')
+	) {
+		(@@ [(<- _get_node_type format)])
+	})
+	(= format (<- string$split (: format 1 -1) '|'))
+	(@@ (<- sort$sort ([> (= i 0) (< i ($ format))
+		(= type (<- string$trim
+			(<- string$lower_case
+				(: format i)
+			)
+		))
+		(++ i)
+		(<- _get_node_type type)
+	)))
+))
+
+(= _get_condition_object (,,, root condition
+	(= condition (<- string$split condition '.'))
+	(= out root)
+	(-> (= i 0) (< i ($ condition))
+		(= step (: condition i))
+		(= possible_nodes (<- _get_possible_nodes step))
+		(= condition_obj (: out$children possible_nodes))
+		(? (! condition_obj) {
+			(= condition_obj (. node_condition_data_type
+				<>
+				""
+			))
+			(= (: out$children possible_nodes) condition_obj)
+		})
+		(= out condition_obj)
+		(++ i)
+	)
+	(@@ out)
+))
+
+(= _generate_children_condition (,,, fh possible_nodes indentation_str level
+	(= child_bitmap (<- array$create
+		(>>
+			(+ ($ _type_to_number) 31)
+			5
+		)
+	))
+	(-> (= i 0) (< i ($ possible_nodes))
+		(= type (: possible_nodes i))
+		(= (: child_bitmap (>> type 5)) (|
+			(: child_bitmap (>> type 5))
+			(<< 1 (& type 31))
+		))
+		(++ i)
+	)
+	(= prev_level (- level 1))
+	(<- file$write fh (<- string$join "||" ([> (= i 0) (< i ($ child_bitmap))
+		(= mask (: child_bitmap i))
+		(++ i)
+		(? (! mask) (<<<))
+		(+
+			"data"
+			prev_level
+			"->child_type_bitmap["
+			(- i 1)
+			"]&"
+			mask
+		)
+	))
+`){
+` indentation_str `	for (child_count_t idx` prev_level `=0;idx` prev_level `<data` prev_level `->child_count;idx` prev_level `++){
+` indentation_str `		optimizer_node_children_data_t* data` level `=data` prev_level `->children+idx` prev_level `;
+` indentation_str `		if (` (<- string$join "||" ([> (= i 0) (< i ($ possible_nodes))
+		(= type (: possible_nodes i))
+		(++ i)
+		(+
+			"data"
+			level
+			"->node->type=="
+			type
+		)
+	)))
+))
+
+(= _generate_root_condition (,,, fh possible_nodes
+	(<- file$write fh (<- string$join "||" ([> (= i 0) (< i ($ possible_nodes))
+		(= type (: possible_nodes i))
+		(++ i)
+		(+ "data0->node->type==" type)
+	)))
+))
+
+(= _generate_condition_code (,,, fh code indentation_str
+	(= code (<- string$trim code))
+	(? (! code) (@@))
+	(<- file$write fh indentation_str "// " code '\n')
+))
+
+(= _generate_code (,,, fh children level
+	(= children (:: children array_type))
+	(= data ([> (= i 0) (< i ($ children))
+		(= key (: children i))
+		(++ i)
+		(= value (: children i))
+		(++ i)
+		[key value]
+	))
+	(<- sort$sort data true true)
+	(= indentation_str (* "\t" (+
+		(?: (> level 1)
+			(+ (* (- level 1) 3) 1)
+			level
+		)
+		1
+	)))
+	(-> (= i 0) (< i ($ data))
+		(= elem (: data i))
+		(= possible_nodes (: elem 0))
+		(= condition_data (: elem 1))
+		(<- file$write fh indentation_str)
+		(? i (<- file$write fh "else "))
+		(<- file$write fh "if (")
+		(<- (?: level
+			_generate_children_condition
+			_generate_root_condition
+		) fh possible_nodes indentation_str level)
+		(<- file$write fh "){\n")
+		(? condition_data$children {
+			(<- _generate_code fh condition_data$children (+ level 1))
+		})
+		(<- _generate_condition_code fh condition_data$code (+
+			indentation_str
+			(* "\t" (?: level
+				3
+				1
+			))
+		))
+		(? level (<- file$write fh indentation_str "\t\t}\n" indentation_str "\t}\n"))
+		(<- file$write fh indentation_str "}\n")
+		(++ i)
+	)
+))
 
 (= generate_optimizer (,,,
 	(<- log$log "Generating optimizer from '" config$OPTIMIZER_CONFIG_FILE_PATH "'...")
@@ -33,7 +188,7 @@
 		)
 		'\n'
 	))
-	(= type_to_number ({> (= i 0) (< i ($ data))
+	(= _type_to_number ({> (= i 0) (< i ($ data))
 		(= line (: data i))
 		(++ i)
 		(? (! (<- string$starts line "#define")) (<<<))
@@ -56,8 +211,14 @@
 		)
 		(:: (: line 1) int_type)
 	))
-	(= type_count ($ type_to_number))
+	(= type_count ($ _type_to_number))
 	(<- log$log "  Reading configuration file...")
+	(= node_type_shift (+ (<- math$int_log2 type_count) 1))
+	(= required_child_levels (<- array$create (<< type_count node_type_shift)))
+	(= root (. node_condition_data_type
+		<>
+		[]
+	))
 	(= data (<- string$split
 		(<- file$read
 			(<- file$open
@@ -67,8 +228,19 @@
 		)
 		'\n'
 	))
-	(= node_type_shift (+ (<- math$int_log2 type_count) 1))
-	(= required_child_levels (<- array$create (<< type_count node_type_shift)))
+	(-> (= i 0) (< i ($ data))
+		(= line (<- string$trim (: data i)))
+		(++ i)
+		(? (||
+			(! line)
+			(=== (: line 0) '#')
+		) (<<<))
+		(= line (<- string$split line "->"))
+		(? (!== ($ line) 2) (<<<))
+		(= condition (<- _get_condition_object root (: line 0)))
+		(= condition$code (: line 1))
+	)
+	(:> root '\n')
 	(<- log$log "  Generating code in '" config$OPTIMIZER_OUTPUT_FILE_PATH "'...")
 	(= fh (<- file$open config$OPTIMIZER_OUTPUT_FILE_PATH "w"))
 	(<- file$write fh
@@ -99,8 +271,11 @@ static const child_level_count_t _optimizer_required_child_levels[]={
 
 
 
-static void __SLL_FORCE_INLINE _optimizer_execute(optimizer_node_children_data_t* data){
-}
+static void __SLL_FORCE_INLINE _optimizer_execute(optimizer_node_children_data_t* data0){
+`)
+	(<- _generate_code fh root$children 0)
+	(<- file$write fh
+`}
 
 
 
