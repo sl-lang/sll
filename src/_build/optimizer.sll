@@ -84,7 +84,17 @@
 
 
 static const child_level_count_t _optimizer_required_child_levels[]={
-	` (<- string$join ",\n\t" required_child_levels) `
+	`)
+	(-> (= i 0) (< i ($ required_child_levels))
+		(? i {
+			(<- file$write fh ',')
+			(? (! (% i config$BYTE_ARRAY_WRAP_SIZE)) (<- file$write fh "\n\t"))
+		})
+		(<- file$write fh (: required_child_levels i))
+		(++ i)
+	)
+	(<- file$write fh
+`
 };
 
 
