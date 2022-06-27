@@ -141,7 +141,13 @@
 	(= code (<- string$split code ','))
 	(-> (= i 0) (< i ($ code))
 		(= line (<- string$trim (: code i)))
+		(++ i)
 		(? (! line) (<<<))
+		(? (=== (: line 0) '*') {
+			(= node_index (:: (>> line 1) int_type))
+			(<- file$write fh indentation_str "_expand_node(data" node_index ",data" (- node_index 1) "->node);\n")
+			(<<<)
+		})
 		(= line (<- string$split line '='))
 		(? (!== ($ line) 2) (<<<))
 		(= node_index (:: (: line 0) int_type))
@@ -153,7 +159,6 @@
 			(<- util$fail_and_exit)
 		})
 		(<- file$write fh indentation_str "return;\n")
-		(++ i)
 	)
 ))
 
@@ -169,7 +174,12 @@
 			data
 		)
 	))
-	(<- sort$sort data true true)
+	(<- sort$sort data false true (,,, elem
+		(@@ [
+			(- 0 ($ elem$possible_nodes))
+			elem$possible_nodes
+		])
+	))
 	(= indentation_str (* "\t" (+
 		(?: (> level 1)
 			(+ (* (- level 1) 3) 1)

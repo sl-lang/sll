@@ -8,6 +8,39 @@
 
 
 
+static __SLL_FORCE_INLINE child_count_t* _get_child_count(sll_node_t* node){
+	switch (node->type){
+		case SLL_NODE_TYPE_INT:
+		case SLL_NODE_TYPE_FLOAT:
+		case SLL_NODE_TYPE_CHAR:
+		case SLL_NODE_TYPE_COMPLEX:
+		case SLL_NODE_TYPE_STRING:
+		case SLL_NODE_TYPE_IDENTIFIER:
+		case SLL_NODE_TYPE_FIELD:
+		case SLL_NODE_TYPE_FUNCTION_ID:
+			return NULL;
+		case SLL_NODE_TYPE_ARRAY:
+			return &(node->data.array_length);
+		case SLL_NODE_TYPE_MAP:
+			return &(node->data.map_length);
+		case SLL_NODE_TYPE_FUNC:
+		case SLL_NODE_TYPE_INTERNAL_FUNC:
+			return &(node->data.function.arg_count);
+		case SLL_NODE_TYPE_FOR:
+		case SLL_NODE_TYPE_WHILE:
+		case SLL_NODE_TYPE_LOOP:
+		case SLL_NODE_TYPE_FOR_ARRAY:
+		case SLL_NODE_TYPE_WHILE_ARRAY:
+		case SLL_NODE_TYPE_FOR_MAP:
+		case SLL_NODE_TYPE_WHILE_MAP:
+			return &(node->data.loop.arg_count);
+		default:
+			return &(node->data.arg_count);
+	}
+}
+
+
+
 static void _delete_deep_children(optimizer_node_children_data_t* children,child_count_t child_count,child_level_count_t levels){
 	if (levels){
 		for (child_count_t i=0;i<child_count;i++){
@@ -26,40 +59,11 @@ static void _delete_deep_children(optimizer_node_children_data_t* children,child
 
 static sll_node_t* _visit_node(sll_source_file_t* source_file,sll_node_t* node,optimizer_node_children_data_t* parent,child_level_count_t child_level_count_required){
 	parent->node=node;
-	child_count_t child_count;
-	switch (node->type){
-		case SLL_NODE_TYPE_INT:
-		case SLL_NODE_TYPE_FLOAT:
-		case SLL_NODE_TYPE_CHAR:
-		case SLL_NODE_TYPE_COMPLEX:
-		case SLL_NODE_TYPE_STRING:
-		case SLL_NODE_TYPE_IDENTIFIER:
-		case SLL_NODE_TYPE_FIELD:
-		case SLL_NODE_TYPE_FUNCTION_ID:
-			return node+1;
-		case SLL_NODE_TYPE_ARRAY:
-			child_count=node->data.array_length;
-			break;
-		case SLL_NODE_TYPE_MAP:
-			child_count=node->data.map_length;
-			break;
-		case SLL_NODE_TYPE_FUNC:
-		case SLL_NODE_TYPE_INTERNAL_FUNC:
-			child_count=node->data.function.arg_count;
-			break;
-		case SLL_NODE_TYPE_FOR:
-		case SLL_NODE_TYPE_WHILE:
-		case SLL_NODE_TYPE_LOOP:
-		case SLL_NODE_TYPE_FOR_ARRAY:
-		case SLL_NODE_TYPE_WHILE_ARRAY:
-		case SLL_NODE_TYPE_FOR_MAP:
-		case SLL_NODE_TYPE_WHILE_MAP:
-			child_count=node->data.loop.arg_count;
-			break;
-		default:
-			child_count=node->data.arg_count;
-			break;
+	child_count_t* child_count_ptr=_get_child_count(node);
+	if (!child_count_ptr){
+		return node+1;
 	}
+	child_count_t child_count=*child_count_ptr;
 	optimizer_node_children_data_t* children=sll_zero_allocate(child_count*sizeof(optimizer_node_children_data_t));
 	parent->children=children;
 	parent->child_count=child_count;
@@ -80,43 +84,13 @@ static sll_node_t* _visit_node(sll_source_file_t* source_file,sll_node_t* node,o
 
 static sll_node_t* _delete_node_raw(sll_node_t* node){
 	SKIP_NODE_NOP(node);
-	sll_node_type_t type=node->type;
+	child_count_t* child_count_ptr=_get_child_count(node);
 	node->type=SLL_NODE_TYPE_NOP;
-	child_count_t child_count;
-	switch (type){
-		case SLL_NODE_TYPE_INT:
-		case SLL_NODE_TYPE_FLOAT:
-		case SLL_NODE_TYPE_CHAR:
-		case SLL_NODE_TYPE_COMPLEX:
-		case SLL_NODE_TYPE_STRING:
-		case SLL_NODE_TYPE_IDENTIFIER:
-		case SLL_NODE_TYPE_FIELD:
-		case SLL_NODE_TYPE_FUNCTION_ID:
-			return node+1;
-		case SLL_NODE_TYPE_ARRAY:
-			child_count=node->data.array_length;
-			break;
-		case SLL_NODE_TYPE_MAP:
-			child_count=node->data.map_length;
-			break;
-		case SLL_NODE_TYPE_FUNC:
-		case SLL_NODE_TYPE_INTERNAL_FUNC:
-			child_count=node->data.function.arg_count;
-			break;
-		case SLL_NODE_TYPE_FOR:
-		case SLL_NODE_TYPE_WHILE:
-		case SLL_NODE_TYPE_LOOP:
-		case SLL_NODE_TYPE_FOR_ARRAY:
-		case SLL_NODE_TYPE_WHILE_ARRAY:
-		case SLL_NODE_TYPE_FOR_MAP:
-		case SLL_NODE_TYPE_WHILE_MAP:
-			child_count=node->data.loop.arg_count;
-			break;
-		default:
-			child_count=node->data.arg_count;
-			break;
-	}
 	node++;
+	if (!child_count_ptr){
+		return node;
+	}
+	child_count_t child_count=*child_count_ptr;
 	while (child_count){
 		child_count--;
 		node=_delete_node_raw(node);
@@ -141,43 +115,33 @@ static void _delete_recursive_children(optimizer_node_children_data_t* data){
 
 
 
-void _delete_node(optimizer_node_children_data_t* data,sll_node_t* parent){
-	switch (parent->type){
-		case SLL_NODE_TYPE_INT:
-		case SLL_NODE_TYPE_FLOAT:
-		case SLL_NODE_TYPE_CHAR:
-		case SLL_NODE_TYPE_COMPLEX:
-		case SLL_NODE_TYPE_STRING:
-		case SLL_NODE_TYPE_IDENTIFIER:
-		case SLL_NODE_TYPE_FIELD:
-		case SLL_NODE_TYPE_FUNCTION_ID:
-			SLL_UNREACHABLE();
-		case SLL_NODE_TYPE_ARRAY:
-			parent->data.array_length--;
-			break;
-		case SLL_NODE_TYPE_MAP:
-			parent->data.map_length--;
-			break;
-		case SLL_NODE_TYPE_FUNC:
-		case SLL_NODE_TYPE_INTERNAL_FUNC:
-			parent->data.function.arg_count--;
-			break;
-		case SLL_NODE_TYPE_FOR:
-		case SLL_NODE_TYPE_WHILE:
-		case SLL_NODE_TYPE_LOOP:
-		case SLL_NODE_TYPE_FOR_ARRAY:
-		case SLL_NODE_TYPE_WHILE_ARRAY:
-		case SLL_NODE_TYPE_FOR_MAP:
-		case SLL_NODE_TYPE_WHILE_MAP:
-			parent->data.loop.arg_count--;
-			break;
-		default:
-			parent->data.arg_count--;
-			break;
+static void _delete_recursive_children_optimizer_objects(optimizer_node_children_data_t* data){
+	for (child_count_t i=0;i<data->child_count;i++){
+		_delete_recursive_children_optimizer_objects(data->children+i);
 	}
+	sll_deallocate(data->children);
+}
+
+
+
+void _delete_node(optimizer_node_children_data_t* data,sll_node_t* parent){
+	(*_get_child_count(parent))--;
 	_delete_recursive_children(data);
-	data->children=NULL;
-	data->child_count=0;
+	sll_zero_memory(data,sizeof(optimizer_node_children_data_t));
+}
+
+
+
+void _expand_node(optimizer_node_children_data_t* data,sll_node_t* parent){
+	child_count_t* child_count_ptr=_get_child_count(data->node);
+	if (!child_count_ptr){
+		_delete_node(data,parent);
+		return;
+	}
+	data->node->type=SLL_NODE_TYPE_NOP;
+	_delete_recursive_children_optimizer_objects(data);
+	sll_zero_memory(data,sizeof(optimizer_node_children_data_t));
+	(*_get_child_count(parent))+=*child_count_ptr;
 }
 
 

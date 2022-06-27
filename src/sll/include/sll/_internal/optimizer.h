@@ -34,4 +34,8 @@ void _delete_node(optimizer_node_children_data_t* data,sll_node_t* parent);
 
 
 
+void _expand_node(optimizer_node_children_data_t* data,sll_node_t* parent);
+
+
+
 #endif

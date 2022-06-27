@@ -1,1 +1,2 @@
 {func|operation_list}.{int|float|char|complex|string|identifier|field|function_id} -> 1=nop
+{func|operation_list}.{operation_list|comma} -> *1
