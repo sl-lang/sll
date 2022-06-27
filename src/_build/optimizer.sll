@@ -13,6 +13,7 @@
 
 
 (= node_condition_data_type (&:
+	map_type type_to_range
 	map_type children
 	string_type code
 ))
@@ -22,10 +23,14 @@
 	(~ node_condition_data_type) data
 ))
 
-(= node_type_and_range_type (&:
-	(~ int_type) node_type
+(= range_type (&:
 	(~ int_type) min
 	(~ int_type) max
+))
+
+(= node_type_and_range_type (&:
+	(~ int_type) node_type
+	(~ range_type) range
 ))
 
 (= optimizer_module_type (&:
@@ -55,8 +60,10 @@
 	})
 	(? (|: _type_to_number type) (@@ (. node_type_and_range_type
 		(: _type_to_number type)
-		min
-		max
+		[
+			min
+			max
+		]
 	)))
 	(:> "Unknown node type: '" type "'\n")
 	(<- util$fail_and_exit)
@@ -90,14 +97,18 @@
 	(-> (= i 0) (< i ($ condition))
 		(= step (: condition i))
 		(= possible_nodes (<- _get_possible_nodes step))
+		(:> possible_nodes '\n')
+		(= type_to_range <>)
 		(= possible_node_types ([> (= j 0) (< j ($ possible_nodes))
 			(= data (: possible_nodes j))
+			(= (: type_to_range data$node_type) data$range)
 			(++ j)
 			data$node_type
 		))
 		(= condition_obj (: out$children possible_node_types))
 		(? (! condition_obj) {
 			(= condition_obj (. node_condition_data_type
+				type_to_range
 				<>
 				""
 			))

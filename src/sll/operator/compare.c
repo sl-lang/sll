@@ -10,6 +10,7 @@
 #include <sll/object.h>
 #include <sll/string.h>
 #include <sll/types.h>
+#include <sll/vm.h>
 
 
 
@@ -129,8 +130,34 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_compare_result_t sll_operator_compare(sll_
 			return sll_array_compare_map(&(b->data.array),&(a->data.map),1);
 		case COMBINED_TYPE_MM:
 			return sll_map_compare(&(a->data.map),&(b->data.map));
-		default:
-			SLL_UNREACHABLE();
 	}
-	return 0;
+	if (a->type==b->type&&sll_current_runtime_data&&a->type<=sll_current_runtime_data->type_table->length+SLL_MAX_OBJECT_TYPE){
+		const sll_object_type_data_t* data=*(sll_current_runtime_data->type_table->data+a->type-SLL_MAX_OBJECT_TYPE-1);
+		const sll_object_field_t* ap=a->data.fields;
+		const sll_object_field_t* bp=b->data.fields;
+		const sll_object_type_data_field_t* fp=data->fields;
+		for (sll_arg_count_t i=0;i<data->field_count;i++){
+			sll_compare_result_t cmp;
+			if (fp->type==SLL_OBJECT_TYPE_INT){
+				cmp=COMPARE_RESULT(ap->int_,bp->int_);
+			}
+			else if (fp->type==SLL_OBJECT_TYPE_FLOAT){
+				cmp=COMPARE_RESULT(ap->float_,bp->float_);
+			}
+			else if (fp->type==SLL_OBJECT_TYPE_CHAR){
+				cmp=COMPARE_RESULT(ap->char_,bp->char_);
+			}
+			else{
+				cmp=sll_operator_compare(ap->any,bp->any);
+			}
+			if (cmp!=SLL_COMPARE_RESULT_EQUAL){
+				return cmp;
+			}
+			ap++;
+			bp++;
+			fp++;
+		}
+		return SLL_COMPARE_RESULT_EQUAL;
+	}
+	SLL_UNIMPLEMENTED();
 }
