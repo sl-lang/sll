@@ -121,7 +121,10 @@
 	(<- file$write fh (<- string$join "||" ([> (= i 0) (< i ($ possible_nodes))
 		(= type (: possible_nodes i))
 		(++ i)
-		(+ "data0->node->type==" type)
+		(+
+			"data0->node->type=="
+			type
+		)
 	)))
 ))
 
