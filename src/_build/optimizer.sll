@@ -249,26 +249,25 @@ indentation_str `	child_count_t start` level `=` range$min `;
 indentation_str `	child_count_t start` level `;
 ` indentation_str `	child_count_t end` level `;
 `)
-		(-> (= i 0) (< i (- ($ ranges) 1))
+		(-> (= i 0) (< i ($ ranges))
 			(= range (: ranges i))
 			(= types (: range_to_types range))
 			(<- file$write fh indentation_str '\t')
-			(? i (<- file$write fh "else "))
+			(?
+				(=== i (- ($ ranges) 1)) (<- file$write fh "else")
+				{
+					(? i (<- file$write fh "else "))
+					(<- file$write fh "if (" (<- _generate_node_type_check types level) ')')
+				}
+			)
 			(<- file$write fh
-`if (` (<- _generate_node_type_check types level) `){
+`{
 ` indentation_str `		start` level `=` range$min `;
 ` indentation_str `		end` level `=` (<- _generate_upper_range_bound level range$max) `;
 ` indentation_str `	}
 `)
 			(++ i)
 		)
-		(= range (: ranges -1))
-		(<- file$write fh
-indentation_str `	else{
-` indentation_str `		start` level `=` range$min `;
-` indentation_str `		end` level `=` (<- _generate_upper_range_bound level range$max) `;
-` indentation_str `	}
-`)
 	})
 ))
 
@@ -415,7 +414,7 @@ static const child_level_count_t _optimizer_required_child_levels[]={
 	(-> (= i 0) (< i ($ required_child_levels))
 		(? i {
 			(<- file$write fh ',')
-			(? (! (% i config$BYTE_ARRAY_WRAP_SIZE)) (<- file$write fh "\n\t"))
+			(? (! (% i config$OPTIMIZER_REQUIRED_CHILD_LEVELS_WRAP_SIZE)) (<- file$write fh "\n\t"))
 		})
 		(<- file$write fh (: required_child_levels i))
 		(++ i)
