@@ -1,5 +1,6 @@
 #ifndef __SLL_GENERATED_OPTIMIZER_H__
 #define __SLL_GENERATED_OPTIMIZER_H__ 1
+#include <sll/_internal/common.h>
 #include <sll/_internal/optimizer.h>
 
 
@@ -10250,6 +10251,11 @@ static const child_level_count_t _optimizer_required_child_levels[]={
 	0,
 	0
 };
+
+
+
+static void __SLL_FORCE_INLINE _optimizer_execute(optimizer_node_children_data_t* data){
+}
 
 
 
