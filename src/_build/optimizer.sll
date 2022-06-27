@@ -17,6 +17,11 @@
 	string_type code
 ))
 
+(= node_condition_data_and_types_type (&:
+	array_type possible_nodes
+	node_condition_data_type data
+))
+
 (= optimizer_module_type (&:
 	(~ func_type) generate_optimizer
 ))
@@ -105,6 +110,9 @@
 `){
 ` indentation_str `	for (child_count_t idx` prev_level `=0;idx` prev_level `<data` prev_level `->child_count;idx` prev_level `++){
 ` indentation_str `		optimizer_node_children_data_t* data` level `=data` prev_level `->children+idx` prev_level `;
+` indentation_str `		if (!data` level `->node){
+` indentation_str `			continue;
+` indentation_str `		}
 ` indentation_str `		if (` (<- string$join "||" ([> (= i 0) (< i ($ possible_nodes))
 		(= type (: possible_nodes i))
 		(++ i)
@@ -128,19 +136,38 @@
 	)))
 ))
 
-(= _generate_condition_code (,,, fh code indentation_str
+(= _generate_condition_code (,,, fh previous_conditions code indentation_str
 	(? (! code) (@@))
-	(<- file$write fh indentation_str "// " code '\n')
+	(= code (<- string$split code ','))
+	(-> (= i 0) (< i ($ code))
+		(= line (<- string$trim (: code i)))
+		(? (! line) (<<<))
+		(= line (<- string$split line '='))
+		(? (!== ($ line) 2) (<<<))
+		(= node_index (:: (: line 0) int_type))
+		(? (=== (: line 1) "nop") {
+			(<- file$write fh indentation_str "_delete_node(data" node_index ",data" (- node_index 1) "->node);\n")
+		} {
+			(= new_type (<- _get_node_type (: line 1)))
+			(:> "Unimplemented!\n")
+			(<- util$fail_and_exit)
+		})
+		(<- file$write fh indentation_str "return;\n")
+		(++ i)
+	)
 ))
 
-(= _generate_code (,,, fh children level
+(= _generate_code (,,, fh previous_conditions children level
 	(= children (:: children array_type))
 	(= data ([> (= i 0) (< i ($ children))
-		(= key (: children i))
+		(= possible_nodes (: children i))
 		(++ i)
-		(= value (: children i))
+		(= data (: children i))
 		(++ i)
-		[key value]
+		(. node_condition_data_and_types_type
+			possible_nodes
+			data
+		)
 	))
 	(<- sort$sort data true true)
 	(= indentation_str (* "\t" (+
@@ -152,20 +179,22 @@
 	)))
 	(-> (= i 0) (< i ($ data))
 		(= elem (: data i))
-		(= possible_nodes (: elem 0))
-		(= condition_data (: elem 1))
 		(<- file$write fh indentation_str)
 		(? i (<- file$write fh "else "))
 		(<- file$write fh "if (")
 		(<- (?: level
 			_generate_children_condition
 			_generate_root_condition
-		) fh possible_nodes indentation_str level)
+		) fh elem$possible_nodes indentation_str level)
 		(<- file$write fh "){\n")
-		(? condition_data$children {
-			(<- _generate_code fh condition_data$children (+ level 1))
+		(= current_conditions (+
+			previous_conditions
+			[elem$possible_nodes]
+		))
+		(? elem$data$children {
+			(<- _generate_code fh current_conditions elem$data$children (+ level 1))
 		})
-		(<- _generate_condition_code fh condition_data$code (+
+		(<- _generate_condition_code fh current_conditions elem$data$code (+
 			indentation_str
 			(* "\t" (?: level
 				3
@@ -278,7 +307,7 @@ static const child_level_count_t _optimizer_required_child_levels[]={
 
 static void __SLL_FORCE_INLINE _optimizer_execute(optimizer_node_children_data_t* data0){
 `)
-	(<- _generate_code fh root$children 0)
+	(<- _generate_code fh [] root$children 0)
 	(<- file$write fh
 `}
 

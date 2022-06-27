@@ -30,4 +30,8 @@ typedef struct __OPTIMIZER_NODE_CHILDREN_DATA{
 
 
 
+void _delete_node(optimizer_node_children_data_t* data,sll_node_t* parent);
+
+
+
 #endif
