@@ -3,6 +3,7 @@
 	"array.sll"
 	"file.sll"
 	"log.sll"
+	"math.sll"
 	"string.sll"
 	"types.sll"
 )
@@ -55,6 +56,7 @@
 		)
 		(:: (: line 1) int_type)
 	))
+	(= type_count ($ type_to_number))
 	(<- log$log "  Reading configuration file...")
 	(= data (<- string$split
 		(<- file$read
@@ -65,14 +67,8 @@
 		)
 		'\n'
 	))
-	(= optimizer_data ([> (= i 0) (< i ($ type_to_number))
-		(++ i)
-		(. optimizer_node_data_type
-			(<- array$create ($ type_to_number))
-			[]
-		)
-	))
-	(:> optimizer_data '\n')
+	(= node_type_shift (+ (<- math$int_log2 type_count) 1))
+	(= required_child_levels (<- array$create (<< type_count node_type_shift)))
 	(<- log$log "  Generating code in '" config$OPTIMIZER_OUTPUT_FILE_PATH "'...")
 	(= fh (<- file$open config$OPTIMIZER_OUTPUT_FILE_PATH "w"))
 	(<- file$write fh
@@ -82,23 +78,13 @@
 
 
 
-static const optimizer_node_data_t _optimizer_data[]={
-`)
-	(-> (= i 0) (< i ($ optimizer_data))
-		(= data (: optimizer_data i))
-		(<- file$write fh
-`	{
-		{
-			` (<- string$join ",\n\t\t\t" data$required_child_levels) `
-		},
-		NULL,
-		` ($ data$conditions) `
-	},
-`)
-		(++ i)
-	)
-	(<- file$write fh
-`};
+#define OPTIMIZER_DATA_NODE_TYPE_SHIFT ` node_type_shift `
+
+
+
+static const child_level_count_t _optimizer_required_child_levels[]={
+	` (<- string$join ",\n\t" required_child_levels) `
+};
 
 
 
