@@ -41,6 +41,18 @@
 (= _get_node_type (,,, type
 	(= min 0)
 	(= max 0)
+	(= idx (<- string$index type '['))
+	(? (&&
+		(!== idx -1)
+		(=== (: type -1) ']')
+	) {
+		(= range (<- string$split (: type (+ idx 1) -1) ':'))
+		(= type (: type 0 idx))
+		(= min (:: (: range 0) int_type))
+		(? (< min 0) (= min 0))
+		(= max (:: (: range 1) int_type))
+		(? (> max 0) (= max 0))
+	})
 	(? (|: _type_to_number type) (@@ (. node_type_and_range_type
 		(: _type_to_number type)
 		min
