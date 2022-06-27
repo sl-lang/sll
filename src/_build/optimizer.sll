@@ -39,6 +39,7 @@
 
 
 (= _type_to_number nil)
+(= _node_type_shift nil)
 
 
 
@@ -90,12 +91,18 @@
 	)))
 ))
 
-(= _get_condition_object (,,, root condition
+(= _get_condition_object (,,, root condition required_child_levels
 	(= condition (<- string$split condition '.'))
+	(= first_possible_nodes [])
+	(= second_possible_nodes [])
 	(= out root)
 	(-> (= i 0) (< i ($ condition))
 		(= step (: condition i))
 		(= possible_nodes (<- _get_possible_nodes step))
+		(?
+			(! i) (= first_possible_nodes possible_nodes)
+			(=== i 1) (= second_possible_nodes possible_nodes)
+		)
 		(= condition_obj (: out$children possible_nodes))
 		(? (! condition_obj) {
 			(= condition_obj (. node_condition_data_type
@@ -107,6 +114,25 @@
 		(= out condition_obj)
 		(++ i)
 	)
+	(= length (- ($ condition) 2))
+	(? (> length 0) {
+		(-> (= i 0) (< i ($ first_possible_nodes))
+			(= first (: first_possible_nodes i))
+			(-> (= j 0) (< j ($ second_possible_nodes))
+				(= second (: second_possible_nodes j))
+				(= offset (|
+					(<< first$node_type _node_type_shift)
+					second$node_type
+				))
+				(= (: required_child_levels offset) (?: (> (: required_child_levels offset) length)
+					(: required_child_levels offset)
+					length
+				))
+				(++ j)
+			)
+			(++ i)
+		)
+	})
 	(@@ out)
 ))
 
@@ -311,7 +337,13 @@ indentation_str `	child_count_t start` level `;
 			[elem$possible_nodes]
 		))
 		(? elem$data$children {
-			(<- _generate_child_offsets fh elem$possible_nodes indentation_str level)
+			(<- _generate_child_offsets fh elem$possible_nodes (+
+				indentation_str
+				(?: level
+					"\t\t"
+					""
+				)
+			) level)
 			(<- _generate_code fh current_conditions elem$data$children (+ level 1))
 		})
 		(<- _generate_condition_code fh current_conditions elem$data$code (+
@@ -362,10 +394,9 @@ indentation_str `	child_count_t start` level `;
 		)
 		(:: (: line 1) int_type)
 	))
-	(= type_count ($ _type_to_number))
 	(<- log$log "  Reading configuration file...")
-	(= node_type_shift (+ (<- math$int_log2 type_count) 1))
-	(= required_child_levels (<- array$create (<< type_count node_type_shift)))
+	(= _node_type_shift (+ (<- math$int_log2 ($ _type_to_number)) 1))
+	(= required_child_levels (<- array$create (<< ($ _type_to_number) _node_type_shift)))
 	(= root (. node_condition_data_type
 		<>
 		[]
@@ -392,7 +423,7 @@ indentation_str `	child_count_t start` level `;
 			(!== ($ line) 2)
 			(! code)
 		) (<<<))
-		(= condition (<- _get_condition_object root (: line 0)))
+		(= condition (<- _get_condition_object root (: line 0) required_child_levels))
 		(= condition$code code)
 	)
 	(<- log$log "  Generating code in '" config$OPTIMIZER_OUTPUT_FILE_PATH "'...")
@@ -405,7 +436,7 @@ indentation_str `	child_count_t start` level `;
 
 
 
-#define OPTIMIZER_DATA_NODE_TYPE_SHIFT ` node_type_shift `
+#define OPTIMIZER_DATA_NODE_TYPE_SHIFT ` _node_type_shift `
 
 
 

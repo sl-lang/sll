@@ -98,10 +98,8 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_mult(sll_object_t* 
 			}
 		case COMBINED_TYPE_AA:
 			{
-				sll_array_t aa=a->data.array;
-				sll_array_t ab=b->data.array;
 				sll_object_t* o=sll_create_object(SLL_OBJECT_TYPE_ARRAY);
-				sll_array_combinations(&aa,&ab,&(o->data.array));
+				sll_array_combinations(&(a->data.array),&(b->data.array),&(o->data.array));
 				return o;
 			}
 		case COMBINED_TYPE_MM:
