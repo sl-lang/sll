@@ -126,7 +126,6 @@
 ))
 
 (= _generate_condition_code (,,, fh code indentation_str
-	(= code (<- string$trim code))
 	(? (! code) (@@))
 	(<- file$write fh indentation_str "// " code '\n')
 ))
@@ -236,11 +235,14 @@
 			(=== (: line 0) '#')
 		) (<<<))
 		(= line (<- string$split line "->"))
-		(? (!== ($ line) 2) (<<<))
+		(= code (<- string$trim (: line 1)))
+		(? (||
+			(!== ($ line) 2)
+			(! code)
+		) (<<<))
 		(= condition (<- _get_condition_object root (: line 0)))
-		(= condition$code (: line 1))
+		(= condition$code code)
 	)
-	(:> root '\n')
 	(<- log$log "  Generating code in '" config$OPTIMIZER_OUTPUT_FILE_PATH "'...")
 	(= fh (<- file$open config$OPTIMIZER_OUTPUT_FILE_PATH "w"))
 	(<- file$write fh
