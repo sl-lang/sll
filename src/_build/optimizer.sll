@@ -29,6 +29,7 @@
 
 (= node_type_and_range_type (&:
 	(~ int_type) node_type
+	(~ int_type) required_length
 	(~ range_type) range
 ))
 
@@ -44,6 +45,7 @@
 
 
 (= _get_node_type (,,, type
+	(= required_length -1)
 	(= min 0)
 	(= max 0)
 	(= idx (<- string$index type '['))
@@ -56,8 +58,18 @@
 		(= min (:: (: range 0) int_type))
 		(= max (:: (: range 1) int_type))
 	})
+	(= idx (<- string$index type '@'))
+	(? (!== idx -1) {
+		(= required_length (::
+			(>> type (+ idx 1))
+			int_type
+		))
+		(= type (: type 0 idx))
+		(? (< required_length 0) (= required_length -1))
+	})
 	(? (|: _type_to_number type) (@@ (. node_type_and_range_type
 		(: _type_to_number type)
+		required_length
 		[
 			min
 			max
@@ -214,22 +226,25 @@
 		(= line (<- string$trim (: code i)))
 		(++ i)
 		(? (! line) (<<<))
-		(? (=== (: line 0) '*') {
-			(= node_index (:: (>> line 1) int_type))
-			(<- file$write fh indentation_str "_expand_node(data" node_index ",data" (- node_index 1) "->node);\n")
-			(<<<)
-		})
+		(?
+			(=== (: line 0) '*') {
+				(= node_index (:: (>> line 1) int_type))
+				(<- file$write fh indentation_str "_expand_node(data" node_index ",data" (- node_index 1) "->node);\n")
+				(<<<)
+			}
+			(=== (: line 0) '#') {
+				(= node_index (:: (>> line 1) int_type))
+				(<- file$write fh indentation_str "_delete_node(data" node_index ",data" (- node_index 1) "->node);\n")
+				(<<<)
+			}
+		)
 		(= line (<- string$split line '='))
 		(? (!== ($ line) 2) (<<<))
 		(= node_index (:: (: line 0) int_type))
-		(? (=== (: line 1) "nop") {
-			(<- file$write fh indentation_str "_delete_node(data" node_index ",data" (- node_index 1) "->node);\n")
-		} {
-			(= new_type (<- _get_node_type (: line 1)))
-			(<- file$write fh indentation_str "data" node_index "->node->type=" new_type$node_type ";\n")
-		})
-		(<- file$write fh indentation_str "return;\n")
+		(= new_type (<- _get_node_type (: line 1)))
+		(<- file$write fh indentation_str "data" node_index "->node->type=" new_type$node_type ";\n")
 	)
+	(<- file$write fh indentation_str "return;\n")
 ))
 
 (= _generate_bound (,,, level bound end?

@@ -84,7 +84,7 @@
 
 
 static const sll_char_t _string_whitespace[]={'\t','\n','\v','\x0c','\r',' '};
-static const sll_string_length_t _string_whitespace_count=sizeof(_string_whitespace)/sizeof(const sll_char_t);
+static const sll_string_length_t _string_whitespace_count=6;
 
 
 

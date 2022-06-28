@@ -370,6 +370,7 @@ static void __SLL_FORCE_INLINE _optimizer_execute(optimizer_node_children_data_t
 				}
 				if (data1->node->type==5||data1->node->type==6||data1->node->type==69||data1->node->type==70){
 					_expand_node(data1,data0->node);
+					return;
 				}
 			}
 		}
@@ -409,6 +410,7 @@ static void __SLL_FORCE_INLINE _optimizer_execute(optimizer_node_children_data_t
 				}
 				if (data1->node->type==69){
 					_expand_node(data1,data0->node);
+					return;
 				}
 			}
 		}
