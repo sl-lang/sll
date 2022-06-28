@@ -67,8 +67,12 @@
 	(<- util$fail_and_exit)
 ))
 
-(= _get_possible_nodes (,,, format
+(= _get_possible_nodes (,,, format variables
 	(= format (<- string$trim format))
+	(? (&&
+		(=== (: format 0) '$')
+		(|: variables format)
+	) (= format (: variables format)))
 	(? (||
 		(!== (: format 0) '{')
 		(!== (: format -1) '}')
@@ -89,14 +93,14 @@
 	)))
 ))
 
-(= _get_condition_object (,,, root condition required_child_levels
+(= _get_condition_object (,,, root condition required_child_levels variables
 	(= condition (<- string$split condition '.'))
 	(= first_possible_nodes [])
 	(= second_possible_nodes [])
 	(= out root)
 	(-> (= i 0) (< i ($ condition))
 		(= step (: condition i))
-		(= possible_nodes (<- _get_possible_nodes step))
+		(= possible_nodes (<- _get_possible_nodes step variables))
 		(?
 			(! i) (= first_possible_nodes possible_nodes)
 			(=== i 1) (= second_possible_nodes possible_nodes)
@@ -409,6 +413,7 @@ indentation_str `	child_count_t start` level `;
 		)
 		'\n'
 	))
+	(= variables <>)
 	(-> (= i 0) (< i ($ data))
 		(= line (<- string$trim (: data i)))
 		(++ i)
@@ -417,12 +422,21 @@ indentation_str `	child_count_t start` level `;
 			(=== (: line 0) '#')
 		) (<<<))
 		(= line (<- string$split line "->"))
+		(? (=== ($ line) 1) {
+			(= line (<- string$split (: line 0) '='))
+			(= name (<- string$trim (: line 0)))
+			(? (&&
+				(=== ($ line) 2)
+				(=== (: name 0) '$')
+			) (= (: variables name) (<- string$trim (: line 1))))
+			(<<<)
+		})
 		(= code (<- string$trim (: line 1)))
 		(? (||
 			(!== ($ line) 2)
 			(! code)
 		) (<<<))
-		(= condition (<- _get_condition_object root (: line 0) required_child_levels))
+		(= condition (<- _get_condition_object root (: line 0) required_child_levels variables))
 		(= condition$code code)
 	)
 	(<- log$log "  Generating code in '" config$OPTIMIZER_OUTPUT_FILE_PATH "'...")
