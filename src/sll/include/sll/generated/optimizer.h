@@ -374,6 +374,22 @@ static void __SLL_FORCE_INLINE _optimizer_execute(optimizer_node_children_data_t
 			}
 		}
 	}
+	else if (data0->node->type==69){
+		child_count_t start0=(data0->child_count>1?data0->child_count-1:0);
+		child_count_t end0=data0->child_count;
+		if (data0->child_type_bitmap[2]&64){
+			for (child_count_t idx0=start0;idx0<end0;idx0++){
+				optimizer_node_children_data_t* data1=data0->children+idx0;
+				if (!data1->node){
+					continue;
+				}
+				if (data1->node->type==70){
+					data0->node->type=70;
+					return;
+				}
+			}
+		}
+	}
 }
 
 

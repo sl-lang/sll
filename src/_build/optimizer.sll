@@ -54,9 +54,7 @@
 		(= range (<- string$split (: type (+ idx 1) -1) ':'))
 		(= type (: type 0 idx))
 		(= min (:: (: range 0) int_type))
-		(? (< min 0) (= min 0))
-		(= max (- 0 (:: (: range 1) int_type)))
-		(? (< max 0) (= max 0))
+		(= max (:: (: range 1) int_type))
 	})
 	(? (|: _type_to_number type) (@@ (. node_type_and_range_type
 		(: _type_to_number type)
@@ -206,7 +204,6 @@
 ))
 
 (= _generate_condition_code (,,, fh previous_conditions code indentation_str
-	(:> code '\n')
 	(? (! code) (@@))
 	(= code (<- string$split code ','))
 	(-> (= i 0) (< i ($ code))
@@ -225,31 +222,32 @@
 			(<- file$write fh indentation_str "_delete_node(data" node_index ",data" (- node_index 1) "->node);\n")
 		} {
 			(= new_type (<- _get_node_type (: line 1)))
-			(:> "Unimplemented!\n")
-			(<- util$fail_and_exit)
+			(<- file$write fh indentation_str "data" node_index "->node->type=" new_type$node_type ";\n")
 		})
 		(<- file$write fh indentation_str "return;\n")
 	)
 ))
 
-(= _generate_upper_range_bound (,,, level max
-	(@@ (?: max
-		(+
+(= _generate_bound (,,, level bound end?
+	(@@ (?:
+		(> bound 0)	(:: bound string_type)
+		(< bound 0)	(+
 			"(data"
 			level
 			"->child_count>"
-			max
+			(- 0 bound)
 			"?data"
 			level
-			"->child_count-"
-			max
+			"->child_count"
+			bound
 			":0)"
 		)
-		(+
+		end? (+
 			"data"
 			level
 			"->child_count"
 		)
+		"0"
 	))
 ))
 
@@ -268,8 +266,8 @@
 	(? (=== ($ ranges) 1) {
 		(= range (: ranges 0))
 		(<- file$write fh
-indentation_str `	child_count_t start` level `=` range$min `;
-` indentation_str `	child_count_t end` level `=` (<- _generate_upper_range_bound level range$max) `;
+indentation_str `	child_count_t start` level `=` (<- _generate_bound level range$min false) `;
+` indentation_str `	child_count_t end` level `=` (<- _generate_bound level range$max true) `;
 `)
 	} {
 		(<- file$write fh
@@ -289,8 +287,8 @@ indentation_str `	child_count_t start` level `;
 			)
 			(<- file$write fh
 `{
-` indentation_str `		start` level `=` range$min `;
-` indentation_str `		end` level `=` (<- _generate_upper_range_bound level range$max) `;
+` indentation_str `		start` level `=` (<- _generate_bound level range$min false) `;
+` indentation_str `		end` level `=` (<- _generate_bound level range$max true) `;
 ` indentation_str `	}
 `)
 			(++ i)
