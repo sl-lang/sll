@@ -2,6 +2,10 @@
 #define __SLL_GENERATED_OPTIMIZER_H__ 1
 #include <sll/_internal/common.h>
 #include <sll/_internal/optimizer.h>
+#include <sll/node.h>
+#include <sll/string.h>
+#include <sll/string_table.h>
+
 
 
 
@@ -334,7 +338,7 @@ static const child_level_count_t _optimizer_required_child_levels[]={
 
 
 
-static void __SLL_FORCE_INLINE _optimizer_execute(optimizer_node_children_data_t* data0){
+static void __SLL_FORCE_INLINE _optimizer_execute(sll_source_file_t* source_file,optimizer_node_children_data_t* data0){
 	if ((data0->node->type==10&&data0->child_count==0)||(data0->node->type==11&&data0->child_count==0)||(data0->node->type==12&&data0->child_count==0)||(data0->node->type==13&&data0->child_count==0)||(data0->node->type==14&&data0->child_count==0)||(data0->node->type==15&&data0->child_count==0)||(data0->node->type==18&&data0->child_count==0)||(data0->node->type==19&&data0->child_count==0)||(data0->node->type==20&&data0->child_count==0)||(data0->node->type==21&&data0->child_count==0)||(data0->node->type==22&&data0->child_count==0)||(data0->node->type==23&&data0->child_count==0)||(data0->node->type==24&&data0->child_count==0)||(data0->node->type==25&&data0->child_count==0)||(data0->node->type==26&&data0->child_count==0)||(data0->node->type==27&&data0->child_count==0)||(data0->node->type==28&&data0->child_count==0)||(data0->node->type==29&&data0->child_count==0)||(data0->node->type==30&&data0->child_count==0)||(data0->node->type==31&&data0->child_count==0)||(data0->node->type==32&&data0->child_count==0)||(data0->node->type==33&&data0->child_count==0)||(data0->node->type==34&&data0->child_count==0)||(data0->node->type==35&&data0->child_count==0)||(data0->node->type==36&&data0->child_count==0)||(data0->node->type==37&&data0->child_count==0)||(data0->node->type==38&&data0->child_count==0)||(data0->node->type==39&&data0->child_count==0)||(data0->node->type==40&&data0->child_count==0)||(data0->node->type==41&&data0->child_count==0)||(data0->node->type==42&&data0->child_count==0)||(data0->node->type==43&&data0->child_count==0)||(data0->node->type==44&&data0->child_count==0)||(data0->node->type==45&&data0->child_count==0)||(data0->node->type==46&&data0->child_count==0)||(data0->node->type==47&&data0->child_count==0)||(data0->node->type==48&&data0->child_count==0)||(data0->node->type==49&&data0->child_count==0)||(data0->node->type==50&&data0->child_count==0)||(data0->node->type==51&&data0->child_count==0)||(data0->node->type==52&&data0->child_count==0)||(data0->node->type==53&&data0->child_count==0)||(data0->node->type==54&&data0->child_count==0)||(data0->node->type==55&&data0->child_count==0)||(data0->node->type==56&&data0->child_count==0)||(data0->node->type==60&&data0->child_count==0)||(data0->node->type==67&&data0->child_count==0)||(data0->node->type==69&&data0->child_count==0)||(data0->node->type==70&&data0->child_count==0)){
 		data0->node->type=0;
 		data0->node->data.int_=0;
@@ -362,7 +366,6 @@ static void __SLL_FORCE_INLINE _optimizer_execute(optimizer_node_children_data_t
 					continue;
 				}
 				if (data1->node->type==0||data1->node->type==1||data1->node->type==2||data1->node->type==3||data1->node->type==4||data1->node->type==7||data1->node->type==8||data1->node->type==9){
-					_delete_node(data1,data0->node);
 					return;
 				}
 			}
@@ -374,7 +377,6 @@ static void __SLL_FORCE_INLINE _optimizer_execute(optimizer_node_children_data_t
 					continue;
 				}
 				if (data1->node->type==5||data1->node->type==6||data1->node->type==69||data1->node->type==70){
-					_expand_node(data1,data0->node);
 					return;
 				}
 			}
@@ -386,7 +388,7 @@ static void __SLL_FORCE_INLINE _optimizer_execute(optimizer_node_children_data_t
 					continue;
 				}
 				if (data1->node->type==23){
-					data1->node->type=22;
+					data0->node->type=22;
 					return;
 				}
 			}
@@ -402,11 +404,17 @@ static void __SLL_FORCE_INLINE _optimizer_execute(optimizer_node_children_data_t
 					continue;
 				}
 				if (data1->node->type==69||data1->node->type==70){
-					data1->node->type=255;
+					data0->node->type=255;
 					return;
 				}
 			}
 		}
+	}
+	else if ((data0->node->type==57&&data0->child_count==0)||(data0->node->type==58&&data0->child_count==0)){
+		data0->node->type=4;
+		sll_string_t str=SLL_INIT_STRING_STRUCT;
+		data0->node->data.string_index=sll_add_string(&(source_file->string_table),&str);
+		return;
 	}
 	else if ((data0->node->type==61&&data0->child_count==0)||(data0->node->type==62&&data0->child_count==0)){
 		data0->node->type=5;
@@ -440,7 +448,6 @@ static void __SLL_FORCE_INLINE _optimizer_execute(optimizer_node_children_data_t
 					continue;
 				}
 				if (data1->node->type==69){
-					_expand_node(data1,data0->node);
 					return;
 				}
 			}

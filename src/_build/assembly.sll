@@ -1,5 +1,6 @@
 (---
 	"@build-script/config.sll"
+	"@build-script/util.sll"
 	"array.sll"
 	"file.sll"
 	"log.sll"
@@ -19,30 +20,6 @@
 ))
 
 
-
-(= _split_with_scope (,,, str infix
-	(= out [])
-	(= i 0)
-	(= j 0)
-	(-> nil (<= j (- ($ str) ($ infix)))
-		(?
-			(<- string$starts (>> str j) infix) {
-				(<- array$push out (: str i j))
-				(= j (+ j ($ infix)))
-				(= i j)
-				(<<<)
-			}
-			(=== (: str j) '"') {
-				(>- nil (!== (: str j) '"')
-					(++ j)
-				)
-			}
-		)
-		(++ j)
-	)
-	(<- array$push out (>> str i))
-	(@@ out)
-))
 
 (= _parse_object (,,, str
 	(= str (<- string$split (<- string$lower_case str) '.'))
@@ -171,7 +148,7 @@
 		(= line (<- string$trim (: data i)))
 		(++ i)
 		(? (|| (! line) (=== (: line 0) ';')) (<<<))
-		(= line (<- _split_with_scope line "->"))
+		(= line (<- util$split_with_scope line "->"))
 		(? (!== ($ line) 2) (<<<))
 		(= cond (<- string$split (: line 0) ','))
 		(= code (<- string$trim (: line 1)))

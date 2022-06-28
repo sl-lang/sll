@@ -25,6 +25,7 @@
 	(~ func_type) get_output_file_path
 	(~ func_type) get_source_file_path
 	(~ func_type) hash_file
+	(~ func_type) split_with_scope
 ))
 
 
@@ -192,6 +193,30 @@
 	))
 ))
 
+(= split_with_scope (,,, str infix
+	(= out [])
+	(= i 0)
+	(= j 0)
+	(-> nil (<= j (- ($ str) ($ infix)))
+		(?
+			(<- string$starts (>> str j) infix) {
+				(<- array$push out (: str i j))
+				(= j (+ j ($ infix)))
+				(= i j)
+				(<<<)
+			}
+			(=== (: str j) '"') {
+				(>- nil (!== (: str j) '"')
+					(++ j)
+				)
+			}
+		)
+		(++ j)
+	)
+	(<- array$push out (>> str i))
+	(@@ out)
+))
+
 
 
 (= util (. util_module_type
@@ -203,5 +228,6 @@
 	get_output_file_path
 	get_source_file_path
 	hash_file
+	split_with_scope
 ))
 (## util)

@@ -230,12 +230,16 @@
 
 (= _generate_condition_code (,,, fh previous_conditions code indentation_str
 	(? (! code) (@@))
-	(= code (<- string$split code ','))
+	(= code (<- util$split_with_scope code ','))
 	(-> (= i 0) (< i ($ code))
 		(= line (<- string$trim (: code i)))
 		(++ i)
 		(? (! line) (<<<))
 		(?
+			(=== (: line 0) '"') {
+				(<- file$write fh indentation_str (: line 1 -1) ";\n")
+				(<<<)
+			}
 			(=== (: line 0) '*') {
 				(= node_index (:: (>> line 1) int_type))
 				(<- file$write fh indentation_str "_expand_node(data" node_index ",data" (- node_index 1) "->node);\n")
@@ -451,17 +455,21 @@ indentation_str `	child_count_t start` level `;
 		)
 		'\n'
 	))
+	(= included_header_files [])
 	(= variables <>)
 	(-> (= i 0) (< i ($ data))
 		(= line (<- string$trim (: data i)))
 		(++ i)
-		(? (||
-			(! line)
-			(=== (: line 0) '#')
-		) (<<<))
-		(= line (<- string$split line "->"))
-		(? (=== ($ line) 1) {
-			(= line (<- string$split (: line 0) '='))
+		(?
+			(||
+				(! line)
+				(=== (: line 0) '#')
+			) (<<<)
+			(<- string$starts line "--") (<- array$push included_header_files (<- string$trim (>> line 2)))
+		)
+		(= idx (<- string$index line "->"))
+		(? (=== idx -1) {
+			(= line (<- string$split line '='))
 			(= name (<- string$trim (: line 0)))
 			(? (&&
 				(=== ($ line) 2)
@@ -469,12 +477,9 @@ indentation_str `	child_count_t start` level `;
 			) (= (: variables name) (<- string$trim (: line 1))))
 			(<<<)
 		})
-		(= code (<- string$trim (: line 1)))
-		(? (||
-			(!== ($ line) 2)
-			(! code)
-		) (<<<))
-		(= condition (<- _get_condition_object root (: line 0) required_child_levels variables))
+		(= code (<- string$trim (>> line (+ idx 1))))
+		(? (! code) (<<<))
+		(= condition (<- _get_condition_object root (: line 0 idx) required_child_levels variables))
 		(= condition$code code)
 	)
 	(<- log$log "  Generating code in '" config$OPTIMIZER_OUTPUT_FILE_PATH "'...")
@@ -484,6 +489,16 @@ indentation_str `	child_count_t start` level `;
 #define __SLL_GENERATED_OPTIMIZER_H__ 1
 #include <sll/_internal/common.h>
 #include <sll/_internal/optimizer.h>
+#include <sll/node.h>
+` (<- string$join "" ([> (= i 0) (< i ($ included_header_files))
+	(= file_path (: included_header_files i))
+	(++ i)
+	(+
+		"#include <"
+		file_path
+		">\n"
+	)
+)) `
 
 
 
@@ -507,7 +522,7 @@ static const child_level_count_t _optimizer_required_child_levels[]={
 
 
 
-static void __SLL_FORCE_INLINE _optimizer_execute(optimizer_node_children_data_t* data0){
+static void __SLL_FORCE_INLINE _optimizer_execute(sll_source_file_t* source_file,optimizer_node_children_data_t* data0){
 `)
 	(<- _generate_code fh [] root$children 0)
 	(<- file$write fh

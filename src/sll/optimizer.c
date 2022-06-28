@@ -75,7 +75,7 @@ static sll_node_t* _visit_node(sll_source_file_t* source_file,sll_node_t* node,o
 		child_level_count_t child_level_count=_optimizer_required_child_levels[(node->type<<OPTIMIZER_DATA_NODE_TYPE_SHIFT)|child->type];
 		child=_visit_node(source_file,child,children+i,(child_level_count>child_level_count_required?child_level_count:child_level_count_required));
 	}
-	_optimizer_execute(parent);
+	_optimizer_execute(source_file,parent);
 	_delete_deep_children(children,child_count,child_level_count_required);
 	return child;
 }
