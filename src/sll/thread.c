@@ -48,7 +48,7 @@ void _thread_deinit(void){
 
 
 thread_data_t* _thread_get(sll_thread_index_t thread_index){
-	return (SLL_HANDLE_CONTAINER_CHECK(&_thread_data,thread_index)?*(_thread_data.data+thread_index):NULL);
+	return SLL_HANDLE_CONTAINER_GET(&_thread_data,thread_index);
 }
 
 

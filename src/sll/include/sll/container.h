@@ -237,6 +237,20 @@
 
 /**
  * \flags func macro
+ * \name SLL_HANDLE_CONTAINER_GET
+ * \group container
+ * \subgroup container-handle
+ * \desc Docs!
+ * \arg sll_handle_container_t* c
+ * \arg sll_size_t index
+ * \ret void*
+ */
+#define SLL_HANDLE_CONTAINER_GET(c,index) ((index)<(c)->size&&!(((sll_size_t)(*((c)->data+(index))))>>63)?*((c)->data+(index)):NULL)
+
+
+
+/**
+ * \flags func macro
  * \name SLL_HANDLE_CONTAINER_INIT
  * \group container
  * \subgroup container-handle
