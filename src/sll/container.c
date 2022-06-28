@@ -91,6 +91,12 @@ __SLL_EXTERNAL void sll_handle_container_dealloc(sll_handle_container_t* c,sll_s
 
 
 
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT void* sll_handle_container_get(sll_handle_container_t* c,sll_size_t index){
+	return SLL_HANDLE_CONTAINER_GET(c,index);
+}
+
+
+
 __SLL_EXTERNAL void sll_handle_container_init(sll_handle_container_t* c){
 	SLL_HANDLE_CONTAINER_INIT(c);
 }

@@ -508,6 +508,20 @@ __SLL_EXTERNAL void sll_handle_container_dealloc(sll_handle_container_t* c,sll_s
 
 
 /**
+ * \flags check_output func
+ * \name sll_handle_container_get
+ * \group container
+ * \subgroup container-handle
+ * \desc Docs!
+ * \arg sll_handle_container_t* c
+ * \arg sll_size_t index
+ * \ret void*
+ */
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT void* sll_handle_container_get(sll_handle_container_t* c,sll_size_t index);
+
+
+
+/**
  * \flags func
  * \name sll_handle_container_init
  * \group container
