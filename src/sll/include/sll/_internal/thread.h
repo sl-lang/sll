@@ -4,6 +4,7 @@
 #include <sll/_internal/sandbox.h>
 #include <sll/_size_types.h>
 #include <sll/assembly.h>
+#include <sll/container.h>
 #include <sll/gc.h>
 #include <sll/sandbox.h>
 #include <sll/thread.h>
@@ -13,9 +14,6 @@
 
 
 #define THREAD_SCHEDULER_INSTRUCTION_COUNT 10
-#define THREAD_IS_UNUSED(t) (ADDR(t)>>63)
-#define THREAD_NEXT_UNUSED(id) (PTR((id)|0x8000000000000000ull))
-#define THREAD_GET_NEXT_UNUSED(t) ((sll_thread_index_t)(ADDR((t))&0x7fffffffffffffffull))
 #define THREAD_SIZE SLL_ROUND_PAGE(sizeof(thread_data_t)+sll_current_vm_config->call_stack_size*sizeof(sll_call_stack_frame_t)+(sll_current_vm_config->stack_size+sll_current_runtime_data->assembly_data->tls_variable_count)*sizeof(sll_object_t*))
 
 #define THREAD_ALLOCATOR_CACHE_POOL_SIZE 32
@@ -67,7 +65,7 @@ typedef struct _THREAD_DATA{
 
 
 extern volatile thread_list_length_t _thread_active_count;
-extern thread_data_t** _thread_data;
+extern sll_handle_container_t _thread_data;
 
 
 

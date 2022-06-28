@@ -91,7 +91,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_semaphore_release(sll_semaphore
 		data->count++;
 		return 1;
 	}
-	thread_data_t* thr=*(_thread_data+data->first);
+	thread_data_t* thr=*(_thread_data.data+data->first);
 	thr->state=THREAD_STATE_QUEUED;
 	_scheduler_queue_thread(data->first);
 	data->first=thr->next;

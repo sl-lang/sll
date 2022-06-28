@@ -95,7 +95,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_lock_release(sll_lock_index_t l
 	if (data->first==SLL_UNKNOWN_THREAD_INDEX){
 		return 1;
 	}
-	thread_data_t* thr=*(_thread_data+data->lock);
+	thread_data_t* thr=*(_thread_data.data+data->lock);
 	data->first=thr->next;
 	thr->state=THREAD_STATE_QUEUED;
 	_scheduler_queue_thread(data->lock);
