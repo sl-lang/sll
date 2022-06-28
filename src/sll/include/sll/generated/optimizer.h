@@ -357,6 +357,8 @@ static void __SLL_FORCE_INLINE _optimizer_execute(optimizer_node_children_data_t
 					continue;
 				}
 				if (data1->node->type==0||data1->node->type==1||data1->node->type==2||data1->node->type==3||data1->node->type==4||data1->node->type==7||data1->node->type==8||data1->node->type==9){
+					_delete_node(data1,data0->node);
+					return;
 				}
 			}
 		}
@@ -367,6 +369,7 @@ static void __SLL_FORCE_INLINE _optimizer_execute(optimizer_node_children_data_t
 					continue;
 				}
 				if (data1->node->type==5||data1->node->type==6||data1->node->type==69||data1->node->type==70){
+					_expand_node(data1,data0->node);
 				}
 			}
 		}

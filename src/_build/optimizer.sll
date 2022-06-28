@@ -14,7 +14,7 @@
 
 (= node_condition_data_type (&:
 	(~ map_type) children
-	(~ string_type) code
+	string_type code
 ))
 
 (= node_condition_data_and_types_type (&:
@@ -206,6 +206,7 @@
 ))
 
 (= _generate_condition_code (,,, fh previous_conditions code indentation_str
+	(:> code '\n')
 	(? (! code) (@@))
 	(= code (<- string$split code ','))
 	(-> (= i 0) (< i ($ code))
