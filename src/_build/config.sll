@@ -511,7 +511,7 @@
 	"src/sll/include/sll/node.h"
 	"SLL_NODE_TYPE_"
 	"src/sll/include/sll/generated/optimizer.h"
-	48
+	32
 	options
 	<
 		"darwin" "-D"
