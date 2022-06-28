@@ -1,3 +1,6 @@
 {func|operation_list|comma[:-1]|for[2:]|while[2:]|loop|for_array[2:]|while_array[2:]|for_map[2:]|while_map[2:]}.{int|float|char|complex|string|identifier|field|function_id} -> 1=nop
 {func|operation_list|comma[:-1]|for[2:]|while[2:]|loop|for_array[2:]|while_array[2:]|for_map[2:]|while_map[2:]}.{array|map|operation_list|comma} -> *1
-comma[-1:].{operation_list} -> 0=operation_list
+{func|operation_list|comma[:-1]|for[2:]|while[2:]|loop|for_array[2:]|while_array[2:]|for_map[2:]|while_map[2:]}.inline_if -> 1=if
+
+comma[-1:].{print|if|switch|for|while|loop|break|continue|return|operation_list|thread_wait|thread_lock|thread_semaphore|thread_barrier_eq|thread_barrier_geq|thread_exit} -> 0=operation_list
+comma[-1:].comma -> *1

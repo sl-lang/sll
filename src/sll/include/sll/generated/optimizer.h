@@ -373,19 +373,42 @@ static void __SLL_FORCE_INLINE _optimizer_execute(optimizer_node_children_data_t
 				}
 			}
 		}
-	}
-	else if (data0->node->type==69){
-		child_count_t start0=(data0->child_count>1?data0->child_count-1:0);
-		child_count_t end0=data0->child_count;
-		if (data0->child_type_bitmap[2]&64){
+		else if (data0->child_type_bitmap[0]&8388608){
 			for (child_count_t idx0=start0;idx0<end0;idx0++){
 				optimizer_node_children_data_t* data1=data0->children+idx0;
 				if (!data1->node){
 					continue;
 				}
-				if (data1->node->type==70){
+				if (data1->node->type==23){
+					data1->node->type=22;
+					return;
+				}
+			}
+		}
+	}
+	else if (data0->node->type==69){
+		child_count_t start0=(data0->child_count>1?data0->child_count-1:0);
+		child_count_t end0=data0->child_count;
+		if (data0->child_type_bitmap[0]&255853568||data0->child_type_bitmap[2]&16214){
+			for (child_count_t idx0=start0;idx0<end0;idx0++){
+				optimizer_node_children_data_t* data1=data0->children+idx0;
+				if (!data1->node){
+					continue;
+				}
+				if (data1->node->type==10||data1->node->type==22||data1->node->type==24||data1->node->type==25||data1->node->type==26||data1->node->type==27||data1->node->type==65||data1->node->type==66||data1->node->type==68||data1->node->type==70||data1->node->type==72||data1->node->type==73||data1->node->type==74||data1->node->type==75||data1->node->type==76||data1->node->type==77){
 					data0->node->type=70;
 					return;
+				}
+			}
+		}
+		else if (data0->child_type_bitmap[2]&32){
+			for (child_count_t idx0=start0;idx0<end0;idx0++){
+				optimizer_node_children_data_t* data1=data0->children+idx0;
+				if (!data1->node){
+					continue;
+				}
+				if (data1->node->type==69){
+					_expand_node(data1,data0->node);
 				}
 			}
 		}
