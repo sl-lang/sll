@@ -249,7 +249,13 @@
 		)
 		(= line (<- string$split line '='))
 		(? (!== ($ line) 2) (<<<))
-		(= node_index (:: (: line 0) int_type))
+		(= source (: line 0))
+		(= idx (<- string$index source '.'))
+		(? (!== idx -1) {
+			(<- file$write fh indentation_str "data" (: source 0 idx) "->node->data." (>> source (+ idx 1)) '=' (: line 1) ";\n")
+			(<<<)
+		})
+		(= node_index (:: source int_type))
 		(= type (: line 1))
 		(= new_type (?: (=== type "nop")
 			255

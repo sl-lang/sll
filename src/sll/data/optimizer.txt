@@ -1,3 +1,4 @@
+$replace_by_nil = {print@0|and@0|or@0|not@0|bool@0|assign@0|internal_func@0|internal_func_load@0|inline_func@0|call@0|call_array@0|if@0|inline_if@0|switch@0|for@0|while@0|loop@0|inc@0|dec@0|add@0|sub@0|mult@0|div@0|floor_div@0|mod@0|bit_and@0|bit_or@0|bit_xor@0|bit_not@0|bit_right_shift@0|bit_left_shift@0|less@0|less_equal@0|equal@0|not_equal@0|more@0|more_equal@0|strict_equal@0|strict_not_equal@0|length@0|access@0|deep_copy@0|var_access@0|has@0|cast@0|typeof@0|new@0|ref@0|comma@0|operation_list@0}
 $replace_by_operation_list = {assign@1|inline_if@1|switch@1|for@1|while@1|less@1|less_equal@1|equal@1|not_equal@1|more@1|more_equal@1|strict_equal@1|strict_not_equal@1|has@1|cast@1}
 $nil_return_value = {print|if|switch|for|while|loop|break|continue|return|operation_list|thread_wait|thread_lock|thread_semaphore|thread_barrier_eq|thread_barrier_geq|thread_exit}
 $optional_fields = {func|operation_list|comma[:-1]|for[2:]|while[2:]|loop|for_array[2:]|while_array[2:]|for_map[2:]|while_map[2:]|assign[2:]}
@@ -14,4 +15,5 @@ comma[-1:].comma -> *1
 
 $ignored_required_fields.{comma@1|operation_list@1} -> 1=nop
 
+#$replace_by_nil -> 0=int, 0.int_=0
 $replace_by_operation_list -> 0=operation_list
