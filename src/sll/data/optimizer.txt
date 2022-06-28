@@ -1,6 +1,7 @@
+$replace_by_operation_list = {assign@1|inline_if@1|switch@1|for@1|while@1|less@1|less_equal@1|equal@1|not_equal@1|more@1|more_equal@1|strict_equal@1|strict_not_equal@1|has@1|cast@1}
 $nil_return_value = {print|if|switch|for|while|loop|break|continue|return|operation_list|thread_wait|thread_lock|thread_semaphore|thread_barrier_eq|thread_barrier_geq|thread_exit}
-$optional_fields = {func|operation_list|comma[:-1]|for[2:]|while[2:]|loop|for_array[2:]|while_array[2:]|for_map[2:]|while_map[2:]}
-$ignored_required_fileds = {for[:1]|while[:1]|for_array[:1]|while_array[:1]|for_map[:1]|while_map[:1]}
+$optional_fields = {func|operation_list|comma[:-1]|for[2:]|while[2:]|loop|for_array[2:]|while_array[2:]|for_map[2:]|while_map[2:]|assign[2:]}
+$ignored_required_fields = {for[:1]|while[:1]|for_array[:1]|while_array[:1]|for_map[:1]|while_map[:1]}
 
 
 
@@ -11,4 +12,6 @@ $optional_fields.inline_if -> 1=if
 comma[-1:].$nil_return_value -> 0=operation_list
 comma[-1:].comma -> *1
 
-# $ignored_required_fileds.operation_list@1 -> 1=nop
+$ignored_required_fields.{comma@1|operation_list@1} -> 1=nop
+
+$replace_by_operation_list -> 0=operation_list
