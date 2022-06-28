@@ -17,3 +17,6 @@ $ignored_required_fields.{comma@1|operation_list@1} -> 1=nop
 
 $replace_by_nil -> 0=int, 0.int_=0
 $replace_by_operation_list -> 0=operation_list
+
+{for_array@0|while_array@0} -> 0=array, 0.array_length=0
+{for_map@0|while_map@0} -> 0=map, 0.map_length=0

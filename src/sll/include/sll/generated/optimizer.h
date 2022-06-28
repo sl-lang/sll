@@ -408,6 +408,16 @@ static void __SLL_FORCE_INLINE _optimizer_execute(optimizer_node_children_data_t
 			}
 		}
 	}
+	else if ((data0->node->type==61&&data0->child_count==0)||(data0->node->type==62&&data0->child_count==0)){
+		data0->node->type=5;
+		data0->node->data.array_length=0;
+		return;
+	}
+	else if ((data0->node->type==63&&data0->child_count==0)||(data0->node->type==64&&data0->child_count==0)){
+		data0->node->type=6;
+		data0->node->data.map_length=0;
+		return;
+	}
 	else if (data0->node->type==69){
 		child_count_t start0=(data0->child_count>1?data0->child_count-1:0);
 		child_count_t end0=data0->child_count;
