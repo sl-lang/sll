@@ -15,9 +15,9 @@ $optional_fields.{int|float|char|complex|string|identifier|field|function_id} ->
 $optional_fields.{array|map|operation_list|comma} -> *1
 $optional_fields.inline_if -> 1=if
 
-comma[-1:].$nil_return_value -> 0=operation_list
-comma[-1:].comma -> *1
 comma[-1:].int<int_=0> -> 0=operation_list, 1=nop
+comma[-1:].comma -> *1
+comma[-1:].$nil_return_value -> 0=operation_list
 
 $ignored_required_fields.{comma@1|operation_list@1} -> 1=nop
 
