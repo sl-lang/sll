@@ -351,7 +351,7 @@ static void __SLL_FORCE_INLINE _optimizer_execute(sll_source_file_t* source_file
 			start0=0;
 			end0=(data0->child_count>1?data0->child_count-1:0);
 		}
-		else if (data0->node->type==13||data0->node->type==14||data0->node->type==18||data0->node->type==28||data0->node->type==29||data0->node->type==50||data0->node->type==52||data0->node->type==56||data0->node->type==57||data0->node->type==58||data0->node->type==67||data0->node->type==72||data0->node->type==73||data0->node->type==74||data0->node->type==77||data0->node->type==79){
+		else if (data0->node->type==13||data0->node->type==14||data0->node->type==18||data0->node->type==28||data0->node->type==29||data0->node->type==50||data0->node->type==52||data0->node->type==56||data0->node->type==57||data0->node->type==58||data0->node->type==67||data0->node->type==68||data0->node->type==72||data0->node->type==73||data0->node->type==74||data0->node->type==77||data0->node->type==79){
 			start0=1;
 			end0=data0->child_count;
 		}
@@ -359,7 +359,7 @@ static void __SLL_FORCE_INLINE _optimizer_execute(sll_source_file_t* source_file
 			start0=2;
 			end0=data0->child_count;
 		}
-		else if (data0->node->type==16||data0->node->type==17||data0->node->type==19||data0->node->type==27||data0->node->type==65||data0->node->type==66||data0->node->type==68||data0->node->type==70||data0->node->type==71){
+		else if (data0->node->type==16||data0->node->type==17||data0->node->type==19||data0->node->type==27||data0->node->type==65||data0->node->type==66||data0->node->type==70||data0->node->type==71){
 			start0=0;
 			end0=data0->child_count;
 		}
