@@ -25,6 +25,7 @@
 (= range_type (&:
 	(~ int_type) min
 	(~ int_type) max
+	(~ int_type) step
 ))
 
 (= node_type_and_range_type (&:
@@ -54,6 +55,7 @@
 	(= required_length -1)
 	(= min 0)
 	(= max 0)
+	(= step 1)
 	(= idx (<- string$index type '['))
 	(? (&&
 		(!== idx -1)
@@ -63,6 +65,8 @@
 		(= type (: type 0 idx))
 		(= min (:: (: range 0) int_type))
 		(= max (:: (: range 1) int_type))
+		(= step (:: (: range 2) int_type))
+		(? (! step) (= step 1))
 	})
 	(= idx (<- string$index type '@'))
 	(? (!== idx -1) {
@@ -83,6 +87,7 @@
 		[
 			min
 			max
+			step
 		]
 	)))
 	(:> "Unknown node type: '" type "'\n")
@@ -191,7 +196,7 @@
 		)
 	))
 `){
-` indentation_str `	for (child_count_t idx` prev_level `=start` prev_level `;idx` prev_level `<end` prev_level `;idx` prev_level `++){
+` indentation_str `	for (child_count_t idx` prev_level `=start` prev_level `;idx` prev_level `<end` prev_level `;idx` prev_level `+=step` prev_level `){
 ` indentation_str `		optimizer_node_children_data_t* data` level `=data` prev_level `->children+idx` prev_level `;
 ` indentation_str `		if (!data` level `->node){
 ` indentation_str `			continue;
@@ -352,11 +357,13 @@
 		(<- file$write fh
 indentation_str `	child_count_t start` level `=` (<- _generate_bound level range$min false) `;
 ` indentation_str `	child_count_t end` level `=` (<- _generate_bound level range$max true) `;
+` indentation_str `	child_count_t step` level `=` range$step `;
 `)
 	} {
 		(<- file$write fh
 indentation_str `	child_count_t start` level `;
 ` indentation_str `	child_count_t end` level `;
+` indentation_str `	child_count_t step` level `;
 `)
 		(-> (= i 0) (< i ($ ranges))
 			(= range (: ranges i))
@@ -377,6 +384,7 @@ indentation_str `	child_count_t start` level `;
 `{
 ` indentation_str `		start` level `=` (<- _generate_bound level range$min false) `;
 ` indentation_str `		end` level `=` (<- _generate_bound level range$max true) `;
+` indentation_str `		step` level `=` range$step `;
 ` indentation_str `	}
 `)
 			(++ i)
