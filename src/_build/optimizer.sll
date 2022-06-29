@@ -39,6 +39,12 @@
 
 
 
+(= REQUIRED_LENGTH_IGNORED -1)
+(= REQUIRED_LENGTH_EVEN -2)
+(= REQUIRED_LENGTH_ODD -3)
+
+
+
 (= _type_to_number nil)
 (= _node_type_shift nil)
 
@@ -60,12 +66,16 @@
 	})
 	(= idx (<- string$index type '@'))
 	(? (!== idx -1) {
-		(= required_length (::
-			(>> type (+ idx 1))
-			int_type
-		))
+		(= required_length_str (>> type (+ idx 1)))
 		(= type (: type 0 idx))
-		(? (< required_length 0) (= required_length -1))
+		(?
+			(=== required_length_str "even") (= required_length REQUIRED_LENGTH_EVEN)
+			(=== required_length_str "odd") (= required_length REQUIRED_LENGTH_ODD)
+			{
+				(= required_length (:: required_length_str int_type))
+				(? (< required_length 0) (= required_length REQUIRED_LENGTH_IGNORED))
+			}
+		)
 	})
 	(? (|: _type_to_number type) (@@ (. node_type_and_range_type
 		(: _type_to_number type)
@@ -199,14 +209,32 @@
 ))
 
 (= _generate_node_check (,,, data level
-	(@@ (?: (=== data$required_length -1)
-		(+
+	(?? data$required_length
+		REQUIRED_LENGTH_IGNORED (@@ (+
 			"data"
 			level
 			"->node->type=="
 			data$node_type
-		)
-		(+
+		))
+		REQUIRED_LENGTH_EVEN (@@ (+
+			"(data"
+			level
+			"->node->type=="
+			data$node_type
+			"&&!(data"
+			level
+			"->child_count&1))"
+		))
+		REQUIRED_LENGTH_ODD (@@ (+
+			"(data"
+			level
+			"->node->type=="
+			data$node_type
+			"&&(data"
+			level
+			"->child_count&1))"
+		))
+		(@@ (+
 			"(data"
 			level
 			"->node->type=="
@@ -216,8 +244,8 @@
 			"->child_count=="
 			data$required_length
 			")"
-		)
-	))
+		))
+	)
 ))
 
 (= _generate_root_condition (,,, fh possible_nodes
@@ -302,7 +330,7 @@
 		(++ i)
 	)
 	(= ranges (:: range_to_types map_key_type))
-	(<- sort$sort ranges false true (,,, elem
+	(<- sort$sort ranges true true (,,, elem
 		(@@ ($ (: range_to_types elem)))
 	))
 	(? (=== ($ ranges) 1) {
