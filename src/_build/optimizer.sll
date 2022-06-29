@@ -329,9 +329,23 @@
 		(<- array$push (: range_to_types elem$range) elem)
 		(++ i)
 	)
-	(= ranges (:: range_to_types map_key_type))
-	(<- sort$sort ranges true true (,,, elem
-		(@@ ($ (: range_to_types elem)))
+	(= ranges (:: range_to_types array_type))
+	(= ranges (<- sort$sort ([> (= i 0) (< i ($ ranges))
+		(= range (: ranges i))
+		(++ i)
+		(= length ($ (: ranges i)))
+		(++ i)
+		[
+			range
+			length
+		]
+	) false false (,,, elem
+		(@@ (: elem 1))
+	))
+	(= ranges ([> (= i 0) (< i ($ ranges))
+		(= range (: ranges i))
+		(++ i)
+		(: range 0)
 	))
 	(? (=== ($ ranges) 1) {
 		(= range (: ranges 0))
