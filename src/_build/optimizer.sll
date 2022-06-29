@@ -324,9 +324,9 @@ indentation_str `	child_count_t start` level `;
 				(=== i (- ($ ranges) 1)) (<- file$write fh "else")
 				{
 					(? i (<- file$write fh "else "))
-					(<- file$write fh "if (" (<- string$join "||" ([> (= i 0) (< i ($ possible_types))
-						(= data (: possible_types i))
-						(++ i)
+					(<- file$write fh "if (" (<- string$join "||" ([> (= j 0) (< j ($ possible_types))
+						(= data (: possible_types j))
+						(++ j)
 						(<- _generate_node_check data level)
 					)) ')')
 				}

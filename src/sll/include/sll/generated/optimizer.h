@@ -344,16 +344,32 @@ static void __SLL_FORCE_INLINE _optimizer_execute(sll_source_file_t* source_file
 		data0->node->data.int_=0;
 		return;
 	}
-	else if (data0->node->type==13||data0->node->type==14||data0->node->type==15||data0->node->type==16||data0->node->type==17||data0->node->type==18||data0->node->type==19||data0->node->type==21||data0->node->type==25||data0->node->type==26||data0->node->type==27||data0->node->type==28||data0->node->type==29||data0->node->type==50||data0->node->type==51||data0->node->type==52||data0->node->type==54||data0->node->type==56||data0->node->type==57||data0->node->type==58||data0->node->type==61||data0->node->type==62||data0->node->type==63||data0->node->type==64||data0->node->type==65||data0->node->type==66||data0->node->type==67||data0->node->type==68||data0->node->type==69||data0->node->type==70||data0->node->type==71||data0->node->type==72||data0->node->type==73||data0->node->type==74||data0->node->type==77){
+	else if (data0->node->type==13||data0->node->type==14||data0->node->type==15||data0->node->type==16||data0->node->type==17||data0->node->type==18||data0->node->type==19||data0->node->type==21||data0->node->type==25||data0->node->type==26||data0->node->type==27||data0->node->type==28||data0->node->type==29||data0->node->type==50||data0->node->type==51||data0->node->type==52||data0->node->type==54||data0->node->type==56||data0->node->type==57||data0->node->type==58||data0->node->type==61||data0->node->type==62||data0->node->type==63||data0->node->type==64||data0->node->type==65||data0->node->type==66||data0->node->type==67||data0->node->type==68||data0->node->type==69||data0->node->type==70||data0->node->type==71||data0->node->type==72||data0->node->type==73||data0->node->type==74||data0->node->type==75||data0->node->type==76||data0->node->type==77||data0->node->type==78||data0->node->type==79){
 		child_count_t start0;
 		child_count_t end0;
 		if (data0->node->type==69){
 			start0=0;
 			end0=(data0->child_count>1?data0->child_count-1:0);
 		}
-		else if (data0->node->type==15||data0->node->type==21||data0->node->type==25||data0->node->type==26||data0->node->type==54){
+		else if (data0->node->type==13||data0->node->type==14||data0->node->type==18||data0->node->type==28||data0->node->type==29||data0->node->type==50||data0->node->type==52||data0->node->type==56||data0->node->type==57||data0->node->type==58||data0->node->type==67||data0->node->type==72||data0->node->type==73||data0->node->type==74||data0->node->type==77||data0->node->type==79){
+			start0=1;
+			end0=data0->child_count;
+		}
+		else if (data0->node->type==15||data0->node->type==21||data0->node->type==25||data0->node->type==26||data0->node->type==54||data0->node->type==75||data0->node->type==76||data0->node->type==78){
 			start0=2;
 			end0=data0->child_count;
+		}
+		else if (data0->node->type==16||data0->node->type==17||data0->node->type==19||data0->node->type==27||data0->node->type==65||data0->node->type==66||data0->node->type==68||data0->node->type==70||data0->node->type==71){
+			start0=0;
+			end0=data0->child_count;
+		}
+		else if (data0->node->type==51){
+			start0=4;
+			end0=data0->child_count;
+		}
+		else if (data0->node->type==61||data0->node->type==62){
+			start0=2;
+			end0=(data0->child_count>1?data0->child_count-1:0);
 		}
 		else{
 			start0=2;
