@@ -17,6 +17,7 @@ $optional_fields.inline_if -> 1=if
 
 comma[-1:].$nil_return_value -> 0=operation_list
 comma[-1:].comma -> *1
+comma[-1:].int<int_=0> -> 0=operation_list, 1=nop
 
 $ignored_required_fields.{comma@1|operation_list@1} -> 1=nop
 
@@ -27,5 +28,3 @@ $replace_by_operation_list -> 0=operation_list
 {for_map@0|while_map@0} -> 0=map, 0.map_length=0
 
 {nameof@0|nameof_type@0} -> 0=string, "sll_string_t str=SLL_INIT_STRING_STRUCT", "data0->node->data.string_index=sll_add_string(&(source_file->string_table),&str)"
-
-comma[-1:].int<int_=0> -> 0=operation_list, 1=nop
