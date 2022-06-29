@@ -48,6 +48,7 @@
 
 
 (= _type_to_number nil)
+(= _nop_type nil)
 (= _node_type_shift nil)
 
 
@@ -318,7 +319,7 @@
 		(= node_index (:: source int_type))
 		(= type (: line 1))
 		(= new_type (?: (=== type "nop")
-			255
+			_nop_type
 			(: (<- _get_node_type type) "node_type")
 		))
 		(<- file$write fh indentation_str "data" node_index "->node->type=" new_type ";\n")
@@ -500,10 +501,16 @@ indentation_str `	child_count_t start` level `;
 			' '
 		))
 		(= name (: line 0))
-		(? (||
-			(! (<- string$starts name config$OPTIMIZER_NODE_TYPE_PREFIX))
-			(|: config$OPTIMIZER_IGNORED_NODE_TYPES name)
-		) (<<<))
+		(?
+			(=== name (+ config$OPTIMIZER_NODE_TYPE_PREFIX "NOP")) {
+				(= _nop_type (:: (: line 1) int_type))
+				(<<<)
+			}
+			(||
+				(! (<- string$starts name config$OPTIMIZER_NODE_TYPE_PREFIX))
+				(|: config$OPTIMIZER_IGNORED_NODE_TYPES name)
+			) (<<<)
+		)
 		(<- string$lower_case
 			(>>
 				name
