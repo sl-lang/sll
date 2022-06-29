@@ -31,6 +31,7 @@
 (= node_type_and_range_type (&:
 	(~ int_type) node_type
 	(~ int_type) required_length
+	(~ array_type) properties
 	(~ range_type) range
 ))
 
@@ -53,6 +54,7 @@
 
 (= _get_node_type (,,, type
 	(= required_length -1)
+	(= properties [])
 	(= min 0)
 	(= max 0)
 	(= step 1)
@@ -67,6 +69,23 @@
 		(= max (:: (: range 1) int_type))
 		(= step (:: (: range 2) int_type))
 		(? (! step) (= step 1))
+	})
+	(= idx (<- string$index type '<'))
+	(? (&&
+		(!== idx -1)
+		(=== (: type -1) '>')
+	) {
+		(= properties (<- string$split (: type (+ idx 1) -1) ';'))
+		(= type (: type 0 idx))
+		(= properties ([> (= i 0) (< i ($ properties))
+			(= elem (<- string$replace
+				(: properties i)
+				"="
+				"=="
+			))
+			(++ i)
+			elem
+		))
 	})
 	(= idx (<- string$index type '@'))
 	(? (!== idx -1) {
@@ -84,6 +103,7 @@
 	(? (|: _type_to_number type) (@@ (. node_type_and_range_type
 		(: _type_to_number type)
 		required_length
+		properties
 		[
 			min
 			max
@@ -214,43 +234,46 @@
 ))
 
 (= _generate_node_check (,,, data level
-	(?? data$required_length
-		REQUIRED_LENGTH_IGNORED (@@ (+
+	(= parts [
+		(+
 			"data"
 			level
 			"->node->type=="
 			data$node_type
+		)
+	])
+	(?? data$required_length
+		REQUIRED_LENGTH_IGNORED nil
+		REQUIRED_LENGTH_EVEN (<- array$push parts (+
+			"!(data"
+			level
+			"->child_count&1)"
 		))
-		REQUIRED_LENGTH_EVEN (@@ (+
+		REQUIRED_LENGTH_ODD (<- array$push parts (+
 			"(data"
 			level
-			"->node->type=="
-			data$node_type
-			"&&!(data"
-			level
-			"->child_count&1))"
+			"->child_count&1)"
 		))
-		REQUIRED_LENGTH_ODD (@@ (+
-			"(data"
-			level
-			"->node->type=="
-			data$node_type
-			"&&(data"
-			level
-			"->child_count&1))"
-		))
-		(@@ (+
-			"(data"
-			level
-			"->node->type=="
-			data$node_type
-			"&&data"
+		(<- array$push parts (+
+			"data"
 			level
 			"->child_count=="
 			data$required_length
-			")"
 		))
 	)
+	(-> (= i 0) (< i ($ data$properties))
+		(<- array$push parts (+
+			"data"
+			level
+			"->node->"
+			(: data$properties i)
+		))
+		(++ i)
+	)
+	(@@ (?: (=== ($ parts) 1)
+		(: parts 0)
+		(+ '(' (<- string$join "&&" parts) ')')
+	))
 ))
 
 (= _generate_root_condition (,,, fh possible_nodes
