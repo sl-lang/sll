@@ -251,12 +251,13 @@
 		(++ i)
 		(? (! mask) (<<<))
 		(+
-			"data"
+			"(data"
 			prev_level
 			"->child_type_bitmap["
 			(- i 1)
 			"]&"
 			mask
+			')'
 		)
 	))
 `){

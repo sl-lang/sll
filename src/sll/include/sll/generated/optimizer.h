@@ -388,7 +388,7 @@ static void __SLL_FORCE_INLINE _optimizer_execute(sll_source_file_t* source_file
 			end0=data0->child_count;
 			step0=1;
 		}
-		if (data0->child_type_bitmap[0]&927){
+		if ((data0->child_type_bitmap[0]&927)){
 			for (child_count_t idx0=start0;idx0<end0;idx0+=step0){
 				optimizer_node_children_data_t* data1=data0->children+idx0;
 				if (!data1->node){
@@ -399,7 +399,7 @@ static void __SLL_FORCE_INLINE _optimizer_execute(sll_source_file_t* source_file
 				}
 			}
 		}
-		else if (data0->child_type_bitmap[0]&96||data0->child_type_bitmap[2]&96){
+		else if ((data0->child_type_bitmap[0]&96)||(data0->child_type_bitmap[2]&96)){
 			for (child_count_t idx0=start0;idx0<end0;idx0+=step0){
 				optimizer_node_children_data_t* data1=data0->children+idx0;
 				if (!data1->node){
@@ -410,7 +410,7 @@ static void __SLL_FORCE_INLINE _optimizer_execute(sll_source_file_t* source_file
 				}
 			}
 		}
-		else if (data0->child_type_bitmap[0]&8388608){
+		else if ((data0->child_type_bitmap[0]&8388608)){
 			for (child_count_t idx0=start0;idx0<end0;idx0+=step0){
 				optimizer_node_children_data_t* data1=data0->children+idx0;
 				if (!data1->node){
@@ -446,7 +446,7 @@ static void __SLL_FORCE_INLINE _optimizer_execute(sll_source_file_t* source_file
 			end0=1;
 			step0=1;
 		}
-		if (data0->child_type_bitmap[2]&96){
+		if ((data0->child_type_bitmap[2]&96)){
 			for (child_count_t idx0=start0;idx0<end0;idx0+=step0){
 				optimizer_node_children_data_t* data1=data0->children+idx0;
 				if (!data1->node){
@@ -463,7 +463,7 @@ static void __SLL_FORCE_INLINE _optimizer_execute(sll_source_file_t* source_file
 		child_count_t start0=1;
 		child_count_t end0=2;
 		child_count_t step0=1;
-		if (data0->child_type_bitmap[0]&7||data0->child_type_bitmap[2]&64){
+		if ((data0->child_type_bitmap[0]&7)||(data0->child_type_bitmap[2]&64)){
 			for (child_count_t idx0=start0;idx0<end0;idx0+=step0){
 				optimizer_node_children_data_t* data1=data0->children+idx0;
 				if (!data1->node){
@@ -497,7 +497,7 @@ static void __SLL_FORCE_INLINE _optimizer_execute(sll_source_file_t* source_file
 		child_count_t start0=(data0->child_count>1?data0->child_count-1:0);
 		child_count_t end0=data0->child_count;
 		child_count_t step0=1;
-		if (data0->child_type_bitmap[0]&255853568||data0->child_type_bitmap[2]&16214){
+		if ((data0->child_type_bitmap[0]&255853568)||(data0->child_type_bitmap[2]&16214)){
 			for (child_count_t idx0=start0;idx0<end0;idx0+=step0){
 				optimizer_node_children_data_t* data1=data0->children+idx0;
 				if (!data1->node){
@@ -509,7 +509,7 @@ static void __SLL_FORCE_INLINE _optimizer_execute(sll_source_file_t* source_file
 				}
 			}
 		}
-		else if (data0->child_type_bitmap[0]&1){
+		else if ((data0->child_type_bitmap[0]&1)){
 			for (child_count_t idx0=start0;idx0<end0;idx0+=step0){
 				optimizer_node_children_data_t* data1=data0->children+idx0;
 				if (!data1->node){
@@ -522,7 +522,7 @@ static void __SLL_FORCE_INLINE _optimizer_execute(sll_source_file_t* source_file
 				}
 			}
 		}
-		else if (data0->child_type_bitmap[2]&32){
+		else if ((data0->child_type_bitmap[2]&32)){
 			for (child_count_t idx0=start0;idx0<end0;idx0+=step0){
 				optimizer_node_children_data_t* data1=data0->children+idx0;
 				if (!data1->node){
