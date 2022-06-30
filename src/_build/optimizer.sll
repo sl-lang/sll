@@ -513,16 +513,10 @@ indentation_str `	child_count_t start` level `;
 			' '
 		))
 		(= name (: line 0))
-		(?
-			(=== name (+ config$OPTIMIZER_NODE_TYPE_PREFIX "NOP")) {
-				(= _nop_type (:: (: line 1) int_type))
-				(<<<)
-			}
-			(||
-				(! (<- string$starts name config$OPTIMIZER_NODE_TYPE_PREFIX))
-				(|: config$OPTIMIZER_IGNORED_NODE_TYPES name)
-			) (<<<)
-		)
+		(? (||
+			(! (<- string$starts name config$OPTIMIZER_NODE_TYPE_PREFIX))
+			(|: config$OPTIMIZER_IGNORED_NODE_TYPES name)
+		) (<<<))
 		(<- string$lower_case
 			(>>
 				name
