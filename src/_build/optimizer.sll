@@ -78,13 +78,18 @@
 		(= properties (<- string$split (: type (+ idx 1) -1) ','))
 		(= type (: type 0 idx))
 		(= properties ([> (= i 0) (< i ($ properties))
-			(= elem (<- string$replace
-				(: properties i)
-				'='
-				"=="
-			))
+			(= elem (: properties i))
 			(++ i)
-			elem
+			(= idx (<- string$index elem '='))
+			(? (=== idx -1) (<<<))
+			(= value (>> elem (+ idx 1)))
+			(= neg (=== (: value 0) '!'))
+			(? neg (= value (>> value 1)))
+			(+
+				(: elem 0 idx)
+				(?: neg "!=" "==")
+				value
+			)
 		))
 	})
 	(= idx (<- string$index type '@'))

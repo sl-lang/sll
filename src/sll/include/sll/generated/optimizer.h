@@ -116,11 +116,11 @@ static const child_level_count_t _optimizer_required_child_levels[]={
 	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+	0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+	0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -473,6 +473,43 @@ static void __SLL_FORCE_INLINE _optimizer_execute(sll_source_file_t* source_file
 						_delete_node(data0->children+del,data0->node);
 					}
 					return;
+				}
+			}
+		}
+		else if ((data0->child_type_bitmap[0]&7)){
+			for (child_count_t idx0=start0;idx0<end0;idx0+=step0){
+				optimizer_node_children_data_t* data1=data0->children+idx0;
+				if (!data1->node){
+					continue;
+				}
+				if ((data1->node->type==0&&data1->node->data.int_!=0)||(data1->node->type==1&&data1->node->data.float_!=0)||(data1->node->type==2&&data1->node->data.char_!=0)){
+					data0->node->type=27;
+					return;
+				}
+			}
+		}
+		else if ((data0->child_type_bitmap[2]&32)){
+			for (child_count_t idx0=start0;idx0<end0;idx0+=step0){
+				optimizer_node_children_data_t* data1=data0->children+idx0;
+				if (!data1->node){
+					continue;
+				}
+				if (data1->node->type==69){
+					child_count_t start1=(data1->child_count>1?data1->child_count-1:0);
+					child_count_t end1=data1->child_count;
+					child_count_t step1=1;
+					if ((data1->child_type_bitmap[0]&7)){
+						for (child_count_t idx1=start1;idx1<end1;idx1+=step1){
+							optimizer_node_children_data_t* data2=data1->children+idx1;
+							if (!data2->node){
+								continue;
+							}
+							if ((data2->node->type==0&&data2->node->data.int_!=0)||(data2->node->type==1&&data2->node->data.float_!=0)||(data2->node->type==2&&data2->node->data.char_!=0)){
+								data0->node->type=27;
+								return;
+							}
+						}
+					}
 				}
 			}
 		}
