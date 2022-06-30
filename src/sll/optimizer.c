@@ -138,16 +138,16 @@ void _expand_node(optimizer_node_children_data_t* data,sll_node_t* parent){
 		_delete_node(data,parent);
 		return;
 	}
-	data->node->type=SLL_NODE_TYPE_NOP;
-	_delete_recursive_children_optimizer_objects(data);
-	sll_zero_memory(data,sizeof(optimizer_node_children_data_t));
 	(*_get_child_count(parent))+=(*child_count_ptr)-1;
+	_set_nop(data);
 }
 
 
 
 void _set_nop(optimizer_node_children_data_t* data){
-	SLL_UNIMPLEMENTED();
+	data->node->type=SLL_NODE_TYPE_NOP;
+	_delete_recursive_children_optimizer_objects(data);
+	sll_zero_memory(data,sizeof(optimizer_node_children_data_t));
 }
 
 

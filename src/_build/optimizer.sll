@@ -563,7 +563,7 @@ indentation_str `	child_count_t start` level `;
 			) (= (: variables name) (<- string$trim (>> line (+ idx 1)))))
 			(<<<)
 		})
-		(= code (<- string$trim (>> line (+ idx 1))))
+		(= code (<- string$trim (>> line (+ idx 2))))
 		(? (! code) (<<<))
 		(= condition (<- _get_condition_object root (: line 0 idx) required_child_levels variables))
 		(= condition$code code)
