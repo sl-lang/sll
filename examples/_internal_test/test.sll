@@ -672,8 +672,3 @@ abc` '\n')
 ))
 
 (:> (<- path$relative "src/sll/gc.c" "src/_build") '\n')
-
-(-> nil nil
-	(:> "AAAA\n")
-)
-

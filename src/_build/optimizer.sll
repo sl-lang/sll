@@ -336,7 +336,12 @@
 				(= node_index (:: (: node_index 0 idx) int_type))
 				(= min (:: (: range 0) int_type))
 				(= max (:: (: range 1) int_type))
-				(<- file$write fh indentation_str "_delete_node_children(data" node_index ',' (<- _generate_bound node_index min false) ',' (<- _generate_bound node_index max true) ");\n")
+				(<- file$write fh
+indentation_str `child_count_t del_end=` (<- _generate_bound node_index max true) `;
+` indentation_str `for (child_count_t del=` (<- _generate_bound node_index min false) `;del<del_end;del++){
+` indentation_str `	_delete_node(data` node_index `->children+del,data` node_index `->node);
+` indentation_str `}
+`)
 				(<<<)
 			}
 		)
