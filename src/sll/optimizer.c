@@ -146,6 +146,12 @@ void _expand_node(optimizer_node_children_data_t* data,sll_node_t* parent){
 
 
 
+void _set_nop(optimizer_node_children_data_t* data){
+	SLL_UNIMPLEMENTED();
+}
+
+
+
 __SLL_EXTERNAL void sll_optimize_source_file(sll_source_file_t* source_file,sll_optimization_round_count_t round_count){
 	if (!source_file->first_node){
 		return;

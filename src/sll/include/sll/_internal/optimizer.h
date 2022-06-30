@@ -38,4 +38,8 @@ void _expand_node(optimizer_node_children_data_t* data,sll_node_t* parent);
 
 
 
+void _set_nop(optimizer_node_children_data_t* data);
+
+
+
 #endif

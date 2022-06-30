@@ -21,7 +21,7 @@ comma[-1].int<int_=0> -> 0=operation_list, 1=nop
 comma[-1].comma -> *1
 comma[-1].$nil_return_value -> 0=operation_list
 
-#$ignored_required_fields.{comma@1|operation_list@1} -> 1=nop
+# $ignored_required_fields.{comma@1|operation_list@1} -> 1=nop
 
 $replace_by_nil -> 0=int, 0.int_=0
 $replace_by_operation_list -> 0=operation_list

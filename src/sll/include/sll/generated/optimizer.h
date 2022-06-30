@@ -488,7 +488,7 @@ static void __SLL_FORCE_INLINE _optimizer_execute(sll_source_file_t* source_file
 				}
 				if ((data1->node->type==0&&data1->node->data.int_==0)){
 					data0->node->type=70;
-					data1->node->type=255;
+					_set_nop(data1);
 					return;
 				}
 			}

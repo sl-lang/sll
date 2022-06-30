@@ -48,7 +48,6 @@
 
 
 (= _type_to_number nil)
-(= _nop_type nil)
 (= _node_type_shift nil)
 
 
@@ -355,11 +354,10 @@ indentation_str `child_count_t del_end=` (<- _generate_bound node_index max true
 		})
 		(= node_index (:: source int_type))
 		(= type (: line 1))
-		(= new_type (?: (=== type "nop")
-			_nop_type
-			(: (<- _get_node_type type) "node_type")
-		))
-		(<- file$write fh indentation_str "data" node_index "->node->type=" new_type ";\n")
+		(? (=== type "nop")
+			(<- file$write fh indentation_str "_set_nop(data" node_index ");\n")
+			(<- file$write fh indentation_str "data" node_index "->node->type=" (: (<- _get_node_type type) "node_type") ";\n")
+		)
 	)
 	(<- file$write fh indentation_str "return;\n")
 ))
