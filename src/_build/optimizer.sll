@@ -186,6 +186,49 @@
 	(@@ out)
 ))
 
+(= _generate_node_check (,,, data level
+	(= parts [
+		(+
+			"data"
+			level
+			"->node->type=="
+			data$node_type
+		)
+	])
+	(?? data$required_length
+		REQUIRED_LENGTH_IGNORED nil
+		REQUIRED_LENGTH_EVEN (<- array$push parts (+
+			"!(data"
+			level
+			"->child_count&1)"
+		))
+		REQUIRED_LENGTH_ODD (<- array$push parts (+
+			"(data"
+			level
+			"->child_count&1)"
+		))
+		(<- array$push parts (+
+			"data"
+			level
+			"->child_count=="
+			data$required_length
+		))
+	)
+	(-> (= i 0) (< i ($ data$properties))
+		(<- array$push parts (+
+			"data"
+			level
+			"->node->data."
+			(: data$properties i)
+		))
+		(++ i)
+	)
+	(@@ (?: (=== ($ parts) 1)
+		(: parts 0)
+		(+ '(' (<- string$join "&&" parts) ')')
+	))
+))
+
 (= _generate_children_condition (,,, fh possible_nodes indentation_str level
 	(= child_bitmap (<- array$create
 		(>>
@@ -223,58 +266,10 @@
 ` indentation_str `			continue;
 ` indentation_str `		}
 ` indentation_str `		if (` (<- string$join "||" ([> (= i 0) (< i ($ possible_nodes))
-		(= type (: possible_nodes i))
+		(= data (: possible_nodes i))
 		(++ i)
-		(+
-			"data"
-			level
-			"->node->type=="
-			type$node_type
-		)
+		(<- _generate_node_check data level)
 	)))
-))
-
-(= _generate_node_check (,,, data level
-	(= parts [
-		(+
-			"data"
-			level
-			"->node->type=="
-			data$node_type
-		)
-	])
-	(?? data$required_length
-		REQUIRED_LENGTH_IGNORED nil
-		REQUIRED_LENGTH_EVEN (<- array$push parts (+
-			"!(data"
-			level
-			"->child_count&1)"
-		))
-		REQUIRED_LENGTH_ODD (<- array$push parts (+
-			"(data"
-			level
-			"->child_count&1)"
-		))
-		(<- array$push parts (+
-			"data"
-			level
-			"->child_count=="
-			data$required_length
-		))
-	)
-	(-> (= i 0) (< i ($ data$properties))
-		(<- array$push parts (+
-			"data"
-			level
-			"->node->"
-			(: data$properties i)
-		))
-		(++ i)
-	)
-	(@@ (?: (=== ($ parts) 1)
-		(: parts 0)
-		(+ '(' (<- string$join "&&" parts) ')')
-	))
 ))
 
 (= _generate_root_condition (,,, fh possible_nodes
@@ -283,48 +278,6 @@
 		(++ i)
 		(<- _generate_node_check data 0)
 	)))
-))
-
-(= _generate_condition_code (,,, fh previous_conditions code indentation_str
-	(? (! code) (@@))
-	(= code (<- util$split_with_scope code ','))
-	(-> (= i 0) (< i ($ code))
-		(= line (<- string$trim (: code i)))
-		(++ i)
-		(? (! line) (<<<))
-		(?
-			(=== (: line 0) '"') {
-				(<- file$write fh indentation_str (: line 1 -1) ";\n")
-				(<<<)
-			}
-			(=== (: line 0) '*') {
-				(= node_index (:: (>> line 1) int_type))
-				(<- file$write fh indentation_str "_expand_node(data" node_index ",data" (- node_index 1) "->node);\n")
-				(<<<)
-			}
-			(=== (: line 0) '#') {
-				(= node_index (:: (>> line 1) int_type))
-				(<- file$write fh indentation_str "_delete_node(data" node_index ",data" (- node_index 1) "->node);\n")
-				(<<<)
-			}
-		)
-		(= line (<- string$split line '='))
-		(? (!== ($ line) 2) (<<<))
-		(= source (: line 0))
-		(= idx (<- string$index source '.'))
-		(? (!== idx -1) {
-			(<- file$write fh indentation_str "data" (: source 0 idx) "->node->data." (>> source (+ idx 1)) '=' (: line 1) ";\n")
-			(<<<)
-		})
-		(= node_index (:: source int_type))
-		(= type (: line 1))
-		(= new_type (?: (=== type "nop")
-			_nop_type
-			(: (<- _get_node_type type) "node_type")
-		))
-		(<- file$write fh indentation_str "data" node_index "->node->type=" new_type ";\n")
-	)
-	(<- file$write fh indentation_str "return;\n")
 ))
 
 (= _generate_bound (,,, level bound end?
@@ -348,6 +301,61 @@
 		)
 		"0"
 	))
+))
+
+(= _generate_condition_code (,,, fh previous_conditions code indentation_str
+	(? (! code) (@@))
+	(= code (<- util$split_with_scope code ','))
+	(-> (= i 0) (< i ($ code))
+		(= line (<- string$trim (: code i)))
+		(++ i)
+		(? (! line) (<<<))
+		(?
+			(=== (: line 0) '"') {
+				(<- file$write fh indentation_str (: line 1 -1) ";\n")
+				(<<<)
+			}
+			(=== (: line 0) '*') {
+				(= node_index (:: (>> line 1) int_type))
+				(<- file$write fh indentation_str "_expand_node(data" node_index ",data" (- node_index 1) "->node);\n")
+				(<<<)
+			}
+			(=== (: line 0) '#') {
+				(= node_index (>> line 1))
+				(= idx (<- string$index node_index '['))
+				(? (||
+					(=== idx -1)
+					(!== (: node_index -1) ']')
+				) {
+					(= node_index (:: node_index int_type))
+					(<- file$write fh indentation_str "_delete_node(data" node_index ",data" (- node_index 1) "->node);\n")
+					(<<<)
+				})
+				(= range (<- string$split (: node_index (+ idx 1) -1) ':'))
+				(= node_index (:: (: node_index 0 idx) int_type))
+				(= min (:: (: range 0) int_type))
+				(= max (:: (: range 1) int_type))
+				(<- file$write fh indentation_str "_delete_node_children(data" node_index ',' (<- _generate_bound node_index min false) ',' (<- _generate_bound node_index max true) ");\n")
+				(<<<)
+			}
+		)
+		(= line (<- string$split line '='))
+		(? (!== ($ line) 2) (<<<))
+		(= source (: line 0))
+		(= idx (<- string$index source '.'))
+		(? (!== idx -1) {
+			(<- file$write fh indentation_str "data" (: source 0 idx) "->node->data." (>> source (+ idx 1)) '=' (: line 1) ";\n")
+			(<<<)
+		})
+		(= node_index (:: source int_type))
+		(= type (: line 1))
+		(= new_type (?: (=== type "nop")
+			_nop_type
+			(: (<- _get_node_type type) "node_type")
+		))
+		(<- file$write fh indentation_str "data" node_index "->node->type=" new_type ";\n")
+	)
+	(<- file$write fh indentation_str "return;\n")
 ))
 
 (= _generate_child_offsets (,,, fh possible_nodes indentation_str level
@@ -549,12 +557,12 @@ indentation_str `	child_count_t start` level `;
 		)
 		(= idx (<- string$index line "->"))
 		(? (=== idx -1) {
-			(= line (<- string$split line '='))
-			(= name (<- string$trim (: line 0)))
+			(= idx (<- string$index line '='))
+			(= name (<- string$trim (: line 0 idx)))
 			(? (&&
-				(=== ($ line) 2)
+				(!== idx -1)
 				(=== (: name 0) '$')
-			) (= (: variables name) (<- string$trim (: line 1))))
+			) (= (: variables name) (<- string$trim (>> line (+ idx 1)))))
 			(<<<)
 		})
 		(= code (<- string$trim (>> line (+ idx 1))))

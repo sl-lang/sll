@@ -132,6 +132,12 @@ void _delete_node(optimizer_node_children_data_t* data,sll_node_t* parent){
 
 
 
+void _delete_node_children(optimizer_node_children_data_t* data,child_count_t start,child_count_t end){
+	SLL_UNIMPLEMENTED();
+}
+
+
+
 void _expand_node(optimizer_node_children_data_t* data,sll_node_t* parent){
 	child_count_t* child_count_ptr=_get_child_count(data->node);
 	if (!child_count_ptr){

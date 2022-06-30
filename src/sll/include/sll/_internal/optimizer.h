@@ -34,6 +34,10 @@ void _delete_node(optimizer_node_children_data_t* data,sll_node_t* parent);
 
 
 
+void _delete_node_children(optimizer_node_children_data_t* data,child_count_t start,child_count_t end);
+
+
+
 void _expand_node(optimizer_node_children_data_t* data,sll_node_t* parent);
 
 

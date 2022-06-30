@@ -3,11 +3,13 @@
 
 
 
+$false={int<int_=0>|float<float_=0>|char<char_=0>|operation_list}
 $ignored_required_fields = {if[1::2]|inline_if[1::2]|switch[2::2]|for[:1]|while[:1]|for_array[:1]|while_array[:1]|for_map[:1]|while_map[:1]}
 $nil_return_value = {print|if|switch|for|while|loop|break|continue|return|operation_list|thread_wait|thread_lock|thread_semaphore|thread_barrier_eq|thread_barrier_geq|thread_exit}
 $optional_fields = {not[1:]|bool[1:]|assign[2:]|if[-1:]|inline_if[-1:]|switch@even[-1:]|func|internal_func|internal_func_load[1:]|inline_func|call_array[2:]|for[2:]|while[2:]|loop|inc[1:]|dec[1:]|length[1:]|access[4:]|deep_copy[1:]|has[2:]|typeof[1:]|nameof[1:]|nameof_type[1:]|for_array[2:-1]|while_array[2:-1]|for_map[2:-2]|while_map[2:-2]|break|continue|ref[1:]|return[1:]|comma[:-1]|operation_list|thread_id|thread_wait[1:]|thread_lock[1:]|thread_semaphore[1:]|thread_barrier_eq[2:]|thread_barrier_geq[2:]|thread_exit[1:]|read_blocking[2:]|read_blocking_char[1:]}
 $replace_by_nil = {print@0|and@0|or@0|not@0|bool@0|assign@0|internal_func_load@0|inline_func@0|call@0|call_array@0|if@0|inline_if@0|switch@0|for@0|while@0|loop@0|inc@0|dec@0|add@0|sub@0|mult@0|div@0|floor_div@0|mod@0|bit_and@0|bit_or@0|bit_xor@0|bit_not@0|bit_right_shift@0|bit_left_shift@0|less@0|less_equal@0|equal@0|not_equal@0|more@0|more_equal@0|strict_equal@0|strict_not_equal@0|length@0|access@0|deep_copy@0|var_access@0|has@0|cast@0|typeof@0|new@0|ref@0|comma@0|operation_list@0}
 $replace_by_operation_list = {assign@1|if@1|inline_if@1|switch@1|for@1|while@1|less@1|less_equal@1|equal@1|not_equal@1|more@1|more_equal@1|strict_equal@1|strict_not_equal@1|has@1|cast@1}
+$true={int<int_=!0>}
 
 
 
@@ -15,9 +17,9 @@ $optional_fields.{int|float|char|complex|string|identifier|field|function_id} ->
 $optional_fields.{array|map|operation_list|comma} -> *1
 $optional_fields.inline_if -> 1=if
 
-comma[-1:].int<int_=0> -> 0=operation_list, 1=nop
-comma[-1:].comma -> *1
-comma[-1:].$nil_return_value -> 0=operation_list
+comma[-1].int<int_=0> -> 0=operation_list, 1=nop
+comma[-1].comma -> *1
+comma[-1].$nil_return_value -> 0=operation_list
 
 $ignored_required_fields.{comma@1|operation_list@1} -> 1=nop
 
@@ -28,3 +30,7 @@ $replace_by_operation_list -> 0=operation_list
 {for_map@0|while_map@0} -> 0=map, 0.map_length=0
 
 {nameof@0|nameof_type@0} -> 0=string, "sll_string_t str=SLL_INIT_STRING_STRUCT", "data0->node->data.string_index=sll_add_string(&(source_file->string_table),&str)"
+
+# {for[1:2]|while[1:2]}.$true -> 0=loop
+# {for[1:2]|while[1:2]}.comma[-1].$true -> 0=loop
+{for[1:2]|while[1:2]}.$false -> 0=operation_list, #0[2:]

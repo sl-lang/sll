@@ -452,8 +452,26 @@ static void __SLL_FORCE_INLINE _optimizer_execute(sll_source_file_t* source_file
 				if (!data1->node){
 					continue;
 				}
-				if (data1->node->type==69||data1->node->type==70){
+				if ((data1->node->type==69&&data1->child_count==1)||(data1->node->type==70&&data1->child_count==1)){
 					data0->node->type=255;
+					return;
+				}
+			}
+		}
+	}
+	else if (data0->node->type==25||data0->node->type==26){
+		child_count_t start0=1;
+		child_count_t end0=2;
+		child_count_t step0=1;
+		if (data0->child_type_bitmap[0]&7||data0->child_type_bitmap[2]&64){
+			for (child_count_t idx0=start0;idx0<end0;idx0+=step0){
+				optimizer_node_children_data_t* data1=data0->children+idx0;
+				if (!data1->node){
+					continue;
+				}
+				if ((data1->node->type==0&&data1->node->data.int_==0)||(data1->node->type==1&&data1->node->data.float_==0)||(data1->node->type==2&&data1->node->data.char_==0)||data1->node->type==70){
+					data0->node->type=70;
+					_delete_node_children(data0,2,data0->child_count);
 					return;
 				}
 			}
@@ -497,7 +515,7 @@ static void __SLL_FORCE_INLINE _optimizer_execute(sll_source_file_t* source_file
 				if (!data1->node){
 					continue;
 				}
-				if (data1->node->type==0){
+				if ((data1->node->type==0&&data1->node->data.int_==0)){
 					data0->node->type=70;
 					data1->node->type=255;
 					return;
