@@ -289,7 +289,7 @@
 		)
 		"windows" (. platform_cli_command_list_type
 			["rc.exe" "/r" "/fo" "build/app.res" "/nologo" "src/cli/rsrc/app.rc"]
-			["cl.exe" "/c" "/permissive-" "/Zc:preprocessor" "/std:c11" "/Wv:18" "/GS" "/utf-8" "/W3" "/Zc:wchar_t" "/Gm-" "/sdl" "/Zc:inline" "/fp:precise" "/D" "NDEBUG" "/D" "_WINDOWS" "/D" "__SLL_BUILD_WINDOWS" "/D" "_CRT_SECURE_NO_WARNINGS" "/D" "WIN32_LEAN_AND_MEAN" "/errorReport:none" "/WX" "/Zc:forScope" "/Gd" "/Oi" "/EHsc" "/nologo" "/diagnostics:column" "/GL" "/Gy" "/O2" "/MD" "/I" "build" "/Fobuild/objects/windows_cli.o" "src/cli/windows.c"]
+			["cl.exe" "/c" "/TP" "/permissive-" "/Zc:preprocessor" "/std:c11" "/Wv:18" "/GS" "/utf-8" "/W3" "/Zc:wchar_t" "/Gm-" "/sdl" "/Zc:inline" "/fp:precise" "/D" "NDEBUG" "/D" "_WINDOWS" "/D" "__SLL_BUILD_WINDOWS" "/D" "_CRT_SECURE_NO_WARNINGS" "/D" "WIN32_LEAN_AND_MEAN" "/errorReport:none" "/WX" "/Zc:forScope" "/Gd" "/Oi" "/EHsc" "/nologo" "/diagnostics:column" "/GL" "/Gy" "/O2" "/MD" "/I" "build" "/Fobuild/objects/windows_cli.o" "src/cli/windows.c"]
 			["link.exe" "build/objects/windows_cli.o" "build/app.res" "/OUT:build/sll.exe" "/DYNAMICBASE" "/MACHINE:X64" "/SUBSYSTEM:CONSOLE" "/ERRORREPORT:none" "/NOLOGO" "/TLBID:1" "/WX" "/LTCG" "/OPT:REF" "/INCREMENTAL:NO" "/RELEASE"]
 			["link.exe" "build/objects/windows_cli.o" "build/app.res" "/OUT:build/sllw.exe" "/DYNAMICBASE" "/MACHINE:X64" "/SUBSYSTEM:WINDOWS" "/ERRORREPORT:none" "/NOLOGO" "/TLBID:1" "/WX" "/LTCG" "/OPT:REF" "/INCREMENTAL:NO" "/RELEASE"]
 			nil
@@ -349,7 +349,7 @@
 			""
 		)
 		"windows" (. platform_command_list_type
-			["cl.exe" "/c" "/permissive-" "/Zc:preprocessor" "/std:c11" "/Wv:18" "/GS" "/utf-8" "/W3" "/Zc:wchar_t" "/Gm-" "/sdl" "/Zc:inline" "/fp:precise" "/D" "_DEBUG" "/errorReport:none" "/WX" "/Zc:forScope" "/Gd" "/Oi" "/EHsc" "/nologo" "/diagnostics:column" "/Zi" "/Od" "/RTC1" "/MDd" "/I" "src/sll/include" "/Fdbuild/sll.pdb" COMMAND_MARKER_OUTPUT COMMAND_MARKER_INPUT]
+			["cl.exe" "/c" "/TP" "/permissive-" "/Zc:preprocessor" "/std:c11" "/Wv:18" "/GS" "/utf-8" "/W3" "/Zc:wchar_t" "/Gm-" "/sdl" "/Zc:inline" "/fp:precise" "/D" "_DEBUG" "/errorReport:none" "/WX" "/Zc:forScope" "/Gd" "/Oi" "/EHsc" "/nologo" "/diagnostics:column" "/Zi" "/Od" "/RTC1" "/MDd" "/I" "src/sll/include" "/Fdbuild/sll.pdb" COMMAND_MARKER_OUTPUT COMMAND_MARKER_INPUT]
 			["nasm.exe" "-I" "src/sll/include" "-D__SLL_BUILD_WINDOWS" "-DDEBUG_BUILD" "-o" COMMAND_MARKER_OUTPUT "-O0" "-Wall" "-Werror" "-gcv8" "-f" "win64" COMMAND_MARKER_INPUT]
 			nil
 			["link.exe" (+ "/OUT:" output_library) "/DLL" "/DYNAMICBASE" "/MACHINE:X64" "/ERRORREPORT:none" "/NOLOGO" "/TLBID:1" "/WX" "/DEBUG" "/INCREMENTAL:NO" "/RELEASE" "/PDB:build/sll.pdb" "advapi32.lib" "bcrypt.lib" COMMAND_MARKER_INPUT]
@@ -357,7 +357,7 @@
 			"/Fo"
 		)
 		"windows_release" (. platform_command_list_type
-			["cl.exe" "/c" "/permissive-" "/Zc:preprocessor" "/std:c11" "/Wv:18" "/GS" "/utf-8" "/W3" "/Zc:wchar_t" "/Gm-" "/sdl" "/Zc:inline" "/fp:precise" "/D" "NDEBUG" "/errorReport:none" "/WX" "/Zc:forScope" "/Gd" "/Oi" "/EHsc" "/nologo" "/diagnostics:column" "/GL" "/Gy" "/O2" "/MD" "/I" "src/sll/include" COMMAND_MARKER_OUTPUT COMMAND_MARKER_INPUT]
+			["cl.exe" "/c" "/TP" "/permissive-" "/Zc:preprocessor" "/std:c11" "/Wv:18" "/GS" "/utf-8" "/W3" "/Zc:wchar_t" "/Gm-" "/sdl" "/Zc:inline" "/fp:precise" "/D" "NDEBUG" "/errorReport:none" "/WX" "/Zc:forScope" "/Gd" "/Oi" "/EHsc" "/nologo" "/diagnostics:column" "/GL" "/Gy" "/O2" "/MD" "/I" "src/sll/include" COMMAND_MARKER_OUTPUT COMMAND_MARKER_INPUT]
 			["nasm.exe" "-I" "src/sll/include" "-D__SLL_BUILD_WINDOWS" "-o" COMMAND_MARKER_OUTPUT "-Ox" "-Wall" "-Werror" "-f" "win64" COMMAND_MARKER_INPUT]
 			nil
 			["link.exe" (+ "/OUT:" output_library) "/DLL" "/DYNAMICBASE" "/MACHINE:X64" "/ERRORREPORT:none" "/NOLOGO" "/TLBID:1" "/WX" "/LTCG" "/OPT:NOREF" "/INCREMENTAL:NO" "/RELEASE" "advapi32.lib" "bcrypt.lib" COMMAND_MARKER_INPUT]
@@ -435,7 +435,7 @@
 			""
 		)
 		"windows" (. platform_extension_command_list_type
-			["cl.exe" "/c" "/permissive-" "/Zc:preprocessor" "/std:c11" "/Wv:18" "/GS" "/utf-8" "/W3" "/Zc:wchar_t" "/Gm-" "/sdl" "/Zc:inline" "/fp:precise" "/D" "_DEBUG" "/errorReport:none" "/WX" "/Zc:forScope" "/Gd" "/Oi" "/EHsc" "/nologo" "/diagnostics:column" "/Zi" "/Od" "/RTC1" "/MDd" "/I" "build" "/I" COMMAND_MARKER_INCLUDE "/Fdbuild/ext.pdb" COMMAND_MARKER_OUTPUT COMMAND_MARKER_INPUT]
+			["cl.exe" "/c" "/TP" "/permissive-" "/Zc:preprocessor" "/std:c11" "/Wv:18" "/GS" "/utf-8" "/W3" "/Zc:wchar_t" "/Gm-" "/sdl" "/Zc:inline" "/fp:precise" "/D" "_DEBUG" "/errorReport:none" "/WX" "/Zc:forScope" "/Gd" "/Oi" "/EHsc" "/nologo" "/diagnostics:column" "/Zi" "/Od" "/RTC1" "/MDd" "/I" "build" "/I" COMMAND_MARKER_INCLUDE "/Fdbuild/ext.pdb" COMMAND_MARKER_OUTPUT COMMAND_MARKER_INPUT]
 			["nasm.exe" "-I" COMMAND_MARKER_INCLUDE "-D__SLL_BUILD_WINDOWS" "-DDEBUG_BUILD" "-o" COMMAND_MARKER_OUTPUT "-O0" "-Wall" "-Werror" "-gcv8" "-f" "win64" COMMAND_MARKER_INPUT]
 			nil
 			["link.exe" COMMAND_MARKER_OUTPUT "/DLL" "/DYNAMICBASE" "/MACHINE:X64" "/ERRORREPORT:none" "/NOLOGO" "/TLBID:1" "/WX" "/DEBUG" "/INCREMENTAL:NO" "/RELEASE" "/PDB:build/ext.pdb" output_library_lib COMMAND_MARKER_INPUT]
@@ -444,7 +444,7 @@
 			"/OUT:"
 		)
 		"windows_release" (. platform_extension_command_list_type
-			["cl.exe" "/c" "/permissive-" "/Zc:preprocessor" "/std:c11" "/Wv:18" "/GS" "/utf-8" "/W3" "/Zc:wchar_t" "/Gm-" "/sdl" "/Zc:inline" "/fp:precise" "/D" "NDEBUG" "/errorReport:none" "/WX" "/Zc:forScope" "/Gd" "/Oi" "/EHsc" "/nologo" "/diagnostics:column" "/GL" "/Gy" "/O2" "/MD" "/I" "build" "/I" COMMAND_MARKER_INCLUDE COMMAND_MARKER_OUTPUT COMMAND_MARKER_INPUT]
+			["cl.exe" "/c" "/TP" "/permissive-" "/Zc:preprocessor" "/std:c11" "/Wv:18" "/GS" "/utf-8" "/W3" "/Zc:wchar_t" "/Gm-" "/sdl" "/Zc:inline" "/fp:precise" "/D" "NDEBUG" "/errorReport:none" "/WX" "/Zc:forScope" "/Gd" "/Oi" "/EHsc" "/nologo" "/diagnostics:column" "/GL" "/Gy" "/O2" "/MD" "/I" "build" "/I" COMMAND_MARKER_INCLUDE COMMAND_MARKER_OUTPUT COMMAND_MARKER_INPUT]
 			["nasm.exe" "-I" COMMAND_MARKER_INCLUDE "-D__SLL_BUILD_WINDOWS" "-o" COMMAND_MARKER_OUTPUT "-Ox" "-Wall" "-Werror" "-f" "win64" COMMAND_MARKER_INPUT]
 			nil
 			["link.exe" COMMAND_MARKER_OUTPUT "/DLL" "/DYNAMICBASE" "/MACHINE:X64" "/ERRORREPORT:none" "/NOLOGO" "/TLBID:1" "/WX" "/LTCG" "/OPT:NOREF" "/INCREMENTAL:NO" "/RELEASE" output_library_lib COMMAND_MARKER_INPUT]
