@@ -14,7 +14,6 @@
 #endif
 #define __SLL_CHECK_OUTPUT _Must_inspect_result_
 #define __SLL_API_CALL
-#define __SLL_TYPEOF(x) decltype((x))
 #else
 #ifdef __SLL_COMPILATION__
 #define __SLL_EXTERNAL __attribute__((visibility("default")))
@@ -23,7 +22,6 @@
 #endif
 #define __SLL_CHECK_OUTPUT __attribute__((warn_unused_result))
 #define __SLL_API_CALL __attribute__((ms_abi))
-#define __SLL_TYPEOF(x) __typeof__((x))
 #endif
 
 
