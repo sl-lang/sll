@@ -182,6 +182,7 @@ jobs:
         run: |
           winget install nasm -i
           set PATH=C:\Program Files\NASM\;%PATH%
+        shell: cmd
       - name: Setup MSVC
         uses: ilammy/msvc-dev-cmd@v1
       - name: Build
@@ -206,6 +207,7 @@ jobs:
         run: |
           winget install nasm -i
           set PATH=C:\Program Files\NASM\;%PATH%
+        shell: cmd
       - name: Setup MSVC
         uses: ilammy/msvc-dev-cmd@v1
       - name: Build
