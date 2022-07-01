@@ -101,7 +101,8 @@
 (= MIME_TYPE_TO_EXTENSION ({> (= i 0) (< i ($ keys))
 	(= key (: keys i))
 	(++ i)
-	(: EXTENSION_TO_MIME_TYPE key) key
+	(: EXTENSION_TO_MIME_TYPE key)
+	key
 ))
 
 
