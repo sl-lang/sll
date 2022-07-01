@@ -8,6 +8,7 @@
 - Implemented `SLL_HANDLE_CONTAINER_GET`
 - Implemented `sll_string_parse_int`
 - Implemented custom type comparation between same types
+- More MIME types in the HTTP extension module
 
 ## Changed
 
