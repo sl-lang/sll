@@ -107,7 +107,7 @@ sll_thread_index_t _thread_new(void){
 void _thread_terminate(sll_object_t* return_value){
 	SLL_ASSERT(_scheduler_current_thread->state==THREAD_STATE_RUNNING&&!(_scheduler_current_thread->flags&THREAD_FLAG_SUSPENDED));
 	SLL_ACQUIRE(return_value);
-	sll_thread_index_t tid=_scheduler_current_thread_index;
+	sll_thread_index_t thread_index=_scheduler_current_thread_index;
 	sll_bool_t del=!!(_scheduler_current_thread->flags&THREAD_FLAG_DELETE);
 	_scheduler_current_thread->return_value=return_value;
 	_scheduler_current_thread->state=THREAD_STATE_TERMINATED;
@@ -126,7 +126,7 @@ void _thread_terminate(sll_object_t* return_value){
 		_scheduler_current_thread->state=THREAD_STATE_RUNNING;
 	}
 	if (!(_scheduler_current_thread->flags&THREAD_FLAG_NO_AUDIT_TERMINATE)){
-		sll_audit(SLL_CHAR("sll.thread.return"),SLL_CHAR("u"),tid);
+		sll_audit(SLL_CHAR("sll.thread.return"),SLL_CHAR("u"),thread_index);
 	}
 	SLL_CRITICAL_ERROR(sll_platform_lock_acquire(_thread_lock));
 	if (_thread_active_count==1){
@@ -138,7 +138,7 @@ void _thread_terminate(sll_object_t* return_value){
 	_thread_active_count--;
 	SLL_CRITICAL(sll_platform_lock_release(_thread_lock));
 	if (del){
-		SLL_CRITICAL(sll_thread_delete(tid));
+		SLL_CRITICAL(sll_thread_delete(thread_index));
 	}
 }
 
