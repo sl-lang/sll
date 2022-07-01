@@ -175,7 +175,7 @@ contexts:
     - match: '[\)\}\]>]'
       scope: invalid.illegal.stray-bracket-end.sll
     - include: types
-    - match: '{{not_identifier_start}}(int|func|type|float|char|complex|string|array|map|map_key|map_value|object)_type{{not_identifier_end}}'
+    - match: '{{not_identifier_start}}(int|func|type|float|char|complex|string|array|map|map_key|map_value|self|object)_type{{not_identifier_end}}'
       scope: storage.type.builtin.sll
     - match: '{{not_identifier_start}}@@(copy|delete|init|string)@@{{not_identifier_end}}'
       scope: support.function.special.sll

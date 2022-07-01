@@ -7,6 +7,7 @@
 - Implemented `sll_container_callback_t` and `sll_container_check_callback_t`
 - Implemented `SLL_HANDLE_CONTAINER_GET`
 - Implemented `sll_string_parse_int`
+- Imolemented `self_type` and `SLL_OBJECT_TYPE_SELF`
 - Implemented custom type comparation between same types
 - More MIME types in the HTTP extension module
 

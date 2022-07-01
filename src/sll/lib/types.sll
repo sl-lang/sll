@@ -9,6 +9,7 @@
 (= map_type 6)
 (= map_key_type 7)
 (= map_value_type 8)
+(= self_type 0xfffffffe)
 (= object_type 0xffffffff)
 
-(## int_type func_type type_type float_type char_type complex_type string_type array_type map_type map_key_type map_value_type object_type)
+(## int_type func_type type_type float_type char_type complex_type string_type array_type map_type map_key_type map_value_type self_type object_type)

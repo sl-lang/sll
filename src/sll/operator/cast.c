@@ -47,7 +47,7 @@ static sll_object_t* _array_from_length(sll_integer_t len){
 
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_cast(sll_object_t* a,sll_object_t* b){
-	if (b->type!=SLL_OBJECT_TYPE_INT||b->data.int_<0||b->data.int_==a->type||b->data.int_==SLL_OBJECT_TYPE_OBJECT){
+	if (b->type!=SLL_OBJECT_TYPE_INT||b->data.int_<0||b->data.int_==a->type||b->data.int_==SLL_OBJECT_TYPE_SELF||b->data.int_==SLL_OBJECT_TYPE_OBJECT){
 		SLL_ACQUIRE(a);
 		return a;
 	}

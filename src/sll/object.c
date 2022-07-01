@@ -158,6 +158,7 @@ static void _init_struct(const sll_object_type_table_t* type_table,sll_object_t*
 
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_type_t sll_add_type(sll_object_type_table_t* type_table,sll_object_t*const* object_data,sll_arg_count_t field_count,const sll_string_t* name){
+	sll_object_type_t current_type=type_table->length+SLL_MAX_OBJECT_TYPE+1;
 	sll_object_type_data_t* n=sll_allocate(sizeof(sll_object_type_data_t)+field_count*sizeof(sll_object_type_data_field_t));
 	if (name){
 		sll_string_clone(name,(sll_string_t*)(&(n->name)));
@@ -177,7 +178,15 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_type_t sll_add_type(sll_object_type
 			vv=~vv;
 		}
 		SLL_ASSERT(vv>=0);
-		n->fields[i].type=(vv!=SLL_OBJECT_TYPE_OBJECT&&vv>type_table->length+SLL_MAX_OBJECT_TYPE?SLL_OBJECT_TYPE_INT:(sll_object_type_t)vv);
+		if (vv==SLL_OBJECT_TYPE_SELF){
+			n->fields[i].type=current_type;
+		}
+		else if (vv!=SLL_OBJECT_TYPE_OBJECT&&vv>type_table->length+SLL_MAX_OBJECT_TYPE){
+			n->fields[i].type=SLL_OBJECT_TYPE_INT;
+		}
+		else{
+			n->fields[i].type=(sll_object_type_t)vv;
+		}
 		object_data++;
 		v=sll_operator_cast((sll_object_t*)(*object_data),sll_static_int[SLL_OBJECT_TYPE_STRING]);
 		object_data++;
@@ -232,7 +241,7 @@ _skip_next:;
 		}
 	}
 	type_table->length++;
-	SLL_ASSERT(type_table->length+SLL_MAX_OBJECT_TYPE<SLL_OBJECT_TYPE_OBJECT);
+	SLL_ASSERT(type_table->length+SLL_MAX_OBJECT_TYPE<SLL_OBJECT_TYPE_SELF);
 	type_table->data=sll_reallocate(PTR(type_table->data),type_table->length*sizeof(const sll_object_type_data_t*));
 	*(type_table->data+type_table->length-1)=n;
 	return type_table->length+SLL_MAX_OBJECT_TYPE;
@@ -242,7 +251,7 @@ _skip_next:;
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_create_new_object_type(sll_object_type_table_t* type_table){
 	type_table->length++;
-	SLL_ASSERT(type_table->length+SLL_MAX_OBJECT_TYPE<SLL_OBJECT_TYPE_OBJECT);
+	SLL_ASSERT(type_table->length+SLL_MAX_OBJECT_TYPE<SLL_OBJECT_TYPE_SELF);
 	type_table->data=sll_reallocate(PTR(type_table->data),type_table->length*sizeof(const sll_object_type_data_t*));
 	sll_object_type_data_t* n=sll_allocate(sizeof(sll_object_type_data_t));
 	SLL_INIT_STRING((sll_string_t*)(&(n->name)));

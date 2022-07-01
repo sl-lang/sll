@@ -67,7 +67,7 @@ static void _mark_objects(sll_object_t* object){
 			_mark_objects(object->data.map.data[i]);
 		}
 	}
-	else if (object->type>SLL_MAX_OBJECT_TYPE&&object->type<SLL_OBJECT_TYPE_OBJECT&&sll_current_runtime_data&&object->type<=sll_current_runtime_data->type_table->length+SLL_MAX_OBJECT_TYPE){
+	else if (object->type>SLL_MAX_OBJECT_TYPE&&object->type<SLL_OBJECT_TYPE_SELF&&sll_current_runtime_data&&object->type<=sll_current_runtime_data->type_table->length+SLL_MAX_OBJECT_TYPE){
 		const sll_object_type_data_t* dt=*(sll_current_runtime_data->type_table->data+object->type-SLL_MAX_OBJECT_TYPE-1);
 		sll_object_field_t* p=object->data.fields;
 		for (sll_arg_count_t i=0;i<dt->field_count;i++){
@@ -158,7 +158,7 @@ __SLL_EXTERNAL void sll__release_object_internal(sll_object_t* object){
 		}
 		sll_deallocate(object->data.map.data);
 	}
-	else if (object->type>SLL_MAX_OBJECT_TYPE&&object->type<SLL_OBJECT_TYPE_OBJECT){
+	else if (object->type>SLL_MAX_OBJECT_TYPE&&object->type<SLL_OBJECT_TYPE_SELF){
 		if (sll_current_runtime_data&&object->type<=sll_current_runtime_data->type_table->length+SLL_MAX_OBJECT_TYPE){
 			const sll_object_type_data_t* dt=*(sll_current_runtime_data->type_table->data+object->type-SLL_MAX_OBJECT_TYPE-1);
 			if (_scheduler_current_thread_index!=SLL_UNKNOWN_THREAD_INDEX&&dt->functions[SLL_OBJECT_FUNC_DELETE]){

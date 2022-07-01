@@ -132,6 +132,18 @@
 
 /**
  * \flags macro var
+ * \name SLL_OBJECT_TYPE_SELF
+ * \group object
+ * \subgroup object-type
+ * \desc Docs!
+ * \type sll_object_type_t
+ */
+#define SLL_OBJECT_TYPE_SELF 0xfffffffe
+
+
+
+/**
+ * \flags macro var
  * \name SLL_OBJECT_TYPE_OBJECT
  * \group object
  * \subgroup object-type
