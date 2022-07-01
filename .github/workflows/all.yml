@@ -179,10 +179,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
       - name: Setup NASM
-        run: |
-          winget install nasm -i
-          set PATH=C:\Program Files\NASM\;%PATH%
-        shell: cmd
+        run: src\_build\download_nasm.ps1
       - name: Setup MSVC
         uses: ilammy/msvc-dev-cmd@v1
       - name: Build
@@ -204,10 +201,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
       - name: Setup NASM
-        run: |
-          winget install nasm -i
-          set PATH=C:\Program Files\NASM\;%PATH%
-        shell: cmd
+        run: src\_build\download_nasm.ps1
       - name: Setup MSVC
         uses: ilammy/msvc-dev-cmd@v1
       - name: Build
