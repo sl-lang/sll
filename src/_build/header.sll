@@ -285,6 +285,9 @@ static const sll_char_t ` name `_END[]={
 	(<- file$write fh
 `#ifndef __SLL_H__
 #define __SLL_H__ 1
+#ifdef __cplusplus
+extern "C" {
+#endif
 #include <stdarg.h>
 #include <stddef.h>
 `)
@@ -385,7 +388,10 @@ static const sll_char_t ` name `_END[]={
 		(++ i)
 	)
 	(<- file$write fh
-`#endif
+`#ifdef __cplusplus
+}
+#endif
+#endif
 `)
 	(<- file$close fh)
 ))
