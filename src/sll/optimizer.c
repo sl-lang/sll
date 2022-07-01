@@ -160,6 +160,6 @@ __SLL_EXTERNAL void sll_optimize_source_file(sll_source_file_t* source_file,sll_
 	while (round_count){
 		round_count--;
 		_visit_node(source_file,source_file->first_node,&tmp,0);
-		sll_deallocate(tmp.children);
+		_delete_recursive_children_optimizer_objects(&tmp);
 	}
 }
