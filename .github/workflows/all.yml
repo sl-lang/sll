@@ -93,7 +93,7 @@ jobs:
           path: build
       - name: Unpack build
         run: unzip -o build/darwin.zip -d build
-      - name: Test
+      - name: Execute tests
         run: build/sll tests/_runner.sll
   linux:
     name: Build linux
@@ -139,9 +139,9 @@ jobs:
         run: ${{env.BUILD_COMMAND_LINUX}} --coverage
         env:
           GENERATE_COVERAGE: 1
-      - name: Prepare test
+      - name: Delete previous coverage
         run: rm -f build/objects/*.gcda
-      - name: Test
+      - name: Execute tests
         run: build/sll tests/_runner.sll
       - name: Generate coverage report
         run: gcov -a -b -c -f -l -p $(find build/objects -type f -name *.gcno)
@@ -178,7 +178,7 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-      - name: Setup NASM & MSVC
+      - name: Setup NASM + MSVC
         run: src\_build\setup_win.ps1
       - name: Build
         run: ${{env.BUILD_COMMAND_WINDOWS}}
@@ -198,7 +198,7 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-      - name: Setup NASM & MSVC
+      - name: Setup NASM + MSVC
         run: src\_build\setup_win.ps1
       - name: Build
         run: ${{env.BUILD_COMMAND_WINDOWS}} --release
@@ -232,5 +232,5 @@ jobs:
           Expand-Archive -Force build\windows.zip build\
           exit 0
         shell: powershell
-      - name: Test
+      - name: Execute tests
         run: build/sll.exe tests/_runner.sll
