@@ -204,19 +204,19 @@ sll_return_code_t _scheduler_run(void){
 
 
 
-void _scheduler_set_thread(sll_thread_index_t t){
-	if (_scheduler_current_thread_index==t){
+void _scheduler_set_thread(sll_thread_index_t thread_index){
+	if (_scheduler_current_thread_index==thread_index){
 		return;
 	}
 	if (_scheduler_current_thread_index!=SLL_UNKNOWN_THREAD_INDEX){
 		_scheduler_queue_thread(_scheduler_current_thread_index);
 	}
-	thread_data_t* thr=*(_thread_data.data+t);
+	thread_data_t* thr=*(_thread_data.data+thread_index);
 	if (thr->state==THREAD_STATE_TERMINATED){
 		_scheduler_current_thread_index=SLL_UNKNOWN_THREAD_INDEX;
 		return;
 	}
-	_scheduler_current_thread_index=t;
+	_scheduler_current_thread_index=thread_index;
 	_scheduler_current_thread=thr;
 	if ((_scheduler_current_thread->state!=THREAD_STATE_INITIALIZED&&_scheduler_current_thread->state!=THREAD_STATE_RUNNING&&_scheduler_current_thread->state!=THREAD_STATE_UNDEFINED&&_scheduler_current_thread->state!=THREAD_STATE_WAIT_IO)||(_scheduler_current_thread->flags&THREAD_FLAG_SUSPENDED)){
 		SLL_UNIMPLEMENTED();
