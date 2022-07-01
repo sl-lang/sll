@@ -3,7 +3,7 @@
 
 
 
-$false={int<int_=0>|float<float_=0>|char<char_=0>|assign|if|switch|operation_list}
+$false={int<int_=0>|float<float_=0>|char<char_=0>|complex<complex_.real=0,complex_.imag=0>|array<array_length=0>|map<map_length=0>|print|assign|if|switch|for|while|loop|inc|dec|break|continue|return|operation_list|thread_wait|thread_lock|thread_semaphore|thread_barrier_eq|thread_barrier_geq|thread_exit}
 $ignored_required_fields = {if[1::2]|inline_if[1::2]|switch[2::2]|for[:1]|while[:1]|for_array[:1]|while_array[:1]|for_map[:1]|while_map[:1]}
 $nil_return_value = {print|if|switch|for|while|loop|break|continue|return|operation_list|thread_wait|thread_lock|thread_semaphore|thread_barrier_eq|thread_barrier_geq|thread_exit}
 $optional_fields = {not[1:]|bool[1:]|assign[2:]|func|internal_func|internal_func_load[1:]|inline_func|call_array[2:]|for[2:]|while[2:]|loop|inc[1:]|dec[1:]|length[1:]|access[4:]|deep_copy[1:]|has[2:]|typeof[1:]|nameof[1:]|nameof_type[1:]|for_array[2:-1]|while_array[2:-1]|for_map[2:-2]|while_map[2:-2]|break|continue|ref[1:]|return[1:]|comma[:-1]|operation_list|thread_id|thread_wait[1:]|thread_lock[1:]|thread_semaphore[1:]|thread_barrier_eq[2:]|thread_barrier_geq[2:]|thread_exit[1:]|read_blocking[2:]|read_blocking_char[1:]}
