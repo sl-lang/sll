@@ -11,6 +11,7 @@
 - Implemented custom type comparison between same types
 - More MIME types in the HTTP extension module
 - Output header files are now C++-compatible
+- Window extension module
 
 ## Changed
 
