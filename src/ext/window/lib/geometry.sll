@@ -17,7 +17,7 @@
 		})
 	) @@init@@
 	(,,, dt
-		(@@ (<- string$format "%ux%u%+d%+d"
+		(@@ (<- string$format "%llux%llu%+lld%+lld"
 			dt$width
 			dt$height
 			dt$x
