@@ -33,6 +33,7 @@
 	"uuid.sll"
 	"vm.sll"
 	"weakref.sll"
+	"window/window.sll"
 )
 (= JSON_STRING "{\"key\":[\"value\",10,0.555,-842.9e-5,{\"a\":[\"c\",30,\"d\",\"\\t€\"],\"other\":\"else\"},true,false,null,[],{}]}")
 (-> (= i 1) (< i 11) {
@@ -672,3 +673,6 @@ abc` '\n')
 ))
 
 (:> (<- path$relative "src/sll/gc.c" "src/_build") '\n')
+
+(= window (<- window_window$create 40 40 900 600 "ABC" 0 ""))
+(:> window '\n')

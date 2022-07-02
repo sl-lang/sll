@@ -1,0 +1,30 @@
+(---
+	"window/_load_library.sll"
+	"types.sll"
+)
+
+
+
+(= window_window_module_type (&:
+	(~ func_type) create
+))
+
+
+
+(= create (,,, x y width height title flags display
+	(@@ (<- (... "window:create_window")
+		x
+		y
+		width
+		height
+		title
+		flags
+		display
+	))
+))
+
+
+
+(= window_window (. window_window_module_type
+))
+(## window_window)

@@ -5,6 +5,7 @@
 	"array.sll"
 	"error.sll"
 	"file.sll"
+	"json.sll"
 	"log.sll"
 	"path.sll"
 	"process.sll"
@@ -15,6 +16,11 @@
 )
 
 
+
+(= module_data_type (&:
+	string_type platform_file_path
+	array_type extra_options
+))
 
 (= build_module_type (&:
 	(~ func_type) build_extensions
@@ -62,6 +68,62 @@
 	(@@ (<- util$execute args))
 ))
 
+(= _read_module_data (,,, name
+	(= out (. module_data_type
+		(<- string$replace
+			(: config$EXTENSION_PLATFORM_SOURCE_FILE_PATH sys$PLATFORM)
+			"<name>"
+			name
+		)
+		[]
+	))
+	(= fh (<- file$open
+		(<- string$replace
+			config$EXTENSION_EXTRA_DATA_FILE_PATH
+			"<name>"
+			name
+		)
+		"r"
+	))
+	(? (! fh$error_data) {
+		(= data (<- json$parse
+			(<- file$read
+				fh
+			)
+		))
+		(? (&&
+			data$platform_directories
+			(=== (:? data$platform_directories) map_type)
+		) {
+			(= dir (::
+				(: data$platform_directories sys$PLATFORM)
+				string_type
+			))
+			(? dir {
+				(= out$platform_file_path (+
+					(<- string$replace
+						config$EXTENSION_ROOT_SOURCE_FILE_PATH
+						"<name>"
+						name
+					)
+					'/'
+					dir
+				))
+			})
+		})
+		(? (&&
+			data$extra_options
+			(=== (:? data$extra_options) map_type)
+		) {
+			(= out$extra_options (::
+				(: data$extra_options sys$PLATFORM)
+				array_type
+			))
+		})
+	})
+	(@@ out)
+))
+
 
 (= build_extensions (,,,
 	(<- log$log "Compiling extensions...")
@@ -82,12 +144,9 @@
 			)
 			true
 		))
+		(= module_data (<- _read_module_data name))
 		(= platform_files (<- path$list_dir
-			(<- string$replace
-				(: config$EXTENSION_PLATFORM_SOURCE_FILE_PATH sys$PLATFORM)
-				"<name>"
-				name
-			)
+			module_data$platform_file_path
 			true
 		))
 		(= files (+
@@ -111,7 +170,7 @@
 		(<- log$log "      Found " ($ files) " files")
 		(? files {
 			(<- log$log "    Aggregating preprocessor definitions...")
-			(= options [])
+			(= options config$extra_options)
 			(-> (= i 0) (< i ($ config$EXTENSION_PREPROCESSOR_DEFINITIONS))
 				(<- array$extend options [
 					(: config$PREPROCESSOR_DEFINITION_PREFIX sys$PLATFORM)

@@ -1,0 +1,12 @@
+{
+	"platform_directories": {
+		"darwin": "platform/darwin",
+		"linux": "platform/linux",
+		"windows": "platform/windows"
+	},
+	"extra_options": {
+		"darwin": [],
+		"linux": ["-lxcb"],
+		"windows": []
+	}
+}
