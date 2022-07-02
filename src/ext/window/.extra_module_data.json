@@ -4,9 +4,6 @@
 		"linux": "platform/linux",
 		"windows": "platform/windows"
 	},
-	"extra_options": {
-		"windows": ["/U","NOGDI"]
-	},
 	"extra_link_options": {
 		"linux": ["-lxcb","-lxcb-randr"],
 		"windows": ["user32.lib"]
