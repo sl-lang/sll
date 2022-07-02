@@ -13,6 +13,7 @@ permissions: read-all
 env:
   BUILD_COMMAND_LINUX: ./build.sh --verbose
   BUILD_COMMAND_WINDOWS: .\build.bat --verbose
+  SETUP_LINUX: sudo apt install nasm libxcb-randr0 libxcb-randr0-dev
 jobs:
   codeql:
     name: Analyze code
@@ -30,8 +31,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-      - name: Setup NASM
-        run: sudo apt install nasm
+      - name: Setup environment
+        run: ${{env.SETUP_LINUX}}
       - name: Initialize codeql@1
         uses: github/codeql-action/init@v2
         with:
@@ -101,8 +102,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-      - name: Setup dependencies
-        run: sudo apt install nasm libxcb-randr0 libxcb-randr0-dev
+      - name: Setup environment
+        run: ${{env.SETUP_LINUX}}
       - name: Build
         run: ${{env.BUILD_COMMAND_LINUX}}
   linux-release:
@@ -111,8 +112,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-      - name: Setup dependencies
-        run: sudo apt install nasm libxcb-randr0 libxcb-randr0-dev
+      - name: Setup environment
+        run: ${{env.SETUP_LINUX}}
       - name: Build
         run: ${{env.BUILD_COMMAND_LINUX}} --release
       - name: Create bundle
@@ -133,8 +134,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-      - name: Setup dependencies
-        run: sudo apt install nasm libxcb-randr0 libxcb-randr0-dev
+      - name: Setup environment
+        run: ${{env.SETUP_LINUX}}
       - name: Build
         run: ${{env.BUILD_COMMAND_LINUX}} --coverage
         env:
