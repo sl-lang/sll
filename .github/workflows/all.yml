@@ -43,6 +43,7 @@ jobs:
         uses: github/codeql-action/analyze@v2
   darwin:
     name: Build darwin
+    if: github.event_name=='push'||github.event_name=='pull_request'
     runs-on: macos-latest
     steps:
       - name: Checkout
@@ -98,6 +99,7 @@ jobs:
         run: build/sll tests/_runner.sll
   linux:
     name: Build linux
+    if: github.event_name=='push'||github.event_name=='pull_request'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -175,6 +177,7 @@ jobs:
         run: ${{secrets.PACKAGE_SERVER_UPDATE_COMMAND}}
   windows:
     name: Build windows
+    if: github.event_name=='push'||github.event_name=='pull_request'
     runs-on: windows-latest
     steps:
       - name: Checkout
