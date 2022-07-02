@@ -30,7 +30,7 @@ __WINDOW_API_CALL void window_api_display_enumerate(sll_array_t* out){
 		if (id==main_id){
 			flags|=WINDOW_DISPLAY_FLAG_MAIN_DISPLAY;
 		}
-		out->data[i]=sll_new_object(SLL_CHAR("uhhuufi"),id,(int32_t)(rect.origin.x),(int32_t)(rect.origin.y),(uint32_t)(rect.size.width),(uint32_t)(rect.size.height),CGDisplayRotation(mode),flags);
+		out->data[i]=sll_new_object(SLL_CHAR("u[hhuu]fi"),id,(int32_t)(rect.origin.x),(int32_t)(rect.origin.y),(uint32_t)(rect.size.width),(uint32_t)(rect.size.height),CGDisplayRotation(id),flags);
 	}
 	sll_deallocate(data);
 }
