@@ -170,7 +170,7 @@
 		(<- log$log "      Found " ($ files) " files")
 		(? files {
 			(<- log$log "    Aggregating preprocessor definitions...")
-			(= options config$extra_options)
+			(= options module_data$extra_options)
 			(-> (= i 0) (< i ($ config$EXTENSION_PREPROCESSOR_DEFINITIONS))
 				(<- array$extend options [
 					(: config$PREPROCESSOR_DEFINITION_PREFIX sys$PLATFORM)
