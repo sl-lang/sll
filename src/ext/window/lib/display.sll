@@ -13,10 +13,12 @@
 
 (= window_display_type (&:
 	(,,, dt
-		(@@ (<- string$format "<%s Hz%s%s>"
-			dt$geometry
+		(@@ (+
+			'<'
+			(:: dt$geometry string_type)
 			(* ", Active" (!! (& dt$flags FLAG_ACTIVE)))
 			(* ", Main" (!! (& dt$flags FLAG_MAIN_DISPLAY)))
+			'>'
 		))
 	) @@string@@
 	(~ int_type) id
