@@ -1,11 +1,26 @@
 (---
-	"window/_load_library.sll"
+	"string.sll"
 	"types.sll"
+	"window/_load_library.sll"
 )
 
 
 
+(# FLAG_ACTIVE FLAG_MAIN_DISPLAY)
+
+
+
 (= window_display_type (&:
+	(,,, dt
+		(@@ (<- string$format "<%ux%u%+d%+d%s%s>"
+			dt$width
+			dt$height
+			dt$x
+			dt$y
+			(* ", Active" (!! (& dt$flags FLAG_ACTIVE)))
+			(* ", Main" (!! (& dt$flags FLAG_MAIN_DISPLAY)))
+		))
+	) @@string@@
 	(~ int_type) id
 	(~ int_type) x
 	(~ int_type) y

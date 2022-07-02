@@ -1,5 +1,4 @@
 #include <sll.h>
-#include <stdio.h>
 #include <stdlib.h>
 #include <window/common.h>
 #include <window/display.h>
