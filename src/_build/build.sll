@@ -20,6 +20,7 @@
 (= module_data_type (&:
 	string_type platform_file_path
 	array_type extra_options
+	array_type extra_link_options
 ))
 
 (= build_module_type (&:
@@ -120,6 +121,15 @@
 				array_type
 			))
 		})
+		(? (&&
+			data$extra_link_options
+			(=== (:? data$extra_link_options) map_type)
+		) {
+			(= out$extra_link_options (::
+				(: data$extra_link_options sys$PLATFORM)
+				array_type
+			))
+		})
 	})
 	(@@ out)
 ))
@@ -170,7 +180,7 @@
 		(<- log$log "      Found " ($ files) " files")
 		(? files {
 			(<- log$log "    Aggregating preprocessor definitions...")
-			(= options (: module_data$extra_options))
+			(= options module_data$extra_options)
 			(-> (= i 0) (< i ($ config$EXTENSION_PREPROCESSOR_DEFINITIONS))
 				(<- array$extend options [
 					(: config$PREPROCESSOR_DEFINITION_PREFIX sys$PLATFORM)
@@ -219,7 +229,7 @@
 				name
 			))
 			(<- log$log "    Linking files...")
-			(? (<- _execute_command command_list$LINK_COMMAND output_files (+ command_list$OUTPUT_LINK_PREFIX temporary_output_library) module_data$extra_options) (<- util$fail_and_exit))
+			(? (<- _execute_command command_list$LINK_COMMAND output_files (+ command_list$OUTPUT_LINK_PREFIX temporary_output_library) module_data$extra_link_options) (<- util$fail_and_exit))
 			(<- log$log "    Executing post-link command...")
 			(? (<- _execute_command command_list$POST_LINK_COMMAND nil temporary_output_library) (<- util$fail_and_exit))
 			(<- log$log "    Copying library from '" temporary_output_library "' to '" output_library "'...")

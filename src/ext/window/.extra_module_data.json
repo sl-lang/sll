@@ -5,8 +5,9 @@
 		"windows": "platform/windows"
 	},
 	"extra_options": {
-		"darwin": [],
-		"linux": ["-lxcb","-lxcb-randr"],
-		"windows": []
+		"windows": ["/U","NOGDI"]
+	},
+	"extra_link_options": {
+		"linux": ["-lxcb","-lxcb-randr"]
 	}
 }
