@@ -7,6 +7,8 @@
 
 (= window_display_type (&:
 	(~ int_type) id
+	(~ int_type) x
+	(~ int_type) y
 	(~ int_type) width
 	(~ int_type) height
 	(~ float_type) rotation

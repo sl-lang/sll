@@ -6,7 +6,7 @@
 	},
 	"extra_options": {
 		"darwin": [],
-		"linux": ["-lxcb"],
+		"linux": ["-lxcb","-lxcb-randr"],
 		"windows": []
 	}
 }
