@@ -1,0 +1,23 @@
+(---
+	"window/_load_library.sll"
+	"types.sll"
+)
+
+
+
+(= window_display_module_type (&:
+	(~ func_type) enumerate
+))
+
+
+
+(= enumerate (,,,
+	(@@ (<- (... "window:display_enumerate")))
+))
+
+
+
+(= window_display (. window_display_module_type
+	enumerate
+))
+(## window_display)

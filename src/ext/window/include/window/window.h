@@ -1,5 +1,5 @@
-#ifndef __WINDOW_LIBRARY_H__
-#define __WINDOW_LIBRARY_H__ 1
+#ifndef __WINDOW_WINDOW_H__
+#define __WINDOW_WINDOW_H__ 1
 #include <window/common.h>
 #include <sll.h>
 
