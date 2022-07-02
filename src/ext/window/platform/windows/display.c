@@ -24,13 +24,13 @@ __WINDOW_API_CALL void window_api_display_enumerate(sll_array_t* out){
 		}
 		sll_float_t rotation=0;
 		if (settings.dmDisplayOrientation==DMDO_90){
-			rotation=WINDOW_MATH_PI/2;
+			rotation=90;
 		}
 		else if (settings.dmDisplayOrientation==DMDO_180){
-			rotation=WINDOW_MATH_PI;
+			rotation=180;
 		}
 		else if (settings.dmDisplayOrientation==DMDO_270){
-			rotation=WINDOW_MATH_PI*3/2;
+			rotation=270;
 		}
 		sll_integer_t flags=0;
 		if (device.StateFlags&DISPLAY_DEVICE_ACTIVE){

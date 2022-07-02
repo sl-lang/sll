@@ -13,8 +13,4 @@
 
 
 
-#define WINDOW_MATH_PI 3.14159265358979323846
-
-
-
 #endif

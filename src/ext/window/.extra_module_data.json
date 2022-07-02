@@ -4,6 +4,9 @@
 		"linux": "platform/linux",
 		"windows": "platform/windows"
 	},
+	"extra_options": {
+		"darwin": ["-framework","IOKit"]
+	},
 	"extra_link_options": {
 		"linux": ["-lxcb","-lxcb-randr"],
 		"windows": ["user32.lib"]

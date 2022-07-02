@@ -29,13 +29,13 @@ __WINDOW_API_CALL void window_api_display_enumerate(sll_array_t* out){
 		xcb_randr_get_crtc_info_reply_t* crtc=xcb_randr_get_crtc_info_reply(conn,xcb_randr_get_crtc_info(conn,output->crtc,reply->config_timestamp),NULL);
 		sll_float_t rotation=0;
 		if (crtc->rotation==XCB_RANDR_ROTATION_ROTATE_90){
-			rotation=WINDOW_MATH_PI/2;
+			rotation=90;
 		}
 		else if (crtc->rotation==XCB_RANDR_ROTATION_ROTATE_180){
-			rotation=WINDOW_MATH_PI;
+			rotation=180;
 		}
 		else if (crtc->rotation==XCB_RANDR_ROTATION_ROTATE_270){
-			rotation=WINDOW_MATH_PI*3/2;
+			rotation=270;
 		}
 		sll_integer_t flags=0;
 		if (output->connection==XCB_RANDR_CONNECTION_CONNECTED){
