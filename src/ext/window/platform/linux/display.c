@@ -44,7 +44,7 @@ __WINDOW_API_CALL void window_api_display_enumerate(sll_array_t* out){
 		if (id==primary_id){
 			flags|=WINDOW_DISPLAY_FLAG_MAIN_DISPLAY;
 		}
-		out->data[i]=sll_new_object(SLL_CHAR("uhhuu0fi"),id,crtc->x,crtc->y,crtc->width,crtc->height,rotation,flags);
+		out->data[i]=sll_new_object(SLL_CHAR("uhhuufi"),id,crtc->x,crtc->y,crtc->width,crtc->height,rotation,flags);
 		i++;
 		free(crtc);
 		free(output);

@@ -12,12 +12,11 @@
 
 (= window_display_type (&:
 	(,,, dt
-		(@@ (<- string$format "<%ux%u%+d%+d@%u Hz%s%s>"
+		(@@ (<- string$format "<%ux%u%+d%+d Hz%s%s>"
 			dt$width
 			dt$height
 			dt$x
 			dt$y
-			dt$refresh_rate
 			(* ", Active" (!! (& dt$flags FLAG_ACTIVE)))
 			(* ", Main" (!! (& dt$flags FLAG_MAIN_DISPLAY)))
 		))
@@ -27,7 +26,6 @@
 	(~ int_type) y
 	(~ int_type) width
 	(~ int_type) height
-	(~ float_type) refresh_rate
 	(~ float_type) rotation
 	(~ int_type) flags
 ))
