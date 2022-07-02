@@ -8,6 +8,7 @@
 		"windows": ["/U","NOGDI"]
 	},
 	"extra_link_options": {
-		"linux": ["-lxcb","-lxcb-randr"]
+		"linux": ["-lxcb","-lxcb-randr"],
+		"windows": ["user32.lib"]
 	}
 }
