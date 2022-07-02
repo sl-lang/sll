@@ -7,10 +7,6 @@
 
 
 
-#define PI 3.14159265358979323846
-
-
-
 __WINDOW_API_CALL void window_api_display_enumerate(sll_array_t* out){
 	xcb_connection_t* conn=xcb_connect(NULL,NULL);
 	xcb_screen_t* screen=xcb_setup_roots_iterator(xcb_get_setup(conn)).data;
@@ -31,18 +27,15 @@ __WINDOW_API_CALL void window_api_display_enumerate(sll_array_t* out){
 			continue;
 		}
 		xcb_randr_get_crtc_info_reply_t* crtc=xcb_randr_get_crtc_info_reply(conn,xcb_randr_get_crtc_info(conn,output->crtc,reply->config_timestamp),NULL);
-		sll_float_t rotation;
+		sll_float_t rotation=0;
 		if (crtc->rotation==XCB_RANDR_ROTATION_ROTATE_90){
-			rotation=PI/2;
+			rotation=WINDOW_MATH_PI/2;
 		}
-		else if (crtc->rotation==XCB_RANDR_ROTATION_ROTATE_90){
-			rotation=PI;
+		else if (crtc->rotation==XCB_RANDR_ROTATION_ROTATE_180){
+			rotation=WINDOW_MATH_PI;
 		}
-		else if (crtc->rotation==XCB_RANDR_ROTATION_ROTATE_90){
-			rotation=PI*3/2;
-		}
-		else{
-			rotation=0;
+		else if (crtc->rotation==XCB_RANDR_ROTATION_ROTATE_270){
+			rotation=WINDOW_MATH_PI*3/2;
 		}
 		sll_integer_t flags=0;
 		if (output->connection==XCB_RANDR_CONNECTION_CONNECTED){
