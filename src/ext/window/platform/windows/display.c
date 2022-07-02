@@ -1,6 +1,7 @@
+#undef NOGDI
 #include <sll.h>
 #include <window/common.h>
-#undef NOGDI
+#include <window/display.h>
 #include <windows.h>
 
 
@@ -31,7 +32,14 @@ __WINDOW_API_CALL void window_api_display_enumerate(sll_array_t* out){
 		else if (settings.dmDisplayOrientation==DMDO_270){
 			rotation=WINDOW_MATH_PI*3/2;
 		}
-		sll_object_t* display=sll_new_object(SLL_CHAR("uhhuufi"),id,settings.dmPosition.x,settings.dmPosition.y,settings.dmPelsWidth,settings.dmPelsHeight,rotation,0);
+		sll_integer_t flags=0;
+		if (device.StateFlags&DISPLAY_DEVICE_ACTIVE){
+			flags|=WINDOW_DISPLAY_FLAG_ACTIVE;
+		}
+		if (!settings.dmPosition.x&&!settings.dmPosition.y){
+			flags|=WINDOW_DISPLAY_FLAG_MAIN_DISPLAY;
+		}
+		sll_object_t* display=sll_new_object(SLL_CHAR("uhhuufi"),id,settings.dmPosition.x,settings.dmPosition.y,settings.dmPelsWidth,settings.dmPelsHeight,rotation,flags);
 		sll_array_push(NULL,display,out);
 		SLL_RELEASE(display);
 _next_display:
