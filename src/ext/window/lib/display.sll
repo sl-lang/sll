@@ -5,19 +5,43 @@
 
 
 
+(= window_display_type (&:
+	(~ int_type) id
+	(~ int_type) width
+	(~ int_type) height
+	(~ float_type) rotation
+	(~ int_type) flags
+))
+
 (= window_display_module_type (&:
+	(~ type_type) window_display_type
+	(~ int_type) FLAG_ACTIVE
+	(~ int_type) FLAG_MAIN_DISPLAY
 	(~ func_type) enumerate
 ))
 
 
 
+(= FLAG_ACTIVE 1)
+(= FLAG_MAIN_DISPLAY 2)
+
+
+
 (= enumerate (,,,
-	(@@ (<- (... "window:display_enumerate")))
+	(= data (<- (... "window:display_enumerate")))
+	(@@ ([> (= i 0) (< i ($ data))
+		(= display (: data i))
+		(++ i)
+		(:: display window_display_type)
+	))
 ))
 
 
 
 (= window_display (. window_display_module_type
+	window_display_type
+	FLAG_ACTIVE
+	FLAG_MAIN_DISPLAY
 	enumerate
 ))
 (## window_display)
