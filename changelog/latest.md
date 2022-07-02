@@ -1,4 +1,4 @@
-# Sll [0.7.24] - Ongoing
+# Sll [0.7.24] - 2022-07-02
 
 ## Added
 
@@ -20,4 +20,4 @@
 - Reworked the optimizer
 - System library loading audit events (`sll.sys.library.load.*`) no longer contain the `name` argument
 
-[0.7.24]: https://github.com/sl-lang/sll/compare/sll-v0.7.23...main
+[0.7.24]: https://github.com/sl-lang/sll/compare/sll-v0.7.23...sll-v0.7.24
