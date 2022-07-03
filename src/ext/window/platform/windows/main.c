@@ -22,7 +22,7 @@ void _init_platform(void){
 		0,
 		_winapi_hinstance,
 		NULL,
-		NULL,
+		LoadCursorA(_winapi_hinstance,MAKEINTRESOURCE(IDC_ARROW)),
 		NULL,
 		NULL,
 		"_sll_window_extension_default_class"
