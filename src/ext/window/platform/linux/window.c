@@ -20,6 +20,13 @@ __WINDOW_API_CALL void window_api_window_destroy(void* id){
 
 
 
+__WINDOW_API_CALL void window_api_window_set_title(void* id,const sll_string_t* name){
+	xcb_change_property(_xcb_conn,XCB_PROP_MODE_REPLACE,(int)(intptr_t)id,XCB_ATOM_WM_NAME,XCB_ATOM_STRING,8,name->length,name->data);
+	xcb_flush(_xcb_conn);
+}
+
+
+
 __WINDOW_API_CALL void window_api_window_set_visibility(void* id,sll_bool_t show){
 	(show?xcb_map_window:xcb_unmap_window)(_xcb_conn,(int)(intptr_t)id);
 	xcb_flush(_xcb_conn);

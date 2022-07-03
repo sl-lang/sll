@@ -27,12 +27,17 @@
 	(~ func_type) create
 	(~ func_type) destroy
 	(~ func_type) hide
+	(~ func_type) set_title
 	(~ func_type) show
 ))
 
 
 
-(= create (,,, geometry parent visible?
+(# set_title show)
+
+
+
+(= create (,,, geometry parent title visible?
 	(= geometry (:: geometry window_geometry$window_geometry_type))
 	(= parent_id (?: parent
 		(: (:: parent window_window_type) "id")
@@ -45,11 +50,13 @@
 		geometry$height
 		parent_id
 	))
-	(? visible? (<- (... "window:window_set_visibility") id true))
-	(@@ (. window_window_type
+	(= out (. window_window_type
 		id
 		geometry
 	))
+	(? title (<- set_title out title))
+	(? visible? (<- show out))
+	(@@ out)
 ))
 
 (= destroy (,,, window
@@ -62,6 +69,17 @@
 	(? (! window) (@@))
 	(= window (:: window window_window_type))
 	(<- (... "window:window_set_visibility") window$id false)
+))
+
+(= set_title (,,, window title
+	(? (! window) (@@))
+	(= window (:: window window_window_type))
+	(= title (?: title (:: title string_type) ""))
+	(= title (: (<- string$split title '\x00') 0))
+	(<- (... "window:window_set_title")
+		window$id
+		title
+	)
 ))
 
 (= show (,,, window
