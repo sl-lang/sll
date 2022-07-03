@@ -1,3 +1,6 @@
+#undef NOSHOWWINDOW
+#undef NOUSER
+#undef NOWINSTYLES
 #include <windows.h>
 #include <sll.h>
 #include <stdint.h>
