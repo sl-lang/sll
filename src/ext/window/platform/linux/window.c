@@ -5,7 +5,8 @@
 
 
 __WINDOW_API_CALL void* window_api_window_create(int32_t x,int32_t y,uint32_t w,uint32_t h,void* parent){
-	return (void*)0;
+	xcb_window_t id=xcb_generate_id(_xcb_conn);
+	return (void*)id;
 }
 
 
