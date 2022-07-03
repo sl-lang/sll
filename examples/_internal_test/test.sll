@@ -677,6 +677,6 @@ abc` '\n')
 
 (:> (<- window_display$enumerate) '\n')
 
-(= window (<- window_window$create [0 0 1000 1000] nil true))
+(= window (<- window_window$create [0 0 900 600] nil true))
 (<- file$read_char file$stdin)
 (:> window '\n')
