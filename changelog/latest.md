@@ -3,5 +3,6 @@
 ## Added
 
 - Argument parsing modifier to parse signed integers: `-`
+- Window creation to the window extenion module
 
 [0.7.25]: https://github.com/sl-lang/sll/compare/sll-v0.7.24...main
