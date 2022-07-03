@@ -22,6 +22,11 @@ static const sll_internal_function_descriptor_t _internal_function_table[]={
 		SLL_CHAR("Q|")
 	},
 	{
+		SLL_CHAR("window:window_poll_events"),
+		window_api_window_poll_events,
+		SLL_CHAR("|")
+	},
+	{
 		SLL_CHAR("window:window_set_title"),
 		window_api_window_set_title,
 		SLL_CHAR("Q#s|")
@@ -37,7 +42,7 @@ static const sll_internal_function_descriptor_t _internal_function_table[]={
 
 static const sll_internal_function_table_descriptor_t _internal_function_table_descriptor_data={
 	(const sll_internal_function_descriptor_t*)(&_internal_function_table),
-	5
+	6
 };
 
 

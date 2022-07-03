@@ -26,6 +26,21 @@ __WINDOW_API_CALL void window_api_window_destroy(void* id){
 
 
 
+__WINDOW_API_CALL void window_api_window_poll_events(void){
+	MSG msg;
+	while (PeekMessageW(&msg,NULL,0,0,PM_REMOVE)){
+		if (msg.message==WM_QUIT){
+			//
+		}
+		else{
+			TranslateMessage(&msg);
+			DispatchMessageW(&msg);
+		}
+	}
+}
+
+
+
 __WINDOW_API_CALL void window_api_window_set_title(void* id,const sll_string_t* name){
 	SetWindowTextA(id,name->data);
 }

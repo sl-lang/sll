@@ -678,5 +678,7 @@ abc` '\n')
 (:> (<- window_display$enumerate) '\n')
 
 (= window (<- window_window$create [0 0 900 600] nil "Example Window Title" true))
-(<- file$read_char file$stdin)
+(>- nil (! (<- file$read file$stdin 1 true))
+	(<- window_window$poll)
+)
 (:> window '\n')

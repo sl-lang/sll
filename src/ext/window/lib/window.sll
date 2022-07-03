@@ -27,6 +27,7 @@
 	(~ func_type) create
 	(~ func_type) destroy
 	(~ func_type) hide
+	(~ func_type) poll
 	(~ func_type) set_title
 	(~ func_type) show
 ))
@@ -71,6 +72,8 @@
 	(<- (... "window:window_set_visibility") window$id false)
 ))
 
+(= poll (... "window:window_poll_events")
+
 (= set_title (,,, window title
 	(? (! window) (@@))
 	(= window (:: window window_window_type))
@@ -95,6 +98,8 @@
 	create
 	destroy
 	hide
+	poll
+	set_title
 	show
 ))
 (## window_window)

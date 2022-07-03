@@ -5,4 +5,8 @@
 - Argument parsing modifier to parse signed integers: `-`
 - Window creation API to the window extenion module
 
+## Changed
+
+- Fixed `file$read` with asynchronous files
+
 [0.7.25]: https://github.com/sl-lang/sll/compare/sll-v0.7.24...main

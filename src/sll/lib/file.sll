@@ -157,16 +157,14 @@
 	))
 ))
 
-(= read (,,, f cnt nonblocking
+(= read (,,, f count nonblocking
 	(? (=== f nil) (@@ nil))
 	(= f (:: f file_type))
-	(= cnt (:: cnt int_type))
-	(? (< cnt 0) {
-		(@@ "")
-	})
+	(= count (:: count int_type))
+	(? (< count 0) (@@ ""))
 	(= o (?: nonblocking
-		(<- (... "sll:file_read") f$_handle cnt)
-		(!<- f$_handle cnt)
+		(<- (... "sll:file_read") f$_handle count)
+		(!<- f$_handle count)
 	)
 	(@@ (?: (=== (:? o) int_type)
 		(<- error$from_internal o <"file" f>)

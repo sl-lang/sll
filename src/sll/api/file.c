@@ -205,6 +205,10 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_file_read(s
 	}
 	extended_file_t* data=*(_file_data.data+handle);
 	sll_file_t* f=(data->is_pointer?data->data.pointer:&(data->data.struct_));
+	if ((f->flags&SLL_FILE_FLAG_ASYNC)&&!sll_file_data_available(f)){
+		SLL_INIT_STRING(out);
+		return SLL_NO_ERROR;
+	}
 	if (!size){
 		return sll_file_read_all(f,out);
 	}
