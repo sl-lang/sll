@@ -1,0 +1,71 @@
+(---
+	"string.sll"
+	"types.sll"
+	"window/_load_library.sll"
+	"window/geometry.sll"
+)
+
+
+
+(= window_window_type (&:
+	(,,, dt
+		(@@ (+
+			'<'
+			(:: dt$geometry string_type)
+			(* ", Active" (!! (& dt$flags FLAG_ACTIVE)))
+			(* ", Main" (!! (& dt$flags FLAG_MAIN_DISPLAY)))
+			'>'
+		))
+	) @@string@@
+	(~ int_type) id
+	(~ window_geometry$window_geometry_type) geometry
+	(~ float_type) rotation
+	(~ int_type) flags
+))
+
+(= window_window_module_type (&:
+	(~ type_type) window_window_type
+	(~ func_type) create
+	(~ func_type) hide
+	(~ func_type) show
+))
+
+
+
+(= create (,,, geometry parent visible?
+	(= geometry (:: geometry window_geometry$window_geometry_type))
+	(= parent_id (?: parent
+		(: (:: parent window_window_type) "id")
+		-1
+	))
+	(= id (<- (... "window:window_create")
+		geometry$x
+		geometry$y
+		geometry$width
+		geometry$height
+		parent_id
+	))
+	(? visible? (<- (... "window:window_update_visibility") id true))
+))
+
+(= hide (,,, window
+	(? (! window) (@@))
+	(= window (:: window window_window_type))
+	(<- (... "window:window_update_visibility") window$id false)
+))
+
+(= show (,,, window
+	(? (! window) (@@))
+	(= window (:: window window_window_type))
+	(<- (... "window:window_update_visibility") window$id true)
+))
+
+
+
+(= window_window (. window_window_module_type
+	window_window_type
+	create
+	hide
+	show
+))
+(## window_window)

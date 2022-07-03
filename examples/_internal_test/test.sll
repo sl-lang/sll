@@ -676,3 +676,6 @@ abc` '\n')
 (:> (<- path$relative "src/sll/gc.c" "src/_build") '\n')
 
 (:> (<- window_display$enumerate) '\n')
+
+(= window (<- window_window$create [0 0 100 100] nil true))
+(:> window '\n')
