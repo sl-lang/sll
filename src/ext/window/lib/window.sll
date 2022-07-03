@@ -12,15 +12,11 @@
 		(@@ (+
 			'<'
 			(:: dt$geometry string_type)
-			(* ", Active" (!! (& dt$flags FLAG_ACTIVE)))
-			(* ", Main" (!! (& dt$flags FLAG_MAIN_DISPLAY)))
 			'>'
 		))
 	) @@string@@
 	(~ int_type) id
 	(~ window_geometry$window_geometry_type) geometry
-	(~ float_type) rotation
-	(~ int_type) flags
 ))
 
 (= window_window_module_type (&:
@@ -36,7 +32,7 @@
 	(= geometry (:: geometry window_geometry$window_geometry_type))
 	(= parent_id (?: parent
 		(: (:: parent window_window_type) "id")
-		-1
+		0xffffffffffffffff
 	))
 	(= id (<- (... "window:window_create")
 		geometry$x
@@ -45,7 +41,12 @@
 		geometry$height
 		parent_id
 	))
+	(:> id '\n')
 	(? visible? (<- (... "window:window_update_visibility") id true))
+	(@@ (. window_window_type
+		id
+		geometry
+	))
 ))
 
 (= hide (,,, window
