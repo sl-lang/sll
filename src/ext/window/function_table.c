@@ -17,6 +17,11 @@ static const sll_internal_function_descriptor_t _internal_function_table[]={
 		SLL_CHAR("DDDDQ|Q")
 	},
 	{
+		SLL_CHAR("window:window_destroy"),
+		window_api_window_destroy,
+		SLL_CHAR("Q|")
+	},
+	{
 		SLL_CHAR("window:window_set_visibility"),
 		window_api_window_set_visibility,
 		SLL_CHAR("Qb|")
@@ -27,7 +32,7 @@ static const sll_internal_function_descriptor_t _internal_function_table[]={
 
 static const sll_internal_function_table_descriptor_t _internal_function_table_descriptor_data={
 	(const sll_internal_function_descriptor_t*)(&_internal_function_table),
-	3
+	4
 };
 
 

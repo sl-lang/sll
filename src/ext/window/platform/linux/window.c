@@ -13,6 +13,13 @@ __WINDOW_API_CALL void* window_api_window_create(int32_t x,int32_t y,uint32_t w,
 
 
 
+__WINDOW_API_CALL void window_api_window_destroy(void* id){
+	xcb_destroy_window(_xcb_conn,(int)(intptr_t)id);
+	xcb_flush(_xcb_conn);
+}
+
+
+
 __WINDOW_API_CALL void window_api_window_set_visibility(void* id,sll_bool_t show){
 	(show?xcb_map_window:xcb_unmap_window)(_xcb_conn,(int)(intptr_t)id);
 	xcb_flush(_xcb_conn);
