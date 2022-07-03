@@ -17,8 +17,8 @@ static const sll_internal_function_descriptor_t _internal_function_table[]={
 		SLL_CHAR("DDDDQ|Q")
 	},
 	{
-		SLL_CHAR("window:window_update_visibility"),
-		window_api_window_update_visibility,
+		SLL_CHAR("window:window_set_visibility"),
+		window_api_window_set_visibility,
 		SLL_CHAR("Qb|")
 	}
 };

@@ -1,8 +1,8 @@
 #undef NOGDI
+#include <windows.h>
 #include <sll.h>
 #include <window/common.h>
 #include <window/display.h>
-#include <windows.h>
 
 
 

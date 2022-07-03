@@ -42,7 +42,7 @@
 		parent_id
 	))
 	(:> id '\n')
-	(? visible? (<- (... "window:window_update_visibility") id true))
+	(? visible? (<- (... "window:window_set_visibility") id true))
 	(@@ (. window_window_type
 		id
 		geometry
@@ -52,13 +52,13 @@
 (= hide (,,, window
 	(? (! window) (@@))
 	(= window (:: window window_window_type))
-	(<- (... "window:window_update_visibility") window$id false)
+	(<- (... "window:window_set_visibility") window$id false)
 ))
 
 (= show (,,, window
 	(? (! window) (@@))
 	(= window (:: window window_window_type))
-	(<- (... "window:window_update_visibility") window$id true)
+	(<- (... "window:window_set_visibility") window$id true)
 ))
 
 

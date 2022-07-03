@@ -16,7 +16,9 @@
 
 
 
-#ifdef __SLL_BUILD_LINUX
+#ifdef __SLL_BUILD_WINDOWS
+extern void* _winapi_hinstance;
+#elif defined(__SLL_BUILD_LINUX)
 extern xcb_connection_t* _xcb_conn;
 extern xcb_screen_t* _xcb_screen;
 #endif

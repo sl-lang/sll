@@ -2,8 +2,8 @@
 
 
 
-xcb_connection_t* _xcb_conn=NULL;
-xcb_screen_t* _xcb_screen=NULL;
+xcb_connection_t* _xcb_conn;
+xcb_screen_t* _xcb_screen;
 
 
 
