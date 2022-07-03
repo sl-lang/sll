@@ -23,7 +23,7 @@
 
 
 #define SKIP_WHITESPACE \
-	while (*format&&*format!='b'&&*format!='B'&&*format!='W'&&*format!='D'&&*format!='Q'&&*format!='i'&&*format!='f'&&*format!='x'&&*format!='c'&&*format!='d'&&*format!='X'&&*format!='z'&&*format!='s'&&*format!='y'&&*format!='a'&&*format!='m'&&*format!='o'&&*format!='!'&&*format!='+'&&*format!='&'&&*format!='#'&&*format!='@'){ \
+	while (*format&&*format!='b'&&*format!='B'&&*format!='W'&&*format!='D'&&*format!='Q'&&*format!='i'&&*format!='f'&&*format!='x'&&*format!='c'&&*format!='d'&&*format!='X'&&*format!='z'&&*format!='s'&&*format!='y'&&*format!='a'&&*format!='m'&&*format!='o'&&*format!='!'&&*format!='-'&&*format!='+'&&*format!='&'&&*format!='#'&&*format!='@'){ \
 		format++; \
 	}
 
@@ -63,7 +63,12 @@
 		return; \
 	} \
 	sll_object_t* obj=sll_operator_cast(arg,sll_static_int[SLL_OBJECT_TYPE_INT]); \
-	*var=(obj->data.int_<0?0:(obj->data.int_>__SLL_U##size##_MAX?__SLL_U##size##_MAX:(__SLL_U##size)(obj->data.int_))); \
+	if (flags&PARSE_ARGS_FLAG_SIGNED){ \
+		*var=(obj->data.int_<__SLL_S##size##_MIN?__SLL_S##size##_MIN:(obj->data.int_>__SLL_S##size##_MAX?__SLL_S##size##_MAX:(__SLL_S##size)(obj->data.int_))); \
+	} \
+	else{ \
+		*var=(obj->data.int_<0?0:(obj->data.int_>__SLL_U##size##_MAX?__SLL_U##size##_MAX:(__SLL_U##size)(obj->data.int_))); \
+	} \
 	SLL_RELEASE(obj);
 #define PARSE_TYPE(type,name,field,init) \
 	if (flags&PARSE_ARGS_FLAG_ARRAY){ \
@@ -180,19 +185,19 @@ static void _parse_bool(sll_object_t* arg,arg_parse_flags_t flags,arg_state_t** 
 
 
 
-static void _parse_uint8(sll_object_t* arg,arg_parse_flags_t flags,arg_state_t** arg_state,arg_output_t* arg_output){
+static void _parse_int8(sll_object_t* arg,arg_parse_flags_t flags,arg_state_t** arg_state,arg_output_t* arg_output){
 	PARSE_INT(8);
 }
 
 
 
-static void _parse_uint16(sll_object_t* arg,arg_parse_flags_t flags,arg_state_t** arg_state,arg_output_t* arg_output){
+static void _parse_int16(sll_object_t* arg,arg_parse_flags_t flags,arg_state_t** arg_state,arg_output_t* arg_output){
 	PARSE_INT(16);
 }
 
 
 
-static void _parse_uint32(sll_object_t* arg,arg_parse_flags_t flags,arg_state_t** arg_state,arg_output_t* arg_output){
+static void _parse_int32(sll_object_t* arg,arg_parse_flags_t flags,arg_state_t** arg_state,arg_output_t* arg_output){
 	PARSE_INT(32);
 }
 
@@ -465,6 +470,9 @@ sll_arg_state_t _parse_args_raw(const sll_char_t* format,sll_object_t*const* arg
 		if (*format=='&'){
 			flags|=PARSE_ARGS_FLAG_REF;
 		}
+		else if (*format=='-'){
+			flags|=PARSE_ARGS_FLAG_SIGNED;
+		}
 		else if (*format=='#'){
 			flags|=PARSE_ARGS_FLAG_CONST;
 		}
@@ -484,6 +492,9 @@ sll_arg_state_t _parse_args_raw(const sll_char_t* format,sll_object_t*const* arg
 			SKIP_WHITESPACE;
 			if (*format=='+'){
 				flags|=PARSE_ARGS_FLAG_ARRAY;
+			}
+			else if (*format=='-'){
+				n_flags|=PARSE_ARGS_FLAG_SIGNED;
 			}
 			else if (*format=='&'){
 				n_flags|=PARSE_ARGS_FLAG_REF;
@@ -577,24 +588,24 @@ sll_arg_state_t _parse_args_raw(const sll_char_t* format,sll_object_t*const* arg
 				fn=_parse_bool;
 				break;
 			case 'B':
-				WARN_IGNORED_CONST("'__SLL_U8' (B)");
-				WARN_IGNORED_NULL("'__SLL_U8' (B)");
-				fn=_parse_uint8;
+				WARN_IGNORED_CONST("'__SLL_U8' or '__SLL_S8' (B)");
+				WARN_IGNORED_NULL("'__SLL_U8' or '__SLL_S8' (B)");
+				fn=_parse_int8;
 				break;
 			case 'W':
-				WARN_IGNORED_CONST("'__SLL_U16' (W)");
-				WARN_IGNORED_NULL("'__SLL_U16' (W)");
-				fn=_parse_uint16;
+				WARN_IGNORED_CONST("'__SLL_U16' or '__SLL_S16' (W)");
+				WARN_IGNORED_NULL("'__SLL_U16' or '__SLL_S16' (W)");
+				fn=_parse_int16;
 				break;
 			case 'D':
-				WARN_IGNORED_CONST("'__SLL_U32' (D)");
-				WARN_IGNORED_NULL("'__SLL_U32' (D)");
-				fn=_parse_uint32;
+				WARN_IGNORED_CONST("'__SLL_U32' or '__SLL_S32' (D)");
+				WARN_IGNORED_NULL("'__SLL_U32' or '__SLL_S32' (D)");
+				fn=_parse_int32;
 				break;
 			case 'Q':
 			case 'i':
-				WARN_IGNORED_CONST("'sll_integer_t' or '__SLL_U64' (i or Q)");
-				WARN_IGNORED_NULL("'sll_integer_t' or '__SLL_U64' (i or Q)");
+				WARN_IGNORED_CONST("'sll_integer_t', '__SLL_U64' or '__SLL_S64' (i or Q)");
+				WARN_IGNORED_NULL("'sll_integer_t', '__SLL_U64' or '__SLL_S64' (i or Q)");
 				fn=_parse_int;
 				break;
 			case 'f':

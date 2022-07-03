@@ -15,6 +15,7 @@
 #define PARSE_ARGS_FLAG_REF 2
 #define PARSE_ARGS_FLAG_CONST 4
 #define PARSE_ARGS_FLAG_NULL 8
+#define PARSE_ARGS_FLAG_SIGNED 16
 
 #define PARSE_ARGS_TYPE_COMBINE(a,b) (((a)<<8)|(b))
 
