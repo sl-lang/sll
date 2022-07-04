@@ -24,7 +24,7 @@ static const sll_internal_function_descriptor_t _internal_function_table[]={
 	{
 		SLL_CHAR("window:window_poll_events"),
 		window_api_window_poll_events,
-		SLL_CHAR("|")
+		SLL_CHAR("|a")
 	},
 	{
 		SLL_CHAR("window:window_set_title"),

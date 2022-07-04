@@ -78,7 +78,13 @@
 	(<- (... "window:window_set_visibility") window$id false)
 ))
 
-(= poll (... "window:window_poll_events"))
+(= poll (,,,
+	(= data (<- (... "window:window_poll_events")))
+	(-> (= i 0) (< i ($ data))
+		(= evt (: data i))
+		(++ i)
+	)
+))
 
 (= set_title (,,, window title
 	(? (! window) (@@))

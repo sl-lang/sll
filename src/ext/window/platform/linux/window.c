@@ -22,7 +22,8 @@ __WINDOW_API_CALL void window_api_window_destroy(void* id){
 
 
 
-__WINDOW_API_CALL void window_api_window_poll_events(void){
+__WINDOW_API_CALL void window_api_window_poll_events(sll_array_t* out){
+	SLL_INIT_ARRAY(out);
 	while (1){
 		xcb_generic_event_t* event=xcb_poll_for_event(_xcb_conn);
 		if (!event){

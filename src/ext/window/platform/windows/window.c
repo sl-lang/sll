@@ -27,7 +27,8 @@ __WINDOW_API_CALL void window_api_window_destroy(void* id){
 
 
 
-__WINDOW_API_CALL void window_api_window_poll_events(void){
+__WINDOW_API_CALL void window_api_window_poll_events(sll_array_t* out){
+	SLL_INIT_ARRAY(out);
 	MSG msg;
 	while (PeekMessageA(&msg,NULL,0,0,PM_REMOVE)){
 		TranslateMessage(&msg);
