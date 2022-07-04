@@ -1,4 +1,5 @@
 (---
+	"map.sll"
 	"string.sll"
 	"types.sll"
 	"weakref.sll"
@@ -8,23 +9,20 @@
 
 
 
-(# set_title show)
+(# destroy set_title show)
 
 
 
 (= window_window_type (&:
 	(,,, dt
-		(@@ (+
-			'<'
-			(:: dt$geometry string_type)
-			'>'
-		))
+		(@@ (+ '<' (:: dt$geometry string_type) '>'))
 	) @@string@@
 	(,,, dt
-		(<- (... "window:window_destroy") dt$id)
+		(<- destroy dt)
 	) @@delete@@
 	(~ int_type) id
-	(~ window_geometry$window_geometry_type) geometry
+	window_geometry$window_geometry_type geometry
+	string_type title
 ))
 
 (= window_window_module_type (&:
@@ -59,6 +57,7 @@
 	(= out (. window_window_type
 		id
 		geometry
+		""
 	))
 	(= (: _window_map id) (<- weakref$ref out))
 	(? title (<- set_title out title))
@@ -70,6 +69,7 @@
 	(? (! window) (@@))
 	(= window (:: window window_window_type))
 	(<- (... "window:window_destroy") window$id)
+	(<- map$remove _window_map window$id)
 ))
 
 (= hide (,,, window
@@ -91,6 +91,7 @@
 	(= window (:: window window_window_type))
 	(= title (?: title (:: title string_type) ""))
 	(= title (: (<- string$split title '\x00') 0))
+	(= window$title title)
 	(<- (... "window:window_set_title")
 		window$id
 		title
