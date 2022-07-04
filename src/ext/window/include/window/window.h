@@ -7,17 +7,21 @@
 
 
 
+typedef void* window_handle_t;
+
+
+
 #ifdef __SLL_BUILD_WINDOWS
 unsigned __int64 _window_wnd_proc(void* id,unsigned int msg,unsigned __int64 w_param,__int64 l_param);
 #endif
 
 
 
-__WINDOW_API_CALL void* window_api_window_create(int32_t x,int32_t y,uint32_t w,uint32_t h,void* parent);
+__WINDOW_API_CALL window_handle_t window_api_window_create(int32_t x,int32_t y,uint32_t w,uint32_t h,window_handle_t parent);
 
 
 
-__WINDOW_API_CALL void window_api_window_destroy(void* id);
+__WINDOW_API_CALL void window_api_window_destroy(window_handle_t id);
 
 
 
@@ -25,11 +29,11 @@ __WINDOW_API_CALL void window_api_window_poll_events(sll_array_t* out);
 
 
 
-__WINDOW_API_CALL void window_api_window_set_title(void* id,const sll_string_t* name);
+__WINDOW_API_CALL void window_api_window_set_title(window_handle_t id,const sll_string_t* name);
 
 
 
-__WINDOW_API_CALL void window_api_window_set_visibility(void* id,sll_bool_t show);
+__WINDOW_API_CALL void window_api_window_set_visibility(window_handle_t id,sll_bool_t show);
 
 
 
