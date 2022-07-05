@@ -84,9 +84,9 @@
 
 (= join (... "sll:process_join"))
 
-(= shell (,,, cmd no_flush_io
+(= shell (,,, cmd dont_flush_io?
 	(? (! cmd) (@@ nil))
-	(? (! no_flush_io) {
+	(? (! dont_flush_io?) {
 		(<- file$flush file$stdout)
 		(<- file$flush file$stderr)
 	})
@@ -97,8 +97,8 @@
 
 (= split (... "sll:process_split"))
 
-(= start (,,, args cfg stdin no_flush_io
-	(? (! no_flush_io) {
+(= start (,,, args cfg stdin dont_flush_io?
+	(? (! dont_flush_io?) {
 		(<- file$flush file$stdout)
 		(<- file$flush file$stderr)
 	})

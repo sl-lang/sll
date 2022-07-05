@@ -131,7 +131,7 @@
 	(@@ pad)
 ))
 
-(= create (,,, data ignore_padding
+(= create (,,, data ignore_padding?
 	(? (=== data nil) (@@ nil))
 	(= data (:: data string_type))
 	(= max_size 0)
@@ -143,7 +143,7 @@
 		(= fmt_code (: FORMAT_CODE_DATA type))
 		(? (=== fmt_code nil) (@@ (<- error$create error$ERROR_UNKNOWN_TYPE type)))
 		(? (> fmt_code$size max_size) (= max_size fmt_code$size))
-		(? (! ignore_padding) {
+		(? (! ignore_padding?) {
 			(= pad (<- _add_padding fmt_code$size total_size o))
 			(= padding_total (+ padding_total pad))
 			(= total_size (+ total_size pad))
@@ -152,7 +152,7 @@
 		(= total_size (+ total_size fmt_code$size))
 		(++ i)
 	})
-	(? (! ignore_padding) {
+	(? (! ignore_padding?) {
 		(= pad (<- _add_padding max_size total_size o))
 		(= padding_total (+ padding_total pad))
 		(= total_size (+ total_size pad))

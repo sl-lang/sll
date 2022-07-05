@@ -58,11 +58,11 @@
 	))
 ))
 
-(= mkdir (,,, path all
+(= mkdir (,,, path all?
 	(? (! path) (@@ nil))
 	(@@ (<- error$from_internal (<- (... "sll:path_mkdir")
 		(:: path string_type)
-		(!! all)
+		(!! all?)
 	)))
 ))
 

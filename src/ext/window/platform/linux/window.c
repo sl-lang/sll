@@ -23,15 +23,21 @@ __WINDOW_API_CALL void window_api_window_destroy(window_handle_t id){
 
 
 
-__WINDOW_API_CALL void window_api_window_poll_events(sll_array_t* out){
+__WINDOW_API_CALL void window_api_window_poll_events(sll_bool_t blocking,sll_array_t* out){
 	SLL_INIT_ARRAY(out);
-	while (1){
-		xcb_generic_event_t* event=xcb_poll_for_event(_xcb_conn);
-		if (!event){
-			return;
-		}
+	xcb_generic_event_t* event=(blocking?xcb_wait_for_event:xcb_poll_for_event)(_xcb_conn);
+	while (event){
 		free(event);
+		event=xcb_poll_for_event(_xcb_conn);
 	}
+}
+
+
+
+__WINDOW_API_CALL void window_api_window_set_geometry(window_handle_t id,int32_t x,int32_t y,uint32_t w,uint32_t h){
+	const uint32_t data[4]={x,y,w,h};
+	xcb_configure_window(_xcb_conn,(int)(intptr_t)id,XCB_CONFIG_WINDOW_X|XCB_CONFIG_WINDOW_Y|XCB_CONFIG_WINDOW_WIDTH|XCB_CONFIG_WINDOW_HEIGHT,data);
+	xcb_flush(_xcb_conn);
 }
 
 

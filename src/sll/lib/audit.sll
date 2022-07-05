@@ -67,8 +67,8 @@
 
 (= audit (... "sll:audit_audit"))
 
-(= register (,,, fn
-	(<- array$push _cb_list (:: fn func_type))
+(= register (,,, function
+	(<- array$push _cb_list (:: function func_type))
 ))
 
 (= register_event (,,, name @@args@@
@@ -81,8 +81,8 @@
 	(@@ true)
 ))
 
-(= unregister (,,, fn
-	(<- array$remove _cb_list (:: fn func_type))
+(= unregister (,,, function
+	(<- array$remove _cb_list (:: function func_type))
 ))
 
 

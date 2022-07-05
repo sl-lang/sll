@@ -38,13 +38,13 @@
 
 
 
-(= _create_std_file (,,, id nm fl
+(= _create_std_file (,,, id name flags
 	(= h (<- (... "sll:file_std_handle") id))
 	(@@ (?: (< h 0)
 		nil
 		(. file_type
-			nm
-			fl
+			name
+			flags
 			h
 		)
 	))
@@ -157,12 +157,12 @@
 	))
 ))
 
-(= read (,,, f count nonblocking
+(= read (,,, f count nonblocking?
 	(? (=== f nil) (@@ nil))
 	(= f (:: f file_type))
 	(= count (:: count int_type))
 	(? (< count 0) (@@ ""))
-	(= o (?: nonblocking
+	(= o (?: nonblocking?
 		(<- (... "sll:file_read") f$_handle count)
 		(!<- f$_handle count)
 	)
@@ -172,10 +172,10 @@
 	))
 ))
 
-(= read_char (,,, f nonblocking
+(= read_char (,,, f nonblocking?
 	(? (=== f nil) (@@ nil))
 	(= f (:: f file_type))
-	(= o (?: nonblocking
+	(= o (?: nonblocking?
 		(<- (... "sll:file_read_char") f$_handle)
 		(!<. f$_handle)
 	)

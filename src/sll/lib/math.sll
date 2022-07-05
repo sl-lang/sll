@@ -124,7 +124,7 @@
 
 (= factorial (... "sll:math_factorial"))
 
-(= factors (,,, n {
+(= factors (,,, n
 	(= n (:: n int_type))
 	(= neg [])
 	(? (< n 0) {
@@ -139,7 +139,7 @@
 			(:: k factor_type)
 		)
 	))
-}))
+))
 
 (= floor (... "sll:math_floor"))
 
@@ -164,16 +164,12 @@
 (= round (... "sll:math_round"))
 
 (= sign (,,, v
-	(? (!== (:? v) int_type)
-		(= v (:: v float_type))
+	(= v (:: v float_type))
+	(@@ (?:
+		(< v 0) -1
+		(> v 0) 1
+		0
 	)
-	(? (< v 0) {
-		(@@ -1)
-	} (> v 0){
-		(@@ 1)
-	} {
-		(@@ 0)
-	})
 ))
 
 (= sin (... "sll:math_sin"))
