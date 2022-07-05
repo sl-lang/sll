@@ -55,17 +55,17 @@
 
 (= window_window_module_type (&:
 	(~ type_type) window_window_type
-	(~ int_type) FLAG_IN_FOCUS
-	(~ int_type) FLAG_HAS_MOUSE
 	(~ int_type) FLAG_BUTTON_1
 	(~ int_type) FLAG_BUTTON_2
 	(~ int_type) FLAG_BUTTON_3
-	(~ int_type) FLAG_BUTTON_LEFT
-	(~ int_type) FLAG_BUTTON_MIDDLE
-	(~ int_type) FLAG_BUTTON_RIGHT
 	(~ int_type) FLAG_BUTTON_4
 	(~ int_type) FLAG_BUTTON_5
 	(~ int_type) FLAG_BUTTON_6
+	(~ int_type) FLAG_BUTTON_LEFT
+	(~ int_type) FLAG_BUTTON_MIDDLE
+	(~ int_type) FLAG_BUTTON_RIGHT
+	(~ int_type) FLAG_HAS_MOUSE
+	(~ int_type) FLAG_IN_FOCUS
 	(~ int_type) SCROLL_DOWN
 	(~ int_type) SCROLL_LEFT
 	(~ int_type) SCROLL_RIGHT
@@ -90,12 +90,12 @@
 (= FLAG_BUTTON_1 4)
 (= FLAG_BUTTON_2 8)
 (= FLAG_BUTTON_3 16)
-(= FLAG_BUTTON_LEFT FLAG_BUTTON_1)
-(= FLAG_BUTTON_MIDDLE FLAG_BUTTON_2)
-(= FLAG_BUTTON_RIGHT FLAG_BUTTON_3)
 (= FLAG_BUTTON_4 32)
 (= FLAG_BUTTON_5 64)
 (= FLAG_BUTTON_6 128)
+(= FLAG_BUTTON_LEFT FLAG_BUTTON_1)
+(= FLAG_BUTTON_MIDDLE FLAG_BUTTON_2)
+(= FLAG_BUTTON_RIGHT FLAG_BUTTON_3)
 
 (= SCROLL_DOWN 0)
 (= SCROLL_UP 1)
@@ -287,17 +287,17 @@
 
 (= window_window (. window_window_module_type
 	window_window_type
-	FLAG_IN_FOCUS
-	FLAG_HAS_MOUSE
 	FLAG_BUTTON_1
 	FLAG_BUTTON_2
 	FLAG_BUTTON_3
-	FLAG_BUTTON_LEFT
-	FLAG_BUTTON_MIDDLE
-	FLAG_BUTTON_RIGHT
 	FLAG_BUTTON_4
 	FLAG_BUTTON_5
 	FLAG_BUTTON_6
+	FLAG_BUTTON_LEFT
+	FLAG_BUTTON_MIDDLE
+	FLAG_BUTTON_RIGHT
+	FLAG_HAS_MOUSE
+	FLAG_IN_FOCUS
 	SCROLL_DOWN
 	SCROLL_LEFT
 	SCROLL_RIGHT
