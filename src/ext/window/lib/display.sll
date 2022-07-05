@@ -1,4 +1,5 @@
 (---
+	"audit.sll"
 	"string.sll"
 	"types.sll"
 	"window/_load_library.sll"
@@ -42,6 +43,7 @@
 
 
 (= enumerate (,,,
+	(<- audit$audit "window.display.enumerate")
 	(= data (<- (... "window:display_enumerate")))
 	(@@ ([> (= i 0) (< i ($ data))
 		(= display (: data i))

@@ -15,7 +15,7 @@
 (= err (<- sys$load_library library_file_path))
 (? err {
 	(:> "Error while loading library '" library_file_path "':\n" err '\n')
-	(<- thread$exit 1)
+	(@@ 1)
 })
 
 (<- audit$register_event "clib.library.load" "name" "handle" "module_path")

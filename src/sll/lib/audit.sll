@@ -54,10 +54,10 @@
 (= _call_user_cb (,,, name raw
 	(= keys (: EVENT_ARGUMENTS name))
 	(= data ({> (= i 0) (< i ($ keys))
-		(= k (: keys i))
-		(= v (: raw i))
+		(= key (: keys i))
+		(= value (: raw i))
 		(++ i)
-		k v
+		key value
 	))
 	(-> (= i 0) (< i ($ _cb_list))
 		(<- (: _cb_list i) name data raw)

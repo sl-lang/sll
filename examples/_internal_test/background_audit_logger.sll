@@ -13,11 +13,11 @@
 
 
 
-(<- audit$register (,,, nm args
-	(? (> ($ nm) max_len) (= max_len ($ nm)))
+(<- audit$register (,,, name args
+	(? (> ($ name) max_len) (= max_len ($ name)))
 	(<- file$write logger_file (+
 		(<- string$pad_left (+
-			nm
+			name
 			':'
 		) (+ max_len 2))
 		(<- string$str args)

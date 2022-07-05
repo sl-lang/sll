@@ -1,4 +1,5 @@
 (---
+	"audit.sll"
 	"path.sll"
 	"string.sll"
 	"sys.sll"
@@ -14,5 +15,9 @@
 (= err (<- sys$load_library library_file_path))
 (? err {
 	(:> "Error while loading library '" library_file_path "':\n" err '\n')
-	(<- thread$exit 1)
+	(@@ 1)
 })
+
+(<- audit$register_event "window.create" "window_id")
+(<- audit$register_event "window.destroy" "window_id")
+(<- audit$register_event "window.display.enumerate")
