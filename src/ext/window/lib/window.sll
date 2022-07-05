@@ -16,11 +16,19 @@
 
 
 (= window_callbacks_type (&:
+	func_type focus
+	func_type focus_enter
+	func_type focus_leave
 	func_type geometry
 	func_type key
 	func_type key_down
 	func_type key_up
+	func_type mouse_enter
+	func_type mouse_leave
+	func_type mouse_state
 	func_type position
+	func_type redraw
+	func_type scroll
 	func_type size
 ))
 
@@ -33,13 +41,20 @@
 	) @@delete@@
 	(~ int_type) id
 	window_geometry$window_geometry_type geometry
+	int_type flags
 	string_type title
+	int_type mouse_x
+	int_type mouse_y
 	window_callbacks_type callbacks
 	array_type _keys
 ))
 
 (= window_window_module_type (&:
 	(~ type_type) window_window_type
+	(~ int_type) SCROLL_DOWN
+	(~ int_type) SCROLL_LEFT
+	(~ int_type) SCROLL_RIGHT
+	(~ int_type) SCROLL_UP
 	(~ func_type) create
 	(~ func_type) destroy
 	(~ func_type) geometry
@@ -54,6 +69,14 @@
 
 
 (= KEY_COUNT 256)
+
+(= SCROLL_DOWN 0)
+(= SCROLL_UP 1)
+(= SCROLL_RIGHT 2)
+(= SCROLL_LEFT 3)
+
+(= FLAG_IN_FOCUS 1)
+(= FLAG_HAS_MOUSE 2)
 
 
 
@@ -78,6 +101,7 @@
 	(= out (. window_window_type
 		id
 		geometry
+		0
 		""
 		[]
 		(<- array$create (>> (+ KEY_COUNT 63) 6))
@@ -155,8 +179,28 @@
 			3 {
 			}
 			4 {
+				(= state (: event 0))
+				(= window$flags (?: state
+					(| window$flags FLAG_HAS_MOUSE)
+					(& window$flags (~ FLAG_HAS_MOUSE))
+				))
+				(<- window$callbacks$mouse_state window state)
+				(<- (?: state
+					window$callbacks$mouse_enter
+					window$callbacks$mouse_leave
+				) window)
 			}
 			5 {
+				(= state (: event 0))
+				(= window$flags (?: state
+					(| window$flags FLAG_IN_FOCUS)
+					(& window$flags (~ FLAG_IN_FOCUS))
+				))
+				(<- window$callbacks$focus window state)
+				(<- (?: state
+					window$callbacks$focus_enter
+					window$callbacks$focus_leave
+				) window)
 			}
 			6 {
 				(= geometry (:: event window_geometry$window_geometry_type))
@@ -166,8 +210,10 @@
 				(<- window$callbacks$size window (: event 2) (: event 3))
 			}
 			7 {
+				(<- window$callbacks$scroll window (: event 0))
 			}
 			8 {
+				(<- window$callbacks$redraw window (: event 0) (: event 1) (: event 2) (: event 3))
 			}
 		)
 	)
@@ -199,6 +245,10 @@
 
 (= window_window (. window_window_module_type
 	window_window_type
+	SCROLL_DOWN
+	SCROLL_LEFT
+	SCROLL_RIGHT
+	SCROLL_UP
 	create
 	destroy
 	geometry
