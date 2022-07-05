@@ -97,16 +97,16 @@
 
 (= split (... "sll:process_split"))
 
-(= start (,,, args cfg stdin dont_flush_io?
+(= start (,,, args config stdin dont_flush_io?
 	(? (! dont_flush_io?) {
 		(<- file$flush file$stdout)
 		(<- file$flush file$stderr)
 	})
-	(= cfg (?: cfg (:: cfg process_config_type) DEFAULT_PROCESS_CONFIG))
+	(= config (?: config (:: config process_config_type) DEFAULT_PROCESS_CONFIG))
 	(@@ (:: (<- (... "sll:process_start")
 		(?: (=== (:? args) string_type) [args] (:: args array_type))
-		cfg$cwd
-		cfg$flags
+		config$cwd
+		config$flags
 		(?: stdin (:: stdin string_type) "")
 	) process_type))
 ))
