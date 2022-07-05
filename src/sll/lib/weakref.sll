@@ -48,20 +48,20 @@
 	(? (=== wr nil) (@@ WEAKREF_NO_OBJECT))
 	(= wr (:: wr weakref_type))
 	(? (! wr$_id) (@@ WEAKREF_NO_OBJECT))
-	(= o (<- (... "sll:weakref_get") wr$_id))
-	(? (=== o WEAKREF_NO_OBJECT)
+	(= out (<- (... "sll:weakref_get") wr$_id))
+	(? (=== out WEAKREF_NO_OBJECT)
 		(= wr$_id nil)
 	)
-	(@@ o)
+	(@@ out)
 ))
 
 (= ref (,,, obj
-	(= o (. weakref_type
+	(= out (. weakref_type
 		(<- (... "sll:weakref_create") obj)
 		[]
 	))
-	(<- (... "sll:weakref_set_callback_data") o$_id o)
-	(@@ o)
+	(<- (... "sll:weakref_set_callback_data") out$_id out)
+	(@@ out)
 ))
 
 
