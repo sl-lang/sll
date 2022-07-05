@@ -31,6 +31,7 @@
 	(~ func_type) create
 	(~ func_type) destroy
 	(~ func_type) geometry
+	(~ func_type) get
 	(~ func_type) hide
 	(~ func_type) poll
 	(~ func_type) set_title
@@ -76,18 +77,26 @@
 	(<- map$remove _window_map window$id)
 ))
 
-(= geometry_ (,,, window geometry
+(= geometry (,,, window geometry_
 	(? (! window) (@@))
 	(= window (:: window window_window_type))
-	(= geometry (:: geometry window_geometry$window_geometry_type))
-	(= window$geometry geometry)
+	(= geometry_ (:: geometry_ window_geometry$window_geometry_type))
+	(= window$geometry geometry_)
 	(<- (... "window:window_set_geometry")
 		window$id
-		geometry$x
-		geometry$y
-		geometry$width
-		geometry$height
+		geometry_$x
+		geometry_$y
+		geometry_$width
+		geometry_$height
 	)
+))
+
+(= get (,,, id
+	(= window (: _window_map id))
+	(@@ (?: window
+		(<- weakref$get window)
+		nil
+	))
 ))
 
 (= hide (,,, window
@@ -130,7 +139,8 @@
 	window_window_type
 	create
 	destroy
-	geometry_
+	geometry
+	get
 	hide
 	poll
 	set_title
