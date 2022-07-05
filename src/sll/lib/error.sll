@@ -23,21 +23,21 @@
 
 (= error_type (&:
 	(,,, err
-		(= nm (.? err$error_data))
-		(= o (+
-			(?: nm (+ nm ": ") "")
+		(= name (.? err$error_data))
+		(= out (+
+			(?: name (+ name ": ") "")
 			(:: err$error_data string_type)
 		))
 		(-> (= i ($ err$backtrace)) i {
 			(-- i)
 			(= frame (: err$backtrace i))
-			(= o (+ o (<- string$format "\nat %s:%u (%s)"
+			(= out (+ out (<- string$format "\nat %s:%u (%s)"
 				frame$file
 				frame$line
 				frame$function
 			)))
 		})
-		(@@ o)
+		(@@ out)
 	) @@string@@
 	(~ object_type) error_data
 	(~ array_type) backtrace

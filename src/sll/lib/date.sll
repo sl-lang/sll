@@ -12,19 +12,19 @@
 
 (= time_zone_type (&:
 	(,,, dt
-		(= h (// dt$offset 60))
-		(= min (- dt$offset (* h 60)))
+		(= hour (// dt$offset 60))
+		(= minute (- dt$offset (* hour 60)))
 		(= off_str "")
 		(?
-			h {
-				(? min {
-					(= off_str (<- string$format " offset=%uh %umin" h min))
+			hour {
+				(? minute {
+					(= off_str (<- string$format " offset=%uh %umin" hour minute))
 				} {
-					(= off_str (<- string$format " offset=%uh" h))
+					(= off_str (<- string$format " offset=%uh" hour))
 				})
 			}
-			min {
-				(= off_str (<- string$format " offset=%umin" h min))
+			minute {
+				(= off_str (<- string$format " offset=%umin" minute))
 			}
 		)
 		(@@ (<- string$format "<name=%s%s>" dt$name off_str))
@@ -35,8 +35,8 @@
 
 (= date_type (&:
 	(,,, dt
-		(= h (// dt$time_zone$offset 60))
-		(= min (- dt$time_zone$offset (* h 60)))
+		(= hour (// dt$time_zone$offset 60))
+		(= minute (- dt$time_zone$offset (* hour 60)))
 		(@@ (<- string$format "%.4u/%.2u/%.2u %.2u:%.2u:%.2u %+.2d:%.2u (%s)"
 			dt$year
 			(+ dt$month 1)
@@ -44,8 +44,8 @@
 			dt$hour
 			dt$minute
 			(:: dt$second int_type)
-			h
-			min
+			hour
+			minute
 			dt$time_zone$name
 		))
 	) @@string@@
@@ -278,9 +278,9 @@
 	(@@ (<- from_time (<- time$time) LOCAL_TIME_ZONE)))
 )
 
-(= from_time (,,, tm tz
-	(= tz (?: (=== tz nil) LOCAL_TIME_ZONE (:: tz time_zone_type)))
-	(= dt (<- (... "sll:date_split") (+ (:: tm float_type) (* tz$offset 60))))
+(= from_time (,,, time time_zone
+	(= time_zone (?: (=== time_zone nil) LOCAL_TIME_ZONE (:: time_zone time_zone_type)))
+	(= dt (<- (... "sll:date_split") (+ (:: time float_type) (* time_zone$offset 60))))
 	(@@ (. date_type
 		(: dt 0)
 		(: dt 1)
@@ -289,14 +289,14 @@
 		(: dt 4)
 		(: dt 5)
 		(: dt 6)
-		tz
+		time_zone
 	))
 ))
 
-(= from_time_ns (,,, tm tz
+(= from_time_ns (,,, time time_zone
 	(@@ (<- from_time
-		(* (:: tm int_type) 1e-9)
-		tz
+		(* (:: time int_type) 1e-9)
+		time_zone
 	))
 ))
 
