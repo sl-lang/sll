@@ -60,26 +60,26 @@
 
 (= ROOT_PATH (+ (<- path$absolute (: (<- path$split LIBRARY) 0)) path$SEPARATOR))
 
-(= v_dt (<- (... "sll:sys_get_version")))
-(= commit (: v_dt 3))
+(= raw_version_data (<- (... "sll:sys_get_version")))
+(= commit (: raw_version_data 3))
 (= short_commit "")
 (= url "")
 (? commit {
 	(= short_commit (: commit 0 7))
 	(= url (<- string$format "https://github.com/sl-lang/sll/tree/sll-v%u.%u.%u"
-		(: v_dt 0)
-		(: v_dt 1)
-		(: v_dt 2)
+		(: raw_version_data 0)
+		(: raw_version_data 1)
+		(: raw_version_data 2)
 	))
 })
 (= VERSION (. version_type
-	(: v_dt 0)
-	(: v_dt 1)
-	(: v_dt 2)
+	(: raw_version_data 0)
+	(: raw_version_data 1)
+	(: raw_version_data 2)
 	short_commit
 	commit
 	url
-	(<- date$from_time_ns (: v_dt 4))
+	(<- date$from_time_ns (: raw_version_data 4))
 ))
 
 
@@ -89,61 +89,61 @@
 ))
 
 (= get_sandbox_flags (,,,
-	(= fl (<- (... "sll:sys_get_sandbox_flags")))
+	(= flags (<- (... "sll:sys_get_sandbox_flags")))
 	(= i 0)
 	(= out [])
-	(-> nil fl
-		(? (& fl 1)
+	(-> nil flags
+		(? (& flags 1)
 			(<- array$push out (: _SANDBOX_FLAGS i))
 		)
-		(= fl (>> fl 1))
+		(= flags (>> flags 1))
 		(++ i)
 	)
 	(@@ out)
 ))
 
-(= load_library (,,, fp
-	(? (! fp) (@@ nil))
-	(= fp (:: fp string_type))
+(= load_library (,,, file_path
+	(? (! file_path) (@@ nil))
+	(= file_path (:: file_path string_type))
 	(@@ (<- error$from_internal
 		(<- (... "sll:sys_load_library")
-			fp
+			file_path
 		)
 		<
-			"path" fp
+			"path" file_path
 		>
 	))
 )
 
-(= remove_env (,,, k
-	(? (! k) (@@ nil))
-	(= k (<- string$replace (:: k string_type) '=' ""))
-	(<- map$remove ENVIRONMENT k)
-	(<- (... "sll:sys_remove_env") k)
+(= remove_env (,,, key
+	(? (! key) (@@ nil))
+	(= key (<- string$replace (:: key string_type) '=' ""))
+	(<- map$remove ENVIRONMENT key)
+	(<- (... "sll:sys_remove_env") key)
 ))
 
 (= set_sandbox_flags (,,, @@flags@@
-	(= o 1)
+	(= out 1)
 	(-> (= i 0) (< i ($ @@flags@@))
 		(= j (<- array$index _SANDBOX_FLAGS (:: (: @@flags@@ i) string_type)))
 		(? (=== j -1)
-			(= o 0)
+			(= out 0)
 			(<- (... "sll:sys_set_sandbox_flag") j)
 		)
 		(++ i)
 	)
-	(@@ o)
+	(@@ out)
 ))
 
-(= set_env (,,, k v
+(= set_env (,,, key value
 	(?
-		(! k) (@@)
-		(! v) (@@ (<- remove_env k))
+		(! key) (@@)
+		(! value) (@@ (<- remove_env key))
 	)
-	(= k (<- string$replace (:: k string_type) '=' ""))
-	(= v (:: v string_type))
-	(= (: ENVIRONMENT k) v)
-	(<- (... "sll:sys_set_env") k v)
+	(= key (<- string$replace (:: key string_type) '=' ""))
+	(= value (:: value string_type))
+	(= (: ENVIRONMENT key) value)
+	(<- (... "sll:sys_set_env") key value)
 ))
 
 
