@@ -141,37 +141,37 @@
 
 
 
-(= _thread_wrapper (,,, fn args sem
+(= _thread_wrapper (,,, function args semaphore
 	(= thr nil)
 	(>- (= id (!.)) (=== thr nil)
 		(= thr (<- get id))
 	)
-	(<- (... "sll:thread_release_semaphore") sem)
-	(= o (<-* fn args))
-	(= thr$return_value o)
+	(<- (... "sll:thread_release_semaphore") semaphore)
+	(= out (<-* function args))
+	(= thr$return_value out)
 	(= thr$state STATE_TERMINATED)
-	(@@ o)
+	(@@ out)
 ))
 
-(= acquire_lock (,,, lck
-	(? (=== lck nil) (@@))
-	(= lck (:: lck lock_type))
+(= acquire_lock (,,, lock
+	(? (=== lock nil) (@@))
+	(= lock (:: lock lock_type))
 	(= thr (<- get (!.)))
-	(= thr$blocking lck)
+	(= thr$blocking lock)
 	(= thr$state STATE_WAITING_LOCK)
-	(!<* lck$id)
+	(!<* lock$id)
 	(= thr$state STATE_RUNNING)
-	(= lck$blocking_thread (!.))
+	(= lock$blocking_thread (!.))
 ))
 
-(= acquire_semaphore (,,, sem
-	(? (=== sem nil) (@@))
-	(= sem (:: sem semaphore_type))
+(= acquire_semaphore (,,, semaphore
+	(? (=== semaphore nil) (@@))
+	(= semaphore (:: semaphore semaphore_type))
 	(= thr (<- get (!.)))
-	(= thr$blocking sem)
+	(= thr$blocking semaphore)
 	(= thr$state STATE_WAITING_SEMAPHORE)
-	(!<+ sem$id)
-	(= sem$counter (- sem$counter 1))
+	(!<+ semaphore$id)
+	(= semaphore$counter (- semaphore$counter 1))
 	(= thr$state STATE_RUNNING)
 ))
 
@@ -193,15 +193,15 @@
 	))
 ))
 
-(= create_semaphore (,,, c
-	(= c (:: c int_type))
-	(? (<= c 0) (@@ nil))
-	(= id (<- (... "sll:thread_create_semaphore") c))
+(= create_semaphore (,,, count
+	(= count (:: count int_type))
+	(? (<= count 0) (@@ nil))
+	(= id (<- (... "sll:thread_create_semaphore") count))
 	(? (< id 0) (@@ (<- error$from_internal (~ id))))
 	(@@ (. semaphore_type
 		id
-		c
-		c
+		count
+		count
 	))
 ))
 
@@ -218,9 +218,9 @@
 
 (= get (,,, id
 	(? (! id) (@@ _main_thread))
-	(= dt (: _thread_map id))
-	(@@ (?: dt
-		(<- weakref$get dt)
+	(= thr (: _thread_map id))
+	(@@ (?: thr
+		(<- weakref$get thr)
 		nil
 	))
 ))
@@ -232,30 +232,30 @@
 	(@@ (:: (<- (... "sll:thread_get_internal_data") thr$id) internal_thread_data_type))
 ))
 
-(= if_equal (,,, bar v
-	(? (=== bar nil) (@@))
-	(= bar (:: bar barrier_type))
+(= if_equal (,,, barrier value
+	(? (=== barrier nil) (@@))
+	(= barrier (:: barrier barrier_type))
 	(= thr (<- get (!.)))
-	(= thr$blocking bar)
+	(= thr$blocking barrier)
 	(= thr$state STATE_WAITING_BARRIER)
-	(!<= bar$id (:: v int_type))
+	(!<= barrier$id (:: value int_type))
 	(= thr$state STATE_RUNNING)
 ))
 
-(= if_greater_equal (,,, bar v
-	(? (=== bar nil) (@@))
-	(= bar (:: bar barrier_type))
+(= if_greater_equal (,,, barrier value
+	(? (=== barrier nil) (@@))
+	(= barrier (:: barrier barrier_type))
 	(= thr (<- get (!.)))
-	(= thr$blocking bar)
+	(= thr$blocking barrier)
 	(= thr$state STATE_WAITING_BARRIER)
-	(!<> bar$id (:: v int_type))
+	(!<> barrier$id (:: value int_type))
 	(= thr$state STATE_RUNNING)
 ))
 
-(= increase_barrier (,,, bar
-	(? (=== bar nil) (@@))
-	(= bar (:: bar barrier_type))
-	(= bar$counter (<- (... "sll:thread_increase_barrier") bar$id))
+(= increase_barrier (,,, barrier
+	(? (=== barrier nil) (@@))
+	(= barrier (:: barrier barrier_type))
+	(= barrier$counter (<- (... "sll:thread_increase_barrier") barrier$id))
 ))
 
 (= join (,,, thr
@@ -269,65 +269,65 @@
 	(= c_thr$state STATE_RUNNING)
 ))
 
-(= release_lock (,,, lck
-	(? (=== lck nil) (@@))
-	(= lck (:: lck lock_type))
-	(? (=== lck$blocking_thread -1) (@@))
-	(= lck$blocking_thread -1)
-	(@@ (<- (... "sll:thread_release_lock") lck$id))
+(= release_lock (,,, lock
+	(? (=== lock nil) (@@))
+	(= lock (:: lock lock_type))
+	(? (=== lock$blocking_thread -1) (@@))
+	(= lock$blocking_thread -1)
+	(@@ (<- (... "sll:thread_release_lock") lock$id))
 ))
 
-(= release_semaphore (,,, sem
-	(? (=== sem nil) (@@))
-	(= sem (:: sem semaphore_type))
-	(? (=== sem$counter sem$max) (@@))
-	(= sem$counter (+ sem$counter 1))
-	(@@ (<- (... "sll:thread_release_semaphore") sem$id))
+(= release_semaphore (,,, semaphore
+	(? (=== semaphore nil) (@@))
+	(= semaphore (:: semaphore semaphore_type))
+	(? (=== semaphore$counter semaphore$max) (@@))
+	(= semaphore$counter (+ semaphore$counter 1))
+	(@@ (<- (... "sll:thread_release_semaphore") semaphore$id))
 ))
 
-(= reset_barrier (,,, bar
-	(? (=== bar nil) (@@))
-	(= bar (:: bar barrier_type))
-	(= bar$counter 0)
-	(@@ (<- (... "sll:thread_reset_barrier") bar$id))
+(= reset_barrier (,,, barrier
+	(? (=== barrier nil) (@@))
+	(= barrier (:: barrier barrier_type))
+	(= barrier$counter 0)
+	(@@ (<- (... "sll:thread_reset_barrier") barrier$id))
 ))
 
-(= start (,,, fn @@args@@
+(= start (,,, function @@args@@
 	(?
-		(=== fn nil) (@@ nil)
-		(=== (:? fn) thread_type) {
-			(? (=== fn$suspended -1) (@@ nil))
-			(= fn$suspended -1)
-			(<- (... "sll:thread_restart") fn$id)
+		(=== function nil) (@@ nil)
+		(=== (:? function) thread_type) {
+			(? (=== function$suspended -1) (@@ nil))
+			(= function$suspended -1)
+			(<- (... "sll:thread_restart") function$id)
 			(@@ 1)
 		}
 	)
-	(= fn (:: fn func_type))
-	(= sem (<- (... "sll:thread_create_semaphore") 0))
+	(= function (:: function func_type))
+	(= semaphore (<- (... "sll:thread_create_semaphore") 0))
 	(= tid (<- (... "sll:thread_create")
 		_thread_wrapper
 		[
-			fn
+			function
 			@@args@@
-			sem
+			semaphore
 		]
 	))
 	(? (< tid 0) {
-		(<- (... "sll:thread_delete_semaphore") sem)
+		(<- (... "sll:thread_delete_semaphore") semaphore)
 		(@@ (<- error$from_internal (~ tid)))
 	})
-	(= o (. thread_type
+	(= out (. thread_type
 		tid
 		STATE_RUNNING
 		-1
 		nil
 		nil
 	))
-	(= (: _thread_map tid) (<- weakref$ref o))
-	(!<+ sem)
-	(<- audit$audit "sll.thread.create" "iai" fn @@args@@ tid)
-	(<- (... "sll:thread_delete_semaphore") sem)
-	(@@ o)
+	(= (: _thread_map tid) (<- weakref$ref out))
+	(!<+ semaphore)
+	(<- audit$audit "sll.thread.create" "iai" function @@args@@ tid)
+	(<- (... "sll:thread_delete_semaphore") semaphore)
+	(@@ out)
 ))
 
 (= suspend (,,, thr
