@@ -7,6 +7,21 @@
 
 
 
+#define WINDOW_EVENT_KEY 1
+#define WINDOW_EVENT_BUTTON 2
+#define WINDOW_EVENT_MOUSE 3
+#define WINDOW_EVENT_MOUSE_ENTER 4
+#define WINDOW_EVENT_FOCUS 5
+#define WINDOW_EVENT_RESIZE 6
+#define WINDOW_EVENT_SCROLL 7
+
+#define WINDOW_SCROLL_DOWN 0
+#define WINDOW_SCROLL_UP 1
+#define WINDOW_SCROLL_RIGHT 2
+#define WINDOW_SCROLL_LEFT 3
+
+
+
 typedef void* window_handle_t;
 
 

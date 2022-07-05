@@ -27,7 +27,56 @@ __WINDOW_API_CALL void window_api_window_poll_events(sll_bool_t blocking,sll_arr
 	SLL_INIT_ARRAY(out);
 	xcb_generic_event_t* event=(blocking?xcb_wait_for_event:xcb_poll_for_event)(_xcb_conn);
 	while (event){
+		sll_object_t* arg=NULL;
+		uint8_t type=event->response_type&0x7f;
+		switch (type){
+			case XCB_KEY_PRESS:
+			case XCB_KEY_RELEASE:
+				{
+					xcb_key_press_event_t* key_event=(xcb_key_press_event_t*)event;
+					arg=sll_new_object(SLL_CHAR("uuuu"),WINDOW_EVENT_KEY,key_event->event,key_event->detail,(type==XCB_KEY_PRESS));
+					break;
+				}
+			case XCB_BUTTON_PRESS:
+			case XCB_BUTTON_RELEASE:
+				{
+					xcb_button_press_event_t* button_event=(xcb_button_press_event_t*)event;
+					if (button_event->detail>3&&button_event->detail<8){
+						arg=sll_new_object(SLL_CHAR("uuu"),WINDOW_EVENT_SCROLL,button_event->event,button_event->detail-4);
+					}
+					else{
+						arg=sll_new_object(SLL_CHAR("uuuu"),WINDOW_EVENT_BUTTON,button_event->event,button_event->detail-(button_event->detail>7?4:0),(type==XCB_BUTTON_PRESS));
+					}
+					break;
+				}
+			case XCB_MOTION_NOTIFY:
+				{
+					xcb_motion_notify_event_t* motion_event=(xcb_motion_notify_event_t*)event;
+					arg=sll_new_object(SLL_CHAR("uuuu"),WINDOW_EVENT_BUTTON,motion_event->event,motion_event->event_x,motion_event->event_y);
+					break;
+				}
+			case XCB_ENTER_NOTIFY:
+			case XCB_LEAVE_NOTIFY:
+				break;
+			case XCB_FOCUS_IN:
+			case XCB_FOCUS_OUT:
+				break;
+			case XCB_EXPOSE:
+				break;
+			case XCB_VISIBILITY_NOTIFY:
+				break;
+			case XCB_CONFIGURE_NOTIFY:
+				break;
+			case XCB_PROPERTY_NOTIFY:
+				break;
+			case XCB_SELECTION_NOTIFY:
+				break;
+		}
 		free(event);
+		if (arg){
+			sll_array_push(NULL,arg,out);
+			SLL_RELEASE(arg);
+		}
 		event=xcb_poll_for_event(_xcb_conn);
 	}
 }
