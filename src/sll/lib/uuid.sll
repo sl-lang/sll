@@ -89,57 +89,57 @@
 
 
 
-(= from_bytes (,,, dt v
-	(= dt (:: dt string_type))
-	(? (< ($ dt) 16) {
-		(= dt (+
-			(* '\x00' (- 16 ($ dt)))
-			dt
+(= from_bytes (,,, data version
+	(= data (:: data string_type))
+	(? (< ($ data) 16) {
+		(= data (+
+			(* '\x00' (- 16 ($ data)))
+			data
 		))
 	})
-	(= o (. uuid_type
-		(| (<< (: dt 0) 24) (<< (: dt 1) 16) (<< (: dt 2) 8) (: dt 3))
-		(| (<< (: dt 4) 8) (: dt 5))
-		(| (<< (: dt 6) 8) (: dt 7))
-		(: dt 8)
-		(: dt 9)
-		(| (<< (: dt 10) 40) (<< (: dt 11) 32) (<< (: dt 12) 24) (<< (: dt 13) 16) (<< (: dt 14) 8) (: dt 15))
+	(= out (. uuid_type
+		(| (<< (: data 0) 24) (<< (: data 1) 16) (<< (: data 2) 8) (: data 3))
+		(| (<< (: data 4) 8) (: data 5))
+		(| (<< (: data 6) 8) (: data 7))
+		(: data 8)
+		(: data 9)
+		(| (<< (: data 10) 40) (<< (: data 11) 32) (<< (: data 12) 24) (<< (: data 13) 16) (<< (: data 14) 8) (: data 15))
 	))
-	(= v (:: v int_type))
-	(? (&& (> v 0) (< v 6)) {
-		(= o$clock_seq_hi_and_reserved (| 0x80 (& o$clock_seq_hi_and_reserved 0x3f)))
-		(= o$time_hi_and_version (| (<< v 12) (& o$time_hi_and_version 0xfff)))
+	(= version (:: version int_type))
+	(? (&& (> version 0) (< version 6)) {
+		(= out$clock_seq_hi_and_reserved (| 0x80 (& out$clock_seq_hi_and_reserved 0x3f)))
+		(= out$time_hi_and_version (| (<< version 12) (& out$time_hi_and_version 0xfff)))
 	})
-	(@@ o)
+	(@@ out)
 ))
 
-(= to_bytes (,,, dt
-	(= dt (:: dt uuid_type))
+(= to_bytes (,,, data
+	(= data (:: data uuid_type))
 	(@@ (+
-		(:: (>> dt$time_low 24) char_type string_type)
-		(:: (>> dt$time_low 16) char_type)
-		(:: (>> dt$time_low 8) char_type)
-		(:: dt$time_low char_type)
-		(:: (>> dt$time_mid 8) char_type)
-		(:: dt$time_mid char_type)
-		(:: (>> dt$time_hi_and_version 8) char_type)
-		(:: dt$time_hi_and_version char_type)
-		(:: dt$clock_seq_hi_and_reserved char_type)
-		(:: dt$clock_seq_low char_type)
-		(:: (>> dt$node 40) char_type)
-		(:: (>> dt$node 32) char_type)
-		(:: (>> dt$node 24) char_type)
-		(:: (>> dt$node 16) char_type)
-		(:: (>> dt$node 8) char_type)
-		(:: dt$node char_type)
+		(:: (>> data$time_low 24) char_type string_type)
+		(:: (>> data$time_low 16) char_type)
+		(:: (>> data$time_low 8) char_type)
+		(:: data$time_low char_type)
+		(:: (>> data$time_mid 8) char_type)
+		(:: data$time_mid char_type)
+		(:: (>> data$time_hi_and_version 8) char_type)
+		(:: data$time_hi_and_version char_type)
+		(:: data$clock_seq_hi_and_reserved char_type)
+		(:: data$clock_seq_low char_type)
+		(:: (>> data$node 40) char_type)
+		(:: (>> data$node 32) char_type)
+		(:: (>> data$node 24) char_type)
+		(:: (>> data$node 16) char_type)
+		(:: (>> data$node 8) char_type)
+		(:: data$node char_type)
 	))
 ))
 
-(= uuid3 (,,, ns nm
+(= uuid3 (,,, namespace name
 	(@@ (<- from_bytes
 		(: (<- hash$md5$process (+
-			(<- to_bytes (:: ns uuid_type))
-			(:: nm string_type)
+			(<- to_bytes (:: namespace uuid_type))
+			(:: name string_type)
 		)) 0 16)
 		3
 	))
@@ -149,11 +149,11 @@
 	(@@ (<- from_bytes (<- random$get_string 16) 4))
 ))
 
-(= uuid5 (,,, ns nm
+(= uuid5 (,,, namespace name
 	(@@ (<- from_bytes
 		(: (<- hash$sha1$process (+
-			(<- to_bytes (:: ns uuid_type))
-			(:: nm string_type)
+			(<- to_bytes (:: namespace uuid_type))
+			(:: name string_type)
 		)) 0 16)
 		5
 	))
