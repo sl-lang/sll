@@ -23,6 +23,7 @@
 	func_type key
 	func_type key_down
 	func_type key_up
+	func_type mouse
 	func_type mouse_enter
 	func_type mouse_leave
 	func_type mouse_state
@@ -51,6 +52,8 @@
 
 (= window_window_module_type (&:
 	(~ type_type) window_window_type
+	(~ int_type) FLAG_IN_FOCUS
+	(~ int_type) FLAG_HAS_MOUSE
 	(~ int_type) SCROLL_DOWN
 	(~ int_type) SCROLL_LEFT
 	(~ int_type) SCROLL_RIGHT
@@ -70,13 +73,13 @@
 
 (= KEY_COUNT 256)
 
+(= FLAG_IN_FOCUS 1)
+(= FLAG_HAS_MOUSE 2)
+
 (= SCROLL_DOWN 0)
 (= SCROLL_UP 1)
 (= SCROLL_RIGHT 2)
 (= SCROLL_LEFT 3)
-
-(= FLAG_IN_FOCUS 1)
-(= FLAG_HAS_MOUSE 2)
 
 
 
@@ -103,6 +106,8 @@
 		geometry
 		0
 		""
+		0
+		0
 		[]
 		(<- array$create (>> (+ KEY_COUNT 63) 6))
 	))
@@ -177,6 +182,9 @@
 			2 {
 			}
 			3 {
+				(= window$mouse_x (: event 0))
+				(= window$mouse_y (: event 1))
+				(<- window$callbacks$mouse window (: event 0) (: event 1))
 			}
 			4 {
 				(= state (: event 0))
@@ -245,6 +253,8 @@
 
 (= window_window (. window_window_module_type
 	window_window_type
+	FLAG_IN_FOCUS
+	FLAG_HAS_MOUSE
 	SCROLL_DOWN
 	SCROLL_LEFT
 	SCROLL_RIGHT
