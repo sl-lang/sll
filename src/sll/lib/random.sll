@@ -42,16 +42,16 @@
 ))
 
 (= gauss (,,, mu sigma
-	(= o _next_gauss)
-	(? (!== o nil) {
+	(= out _next_gauss)
+	(? (!== out nil) {
 		(= _next_gauss nil)
-		(@@ o)
+		(@@ out)
 	} {
-		(= dt (<- gauss2))
-		(= _next_gauss (: dt 0))
-		(= o (: dt 1))
+		(= data (<- gauss2))
+		(= _next_gauss (: data 0))
+		(= out (: data 1))
 	})
-	(@@ (+ mu (* o sigma)))
+	(@@ (+ mu (* out sigma)))
 ))
 
 (= gauss2 (,,,
@@ -63,59 +63,56 @@
 	])
 ))
 
-(= get_char (,,, mn mx {
-	(= mn (:: mn char_type))
-	(= mx (:: mx char_type))
-	(? (=== mn mx) {
-		(= mn 0)
-		(= mx 255)
+(= get_char (,,, min max
+	(= min (:: min char_type))
+	(= max (:: max char_type))
+	(? (=== min max) {
+		(= min 0)
+		(= max 255)
 	})
 	(@@ (:: (<- (... "sll:random_get_int")
-		mn
-		mx
+		min
+		max
 	) char_type))
-}))
+))
 
-(= get_float (,,, mn mx {
-	(= mn (:: mn float_type))
-	(= mx (:: mx float_type))
+(= get_float (,,, min max
+	(= min (:: min float_type))
+	(= max (:: max float_type))
 	(@@ (<- (... "sll:random_get_float")
-		mn
-		(?: (=== mn mx) (+ mx 1) mx)
+		min
+		(?: (=== min max) (+ max 1) max)
 	))
-}))
+))
 
-(= get_int (,,, mn mx {
-	(= mn (:: mn int_type))
-	(= mx (:: mx int_type))
+(= get_int (,,, min max
+	(= min (:: min int_type))
+	(= max (:: max int_type))
 	(@@ (<- (... "sll:random_get_int")
-		mn
-		(?: (=== mn mx) (+ mx 1) mx)
+		min
+		(?: (=== min max) (+ max 1) max)
 	))
-}))
+))
 
-(= get_string (,,, l mn mx {
+(= get_string (,,, l min max
 	(= l (:: l int_type))
 	(? (< l 1) {
 		(@@ "")
 	})
-	(= mn (:: mn char_type))
-	(= mx (:: mx char_type))
-	(? (< mx mn) {
-		(= mx 255)
-	} (=== mn mx) {
-		(? mn {
-			(@@ (* (:: mn string_type) l))
-		} {
-			(= mx 255)
-		})
+	(= min (:: min char_type))
+	(= max (:: max char_type))
+	(? (< max min) {
+		(= max 255)
+	} (=== min max) {
+		(? min (@@ (* (:: min string_type) l)))
+		(= max 255)
 	})
 	(@@ (<- (... "sll:random_get_string")
 		l
-		mn
-		mx
+		min
+		max
 	))
-}))
+))
 
 (= shuffle (,,, arr
 	(? (|| (!== (:? arr) array_type) (< ($ arr) 2)) (@@))
