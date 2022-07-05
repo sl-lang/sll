@@ -203,7 +203,7 @@
 			2 {
 				(= button (: event 0))
 				(= state (: event 1))
-				(= mask (<< FLAG_BUTTON_LEFT button))
+				(= mask (<< FLAG_BUTTON_1 button))
 				(= value (: window$_buttons idx))
 				(= (: window$_buttons idx) (?: state
 					(| value mask)
