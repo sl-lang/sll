@@ -124,19 +124,19 @@
 
 (= factorial (... "sll:math_factorial"))
 
-(= factors (,,, n
-	(= n (:: n int_type))
+(= factors (,,, number
+	(= number (:: number int_type))
 	(= neg [])
-	(? (< n 0) {
+	(? (< number 0) {
 		(= neg [(. factor_type -1 1)])
-		(= n (- 0 n))
+		(= number (- 0 number))
 	})
-	(= l (<- (... "sll:math_factors") n))
+	(= factors (<- (... "sll:math_factors") number))
 	(@@ (+ neg
-		([> (= i 0) (< i ($ l))
-			(= k (: l i))
+		([> (= i 0) (< i ($ factors))
+			(= factor (: factors i))
 			(++ i)
-			(:: k factor_type)
+			(:: factor factor_type)
 		)
 	))
 ))
@@ -163,11 +163,10 @@
 
 (= round (... "sll:math_round"))
 
-(= sign (,,, v
-	(= v (:: v float_type))
+(= sign (,,, value
 	(@@ (?:
-		(< v 0) -1
-		(> v 0) 1
+		(< value 0) -1
+		(> value 0) 1
 		0
 	)
 ))
