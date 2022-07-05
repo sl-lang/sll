@@ -1,4 +1,5 @@
 (---
+	"array.sll"
 	"audit.sll"
 	"map.sll"
 	"string.sll"
@@ -14,6 +15,15 @@
 
 
 
+(= window_callbacks_type (&:
+	func_type geometry
+	func_type key
+	func_type key_down
+	func_type key_up
+	func_type position
+	func_type size
+))
+
 (= window_window_type (&:
 	(,,, dt
 		(@@ (+ '<' (:: dt$geometry string_type) '>'))
@@ -24,6 +34,8 @@
 	(~ int_type) id
 	window_geometry$window_geometry_type geometry
 	string_type title
+	window_callbacks_type callbacks
+	array_type _keys
 ))
 
 (= window_window_module_type (&:
@@ -38,6 +50,10 @@
 	(~ func_type) set_visibility
 	(~ func_type) show
 ))
+
+
+
+(= KEY_COUNT 256)
 
 
 
@@ -63,6 +79,8 @@
 		id
 		geometry
 		""
+		[]
+		(<- array$create (>> (+ KEY_COUNT 63) 6))
 	))
 	(= (: _window_map id) (<- weakref$ref out))
 	(? title (<- set_title out title))
@@ -109,9 +127,49 @@
 		(!! blocking?)
 	))
 	(-> (= i 0) (< i ($ data))
-		(= evt (: data i))
-		(:> evt '\n')
+		(= event (: data i))
 		(++ i)
+		(= window (<- weakref$get (: _window_map (: event 1))))
+		(? (=== window weakref$WEAKREF_NO_OBJECT) (<<<))
+		(= type (: event 0))
+		(= event (>> event 2))
+		(?? type
+			1 {
+				(= key (: event 0))
+				(= state (: event 1))
+				(= idx (>> key 6))
+				(= mask (& key 63))
+				(= value (: window$_keys idx))
+				(= (: window$_keys idx) (?: state
+					(| value mask)
+					(& value (~ mask))
+				))
+				(<- window$callbacks$key window key state)
+				(<- (?: state
+					window$callbacks$key_down
+					window$callbacks$key_up
+				) window key)
+			}
+			2 {
+			}
+			3 {
+			}
+			4 {
+			}
+			5 {
+			}
+			6 {
+				(= geometry (:: event window_geometry$window_geometry_type))
+				(= window$geometry geometry)
+				(<- window$callbacks$geometry window geometry)
+				(<- window$callbacks$position window (: event 0) (: event 1))
+				(<- window$callbacks$size window (: event 2) (: event 3))
+			}
+			7 {
+			}
+			8 {
+			}
+		)
 	)
 ))
 

@@ -8,7 +8,7 @@
 
 __WINDOW_API_CALL window_handle_t window_api_window_create(int32_t x,int32_t y,uint32_t w,uint32_t h,window_handle_t parent){
 	xcb_window_t id=xcb_generate_id(_xcb_conn);
-	const uint32_t data[1]={XCB_EVENT_MASK_KEY_PRESS|XCB_EVENT_MASK_KEY_RELEASE|XCB_EVENT_MASK_BUTTON_PRESS|XCB_EVENT_MASK_BUTTON_RELEASE|XCB_EVENT_MASK_ENTER_WINDOW|XCB_EVENT_MASK_LEAVE_WINDOW|XCB_EVENT_MASK_POINTER_MOTION|XCB_EVENT_MASK_EXPOSURE|XCB_EVENT_MASK_VISIBILITY_CHANGE|XCB_EVENT_MASK_STRUCTURE_NOTIFY|XCB_EVENT_MASK_FOCUS_CHANGE|XCB_EVENT_MASK_PROPERTY_CHANGE};
+	const uint32_t data[1]={XCB_EVENT_MASK_KEY_PRESS|XCB_EVENT_MASK_KEY_RELEASE|XCB_EVENT_MASK_BUTTON_PRESS|XCB_EVENT_MASK_BUTTON_RELEASE|XCB_EVENT_MASK_ENTER_WINDOW|XCB_EVENT_MASK_LEAVE_WINDOW|XCB_EVENT_MASK_POINTER_MOTION|XCB_EVENT_MASK_EXPOSURE|XCB_EVENT_MASK_STRUCTURE_NOTIFY|XCB_EVENT_MASK_FOCUS_CHANGE};
 	xcb_create_window(_xcb_conn,XCB_COPY_FROM_PARENT,id,(parent==(window_handle_t)(0xffffffffffffffffull)?_xcb_screen->root:(int)(intptr_t)parent),x,y,w,h,10,XCB_WINDOW_CLASS_INPUT_OUTPUT,_xcb_screen->root_visual,XCB_CW_EVENT_MASK,data);
 	xcb_flush(_xcb_conn);
 	return (window_handle_t)(intptr_t)id;
@@ -57,20 +57,30 @@ __WINDOW_API_CALL void window_api_window_poll_events(sll_bool_t blocking,sll_arr
 				}
 			case XCB_ENTER_NOTIFY:
 			case XCB_LEAVE_NOTIFY:
-				break;
+				{
+					xcb_enter_notify_event_t* enter_event=(xcb_enter_notify_event_t*)event;
+					arg=sll_new_object(SLL_CHAR("uuu"),WINDOW_EVENT_MOUSE_ENTER,enter_event->event,(type==XCB_ENTER_NOTIFY));
+					break;
+				}
 			case XCB_FOCUS_IN:
 			case XCB_FOCUS_OUT:
-				break;
+				{
+					xcb_focus_in_event_t* focus_event=(xcb_focus_in_event_t*)event;
+					arg=sll_new_object(SLL_CHAR("uuu"),WINDOW_EVENT_FOCUS,focus_event->event,(type==XCB_FOCUS_IN));
+					break;
+				}
 			case XCB_EXPOSE:
-				break;
-			case XCB_VISIBILITY_NOTIFY:
-				break;
+				{
+					xcb_configure_notify_event_t* configure_event=(xcb_configure_notify_event_t*)event;
+					arg=sll_new_object(SLL_CHAR("uuuuuu"),WINDOW_EVENT_REDRAW,configure_event->event,configure_event->x,configure_event->y,configure_event->width,configure_event->height);
+					break;
+				}
 			case XCB_CONFIGURE_NOTIFY:
-				break;
-			case XCB_PROPERTY_NOTIFY:
-				break;
-			case XCB_SELECTION_NOTIFY:
-				break;
+				{
+					xcb_configure_notify_event_t* configure_event=(xcb_configure_notify_event_t*)event;
+					arg=sll_new_object(SLL_CHAR("uuuuuu"),WINDOW_EVENT_GEOMETRY,configure_event->event,configure_event->x,configure_event->y,configure_event->width,configure_event->height);
+					break;
+				}
 		}
 		free(event);
 		if (arg){
