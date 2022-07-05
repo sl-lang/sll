@@ -173,11 +173,11 @@
 
 
 
-(= dt (:: SYSTEM_ERROR_CODES map_value_type))
-(= _name_to_error ({> (= i 0) (< i ($ dt))
-	(= e (: dt i))
+(= errors (:: SYSTEM_ERROR_CODES map_value_type))
+(= _name_to_error ({> (= i 0) (< i ($ errors))
+	(= error (: errors i))
 	(++ i)
-	e$name e
+	error$name error
 ))
 (<- map$remove _name_to_error "EWIN")
 

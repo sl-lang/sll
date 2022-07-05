@@ -24,9 +24,7 @@
 	(= data (:: data string_type))
 	(= out (<- (... "sll:base64_decode") data))
 	(@@ (?: (=== (:? out) int_type)
-		(<- error$from_internal out <
-			"string" data
-		>)
+		(<- error$from_internal out <"string" data>)
 		out
 	))
 )

@@ -68,12 +68,12 @@
 
 
 
-(= close (,,, f
-	(? (=== f nil) (@@))
-	(= f (:: f file_type))
-	(? (=== f$_handle -1) (@@))
-	(? (! (<- (... "sll:file_close") f$_handle)) (@@))
-	(= f$_handle -1)
+(= close (,,, file
+	(? (! file) (@@))
+	(= file (:: file file_type))
+	(? (=== file$_handle -1) (@@))
+	(? (! (<- (... "sll:file_close") file$_handle)) (@@))
+	(= file$_handle -1)
 ))
 
 (= copy (,,, src dst
@@ -91,35 +91,35 @@
 	)))
 ))
 
-(= flush (,,, f
-	(? (=== f nil) (@@ nil))
-	(= f (:: f file_type))
-	(<- (... "sll:file_flush") f$_handle)
+(= flush (,,, file
+	(? (! file) (@@ nil))
+	(= file (:: file file_type))
+	(<- (... "sll:file_flush") file$_handle)
 ))
 
-(= from_data (,,, bf fl
-	(= bf (?: (=== bf nil) "" (:: bf string_type)))
-	(= fl (?: (=== fl nil) FLAG_READ (:: fl int_type)))
-	(= handle (<- (... "sll:file_from_data") bf fl))
-	(? (< handle 0) {
-		(@@ (<- error$from_internal (~ handle)))
-	})
+(= from_data (,,, bf flags
+	(= buffer (?: buffer (:: buffer string_type) ""))
+	(= flags (?: flags (:: flags int_type) FLAG_READ))
+	(= handle (<- (... "sll:file_from_data") buffer flags))
+	(? (< handle 0) (@@ (<- error$from_internal (~ handle))))
 	(@@ (. file_type
 		"@data"
-		fl
+		flags
 		handle
 	))
 ))
 
-(= get_buffer (,,, f
-	(? (=== f nil) (@@ ""))
-	(= f (:: f file_type))
-	(? (! (& f$flags FLAG_WRITE)) (@@ ""))
-	(@@ (<- (... "sll:file_get_buffer") f$_handle))
+(= get_buffer (,,, file
+	(? (! file) (@@ ""))
+	(= file (:: file file_type))
+	(@@ (?: (& file$flags FLAG_WRITE)
+		(<- (... "sll:file_get_buffer") file$_handle)
+		""
+	))
 ))
 
 (= open (,,, path mode
-	(? (=== path nil) (@@ nil))
+	(? (! path) (@@ nil))
 	(= path (:: path string_type))
 	(= flags FLAG_READ)
 	(? (!== mode nil) {
@@ -137,9 +137,7 @@
 		path
 		flags
 	))
-	(? (< handle 0) {
-		(@@ (<- error$from_internal (~ handle) <"path" path>))
-	})
+	(? (< handle 0) (@@ (<- error$from_internal (~ handle) <"path" path>)))
 	(@@ (. file_type
 		path
 		flags
@@ -147,41 +145,41 @@
 	))
 ))
 
-(= peek (,,, f
-	(? (=== f nil) (@@ nil))
-	(= f (:: f file_type))
-	(= o (<- (... "sll:file_peek") f$_handle))
-	(@@ (?: (=== (:? o) int_type)
-		(<- error$from_internal o <"file" f>)
-		o
+(= peek (,,, file
+	(? (! file) (@@ nil))
+	(= file (:: file file_type))
+	(= out (<- (... "sll:file_peek") file$_handle))
+	(@@ (?: (=== (:? out) int_type)
+		(<- error$from_internal out <"file" file>)
+		out
 	))
 ))
 
-(= read (,,, f count nonblocking?
-	(? (=== f nil) (@@ nil))
-	(= f (:: f file_type))
-	(= count (:: count int_type))
-	(? (< count 0) (@@ ""))
-	(= o (?: nonblocking?
-		(<- (... "sll:file_read") f$_handle count)
-		(!<- f$_handle count)
+(= read (,,, file size nonblocking?
+	(? (! file) (@@ nil))
+	(= file (:: file file_type))
+	(= size (:: size int_type))
+	(? (< size 0) (@@ ""))
+	(= out (?: nonblocking?
+		(<- (... "sll:file_read") file$_handle size)
+		(!<- file$_handle size)
 	)
-	(@@ (?: (=== (:? o) int_type)
-		(<- error$from_internal o <"file" f>)
-		o
+	(@@ (?: (=== (:? out) int_type)
+		(<- error$from_internal out <"file" file>)
+		out
 	))
 ))
 
-(= read_char (,,, f nonblocking?
-	(? (=== f nil) (@@ nil))
-	(= f (:: f file_type))
-	(= o (?: nonblocking?
-		(<- (... "sll:file_read_char") f$_handle)
-		(!<. f$_handle)
+(= read_char (,,, file nonblocking?
+	(? (! file) (@@ nil))
+	(= file (:: file file_type))
+	(= out (?: nonblocking?
+		(<- (... "sll:file_read_char") file$_handle)
+		(!<. file$_handle)
 	)
-	(@@ (?: (=== (:? o) int_type)
-		(<- error$from_internal o <"file" f>)
-		o
+	(@@ (?: (=== (:? out) int_type)
+		(<- error$from_internal out <"file" file>)
+		out
 	))
 ))
 
@@ -193,22 +191,20 @@
 	)))
 ))
 
-(= write (,,, f @@dt@@
-	(? (=== f nil) (@@ nil))
-	(= f (:: f file_type))
-	(= o 0)
-	(-> (= i 0) (< i ($ @@dt@@))
-		(= v (<- (... "sll:file_write")
-			f$_handle
-			(:: (: @@dt@@ i) string_type)
+(= write (,,, file @@data@@
+	(? (! file) (@@ nil))
+	(= file (:: file file_type))
+	(= out 0)
+	(-> (= i 0) (< i ($ @@data@@))
+		(= written_count (<- (... "sll:file_write")
+			file$_handle
+			(:: (: @@data@@ i) string_type)
 		))
-		(? (< v 0)
-			(@@ (<- error$from_internal (~ v) <"file" f>))
-		)
-		(= o (+ o v))
+		(? (< written_count 0) (@@ (<- error$from_internal (~ written_count) <"file" file>)))
+		(= out (+ out written_count))
 		(++ i)
 	)
-	(@@ o)
+	(@@ out)
 ))
 
 
