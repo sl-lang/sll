@@ -25,7 +25,7 @@ __WINDOW_API_CALL void window_api_window_destroy(window_handle_t id){
 
 __WINDOW_API_CALL void window_api_window_poll_events(sll_bool_t blocking,sll_array_t* out){
 	SLL_INIT_ARRAY(out);
-	xcb_generic_event_t* event=(blocking?xcb_wait_for_event:xcb_poll_for_event)(_xcb_conn);
+	const xcb_generic_event_t* event=(blocking?xcb_wait_for_event:xcb_poll_for_event)(_xcb_conn);
 	while (event){
 		sll_object_t* arg=NULL;
 		uint8_t type=event->response_type&0x7f;
@@ -33,14 +33,14 @@ __WINDOW_API_CALL void window_api_window_poll_events(sll_bool_t blocking,sll_arr
 			case XCB_KEY_PRESS:
 			case XCB_KEY_RELEASE:
 				{
-					xcb_key_press_event_t* key_event=(xcb_key_press_event_t*)event;
+					const xcb_key_press_event_t* key_event=(const xcb_key_press_event_t*)event;
 					arg=sll_new_object(SLL_CHAR("uuuu"),WINDOW_EVENT_KEY,key_event->event,key_event->detail,(type==XCB_KEY_PRESS));
 					break;
 				}
 			case XCB_BUTTON_PRESS:
 			case XCB_BUTTON_RELEASE:
 				{
-					xcb_button_press_event_t* button_event=(xcb_button_press_event_t*)event;
+					const xcb_button_press_event_t* button_event=(const xcb_button_press_event_t*)event;
 					if (button_event->detail>3&&button_event->detail<8){
 						arg=sll_new_object(SLL_CHAR("uuu"),WINDOW_EVENT_SCROLL,button_event->event,button_event->detail-4);
 					}
@@ -51,38 +51,38 @@ __WINDOW_API_CALL void window_api_window_poll_events(sll_bool_t blocking,sll_arr
 				}
 			case XCB_MOTION_NOTIFY:
 				{
-					xcb_motion_notify_event_t* motion_event=(xcb_motion_notify_event_t*)event;
+					const xcb_motion_notify_event_t* motion_event=(const xcb_motion_notify_event_t*)event;
 					arg=sll_new_object(SLL_CHAR("uuuu"),WINDOW_EVENT_BUTTON,motion_event->event,motion_event->event_x,motion_event->event_y);
 					break;
 				}
 			case XCB_ENTER_NOTIFY:
 			case XCB_LEAVE_NOTIFY:
 				{
-					xcb_enter_notify_event_t* enter_event=(xcb_enter_notify_event_t*)event;
+					const xcb_enter_notify_event_t* enter_event=(const xcb_enter_notify_event_t*)event;
 					arg=sll_new_object(SLL_CHAR("uuu"),WINDOW_EVENT_MOUSE_ENTER,enter_event->event,(type==XCB_ENTER_NOTIFY));
 					break;
 				}
 			case XCB_FOCUS_IN:
 			case XCB_FOCUS_OUT:
 				{
-					xcb_focus_in_event_t* focus_event=(xcb_focus_in_event_t*)event;
+					const xcb_focus_in_event_t* focus_event=(const xcb_focus_in_event_t*)event;
 					arg=sll_new_object(SLL_CHAR("uuu"),WINDOW_EVENT_FOCUS,focus_event->event,(type==XCB_FOCUS_IN));
 					break;
 				}
 			case XCB_EXPOSE:
 				{
-					xcb_configure_notify_event_t* configure_event=(xcb_configure_notify_event_t*)event;
+					const xcb_configure_notify_event_t* configure_event=(const xcb_configure_notify_event_t*)event;
 					arg=sll_new_object(SLL_CHAR("uuuuuu"),WINDOW_EVENT_REDRAW,configure_event->event,configure_event->x,configure_event->y,configure_event->width,configure_event->height);
 					break;
 				}
 			case XCB_CONFIGURE_NOTIFY:
 				{
-					xcb_configure_notify_event_t* configure_event=(xcb_configure_notify_event_t*)event;
+					const xcb_configure_notify_event_t* configure_event=(const xcb_configure_notify_event_t*)event;
 					arg=sll_new_object(SLL_CHAR("uuuuuu"),WINDOW_EVENT_GEOMETRY,configure_event->event,configure_event->x,configure_event->y,configure_event->width,configure_event->height);
 					break;
 				}
 		}
-		free(event);
+		free((void*)event);
 		if (arg){
 			sll_array_push(NULL,arg,out);
 			SLL_RELEASE(arg);
