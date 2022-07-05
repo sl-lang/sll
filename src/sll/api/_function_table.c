@@ -183,9 +183,7 @@ extern void sll_api_thread_reset_barrier(void);
 extern void sll_api_thread_restart(void);
 extern void sll_api_thread_suspend(void);
 extern void sll_api_time_current(void);
-extern void sll_api_time_current_ns(void);
 extern void sll_api_time_sleep(void);
-extern void sll_api_time_sleep_ns(void);
 extern void sll_api_vm_get_config(void);
 extern void sll_api_vm_get_instruction_count(void);
 extern void sll_api_vm_get_instruction_index(void);
@@ -1088,21 +1086,11 @@ static const sll_internal_function_descriptor_t _internal_function_table[]={
 	{
 		SLL_CHAR("sll:time_current"),
 		sll_api_time_current,
-		SLL_CHAR("|f")
-	},
-	{
-		SLL_CHAR("sll:time_current_ns"),
-		sll_api_time_current_ns,
 		SLL_CHAR("|Q")
 	},
 	{
 		SLL_CHAR("sll:time_sleep"),
 		sll_api_time_sleep,
-		SLL_CHAR("x|f")
-	},
-	{
-		SLL_CHAR("sll:time_sleep_ns"),
-		sll_api_time_sleep_ns,
 		SLL_CHAR("x|Q")
 	},
 	{
@@ -1161,7 +1149,7 @@ static const sll_internal_function_descriptor_t _internal_function_table[]={
 
 static const sll_internal_function_table_descriptor_t _internal_function_table_descriptor_data={
 	(const sll_internal_function_descriptor_t*)(&_internal_function_table),
-	191
+	189
 };
 
 

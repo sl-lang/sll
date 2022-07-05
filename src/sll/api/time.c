@@ -9,27 +9,13 @@
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_float_t sll_api_time_current(void){
-	return sll_platform_get_current_time()*1e-9;
-}
-
-
-
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_time_t sll_api_time_current_ns(void){
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_time_t sll_api_time_current(void){
 	return sll_platform_get_current_time();
 }
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_float_t sll_api_time_sleep(const sll_number_t* time){
-	sll_time_t st=sll_platform_get_current_time();
-	sll_platform_sleep((time->type==SLL_PARSE_ARGS_TYPE_INT?time->data.int_*1000000000:(sll_integer_t)round(time->data.float_*1e9)));
-	return (sll_platform_get_current_time()-st)*1e-9;
-}
-
-
-
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_time_t sll_api_time_sleep_ns(const sll_number_t* time){
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_time_t sll_api_time_sleep(const sll_number_t* time){
 	sll_time_t st=sll_platform_get_current_time();
 	sll_platform_sleep((time->type==SLL_PARSE_ARGS_TYPE_INT?time->data.int_:(sll_integer_t)round(time->data.float_)));
 	return sll_platform_get_current_time()-st;

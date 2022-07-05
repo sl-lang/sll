@@ -12,27 +12,33 @@
 
 
 
-(= get (... "sll:time_current"))
+(= time (,,,
+	(@@ (<- (* 1e-9 (... "sll:time_current"))))
+))
 
-(= get_ns (... "sll:time_current_ns"))
+(= time_ns (... "sll:time_current"))
 
-(= sleep (... "sll:time_sleep"))
+(= sleep (,,, seconds
+	(@@ (* 1e-9 (<- (... "sll:time_sleep")
+		(:: (* (:: seconds float_type) 1e9) int_type)
+	)))
+))
 
-(= sleep_ns (... "sll:time_sleep_ns"))
+(= sleep_ns (... "sll:time_sleep"))
 
-(= time_function (,,, fn @@args@@
-	(= fn (:: fn int_type))
-	(= st (<- get))
-	(<-* fn @@args@@)
-	(= et (<- get))
-	(@@ (- et st))
+(= time_function (,,, function @@args@@
+	(= function (:: function int_type))
+	(= start (<- time))
+	(<-* function @@args@@)
+	(= end (<- time))
+	(@@ (- end start))
 ))
 
 
 
 (= time (. time_module_type
-	get
-	get_ns
+	time
+	time_ns
 	sleep
 	sleep_ns
 	time_function
