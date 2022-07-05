@@ -97,12 +97,12 @@
 	))
 ))
 
-(= encode_string (,,, file_ s
+(= encode_string (,,, file_ string
 	(? (=== file_ nil) (@@))
 	(= file_ (:: file_ file$file_type))
-	(= s (:: s string_type))
+	(= string (:: string string_type))
 	(@@ (<- error$from_internal
-		(<- (... "sll:serial_encode_string") file_$_handle s)
+		(<- (... "sll:serial_encode_string") file_$_handle string)
 	))
 ))
 

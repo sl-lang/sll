@@ -14,50 +14,50 @@
 (= struct_type (&:
 	(,,, dt {
 		(? dt$_fmt_str (@@ dt$_fmt_str))
-		(= o "<")
+		(= out "<")
 		(-> (= i 0) (< i ($ dt$_format))
-			(= e (: dt$_format i))
-			(?? (& e STRUCT_ELEM_TYPE_MASK)
+			(= elem (: dt$_format i))
+			(?? (& elem STRUCT_ELEM_TYPE_MASK)
 				STRUCT_ELEM_TYPE_INT {
-					(?? (& e STRUCT_ELEM_SIZE_MASK)
+					(?? (& elem STRUCT_ELEM_SIZE_MASK)
 						STRUCT_ELEM_SIZE_BIT {
-							(= o (+ o '?'))
+							(= out (+ out '?'))
 						}
 						STRUCT_ELEM_SIZE_BYTE {
-							(= o (+ o 'B'))
+							(= out (+ out 'B'))
 						}
 						STRUCT_ELEM_SIZE_WORD {
-							(= o (+ o 'H'))
+							(= out (+ out 'H'))
 						}
 						STRUCT_ELEM_SIZE_DWORD {
-							(= o (+ o 'I'))
+							(= out (+ out 'I'))
 						}
 						STRUCT_ELEM_SIZE_QWORD {
-							(= o (+ o 'Q'))
+							(= out (+ out 'Q'))
 						}
 					)
-					(? (& e STRUCT_ELEM_SIGNED) {
-						(= (: o -1) (+ (: o -1) 32))
+					(? (& elem STRUCT_ELEM_SIGNED) {
+						(= (: out -1) (+ (: out -1) 32))
 					})
 				}
 				STRUCT_ELEM_TYPE_FLOAT {
-					(= o (+
-						o
-						(?: (=== (& e STRUCT_ELEM_SIZE_MASK) STRUCT_ELEM_SIZE_BINARY32) 'f' 'd')
+					(= out (+
+						out
+						(?: (=== (& elem STRUCT_ELEM_SIZE_MASK) STRUCT_ELEM_SIZE_BINARY32) 'f' 'd')
 					))
 				}
 				STRUCT_ELEM_TYPE_PADDING {
-					(= o (+
-						o
-						(* "-" (>> e STRUCT_ELEM_SIZE_SHIFT))
+					(= out (+
+						out
+						(* "-" (>> elem STRUCT_ELEM_SIZE_SHIFT))
 					))
 				}
 			)
 			(++ i)
 		)
-		(= o (+ o '>'))
-		(= dt$_fmt_str o)
-		(@@ o)
+		(= out (+ out '>'))
+		(= dt$_fmt_str out)
+		(@@ out)
 	}) @@string@@
 	(~ int_type) size
 	(~ int_type) data_size
@@ -116,18 +116,18 @@
 
 
 
-(= _check_range (,,, v min max
-	(@@ (?: (|| (< v min) (> v max))
-		(<- error$create error$ERROR_OUT_OF_RANGE v min max)
+(= _check_range (,,, value min max
+	(@@ (?: (|| (< value min) (> value max))
+		(<- error$create error$ERROR_OUT_OF_RANGE value min max)
 		nil
 	))
 ))
 
-(= _add_padding (,,, size total_size o
+(= _add_padding (,,, size total_size out
 	(= pad (& total_size (- size 1)))
 	(? (! pad) (@@ 0))
 	(= pad (- size pad))
-	(<- array$push o (| STRUCT_ELEM_TYPE_PADDING (<< pad STRUCT_ELEM_SIZE_SHIFT)))
+	(<- array$push out (| STRUCT_ELEM_TYPE_PADDING (<< pad STRUCT_ELEM_SIZE_SHIFT)))
 	(@@ pad)
 ))
 
@@ -137,30 +137,30 @@
 	(= max_size 0)
 	(= padding_total 0)
 	(= total_size 0)
-	(= o [])
+	(= out [])
 	(-> (= i 0) (< i ($ data)) {
 		(= type (: data i))
 		(= fmt_code (: FORMAT_CODE_DATA type))
 		(? (=== fmt_code nil) (@@ (<- error$create error$ERROR_UNKNOWN_TYPE type)))
 		(? (> fmt_code$size max_size) (= max_size fmt_code$size))
 		(? (! ignore_padding?) {
-			(= pad (<- _add_padding fmt_code$size total_size o))
+			(= pad (<- _add_padding fmt_code$size total_size out))
 			(= padding_total (+ padding_total pad))
 			(= total_size (+ total_size pad))
 		})
-		(<- array$push o fmt_code$flags)
+		(<- array$push out fmt_code$flags)
 		(= total_size (+ total_size fmt_code$size))
 		(++ i)
 	})
 	(? (! ignore_padding?) {
-		(= pad (<- _add_padding max_size total_size o))
+		(= pad (<- _add_padding max_size total_size out))
 		(= padding_total (+ padding_total pad))
 		(= total_size (+ total_size pad))
 	})
 	(@@ (. struct_type
 		total_size
 		(- total_size padding_total)
-		o
+		out
 	))
 ))
 
@@ -168,48 +168,48 @@
 	(? (=== fmt nil) (@@ ""))
 	(= fmt (:: fmt struct_type))
 	(= data (:: data string_type))
-	(= o [])
+	(= out [])
 	(-> (= i 0) (< i ($ fmt$_format))
-		(= e (: fmt$_format i))
-		(?? (& e STRUCT_ELEM_TYPE_MASK)
+		(= elem (: fmt$_format i))
+		(?? (& elem STRUCT_ELEM_TYPE_MASK)
 			STRUCT_ELEM_TYPE_INT {
-				(= sgn (& e STRUCT_ELEM_SIGNED))
-				(?? (& e STRUCT_ELEM_SIZE_MASK)
+				(= sgn (& elem STRUCT_ELEM_SIGNED))
+				(?? (& elem STRUCT_ELEM_SIZE_MASK)
 					STRUCT_ELEM_SIZE_BIT {
-						(<- array$push o (:: int_type (!! (: data 0))))
+						(<- array$push out (:: int_type (!! (: data 0))))
 						(= data (>> data 1))
 					}
 					STRUCT_ELEM_SIZE_BYTE {
-						(= v (:: (: data 0) int_type))
+						(= value (:: (: data 0) int_type))
 						(= data (>> data 1))
-						(<- array$push o
-							(?: v (?: sgn (~ (& (~ v) 0xff)) v) 0)
+						(<- array$push out
+							(?: value (?: sgn (~ (& (~ value) 0xff)) value) 0)
 						)
 					}
 					STRUCT_ELEM_SIZE_WORD {
-						(= v (|
+						(= value (|
 							(: data 0)
 							(<< (: data 1) 8)
 						))
 						(= data (>> data 2))
-						(<- array$push o
-							(?: v (?: sgn (~ (& (~ v) 0xffff)) v) 0)
+						(<- array$push out
+							(?: value (?: sgn (~ (& (~ value) 0xffff)) value) 0)
 						)
 					}
 					STRUCT_ELEM_SIZE_DWORD {
-						(= v (|
+						(= value (|
 							(: data 0)
 							(<< (: data 1) 8)
 							(<< (: data 2) 16)
 							(<< (: data 3) 24)
 						))
 						(= data (>> data 4))
-						(<- array$push o
-							(?: v (?: sgn (~ (& (~ v) 0xffffffff)) v) 0)
+						(<- array$push out
+							(?: value (?: sgn (~ (& (~ value) 0xffffffff)) value) 0)
 						)
 					}
 					STRUCT_ELEM_SIZE_QWORD {
-						(<- array$push o (|
+						(<- array$push out (|
 							(: data 0)
 							(<< (: data 1) 8)
 							(<< (: data 2) 16)
@@ -224,18 +224,18 @@
 				)
 			}
 			STRUCT_ELEM_TYPE_FLOAT {
-				(= v (|
+				(= value (|
 					(: data 0)
 					(<< (: data 1) 8)
 					(<< (: data 2) 16)
 					(<< (: data 3) 24)
 				))
-				(? (=== (& e STRUCT_ELEM_SIZE_MASK) STRUCT_ELEM_SIZE_BINARY32) {
-					(= v (<- (... "sll:struct_float_from_bits") v))
+				(? (=== (& elem STRUCT_ELEM_SIZE_MASK) STRUCT_ELEM_SIZE_BINARY32) {
+					(= value (<- (... "sll:struct_float_from_bits") value))
 					(= data (>> data 4))
 				} {
-					(= v (<- (... "sll:struct_double_from_bits") (|
-						v
+					(= value (<- (... "sll:struct_double_from_bits") (|
+						value
 						(<< (: data 4) 32)
 						(<< (: data 5) 40)
 						(<< (: data 6) 48)
@@ -243,126 +243,126 @@
 					)))
 					(= data (>> data 8))
 				})
-				(<- array$push o v)
+				(<- array$push out value)
 			}
 			STRUCT_ELEM_TYPE_PADDING {
-				(= data (>> data (>> e STRUCT_ELEM_SIZE_SHIFT)))
+				(= data (>> data (>> elem STRUCT_ELEM_SIZE_SHIFT)))
 			}
 		)
 		(++ i)
 		)
-	(@@ o)
+	(@@ out)
 ))
 
 (= encode (,,, fmt @@data@@
 	(? (=== fmt nil) (@@ ""))
 	(= fmt (:: fmt struct_type))
-	(= o "")
+	(= out "")
 	(-> (= i 0) (< i ($ fmt$_format))
-		(= e (: fmt$_format i))
-		(?? (& e STRUCT_ELEM_TYPE_MASK)
+		(= elem (: fmt$_format i))
+		(?? (& elem STRUCT_ELEM_TYPE_MASK)
 			STRUCT_ELEM_TYPE_INT {
-				(= v (:: (<- array$shift @@data@@) int_type))
-				(= sgn (& e STRUCT_ELEM_SIGNED))
-				(?? (& e STRUCT_ELEM_SIZE_MASK)
+				(= value (:: (<- array$shift @@data@@) int_type))
+				(= sgn (& elem STRUCT_ELEM_SIGNED))
+				(?? (& elem STRUCT_ELEM_SIZE_MASK)
 					STRUCT_ELEM_SIZE_BIT {
-						(= o (+
-							o
-							(:: (!! v) char_type)
+						(= out (+
+							out
+							(:: (!! value) char_type)
 						))
 					}
 					STRUCT_ELEM_SIZE_BYTE {
 						(? sgn {
-							(= err (<- _check_range v -0x80 0x7f))
+							(= err (<- _check_range value -0x80 0x7f))
 							(? err (@@ err))
 						} {
-							(= err (<- _check_range v 0 0xff))
+							(= err (<- _check_range value 0 0xff))
 							(? err (@@ err))
 						})
-						(= o (+
-							o
-							(:: v char_type)
+						(= out (+
+							out
+							(:: value char_type)
 						))
 					}
 					STRUCT_ELEM_SIZE_WORD {
 						(? sgn {
-							(= err (<- _check_range v -0x8000 0x7fff))
+							(= err (<- _check_range value -0x8000 0x7fff))
 							(? err (@@ err))
 						} {
-							(= err (<- _check_range v 0 0xffff))
+							(= err (<- _check_range value 0 0xffff))
 							(? err (@@ err))
 						})
-						(= o (+
-							o
-							(:: v char_type)
-							(:: (>> v 8) char_type)
+						(= out (+
+							out
+							(:: value char_type)
+							(:: (>> value 8) char_type)
 						))
 					}
 					STRUCT_ELEM_SIZE_DWORD {
 						(? sgn {
-							(= err (<- _check_range v -0x80000000 0x7fffffff))
+							(= err (<- _check_range value -0x80000000 0x7fffffff))
 							(? err (@@ err))
 						} {
-							(= err (<- _check_range v 0 0xffffffff))
+							(= err (<- _check_range value 0 0xffffffff))
 							(? err (@@ err))
 						})
-						(= o (+
-							o
-							(:: v char_type)
-							(:: (>> v 8) char_type)
-							(:: (>> v 16) char_type)
-							(:: (>> v 24) char_type)
+						(= out (+
+							out
+							(:: value char_type)
+							(:: (>> value 8) char_type)
+							(:: (>> value 16) char_type)
+							(:: (>> value 24) char_type)
 						))
 					}
 					STRUCT_ELEM_SIZE_QWORD {
-						(= o (+
-							o
-							(:: v char_type)
-							(:: (>> v 8) char_type)
-							(:: (>> v 16) char_type)
-							(:: (>> v 24) char_type)
-							(:: (>> v 32) char_type)
-							(:: (>> v 40) char_type)
-							(:: (>> v 48) char_type)
-							(:: (>> v 56) char_type)
+						(= out (+
+							out
+							(:: value char_type)
+							(:: (>> value 8) char_type)
+							(:: (>> value 16) char_type)
+							(:: (>> value 24) char_type)
+							(:: (>> value 32) char_type)
+							(:: (>> value 40) char_type)
+							(:: (>> value 48) char_type)
+							(:: (>> value 56) char_type)
 						))
 					}
 				)
 			}
 			STRUCT_ELEM_TYPE_FLOAT {
-				(= v (<- (?: (=== (& e STRUCT_ELEM_SIZE_MASK) STRUCT_ELEM_SIZE_BINARY32)
+				(= value (<- (?: (=== (& elem STRUCT_ELEM_SIZE_MASK) STRUCT_ELEM_SIZE_BINARY32)
 						(... "sll:struct_float_to_bits")
 						(... "sll:struct_double_to_bits")
 					)
 					(:: (<- array$shift @@data@@) float_type)
 				))
-				(= o (+
-					o
-					(:: v char_type)
-					(:: (>> v 8) char_type)
-					(:: (>> v 16) char_type)
-					(:: (>> v 24) char_type)
+				(= out (+
+					out
+					(:: value char_type)
+					(:: (>> value 8) char_type)
+					(:: (>> value 16) char_type)
+					(:: (>> value 24) char_type)
 				))
-				(? (=== (& e STRUCT_ELEM_SIZE_MASK) STRUCT_ELEM_SIZE_BINARY64) {
-					(= o (+
-						o
-						(:: (>> v 32) char_type)
-						(:: (>> v 40) char_type)
-						(:: (>> v 48) char_type)
-						(:: (>> v 56) char_type)
+				(? (=== (& elem STRUCT_ELEM_SIZE_MASK) STRUCT_ELEM_SIZE_BINARY64) {
+					(= out (+
+						out
+						(:: (>> value 32) char_type)
+						(:: (>> value 40) char_type)
+						(:: (>> value 48) char_type)
+						(:: (>> value 56) char_type)
 					))
 				})
 			}
 			STRUCT_ELEM_TYPE_PADDING {
-				(= o (+
-					o
-					(* "\x00" (>> e STRUCT_ELEM_SIZE_SHIFT))
+				(= out (+
+					out
+					(* "\x00" (>> elem STRUCT_ELEM_SIZE_SHIFT))
 				))
 			}
 		)
 		(++ i)
 	)
-	(@@ o)
+	(@@ out)
 ))
 
 

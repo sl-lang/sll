@@ -83,42 +83,42 @@
 
 (= lower_case (... "sll:string_to_lower_case"))
 
-(= pad (,,, s l c
+(= pad (,,, string length char
 	(@@ (<- (... "sll:string_pad")
-		(:: s string_type)
-		(:: l int_type)
-		(?: (=== c nil) ' ' (:: c char_type))
+		(:: string string_type)
+		(:: length int_type)
+		(?: (=== char nil) ' ' (:: char char_type))
 	))
 ))
 
-(= pad_left (,,, s l c
+(= pad_left (,,, string length char
 	(@@ (<- (... "sll:string_pad_left")
-		(:: s string_type)
-		(:: l int_type)
-		(?: (=== c nil) ' ' (:: c char_type))
+		(:: string string_type)
+		(:: length int_type)
+		(?: (=== char nil) ' ' (:: char char_type))
 	))
 ))
 
-(= pad_right (,,, s l c
+(= pad_right (,,, string length char
 	(@@ (<- (... "sll:string_pad_right")
-		(:: s string_type)
-		(:: l int_type)
-		(?: (=== c nil) ' ' (:: c char_type))
+		(:: string string_type)
+		(:: length int_type)
+		(?: (=== char nil) ' ' (:: char char_type))
 	))
 ))
 
-(= replace (,,, dt k v
+(= replace (,,, string key value
 	(@@ (<- (... "sll:string_replace")
-		(:: dt string_type)
+		(:: string string_type)
 		(?:
-			(=== k nil) ""
-			(!== (:? k) char_type) (:: k string_type)
-			k
+			(=== key nil) ""
+			(!== (:? key) char_type) (:: key string_type)
+			key
 		)
 		(?:
-			(=== v nil) ""
-			(!== (:? v) char_type) (:: v string_type)
-			v
+			(=== value nil) ""
+			(!== (:? value) char_type) (:: value string_type)
+			value
 		)
 	))
 ))
