@@ -182,11 +182,11 @@
 (= create (,,, type @@data@@
 	(? (=== type nil) (@@ nil))
 	(= type (:: type type_type))
-	(= bt (<- _get_error_backtrace))
-	(<- audit$audit "sll.error.create" "iaa" type @@data@@ bt)
+	(= backtrace (<- _get_error_backtrace))
+	(<- audit$audit "sll.error.create" "iaa" type @@data@@ backtrace)
 	(@@ (. error_type
 		(:: @@data@@ type)
-		bt
+		backtrace
 	))
 ))
 
@@ -195,42 +195,42 @@
 	(<- audit$audit "sll.error.create.internal" "im" err data)
 	(= id (& err 0xff))
 	(= extra (>> err 9))
-	(= v nil)
+	(= error_data nil)
 	(? (& err 0x100)
 		{
-			(= v (: (: error_codes$SYSTEM_ERROR_CODES id)))
-			(= v$raw_error extra)
+			(= error_data (: (: error_codes$SYSTEM_ERROR_CODES id)))
+			(= error_data$raw_error extra)
 		}
 		(?? id
-			1 (= v (. ERROR_FILE_NOT_FOUND
+			1 (= error_data (. ERROR_FILE_NOT_FOUND
 				(: data "path")
 			))
-			2 (= v (. ERROR_INVALID_FILE_DESCRIPTOR))
-			3 (= v (. ERROR_SANDBOX
+			2 (= error_data (. ERROR_INVALID_FILE_DESCRIPTOR))
+			3 (= error_data (. ERROR_SANDBOX
 				(: _SANDBOX_FLAGS extra)
 			))
-			4 (= v (. ERROR_PATH_TOO_LONG))
-			5 (= v (. ERROR_EOF
+			4 (= error_data (. ERROR_PATH_TOO_LONG))
+			5 (= error_data (. ERROR_EOF
 				(: data "file")
 			))
-			6 (= v (. ERROR_INVALID_BASE64_PADDING))
-			7 (= v (. ERROR_INVALID_BASE64_CHARACTER
+			6 (= error_data (. ERROR_INVALID_BASE64_PADDING))
+			7 (= error_data (. ERROR_INVALID_BASE64_CHARACTER
 				extra
 				(: (: data "string") extra)
 			))
-			8 (= v (. ERROR_STRING
+			8 (= error_data (. ERROR_STRING
 				(<- (... "sll:error_get_error_string") err)
 			))
-			9 (= v (. ERROR_UNKNOWN_FUNCTION
+			9 (= error_data (. ERROR_UNKNOWN_FUNCTION
 				(: data "function")
 			))
 		)
 	)
-	(? (=== v nil)
-		(= v (. ERROR_ANY (:: err string_type)))
+	(? (=== error_data nil)
+		(= error_data (. ERROR_ANY (:: err string_type)))
 	)
 	(@@ (. error_type
-		v
+		error_data
 		(<- _get_error_backtrace)
 	))
 ))
@@ -242,9 +242,9 @@
 		(?: thr thr$id (!.))
 	))
 	(@@ ([> (= i 0) (< i ($ call_stack))
-		(= k (: call_stack i))
+		(= frame (: call_stack i))
 		(++ i)
-		(:: k call_stack_type)
+		(:: frame call_stack_type)
 	))
 ))
 
