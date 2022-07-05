@@ -178,8 +178,8 @@
 	(@@ o)
 ))
 
-(= md5_process (,,, dt
-	(@@ (<- md5_digest (<- md5_update (<- md5_init) dt)))
+(= md5_process (,,, data
+	(@@ (<- md5_digest (<- md5_update (<- md5_init) data)))
 ))
 
 
@@ -196,23 +196,23 @@
 	))
 ))
 
-(= sha1_update (,,, sha1 dt
+(= sha1_update (,,, sha1 data
 	(= sha1 (:: sha1 sha1_type))
-	(? (=== dt nil)
+	(? (=== data nil)
 		(@@ (: sha1))
 	)
-	(= dt (:: dt string_type))
-	(= len ($ dt))
+	(= data (:: data string_type))
+	(= len ($ data))
 	(? (! len)
 		(@@ (: sha1))
 	)
 	(= n_sz (+ sha1$_sz len))
-	(= dt (+ sha1$_bf dt))
+	(= data (+ sha1$_bf data))
 	(= len (+ len ($ sha1$_bf)))
 	(= i (& len 0xffffffffffffffc0))
 	(? (! i) {
 		(= o (: sha1))
-		(= o$_bf dt)
+		(= o$_bf data)
 		(= o$_sz n_sz)
 		(@@ o)
 	})
@@ -222,10 +222,10 @@
 		sha1$_c
 		sha1$_d
 		sha1$_e
-		(: dt 0 i)
+		(: data 0 i)
 	))
 	(@@ (. sha1_type
-		(>> dt i)
+		(>> data i)
 		n_sz
 		(: new_data 0)
 		(: new_data 1)
@@ -276,8 +276,8 @@
 	(@@ o)
 ))
 
-(= sha1_process (,,, dt
-	(@@ (<- sha1_digest (<- sha1_update (<- sha1_init) dt)))
+(= sha1_process (,,, data
+	(@@ (<- sha1_digest (<- sha1_update (<- sha1_init) data)))
 ))
 
 
@@ -297,23 +297,23 @@
 	))
 ))
 
-(= sha256_update (,,, sha256 dt
+(= sha256_update (,,, sha256 data
 	(= sha256 (:: sha256 sha256_type))
-	(? (=== dt nil)
+	(? (=== data nil)
 		(@@ (: sha256))
 	)
-	(= dt (:: dt string_type))
-	(= len ($ dt))
+	(= data (:: data string_type))
+	(= len ($ data))
 	(? (! len)
 		(@@ (: sha256))
 	)
 	(= n_sz (+ sha256$_sz len))
-	(= dt (+ sha256$_bf dt))
+	(= data (+ sha256$_bf data))
 	(= len (+ len ($ sha256$_bf)))
 	(= i (& len 0xffffffffffffffc0))
 	(? (! i) {
 		(= o (: sha256))
-		(= o$_bf dt)
+		(= o$_bf data)
 		(= o$_sz n_sz)
 		(@@ o)
 	})
@@ -326,10 +326,10 @@
 		sha256$_f
 		sha256$_g
 		sha256$_h
-		(: dt 0 i)
+		(: data 0 i)
 	))
 	(@@ (. sha256_type
-		(>> dt i)
+		(>> data i)
 		n_sz
 		(: new_data 0)
 		(: new_data 1)
@@ -386,8 +386,8 @@
 	(@@ o)
 ))
 
-(= sha256_process (,,, dt
-	(@@ (<- sha256_digest (<- sha256_update (<- sha256_init) dt)))
+(= sha256_process (,,, data
+	(@@ (<- sha256_digest (<- sha256_update (<- sha256_init) data)))
 ))
 
 
@@ -413,8 +413,8 @@
 	(@@ (: (<- sha256_digest sha224) 0 28))
 ))
 
-(= sha224_process (,,, dt
-	(@@ (<- sha224_digest (<- sha224_update (<- sha224_init) dt)))
+(= sha224_process (,,, data
+	(@@ (<- sha224_digest (<- sha224_update (<- sha224_init) data)))
 ))
 
 
@@ -434,23 +434,23 @@
 	))
 ))
 
-(= sha512_update (,,, sha512 dt
+(= sha512_update (,,, sha512 data
 	(= sha512 (:: sha512 sha512_type))
-	(? (=== dt nil)
+	(? (=== data nil)
 		(@@ (: sha512))
 	)
-	(= dt (:: dt string_type))
-	(= len ($ dt))
+	(= data (:: data string_type))
+	(= len ($ data))
 	(? (! len)
 		(@@ (: sha512))
 	)
 	(= n_sz (+ sha512$_sz len))
-	(= dt (+ sha512$_bf dt))
+	(= data (+ sha512$_bf data))
 	(= len (+ len ($ sha512$_bf)))
 	(= i (& len 0xffffffffffffff80))
 	(? (! i) {
 		(= o (: sha512))
-		(= o$_bf dt)
+		(= o$_bf data)
 		(= o$_sz n_sz)
 		(@@ o)
 	})
@@ -463,10 +463,10 @@
 		sha512$_f
 		sha512$_g
 		sha512$_h
-		(: dt 0 i)
+		(: data 0 i)
 	))
 	(@@ (. sha512_type
-		(>> dt i)
+		(>> data i)
 		n_sz
 		(: new_data 0)
 		(: new_data 1)
@@ -527,8 +527,8 @@
 	(@@ o)
 ))
 
-(= sha512_process (,,, dt
-	(@@ (<- sha512_digest (<- sha512_update (<- sha512_init) dt)))
+(= sha512_process (,,, data
+	(@@ (<- sha512_digest (<- sha512_update (<- sha512_init) data)))
 ))
 
 
@@ -554,24 +554,23 @@
 	(@@ (: (<- sha512_digest sha384) 0 48))
 ))
 
-(= sha384_process (,,, dt
-	(@@ (<- sha384_digest (<- sha384_update (<- sha384_init) dt)))
+(= sha384_process (,,, data
+	(@@ (<- sha384_digest (<- sha384_update (<- sha384_init) data)))
 ))
 
 
 
-(= hexdigest (,,, d
-	(= l ($ d))
-	(= o "")
-	(-> (= i 0) (< i l) {
-		(= c (: d i))
-		(= o (+ o
-			(:: (+ (>> c 4) (?: (> (>> c 4) 9) 87 48)) char_type)
-			(:: (+ (& c 15) (?: (> (& c 15) 9) 87 48)) char_type)
+(= hexdigest (,,, data
+	(= out "")
+	(-> (= i 0) (< i ($ data))
+		(= char (: data i))
+		(= out (+ out
+			(:: (+ (>> char 4) (?: (> (>> char 4) 9) 87 48)) char_type)
+			(:: (+ (& char 15) (?: (> (& char 15) 9) 87 48)) char_type)
 		))
 		(++ i)
-	})
-	(@@ o)
+	)
+	(@@ out)
 ))
 
 
