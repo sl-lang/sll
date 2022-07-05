@@ -16,6 +16,9 @@
 
 
 (= window_callbacks_type (&:
+	func_type button
+	func_type button_down
+	func_type button_up
 	func_type focus
 	func_type focus_enter
 	func_type focus_leave
@@ -54,6 +57,15 @@
 	(~ type_type) window_window_type
 	(~ int_type) FLAG_IN_FOCUS
 	(~ int_type) FLAG_HAS_MOUSE
+	(~ int_type) FLAG_BUTTON_1
+	(~ int_type) FLAG_BUTTON_2
+	(~ int_type) FLAG_BUTTON_3
+	(~ int_type) FLAG_BUTTON_LEFT
+	(~ int_type) FLAG_BUTTON_MIDDLE
+	(~ int_type) FLAG_BUTTON_RIGHT
+	(~ int_type) FLAG_BUTTON_4
+	(~ int_type) FLAG_BUTTON_5
+	(~ int_type) FLAG_BUTTON_6
 	(~ int_type) SCROLL_DOWN
 	(~ int_type) SCROLL_LEFT
 	(~ int_type) SCROLL_RIGHT
@@ -75,6 +87,15 @@
 
 (= FLAG_IN_FOCUS 1)
 (= FLAG_HAS_MOUSE 2)
+(= FLAG_BUTTON_1 4)
+(= FLAG_BUTTON_2 8)
+(= FLAG_BUTTON_3 16)
+(= FLAG_BUTTON_LEFT FLAG_BUTTON_1)
+(= FLAG_BUTTON_MIDDLE FLAG_BUTTON_2)
+(= FLAG_BUTTON_RIGHT FLAG_BUTTON_3)
+(= FLAG_BUTTON_4 32)
+(= FLAG_BUTTON_5 64)
+(= FLAG_BUTTON_6 128)
 
 (= SCROLL_DOWN 0)
 (= SCROLL_UP 1)
@@ -180,6 +201,19 @@
 				) window key)
 			}
 			2 {
+				(= button (: event 0))
+				(= state (: event 1))
+				(= mask (<< FLAG_BUTTON_LEFT button))
+				(= value (: window$_buttons idx))
+				(= (: window$_buttons idx) (?: state
+					(| value mask)
+					(& value (~ mask))
+				))
+				(<- window$callbacks$button window button state)
+				(<- (?: state
+					window$callbacks$button_down
+					window$callbacks$button_up
+				) window button)
 			}
 			3 {
 				(= window$mouse_x (: event 0))
@@ -255,6 +289,15 @@
 	window_window_type
 	FLAG_IN_FOCUS
 	FLAG_HAS_MOUSE
+	FLAG_BUTTON_1
+	FLAG_BUTTON_2
+	FLAG_BUTTON_3
+	FLAG_BUTTON_LEFT
+	FLAG_BUTTON_MIDDLE
+	FLAG_BUTTON_RIGHT
+	FLAG_BUTTON_4
+	FLAG_BUTTON_5
+	FLAG_BUTTON_6
 	SCROLL_DOWN
 	SCROLL_LEFT
 	SCROLL_RIGHT
