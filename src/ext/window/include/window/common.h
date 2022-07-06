@@ -21,6 +21,8 @@ extern void* _winapi_hinstance;
 #elif defined(__SLL_BUILD_LINUX)
 extern xcb_connection_t* _xcb_conn;
 extern xcb_screen_t* _xcb_screen;
+extern xcb_atom_t _xcb_wm_protocols;
+extern xcb_atom_t _xcb_wm_delete_window;
 #endif
 
 

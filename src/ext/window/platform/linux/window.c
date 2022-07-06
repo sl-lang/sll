@@ -12,6 +12,10 @@ __WINDOW_API_CALL window_handle_t window_api_window_create(int32_t x,int32_t y,u
 	xcb_window_t id=xcb_generate_id(_xcb_conn);
 	const uint32_t data[1]={XCB_EVENT_MASK_KEY_PRESS|XCB_EVENT_MASK_KEY_RELEASE|XCB_EVENT_MASK_BUTTON_PRESS|XCB_EVENT_MASK_BUTTON_RELEASE|XCB_EVENT_MASK_ENTER_WINDOW|XCB_EVENT_MASK_LEAVE_WINDOW|XCB_EVENT_MASK_POINTER_MOTION|XCB_EVENT_MASK_EXPOSURE|XCB_EVENT_MASK_STRUCTURE_NOTIFY|XCB_EVENT_MASK_FOCUS_CHANGE};
 	xcb_create_window(_xcb_conn,XCB_COPY_FROM_PARENT,id,(parent==(window_handle_t)(0xffffffffffffffffull)?_xcb_screen->root:(int)(intptr_t)parent),x,y,w,h,10,XCB_WINDOW_CLASS_INPUT_OUTPUT,_xcb_screen->root_visual,XCB_CW_EVENT_MASK,data);
+	const xcb_atom_t atom_data[1]={
+		_xcb_wm_delete_window
+	};
+	xcb_change_property(_xcb_conn,XCB_PROP_MODE_REPLACE,id,_xcb_wm_protocols,4,sizeof(xcb_atom_t)*8,1,atom_data);
 	xcb_flush(_xcb_conn);
 	return (window_handle_t)(intptr_t)id;
 }
@@ -81,6 +85,14 @@ __WINDOW_API_CALL void window_api_window_poll_events(sll_bool_t blocking,sll_arr
 				{
 					const xcb_configure_notify_event_t* configure_event=(const xcb_configure_notify_event_t*)event;
 					arg=sll_new_object(SLL_CHAR("uuuuuu"),WINDOW_EVENT_GEOMETRY,configure_event->event,configure_event->x,configure_event->y,configure_event->width,configure_event->height);
+					break;
+				}
+			case XCB_CLIENT_MESSAGE:
+				{
+					const xcb_client_message_event_t* client_event=(const xcb_client_message_event_t*)event;
+					if (client_event->data.data32[0]==_xcb_wm_delete_window){
+						arg=sll_new_object(SLL_CHAR("uu"),WINDOW_EVENT_CLOSE,client_event->window);
+					}
 					break;
 				}
 		}

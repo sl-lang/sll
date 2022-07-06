@@ -679,7 +679,10 @@ abc` '\n')
 
 (= window (<- window_window$create [0 0 900 600] nil "Example Window Title" true))
 (<- window_window$geometry window [300 300 600 500])
-(>- nil (! (<- file$read file$stdin 1 true))
+(>- nil (&&
+	(! (<- file$read file$stdin 1 true))
+	(! (& window$flags window_window$FLAG_CLOSED))
+)
 	(<- window_window$poll true)
 )
 (:> window '\n')
