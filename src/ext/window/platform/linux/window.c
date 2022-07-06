@@ -96,15 +96,15 @@ __WINDOW_API_CALL void window_api_window_poll_events(sll_bool_t blocking,sll_arr
 					const xcb_property_notify_event_t* property_event=(const xcb_property_notify_event_t*)event;
 					if (property_event->atom==_xcb_net_wm_state){
 						xcb_get_property_reply_t* data=xcb_get_property_reply(_xcb_conn,xcb_get_property(_xcb_conn,0,property_event->window,_xcb_net_wm_state,XCB_ATOM_ATOM,0,sizeof(xcb_atom_t)*8),NULL);
-						xcb_atom_t* type=xcb_get_property_value(data);
+						xcb_atom_t* wm_state=xcb_get_property_value(data);
 						unsigned int state=WINDOW_STATE_NORMAL;
-						if (*type==_xcb_net_wm_state_hidden){
+						if (*wm_state==_xcb_net_wm_state_hidden){
 							state=WINDOW_STATE_MINIMIZED;
 						}
-						else if (*type==_xcb_net_wm_state_fullscreen){
+						else if (*wm_state==_xcb_net_wm_state_fullscreen){
 							state=WINDOW_STATE_FULLSCREEN;
 						}
-						else if (*type==_xcb_net_wm_state_maximized_vert||*type==_xcb_net_wm_state_maximized_horz){
+						else if (*wm_state==_xcb_net_wm_state_maximized_vert||*wm_state==_xcb_net_wm_state_maximized_horz){
 							state=WINDOW_STATE_MAXIMIZED;
 						}
 						arg=sll_new_object(SLL_CHAR("uuu"),WINDOW_EVENT_STATE,property_event->window,state);
