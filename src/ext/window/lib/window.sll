@@ -121,7 +121,7 @@
 	(? (< button 1) (@@ false))
 	(@@ (!! (&
 		window$flags
-		(<< FLAG_BUTTON_1 button)
+		(<< FLAG_BUTTON_1 (- button 1))
 	)))
 ))
 
