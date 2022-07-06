@@ -97,7 +97,7 @@
 	(<- (... "sll:file_flush") file$_handle)
 ))
 
-(= from_data (,,, bf flags
+(= from_data (,,, buffer flags
 	(= buffer (?: buffer (:: buffer string_type) ""))
 	(= flags (?: flags (:: flags int_type) FLAG_READ))
 	(= handle (<- (... "sll:file_from_data") buffer flags))
