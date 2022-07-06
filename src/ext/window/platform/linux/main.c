@@ -7,6 +7,7 @@ xcb_connection_t* _xcb_conn;
 xcb_screen_t* _xcb_screen;
 xcb_atom_t _xcb_wm_protocols;
 xcb_atom_t _xcb_wm_delete_window;
+xcb_atom_t _xcb_net_wm_ping;
 
 
 
@@ -26,5 +27,8 @@ void _init_platform(void){
 	free(data);
 	data=xcb_intern_atom_reply(_xcb_conn,xcb_intern_atom(_xcb_conn,1,16,"WM_DELETE_WINDOW"),NULL);
 	_xcb_wm_delete_window=data->atom;
+	free(data);
+	data=xcb_intern_atom_reply(_xcb_conn,xcb_intern_atom(_xcb_conn,1,16,"_NET_WM_PING"),NULL);
+	_xcb_net_wm_ping=data->atom;
 	free(data);
 }

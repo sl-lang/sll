@@ -23,6 +23,7 @@ extern xcb_connection_t* _xcb_conn;
 extern xcb_screen_t* _xcb_screen;
 extern xcb_atom_t _xcb_wm_protocols;
 extern xcb_atom_t _xcb_wm_delete_window;
+extern xcb_atom_t _xcb_net_wm_ping;
 #endif
 
 
