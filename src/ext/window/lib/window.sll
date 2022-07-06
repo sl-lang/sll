@@ -85,6 +85,7 @@
 	(~ func_type) hide
 	(~ func_type) key_pressed
 	(~ func_type) poll
+	(~ func_type) set_state
 	(~ func_type) set_title
 	(~ func_type) set_visibility
 	(~ func_type) show
@@ -305,6 +306,21 @@
 	)
 ))
 
+(= set_state (,,, window state
+	(? (! window) (@@))
+	(= window (:: window window_window_type))
+	(= state (:: state int_type))
+	(? (&&
+		(!== state STATE_MAXIMIZED)
+		(!== state STATE_MINIMIZED)
+	) (= state STATE_NORMAL))
+	(? (=== state window$state) (@@))
+	(<- (... "window:window_set_state")
+		window$id
+		state
+	)
+))
+
 (= set_title (,,, window title
 	(? (! window) (@@))
 	(= window (:: window window_window_type))
@@ -358,6 +374,7 @@
 	hide
 	key_pressed
 	poll
+	set_state
 	set_title
 	set_visibility
 	show

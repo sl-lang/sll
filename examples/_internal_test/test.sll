@@ -34,6 +34,7 @@
 	"vm.sll"
 	"weakref.sll"
 	"window/display.sll"
+	"window/keyboard.sll"
 	"window/window.sll"
 )
 (= JSON_STRING "{\"key\":[\"value\",10,0.555,-842.9e-5,{\"a\":[\"c\",30,\"d\",\"\\t€\"],\"other\":\"else\"},true,false,null,[],{}]}")
@@ -679,6 +680,14 @@ abc` '\n')
 
 (= window (<- window_window$create [0 0 900 600] nil "Example Window Title" true))
 (<- window_window$geometry window [300 300 600 500])
+(= window$callbacks$key_down (,,, window key
+	(?? key
+		window_keyboard$KEY_ESCAPE (<- window_window$destroy window)
+		'1' (<- window_window$set_state window window_window$STATE_MINIMIZED)
+		'2' (<- window_window$set_state window window_window$STATE_NORMAL)
+		'3' (<- window_window$set_state window window_window$STATE_MAXIMIZED)
+	)
+))
 (>- nil (&&
 	(! (<- file$read file$stdin 1 true))
 	(! (& window$flags window_window$FLAG_CLOSED))

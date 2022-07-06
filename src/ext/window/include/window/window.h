@@ -54,6 +54,10 @@ __WINDOW_API_CALL void window_api_window_set_geometry(window_handle_t id,int32_t
 
 
 
+__WINDOW_API_CALL void window_api_window_set_state(window_handle_t id,sll_char_t state);
+
+
+
 __WINDOW_API_CALL void window_api_window_set_title(window_handle_t id,const sll_string_t* name);
 
 

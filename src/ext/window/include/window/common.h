@@ -28,6 +28,7 @@ extern xcb_atom_t _xcb_net_wm_state;
 extern xcb_atom_t _xcb_net_wm_state_hidden;
 extern xcb_atom_t _xcb_net_wm_state_maximized_vert;
 extern xcb_atom_t _xcb_net_wm_state_maximized_horz;
+extern xcb_atom_t _xcb_wm_change_state;
 #endif
 
 
