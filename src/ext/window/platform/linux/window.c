@@ -101,6 +101,9 @@ __WINDOW_API_CALL void window_api_window_poll_events(sll_bool_t blocking,sll_arr
 						if (*type==_xcb_net_wm_state_hidden){
 							state=WINDOW_STATE_MINIMIZED;
 						}
+						else if (*type==_xcb_net_wm_state_fullscreen){
+							state=WINDOW_STATE_FULLSCREEN;
+						}
 						else if (*type==_xcb_net_wm_state_maximized_vert||*type==_xcb_net_wm_state_maximized_horz){
 							state=WINDOW_STATE_MAXIMIZED;
 						}
@@ -145,6 +148,23 @@ __WINDOW_API_CALL void window_api_window_set_geometry(window_handle_t id,int32_t
 
 
 __WINDOW_API_CALL void window_api_window_set_state(window_handle_t id,sll_char_t state){
+	xcb_client_message_event_t fullscreen_event={
+		XCB_CLIENT_MESSAGE,
+		32,
+		0,
+		(int)(intptr_t)id,
+		_xcb_net_wm_state,
+		{
+			.data32={
+				(state==WINDOW_STATE_FULLSCREEN),
+				_xcb_net_wm_state_fullscreen,
+				0,
+				0,
+				0
+			}
+		}
+	};
+	xcb_send_event(_xcb_conn,0,_xcb_screen->root,XCB_EVENT_MASK_STRUCTURE_NOTIFY|XCB_EVENT_MASK_SUBSTRUCTURE_REDIRECT,(const char*)(&fullscreen_event));
 	if (state==WINDOW_STATE_MINIMIZED){
 		xcb_client_message_event_t event={
 			XCB_CLIENT_MESSAGE,

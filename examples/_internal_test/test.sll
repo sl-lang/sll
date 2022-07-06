@@ -686,6 +686,7 @@ abc` '\n')
 		'1' (<- window_window$set_state window window_window$STATE_MINIMIZED)
 		'2' (<- window_window$set_state window window_window$STATE_NORMAL)
 		'3' (<- window_window$set_state window window_window$STATE_MAXIMIZED)
+		'4' (<- window_window$set_state window window_window$STATE_FULLSCREEN)
 	)
 ))
 (>- nil (&&

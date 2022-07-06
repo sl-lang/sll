@@ -74,6 +74,7 @@
 	(~ int_type) SCROLL_LEFT
 	(~ int_type) SCROLL_RIGHT
 	(~ int_type) SCROLL_UP
+	(~ int_type) STATE_FULLSCREEN
 	(~ int_type) STATE_MAXIMIZED
 	(~ int_type) STATE_MINIMIZED
 	(~ int_type) STATE_NORMAL
@@ -113,6 +114,7 @@
 (= SCROLL_RIGHT 2)
 (= SCROLL_LEFT 3)
 
+(= STATE_FULLSCREEN 3)
 (= STATE_MAXIMIZED 2)
 (= STATE_MINIMIZED 1)
 (= STATE_NORMAL 0)
@@ -311,6 +313,7 @@
 	(= window (:: window window_window_type))
 	(= state (:: state int_type))
 	(? (&&
+		(!== state STATE_FULLSCREEN)
 		(!== state STATE_MAXIMIZED)
 		(!== state STATE_MINIMIZED)
 	) (= state STATE_NORMAL))
@@ -363,6 +366,7 @@
 	SCROLL_LEFT
 	SCROLL_RIGHT
 	SCROLL_UP
+	STATE_FULLSCREEN
 	STATE_MAXIMIZED
 	STATE_MINIMIZED
 	STATE_NORMAL

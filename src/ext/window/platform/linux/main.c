@@ -21,6 +21,7 @@ xcb_atom_t _xcb_net_wm_state;
 xcb_atom_t _xcb_net_wm_state_hidden;
 xcb_atom_t _xcb_net_wm_state_maximized_vert;
 xcb_atom_t _xcb_net_wm_state_maximized_horz;
+xcb_atom_t _xcb_net_wm_state_fullscreen;
 xcb_atom_t _xcb_wm_change_state;
 
 
@@ -43,5 +44,6 @@ void _init_platform(void){
 	GET_ATOM("_NET_WM_STATE_HIDDEN",_xcb_net_wm_state_hidden);
 	GET_ATOM("_NET_WM_STATE_MAXIMIZED_VERT",_xcb_net_wm_state_maximized_vert);
 	GET_ATOM("_NET_WM_STATE_MAXIMIZED_HORZ",_xcb_net_wm_state_maximized_horz);
+	GET_ATOM("_NET_WM_STATE_FULLSCREEN",_xcb_net_wm_state_fullscreen);
 	GET_ATOM("WM_CHANGE_STATE",_xcb_wm_change_state);
 }
