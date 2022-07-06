@@ -48,6 +48,7 @@
 	(~ int_type) id
 	window_geometry$window_geometry_type geometry
 	int_type flags
+	int_type state
 	string_type title
 	int_type mouse_x
 	int_type mouse_y
@@ -73,6 +74,9 @@
 	(~ int_type) SCROLL_LEFT
 	(~ int_type) SCROLL_RIGHT
 	(~ int_type) SCROLL_UP
+	(~ int_type) STATE_MAXIMIZED
+	(~ int_type) STATE_MINIMIZED
+	(~ int_type) STATE_NORMAL
 	(~ func_type) button_pressed
 	(~ func_type) create
 	(~ func_type) destroy
@@ -107,6 +111,10 @@
 (= SCROLL_UP 1)
 (= SCROLL_RIGHT 2)
 (= SCROLL_LEFT 3)
+
+(= STATE_MAXIMIZED 2)
+(= STATE_MINIMIZED 1)
+(= STATE_NORMAL 0)
 
 
 
@@ -143,6 +151,7 @@
 		id
 		geometry
 		0
+		STATE_NORMAL
 		""
 		0
 		0
@@ -289,6 +298,9 @@
 			9 {
 				(? (! (<- window$callbacks$close_request window)) (<- destroy window))
 			}
+			10 {
+				(= window$state (: event 0))
+			}
 		)
 	)
 ))
@@ -335,6 +347,9 @@
 	SCROLL_LEFT
 	SCROLL_RIGHT
 	SCROLL_UP
+	STATE_MAXIMIZED
+	STATE_MINIMIZED
+	STATE_NORMAL
 	button_pressed
 	create
 	destroy

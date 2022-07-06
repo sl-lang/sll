@@ -24,6 +24,10 @@ extern xcb_screen_t* _xcb_screen;
 extern xcb_atom_t _xcb_wm_protocols;
 extern xcb_atom_t _xcb_wm_delete_window;
 extern xcb_atom_t _xcb_net_wm_ping;
+extern xcb_atom_t _xcb_net_wm_state;
+extern xcb_atom_t _xcb_net_wm_state_hidden;
+extern xcb_atom_t _xcb_net_wm_state_maximized_vert;
+extern xcb_atom_t _xcb_net_wm_state_maximized_horz;
 #endif
 
 
