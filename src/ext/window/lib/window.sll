@@ -19,7 +19,7 @@
 	func_type button
 	func_type button_down
 	func_type button_up
-	func_type close_request
+	func_type ignore_close_request?
 	func_type destroy
 	func_type focus
 	func_type focus_enter
@@ -300,7 +300,7 @@
 				(<- window$callbacks$redraw window (: event 0) (: event 1) (: event 2) (: event 3))
 			}
 			9 {
-				(? (! (<- window$callbacks$close_request window)) (<- destroy window))
+				(? (! (<- window$callbacks$ignore_close_request? window)) (<- destroy window))
 			}
 			10 {
 				(= window$state (: event 0))
