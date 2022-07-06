@@ -176,7 +176,7 @@ void _setup_key_mapping(void){
 		if (key==WINDOW_KEY_UNKNOWN){
 			uint32_t name_v=*((const uint32_t*)(iter.data->name));
 			xcb_xkb_key_alias_iterator_t alias_iter=xcb_xkb_get_names_value_list_key_aliases_iterator(names,&name_list);
-			for (int i=0;i<max_aliases;i++){
+			for (int j=0;j<max_aliases;j++){
 				if (name_v==*((const uint32_t*)(alias_iter.data->real))){
 					key=_lookup_key(alias_iter.data->alias);
 					if (key!=WINDOW_KEY_UNKNOWN){
