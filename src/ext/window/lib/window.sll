@@ -159,10 +159,9 @@
 	(? (! window) (@@))
 	(= window (:: window window_window_type))
 	(? (& window$flags FLAG_CLOSED) (@@))
+	(= window$flags (| window$flags FLAG_CLOSED))
 	(<- audit$audit "window.destroy" "i" window$id)
 	(<- (... "window:window_destroy") window$id)
-	(<- map$remove _window_map window$id)
-	(= window$flags (| window$flags FLAG_CLOSED))
 	(<- window$callbacks$destroy window)
 ))
 
