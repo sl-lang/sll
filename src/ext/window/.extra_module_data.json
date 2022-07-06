@@ -6,7 +6,7 @@
 	},
 	"extra_link_options": {
 		"darwin": ["-framework","ApplicationServices"],
-		"linux": ["-lxcb","-lxcb-randr"],
+		"linux": ["-lxcb","-lxcb-randr","-lxcb-xkb"],
 		"windows": ["user32.lib"]
 	}
 }

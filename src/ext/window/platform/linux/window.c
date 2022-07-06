@@ -2,6 +2,7 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include <window/common.h>
+#include <window/keyboard.h>
 #include <window/window.h>
 #include <xcb/xcb.h>
 
@@ -35,7 +36,7 @@ __WINDOW_API_CALL void window_api_window_poll_events(sll_bool_t blocking,sll_arr
 			case XCB_KEY_RELEASE:
 				{
 					const xcb_key_press_event_t* key_event=(const xcb_key_press_event_t*)event;
-					arg=sll_new_object(SLL_CHAR("uuuu"),WINDOW_EVENT_KEY,key_event->event,key_event->detail,(type==XCB_KEY_PRESS));
+					arg=sll_new_object(SLL_CHAR("uuuu"),WINDOW_EVENT_KEY,key_event->event,_scancode_to_keycode[key_event->detail],(type==XCB_KEY_PRESS));
 					break;
 				}
 			case XCB_BUTTON_PRESS:
