@@ -36,6 +36,7 @@
 	func_type redraw
 	func_type scroll
 	func_type size
+	func_type state
 ))
 
 (= window_window_type (&:
@@ -303,6 +304,7 @@
 			}
 			10 {
 				(= window$state (: event 0))
+				(<- window$callbacks$state window (: event 0))
 			}
 		)
 	)
