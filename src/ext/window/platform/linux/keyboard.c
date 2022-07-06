@@ -166,8 +166,8 @@ void _setup_key_mapping(void){
 	xcb_xkb_get_names_value_list_t name_list;
 	xcb_xkb_get_names_value_list_unpack(xcb_xkb_get_names_value_list(names),names->nTypes,names->indicators,names->virtualMods,names->groupNames,names->nKeys,names->nKeyAliases,names->nRadioGroups,names->which,&name_list);
 	int max=xcb_xkb_get_names_value_list_key_names_length(names,&name_list);
-	if (max>256){
-		max=256;
+	if (max>256-names->minKeyCode){
+		max=256-names->minKeyCode;
 	}
 	int max_aliases=xcb_xkb_get_names_value_list_key_aliases_length(names,&name_list);
 	xcb_xkb_key_name_iterator_t iter=xcb_xkb_get_names_value_list_key_names_iterator(names,&name_list);
