@@ -93,13 +93,15 @@ __WINDOW_API_CALL void window_api_window_poll_events(sll_bool_t blocking,sll_arr
 			case XCB_CLIENT_MESSAGE:
 				{
 					const xcb_client_message_event_t* client_event=(const xcb_client_message_event_t*)event;
-					if (client_event->data.data32[0]==_xcb_wm_delete_window){
-						arg=sll_new_object(SLL_CHAR("uu"),WINDOW_EVENT_CLOSE,client_event->window);
-					}
-					else if (client_event->data.data32[0]==_xcb_net_wm_ping){
-						xcb_client_message_event_t reply=*client_event;
-						reply.window=_xcb_screen->root;
-						xcb_send_event(_xcb_conn,0,_xcb_screen->root,XCB_EVENT_MASK_SUBSTRUCTURE_NOTIFY|XCB_EVENT_MASK_SUBSTRUCTURE_REDIRECT,(const char*)(&reply));
+					if (client_event->type==_xcb_wm_protocols){
+						if (client_event->data.data32[0]==_xcb_wm_delete_window){
+							arg=sll_new_object(SLL_CHAR("uu"),WINDOW_EVENT_CLOSE,client_event->window);
+						}
+						else if (client_event->data.data32[0]==_xcb_net_wm_ping){
+							xcb_client_message_event_t reply=*client_event;
+							reply.window=_xcb_screen->root;
+							xcb_send_event(_xcb_conn,0,_xcb_screen->root,XCB_EVENT_MASK_SUBSTRUCTURE_NOTIFY|XCB_EVENT_MASK_SUBSTRUCTURE_REDIRECT,(const char*)(&reply));
+						}
 					}
 					break;
 				}
