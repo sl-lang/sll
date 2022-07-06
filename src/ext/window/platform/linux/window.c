@@ -85,7 +85,9 @@ __WINDOW_API_CALL void window_api_window_poll_events(sll_bool_t blocking,sll_arr
 			case XCB_CONFIGURE_NOTIFY:
 				{
 					const xcb_configure_notify_event_t* configure_event=(const xcb_configure_notify_event_t*)event;
-					arg=sll_new_object(SLL_CHAR("uuuuuu"),WINDOW_EVENT_GEOMETRY,configure_event->event,configure_event->x,configure_event->y,configure_event->width,configure_event->height);
+					xcb_translate_coordinates_reply_t* pos=xcb_translate_coordinates_reply(_xcb_conn,xcb_translate_coordinates(_xcb_conn,configure_event->event,_xcb_screen->root,configure_event->x,configure_event->y),NULL);
+					arg=sll_new_object(SLL_CHAR("uuuuuu"),WINDOW_EVENT_GEOMETRY,configure_event->event,pos->dst_x,pos->dst_y,configure_event->width,configure_event->height);
+					free(pos);
 					break;
 				}
 			case XCB_CLIENT_MESSAGE:
