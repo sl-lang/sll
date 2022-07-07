@@ -191,20 +191,6 @@
 	(<- window$callbacks$destroy window)
 ))
 
-(= set_geometry (,,, window geometry
-	(? (! window) (@@))
-	(= window (:: window window_window_type))
-	(= geometry (:: geometry window_geometry$window_geometry_type))
-	(= window$layout$geometry geometry)
-	(<- (... "window:window_set_geometry")
-		window$id
-		geometry$x
-		geometry$y
-		geometry$width
-		geometry$height
-	)
-))
-
 (= get (,,, id
 	(= window (: _window_map id))
 	(@@ (?: window
