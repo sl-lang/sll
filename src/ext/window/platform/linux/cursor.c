@@ -2,6 +2,19 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include <window/common.h>
+#include <window/cursor.h>
+#include <window/window.h>
+#include <xcb/xcb.h>
+
+
+
+__WINDOW_API_CALL void window_api_cursor_apply_to_window(window_handle_t id,window_cursor_t cursor){
+	if (cursor==WINDOW_CURSOR_HIDDEN){
+		return;
+	}
+	xcb_change_window_attributes(_xcb_conn,(int)(intptr_t)id,XCB_CW_CURSOR,_xcb_cursors+cursor-1);
+	xcb_flush(_xcb_conn);
+}
 
 
 

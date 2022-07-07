@@ -327,7 +327,7 @@
 	(? (! window) (@@))
 	(= window (:: window window_window_type))
 	(= cursor (?: cursor (:: cursor window_cursor$window_cursor_type) window_cursor$CURSOR_DEFAULT))
-	(<- (... "window:window_set_cursor")
+	(<- (... "window:cursor_apply_to_window")
 		window$id
 		cursor$id
 	)

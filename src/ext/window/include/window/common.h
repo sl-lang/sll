@@ -2,6 +2,7 @@
 #define __WINDOW_COMMON_H__ 1
 #ifdef __SLL_BUILD_LINUX
 #include <xcb/xcb.h>
+#include <window/_cursor.h>
 #endif
 
 
@@ -30,6 +31,7 @@ extern xcb_atom_t _xcb_net_wm_state_maximized_vert;
 extern xcb_atom_t _xcb_net_wm_state_maximized_horz;
 extern xcb_atom_t _xcb_net_wm_state_fullscreen;
 extern xcb_atom_t _xcb_wm_change_state;
+extern xcb_cursor_t _xcb_cursors[WINDOW_MAX_CURSOR];
 #endif
 
 

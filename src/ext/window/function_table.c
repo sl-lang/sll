@@ -8,6 +8,11 @@
 
 static const sll_internal_function_descriptor_t _internal_function_table[]={
 	{
+		SLL_CHAR("window:cursor_apply_to_window"),
+		window_api_cursor_apply_to_window,
+		SLL_CHAR("QD|")
+	},
+	{
 		SLL_CHAR("window:cursor_get_position"),
 		window_api_cursor_get_position,
 		SLL_CHAR("|a")
@@ -36,11 +41,6 @@ static const sll_internal_function_descriptor_t _internal_function_table[]={
 		SLL_CHAR("window:window_poll_events"),
 		window_api_window_poll_events,
 		SLL_CHAR("b|a")
-	},
-	{
-		SLL_CHAR("window:window_set_cursor"),
-		window_api_window_set_cursor,
-		SLL_CHAR("QD|")
 	},
 	{
 		SLL_CHAR("window:window_set_geometry"),

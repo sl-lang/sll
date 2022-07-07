@@ -4,7 +4,6 @@
 #include <window/common.h>
 #include <window/cursor.h>
 #include <window/keyboard.h>
-#include <window/window.h>
 #include <xcb/xcb.h>
 #include <xcb/xcb_icccm.h>
 
@@ -136,11 +135,6 @@ __WINDOW_API_CALL void window_api_window_poll_events(sll_bool_t blocking,sll_arr
 		}
 		event=xcb_poll_for_event(_xcb_conn);
 	}
-}
-
-
-
-__WINDOW_API_CALL void window_api_window_set_cursor(window_handle_t id,window_cursor_t cursor){
 }
 
 

@@ -13,7 +13,7 @@ permissions: read-all
 env:
   BUILD_COMMAND_LINUX: ./build.sh --verbose
   BUILD_COMMAND_WINDOWS: .\build.bat --verbose
-  SETUP_LINUX: sudo apt install nasm libxcb-randr0 libxcb-randr0-dev libxcb-xkb-dev libxcb-icccm4 libxcb-icccm4-dev
+  SETUP_LINUX: sudo apt install nasm libxcb-randr0 libxcb-randr0-dev libxcb-xkb-dev libxcb-icccm4 libxcb-icccm4-dev libxcb-cursor0 libxcb-cursor-dev
 jobs:
   codeql:
     name: Analyze code
