@@ -1,10 +1,22 @@
-(--- "types.sll")
+(---
+	"string.sll"
+	"types.sll"
+)
 
 
 
 (= window_cursor_type int_type)
 
+(= window_cursor_position_type (&:
+	(,,, data
+		(@@ (<- string$format "<%lld %lld>" data$x data$y))
+	) @@string@@
+	int_type x
+	int_type y
+))
+
 (= window_cursor_module_type (&:
+	(~ type_type) window_cursor_position_type
 	(~ type_type) window_cursor_type
 	(~ int_type) CURSOR_HIDDEN
 	(~ int_type) CURSOR_DEFAULT
@@ -19,6 +31,8 @@
 	(~ int_type) CURSOR_RESIZE_DIAGONAL_UP
 	(~ int_type) CURSOR_RESIZE_DIAGONAL_DOWN
 	(~ int_type) CURSOR_RESIZE_ALL
+	(~ func_type) get
+	(~ func_type) set
 ))
 
 
@@ -39,7 +53,22 @@
 
 
 
+(= get (,,,
+	(@@ (:: (<- (... "window:cursor_get_position")) window_cursor_position_type))
+))
+
+(= set (,,, position
+	(= position (:: position window_cursor_position_type))
+	(<- (... "window:cursor_set_position")
+		position$x
+		position$y
+	)
+))
+
+
+
 (= window_cursor (. window_cursor_module_type
+	window_cursor_position_type
 	window_cursor_type
 	CURSOR_HIDDEN
 	CURSOR_DEFAULT
@@ -54,5 +83,7 @@
 	CURSOR_RESIZE_DIAGONAL_UP
 	CURSOR_RESIZE_DIAGONAL_DOWN
 	CURSOR_RESIZE_ALL
+	get
+	set
 ))
 (## window_cursor)
