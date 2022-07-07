@@ -1,0 +1,58 @@
+(--- "types.sll")
+
+
+
+(= window_cursor_type int_type)
+
+(= window_cursor_module_type (&:
+	(~ type_type) window_cursor_type
+	(~ int_type) CURSOR_HIDDEN
+	(~ int_type) CURSOR_DEFAULT
+	(~ int_type) CURSOR_CROSS
+	(~ int_type) CURSOR_I_BEAM
+	(~ int_type) CURSOR_WAIT
+	(~ int_type) CURSOR_BUSY
+	(~ int_type) CURSOR_FORBIDDEN
+	(~ int_type) CURSOR_POINTER
+	(~ int_type) CURSOR_RESIZE_VERTICAL
+	(~ int_type) CURSOR_RESIZE_HORIZONTAL
+	(~ int_type) CURSOR_RESIZE_DIAGONAL_UP
+	(~ int_type) CURSOR_RESIZE_DIAGONAL_DOWN
+	(~ int_type) CURSOR_RESIZE_ALL
+))
+
+
+
+(= CURSOR_HIDDEN 0)
+(= CURSOR_DEFAULT 1)
+(= CURSOR_CROSS 2)
+(= CURSOR_I_BEAM 3)
+(= CURSOR_WAIT 4)
+(= CURSOR_BUSY 5)
+(= CURSOR_FORBIDDEN 6)
+(= CURSOR_POINTER 7)
+(= CURSOR_RESIZE_VERTICAL 8)
+(= CURSOR_RESIZE_HORIZONTAL 9)
+(= CURSOR_RESIZE_DIAGONAL_UP 10)
+(= CURSOR_RESIZE_DIAGONAL_DOWN 11)
+(= CURSOR_RESIZE_ALL 12)
+
+
+
+(= window_cursor (. window_cursor_module_type
+	window_cursor_type
+	CURSOR_HIDDEN
+	CURSOR_DEFAULT
+	CURSOR_CROSS
+	CURSOR_I_BEAM
+	CURSOR_WAIT
+	CURSOR_BUSY
+	CURSOR_FORBIDDEN
+	CURSOR_POINTER
+	CURSOR_RESIZE_VERTICAL
+	CURSOR_RESIZE_HORIZONTAL
+	CURSOR_RESIZE_DIAGONAL_UP
+	CURSOR_RESIZE_DIAGONAL_DOWN
+	CURSOR_RESIZE_ALL
+))
+(## window_cursor)

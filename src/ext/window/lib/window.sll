@@ -6,6 +6,7 @@
 	"types.sll"
 	"weakref.sll"
 	"window/_load_library.sll"
+	"window/cursor.sll"
 	"window/geometry.sll"
 	"window/range.sll"
 )
@@ -104,6 +105,7 @@
 	(~ func_type) is_button_pressed?
 	(~ func_type) is_key_pressed?
 	(~ func_type) poll
+	(~ func_type) set_cursor
 	(~ func_type) set_geometry
 	(~ func_type) set_size_constraints
 	(~ func_type) set_state
@@ -321,6 +323,16 @@
 	)
 ))
 
+(= set_cursor (,,, window cursor
+	(? (! window) (@@))
+	(= window (:: window window_window_type))
+	(= cursor (:: cursor window_cursor$window_cursor_type))
+	(<- (... "window:window_set_cursor")
+		window$id
+		cursor
+	)
+))
+
 (= set_geometry (,,, window geometry
 	(? (! window) (@@))
 	(= window (:: window window_window_type))
@@ -448,6 +460,7 @@
 	is_button_pressed?
 	is_key_pressed?
 	poll
+	set_cursor
 	set_geometry
 	set_size_constraints
 	set_state
