@@ -59,11 +59,11 @@
 ))
 
 (= window_window_type (&:
-	(,,, dt
-		(@@ (+ '<' (:: dt$layout$geometry string_type) '>'))
+	(,,, data
+		(@@ (+ '<' (:: data$layout$geometry string_type) '>'))
 	) @@string@@
-	(,,, dt
-		(<- destroy dt)
+	(,,, data
+		(<- destroy data)
 	) @@delete@@
 	(~ int_type) id
 	int_type flags
