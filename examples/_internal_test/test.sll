@@ -690,7 +690,7 @@ abc` '\n')
 		'4' (<- window_window$set_state window window_window$STATE_FULLSCREEN)
 	)
 ))
-(>- nil (&&
+(-> nil (&&
 	(! (<- file$read file$stdin 1 true))
 	(! (& window$flags window_window$FLAG_CLOSED))
 )
