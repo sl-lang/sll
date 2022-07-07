@@ -3,6 +3,7 @@
 #include <sll.h>
 #include <stdint.h>
 #include <window/common.h>
+#include <window/cursor.h>
 
 
 
@@ -48,6 +49,10 @@ __WINDOW_API_CALL void window_api_window_destroy(window_handle_t id);
 
 
 __WINDOW_API_CALL void window_api_window_poll_events(sll_bool_t blocking,sll_array_t* out);
+
+
+
+__WINDOW_API_CALL void window_api_window_set_cursor(window_handle_t id,window_cursor_t cursor);
 
 
 

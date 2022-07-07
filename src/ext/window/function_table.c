@@ -27,6 +27,11 @@ static const sll_internal_function_descriptor_t _internal_function_table[]={
 		SLL_CHAR("b|a")
 	},
 	{
+		SLL_CHAR("window:window_set_cursor"),
+		window_api_window_set_cursor,
+		SLL_CHAR("QD|")
+	},
+	{
 		SLL_CHAR("window:window_set_geometry"),
 		window_api_window_set_geometry,
 		SLL_CHAR("Q-D-DDDQ|")
@@ -57,7 +62,7 @@ static const sll_internal_function_descriptor_t _internal_function_table[]={
 
 static const sll_internal_function_table_descriptor_t _internal_function_table_descriptor_data={
 	(const sll_internal_function_descriptor_t*)(&_internal_function_table),
-	9
+	10
 };
 
 
