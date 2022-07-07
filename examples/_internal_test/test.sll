@@ -697,13 +697,11 @@ abc` '\n')
 			(? (! _cursor_list_index) (= _cursor_list_index ($ _cursor_list)))
 			(-- _cursor_list_index)
 			(<- window_window$set_cursor window (: _cursor_list _cursor_list_index))
-			(:> _cursor_list_index '\n')
 		}
 		window_keyboard$KEY_RIGHT {
 			(++ _cursor_list_index)
 			(? (=== _cursor_list_index ($ _cursor_list)) (= _cursor_list_index 0))
 			(<- window_window$set_cursor window (: _cursor_list _cursor_list_index))
-			(:> _cursor_list_index '\n')
 		}
 	)
 ))
