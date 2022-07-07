@@ -23,8 +23,8 @@
 	func_type cleanup
 	func_type destroy
 	func_type focus
-	func_type focus_enter
-	func_type focus_leave
+	func_type focus_acquire
+	func_type focus_lose
 	func_type geometry
 	func_type ignore_close_request?
 	func_type key
@@ -287,8 +287,8 @@
 				))
 				(<- window$callbacks$focus window state)
 				(<- (?: state
-					window$callbacks$focus_enter
-					window$callbacks$focus_leave
+					window$callbacks$focus_acquire
+					window$callbacks$focus_lose
 				) window)
 			}
 			6 {
