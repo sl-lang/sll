@@ -40,6 +40,20 @@
 	func_type state
 ))
 
+(= window_inputs_type (&:
+	int_type mouse_x
+	int_type mouse_y
+	array_type _keys
+))
+
+(= window_layout_type (&:
+	window_geometry$window_geometry_type geometry
+	window_range$window_range_type width_constraints
+	window_range$window_range_type height_constraints
+	string_type title
+	int_type state
+))
+
 (= window_window_type (&:
 	(,,, dt
 		(@@ (+ '<' (:: dt$geometry string_type) '>'))
@@ -48,14 +62,10 @@
 		(<- destroy dt)
 	) @@delete@@
 	(~ int_type) id
-	window_geometry$window_geometry_type geometry
 	int_type flags
-	int_type state
-	string_type title
-	int_type mouse_x
-	int_type mouse_y
+	window_layout_type layout
+	window_inputs_type inputs
 	window_callbacks_type callbacks
-	array_type _keys
 ))
 
 (= window_window_module_type (&:
@@ -72,6 +82,7 @@
 	(~ int_type) FLAG_CLOSED
 	(~ int_type) FLAG_HAS_MOUSE
 	(~ int_type) FLAG_IN_FOCUS
+	(~ int_type) FLAG_SHOWN
 	(~ int_type) SCROLL_DOWN
 	(~ int_type) SCROLL_LEFT
 	(~ int_type) SCROLL_RIGHT
@@ -102,12 +113,13 @@
 (= FLAG_IN_FOCUS 1)
 (= FLAG_HAS_MOUSE 2)
 (= FLAG_CLOSED 4)
-(= FLAG_BUTTON_1 8)
-(= FLAG_BUTTON_2 16)
-(= FLAG_BUTTON_3 32)
-(= FLAG_BUTTON_4 64)
-(= FLAG_BUTTON_5 128)
-(= FLAG_BUTTON_6 256)
+(= FLAG_SHOWN 8)
+(= FLAG_BUTTON_1 16)
+(= FLAG_BUTTON_2 (<< FLAG_BUTTON_1 1))
+(= FLAG_BUTTON_3 (<< FLAG_BUTTON_1 2))
+(= FLAG_BUTTON_4 (<< FLAG_BUTTON_1 3))
+(= FLAG_BUTTON_5 (<< FLAG_BUTTON_1 4))
+(= FLAG_BUTTON_6 (<< FLAG_BUTTON_1 5))
 (= FLAG_BUTTON_LEFT FLAG_BUTTON_1)
 (= FLAG_BUTTON_MIDDLE FLAG_BUTTON_2)
 (= FLAG_BUTTON_RIGHT FLAG_BUTTON_3)
@@ -155,15 +167,10 @@
 	(<- audit$audit "window.create" "i" id)
 	(= out (. window_window_type
 		id
-		geometry
-		0
-		STATE_NORMAL
-		""
-		0
-		0
-		[]
-		(<- array$create (>> (+ KEY_COUNT 63) 6))
 	))
+	(= out$layout$geometry geometry)
+	(= out$layout$state STATE_NORMAL)
+	(= out$inputs$_keys (<- array$create (>> (+ KEY_COUNT 63) 6)))
 	(= (: _window_map id) (<- weakref$ref out))
 	(? title (<- set_title out title))
 	(? visible? (<- set_visibility out true))
@@ -184,7 +191,7 @@
 	(? (! window) (@@))
 	(= window (:: window window_window_type))
 	(= geometry_ (:: geometry_ window_geometry$window_geometry_type))
-	(= window$geometry geometry_)
+	(= window$layout$geometry geometry_)
 	(<- (... "window:window_set_geometry")
 		window$id
 		geometry_$x
@@ -211,7 +218,7 @@
 	(= window (:: window window_window_type))
 	(= key (:: key int_type))
 	(@@ (!! (&
-		(: window$_keys (>> key 6))
+		(: window$inputs$_keys (>> key 6))
 		(<< 1 (& key 63))
 	)))
 ))
@@ -233,8 +240,8 @@
 				(= state (: event 1))
 				(= idx (>> key 6))
 				(= mask (& key 63))
-				(= value (: window$_keys idx))
-				(= (: window$_keys idx) (?: state
+				(= value (: window$inputs$_keys idx))
+				(= (: window$inputs$_keys idx) (?: state
 					(| value mask)
 					(& value (~ mask))
 				))
@@ -248,8 +255,8 @@
 				(= button (: event 0))
 				(= state (: event 1))
 				(= mask (<< FLAG_BUTTON_1 button))
-				(= value (: window$_buttons idx))
-				(= (: window$_buttons idx) (?: state
+				(= value (: window$inputs$_buttons idx))
+				(= (: window$inputs$_buttons idx) (?: state
 					(| value mask)
 					(& value (~ mask))
 				))
@@ -260,8 +267,8 @@
 				) window button)
 			}
 			3 {
-				(= window$mouse_x (: event 0))
-				(= window$mouse_y (: event 1))
+				(= window$inputs$mouse_x (: event 0))
+				(= window$inputs$mouse_y (: event 1))
 				(<- window$callbacks$mouse window (: event 0) (: event 1))
 			}
 			4 {
@@ -290,7 +297,7 @@
 			}
 			6 {
 				(= geometry (:: event window_geometry$window_geometry_type))
-				(= window$geometry geometry)
+				(= window$layout$geometry geometry)
 				(<- window$callbacks$geometry window geometry)
 				(<- window$callbacks$position window (: event 0) (: event 1))
 				(<- window$callbacks$size window (: event 2) (: event 3))
@@ -305,7 +312,7 @@
 				(? (! (<- window$callbacks$ignore_close_request? window)) (<- destroy window))
 			}
 			10 {
-				(= window$state (: event 0))
+				(= window$layout$state (: event 0))
 				(<- window$callbacks$state window (: event 0))
 			}
 		)
@@ -317,15 +324,21 @@
 	(= window (:: window window_window_type))
 	(= width (:: width window_range$window_range_type))
 	(= height (:: height window_range$window_range_type))
-	(= new_size [window$geometry$width window$geometry$height])
+	(? (&&
+		(=== window$layout$width_constraints width)
+		(=== window$layout$height_constraints height)
+	) (@@))
+	(= window$layout$width_constraints width)
+	(= window$layout$height_constraints height)
+	(= new_size [window$layout$geometry$width window$layout$geometry$height])
 	(? (< (: new_size 0) width$min) (= (: new_size 0) width$min))
 	(? (> (: new_size 0) width$max) (= (: new_size 0) width$max))
 	(? (< (: new_size 1) height$min) (= (: new_size 1) height$min))
 	(? (> (: new_size 1) height$max) (= (: new_size 1) height$max))
 	(<- (... "window:window_set_geometry")
 		window$id
-		window$geometry$x
-		window$geometry$y
+		window$layout$geometry$x
+		window$layout$geometry$y
 		(: new_size 0)
 		(: new_size 1)
 	)
@@ -347,7 +360,7 @@
 		(!== state STATE_MAXIMIZED)
 		(!== state STATE_MINIMIZED)
 	) (= state STATE_NORMAL))
-	(? (=== state window$state) (@@))
+	(? (=== state window$layout$state) (@@))
 	(<- (... "window:window_set_state")
 		window$id
 		state
@@ -359,7 +372,7 @@
 	(= window (:: window window_window_type))
 	(= title (?: title (:: title string_type) ""))
 	(= title (: (<- string$split title '\x00') 0))
-	(= window$title title)
+	(= window$layout$title title)
 	(<- (... "window:window_set_title")
 		window$id
 		title
@@ -369,6 +382,10 @@
 (= set_visibility (,,, window show?
 	(? (! window) (@@))
 	(= window (:: window window_window_type))
+	(= window$flags (?: show?
+		(| window$flags FLAG_SHOWN)
+		(& window$flags (~ FLAG_SHOWN))
+	)
 	(<- (... "window:window_set_visibility") window$id show?)
 ))
 
@@ -392,6 +409,7 @@
 	FLAG_CLOSED
 	FLAG_HAS_MOUSE
 	FLAG_IN_FOCUS
+	FLAG_SHOWN
 	SCROLL_DOWN
 	SCROLL_LEFT
 	SCROLL_RIGHT
