@@ -3,7 +3,8 @@
 ## Added
 
 - Argument parsing modifier to parse signed integers: `-`
-- Window creation API to the window extenion module
+- More optimizer rules
+- Window & cursor management APIs to the window extenion module
 
 ## Changed
 

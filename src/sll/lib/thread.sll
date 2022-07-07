@@ -141,18 +141,6 @@
 
 
 
-(= _thread_wrapper (,,, function args semaphore
-	(= thr nil)
-	(>- (= id (!.)) (=== thr nil)
-		(= thr (<- get id))
-	)
-	(<- (... "sll:thread_release_semaphore") semaphore)
-	(= out (<-* function args))
-	(= thr$return_value out)
-	(= thr$state STATE_TERMINATED)
-	(@@ out)
-))
-
 (= acquire_lock (,,, lock
 	(? (=== lock nil) (@@))
 	(= lock (:: lock lock_type))
@@ -305,7 +293,17 @@
 	(= function (:: function func_type))
 	(= semaphore (<- (... "sll:thread_create_semaphore") 0))
 	(= tid (<- (... "sll:thread_create")
-		_thread_wrapper
+		(,,, function args semaphore
+			(= thr nil)
+			(>- (= id (!.)) (=== thr nil)
+				(= thr (<- get id))
+			)
+			(<- (... "sll:thread_release_semaphore") semaphore)
+			(= out (<-* function args))
+			(= thr$return_value out)
+			(= thr$state STATE_TERMINATED)
+			(@@ out)
+		)
 		[
 			function
 			@@args@@

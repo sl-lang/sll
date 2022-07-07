@@ -34,3 +34,5 @@ $replace_by_operation_list -> 0=operation_list
 {for[1:2]|while[1:2]}.$true -> 0=loop
 {for[1:2]|while[1:2]}.comma[-1].$true -> 0=loop
 {for[1:2]|while[1:2]}.$false -> 0=operation_list, #0[2:]
+
+print.string$"(source_file->string_table.data+data1->node->data.string_index)->length==1" -> "data1->node->data.char_=(source_file->string_table.data+data1->node->data.string_index)->data[0]"

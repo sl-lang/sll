@@ -530,6 +530,23 @@ static void __SLL_FORCE_INLINE _optimizer_execute(sll_source_file_t* source_file
 		data0->node->data.map_length=0;
 		return;
 	}
+	else if (data0->node->type==10){
+		child_count_t start0=0;
+		child_count_t end0=data0->child_count;
+		child_count_t step0=1;
+		if ((data0->child_type_bitmap[0]&16)){
+			for (child_count_t idx0=start0;idx0<end0;idx0+=step0){
+				optimizer_node_children_data_t* data1=data0->children+idx0;
+				if (!data1->node){
+					continue;
+				}
+				if (0){
+					data1->node->data.char_=(source_file->string_table.data+data1->node->data.string_index)->data[0];
+					return;
+				}
+			}
+		}
+	}
 	else if (data0->node->type==69){
 		child_count_t start0=(data0->child_count>1?data0->child_count-1:0);
 		child_count_t end0=data0->child_count;
