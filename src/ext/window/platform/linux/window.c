@@ -96,7 +96,7 @@ __WINDOW_API_CALL void window_api_window_poll_events(sll_bool_t blocking,sll_arr
 					const xcb_property_notify_event_t* property_event=(const xcb_property_notify_event_t*)event;
 					if (property_event->atom==_xcb_net_wm_state){
 						xcb_get_property_reply_t* data=xcb_get_property_reply(_xcb_conn,xcb_get_property(_xcb_conn,0,property_event->window,_xcb_net_wm_state,XCB_ATOM_ATOM,0,32),NULL);
-						xcb_atom_t* wm_state=xcb_get_property_value(data);
+						const xcb_atom_t* wm_state=xcb_get_property_value(data);
 						unsigned int state=WINDOW_STATE_NORMAL;
 						if (*wm_state==_xcb_net_wm_state_hidden){
 							state=WINDOW_STATE_MINIMIZED;
