@@ -6,11 +6,11 @@
 
 
 (= factor_type (&:
-	(,,, dt
-		(? (< dt$power 2) {
-			(@@ (:: dt$prime string_type))
-		})
-		(@@ (<- string$format "%llu^%llu" dt$prime dt$power))
+	(,,, data
+		(@@ (?: (< data$power 2)
+			(:: data$prime string_type)
+			(<- string$format "%llu^%llu" data$prime data$power)
+		))
 	) @@string@@
 	int_type prime
 	int_type power

@@ -12,8 +12,8 @@
 
 
 (= version_type (&:
-	(,,, dt
-		(@@ (<- string$format "sll-v%u.%u.%u" dt$major dt$minor dt$patch))
+	(,,, data
+		(@@ (<- string$format "sll-v%u.%u.%u" data$major data$minor data$patch))
 	) @@string@@
 	(~ int_type) major
 	(~ int_type) minor

@@ -14,14 +14,14 @@
 
 
 (= process_config_type (&:
-	(,,, dt
+	(,,, data
 		(= fl [])
-		(? (& dt$flags FLAG_PASS_STDIN) (<- array$push fl "FLAG_PASS_STDIN"))
-		(? (& dt$flags FLAG_PASS_STDOUT) (<- array$push fl "FLAG_PASS_STDOUT"))
-		(? (& dt$flags FLAG_PASS_STDERR) (<- array$push fl "FLAG_PASS_STDERR"))
-		(? (& dt$flags FLAG_WAIT) (<- array$push fl "FLAG_WAIT"))
+		(? (& data$flags FLAG_PASS_STDIN) (<- array$push fl "FLAG_PASS_STDIN"))
+		(? (& data$flags FLAG_PASS_STDOUT) (<- array$push fl "FLAG_PASS_STDOUT"))
+		(? (& data$flags FLAG_PASS_STDERR) (<- array$push fl "FLAG_PASS_STDERR"))
+		(? (& data$flags FLAG_WAIT) (<- array$push fl "FLAG_WAIT"))
 		(@@ (<- string$format "<cwd=\"%s\" flags=%s>"
-			dt$cwd
+			data$cwd
 			(<- string$join ", " fl)
 		))
 	) @@string@@
@@ -30,11 +30,11 @@
 ))
 
 (= stream_data_type (&:
-	(,,, dt
+	(,,, data
 		(@@ (<- string$format "<in=\"%s\" out=\"%s\" err=\"%s\">"
-			dt$stdin
-			dt$stdout
-			dt$stderr
+			data$stdin
+			data$stdout
+			data$stderr
 		))
 	) @@string@@
 	(~ string_type) stdin

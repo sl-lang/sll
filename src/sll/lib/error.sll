@@ -69,29 +69,29 @@
 
 
 (= ERROR_ANY (&:
-	(,,, dt
-		(@@ dt$str)
+	(,,, data
+		(@@ data$str)
 	) @@string@@
 	(~ string_type) str
 ))
 
 (= ERROR_EOF (&:
-	(,,, dt
+	(,,, data
 		(@@ "End of file")
 	) @@string@@
 	(~ file_type) file
 ))
 
 (= ERROR_FILE_NOT_FOUND (&:
-	(,,, dt
-		(@@ (<- string$format "Unable to open file '%s': File not found" dt$fp))
+	(,,, data
+		(@@ (<- string$format "Unable to open file '%s': File not found" data$fp))
 	) @@string@@
 	(~ string_type) fp
 ))
 
 (= ERROR_INVALID_BASE64_CHARACTER (&:
-	(,,, dt
-		(@@ (<- string$format "Invalid Base64 character at offset %llu: '%c'" dt$offset dt$character))
+	(,,, data
+		(@@ (<- string$format "Invalid Base64 character at offset %llu: '%c'" data$offset data$character))
 	) @@string@@
 	(~ int_type) offset
 	(~ char_type) character
@@ -110,24 +110,24 @@
 ))
 
 (= ERROR_LENGTH_MISMATCH (&:
-	(,,, dt
-		(@@ (<- string$format "Expected equal lengths, got %llu and %llu" dt$len_a dt$len_b))
+	(,,, data
+		(@@ (<- string$format "Expected equal lengths, got %llu and %llu" data$len_a data$len_b))
 	) @@string@@
 	(~ int_type) len_a
 	(~ int_type) len_b
 ))
 
 (= ERROR_NOT_ENOUGH_DATA (&:
-	(,,, dt
-		(@@ (<- string$format "Expected at minimum %llu elements, got %llu" dt$min dt$len))
+	(,,, data
+		(@@ (<- string$format "Expected at minimum %llu elements, got %llu" data$min data$len))
 	) @@string@@
 	(~ int_type) len
 	(~ int_type) min
 ))
 
 (= ERROR_OUT_OF_RANGE (&:
-	(,,, dt
-		(@@ (<- string$format "Value '%lld' is not between %lld and %lld" dt$v dt$min dt$max))
+	(,,, data
+		(@@ (<- string$format "Value '%lld' is not between %lld and %lld" data$v data$min data$max))
 	) @@string@@
 	(~ int_type) v
 	(~ int_type) min
@@ -141,29 +141,29 @@
 ))
 
 (= ERROR_SANDBOX (&:
-	(,,, dt
-		(@@ (<- string$format "Feature disabled due to the '%s' sandbox flag" dt$flag))
+	(,,, data
+		(@@ (<- string$format "Feature disabled due to the '%s' sandbox flag" data$flag))
 	) @@string@@
 	(~ string_type) flag
 ))
 
 (= ERROR_STRING (&:
-	(,,, dt
-		(@@ dt$string)
+	(,,, data
+		(@@ data$string)
 	) @@string@@
 	(~ string_type) string
 ))
 
 (= ERROR_UNKNOWN_FUNCTION (&:
-	(,,, dt
-		(@@ (<- string$format "Unknown function: %u" dt$function))
+	(,,, data
+		(@@ (<- string$format "Unknown function: %u" data$function))
 	) @@string@@
 	(~ func_type) function
 ))
 
 (= ERROR_UNKNOWN_TYPE (&:
-	(,,, dt
-		(@@ (<- string$format "Unknown type: '%c'" dt$type))
+	(,,, data
+		(@@ (<- string$format "Unknown type: '%c'" data$type))
 	) @@string@@
 	(~ char_type) type
 ))

@@ -6,19 +6,19 @@
 
 
 (= ERROR_INTERNAL_ERROR (&:
-	(,,, dt
+	(,,, data
 		(@@ (+
-			dt$name
-			(?: dt$raw_error
+			data$name
+			(?: data$raw_error
 				(+
 					" ["
-					dt$raw_error
+					data$raw_error
 					']'
 				)
 				""
 			)
 			": "
-			dt$str
+			data$str
 		))
 	) @@string@@
 	(~ string_type) name

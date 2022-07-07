@@ -11,9 +11,9 @@
 
 
 (= time_zone_type (&:
-	(,,, dt
-		(= hour (// dt$offset 60))
-		(= minute (- dt$offset (* hour 60)))
+	(,,, data
+		(= hour (// data$offset 60))
+		(= minute (- data$offset (* hour 60)))
 		(= off_str "")
 		(?
 			hour {
@@ -27,26 +27,26 @@
 				(= off_str (<- string$format " offset=%umin" minute))
 			}
 		)
-		(@@ (<- string$format "<name=%s%s>" dt$name off_str))
+		(@@ (<- string$format "<name=%s%s>" data$name off_str))
 	) @@string@@
 	int_type offset
 	string_type name
 ))
 
 (= date_type (&:
-	(,,, dt
-		(= hour (// dt$time_zone$offset 60))
-		(= minute (- dt$time_zone$offset (* hour 60)))
+	(,,, data
+		(= hour (// data$time_zone$offset 60))
+		(= minute (- data$time_zone$offset (* hour 60)))
 		(@@ (<- string$format "%.4u/%.2u/%.2u %.2u:%.2u:%.2u %+.2d:%.2u (%s)"
-			dt$year
-			(+ dt$month 1)
-			(+ dt$day 1)
-			dt$hour
-			dt$minute
-			(:: dt$second int_type)
+			data$year
+			(+ data$month 1)
+			(+ data$day 1)
+			data$hour
+			data$minute
+			(:: data$second int_type)
 			hour
 			minute
-			dt$time_zone$name
+			data$time_zone$name
 		))
 	) @@string@@
 	int_type year
@@ -300,16 +300,16 @@
 	))
 ))
 
-(= to_time (,,, dt
-	(= dt (:: dt date_type))
+(= to_time (,,, date
+	(= date (:: date date_type))
 	(@@ (- (<- (... "sll:date_merge")
-		dt$year
-		dt$month
-		dt$day
-		dt$hour
-		dt$minute
-		dt$second
-	) (* dt$time_zone$offset 60)))
+		date$year
+		date$month
+		date$day
+		date$hour
+		date$minute
+		date$second
+	) (* date$time_zone$offset 60)))
 ))
 
 

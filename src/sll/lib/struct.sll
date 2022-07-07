@@ -12,11 +12,11 @@
 
 
 (= struct_type (&:
-	(,,, dt {
-		(? dt$_fmt_str (@@ dt$_fmt_str))
+	(,,, data {
+		(? data$_fmt_str (@@ data$_fmt_str))
 		(= out "<")
-		(-> (= i 0) (< i ($ dt$_format))
-			(= elem (: dt$_format i))
+		(-> (= i 0) (< i ($ data$_format))
+			(= elem (: data$_format i))
 			(?? (& elem STRUCT_ELEM_TYPE_MASK)
 				STRUCT_ELEM_TYPE_INT {
 					(?? (& elem STRUCT_ELEM_SIZE_MASK)
@@ -56,7 +56,7 @@
 			(++ i)
 		)
 		(= out (+ out '>'))
-		(= dt$_fmt_str out)
+		(= data$_fmt_str out)
 		(@@ out)
 	}) @@string@@
 	(~ int_type) size

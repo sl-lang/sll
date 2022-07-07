@@ -10,11 +10,11 @@
 
 
 (= weakref_type (&:
-	(,,, dt
-		(<- (... "sll:weakref_delete") dt$id)
+	(,,, data
+		(<- (... "sll:weakref_delete") data$id)
 	) @@delete@@
-	(,,, dt
-		(@@ (<- string$str (<- get dt)))
+	(,,, data
+		(@@ (<- string$str (<- get data)))
 	) @@string@@
 	(~ int_type) _id
 	(~ array_type) callbacks

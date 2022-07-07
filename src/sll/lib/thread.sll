@@ -14,37 +14,37 @@
 
 
 (= barrier_type (&:
-	(,,, dt
-		(<- (... "sll:thread_delete_barrier") dt$id)
+	(,,, data
+		(<- (... "sll:thread_delete_barrier") data$id)
 	) @@delete@@
-	(,,, dt
-		(@@ (<- string$format "<barrier-%u counter=%u>" dt$id dt$counter))
+	(,,, data
+		(@@ (<- string$format "<barrier-%u counter=%u>" data$id data$counter))
 	) @@string@@
 	(~ int_type) id
 	int_type counter
 ))
 
 (= lock_type (&:
-	(,,, dt
-		(<- (... "sll:thread_delete_lock") dt$id)
+	(,,, data
+		(<- (... "sll:thread_delete_lock") data$id)
 	) @@delete@@
-	(,,, dt
-		(= state (?: (=== dt$blocking_thread -1)
+	(,,, data
+		(= state (?: (=== data$blocking_thread -1)
 			"unlocked"
-			(+ "locked blocking_thread=" (<- string$str (<- get dt$blocking_thread)))
+			(+ "locked blocking_thread=" (<- string$str (<- get data$blocking_thread)))
 		))
-		(@@ (<- string$format "<lock-%u state=%s>" dt$id state))
+		(@@ (<- string$format "<lock-%u state=%s>" data$id state))
 	) @@string@@
 	(~ int_type) id
 	int_type blocking_thread
 ))
 
 (= semaphore_type (&:
-	(,,, dt
-		(<- (... "sll:thread_delete_semaphore") dt$id)
+	(,,, data
+		(<- (... "sll:thread_delete_semaphore") data$id)
 	) @@delete@@
-	(,,, dt
-		(@@ (<- string$format "<semaphore-%u counter=%u/%u>" dt$id dt$counter dt$max))
+	(,,, data
+		(@@ (<- string$format "<semaphore-%u counter=%u/%u>" data$id data$counter data$max))
 	) @@string@@
 	(~ int_type) id
 	(~ int_type) max
@@ -52,26 +52,26 @@
 ))
 
 (= thread_type (&:
-	(,,, dt
-		(<- map$remove _thread_map dt$id)
-		(<- (... "sll:thread_delete") dt$id)
+	(,,, data
+		(<- map$remove _thread_map data$id)
+		(<- (... "sll:thread_delete") data$id)
 	) @@delete@@
-	(,,, dt
+	(,,, data
 		(= state nil)
-		(?? dt$state
+		(?? data$state
 			STATE_RUNNING (= state "running")
-			STATE_WAITING_THREAD (= state (+ "waiting blocking=" (<- string$str (<- get dt$blocking))))
-			STATE_WAITING_LOCK (= state (+ "waiting blocking=" (<- string$str dt$blocking)))
-			STATE_WAITING_SEMAPHORE (= state (+ "waiting blocking=" (<- string$str dt$blocking)))
-			STATE_WAITING_BARRIER (= state (+ "waiting blocking=" (<- string$str dt$blocking)))
-			(= state (+ "terminated return_value=" (<- string$str dt$return_value)))
+			STATE_WAITING_THREAD (= state (+ "waiting blocking=" (<- string$str (<- get data$blocking))))
+			STATE_WAITING_LOCK (= state (+ "waiting blocking=" (<- string$str data$blocking)))
+			STATE_WAITING_SEMAPHORE (= state (+ "waiting blocking=" (<- string$str data$blocking)))
+			STATE_WAITING_BARRIER (= state (+ "waiting blocking=" (<- string$str data$blocking)))
+			(= state (+ "terminated return_value=" (<- string$str data$return_value)))
 		)
-		(? (!== dt$suspended -1) (= state (+
+		(? (!== data$suspended -1) (= state (+
 			state
 			" suspended="
-			(<- string$str (<- get dt$suspended))
+			(<- string$str (<- get data$suspended))
 		)))
-		(@@ (<- string$format "<thread-%u state=%s>" dt$id state))
+		(@@ (<- string$format "<thread-%u state=%s>" data$id state))
 	) @@string@@
 	(~ int_type) id
 	int_type state

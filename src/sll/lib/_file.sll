@@ -14,23 +14,23 @@
 
 
 (= file_type (&:
-	(,,, dt
-		(<- (... "sll:file_inc_handle") dt$_handle)
+	(,,, data
+		(<- (... "sll:file_inc_handle") data$_handle)
 	) @@copy@@
-	(,,, dt
-		(? (=== dt$_handle -1) (@@))
-		(<- (... "sll:file_close") dt$_handle)
+	(,,, data
+		(? (=== data$_handle -1) (@@))
+		(<- (... "sll:file_close") data$_handle)
 	) @@delete@@
-	(,,, dt
+	(,,, data
 		(= m "")
-		(? (& dt$flags FLAG_APPEND) (= m (+ m 'A')))
+		(? (& data$flags FLAG_APPEND) (= m (+ m 'A')))
 		(?
-			(& dt$flags FLAG_NO_BUFFER) (= m (+ m 'B'))
-			(& dt$flags FLAG_FLUSH_ON_NEWLINE) (= m (+ m 'N'))
+			(& data$flags FLAG_NO_BUFFER) (= m (+ m 'B'))
+			(& data$flags FLAG_FLUSH_ON_NEWLINE) (= m (+ m 'N'))
 		)
-		(? (& dt$flags FLAG_READ) (= m (+ m 'R')))
-		(? (& dt$flags FLAG_WRITE) (= m (+ m 'W')))
-		(@@ (<- string$format "<path=%s, mode=%s>" dt$name m))
+		(? (& data$flags FLAG_READ) (= m (+ m 'R')))
+		(? (& data$flags FLAG_WRITE) (= m (+ m 'W')))
+		(@@ (<- string$format "<path=%s, mode=%s>" data$name m))
 	) @@string@@
 	(~ string_type) name
 	(~ int_type) flags
