@@ -122,7 +122,7 @@ __WINDOW_API_CALL void window_api_window_poll_events(sll_bool_t blocking,sll_arr
 						else if (client_event->data.data32[0]==_xcb_net_wm_ping){
 							xcb_client_message_event_t reply=*client_event;
 							reply.window=_xcb_screen->root;
-							xcb_send_event(_xcb_conn,0,_xcb_screen->root,XCB_EVENT_MASK_SUBSTRUCTURE_NOTIFY|XCB_EVENT_MASK_SUBSTRUCTURE_REDIRECT,(const char*)(&reply));
+							xcb_send_event(_xcb_conn,0,_xcb_screen->root,XCB_EVENT_MASK_STRUCTURE_NOTIFY|XCB_EVENT_MASK_SUBSTRUCTURE_REDIRECT,(const char*)(&reply));
 						}
 					}
 					break;
