@@ -45,6 +45,11 @@ __WINDOW_API_CALL void window_api_window_set_geometry(window_handle_t id,int32_t
 
 
 
+__WINDOW_API_CALL void window_api_window_set_size_constraints(window_handle_t id,uint32_t min_w,uint32_t min_h,uint32_t max_w,uint32_t max_h){
+}
+
+
+
 __WINDOW_API_CALL void window_api_window_set_state(window_handle_t id,sll_char_t state){
 }
 

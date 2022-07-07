@@ -7,6 +7,7 @@
 	"weakref.sll"
 	"window/_load_library.sll"
 	"window/geometry.sll"
+	"window/range.sll"
 )
 
 
@@ -87,6 +88,7 @@
 	(~ func_type) hide
 	(~ func_type) key_pressed
 	(~ func_type) poll
+	(~ func_type) set_size_constraints
 	(~ func_type) set_state
 	(~ func_type) set_title
 	(~ func_type) set_visibility
@@ -310,6 +312,20 @@
 	)
 ))
 
+(= set_size_constraints (,,, window width height
+	(? (! window) (@@))
+	(= window (:: window window_window_type))
+	(= width (:: width window_range$window_range_type))
+	(= height (:: height window_range$window_range_type))
+	(<- (... "window:window_set_size_constraints")
+		window$id
+		width$min
+		height$min
+		width$max
+		height$max
+	)
+))
+
 (= set_state (,,, window state
 	(? (! window) (@@))
 	(= window (:: window window_window_type))
@@ -380,6 +396,7 @@
 	hide
 	key_pressed
 	poll
+	set_size_constraints
 	set_state
 	set_title
 	set_visibility

@@ -147,6 +147,17 @@ __WINDOW_API_CALL void window_api_window_set_geometry(window_handle_t id,int32_t
 
 
 
+__WINDOW_API_CALL void window_api_window_set_size_constraints(window_handle_t id,uint32_t min_w,uint32_t min_h,uint32_t max_w,uint32_t max_h){
+	xcb_size_hints_t hints;
+	sll_zero_memory(&hints,sizeof(xcb_size_hints_t));
+	xcb_icccm_size_hints_set_min_size(&hints,min_w,min_h);
+	xcb_icccm_size_hints_set_max_size(&hints,max_w,max_h);
+	xcb_icccm_set_wm_normal_hints(_xcb_conn,(int)(intptr_t)id,&hints);
+	xcb_flush(_xcb_conn);
+}
+
+
+
 __WINDOW_API_CALL void window_api_window_set_state(window_handle_t id,sll_char_t state){
 	xcb_client_message_event_t event={
 		XCB_CLIENT_MESSAGE,

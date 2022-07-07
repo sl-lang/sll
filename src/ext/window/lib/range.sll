@@ -1,0 +1,34 @@
+(---
+	"string.sll"
+	"types.sll"
+)
+
+
+
+(= window_range_type (&:
+	(,,, dt
+		(? (> dt$max dt$min) (@@))
+		(= tmp dt$max)
+		(= dt$max dt$min)
+		(= dt$min tmp)
+	) @@init@@
+	(,,, dt
+		(@@ (<- string$format "%lld-%lld"
+			dt$min
+			dt$max
+		))
+	) @@string@@
+	int_type min
+	int_type max
+))
+
+(= window_range_module_type (&:
+	(~ type_type) window_range_type
+))
+
+
+
+(= window_range (. window_range_module_type
+	window_range_type
+))
+(## window_range)
