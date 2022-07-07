@@ -329,7 +329,7 @@
 	(= cursor (:: cursor window_cursor$window_cursor_type))
 	(<- (... "window:window_set_cursor")
 		window$id
-		cursor
+		cursor$id
 	)
 ))
 
