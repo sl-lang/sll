@@ -17,7 +17,7 @@ __WINDOW_API_CALL window_handle_t window_api_window_create(int32_t x,int32_t y,u
 		_xcb_wm_delete_window,
 		_xcb_net_wm_ping
 	};
-	xcb_change_property(_xcb_conn,XCB_PROP_MODE_REPLACE,id,_xcb_wm_protocols,4,sizeof(xcb_atom_t)*8,2,atom_data);
+	xcb_change_property(_xcb_conn,XCB_PROP_MODE_REPLACE,id,_xcb_wm_protocols,XCB_ATOM_ATOM,sizeof(xcb_atom_t)*8,2,atom_data);
 	xcb_flush(_xcb_conn);
 	return (window_handle_t)(intptr_t)id;
 }

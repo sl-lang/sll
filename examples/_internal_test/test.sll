@@ -682,6 +682,7 @@ abc` '\n')
 (<- window_window$set_geometry window [300 300 1024 1024])
 (<- window_window$set_size_constraints window [300 900] [300 600])
 (= window$callbacks$key_down (,,, window key
+
 	(?? key
 		window_keyboard$KEY_ESCAPE (<- window_window$destroy window)
 		'1' (<- window_window$set_state window window_window$STATE_MINIMIZED)
