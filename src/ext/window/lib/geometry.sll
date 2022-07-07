@@ -6,22 +6,22 @@
 
 
 (= window_geometry_type (&:
-	(,,, dt
-		(? (< dt$width 0) {
-			(= dt$width (- 0 dt$width))
-			(= dt$x (- dt$x dt$width))
+	(,,, data
+		(? (< data$width 0) {
+			(= data$width (- 0 data$width))
+			(= data$x (- data$x data$width))
 		})
-		(? (< dt$height 0) {
-			(= dt$height (- 0 dt$height))
-			(= dt$y (- dt$y dt$height))
+		(? (< data$height 0) {
+			(= data$height (- 0 data$height))
+			(= data$y (- data$y data$height))
 		})
 	) @@init@@
-	(,,, dt
+	(,,, data
 		(@@ (<- string$format "%llux%llu%+lld%+lld"
-			dt$width
-			dt$height
-			dt$x
-			dt$y
+			data$width
+			data$height
+			data$x
+			data$y
 		))
 	) @@string@@
 	int_type x

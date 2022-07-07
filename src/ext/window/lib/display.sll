@@ -13,12 +13,12 @@
 
 
 (= window_display_type (&:
-	(,,, dt
+	(,,, data
 		(@@ (+
 			'<'
-			(:: dt$geometry string_type)
-			(* ", Active" (!! (& dt$flags FLAG_ACTIVE)))
-			(* ", Main" (!! (& dt$flags FLAG_MAIN_DISPLAY)))
+			(:: data$geometry string_type)
+			(* ", Active" (!! (& data$flags FLAG_ACTIVE)))
+			(* ", Main" (!! (& data$flags FLAG_MAIN_DISPLAY)))
 			'>'
 		))
 	) @@string@@

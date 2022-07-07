@@ -6,16 +6,16 @@
 
 
 (= window_range_type (&:
-	(,,, dt
-		(? (> dt$max dt$min) (@@))
-		(= tmp dt$max)
-		(= dt$max dt$min)
-		(= dt$min tmp)
+	(,,, data
+		(? (> data$max data$min) (@@))
+		(= tmp data$max)
+		(= data$max data$min)
+		(= data$min tmp)
 	) @@init@@
-	(,,, dt
+	(,,, data
 		(@@ (<- string$format "%lld-%lld"
-			dt$min
-			dt$max
+			data$min
+			data$max
 		))
 	) @@string@@
 	int_type min
