@@ -95,12 +95,12 @@
 	(~ int_type) STATE_MAXIMIZED
 	(~ int_type) STATE_MINIMIZED
 	(~ int_type) STATE_NORMAL
-	(~ func_type) button_pressed
 	(~ func_type) create
 	(~ func_type) destroy
 	(~ func_type) get
 	(~ func_type) hide
-	(~ func_type) key_pressed
+	(~ func_type) is_button_pressed?
+	(~ func_type) is_key_pressed?
 	(~ func_type) poll
 	(~ func_type) set_geometry
 	(~ func_type) set_size_constraints
@@ -143,17 +143,6 @@
 (= _window_map <>)
 
 
-
-(= button_pressed (,,, window button
-	(? (! window) (@@ false))
-	(= window (:: window window_window_type))
-	(= button (:: button int_type))
-	(? (< button 1) (@@ false))
-	(@@ (!! (&
-		window$flags
-		(<< FLAG_BUTTON_1 (- button 1))
-	)))
-))
 
 (= create (,,, geometry parent title visible?
 	(= geometry (:: geometry window_geometry$window_geometry_type))
@@ -203,7 +192,18 @@
 	(<- set_visibility window false)
 ))
 
-(= key_pressed (,,, window key
+(= is_button_pressed? (,,, window button
+	(? (! window) (@@ false))
+	(= window (:: window window_window_type))
+	(= button (:: button int_type))
+	(? (< button 1) (@@ false))
+	(@@ (!! (&
+		window$flags
+		(<< FLAG_BUTTON_1 (- button 1))
+	)))
+))
+
+(= is_key_pressed? (,,, window key
 	(? (! window) (@@ false))
 	(= window (:: window window_window_type))
 	(= key (:: key int_type))
@@ -430,12 +430,12 @@
 	STATE_MAXIMIZED
 	STATE_MINIMIZED
 	STATE_NORMAL
-	button_pressed
 	create
 	destroy
 	get
 	hide
-	key_pressed
+	is_button_pressed?
+	is_key_pressed?
 	poll
 	set_geometry
 	set_size_constraints
