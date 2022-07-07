@@ -317,6 +317,18 @@
 	(= window (:: window window_window_type))
 	(= width (:: width window_range$window_range_type))
 	(= height (:: height window_range$window_range_type))
+	(= new_size [window$geometry$width window$geometry$height])
+	(? (< (: new_size 0) width$min) (= (: new_size 0) width$min))
+	(? (> (: new_size 0) width$max) (= (: new_size 0) width$max))
+	(? (< (: new_size 1) height$min) (= (: new_size 1) height$min))
+	(? (> (: new_size 1) height$max) (= (: new_size 1) height$max))
+	(<- (... "window:window_set_geometry")
+		window$id
+		window$geometry$x
+		window$geometry$y
+		(: new_size 0)
+		(: new_size 1)
+	)
 	(<- (... "window:window_set_size_constraints")
 		window$id
 		width$min

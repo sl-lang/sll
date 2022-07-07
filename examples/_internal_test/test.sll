@@ -679,7 +679,7 @@ abc` '\n')
 (:> (<- window_display$enumerate) '\n')
 
 (= window (<- window_window$create [0 0 900 600] nil "Example Window Title" true))
-(<- window_window$geometry window [300 300 600 500])
+(<- window_window$geometry window [300 300 1024 1024])
 (<- window_window$set_size_constraints window [300 900] [300 600])
 (= window$callbacks$key_down (,,, window key
 	(?? key
