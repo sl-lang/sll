@@ -1,6 +1,7 @@
 (---
 	"string.sll"
 	"types.sll"
+	"window/display.sll"
 )
 
 
@@ -33,6 +34,7 @@
 	(~ int_type) CURSOR_RESIZE_DIAGONAL_UP
 	(~ int_type) CURSOR_RESIZE_DIAGONAL_DOWN
 	(~ int_type) CURSOR_RESIZE_ALL
+	(~ func_type) center
 	(~ func_type) get
 	(~ func_type) set
 ))
@@ -54,6 +56,21 @@
 (= CURSOR_RESIZE_ALL (. window_cursor_type 12))
 
 
+
+(= _root_screen (: (<- window_display$enumerate) 0))
+(= _center_location [
+	(+ _root_screen$geometry$x (>> _root_screen$geometry$width 1))
+	(+ _root_screen$geometry$y (>> _root_screen$geometry$height 1))
+])
+
+
+
+(= center (,,,
+	(<- (... "window:cursor_set_position")
+		(: _center_location 0)
+		(: _center_location 1)
+	)
+))
 
 (= get (,,,
 	(@@ (:: (<- (... "window:cursor_get_position")) window_cursor_position_type))
@@ -85,6 +102,7 @@
 	CURSOR_RESIZE_DIAGONAL_UP
 	CURSOR_RESIZE_DIAGONAL_DOWN
 	CURSOR_RESIZE_ALL
+	center
 	get
 	set
 ))

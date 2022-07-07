@@ -33,6 +33,7 @@
 	"uuid.sll"
 	"vm.sll"
 	"weakref.sll"
+	"window/cursor.sll"
 	"window/display.sll"
 	"window/keyboard.sll"
 	"window/window.sll"
@@ -682,13 +683,14 @@ abc` '\n')
 (<- window_window$set_geometry window [300 300 1024 1024])
 (<- window_window$set_size_constraints window [300 900] [300 600])
 (= window$callbacks$key_down (,,, window key
-
 	(?? key
 		window_keyboard$KEY_ESCAPE (<- window_window$destroy window)
 		'1' (<- window_window$set_state window window_window$STATE_MINIMIZED)
 		'2' (<- window_window$set_state window window_window$STATE_NORMAL)
 		'3' (<- window_window$set_state window window_window$STATE_MAXIMIZED)
 		'4' (<- window_window$set_state window window_window$STATE_FULLSCREEN)
+		'C' (:> (<- window_cursor$get) '\n')
+		'S' (<- window_cursor$center)
 	)
 ))
 (-> nil (&&

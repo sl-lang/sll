@@ -1,4 +1,5 @@
 #include <window/common.h>
+#include <window/cursor.h>
 #include <window/display.h>
 #include <window/window.h>
 #include <sll.h>
@@ -6,6 +7,16 @@
 
 
 static const sll_internal_function_descriptor_t _internal_function_table[]={
+	{
+		SLL_CHAR("window:cursor_get_position"),
+		window_api_cursor_get_position,
+		SLL_CHAR("|a")
+	},
+	{
+		SLL_CHAR("window:cursor_set_position"),
+		window_api_cursor_set_position,
+		SLL_CHAR("-D-D|")
+	},
 	{
 		SLL_CHAR("window:display_enumerate"),
 		window_api_display_enumerate,
@@ -62,7 +73,7 @@ static const sll_internal_function_descriptor_t _internal_function_table[]={
 
 static const sll_internal_function_table_descriptor_t _internal_function_table_descriptor_data={
 	(const sll_internal_function_descriptor_t*)(&_internal_function_table),
-	10
+	12
 };
 
 
