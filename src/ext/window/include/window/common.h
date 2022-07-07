@@ -31,7 +31,7 @@ extern xcb_atom_t _xcb_net_wm_state_maximized_vert;
 extern xcb_atom_t _xcb_net_wm_state_maximized_horz;
 extern xcb_atom_t _xcb_net_wm_state_fullscreen;
 extern xcb_atom_t _xcb_wm_change_state;
-extern xcb_cursor_t _xcb_cursors[WINDOW_MAX_CURSOR];
+extern xcb_cursor_t _xcb_cursors[WINDOW_MAX_CURSOR+1];
 #endif
 
 

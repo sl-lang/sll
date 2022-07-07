@@ -2,6 +2,7 @@
 #include <window/cursor.h>
 #include <xcb/xcb.h>
 #include <xcb/xcb_cursor.h>
+#include <xcb/xcb_image.h>
 
 
 
@@ -16,12 +17,16 @@
 	do{ \
 		const char* __names[]={__VA_ARGS__,"X_cursor"}; \
 		for (unsigned int __i=0;__i<sizeof(__names)/sizeof(const char*);__i++){ \
-			_xcb_cursors[id-1]=xcb_cursor_load_cursor(_xcb_cursor_ctx,__names[__i]); \
-			if (_xcb_cursors[id-1]!=XCB_NONE){ \
+			_xcb_cursors[id]=xcb_cursor_load_cursor(_xcb_cursor_ctx,__names[__i]); \
+			if (_xcb_cursors[id]!=XCB_NONE){ \
 				break; \
 			} \
 		} \
 	} while (0)
+
+
+
+static const uint8_t _blank_cursor_bits[]={0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
 
 
 
@@ -40,7 +45,7 @@ xcb_atom_t _xcb_net_wm_state_maximized_vert;
 xcb_atom_t _xcb_net_wm_state_maximized_horz;
 xcb_atom_t _xcb_net_wm_state_fullscreen;
 xcb_atom_t _xcb_wm_change_state;
-xcb_cursor_t _xcb_cursors[WINDOW_MAX_CURSOR];
+xcb_cursor_t _xcb_cursors[WINDOW_MAX_CURSOR+1];
 
 
 
@@ -69,6 +74,10 @@ void _init_platform(void){
 	GET_ATOM("_NET_WM_STATE_FULLSCREEN",_xcb_net_wm_state_fullscreen);
 	GET_ATOM("WM_CHANGE_STATE",_xcb_wm_change_state);
 	xcb_cursor_context_new(_xcb_conn,_xcb_screen,&_xcb_cursor_ctx);
+	_xcb_cursors[WINDOW_CURSOR_HIDDEN]=xcb_generate_id(_xcb_conn);
+	xcb_pixmap_t empty_bitmap=xcb_create_pixmap_from_bitmap_data(_xcb_conn,_xcb_screen->root,(uint8_t*)_blank_cursor_bits,16,16,1,0,0,0);
+	xcb_create_cursor(_xcb_conn,_xcb_cursors[WINDOW_CURSOR_HIDDEN],empty_bitmap,empty_bitmap,0,0,0,0xffff,0xffff,0xffff,8,8);
+	xcb_free_pixmap(_xcb_conn,empty_bitmap);
 	LOAD_CURSOR(WINDOW_CURSOR_DEFAULT,"left_ptr","default","top_left_arrow","left_arrow");
 	LOAD_CURSOR(WINDOW_CURSOR_CROSS,"cross");
 	LOAD_CURSOR(WINDOW_CURSOR_I_BEAM,"ibeam","text","xterm");
