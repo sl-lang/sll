@@ -11,34 +11,34 @@
 
 
 (= clib_type (&:
-	(,,, dt
-		(? dt$_str (@@ dt$_str))
+	(,,, data
+		(? data$_str (@@ data$_str))
 		(= string "")
-		(? (=== (& dt$flags (| FLAG_POINTER FLAG_CONST)) FLAG_CONST) (= string (+ string "const ")))
+		(? (=== (& data$flags (| FLAG_POINTER FLAG_CONST)) FLAG_CONST) (= string (+ string "const ")))
 		(? (&&
-			(> dt$size 1)
-			(=== (& dt$flags (| FLAG_INTEGER FLAG_SIGNED FLAG_POINTER)) FLAG_INTEGER)
+			(> data$size 1)
+			(=== (& data$flags (| FLAG_INTEGER FLAG_SIGNED FLAG_POINTER)) FLAG_INTEGER)
 		) (= string (+ string "unsigned ")))
 		(= string (+ string (?:
-			(& dt$flags FLAG_POINTER) (:: dt$ref_type string_type)
-			(& dt$flags FLAG_INTEGER) (: <
+			(& data$flags FLAG_POINTER) (:: data$ref_type string_type)
+			(& data$flags FLAG_INTEGER) (: <
 				1 "bool"
 				8 "char"
 				16 "short int"
 				32 "int"
 				64 "long long int"
-			> dt$size)
-			(! dt$size) "void"
+			> data$size)
+			(! data$size) "void"
 			(: <
 				32 "float"
 				64 "double"
-			> dt$size)
+			> data$size)
 		)))
 		(?
-			(=== (& dt$flags (| FLAG_POINTER FLAG_CONST)) (| FLAG_POINTER FLAG_CONST)) (= string (+ string " const"))
-			(& dt$flags FLAG_POINTER) (= string (+ string '*'))
+			(=== (& data$flags (| FLAG_POINTER FLAG_CONST)) (| FLAG_POINTER FLAG_CONST)) (= string (+ string " const"))
+			(& data$flags FLAG_POINTER) (= string (+ string '*'))
 		)
-		(= dt$_str string)
+		(= data$_str string)
 		(@@ string)
 	) @@string@@
 	(~ int_type) size

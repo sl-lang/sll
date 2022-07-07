@@ -11,8 +11,8 @@
 
 
 (= clib_function_type (&:
-	(,,, dt
-		(@@ (<- string$format "<%s:%s at %#.16llx>" dt$library$file_path dt$name dt$address))
+	(,,, data
+		(@@ (<- string$format "<%s:%s @ %#.16llx>" data$library$file_path data$name data$address))
 	) @@string@@
 	(~ string_type) name
 	(~ int_type) address

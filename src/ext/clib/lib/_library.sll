@@ -11,16 +11,16 @@
 
 
 (= clib_library_type (&:
-	(,,, dt
-		(@@ (<- string$format (?: dt$_handle
+	(,,, data
+		(@@ (<- string$format (?: data$_handle
 			"<%s at %#.16llx>"
 			"<%s at (unloaded)>"
-		) dt$file_path dt$_handle))
+		) data$file_path data$_handle))
 	) @@string@@
-	(,,, dt
-		(? (! dt$_handle) (@@ false))
-		(<- map$remove _lib_map dt$file_path)
-		(<- (... "clib:unload_library") dt$_handle)
+	(,,, data
+		(? (! data$_handle) (@@ false))
+		(<- map$remove _lib_map data$file_path)
+		(<- (... "clib:unload_library") data$_handle)
 	) @@delete@@
 	(~ string_type) file_path
 	(~ map_type) symbols
