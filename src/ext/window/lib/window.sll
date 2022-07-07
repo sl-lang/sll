@@ -20,21 +20,22 @@
 	func_type button
 	func_type button_down
 	func_type button_up
-	func_type ignore_close_request?
+	func_type cleanup
 	func_type destroy
 	func_type focus
 	func_type focus_enter
 	func_type focus_leave
 	func_type geometry
+	func_type ignore_close_request?
 	func_type key
 	func_type key_down
 	func_type key_up
 	func_type mouse
-	func_type mouse_x
-	func_type mouse_y
 	func_type mouse_enter
 	func_type mouse_leave
 	func_type mouse_state
+	func_type mouse_x
+	func_type mouse_y
 	func_type position
 	func_type redraw
 	func_type scroll
@@ -56,6 +57,7 @@
 	window_range$window_range_type height_constraints
 	string_type title
 	int_type state
+	int_type _deferred_state_change
 ))
 
 (= window_window_type (&:
@@ -163,6 +165,7 @@
 	))
 	(= out$layout$geometry geometry)
 	(= out$layout$state STATE_NORMAL)
+	(= out$layout$_deferred_state_change -1)
 	(= out$inputs$_keys (<- array$create (>> (+ KEY_COUNT 63) 6)))
 	(= (: _window_map id) (<- weakref$ref out))
 	(? title (<- set_title out title))
@@ -174,10 +177,11 @@
 	(? (! window) (@@))
 	(= window (:: window window_window_type))
 	(? (& window$flags FLAG_CLOSED) (@@))
+	(<- window$callbacks$destroy window)
 	(= window$flags (| window$flags FLAG_CLOSED))
 	(<- audit$audit "window.destroy" "i" window$id)
 	(<- (... "window:window_destroy") window$id)
-	(<- window$callbacks$destroy window)
+	(<- window$callbacks$cleanup window)
 ))
 
 (= get (,,, id
@@ -372,6 +376,10 @@
 		(!== state STATE_MAXIMIZED)
 		(!== state STATE_MINIMIZED)
 	) (= state STATE_NORMAL))
+	(? (! (& window$flags FLAG_SHOWN)) {
+		(= window$layout$_deferred_state_change state)
+		(@@)
+	})
 	(? (=== state window$layout$state) (@@))
 	(<- (... "window:window_set_state")
 		window$id
@@ -399,6 +407,9 @@
 		(& window$flags (~ FLAG_SHOWN))
 	)
 	(<- (... "window:window_set_visibility") window$id show?)
+	(? (=== window$layout$_deferred_state_change -1) (@@))
+	(<- set_state window window$layout$_deferred_state_change)
+	(= window$layout$_deferred_state_change -1)
 ))
 
 (= show (,,, window
