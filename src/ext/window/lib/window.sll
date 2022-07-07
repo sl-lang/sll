@@ -98,11 +98,11 @@
 	(~ func_type) button_pressed
 	(~ func_type) create
 	(~ func_type) destroy
-	(~ func_type) geometry
 	(~ func_type) get
 	(~ func_type) hide
 	(~ func_type) key_pressed
 	(~ func_type) poll
+	(~ func_type) set_geometry
 	(~ func_type) set_size_constraints
 	(~ func_type) set_state
 	(~ func_type) set_title
@@ -191,17 +191,17 @@
 	(<- window$callbacks$destroy window)
 ))
 
-(= geometry (,,, window geometry_
+(= set_geometry (,,, window geometry
 	(? (! window) (@@))
 	(= window (:: window window_window_type))
-	(= geometry_ (:: geometry_ window_geometry$window_geometry_type))
-	(= window$layout$geometry geometry_)
+	(= geometry (:: geometry window_geometry$window_geometry_type))
+	(= window$layout$geometry geometry)
 	(<- (... "window:window_set_geometry")
 		window$id
-		geometry_$x
-		geometry_$y
-		geometry_$width
-		geometry_$height
+		geometry$x
+		geometry$y
+		geometry$width
+		geometry$height
 	)
 ))
 
@@ -331,6 +331,20 @@
 	)
 ))
 
+(= set_geometry (,,, window geometry
+	(? (! window) (@@))
+	(= window (:: window window_window_type))
+	(= geometry (:: geometry window_geometry$window_geometry_type))
+	(= window$layout$geometry geometry)
+	(<- (... "window:window_set_geometry")
+		window$id
+		geometry$x
+		geometry$y
+		geometry$width
+		geometry$height
+	)
+))
+
 (= set_size_constraints (,,, window width height
 	(? (! window) (@@))
 	(= window (:: window window_window_type))
@@ -433,11 +447,11 @@
 	button_pressed
 	create
 	destroy
-	geometry
 	get
 	hide
 	key_pressed
 	poll
+	set_geometry
 	set_size_constraints
 	set_state
 	set_title
