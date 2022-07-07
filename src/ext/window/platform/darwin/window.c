@@ -22,7 +22,7 @@ __WINDOW_API_CALL void window_api_window_poll_events(sll_bool_t blocking,sll_arr
 
 
 
-__WINDOW_API_CALL void window_api_window_set_cursor(window_handle_t id,sll_char_t type){
+__WINDOW_API_CALL void window_api_window_set_cursor(window_handle_t id,window_cursor_t cursor){
 }
 
 
