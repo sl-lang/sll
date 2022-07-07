@@ -62,7 +62,7 @@
 
 (= window_window_type (&:
 	(,,, data
-		(@@ (+ '<' (:: data$layout$geometry string_type) '>'))
+		(@@ (+ '<' data$layout$title " @ " (:: data$layout$geometry string_type) '>'))
 	) @@string@@
 	(,,, data
 		(<- destroy data)
