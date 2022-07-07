@@ -148,7 +148,7 @@ __WINDOW_API_CALL void window_api_window_set_geometry(window_handle_t id,int32_t
 
 
 __WINDOW_API_CALL void window_api_window_set_state(window_handle_t id,sll_char_t state){
-	xcb_client_message_event_t fullscreen_event={
+	xcb_client_message_event_t event={
 		XCB_CLIENT_MESSAGE,
 		32,
 		0,
@@ -164,45 +164,18 @@ __WINDOW_API_CALL void window_api_window_set_state(window_handle_t id,sll_char_t
 			}
 		}
 	};
-	xcb_send_event(_xcb_conn,0,_xcb_screen->root,XCB_EVENT_MASK_STRUCTURE_NOTIFY|XCB_EVENT_MASK_SUBSTRUCTURE_REDIRECT,(const char*)(&fullscreen_event));
+	xcb_send_event(_xcb_conn,0,_xcb_screen->root,XCB_EVENT_MASK_STRUCTURE_NOTIFY|XCB_EVENT_MASK_SUBSTRUCTURE_REDIRECT,(const char*)(&event));
 	if (state==WINDOW_STATE_MINIMIZED){
-		xcb_client_message_event_t minimize_event={
-			XCB_CLIENT_MESSAGE,
-			32,
-			0,
-			(int)(intptr_t)id,
-			_xcb_wm_change_state,
-			{
-				.data32={
-					XCB_ICCCM_WM_STATE_ICONIC,
-					0,
-					0,
-					0,
-					0
-				}
-			}
-		};
-		xcb_send_event(_xcb_conn,0,_xcb_screen->root,XCB_EVENT_MASK_STRUCTURE_NOTIFY|XCB_EVENT_MASK_SUBSTRUCTURE_REDIRECT,(const char*)(&minimize_event));
+		event.type=_xcb_wm_change_state;
+		event.data.data32[0]=XCB_ICCCM_WM_STATE_ICONIC;
 	}
 	else{
-		xcb_client_message_event_t event={
-			XCB_CLIENT_MESSAGE,
-			32,
-			0,
-			(int)(intptr_t)id,
-			_xcb_net_wm_state,
-			{
-				.data32={
-					(state==WINDOW_STATE_MAXIMIZED),
-					_xcb_net_wm_state_maximized_vert,
-					_xcb_net_wm_state_maximized_horz,
-					0,
-					0
-				}
-			}
-		};
-		xcb_send_event(_xcb_conn,0,_xcb_screen->root,XCB_EVENT_MASK_STRUCTURE_NOTIFY|XCB_EVENT_MASK_SUBSTRUCTURE_REDIRECT,(const char*)(&event));
+		event.type=_xcb_net_wm_state;
+		event.data.data32[0]=(state==WINDOW_STATE_MAXIMIZED);
+		event.data.data32[1]=_xcb_net_wm_state_maximized_vert;
+		event.data.data32[2]=_xcb_net_wm_state_maximized_horz;
 	}
+	xcb_send_event(_xcb_conn,0,_xcb_screen->root,XCB_EVENT_MASK_STRUCTURE_NOTIFY|XCB_EVENT_MASK_SUBSTRUCTURE_REDIRECT,(const char*)(&event));
 	xcb_flush(_xcb_conn);
 }
 
