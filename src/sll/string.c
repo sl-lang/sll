@@ -1593,7 +1593,7 @@ __SLL_EXTERNAL void sll_string_prepend_char(const sll_string_t* string,sll_char_
 	out->length=string->length+1;
 	out->data=sll_allocator_init(SLL_STRING_ALIGN_LENGTH(out->length)*sizeof(sll_char_t));
 	INIT_PADDING(out->data,out->length);
-	const wide_data_t* a=(const wide_data_t*)(string->data+1);
+	const wide_data_t* a=(const wide_data_t*)(string->data+7);
 	wide_data_t* b=(wide_data_t*)(out->data);
 	STRING_DATA_PTR(b);
 	*b=char_|((*((wide_data_t*)(string->data)))<<8);
