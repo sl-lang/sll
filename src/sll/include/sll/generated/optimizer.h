@@ -392,7 +392,6 @@ static void __SLL_FORCE_INLINE _optimizer_execute(sll_source_file_t* source_file
 				}
 				if (data1->node->type==0||data1->node->type==1||data1->node->type==2||data1->node->type==3||data1->node->type==4||data1->node->type==7||data1->node->type==8||data1->node->type==9){
 					_delete_node(data1,data0->node);
-					return;
 				}
 			}
 		}
@@ -404,7 +403,21 @@ static void __SLL_FORCE_INLINE _optimizer_execute(sll_source_file_t* source_file
 				}
 				if (data1->node->type==5||data1->node->type==6||data1->node->type==69||data1->node->type==70){
 					_expand_node(data1,data0->node);
-					return;
+				}
+			}
+		}
+		if ((data0->child_type_bitmap[0]&1024)){
+			for (child_count_t idx0=start0;idx0<end0;idx0+=step0){
+				optimizer_node_children_data_t* data1=data0->children+idx0;
+				if (!data1->node){
+					continue;
+				}
+				if ((data1->node->type==10&&(idx0+1<end0&&(data1+1)->node&&(data1+1)->node->type==SLL_NODE_TYPE_PRINT))){
+					
+	(*_get_child_count(data0->node))--;
+	data1->node->data.arg_count+=(data1+1)->node->data.arg_count;
+	_set_nop(data1+1);
+;
 				}
 			}
 		}
@@ -416,7 +429,6 @@ static void __SLL_FORCE_INLINE _optimizer_execute(sll_source_file_t* source_file
 				}
 				if (data1->node->type==23){
 					data1->node->type=22;
-					return;
 				}
 			}
 		}
@@ -452,7 +464,6 @@ static void __SLL_FORCE_INLINE _optimizer_execute(sll_source_file_t* source_file
 				}
 				if ((data1->node->type==69&&data1->child_count==1)||(data1->node->type==70&&data1->child_count==1)){
 					_set_nop(data1);
-					return;
 				}
 			}
 		}
@@ -543,7 +554,7 @@ static void __SLL_FORCE_INLINE _optimizer_execute(sll_source_file_t* source_file
 				if (!data1->node){
 					continue;
 				}
-				if ((data1->node->type==2&&((data1+1)->node->type==SLL_NODE_TYPE_CHAR))){
+				if ((data1->node->type==2&&((data1+1)->node&&(data1+1)->node->type==SLL_NODE_TYPE_CHAR))){
 					
 	sll_node_t* second_node=(data1+1)->node;
 	sll_string_t tmp;
@@ -552,7 +563,6 @@ static void __SLL_FORCE_INLINE _optimizer_execute(sll_source_file_t* source_file
 	second_node->data.string_index=sll_add_string(&(source_file->string_table),&tmp);
 ;
 					_delete_node(data1,data0->node);
-					return;
 				}
 			}
 		}
@@ -562,7 +572,7 @@ static void __SLL_FORCE_INLINE _optimizer_execute(sll_source_file_t* source_file
 				if (!data1->node){
 					continue;
 				}
-				if ((data1->node->type==2&&((data1+1)->node->type==SLL_NODE_TYPE_STRING))){
+				if ((data1->node->type==2&&((data1+1)->node&&(data1+1)->node->type==SLL_NODE_TYPE_STRING))){
 					
 	sll_node_t* second_node=(data1+1)->node;
 	sll_string_t tmp;
@@ -570,7 +580,6 @@ static void __SLL_FORCE_INLINE _optimizer_execute(sll_source_file_t* source_file
 	second_node->data.string_index=sll_add_string(&(source_file->string_table),&tmp);
 ;
 					_delete_node(data1,data0->node);
-					return;
 				}
 			}
 		}
@@ -580,7 +589,7 @@ static void __SLL_FORCE_INLINE _optimizer_execute(sll_source_file_t* source_file
 				if (!data1->node){
 					continue;
 				}
-				if ((data1->node->type==4&&((data1+1)->node->type==SLL_NODE_TYPE_CHAR))){
+				if ((data1->node->type==4&&((data1+1)->node&&(data1+1)->node->type==SLL_NODE_TYPE_CHAR))){
 					
 	sll_node_t* second_node=(data1+1)->node;
 	sll_string_t tmp;
@@ -589,7 +598,6 @@ static void __SLL_FORCE_INLINE _optimizer_execute(sll_source_file_t* source_file
 	second_node->data.string_index=sll_add_string(&(source_file->string_table),&tmp);
 ;
 					_delete_node(data1,data0->node);
-					return;
 				}
 			}
 		}
@@ -599,7 +607,7 @@ static void __SLL_FORCE_INLINE _optimizer_execute(sll_source_file_t* source_file
 				if (!data1->node){
 					continue;
 				}
-				if ((data1->node->type==4&&((data1+1)->node->type==SLL_NODE_TYPE_STRING))){
+				if ((data1->node->type==4&&((data1+1)->node&&(data1+1)->node->type==SLL_NODE_TYPE_STRING))){
 					
 	sll_node_t* second_node=(data1+1)->node;
 	sll_string_t tmp;
@@ -607,7 +615,6 @@ static void __SLL_FORCE_INLINE _optimizer_execute(sll_source_file_t* source_file
 	second_node->data.string_index=sll_add_string(&(source_file->string_table),&tmp);
 ;
 					_delete_node(data1,data0->node);
-					return;
 				}
 			}
 		}
@@ -627,7 +634,6 @@ static void __SLL_FORCE_INLINE _optimizer_execute(sll_source_file_t* source_file
 	data1->node->type=SLL_NODE_TYPE_CHAR;
 	data1->node->data.char_=(source_file->string_table.data+data1->node->data.string_index)->data[0];
 ;
-					return;
 				}
 			}
 		}
@@ -669,7 +675,6 @@ static void __SLL_FORCE_INLINE _optimizer_execute(sll_source_file_t* source_file
 				}
 				if (data1->node->type==69){
 					_expand_node(data1,data0->node);
-					return;
 				}
 			}
 		}

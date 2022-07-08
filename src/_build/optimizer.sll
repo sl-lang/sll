@@ -328,11 +328,16 @@
 (= _generate_condition_code (,,, fh previous_conditions code indentation_str
 	(? (! code) (@@))
 	(= code (<- util$split_with_scope code ','))
+	(= return false)
 	(-> (= i 0) (< i ($ code))
 		(= line (<- string$trim (: code i)))
 		(++ i)
 		(? (! line) (<<<))
 		(?
+			(=== line "RETURN") {
+				(= return true)
+				(<<<)
+			}
 			(=== (: line 0) '"') {
 				(<- file$write fh indentation_str (: line 1 -1) ";\n")
 				(<<<)
@@ -381,7 +386,7 @@ indentation_str `child_count_t del_end=` (<- _generate_bound node_index max true
 			(<- file$write fh indentation_str "data" node_index "->node->type=" (: (<- _get_node_type type) "node_type") ";\n")
 		)
 	)
-	(<- file$write fh indentation_str "return;\n")
+	(? return (<- file$write fh indentation_str "return;\n"))
 ))
 
 (= _generate_child_offsets (,,, fh possible_nodes indentation_str level

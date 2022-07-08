@@ -82,7 +82,7 @@
 	(<- file$close f)
 } {
 	(:> (<- string$format "Unable to open file '%s'!\n" fp))
-} )
+})
 (:> "File size: " (<- path$size "build/hello.txt") "\n")
 (<- file$write file$stdout "Argument Count: " ($ sys$ARGV) "\n")
 (-> (= i 0) (< i ($ sys$ARGV))

@@ -18,53 +18,59 @@ $optional_fields.{int|float|char|complex|string|identifier|field|function_id} ->
 $optional_fields.{array|map|operation_list|comma} -> *1
 $optional_fields.inline_if -> 1=if
 
-comma[-1].int<int_=0> -> 0=operation_list, 1=nop
+comma[-1].int<int_=0> -> 0=operation_list, 1=nop, RETURN
 comma[-1].comma -> *1
-comma[-1].$nil_return_value -> 0=operation_list
+comma[-1].$nil_return_value -> 0=operation_list, RETURN
 
 $ignored_required_fields.{comma@1|operation_list@1} -> 1=nop
 
-$replace_by_nil -> 0=int, 0.int_=0
-$replace_by_operation_list -> 0=operation_list
-{for_array@0|while_array@0} -> 0=array, 0.array_length=0
-{for_map@0|while_map@0} -> 0=map, 0.map_length=0
+$replace_by_nil -> 0=int, 0.int_=0, RETURN
+$replace_by_operation_list -> 0=operation_list, RETURN
+{for_array@0|while_array@0} -> 0=array, 0.array_length=0, RETURN
+{for_map@0|while_map@0} -> 0=map, 0.map_length=0, RETURN
 {nameof@0|nameof_type@0} -> 0=string, "
 	sll_string_t str=SLL_INIT_STRING_STRUCT;
 	data0->node->data.string_index=sll_add_string(&(source_file->string_table),&str);
-"
+", RETURN
 
-{for[1:2]|while[1:2]}.$true -> 0=loop
-{for[1:2]|while[1:2]}.comma[-1].$true -> 0=loop
-{for[1:2]|while[1:2]}.$false -> 0=operation_list, #0[2:]
+{for[1:2]|while[1:2]}.$true -> 0=loop, RETURN
+{for[1:2]|while[1:2]}.comma[-1].$true -> 0=loop, RETURN
+{for[1:2]|while[1:2]}.$false -> 0=operation_list, #0[2:], RETURN
 
 print.string$"(source_file->string_table.data+data1->node->data.string_index)->length==1" -> "
 	data1->node->type=SLL_NODE_TYPE_CHAR;
 	data1->node->data.char_=(source_file->string_table.data+data1->node->data.string_index)->data[0];
 "
 
-print[:-1].string$"(data1+1)->node->type==SLL_NODE_TYPE_STRING" -> "
+print[:-1].string$"(data1+1)->node&&(data1+1)->node->type==SLL_NODE_TYPE_STRING" -> "
 	sll_node_t* second_node=(data1+1)->node;
 	sll_string_t tmp;
 	sll_string_concat(source_file->string_table.data+data1->node->data.string_index,source_file->string_table.data+second_node->data.string_index,&tmp);
 	second_node->data.string_index=sll_add_string(&(source_file->string_table),&tmp);
 ", #1
-print[:-1].string$"(data1+1)->node->type==SLL_NODE_TYPE_CHAR" -> "
+print[:-1].string$"(data1+1)->node&&(data1+1)->node->type==SLL_NODE_TYPE_CHAR" -> "
 	sll_node_t* second_node=(data1+1)->node;
 	sll_string_t tmp;
 	sll_string_concat_char(source_file->string_table.data+data1->node->data.string_index,second_node->data.char_,&tmp);
 	second_node->type=SLL_NODE_TYPE_STRING;
 	second_node->data.string_index=sll_add_string(&(source_file->string_table),&tmp);
 ", #1
-print[:-1].char$"(data1+1)->node->type==SLL_NODE_TYPE_CHAR" -> "
+print[:-1].char$"(data1+1)->node&&(data1+1)->node->type==SLL_NODE_TYPE_CHAR" -> "
 	sll_node_t* second_node=(data1+1)->node;
 	sll_string_t tmp;
 	sll_string_concat_chars(data1->node->data.char_,second_node->data.char_,&tmp);
 	second_node->type=SLL_NODE_TYPE_STRING;
 	second_node->data.string_index=sll_add_string(&(source_file->string_table),&tmp);
 ", #1
-print[:-1].char$"(data1+1)->node->type==SLL_NODE_TYPE_STRING" -> "
+print[:-1].char$"(data1+1)->node&&(data1+1)->node->type==SLL_NODE_TYPE_STRING" -> "
 	sll_node_t* second_node=(data1+1)->node;
 	sll_string_t tmp;
 	sll_string_prepend_char(source_file->string_table.data+second_node->data.string_index,data1->node->data.char_,&tmp);
 	second_node->data.string_index=sll_add_string(&(source_file->string_table),&tmp);
 ", #1
+
+$optional_fields.print$"idx0+1<end0&&(data1+1)->node&&(data1+1)->node->type==SLL_NODE_TYPE_PRINT" -> "
+	(*_get_child_count(data0->node))--;
+	data1->node->data.arg_count+=(data1+1)->node->data.arg_count;
+	_set_nop(data1+1);
+"
