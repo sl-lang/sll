@@ -477,9 +477,7 @@ indentation_str `	child_count_t start` level `;
 	)))
 	(-> (= i 0) (< i ($ data))
 		(= elem (: data i))
-		(<- file$write fh indentation_str)
-		(? i (<- file$write fh "else "))
-		(<- file$write fh "if (")
+		(<- file$write fh indentation_str "if (")
 		(<- (?: level
 			_generate_children_condition
 			_generate_root_condition
