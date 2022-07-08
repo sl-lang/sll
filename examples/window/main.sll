@@ -1,0 +1,19 @@
+; Sll Simple Window Example
+; @krzem5, 2022-07-08
+
+
+
+(---
+	"window/keyboard.sll"
+	"window/window.sll"
+)
+
+
+
+(= window (<- window_window$create [0 0 900 600] nil "Example Window" true))
+(= window$callbacks$key_down (,,, window key
+	(? (=== key window_keyboard$KEY_ESCAPE) (<- window_window$destroy window))
+))
+(><
+	(<- window_window$poll true)
+)
