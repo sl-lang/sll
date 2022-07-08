@@ -32,13 +32,13 @@
 	(-> (= i 0) (< i ($ data))
 		(= event (: data i))
 		(++ i)
-		(? (! (: event 0)) {
+		(= type (: event 0))
+		(? (! type) {
 			(<- window$callbacks$error (:: (: event 1) window_native_error_type))
 			(<<<)
 		})
 		(= window (<- window_window$get (: event 1)))
 		(? (! window) (<<<))
-		(= type (: event 0))
 		(= event (>> event 2))
 		(?? type
 			1 {
