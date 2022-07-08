@@ -8,7 +8,7 @@
 
 
 
-typedef void* window_cursor_t;
+typedef uint32_t window_cursor_t;
 
 
 
