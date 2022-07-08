@@ -2,6 +2,7 @@
 	"sys.sll"
 	"types.sll"
 	"window/_load_library.sll"
+	"window/geometry.sll"
 	"window/window.sll"
 )
 

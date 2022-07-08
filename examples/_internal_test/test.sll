@@ -693,6 +693,7 @@ abc` '\n')
 		'3' (<- window_window$set_state window window_window$STATE_MAXIMIZED)
 		'4' (<- window_window$set_state window window_window$STATE_FULLSCREEN)
 		'C' (:> (<- window_cursor$get) '\n')
+		'D' (<- window_cursor$center window)
 		'S' (<- window_cursor$center)
 		window_keyboard$KEY_LEFT {
 			(? (! _cursor_list_index) (= _cursor_list_index ($ _cursor_list)))

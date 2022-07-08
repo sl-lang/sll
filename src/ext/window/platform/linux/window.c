@@ -118,6 +118,10 @@ __WINDOW_API_CALL void window_api_window_poll_events(sll_bool_t blocking,sll_arr
 					}
 					break;
 				}
+			case XCB_REPARENT_NOTIFY:
+				{
+					break;
+				}
 			case XCB_CLIENT_MESSAGE:
 				{
 					const xcb_client_message_event_t* client_event=(const xcb_client_message_event_t*)event;

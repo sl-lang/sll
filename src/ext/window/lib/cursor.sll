@@ -67,10 +67,18 @@
 
 
 
-(= center (,,,
+(= center (,,, window
+	(= position _center_location)
+	(? window {
+		(= position [
+			(+ window$layout$geometry$x (>> window$layout$geometry$width 1))
+			(+ window$layout$geometry$y (>> window$layout$geometry$height 1))
+		])
+	})
+	(:> position '\n')
 	(<- (... "window:cursor_set_position")
-		(: _center_location 0)
-		(: _center_location 1)
+		(: position 0)
+		(: position 1)
 	)
 ))
 
