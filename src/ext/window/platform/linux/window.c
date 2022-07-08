@@ -38,6 +38,12 @@ __WINDOW_API_CALL void window_api_window_poll_events(sll_bool_t blocking,sll_arr
 		sll_object_t* arg=NULL;
 		uint8_t type=event->response_type&0x7f;
 		switch (type){
+			case 0:
+				{
+					const xcb_generic_error_t* error=(const xcb_generic_error_t*)event;
+					arg=sll_new_object(SLL_CHAR("u[uuuu]"),WINDOW_EVENT_ERROR,error->error_code,error->resource_id,error->minor_code,error->major_code);
+					break;
+				}
 			case XCB_KEY_PRESS:
 			case XCB_KEY_RELEASE:
 				{

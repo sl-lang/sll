@@ -1,0 +1,128 @@
+(---
+	"types.sll"
+	"window/_load_library.sll"
+	"window/window.sll"
+)
+
+
+
+(= window_event_module_type (&:
+	(~ func_type) poll
+))
+
+
+
+(= poll (,,, blocking?
+	(= data (<- (... "window:window_poll_events")
+		(!! blocking?)
+	))
+	(-> (= i 0) (< i ($ data))
+		(= event (: data i))
+		(++ i)
+		(? (! (: event 0)) {
+			(<- window$callbacks$error (: event 1))
+			(<<<)
+		})
+		(= window (<- window_window$get (: event 1)))
+		(? (! window) (<<<))
+		(= type (: event 0))
+		(= event (>> event 2))
+		(?? type
+			1 {
+				(= key (: event 0))
+				(= state (: event 1))
+				(= idx (>> key 6))
+				(= mask (& key 63))
+				(= value (: window$inputs$_keys idx))
+				(= (: window$inputs$_keys idx) (?: state
+					(| value mask)
+					(& value (~ mask))
+				))
+				(<- window$callbacks$key window key state)
+				(<- (?: state
+					window$callbacks$key_down
+					window$callbacks$key_up
+				) window key)
+			}
+			2 {
+				(= button (: event 0))
+				(= state (: event 1))
+				(= mask (<< window_window$FLAG_BUTTON_1 button))
+				(= value (: window$inputs$_buttons idx))
+				(= (: window$inputs$_buttons idx) (?: state
+					(| value mask)
+					(& value (~ mask))
+				))
+				(<- window$callbacks$button window button state)
+				(<- (?: state
+					window$callbacks$button_down
+					window$callbacks$button_up
+				) window button)
+			}
+			3 {
+				(= window$inputs$mouse_x (: event 0))
+				(= window$inputs$mouse_y (: event 1))
+				(<- window$callbacks$mouse window (: event 0) (: event 1))
+				(? (: event 0) (< window$callbacks$mouse_x (: event 0)))
+				(? (: event 1) (< window$callbacks$mouse_y (: event 1)))
+			}
+			4 {
+				(= state (: event 0))
+				(= window$flags (?: state
+					(| window$flags window_window$FLAG_HAS_MOUSE)
+					(& window$flags (~ window_window$FLAG_HAS_MOUSE))
+				))
+				(<- window$callbacks$mouse_state window state)
+				(<- (?: state
+					window$callbacks$mouse_enter
+					window$callbacks$mouse_leave
+				) window)
+			}
+			5 {
+				(= state (: event 0))
+				(= window$flags (?: state
+					(| window$flags window_window$FLAG_IN_FOCUS)
+					(& window$flags (~ window_window$FLAG_IN_FOCUS))
+				))
+				(<- window$callbacks$focus window state)
+				(<- (?: state
+					window$callbacks$focus_acquire
+					window$callbacks$focus_lose
+				) window)
+			}
+			6 {
+				(= geometry (:: event window_geometry$window_geometry_type))
+				(= window$layout$geometry geometry)
+				(<- window$callbacks$geometry window geometry)
+				(<- window$callbacks$position window (: event 0) (: event 1))
+				(<- window$callbacks$size window (: event 2) (: event 3))
+			}
+			7 {
+				(<- window$callbacks$scroll window (: event 0))
+				(?? (: event 0)
+					window_window$SCROLL_DOWN (<- window$callbacks$scroll_y -1)
+					window_window$SCROLL_UP (<- window$callbacks$scroll_y 1)
+					window_window$SCROLL_RIGHT (<- window$callbacks$scroll_x 1)
+					window_window$SCROLL_LEFT (<- window$callbacks$scroll_x -1)
+				)
+			}
+			8 {
+				(<- window$callbacks$redraw window (: event 0) (: event 1) (: event 2) (: event 3))
+			}
+			9 {
+				(? (! (<- window$callbacks$ignore_close_request? window)) (<- destroy window))
+			}
+			10 {
+				(= window$layout$state (: event 0))
+				(<- window$callbacks$state window (: event 0))
+			}
+		)
+	)
+))
+
+
+
+(= window_event (. window_event_module_type
+	poll
+))
+(## window_event)

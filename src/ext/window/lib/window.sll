@@ -23,6 +23,7 @@
 	func_type button_up
 	func_type cleanup
 	func_type destroy
+	func_type error
 	func_type focus
 	func_type focus_acquire
 	func_type focus_lose
@@ -104,7 +105,6 @@
 	(~ func_type) hide
 	(~ func_type) is_button_pressed?
 	(~ func_type) is_key_pressed?
-	(~ func_type) poll
 	(~ func_type) set_cursor
 	(~ func_type) set_geometry
 	(~ func_type) set_size_constraints
@@ -217,110 +217,6 @@
 		(: window$inputs$_keys (>> key 6))
 		(<< 1 (& key 63))
 	)))
-))
-
-(= poll (,,, blocking?
-	(= data (<- (... "window:window_poll_events")
-		(!! blocking?)
-	))
-	(-> (= i 0) (< i ($ data))
-		(= event (: data i))
-		(++ i)
-		(= window (<- weakref$get (: _window_map (: event 1))))
-		(? (=== window weakref$WEAKREF_NO_OBJECT) (<<<))
-		(= type (: event 0))
-		(= event (>> event 2))
-		(?? type
-			1 {
-				(= key (: event 0))
-				(= state (: event 1))
-				(= idx (>> key 6))
-				(= mask (& key 63))
-				(= value (: window$inputs$_keys idx))
-				(= (: window$inputs$_keys idx) (?: state
-					(| value mask)
-					(& value (~ mask))
-				))
-				(<- window$callbacks$key window key state)
-				(<- (?: state
-					window$callbacks$key_down
-					window$callbacks$key_up
-				) window key)
-			}
-			2 {
-				(= button (: event 0))
-				(= state (: event 1))
-				(= mask (<< FLAG_BUTTON_1 button))
-				(= value (: window$inputs$_buttons idx))
-				(= (: window$inputs$_buttons idx) (?: state
-					(| value mask)
-					(& value (~ mask))
-				))
-				(<- window$callbacks$button window button state)
-				(<- (?: state
-					window$callbacks$button_down
-					window$callbacks$button_up
-				) window button)
-			}
-			3 {
-				(= window$inputs$mouse_x (: event 0))
-				(= window$inputs$mouse_y (: event 1))
-				(<- window$callbacks$mouse window (: event 0) (: event 1))
-				(? (: event 0) (< window$callbacks$mouse_x (: event 0)))
-				(? (: event 1) (< window$callbacks$mouse_y (: event 1)))
-			}
-			4 {
-				(= state (: event 0))
-				(= window$flags (?: state
-					(| window$flags FLAG_HAS_MOUSE)
-					(& window$flags (~ FLAG_HAS_MOUSE))
-				))
-				(<- window$callbacks$mouse_state window state)
-				(<- (?: state
-					window$callbacks$mouse_enter
-					window$callbacks$mouse_leave
-				) window)
-			}
-			5 {
-				(= state (: event 0))
-				(= window$flags (?: state
-					(| window$flags FLAG_IN_FOCUS)
-					(& window$flags (~ FLAG_IN_FOCUS))
-				))
-				(<- window$callbacks$focus window state)
-				(<- (?: state
-					window$callbacks$focus_acquire
-					window$callbacks$focus_lose
-				) window)
-			}
-			6 {
-				(= geometry (:: event window_geometry$window_geometry_type))
-				(= window$layout$geometry geometry)
-				(<- window$callbacks$geometry window geometry)
-				(<- window$callbacks$position window (: event 0) (: event 1))
-				(<- window$callbacks$size window (: event 2) (: event 3))
-			}
-			7 {
-				(<- window$callbacks$scroll window (: event 0))
-				(?? (: event 0)
-					SCROLL_DOWN (<- window$callbacks$scroll_y -1)
-					SCROLL_UP (<- window$callbacks$scroll_y 1)
-					SCROLL_RIGHT (<- window$callbacks$scroll_x 1)
-					SCROLL_LEFT (<- window$callbacks$scroll_x -1)
-				)
-			}
-			8 {
-				(<- window$callbacks$redraw window (: event 0) (: event 1) (: event 2) (: event 3))
-			}
-			9 {
-				(? (! (<- window$callbacks$ignore_close_request? window)) (<- destroy window))
-			}
-			10 {
-				(= window$layout$state (: event 0))
-				(<- window$callbacks$state window (: event 0))
-			}
-		)
-	)
 ))
 
 (= set_cursor (,,, window cursor
@@ -459,7 +355,6 @@
 	hide
 	is_button_pressed?
 	is_key_pressed?
-	poll
 	set_cursor
 	set_geometry
 	set_size_constraints

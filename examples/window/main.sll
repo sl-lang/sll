@@ -4,6 +4,7 @@
 
 
 (---
+	"window/event.sll"
 	"window/keyboard.sll"
 	"window/window.sll"
 )
@@ -15,5 +16,5 @@
 	(? (=== key window_keyboard$KEY_ESCAPE) (<- window_window$destroy window))
 ))
 (><
-	(<- window_window$poll true)
+	(<- window_event$poll true)
 )
