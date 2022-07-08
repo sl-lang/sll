@@ -1,4 +1,5 @@
 (---
+	"sys.sll"
 	"types.sll"
 	"window/_load_library.sll"
 	"window/window.sll"
@@ -6,7 +7,19 @@
 
 
 
+(= window_native_error_type (?:
+	(=== sys$PLATFORM "darwin") array_type
+	(=== sys$PLATFORM "linux") (&:
+		(~ int_type) error_code
+		(~ int_type) resource_id
+		(~ int_type) minor_code
+		(~ int_type) major_code
+	)
+	array_type
+))
+
 (= window_event_module_type (&:
+	(~ type_type) window_native_error_type
 	(~ func_type) poll
 ))
 
@@ -20,7 +33,7 @@
 		(= event (: data i))
 		(++ i)
 		(? (! (: event 0)) {
-			(<- window$callbacks$error (: event 1))
+			(<- window$callbacks$error (:: (: event 1) window_native_error_type))
 			(<<<)
 		})
 		(= window (<- window_window$get (: event 1)))
@@ -123,6 +136,7 @@
 
 
 (= window_event (. window_event_module_type
+	window_native_error_type
 	poll
 ))
 (## window_event)
