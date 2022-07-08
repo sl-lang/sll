@@ -516,8 +516,10 @@ static void __SLL_FORCE_INLINE _optimizer_execute(sll_source_file_t* source_file
 	}
 	else if ((data0->node->type==57&&data0->child_count==0)||(data0->node->type==58&&data0->child_count==0)){
 		data0->node->type=4;
-		sll_string_t str=SLL_INIT_STRING_STRUCT;
-		data0->node->data.string_index=sll_add_string(&(source_file->string_table),&str);
+		
+	sll_string_t str=SLL_INIT_STRING_STRUCT;
+	data0->node->data.string_index=sll_add_string(&(source_file->string_table),&str)
+;
 		return;
 	}
 	else if ((data0->node->type==61&&data0->child_count==0)||(data0->node->type==62&&data0->child_count==0)){
@@ -532,6 +534,29 @@ static void __SLL_FORCE_INLINE _optimizer_execute(sll_source_file_t* source_file
 	}
 	else if (data0->node->type==10){
 		child_count_t start0=0;
+		child_count_t end0=(data0->child_count>1?data0->child_count-1:0);
+		child_count_t step0=1;
+		if ((data0->child_type_bitmap[0]&16)){
+			for (child_count_t idx0=start0;idx0<end0;idx0+=step0){
+				optimizer_node_children_data_t* data1=data0->children+idx0;
+				if (!data1->node){
+					continue;
+				}
+				if ((data1->node->type==4&&((data1+1)->node->type==SLL_NODE_TYPE_STRING))){
+					
+	sll_node_t* second_node=(data1+1)->node;
+	sll_string_t tmp;
+	sll_string_concat(source_file->string_table.data+data1->node->data.string_index,source_file->string_table.data+second_node->data.string_index,&tmp);
+	second_node->data.string_index=sll_add_string(&(source_file->string_table),&tmp);
+;
+					_delete_node(data1,data0->node);
+					return;
+				}
+			}
+		}
+	}
+	else if (data0->node->type==10){
+		child_count_t start0=0;
 		child_count_t end0=data0->child_count;
 		child_count_t step0=1;
 		if ((data0->child_type_bitmap[0]&16)){
@@ -540,7 +565,7 @@ static void __SLL_FORCE_INLINE _optimizer_execute(sll_source_file_t* source_file
 				if (!data1->node){
 					continue;
 				}
-				if (0){
+				if ((data1->node->type==4&&((source_file->string_table.data+data1->node->data.string_index)->length==1))){
 					data1->node->data.char_=(source_file->string_table.data+data1->node->data.string_index)->data[0];
 					return;
 				}

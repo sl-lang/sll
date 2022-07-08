@@ -25,14 +25,22 @@ $ignored_required_fields.{comma@1|operation_list@1} -> 1=nop
 
 $replace_by_nil -> 0=int, 0.int_=0
 $replace_by_operation_list -> 0=operation_list
-
 {for_array@0|while_array@0} -> 0=array, 0.array_length=0
 {for_map@0|while_map@0} -> 0=map, 0.map_length=0
-
-{nameof@0|nameof_type@0} -> 0=string, "sll_string_t str=SLL_INIT_STRING_STRUCT", "data0->node->data.string_index=sll_add_string(&(source_file->string_table),&str)"
+{nameof@0|nameof_type@0} -> 0=string, "
+	sll_string_t str=SLL_INIT_STRING_STRUCT;
+	data0->node->data.string_index=sll_add_string(&(source_file->string_table),&str)
+"
 
 {for[1:2]|while[1:2]}.$true -> 0=loop
 {for[1:2]|while[1:2]}.comma[-1].$true -> 0=loop
 {for[1:2]|while[1:2]}.$false -> 0=operation_list, #0[2:]
 
 print.string$"(source_file->string_table.data+data1->node->data.string_index)->length==1" -> "data1->node->data.char_=(source_file->string_table.data+data1->node->data.string_index)->data[0]"
+
+print[:-1].string$"(data1+1)->node->type==SLL_NODE_TYPE_STRING" -> "
+	sll_node_t* second_node=(data1+1)->node;
+	sll_string_t tmp;
+	sll_string_concat(source_file->string_table.data+data1->node->data.string_index,source_file->string_table.data+second_node->data.string_index,&tmp);
+	second_node->data.string_index=sll_add_string(&(source_file->string_table),&tmp);
+", #1

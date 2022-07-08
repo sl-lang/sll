@@ -243,7 +243,7 @@
 		'('
 		data$code
 		')'
-	))
+	)))
 	(@@ (?: (=== ($ parts) 1)
 		(: parts 0)
 		(+ '(' (<- string$join "&&" parts) ')')
@@ -554,7 +554,7 @@ indentation_str `	child_count_t start` level `;
 		<>
 		[]
 	))
-	(= data (<- string$split
+	(= data (<- util$split_with_scope
 		(<- file$read
 			(<- file$open
 				config$OPTIMIZER_CONFIG_FILE_PATH
