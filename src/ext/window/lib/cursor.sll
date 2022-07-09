@@ -75,7 +75,6 @@
 			(+ window$layout$geometry$y (>> window$layout$geometry$height 1))
 		])
 	})
-	(:> position '\n')
 	(<- (... "window:cursor_set_position")
 		(: position 0)
 		(: position 1)
