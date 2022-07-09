@@ -16,6 +16,13 @@
  * \subgroup container-handle
  * \desc Docs!
  */
+/**
+ * \flags subgroup
+ * \name Map Container
+ * \group container
+ * \subgroup container-map
+ * \desc Docs!
+ */
 
 
 
