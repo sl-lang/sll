@@ -53,13 +53,33 @@
 		"%include"
 		"#include"
 	))
+	(= base_include_file_path (?: (<- string$starts src config$EXTENSION_DIRECTORY_FILE_PATH)
+		(<- string$replace
+			config$EXTENSION_INCLUDE_FILE_PATH
+			"<name>"
+			(:
+				(<- string$split
+					(:
+						(<- string$split
+							(>> src ($ config$EXTENSION_DIRECTORY_FILE_PATH))
+							'\\'
+						)
+						0
+					)
+					'/'
+				)
+				0
+			)
+		)
+		config$INCLUDE_ROOT_DIRECTORY_PATH
+	))
 	(-> (= i 0) (< i ($ data))
 		(= line (<- string$trim (: data i)))
 		(? (<- string$starts line include_prefix) {
 			(= line (>> (<- string$trim (: line 9 -1)) 1))
 			(= include_file_path (+ (?:
 				(=== line "sll.h") "build/"
-				config$INCLUDE_ROOT_DIRECTORY_PATH
+				base_include_file_path
 			) line))
 			(? (&&
 				(<- path$exists include_file_path)
