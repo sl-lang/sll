@@ -60,24 +60,24 @@
 
 
 (= _root_screen (: (<- window_display$enumerate) 0))
-(= _center_location [
+(= _center_location (. window_cursor_position_type
 	(+ _root_screen$geometry$x (>> _root_screen$geometry$width 1))
 	(+ _root_screen$geometry$y (>> _root_screen$geometry$height 1))
-])
+))
 
 
 
 (= center (,,, window
 	(= position _center_location)
 	(? window {
-		(= position [
+		(= position (. window_cursor_position_type
 			(+ window$layout$geometry$x (>> window$layout$geometry$width 1))
 			(+ window$layout$geometry$y (>> window$layout$geometry$height 1))
-		])
+		))
 	})
 	(<- (... "window:cursor_set_position")
-		(: position 0)
-		(: position 1)
+		position$x
+		position$y
 	)
 ))
 
