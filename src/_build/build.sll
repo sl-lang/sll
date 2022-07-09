@@ -33,18 +33,21 @@
 
 
 (= _replace_marker (,,, args marker value
-	(-> nil true
-		(= idx (<- array$index args marker))
-		(? (=== idx -1) (@@ args))
-		(= args (+
-			(: args 0 idx)
-			(?: (=== (:? value) string_type)
-				[value]
-				value
-			)
-			(>> args (+ idx 1))
-		))
+	(-> (= i 0) (< i ($ args))
+		(? (=== (: args i) marker) {
+			(? (=== (:? value) string_type) {
+				(= (: args i) value)
+			} {
+				(= args (+
+					(: args 0 i)
+					value
+					(>> args (+ i 1))
+				))
+			})
+		})
+		(++ i)
 	)
+	(@@ args)
 ))
 
 (= _execute_command (,,, args input output options include_file_path name
@@ -53,7 +56,7 @@
 		(<- _replace_marker
 			(<- _replace_marker
 				(<- _replace_marker
-					args
+					(: args)
 					config$COMMAND_MARKER_NAME
 					name
 				)
