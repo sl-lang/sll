@@ -124,10 +124,10 @@ static cli_include_dir_t* _alloc_include_dir(void){
 
 
 static void _ensure_path_separator(const sll_char_t* str,sll_string_length_t len,sll_string_t* out){
-	sll_bool_t add=(*(str+len-1)!='\\'&&*(str+len-1)!='/');
-	sll_string_create(len+add,out);
+	sll_bool_t add_separator=(*(str+len-1)!='\\'&&*(str+len-1)!='/');
+	sll_string_create(len+add_separator,out);
 	sll_copy_data(str,len,out->data);
-	if (add){
+	if (add_separator){
 		out->data[len]=SLL_API_FILE_PATH_SEPARATOR;
 	}
 	sll_string_calculate_checksum(out);
@@ -135,13 +135,13 @@ static void _ensure_path_separator(const sll_char_t* str,sll_string_length_t len
 
 
 
-static sll_bool_t _starts_with_path_prefix(const sll_string_t* path,const sll_string_t* pfx){
-	if (pfx->length>path->length){
+static sll_bool_t _starts_with_path_prefix(const sll_string_t* path,const sll_string_t* prefix){
+	if (prefix->length>path->length){
 		return 0;
 	}
-	for (sll_string_length_t i=0;i<pfx->length;i++){
+	for (sll_string_length_t i=0;i<prefix->length;i++){
 		sll_char_t a=path->data[i];
-		sll_char_t b=pfx->data[i];
+		sll_char_t b=prefix->data[i];
 		if ((a=='\\'?'/':a)!=(b=='\\'?'/':b)){
 			return 0;
 		}
