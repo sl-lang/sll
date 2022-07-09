@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <window/common.h>
 #include <window/display.h>
+#include <window/platform/linux.h>
 #include <xcb/randr.h>
 #include <xcb/xcb.h>
 

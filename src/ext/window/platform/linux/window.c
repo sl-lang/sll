@@ -4,6 +4,7 @@
 #include <window/common.h>
 #include <window/cursor.h>
 #include <window/keyboard.h>
+#include <window/platform/linux.h>
 #include <xcb/xcb.h>
 #include <xcb/xcb_icccm.h>
 

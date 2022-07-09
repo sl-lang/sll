@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <window/common.h>
 #include <window/cursor.h>
+#include <window/platform/linux.h>
 #include <window/window.h>
 #include <xcb/xcb.h>
 

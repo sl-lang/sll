@@ -2,9 +2,27 @@
 #define __WINDOW_CURSOR_H__ 1
 #include <sll.h>
 #include <stdint.h>
-#include <window/_cursor.h>
 #include <window/common.h>
 #include <window/window.h>
+
+
+
+#define WINDOW_CURSOR_HIDDEN 0
+#define WINDOW_CURSOR_DEFAULT 1
+#define WINDOW_CURSOR_CROSS 2
+#define WINDOW_CURSOR_I_BEAM 3
+#define WINDOW_CURSOR_WAIT 4
+#define WINDOW_CURSOR_BUSY 5
+#define WINDOW_CURSOR_FORBIDDEN 6
+#define WINDOW_CURSOR_POINTER 7
+#define WINDOW_CURSOR_RESIZE_VERTICAL 8
+#define WINDOW_CURSOR_RESIZE_HORIZONTAL 9
+#define WINDOW_CURSOR_RESIZE_DIAGONAL_BT 10
+#define WINDOW_CURSOR_RESIZE_DIAGONAL_TB 11
+#define WINDOW_CURSOR_RESIZE_ALL 12
+#define WINDOW_CURSOR_HELP 13
+
+#define WINDOW_MAX_CURSOR WINDOW_CURSOR_HELP
 
 
 

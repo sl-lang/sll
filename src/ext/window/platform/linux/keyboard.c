@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <window/common.h>
 #include <window/keyboard.h>
+#include <window/platform/linux.h>
 #include <xcb/xcb.h>
 #include <xcb/xkb.h>
 

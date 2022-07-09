@@ -57,8 +57,8 @@
 		(= line (<- string$trim (: data i)))
 		(? (<- string$starts line include_prefix) {
 			(= line (>> (<- string$trim (: line 9 -1)) 1))
-			(= include_file_path (+ (?: (=== line "sll.h")
-				"build/"
+			(= include_file_path (+ (?:
+				(=== line "sll.h") "build/"
 				config$INCLUDE_ROOT_DIRECTORY_PATH
 			) line))
 			(? (&&
