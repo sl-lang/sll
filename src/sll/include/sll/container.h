@@ -325,6 +325,41 @@
 
 
 /**
+ * \flags func type
+ * \name sll_container_callback_t
+ * \group container
+ * \desc Docs!
+ * \arg void* elem
+ */
+typedef void (*sll_container_callback_t)(void* elem);
+
+
+
+/**
+ * \flags func type
+ * \name sll_container_check_callback_t
+ * \group container
+ * \desc Docs!
+ * \arg const void* elem
+ * \ret sll_bool_t
+ */
+typedef sll_bool_t (*sll_container_check_callback_t)(const void* elem);
+
+
+
+/**
+ * \flags func type
+ * \name sll_map_container_hash_callback_t
+ * \group container
+ * \desc Docs!
+ * \arg const void* key
+ * \ret sll_size_t
+ */
+typedef sll_size_t (*sll_map_container_hash_callback_t)(const void* key);
+
+
+
+/**
  * \flags type
  * \name sll_container_t
  * \group container
@@ -358,25 +393,71 @@ typedef struct _SLL_HANDLE_CONTAINER{
 
 
 /**
- * \flags func type
- * \name sll_container_callback_t
+ * \flags type
+ * \name sll_map_container_entry_t
  * \group container
+ * \subgroup container-map
  * \desc Docs!
- * \arg void* elem
+ * \arg const void* key
+ * \arg void* value
  */
-typedef void (*sll_container_callback_t)(void* elem);
+typedef struct _SLL_MAP_CONTAINER_ENTRY{
+	const void* key;
+	void* value;
+} sll_map_container_entry_t;
 
 
 
 /**
- * \flags func type
- * \name sll_container_check_callback_t
+ * \flags type union
+ * \name sll_map_container_hash_data_t
  * \group container
+ * \subgroup container-map
  * \desc Docs!
- * \arg void* elem
- * \ret sll_bool_t
+ * \arg sll_map_container_hash_callback_t fn
+ * \arg sll_size_t size
  */
-typedef sll_bool_t (*sll_container_check_callback_t)(void* elem);
+typedef struct _SLL_MAP_CONTAINER_HASH_DATA{
+	sll_map_container_hash_callback_t fn;
+	sll_size_t size;
+} sll_map_container_hash_data_t;
+
+
+
+/**
+ * \flags type union
+ * \name sll_map_container_hash_t
+ * \group container
+ * \subgroup container-map
+ * \desc Docs!
+ * \arg sll_map_container_hash_data_t data
+ * \arg sll_bool_t is_xor
+ */
+typedef struct _SLL_MAP_CONTAINER_HASH{
+	sll_map_container_hash_data_t data;
+	sll_bool_t is_xor;
+} sll_map_container_hash_t;
+
+
+
+/**
+ * \flags type
+ * \name sll_map_container_t
+ * \group container
+ * \subgroup container-map
+ * \desc Docs!
+ * \arg sll_map_container_entry_t* data
+ * \arg sll_map_container_hash_t _hash
+ * \arg sll_size_t _elem_count
+ * \arg sll_size_t _size
+ */
+typedef struct _SLL_MAP_CONTAINER{
+	sll_map_container_entry_t* data;
+	sll_map_container_hash_t _hash;
+	sll_size_t _elem_count;
+	sll_size_t _size;
+	sll_size_t _rng;
+} sll_map_container_t;
 
 
 
@@ -556,6 +637,127 @@ __SLL_EXTERNAL void sll_handle_container_iter(sll_handle_container_t* c,sll_cont
  * \arg sll_container_callback_t callback
  */
 __SLL_EXTERNAL void sll_handle_container_iter_clear(sll_handle_container_t* c,sll_container_callback_t callback);
+
+
+
+/**
+ * \flags func
+ * \name sll_map_container_add
+ * \group container
+ * \subgroup container-map
+ * \desc Docs!
+ * \arg sll_map_container_t* c
+ * \arg const void* key
+ * \arg void* value
+ */
+__SLL_EXTERNAL void sll_map_container_add(sll_map_container_t* c,const void* key,void* value);
+
+
+
+/**
+ * \flags check_output func
+ * \name sll_map_container_contains
+ * \group container
+ * \subgroup container-map
+ * \desc Docs!
+ * \arg sll_map_container_t* c
+ * \arg const void* key
+ * \ret sll_bool_t
+ */
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_map_container_contains(sll_map_container_t* c,const void* key);
+
+
+
+/**
+ * \flags func
+ * \name sll_map_container_deinit
+ * \group container
+ * \subgroup container-map
+ * \desc Docs!
+ * \arg sll_map_container_t* c
+ */
+__SLL_EXTERNAL void sll_map_container_deinit(sll_map_container_t* c);
+
+
+
+/**
+ * \flags check_output func
+ * \name sll_map_container_delete
+ * \group container
+ * \subgroup container-map
+ * \desc Docs!
+ * \arg sll_map_container_t* c
+ * \arg const void* key
+ * \ret sll_bool_t
+ */
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_map_container_delete(sll_map_container_t* c,const void* key);
+
+
+
+/**
+ * \flags check_output func
+ * \name sll_map_container_get
+ * \group container
+ * \subgroup container-map
+ * \desc Docs!
+ * \arg sll_map_container_t* c
+ * \arg const void* key
+ * \ret void*
+ */
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT void* sll_map_container_get(sll_map_container_t* c,const void* key);
+
+
+
+/**
+ * \flags func
+ * \name sll_map_container_init
+ * \group container
+ * \subgroup container-map
+ * \desc Docs!
+ * \arg sll_map_container_hash_callback_t hash_fn
+ * \arg sll_map_container_t* out
+ */
+__SLL_EXTERNAL void sll_map_container_init(sll_map_container_hash_callback_t hash_fn,sll_map_container_t* out);
+
+
+
+/**
+ * \flags func
+ * \name sll_map_container_iter
+ * \group container
+ * \subgroup container-map
+ * \desc Docs!
+ * \arg sll_map_container_t* c
+ * \arg sll_container_callback_t callback
+ */
+__SLL_EXTERNAL void sll_map_container_iter(sll_map_container_t* c,sll_container_callback_t callback);
+
+
+
+/**
+ * \flags func
+ * \name sll_map_container_iter_clear
+ * \group container
+ * \subgroup container-map
+ * \desc Docs!
+ * \arg sll_map_container_t* c
+ * \arg sll_container_callback_t callback
+ */
+__SLL_EXTERNAL void sll_map_container_iter_clear(sll_map_container_t* c,sll_container_callback_t callback);
+
+
+
+/**
+ * \flags func
+ * \name sll_map_container_set
+ * \group container
+ * \subgroup container-map
+ * \desc Docs!
+ * \arg sll_map_container_t* c
+ * \arg const void* key
+ * \arg void* value
+ */
+__SLL_EXTERNAL void sll_map_container_set(sll_map_container_t* c,const void* key,void* value);
 
 
 
