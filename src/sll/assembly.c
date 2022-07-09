@@ -540,6 +540,12 @@ static const sll_node_t* _generate_jump(const sll_node_t* o,assembly_generator_d
 		case SLL_NODE_TYPE_BREAK:
 		case SLL_NODE_TYPE_CONTINUE:
 		case SLL_NODE_TYPE_OPERATION_LIST:
+		case SLL_NODE_TYPE_THREAD_WAIT:
+		case SLL_NODE_TYPE_THREAD_LOCK:
+		case SLL_NODE_TYPE_THREAD_SEMAPHORE:
+		case SLL_NODE_TYPE_THREAD_BARRIER_EQ:
+		case SLL_NODE_TYPE_THREAD_BARRIER_GEQ:
+		case SLL_NODE_TYPE_THREAD_EXIT:
 			o=_generate(o,g_dt);
 			if (inv){
 				GENERATE_OPCODE_WITH_LABEL(g_dt,SLL_ASSEMBLY_INSTRUCTION_TYPE_JMP,lbl);
@@ -581,14 +587,6 @@ static const sll_node_t* _generate_jump(const sll_node_t* o,assembly_generator_d
 			o=_generate_on_stack(o,g_dt);
 			GENERATE_OPCODE_WITH_LABEL(g_dt,(inv?SLL_ASSEMBLY_INSTRUCTION_TYPE_JZ:SLL_ASSEMBLY_INSTRUCTION_TYPE_JNZ),lbl);
 			return o;
-		case SLL_NODE_TYPE_THREAD_ID:
-			SLL_UNIMPLEMENTED();
-		case SLL_NODE_TYPE_THREAD_WAIT:
-		case SLL_NODE_TYPE_THREAD_LOCK:
-		case SLL_NODE_TYPE_THREAD_SEMAPHORE:
-		case SLL_NODE_TYPE_THREAD_BARRIER_EQ:
-		case SLL_NODE_TYPE_THREAD_BARRIER_GEQ:
-		case SLL_NODE_TYPE_THREAD_EXIT:
 		case SLL_NODE_TYPE_READ_BLOCKING:
 		case SLL_NODE_TYPE_READ_BLOCKING_CHAR:
 			SLL_UNIMPLEMENTED();

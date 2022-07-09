@@ -1,5 +1,6 @@
 (---
 	"sys.sll"
+	"thread.sll"
 	"types.sll"
 	"window/_load_library.sll"
 	"window/geometry.sll"
@@ -27,6 +28,10 @@
 
 
 (= poll (,,, blocking?
+	(? (!.) {
+		(:> "Event polling from non-main threads in not permitted!\n")
+		(<- thread$exit 1)
+	})
 	(= data (<- (... "window:event_poll")
 		(!! blocking?)
 	))
