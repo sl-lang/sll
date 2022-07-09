@@ -23,17 +23,14 @@ __SLL_EXPORT _check_cpuid_flags
 	mov eax, CPUID_AVX_TYPE
 	xor ecx, ecx
 	cpuid
-	shr CPUID_AVX_REGISTER, CPUID_AVX_BIT
-	xor CPUID_AVX_REGISTER, 1
-	or r9d, CPUID_AVX_REGISTER
+	bt CPUID_AVX_REGISTER, CPUID_AVX_BIT
+	setnc r9b
 	mov eax, CPUID_AVX2_TYPE
 	xor ecx, ecx
 	cpuid
-	shr CPUID_AVX2_REGISTER, CPUID_AVX2_BIT
-	xor CPUID_AVX2_REGISTER, 1
-	or r9d, CPUID_AVX2_REGISTER
+	bt CPUID_AVX2_REGISTER, CPUID_AVX2_BIT
+	setnc r9b
 	mov rbx, r8
-	and r9d, 1
 %endif
 	mov eax, r9d
 	ret
