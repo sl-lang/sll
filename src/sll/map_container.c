@@ -65,7 +65,7 @@ __SLL_EXTERNAL void sll_map_container_clear(sll_map_container_t* c){
 
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_map_container_contains(sll_map_container_t* c,const void* key){
-	SLL_UNIMPLEMENTED();
+	return (_lookup_entry(c,_hash_key(c,key),key)!=0xffffffffffffffffull);
 }
 
 
