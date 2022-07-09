@@ -1936,6 +1936,7 @@ static const sll_node_t* _generate(const sll_node_t* o,assembly_generator_data_t
 		case SLL_NODE_TYPE_LOOP:
 			{
 				sll_arg_count_t l=o->data.loop.arg_count;
+				sll_scope_t sc=o->data.loop.scope;
 				o++;
 				assembly_instruction_label_t s=NEXT_LABEL(g_dt);
 				if (!l){
@@ -1946,6 +1947,10 @@ static const sll_node_t* _generate(const sll_node_t* o,assembly_generator_data_t
 				assembly_instruction_label_t e=NEXT_LABEL(g_dt);
 				assembly_loop_generator_data_t lg_dt;
 				_init_loop_data(g_dt,&lg_dt,s,e);
+				const sll_node_t* arg=o;
+				for (sll_arg_count_t i=0;i<l;i++){
+					arg=_mark_loop_delete(arg,g_dt,lg_dt.variable_data,sc);
+				}
 				DEFINE_LABEL(g_dt,s);
 				while (l){
 					l--;
