@@ -7,4 +7,8 @@ extern void* _winapi_hinstance;
 
 
 
+unsigned __int64 _window_wnd_proc(void* id,unsigned int msg,unsigned __int64 w_param,__int64 l_param);
+
+
+
 #endif

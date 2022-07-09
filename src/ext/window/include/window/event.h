@@ -24,12 +24,6 @@
 
 
 
-#ifdef __SLL_BUILD_WINDOWS
-unsigned __int64 _window_wnd_proc(void* id,unsigned int msg,unsigned __int64 w_param,__int64 l_param);
-#endif
-
-
-
 __WINDOW_API_CALL void window_api_event_poll(sll_bool_t blocking,sll_array_t* out);
 
 

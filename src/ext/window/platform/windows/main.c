@@ -1,7 +1,7 @@
 #undef NOUSER
 #include <windows.h>
-#include <window/window.h>
 #include <window/platform/windows.h>
+#include <window/window.h>
 
 
 
