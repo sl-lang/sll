@@ -6,6 +6,7 @@
 #include <sll.h>
 #include <stdint.h>
 #include <window/common.h>
+#include <window/platform/windows.h>
 #include <window/window.h>
 
 

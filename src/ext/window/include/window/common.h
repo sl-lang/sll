@@ -13,12 +13,6 @@
 
 
 
-#ifdef __SLL_BUILD_WINDOWS
-extern void* _winapi_hinstance;
-#endif
-
-
-
 void _deinit_platform(void);
 
 
