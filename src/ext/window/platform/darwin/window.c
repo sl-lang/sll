@@ -16,12 +16,6 @@ __WINDOW_API_CALL void window_api_window_destroy(window_handle_t id){
 
 
 
-__WINDOW_API_CALL void window_api_window_poll_events(sll_bool_t blocking,sll_array_t* out){
-	SLL_INIT_ARRAY(out);
-}
-
-
-
 __WINDOW_API_CALL void window_api_window_set_geometry(window_handle_t id,int32_t x,int32_t y,uint32_t w,uint32_t h){
 }
 
