@@ -706,20 +706,6 @@ __SLL_EXTERNAL void sll_handle_container_iter_clear(sll_handle_container_t* c,sl
 
 /**
  * \flags func
- * \name sll_map_container_add
- * \group container
- * \subgroup container-map
- * \desc Docs!
- * \arg sll_map_container_t* c
- * \arg const void* key
- * \arg void* value
- */
-__SLL_EXTERNAL void sll_map_container_add(sll_map_container_t* c,const void* key,void* value);
-
-
-
-/**
- * \flags func
  * \name sll_map_container_clear
  * \group container
  * \subgroup container-map

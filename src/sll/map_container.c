@@ -53,14 +53,13 @@ static void _index_element(const sll_map_container_t* c,sll_size_t i){
 
 
 
-__SLL_EXTERNAL void sll_map_container_add(sll_map_container_t* c,const void* key,void* value){
-	SLL_UNIMPLEMENTED();
-}
-
-
-
 __SLL_EXTERNAL void sll_map_container_clear(sll_map_container_t* c){
-	SLL_UNIMPLEMENTED();
+	sll_allocator_release(c->data);
+	sll_deallocate(c->_indices);
+	c->data=NULL;
+	c->_indices=NULL;
+	c->_elem_count=0;
+	c->_mask=0;
 }
 
 
