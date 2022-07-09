@@ -325,6 +325,31 @@
 
 
 /**
+ * \flags macro var
+ * \name SLL_MAP_CONTAINER_FLAG_XOR
+ * \group container
+ * \subgroup container-map
+ * \desc Docs!
+ * \type sll_size_t
+ */
+#define SLL_MAP_CONTAINER_FLAG_XOR 0x8000000000000000ull
+
+
+
+/**
+ * \flags func macro
+ * \name SLL_MAP_CONTAINER_HASH_XOR
+ * \group container
+ * \subgroup container-map
+ * \desc Docs!
+ * \arg sll_size_t size
+ * \ret void*
+ */
+#define SLL_MAP_CONTAINER_HASH_XOR(size) ((void*)(((sll_size_t)(size))|SLL_MAP_CONTAINER_FLAG_XOR))
+
+
+
+/**
  * \flags func type
  * \name sll_container_callback_t
  * \group container
@@ -351,11 +376,41 @@ typedef sll_bool_t (*sll_container_check_callback_t)(const void* elem);
  * \flags func type
  * \name sll_map_container_hash_callback_t
  * \group container
+ * \subgroup container-map
  * \desc Docs!
  * \arg const void* key
  * \ret sll_size_t
  */
 typedef sll_size_t (*sll_map_container_hash_callback_t)(const void* key);
+
+
+
+/**
+ * \flags func type
+ * \name sll_map_container_equal_t
+ * \group container
+ * \subgroup container-map
+ * \desc Docs!
+ * \arg const void* value_a
+ * \arg const void* value_b
+ * \ret sll_bool_t
+ */
+typedef sll_bool_t (*sll_map_container_equal_t)(const void* value_a,const void* value_b);
+
+
+
+/**
+ * \flags func type
+ * \name sll_map_container_filter_callback_t
+ * \group container
+ * \subgroup container-map
+ * \desc Docs!
+ * \arg const void* key
+ * \arg void* value
+ * \arg void* ctx
+ * \ret sll_bool_t
+ */
+typedef sll_bool_t (*sll_map_container_filter_callback_t)(const void* key,void* value,void* ctx);
 
 
 
@@ -400,10 +455,14 @@ typedef struct _SLL_HANDLE_CONTAINER{
  * \desc Docs!
  * \arg const void* key
  * \arg void* value
+ * \arg sll_size_t _hash
+ * \arg sll_bool_t _delete
  */
 typedef struct _SLL_MAP_CONTAINER_ENTRY{
 	const void* key;
 	void* value;
+	sll_size_t _hash;
+	sll_bool_t _delete;
 } sll_map_container_entry_t;
 
 
@@ -431,11 +490,11 @@ typedef struct _SLL_MAP_CONTAINER_HASH_DATA{
  * \subgroup container-map
  * \desc Docs!
  * \arg sll_map_container_hash_data_t data
- * \arg sll_bool_t is_xor
+ * \arg sll_bool_t is_function
  */
 typedef struct _SLL_MAP_CONTAINER_HASH{
 	sll_map_container_hash_data_t data;
-	sll_bool_t is_xor;
+	sll_bool_t is_function;
 } sll_map_container_hash_t;
 
 
@@ -447,15 +506,20 @@ typedef struct _SLL_MAP_CONTAINER_HASH{
  * \subgroup container-map
  * \desc Docs!
  * \arg sll_map_container_entry_t* data
+ * \arg sll_size_t* _indices
  * \arg sll_map_container_hash_t _hash
+ * \arg sll_map_container_equal_t _eq_fn
  * \arg sll_size_t _elem_count
- * \arg sll_size_t _size
+ * \arg sll_size_t _mask
+ * \arg sll_size_t _rng
  */
 typedef struct _SLL_MAP_CONTAINER{
 	sll_map_container_entry_t* data;
+	sll_size_t* _indices;
 	sll_map_container_hash_t _hash;
+	sll_map_container_equal_t _eq_fn;
 	sll_size_t _elem_count;
-	sll_size_t _size;
+	sll_size_t _mask;
 	sll_size_t _rng;
 } sll_map_container_t;
 
@@ -655,6 +719,18 @@ __SLL_EXTERNAL void sll_map_container_add(sll_map_container_t* c,const void* key
 
 
 /**
+ * \flags func
+ * \name sll_map_container_clear
+ * \group container
+ * \subgroup container-map
+ * \desc Docs!
+ * \arg sll_map_container_t* c
+ */
+__SLL_EXTERNAL void sll_map_container_clear(sll_map_container_t* c);
+
+
+
+/**
  * \flags check_output func
  * \name sll_map_container_contains
  * \group container
@@ -688,9 +764,25 @@ __SLL_EXTERNAL void sll_map_container_deinit(sll_map_container_t* c);
  * \desc Docs!
  * \arg sll_map_container_t* c
  * \arg const void* key
+ * \arg void* default_
+ * \ret void*
+ */
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT void* sll_map_container_delete(sll_map_container_t* c,const void* key,void* default_);
+
+
+
+/**
+ * \flags func
+ * \name sll_map_container_filter
+ * \group container
+ * \subgroup container-map
+ * \desc Docs!
+ * \arg sll_map_container_t* c
+ * \arg sll_map_container_filter_callback_t callback
+ * \arg void* ctx
  * \ret sll_bool_t
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_map_container_delete(sll_map_container_t* c,const void* key);
+__SLL_EXTERNAL sll_bool_t sll_map_container_filter(sll_map_container_t* c,sll_map_container_filter_callback_t callback,void* ctx);
 
 
 
@@ -702,9 +794,10 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_map_container_delete(sll_map_co
  * \desc Docs!
  * \arg sll_map_container_t* c
  * \arg const void* key
+ * \arg void* default_
  * \ret void*
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT void* sll_map_container_get(sll_map_container_t* c,const void* key);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT void* sll_map_container_get(sll_map_container_t* c,const void* key,void* default_);
 
 
 
@@ -715,9 +808,10 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT void* sll_map_container_get(sll_map_container_
  * \subgroup container-map
  * \desc Docs!
  * \arg sll_map_container_hash_callback_t hash_fn
+ * \arg sll_map_container_equal_t equal_fn
  * \arg sll_map_container_t* out
  */
-__SLL_EXTERNAL void sll_map_container_init(sll_map_container_hash_callback_t hash_fn,sll_map_container_t* out);
+__SLL_EXTERNAL void sll_map_container_init(sll_map_container_hash_callback_t hash_fn,sll_map_container_equal_t equal_fn,sll_map_container_t* out);
 
 
 

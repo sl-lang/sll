@@ -6,12 +6,11 @@
 
 
 
-typedef struct _WEAKREF_KEY_PAIR{
+typedef struct _WEAKREF_OBJECT_DATA{
 	addr_t object;
-	sll_weak_reference_t wr;
 	sll_weak_ref_destructor_t destructor;
 	void* ctx;
-} weakref_key_pair_t;
+} weakref_object_data_t;
 
 
 
