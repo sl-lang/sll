@@ -1,6 +1,7 @@
 #include <window/common.h>
 #include <window/cursor.h>
 #include <window/display.h>
+#include <window/event.h>
 #include <window/window.h>
 #include <sll.h>
 
@@ -28,6 +29,11 @@ static const sll_internal_function_descriptor_t _internal_function_table[]={
 		SLL_CHAR("|a")
 	},
 	{
+		SLL_CHAR("window:event_poll"),
+		window_api_event_poll,
+		SLL_CHAR("b|a")
+	},
+	{
 		SLL_CHAR("window:window_create"),
 		window_api_window_create,
 		SLL_CHAR("-D-DDDQ|Q")
@@ -36,11 +42,6 @@ static const sll_internal_function_descriptor_t _internal_function_table[]={
 		SLL_CHAR("window:window_destroy"),
 		window_api_window_destroy,
 		SLL_CHAR("Q|")
-	},
-	{
-		SLL_CHAR("window:window_poll_events"),
-		window_api_window_poll_events,
-		SLL_CHAR("b|a")
 	},
 	{
 		SLL_CHAR("window:window_set_geometry"),

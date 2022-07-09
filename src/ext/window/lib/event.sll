@@ -27,7 +27,7 @@
 
 
 (= poll (,,, blocking?
-	(= data (<- (... "window:window_poll_events")
+	(= data (<- (... "window:event_poll")
 		(!! blocking?)
 	))
 	(-> (= i 0) (< i ($ data))
