@@ -1,4 +1,4 @@
-# Sll [0.7.25] - Ongoing
+# Sll [0.7.25] - 2022-07-09
 
 ## Added
 
@@ -13,4 +13,4 @@
 - Fixed `sll_string_prepend_char`
 - Fixed changed file detection in the build script
 
-[0.7.25]: https://github.com/sl-lang/sll/compare/sll-v0.7.24...main
+[0.7.25]: https://github.com/sl-lang/sll/compare/sll-v0.7.24...sll-v0.7.25
