@@ -1,3 +1,4 @@
+#include <sll.h>
 #include <stdlib.h>
 #include <window/cursor.h>
 #include <xcb/xcb.h>
@@ -46,11 +47,13 @@ xcb_atom_t _xcb_net_wm_state_maximized_horz;
 xcb_atom_t _xcb_net_wm_state_fullscreen;
 xcb_atom_t _xcb_wm_change_state;
 xcb_cursor_t _xcb_cursors[WINDOW_MAX_CURSOR+1];
+sll_map_container_t _window_to_parent;
 
 
 
 void _deinit_platform(void){
-	for (window_cursor_t i=0;i<WINDOW_MAX_CURSOR;i++){
+	sll_map_container_deinit(&_window_to_parent);
+	for (window_cursor_t i=0;i<=WINDOW_MAX_CURSOR;i++){
 		xcb_free_cursor(_xcb_conn,_xcb_cursors[i]);
 	}
 	xcb_cursor_context_free(_xcb_cursor_ctx);
@@ -91,4 +94,5 @@ void _init_platform(void){
 	LOAD_CURSOR(WINDOW_CURSOR_RESIZE_DIAGONAL_TB,"size_fdiag","bottom_right_corner","nwse-resize","38c5dff7c7b8962045400281044508d2","c7088f0f3e6c8088236ef8e1e3e70000");
 	LOAD_CURSOR(WINDOW_CURSOR_RESIZE_ALL,"fleur","size_all");
 	LOAD_CURSOR(WINDOW_CURSOR_HELP,"whats_this","help","question_arrow","5c6cd98b3f3ebcb1f9c7f1c204630408","d9ce0ab605698f320427677b458ad60b");
+	sll_map_container_init(NULL,NULL,&_window_to_parent);
 }

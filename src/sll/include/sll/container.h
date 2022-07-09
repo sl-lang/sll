@@ -476,7 +476,7 @@ typedef struct _SLL_MAP_CONTAINER_ENTRY{
  * \arg sll_map_container_hash_callback_t fn
  * \arg sll_size_t size
  */
-typedef struct _SLL_MAP_CONTAINER_HASH_DATA{
+typedef union _SLL_MAP_CONTAINER_HASH_DATA{
 	sll_map_container_hash_callback_t fn;
 	sll_size_t size;
 } sll_map_container_hash_data_t;
@@ -484,7 +484,7 @@ typedef struct _SLL_MAP_CONTAINER_HASH_DATA{
 
 
 /**
- * \flags type union
+ * \flags type
  * \name sll_map_container_hash_t
  * \group container
  * \subgroup container-map
@@ -743,7 +743,7 @@ __SLL_EXTERNAL void sll_map_container_deinit(sll_map_container_t* c);
 
 
 /**
- * \flags check_output func
+ * \flags func
  * \name sll_map_container_delete
  * \group container
  * \subgroup container-map
@@ -753,7 +753,7 @@ __SLL_EXTERNAL void sll_map_container_deinit(sll_map_container_t* c);
  * \arg void* default_
  * \ret void*
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT void* sll_map_container_delete(sll_map_container_t* c,const void* key,void* default_);
+__SLL_EXTERNAL void* sll_map_container_delete(sll_map_container_t* c,const void* key,void* default_);
 
 
 

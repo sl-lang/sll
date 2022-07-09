@@ -78,7 +78,7 @@ __SLL_EXTERNAL void sll_map_container_deinit(sll_map_container_t* c){
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT void* sll_map_container_delete(sll_map_container_t* c,const void* key,void* default_){
+__SLL_EXTERNAL void* sll_map_container_delete(sll_map_container_t* c,const void* key,void* default_){
 	sll_size_t index=_lookup_entry(c,_hash_key(c,key),key);
 	if (index==0xffffffffffffffffull){
 		return default_;

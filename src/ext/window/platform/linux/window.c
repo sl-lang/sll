@@ -10,17 +10,6 @@
 
 
 
-typedef struct _WINDOW_AND_PARENT{
-	xcb_window_t window;
-	xcb_window_t parent;
-} window_and_parent_t;
-
-
-
-static sll_container_t _window_parent_mapping=SLL_CONTAINER_INIT_STRUCT;
-
-
-
 __WINDOW_API_CALL window_handle_t window_api_window_create(int32_t x,int32_t y,uint32_t w,uint32_t h,window_handle_t parent){
 	xcb_window_t id=xcb_generate_id(_xcb_conn);
 	const uint32_t data[1]={XCB_EVENT_MASK_KEY_PRESS|XCB_EVENT_MASK_KEY_RELEASE|XCB_EVENT_MASK_BUTTON_PRESS|XCB_EVENT_MASK_BUTTON_RELEASE|XCB_EVENT_MASK_ENTER_WINDOW|XCB_EVENT_MASK_LEAVE_WINDOW|XCB_EVENT_MASK_POINTER_MOTION|XCB_EVENT_MASK_EXPOSURE|XCB_EVENT_MASK_STRUCTURE_NOTIFY|XCB_EVENT_MASK_FOCUS_CHANGE|XCB_EVENT_MASK_PROPERTY_CHANGE};
@@ -31,18 +20,14 @@ __WINDOW_API_CALL window_handle_t window_api_window_create(int32_t x,int32_t y,u
 	};
 	xcb_change_property(_xcb_conn,XCB_PROP_MODE_REPLACE,id,_xcb_wm_protocols,XCB_ATOM_ATOM,sizeof(xcb_atom_t)*8,2,atom_data);
 	xcb_flush(_xcb_conn);
-	window_and_parent_t elem={
-		id,
-		_xcb_screen->root
-	};
-	SLL_CONTAINER_PUSH(&_window_parent_mapping,window_and_parent_t,elem);
+	sll_map_container_set(&_window_to_parent,(void*)(intptr_t)id,(void*)(intptr_t)(_xcb_screen->root));
 	return (window_handle_t)(intptr_t)id;
 }
 
 
 
 __WINDOW_API_CALL void window_api_window_destroy(window_handle_t id){
-	SLL_CONTAINER_FILTER(&_window_parent_mapping,window_and_parent_t,elem,elem.window!=(int)(intptr_t)id,{});
+	sll_map_container_delete(&_window_to_parent,id,NULL);
 	xcb_destroy_window(_xcb_conn,(int)(intptr_t)id);
 	xcb_flush(_xcb_conn);
 }
@@ -55,6 +40,7 @@ __WINDOW_API_CALL void window_api_window_poll_events(sll_bool_t blocking,sll_arr
 	while (event){
 		sll_object_t* arg=NULL;
 		uint8_t type=event->response_type&0x7f;
+		sll_bool_t is_send_event=event->response_type>>7;
 		switch (type){
 			case 0:
 				{
@@ -103,23 +89,25 @@ __WINDOW_API_CALL void window_api_window_poll_events(sll_bool_t blocking,sll_arr
 				}
 			case XCB_EXPOSE:
 				{
-					const xcb_configure_notify_event_t* configure_event=(const xcb_configure_notify_event_t*)event;
-					arg=sll_new_object(SLL_CHAR("uuuuuu"),WINDOW_EVENT_REDRAW,configure_event->event,configure_event->x,configure_event->y,configure_event->width,configure_event->height);
+					const xcb_expose_event_t* expose_event=(const xcb_expose_event_t*)event;
+					arg=sll_new_object(SLL_CHAR("uuuuuu"),WINDOW_EVENT_REDRAW,expose_event->window,expose_event->x,expose_event->y,expose_event->width,expose_event->height);
 					break;
 				}
 			case XCB_CONFIGURE_NOTIFY:
 				{
 					const xcb_configure_notify_event_t* configure_event=(const xcb_configure_notify_event_t*)event;
-					xcb_window_t parent=_xcb_screen->root;
-					SLL_CONTAINER_ITER(&_window_parent_mapping,window_and_parent_t,elem,{
-						if (elem.window==configure_event->event){
-							parent=elem.parent;
-							break;
+					int16_t x=configure_event->x;
+					int16_t y=configure_event->y;
+					if (!is_send_event){
+						xcb_window_t parent=(xcb_window_t)(intptr_t)sll_map_container_get(&_window_to_parent,(void*)(intptr_t)(configure_event->window),(void*)(intptr_t)(_xcb_screen->root));
+						if (parent!=_xcb_screen->root){
+							xcb_translate_coordinates_reply_t* pos=xcb_translate_coordinates_reply(_xcb_conn,xcb_translate_coordinates(_xcb_conn,parent,_xcb_screen->root,x,y),NULL);
+							x=pos->dst_x;
+							y=pos->dst_y;
+							free(pos);
 						}
-					});
-					xcb_translate_coordinates_reply_t* pos=xcb_translate_coordinates_reply(_xcb_conn,xcb_translate_coordinates(_xcb_conn,parent,_xcb_screen->root,configure_event->x,configure_event->y),NULL);
-					arg=sll_new_object(SLL_CHAR("uuuuuu"),WINDOW_EVENT_GEOMETRY,configure_event->event,pos->dst_x,pos->dst_y,configure_event->width,configure_event->height);
-					free(pos);
+					}
+					arg=sll_new_object(SLL_CHAR("uuuuuu"),WINDOW_EVENT_GEOMETRY,configure_event->window,x,y,configure_event->width,configure_event->height);
 					break;
 				}
 			case XCB_PROPERTY_NOTIFY:
@@ -146,12 +134,7 @@ __WINDOW_API_CALL void window_api_window_poll_events(sll_bool_t blocking,sll_arr
 			case XCB_REPARENT_NOTIFY:
 				{
 					const xcb_reparent_notify_event_t* reparent_event=(const xcb_reparent_notify_event_t*)event;
-					SLL_CONTAINER_ITER(&_window_parent_mapping,window_and_parent_t,elem,{
-						if (elem.window==reparent_event->window){
-							elem.parent=reparent_event->parent;
-							break;
-						}
-					});
+					sll_map_container_set(&_window_to_parent,(void*)(intptr_t)(reparent_event->window),(void*)(intptr_t)(reparent_event->parent));
 					break;
 				}
 			case XCB_CLIENT_MESSAGE:
