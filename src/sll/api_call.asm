@@ -96,24 +96,31 @@ __SLL_EXPORT _call_api_func_assembly
 	call r10
 
 	; rax - Integer return value
+	; rcx - Current bitmap
 	; rsi - Current bitmap
 	; xmm0 - Floating-point return value
 	; [rbp+16] - Return value structure pointer
-	test esi, esi
+	mov ecx, esi
+	mov rsi, QWORD [rbp-8]
+	leave
+
+	; rax - Integer return value
+	; rcx - Current bitmap
+	; xmm0 - Floating-point return value
+	; [rsp+8] - Return value structure pointer
+	test ecx, ecx
 	jz ._write_integer_to_struct
-	cmp esi, 1
+	cmp ecx, 1
 	jz ._return
 	xorpd xmm0, xmm0
 	cmp rax, 0xffffffffffffffff
 	jz ._return
-	mov rcx, 0x3ff0000000000000
-	movq xmm0, rcx
+	mov rdx, 0x3ff0000000000000
+	movq xmm0, rdx
 ._write_integer_to_struct:
-	mov rcx, QWORD [rbp+16]
-	mov QWORD [rcx], rax
+	mov rdx, QWORD [rsp+8]
+	mov QWORD [rdx], rax
 ._return:
 
 	; xmm0 - Floating-point return value
-	mov rsi, QWORD [rbp-8]
-	leave
 	ret

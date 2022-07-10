@@ -80,3 +80,4 @@ $optional_fields.print$"idx0+1<end0&&(data1+1)->node&&(data1+1)->node->type==SLL
 length@1.{int|float} -> 0=nop, RETURN
 length@1.char -> 0=nop, 1=int, 1.int_=1, RETURN
 length@1.string -> 0=nop, 1=int, "data1->node->data.int_=(source_file->string_table.data+data1->node->data.string_index)->length", RETURN
+
