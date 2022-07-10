@@ -1,0 +1,80 @@
+%YAML 1.2
+name: Sll optimizer
+first_line_match: '^\# Sll optimizer definition file'
+scope: source.sll-optimizer
+version: 2
+contexts:
+  main:
+    - include: comments
+    - match: '^\s*(--)\s+([a-zA-Z0-9_/\\\.-]+)$'
+      captures:
+        1: keyword.control.import
+        2: string.quoted.other meta.scope
+    - match: '^\s*((\$)\w+)\s*(=)\s*'
+      captures:
+        1: entity.name.constant
+        2: punctuation.definition.variable
+        3: keyword.operator.assignment
+      push: condition
+    - match: '->'
+      scope: keyword.operator.arrow
+    - match: '(")[^"]+(")'
+      scope: string.quoted.double
+      captures:
+        1: punctuation.definition.string.begin
+        2: punctuation.definition.string.end
+    - include: condition_or_variable
+  condition:
+    - match: '{'
+      scope: punctuation.definition.generic.begin
+      push:
+        - meta_scope: meta.generic
+        - match: '\|'
+          scope: keyword.operator.logical.or
+        - match: '}'
+          scope: punctuation.definition.generic.end
+          pop: 2
+        - include: expression
+    - include: expression
+  condition_or_variable:
+    - match: '(\$)\w+'
+      scope: entity.name.constant
+      captures:
+        1: punctuation.definition.variable
+    - include: condition
+  expression:
+    - match: '[a-z_]+'
+      scope: storage.type.builtin
+    - match: '(@)\s*([0-9]+)'
+      captures:
+        1: keyword.operator.length
+        2: constant.numeric.integer
+    - match: '\['
+      scope: punctuation.section.brackets.begin
+      push:
+        - meta_scope: meta.brackets
+        - match: '-?[0-9]+'
+          scope: constant.numeric.integer
+        - match: ':'
+          scope: keyword.operator.range.delimiter
+        - match: '\]'
+          scope: punctuation.section.brackets.end
+          pop: 1
+    - match: '<'
+      scope: punctuation.section.generic.begin
+      push:
+        - meta_scope: meta.generic
+        - match: '[a-z_\.]+'
+          scope: variable.parameter.sll
+        - match: '-?[0-9]+'
+          scope: constant.numeric.integer
+        - match: '=!?'
+          scope: keyword.operator.logical.compare
+        - match: '>'
+          scope: punctuation.section.generic.end
+          pop: 1
+  comments:
+    - match: '^\s*(#).*$'
+      scope: comment.line.sll
+      captures:
+        1: punctuation.definition.comment.sll

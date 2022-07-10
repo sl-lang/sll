@@ -638,6 +638,51 @@ static void __SLL_FORCE_INLINE _optimizer_execute(sll_source_file_t* source_file
 			}
 		}
 	}
+	if ((data0->node->type==50&&data0->child_count==1)){
+		child_count_t start0=0;
+		child_count_t end0=data0->child_count;
+		child_count_t step0=1;
+		if ((data0->child_type_bitmap[0]&3)){
+			for (child_count_t idx0=start0;idx0<end0;idx0+=step0){
+				optimizer_node_children_data_t* data1=data0->children+idx0;
+				if (!data1->node){
+					continue;
+				}
+				if (data1->node->type==0||data1->node->type==1){
+					_set_nop(data0);
+					return;
+				}
+			}
+		}
+		if ((data0->child_type_bitmap[0]&4)){
+			for (child_count_t idx0=start0;idx0<end0;idx0+=step0){
+				optimizer_node_children_data_t* data1=data0->children+idx0;
+				if (!data1->node){
+					continue;
+				}
+				if (data1->node->type==2){
+					_set_nop(data0);
+					data1->node->type=0;
+					data1->node->data.int_=1;
+					return;
+				}
+			}
+		}
+		if ((data0->child_type_bitmap[0]&16)){
+			for (child_count_t idx0=start0;idx0<end0;idx0+=step0){
+				optimizer_node_children_data_t* data1=data0->children+idx0;
+				if (!data1->node){
+					continue;
+				}
+				if (data1->node->type==4){
+					_set_nop(data0);
+					data1->node->type=0;
+					data1->node->data.int_=(source_file->string_table.data+data1->node->data.string_index)->length;
+					return;
+				}
+			}
+		}
+	}
 	if (data0->node->type==69){
 		child_count_t start0=(data0->child_count>1?data0->child_count-1:0);
 		child_count_t end0=data0->child_count;
