@@ -1,5 +1,6 @@
 #include <sll.h>
 #include <stdlib.h>
+#include <window/common.h>
 #include <window/cursor.h>
 #include <xcb/xcb.h>
 #include <xcb/xcb_cursor.h>
@@ -95,4 +96,10 @@ void _init_platform(void){
 	LOAD_CURSOR(WINDOW_CURSOR_RESIZE_ALL,"fleur","size_all");
 	LOAD_CURSOR(WINDOW_CURSOR_HELP,"whats_this","help","question_arrow","5c6cd98b3f3ebcb1f9c7f1c204630408","d9ce0ab605698f320427677b458ad60b");
 	sll_map_container_init(NULL,NULL,&_window_to_parent);
+}
+
+
+
+__WINDOW_API_CALL void* window_api_get_context(void){
+	return _xcb_conn;
 }

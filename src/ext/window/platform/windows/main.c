@@ -1,5 +1,7 @@
 #undef NOUSER
 #include <windows.h>
+#include <stddef.h>
+#include <window/common.h>
 #include <window/platform/windows.h>
 #include <window/window.h>
 
@@ -30,4 +32,10 @@ void _init_platform(void){
 		"_sll_window_extension_default_class"
 	};
 	RegisterClassA(&wnd_class);
+}
+
+
+
+__WINDOW_API_CALL void* window_api_get_context(void){
+	return NULL;
 }

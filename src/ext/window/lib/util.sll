@@ -1,0 +1,18 @@
+(--- "types.sll")
+
+
+
+(= window_util_module_type (&:
+	(~ func_type) get_context
+))
+
+
+
+(= get_context (... "window:get_context"))
+
+
+
+(= window_util (. window_util_module_type
+	get_context
+))
+(## window_util)

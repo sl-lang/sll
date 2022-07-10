@@ -34,6 +34,11 @@ static const sll_internal_function_descriptor_t _internal_function_table[]={
 		SLL_CHAR("b|a")
 	},
 	{
+		SLL_CHAR("window:get_context"),
+		window_api_get_context,
+		SLL_CHAR("|Q")
+	},
+	{
 		SLL_CHAR("window:window_create"),
 		window_api_window_create,
 		SLL_CHAR("-D-DDDQ|Q")
@@ -67,14 +72,14 @@ static const sll_internal_function_descriptor_t _internal_function_table[]={
 		SLL_CHAR("window:window_set_visibility"),
 		window_api_window_set_visibility,
 		SLL_CHAR("Qb|")
-	}
+	},
 };
 
 
 
 static const sll_internal_function_table_descriptor_t _internal_function_table_descriptor_data={
 	(const sll_internal_function_descriptor_t*)(&_internal_function_table),
-	12
+	13
 };
 
 
