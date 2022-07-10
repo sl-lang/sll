@@ -17,20 +17,20 @@ section .text
 
 
 __SLL_EXPORT _check_cpuid_flags
-	xor r9d, r9d
+	xor r8d, r8d
 %ifndef __SLL_BUILD_DARWIN
-	mov r8, rbx
+	mov r9, rbx
 	mov eax, CPUID_AVX_TYPE
 	xor ecx, ecx
 	cpuid
 	bt CPUID_AVX_REGISTER, CPUID_AVX_BIT
-	setnc r9b
+	setnc r8b
 	mov eax, CPUID_AVX2_TYPE
 	xor ecx, ecx
 	cpuid
 	bt CPUID_AVX2_REGISTER, CPUID_AVX2_BIT
-	setnc r9b
-	mov rbx, r8
+	setnc r8b
+	mov rbx, r9
 %endif
-	mov eax, r9d
+	mov eax, r8d
 	ret
