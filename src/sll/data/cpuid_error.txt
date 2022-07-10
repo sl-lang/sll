@@ -1,1 +1,1 @@
-Required CPU flags to execute this library are not present on the current system.
+Required CPU flags to execute this library (AVX and AVX2) are not present on the current system.
