@@ -19,6 +19,7 @@
 typedef union _API_RETURN_VALUE{
 	sll_bool_t bool_;
 	sll_integer_t int_;
+	sll_float_t float_;
 	sll_char_t char_;
 	sll_complex_t complex_;
 	sll_number_t number;
@@ -35,7 +36,7 @@ sll_object_t* _call_api_func(sll_function_index_t fn,sll_object_t*const* al,sll_
 
 
 
-__SLL_API_CALL sll_float_t _call_api_func_assembly(api_return_value_t* ret,const bitmap_t* regs,const void* data,sll_arg_count_t ac,sll_internal_function_pointer_t fn);
+__SLL_API_CALL sll_integer_t _call_api_func_assembly(api_return_value_t* ret,const bitmap_t* regs,const void* data,sll_arg_count_t ac,sll_internal_function_pointer_t fn);
 
 
 

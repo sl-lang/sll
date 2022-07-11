@@ -30,37 +30,37 @@ sll_object_t* _call_api_func(sll_function_index_t fn,sll_object_t*const* al,sll_
 	};
 	sll_arg_state_t st=_parse_args_raw(dt->format,al,all,&ao);
 	api_return_value_t ret;
-	sll_float_t ret_f=_call_api_func_assembly(&ret,dt->_registers,bf,dt->_arg_count,dt->function);
+	sll_integer_t ret_i=_call_api_func_assembly(&ret,dt->_registers,bf,dt->_arg_count,dt->function);
 	sll_object_t* o;
-	if ((dt->_return_value&RETURN_VALUE_FLAG_ERROR)&&ret_f){
+	if ((dt->_return_value&RETURN_VALUE_FLAG_ERROR)&&ret_i){
 		if (RETURN_VALUE_GET_TYPE(dt->_return_value)=='b'||RETURN_VALUE_GET_TYPE(dt->_return_value)=='B'||RETURN_VALUE_GET_TYPE(dt->_return_value)=='W'||RETURN_VALUE_GET_TYPE(dt->_return_value)=='D'||RETURN_VALUE_GET_TYPE(dt->_return_value)=='Q'||RETURN_VALUE_GET_TYPE(dt->_return_value)=='i'){
 			ret.error=~ret.error;
 		}
 		o=sll_int_to_object(ret.error);
 	}
 	else{
+		if (dt->_return_value&RETURN_VALUE_FLAG_ERROR){
+			ret_i=ret.int_;
+		}
 		switch (RETURN_VALUE_GET_TYPE(dt->_return_value)){
 			case 'b':
 				o=SLL_ACQUIRE_STATIC_INT(ret.bool_);
 				break;
 			case 'B':
-				o=sll_int_to_object(ret.int_&0xff);
+				o=sll_int_to_object(ret_i&0xff);
 				break;
 			case 'W':
-				o=sll_int_to_object(ret.int_&0xffff);
+				o=sll_int_to_object(ret_i&0xffff);
 				break;
 			case 'D':
-				o=sll_int_to_object(ret.int_&0xffffffff);
+				o=sll_int_to_object(ret_i&0xffffffff);
 				break;
 			case 'Q':
 			case 'i':
-				o=sll_int_to_object(ret.int_);
+				o=sll_int_to_object(ret_i);
 				break;
 			case 'f':
-				if (dt->_return_value&RETURN_VALUE_FLAG_ERROR){
-					SLL_UNIMPLEMENTED();
-				}
-				o=sll_float_to_object(ret_f);
+				o=sll_float_to_object(ret.float_);
 				break;
 			case 'c':
 				o=SLL_FROM_CHAR(ret.char_);
@@ -89,7 +89,7 @@ sll_object_t* _call_api_func(sll_function_index_t fn,sll_object_t*const* al,sll_
 				o=sll_map_to_object_nocopy(&(ret.map));
 				break;
 			case 'o':
-				o=ret.object;
+				o=(sll_object_t*)PTR(ret_i);
 				break;
 			case 'v':
 				o=SLL_ACQUIRE_STATIC_INT(0);

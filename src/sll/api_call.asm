@@ -4,7 +4,6 @@
 %include "sll/_internal/common.inc"
 
 
-
 __SLL_EXPORT _call_api_func_assembly
 	; rcx - Return value pointer
 	; rdx - Argument bitmap pointer
@@ -106,21 +105,23 @@ __SLL_EXPORT _call_api_func_assembly
 
 	; rax - Integer return value
 	; rcx - Current bitmap
+	; rdx - Return value structure pointer
+	; r8 - Integer return value
 	; xmm0 - Floating-point return value
 	; [rsp+8] - Return value structure pointer
 	test ecx, ecx
-	jz ._write_integer_to_struct
+	mov rdx, QWORD [rsp+8]
+	jz ._write_float_to_struct
 	cmp ecx, 1
 	jz ._return
-	xorpd xmm0, xmm0
-	cmp rax, 0xffffffffffffffff
-	jz ._return
-	mov rdx, 0x3ff0000000000000
-	movq xmm0, rdx
-._write_integer_to_struct:
-	mov rdx, QWORD [rsp+8]
-	mov QWORD [rdx], rax
+	mov r8, rax
+	add rax, 1
+	jnz ._write_error_to_struct
 ._return:
-
-	; xmm0 - Floating-point return value
+	ret
+._write_float_to_struct:
+	movq QWORD [rdx], xmm0
+	ret
+._write_error_to_struct:
+	mov QWORD [rdx], r8
 	ret
