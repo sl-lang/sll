@@ -19,7 +19,7 @@
 sll_object_t* _call_api_func(sll_function_index_t fn,sll_object_t*const* al,sll_arg_count_t all){
 	const sll_internal_function_t* dt=sll_current_runtime_data->internal_function_table->data+fn;
 	void* bf=sll_allocate_stack(dt->_arg_size);
-	arg_output_t ao={
+	arg_output_t arg_output={
 		ARG_OUTPUT_TYPE_ARRAY,
 		{
 			.array={
@@ -28,7 +28,7 @@ sll_object_t* _call_api_func(sll_function_index_t fn,sll_object_t*const* al,sll_
 			}
 		}
 	};
-	sll_arg_state_t st=_parse_args_raw(dt->format,al,all,&ao);
+	sll_arg_state_t st=_parse_args_raw(dt->format,al,all,&arg_output);
 	api_return_value_t ret;
 	sll_integer_t ret_i=_call_api_func_assembly(&ret,dt->_registers,bf,dt->_arg_count,dt->function);
 	sll_object_t* o;
