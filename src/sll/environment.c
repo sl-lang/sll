@@ -73,8 +73,8 @@ __SLL_EXTERNAL sll_bool_t sll_expand_environment_variable(const sll_string_t* ke
 		if (i==SLL_MAX_STRING_LENGTH){
 			break;
 		}
-		sll_string_length_t e=sll_string_index_char(out,'%',0,i);
-		if (e==SLL_MAX_STRING_LENGTH){
+		sll_string_length_t j=sll_string_index_char(out,'%',0,i);
+		if (j==SLL_MAX_STRING_LENGTH){
 			break;
 		}
 		SLL_UNIMPLEMENTED();
