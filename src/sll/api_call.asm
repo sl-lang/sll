@@ -116,12 +116,10 @@ __SLL_EXPORT _call_api_func_assembly
 	jz ._return
 	mov r8, rax
 	add rax, 1
-	jnz ._write_error_to_struct
+	jz ._return
+	mov QWORD [rdx], r8
 ._return:
 	ret
 ._write_float_to_struct:
 	movq QWORD [rdx], xmm0
-	ret
-._write_error_to_struct:
-	mov QWORD [rdx], r8
 	ret
