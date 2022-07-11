@@ -95,7 +95,7 @@ static void _check_release_mode(sll_array_length_t argc,const sll_char_t*const*a
 		const sll_char_t* e=*argv;
 		argc--;
 		argv++;
-		sll_char_t nm=(*e=='-'&&*(e+1)&&!*(e+2)?*(e+1):0);
+		sll_char_t nm=(*e=='-'&&*(e+1)&&!(*(e+2))?*(e+1):0);
 		if (nm=='A'||sll_string_compare_pointer(e,SLL_CHAR("--args"))==SLL_COMPARE_RESULT_EQUAL){
 			break;
 		}
@@ -326,7 +326,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_code_t sll_cli_main(sll_array_lengt
 	sll_array_length_t i=0;
 	do{
 		const sll_char_t* e=argv[i];
-		sll_char_t nm=(*e=='-'&&*(e+1)&&!*(e+2)?*(e+1):0);
+		sll_char_t nm=(*e=='-'&&*(e+1)&&!(*(e+2))?*(e+1):0);
 		if (nm=='a'||sll_string_compare_pointer(e,SLL_CHAR("--generate-assembly"))==SLL_COMPARE_RESULT_EQUAL){
 			_cli_flags|=SLL_CLI_FLAG_GENERATE_ASSEMBLY;
 		}

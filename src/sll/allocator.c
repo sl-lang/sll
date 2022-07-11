@@ -9,7 +9,7 @@
 
 
 __SLL_EXTERNAL void sll_allocator_collapse(void** pointer,sll_size_t size){
-	if (!*pointer){
+	if (!(*pointer)){
 		*pointer=sll_allocator_init(size);
 		return;
 	}
@@ -45,7 +45,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT void* sll_allocator_init(sll_size_t size){
 
 
 __SLL_EXTERNAL void sll_allocator_move(void** pointer,sll_bool_t direction){
-	if (!*pointer){
+	if (!(*pointer)){
 		return;
 	}
 	*pointer=PTR(ADDR(sll_memory_move(PTR(ADDR(*pointer)-sizeof(allocator_header_t)),direction))+sizeof(allocator_header_t));
@@ -63,7 +63,7 @@ __SLL_EXTERNAL void sll_allocator_release(void* pointer){
 
 
 __SLL_EXTERNAL void sll_allocator_resize(void** pointer,sll_size_t size){
-	if (!*pointer){
+	if (!(*pointer)){
 		*pointer=sll_allocator_init(size);
 		return;
 	}
