@@ -10,4 +10,8 @@
 - Fixed variable deletion after infinite loops
 - Improved performance of API calls
 
+## Removed
+
+- Obsolete TLS API
+
 [0.7.26]: https://github.com/sl-lang/sll/compare/sll-v0.7.25...main
