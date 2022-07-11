@@ -34,10 +34,10 @@ void _deinit_environment(void){
 	SLL_CRITICAL(sll_platform_lock_delete(_env_lock));
 	sll_free_search_path(&_env_path);
 	for (sll_environment_length_t i=0;i<sll_environment->length;i++){
-		const sll_environment_variable_t* kv=*(sll_environment->data+i);
-		sll_free_string((sll_string_t*)(&(kv->key)));
-		sll_free_string((sll_string_t*)(&(kv->value)));
-		sll_deallocate(PTR(kv));
+		const sll_environment_variable_t* key_value=*(sll_environment->data+i);
+		sll_free_string((sll_string_t*)(&(key_value->key)));
+		sll_free_string((sll_string_t*)(&(key_value->value)));
+		sll_deallocate(PTR(key_value));
 	}
 	*((sll_environment_length_t*)(&(sll_environment->length)))=0;
 	sll_deallocate(PTR(sll_environment->data));
@@ -48,8 +48,8 @@ void _deinit_environment(void){
 void _init_environment(void){
 	_init_platform_env();
 	for (sll_environment_length_t i=0;i<sll_environment->length;i++){
-		sll_environment_variable_t* kv=(sll_environment_variable_t*)(*(sll_environment->data+i));
-		sll_string_upper_case(NULL,(sll_string_t*)(&(kv->key)));
+		sll_environment_variable_t* key_value=(sll_environment_variable_t*)(*(sll_environment->data+i));
+		sll_string_upper_case(NULL,(sll_string_t*)(&(key_value->key)));
 	}
 	_env_lock=sll_platform_lock_create(NULL);
 	sll_string_t tmp;
@@ -113,12 +113,12 @@ __SLL_EXTERNAL void sll_remove_environment_variable(const sll_string_t* key){
 	LOCK_ENV;
 	sll_environment_length_t i=0;
 	while (i<sll_environment->length){
-		sll_environment_variable_t* kv=(sll_environment_variable_t*)(*(sll_environment->data+i));
-		if (STRING_EQUAL(&k_lowercase,&(kv->key))){
+		sll_environment_variable_t* key_value=(sll_environment_variable_t*)(*(sll_environment->data+i));
+		if (STRING_EQUAL(&k_lowercase,&(key_value->key))){
 			sll_platform_remove_environment_variable(key->data);
-			sll_free_string((sll_string_t*)(&(kv->key)));
-			sll_free_string((sll_string_t*)(&(kv->value)));
-			sll_deallocate(kv);
+			sll_free_string((sll_string_t*)(&(key_value->key)));
+			sll_free_string((sll_string_t*)(&(key_value->value)));
+			sll_deallocate(key_value);
 			i++;
 			while (i<sll_environment->length){
 				*(((const sll_environment_variable_t**)(sll_environment->data))+i-1)=*(sll_environment->data+i);
@@ -147,10 +147,10 @@ __SLL_EXTERNAL void sll_set_environment_variable(const sll_string_t* key,const s
 	LOCK_ENV;
 	sll_platform_set_environment_variable(key->data,value->data);
 	for (sll_environment_length_t i=0;i<sll_environment->length;i++){
-		sll_environment_variable_t* kv=(sll_environment_variable_t*)(*(sll_environment->data+i));
-		if (STRING_EQUAL(&k_lowercase,&(kv->key))){
-			sll_free_string((sll_string_t*)(&(kv->value)));
-			sll_string_clone(value,(sll_string_t*)(&(kv->value)));
+		sll_environment_variable_t* key_value=(sll_environment_variable_t*)(*(sll_environment->data+i));
+		if (STRING_EQUAL(&k_lowercase,&(key_value->key))){
+			sll_free_string((sll_string_t*)(&(key_value->value)));
+			sll_string_clone(value,(sll_string_t*)(&(key_value->value)));
 			goto _end;
 		}
 	}
