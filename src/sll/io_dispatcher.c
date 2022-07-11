@@ -31,11 +31,11 @@ static raw_event_data_t* _io_dispatcher_raw_event;
 static sll_thread_index_t _restart_thread(event_list_length_t idx){
 	event_data_t* evt=_io_dispatcher_event+idx;
 	SLL_ASSERT(evt->file);
-	sll_object_t* o=NULL;
+	sll_object_t* out=NULL;
 	if (evt->size==SLL_MAX_STRING_LENGTH){
 		sll_error_t err;
 		sll_read_char_t chr=sll_file_read_char(evt->file,&err);
-		o=(chr==SLL_END_OF_DATA?(err==SLL_NO_ERROR?SLL_ACQUIRE_STATIC_INT(0):sll_int_to_object(~err)):SLL_FROM_CHAR(chr));
+		out=(chr==SLL_END_OF_DATA?(err==SLL_NO_ERROR?SLL_ACQUIRE_STATIC_INT(0):sll_int_to_object(~err)):SLL_FROM_CHAR(chr));
 	}
 	else if (!evt->size){
 		SLL_UNIMPLEMENTED();
@@ -47,17 +47,17 @@ static sll_thread_index_t _restart_thread(event_list_length_t idx){
 		sll_size_t sz=sll_file_read(evt->file,bf.data,evt->size,&err);
 		if (!sz&&err!=SLL_NO_ERROR){
 			sll_free_string(&bf);
-			o=sll_int_to_object(err);
+			out=sll_int_to_object(err);
 		}
 		else{
 			sll_string_decrease(&bf,(sll_string_length_t)sz);
 			sll_string_calculate_checksum(&bf);
-			o=STRING_TO_OBJECT_NOCOPY(&bf);
+			out=STRING_TO_OBJECT_NOCOPY(&bf);
 		}
 	}
 	sll_thread_index_t tid=evt->thread_index;
 	thread_data_t* thr=_thread_get(tid);
-	*(thr->stack+thr->stack_index)=o;
+	*(thr->stack+thr->stack_index)=out;
 	thr->stack_index++;
 	for (event_list_length_t i=idx+1;i<_io_dispatcher_event_len;i++){
 		*(_io_dispatcher_event+i-1)=*(_io_dispatcher_event+i);
