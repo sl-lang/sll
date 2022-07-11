@@ -85,22 +85,22 @@ __SLL_EXTERNAL sll_bool_t sll_expand_environment_variable(const sll_string_t* ke
 
 
 __SLL_EXTERNAL sll_bool_t sll_get_environment_variable(const sll_string_t* key,sll_string_t* out){
-	sll_string_t k_lowercase;
-	sll_string_upper_case(key,&k_lowercase);
+	sll_string_t lowercase_key;
+	sll_string_upper_case(key,&lowercase_key);
 	LOCK_ENV;
 	for (sll_environment_length_t i=0;i<sll_environment->length;i++){
 		const sll_environment_variable_t* key_value=*(sll_environment->data+i);
-		if (STRING_EQUAL(&k_lowercase,&(key_value->key))){
+		if (STRING_EQUAL(&lowercase_key,&(key_value->key))){
 			if (out){
 				sll_string_clone(&(key_value->value),out);
 			}
 			UNLOCK_ENV;
-			sll_free_string(&k_lowercase);
+			sll_free_string(&lowercase_key);
 			return 1;
 		}
 	}
 	UNLOCK_ENV;
-	sll_free_string(&k_lowercase);
+	sll_free_string(&lowercase_key);
 	SLL_INIT_STRING(out);
 	return 0;
 }
@@ -108,13 +108,13 @@ __SLL_EXTERNAL sll_bool_t sll_get_environment_variable(const sll_string_t* key,s
 
 
 __SLL_EXTERNAL void sll_remove_environment_variable(const sll_string_t* key){
-	sll_string_t k_lowercase;
-	sll_string_upper_case(key,&k_lowercase);
+	sll_string_t lowercase_key;
+	sll_string_upper_case(key,&lowercase_key);
 	LOCK_ENV;
 	sll_environment_length_t i=0;
 	while (i<sll_environment->length){
 		sll_environment_variable_t* key_value=(sll_environment_variable_t*)(*(sll_environment->data+i));
-		if (STRING_EQUAL(&k_lowercase,&(key_value->key))){
+		if (STRING_EQUAL(&lowercase_key,&(key_value->key))){
 			sll_platform_remove_environment_variable(key->data);
 			sll_free_string((sll_string_t*)(&(key_value->key)));
 			sll_free_string((sll_string_t*)(&(key_value->value)));
@@ -131,24 +131,24 @@ __SLL_EXTERNAL void sll_remove_environment_variable(const sll_string_t* key){
 		i++;
 	}
 _cleanup:
-	if (sll_string_equal(&k_lowercase,&_env_path_var_name)){
+	if (sll_string_equal(&lowercase_key,&_env_path_var_name)){
 		sll_free_search_path(&_env_path);
 		sll_search_path_from_environment(&_env_path_var_name,&_env_path);
 	}
 	UNLOCK_ENV;
-	sll_free_string(&k_lowercase);
+	sll_free_string(&lowercase_key);
 }
 
 
 
 __SLL_EXTERNAL void sll_set_environment_variable(const sll_string_t* key,const sll_string_t* value){
-	sll_string_t k_lowercase;
-	sll_string_upper_case(key,&k_lowercase);
+	sll_string_t lowercase_key;
+	sll_string_upper_case(key,&lowercase_key);
 	LOCK_ENV;
 	sll_platform_set_environment_variable(key->data,value->data);
 	for (sll_environment_length_t i=0;i<sll_environment->length;i++){
 		sll_environment_variable_t* key_value=(sll_environment_variable_t*)(*(sll_environment->data+i));
-		if (STRING_EQUAL(&k_lowercase,&(key_value->key))){
+		if (STRING_EQUAL(&lowercase_key,&(key_value->key))){
 			sll_free_string((sll_string_t*)(&(key_value->value)));
 			sll_string_clone(value,(sll_string_t*)(&(key_value->value)));
 			goto _end;
@@ -162,9 +162,9 @@ __SLL_EXTERNAL void sll_set_environment_variable(const sll_string_t* key,const s
 	*(((const sll_environment_variable_t**)(sll_environment->data))+sll_environment->length-1)=n;
 _end:
 	UNLOCK_ENV;
-	if (sll_string_equal(&k_lowercase,&_env_path_var_name)){
+	if (sll_string_equal(&lowercase_key,&_env_path_var_name)){
 		sll_free_search_path(&_env_path);
 		sll_search_path_from_environment(&_env_path_var_name,&_env_path);
 	}
-	sll_free_string(&k_lowercase);
+	sll_free_string(&lowercase_key);
 }
