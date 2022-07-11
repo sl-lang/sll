@@ -21,7 +21,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_error_t sll_error_from_string_pointer(cons
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT const sll_char_t* sll_error_get_string_pointer(sll_error_t err){
-	SLL_ASSERT(SLL_ERROR_GET_TYPE(err)==SLL_ERROR_FLAG_SLL&&SLL_ERROR_GET_VALUE(err)==SLL_ERROR_STRING);
-	return _error_string_pointer_table[SLL_ERROR_GET_EXTRA(err)];
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT const sll_char_t* sll_error_get_string_pointer(sll_error_t error){
+	SLL_ASSERT(SLL_ERROR_GET_TYPE(error)==SLL_ERROR_FLAG_SLL&&SLL_ERROR_GET_VALUE(error)==SLL_ERROR_STRING);
+	return _error_string_pointer_table[SLL_ERROR_GET_EXTRA(error)];
 }

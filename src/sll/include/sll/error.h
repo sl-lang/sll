@@ -272,10 +272,10 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_error_t sll_error_from_string_pointer(cons
  * \name sll_error_get_string_pointer
  * \group file
  * \desc Docs!
- * \arg sll_error_t err
+ * \arg sll_error_t error
  * \ret const sll_char_t*
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT const sll_char_t* sll_error_get_string_pointer(sll_error_t err);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT const sll_char_t* sll_error_get_string_pointer(sll_error_t error);
 
 
 
