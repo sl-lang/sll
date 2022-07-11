@@ -29,67 +29,67 @@ sll_object_t* _call_api_func(sll_function_index_t fn,sll_object_t*const* al,sll_
 		}
 	};
 	sll_arg_state_t arg_state=_parse_args_raw(dt->format,al,all,&arg_output);
-	api_return_value_t ret;
-	sll_integer_t ret_i=_call_api_func_assembly(&ret,dt->_registers,buffer,dt->_arg_count,dt->function);
+	api_return_value_t ret_any;
+	sll_integer_t ret=_call_api_func_assembly(&ret_any,dt->_registers,buffer,dt->_arg_count,dt->function);
 	sll_object_t* out;
-	if ((dt->_return_value&RETURN_VALUE_FLAG_ERROR)&&ret_i){
+	if ((dt->_return_value&RETURN_VALUE_FLAG_ERROR)&&ret){
 		if (RETURN_VALUE_GET_TYPE(dt->_return_value)=='b'||RETURN_VALUE_GET_TYPE(dt->_return_value)=='B'||RETURN_VALUE_GET_TYPE(dt->_return_value)=='W'||RETURN_VALUE_GET_TYPE(dt->_return_value)=='D'||RETURN_VALUE_GET_TYPE(dt->_return_value)=='Q'||RETURN_VALUE_GET_TYPE(dt->_return_value)=='i'){
-			ret.error=~ret.error;
+			ret_any.error=~ret_any.error;
 		}
-		out=sll_int_to_object(ret.error);
+		out=sll_int_to_object(ret_any.error);
 	}
 	else{
 		if (dt->_return_value&RETURN_VALUE_FLAG_ERROR){
-			ret_i=ret.int_;
+			ret=ret_any.int_;
 		}
 		switch (RETURN_VALUE_GET_TYPE(dt->_return_value)){
 			case 'b':
-				out=SLL_ACQUIRE_STATIC_INT(ret.bool_);
+				out=SLL_ACQUIRE_STATIC_INT(ret_any.bool_);
 				break;
 			case 'B':
-				out=sll_int_to_object(ret_i&0xff);
+				out=sll_int_to_object(ret&0xff);
 				break;
 			case 'W':
-				out=sll_int_to_object(ret_i&0xffff);
+				out=sll_int_to_object(ret&0xffff);
 				break;
 			case 'D':
-				out=sll_int_to_object(ret_i&0xffffffff);
+				out=sll_int_to_object(ret&0xffffffff);
 				break;
 			case 'Q':
 			case 'i':
-				out=sll_int_to_object(ret_i);
+				out=sll_int_to_object(ret);
 				break;
 			case 'f':
-				out=sll_float_to_object(ret.float_);
+				out=sll_float_to_object(ret_any.float_);
 				break;
 			case 'c':
-				out=SLL_FROM_CHAR(ret.char_);
+				out=SLL_FROM_CHAR(ret_any.char_);
 				break;
 			case 'd':
-				out=sll_complex_to_object(&(ret.complex_));
+				out=sll_complex_to_object(&(ret_any.complex_));
 				break;
 			case 'x':
-				if (ret.number.type==SLL_PARSE_ARGS_TYPE_INT){
-					out=sll_int_to_object(ret.number.data.int_);
+				if (ret_any.number.type==SLL_PARSE_ARGS_TYPE_INT){
+					out=sll_int_to_object(ret_any.number.data.int_);
 				}
-				else if (ret.number.type==SLL_PARSE_ARGS_TYPE_FLOAT){
-					out=sll_float_to_object(ret.number.data.float_);
+				else if (ret_any.number.type==SLL_PARSE_ARGS_TYPE_FLOAT){
+					out=sll_float_to_object(ret_any.number.data.float_);
 				}
 				else{
-					out=sll_complex_to_object(&(ret.number.data.complex_));
+					out=sll_complex_to_object(&(ret_any.number.data.complex_));
 				}
 				break;
 			case 's':
-				out=STRING_TO_OBJECT_NOCOPY(&(ret.string));
+				out=STRING_TO_OBJECT_NOCOPY(&(ret_any.string));
 				break;
 			case 'a':
-				out=sll_array_to_object_nocopy(&(ret.array));
+				out=sll_array_to_object_nocopy(&(ret_any.array));
 				break;
 			case 'm':
-				out=sll_map_to_object_nocopy(&(ret.map));
+				out=sll_map_to_object_nocopy(&(ret_any.map));
 				break;
 			case 'o':
-				out=(sll_object_t*)PTR(ret_i);
+				out=PTR(ret);
 				break;
 			case 'v':
 				out=SLL_ACQUIRE_STATIC_INT(0);
