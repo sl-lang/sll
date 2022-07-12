@@ -81,7 +81,10 @@
 		x
 		(* y image$width)
 	) 4))
-	(= (: image$data offset (+ offset 4)) [color$red color$green color$blue color$alpha])
+	(= (: image$data offset) color$red)
+	(= (: image$data (+ offset 1)) color$green)
+	(= (: image$data (+ offset 2)) color$blue)
+	(= (: image$data (+ offset 3)) color$alpha)
 ))
 
 
