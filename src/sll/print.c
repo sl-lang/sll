@@ -248,17 +248,17 @@ static const sll_node_t* _print_node_internal(const sll_source_file_t* source_fi
 		case SLL_NODE_TYPE_FUNC:
 			{
 				PRINT_STATIC_STRING(",,,",out);
-				const sll_function_t* f=*(source_file->function_table.data+node->data.function.function_index);
-				if (f->name_string_index!=SLL_MAX_STRING_INDEX){
+				const sll_function_t* function=*(source_file->function_table.data+node->data.function.function_index);
+				if (function->name_string_index!=SLL_MAX_STRING_INDEX){
 					PRINT_STATIC_STRING("|#",out);
-					sll_file_write(out,(source_file->string_table.data+f->name_string_index)->data,(source_file->string_table.data+f->name_string_index)->length,NULL);
+					sll_file_write(out,(source_file->string_table.data+function->name_string_index)->data,(source_file->string_table.data+function->name_string_index)->length,NULL);
 					PRINT_STATIC_STRING("#|",out);
 				}
-				for (sll_arg_count_t i=0;i<SLL_FUNCTION_GET_ARGUMENT_COUNT(f);i++){
+				for (sll_arg_count_t i=0;i<SLL_FUNCTION_GET_ARGUMENT_COUNT(function);i++){
 					sll_file_write_char(out,' ',NULL);
-					_print_identifier(f->args[i],source_file,out);
+					_print_identifier(function->args[i],source_file,out);
 				}
-				if (f->description_string_index!=SLL_MAX_STRING_INDEX){
+				if (function->description_string_index!=SLL_MAX_STRING_INDEX){
 					SLL_UNIMPLEMENTED();
 				}
 			}
@@ -275,10 +275,10 @@ static const sll_node_t* _print_node_internal(const sll_source_file_t* source_fi
 						_print_int(node->data.function.function_index,out);
 					}
 				}
-				sll_arg_count_t l=node->data.function.arg_count;
+				sll_arg_count_t length=node->data.function.arg_count;
 				node++;
-				while (l){
-					l--;
+				while (length){
+					length--;
 					sll_file_write_char(out,' ',NULL);
 					node=_print_node_internal(source_file,internal_function_table,node,out,line);
 				}
