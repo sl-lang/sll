@@ -300,9 +300,9 @@ static const sll_node_t* _print_node_internal(const sll_source_file_t* source_fi
 				else{
 					PRINT_STATIC_STRING("<-*",out);
 				}
-				sll_arg_count_t ac=node->data.arg_count;
+				sll_arg_count_t arg_count=node->data.arg_count;
 				node++;
-				if (ac){
+				if (arg_count){
 					while (node->type==SLL_NODE_TYPE_NOP||node->type==SLL_NODE_TYPE_DBG||node->type==SLL_NODE_TYPE_CHANGE_STACK){
 						if (node->type==SLL_NODE_TYPE_DBG){
 							_print_line(node->data.string_index,source_file,line,out);
@@ -320,7 +320,7 @@ static const sll_node_t* _print_node_internal(const sll_source_file_t* source_fi
 							node++;
 						}
 					}
-					for (;i<ac;i++){
+					for (;i<arg_count;i++){
 						sll_file_write_char(out,' ',NULL);
 						node=_print_node_internal(source_file,internal_function_table,node,out,line);
 					}
