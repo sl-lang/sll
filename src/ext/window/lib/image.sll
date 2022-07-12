@@ -34,7 +34,9 @@
 
 (= window_image_module_type (&:
 	(~ type_type) window_image_type
+	(~ type_type) window_pixel_type
 	(~ func_type) get_pixel
+	(~ func_type) set_pixel
 ))
 
 
@@ -63,10 +65,31 @@
 	))
 ))
 
+(= set_pixel (,,, image x y color
+	(? (! image) (@@ nil))
+	(= image (:: image window_image_type))
+	(= x (:: x int_type))
+	(= y (:: y int_type))
+	(? (||
+		(< x 0)
+		(< y 0)
+		(>= x image$width)
+		(>= y image$height)
+	) (@@ nil))
+	(= color (:: color window_pixel_type))
+	(= offset (* (+
+		x
+		(* y image$width)
+	) 4))
+	(= (: image$data offset (+ offset 4)) [color$red color$green color$blue color$alpha])
+))
+
 
 
 (= window_image (. window_image_module_type
 	window_image_type
+	window_pixel_type
 	get_pixel
+	set_pixel
 ))
 (## window_image)
