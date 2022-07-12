@@ -193,9 +193,9 @@ static const sll_node_t* _print_node_internal(const sll_source_file_t* source_fi
 		case SLL_NODE_TYPE_ARRAY:
 			{
 				sll_file_write_char(out,'[',NULL);
-				sll_array_length_t al=node->data.array_length;
+				sll_array_length_t array_length=node->data.array_length;
 				node++;
-				for (sll_array_length_t i=0;i<al;i++){
+				for (sll_array_length_t i=0;i<array_length;i++){
 					if (i){
 						sll_file_write_char(out,' ',NULL);
 					}
@@ -207,9 +207,9 @@ static const sll_node_t* _print_node_internal(const sll_source_file_t* source_fi
 		case SLL_NODE_TYPE_MAP:
 			{
 				sll_file_write_char(out,'<',NULL);
-				sll_map_length_t ml=node->data.map_length;
+				sll_map_length_t map_length=node->data.map_length;
 				node++;
-				for (sll_map_length_t i=0;i<ml;i++){
+				for (sll_map_length_t i=0;i<map_length;i++){
 					if (i){
 						sll_file_write_char(out,' ',NULL);
 					}
