@@ -54,6 +54,11 @@ static const sll_internal_function_descriptor_t _internal_function_table[]={
 		SLL_CHAR("Q-D-DDDQ|")
 	},
 	{
+		SLL_CHAR("window:window_set_icon"),
+		window_api_window_set_icon,
+		SLL_CHAR("QDD#s|")
+	},
+	{
 		SLL_CHAR("window:window_set_size_constraints"),
 		window_api_window_set_size_constraints,
 		SLL_CHAR("QDDDD|")
@@ -79,7 +84,7 @@ static const sll_internal_function_descriptor_t _internal_function_table[]={
 
 static const sll_internal_function_table_descriptor_t _internal_function_table_descriptor_data={
 	(const sll_internal_function_descriptor_t*)(&_internal_function_table),
-	13
+	14
 };
 
 

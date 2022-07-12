@@ -40,6 +40,11 @@ __WINDOW_API_CALL void window_api_window_set_geometry(window_handle_t id,int32_t
 
 
 
+__WINDOW_API_CALL void window_api_window_set_icon(window_handle_t id,uint32_t width,const sll_string_t* data){
+}
+
+
+
 __WINDOW_API_CALL void window_api_window_set_size_constraints(window_handle_t id,uint32_t min_w,uint32_t min_h,uint32_t max_w,uint32_t max_h){
 	xcb_size_hints_t hints;
 	sll_zero_memory(&hints,sizeof(xcb_size_hints_t));
