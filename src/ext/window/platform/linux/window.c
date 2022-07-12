@@ -41,6 +41,24 @@ __WINDOW_API_CALL void window_api_window_set_geometry(window_handle_t id,int32_t
 
 
 __WINDOW_API_CALL void window_api_window_set_icon(window_handle_t id,uint32_t width,const sll_string_t* data){
+	if (!width){
+		xcb_delete_property(_xcb_conn,(int)(intptr_t)id,_xcb_net_wm_icon);
+	}
+	else{
+		uint32_t height=data->length/4/width;
+		uint32_t count=2+width*height;
+		uint32_t* buffer=sll_allocate_stack(count*sizeof(uint32_t));
+		*buffer=width;
+		*(buffer+1)=height;
+		uint32_t i=0;
+		for (uint32_t j=2;j<count;j++){
+			*(buffer+j)=FORMAT_COLOR_BITS(data->data[i],data->data[i+1],data->data[i+2],data->data[i+3]);
+			i+=4;
+		}
+		xcb_change_property(_xcb_conn,XCB_PROP_MODE_REPLACE,(int)(intptr_t)id,_xcb_net_wm_icon,XCB_ATOM_CARDINAL,sizeof(uint32_t)*8,count,buffer);
+		sll_deallocate(buffer);
+	}
+	xcb_flush(_xcb_conn);
 }
 
 

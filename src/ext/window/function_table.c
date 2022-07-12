@@ -56,7 +56,7 @@ static const sll_internal_function_descriptor_t _internal_function_table[]={
 	{
 		SLL_CHAR("window:window_set_icon"),
 		window_api_window_set_icon,
-		SLL_CHAR("QDD#s|")
+		SLL_CHAR("QD#s|")
 	},
 	{
 		SLL_CHAR("window:window_set_size_constraints"),

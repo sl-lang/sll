@@ -5,6 +5,10 @@
 
 
 
+#define FORMAT_COLOR_BITS(r,g,b,a) ((((uint32_t)(r))<<16)|(((uint32_t)(g))<<8)|((uint32_t)(b))|(((uint32_t)(a))<<24))
+
+
+
 extern xcb_connection_t* _xcb_conn;
 extern xcb_screen_t* _xcb_screen;
 extern xcb_atom_t _xcb_net_wm_icon;

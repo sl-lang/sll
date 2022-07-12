@@ -1,0 +1,29 @@
+(---
+	"string.sll"
+	"types.sll"
+)
+
+
+
+(= window_image_type (&:
+	(,,, data
+		(@@ (<- string$format "<%llux%llu, RGBA>"
+			data$width
+			data$height
+		))
+	) @@string@@
+	int_type width
+	int_type height
+	string_type data
+))
+
+(= window_image_module_type (&:
+	(~ type_type) window_image_type
+))
+
+
+
+(= window_image (. window_image_module_type
+	window_image_type
+))
+(## window_image)
