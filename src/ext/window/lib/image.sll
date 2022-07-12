@@ -17,13 +17,56 @@
 	string_type data
 ))
 
+(= window_pixel_type (&:
+	(,,, data
+		(@@ (<- string$format "#%.2hhx%.2hhx%.2hhx%.2hhx"
+			data$red
+			data$green
+			data$blue
+			data$alpha
+		))
+	) @@string@@
+	char_type red
+	char_type green
+	char_type blue
+	char_type alpha
+))
+
 (= window_image_module_type (&:
 	(~ type_type) window_image_type
+	(~ func_type) get_pixel
+))
+
+
+
+(= get_pixel (,,, image x y
+	(? (! image) (@@ nil))
+	(= image (:: image window_image_type))
+	(= x (:: x int_type))
+	(= y (:: y int_type))
+	(? (||
+		(< x 0)
+		(< y 0)
+		(>= x image$width)
+		(>= y image$height)
+	) (@@ nil))
+	(= offset (* (+
+		x
+		(* y image$width)
+	) 4))
+	(= data (: image$data offset (+ offset 4)))
+	(@@ (. window_pixel_type
+		(: data 0)
+		(: data 1)
+		(: data 2)
+		(: data 3)
+	))
 ))
 
 
 
 (= window_image (. window_image_module_type
 	window_image_type
+	get_pixel
 ))
 (## window_image)
