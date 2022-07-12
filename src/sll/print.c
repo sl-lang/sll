@@ -340,9 +340,9 @@ static const sll_node_t* _print_node_internal(const sll_source_file_t* source_fi
 		case SLL_NODE_TYPE_FOR:
 			{
 				PRINT_STATIC_STRING("->",out);
-				sll_arg_count_t ac=node->data.loop.arg_count;
+				sll_arg_count_t arg_count=node->data.loop.arg_count;
 				node++;
-				for (sll_arg_count_t i=0;i<ac;i++){
+				for (sll_arg_count_t i=0;i<arg_count;i++){
 					sll_file_write_char(out,' ',NULL);
 					node=_print_node_internal(source_file,internal_function_table,node,out,line);
 				}
@@ -352,9 +352,9 @@ static const sll_node_t* _print_node_internal(const sll_source_file_t* source_fi
 		case SLL_NODE_TYPE_WHILE:
 			{
 				PRINT_STATIC_STRING(">-",out);
-				sll_arg_count_t ac=node->data.loop.arg_count;
+				sll_arg_count_t arg_count=node->data.loop.arg_count;
 				node++;
-				for (sll_arg_count_t i=0;i<ac;i++){
+				for (sll_arg_count_t i=0;i<arg_count;i++){
 					sll_file_write_char(out,' ',NULL);
 					node=_print_node_internal(source_file,internal_function_table,node,out,line);
 				}
@@ -364,9 +364,9 @@ static const sll_node_t* _print_node_internal(const sll_source_file_t* source_fi
 		case SLL_NODE_TYPE_LOOP:
 			{
 				PRINT_STATIC_STRING("><",out);
-				sll_arg_count_t ac=node->data.loop.arg_count;
+				sll_arg_count_t arg_count=node->data.loop.arg_count;
 				node++;
-				for (sll_arg_count_t i=0;i<ac;i++){
+				for (sll_arg_count_t i=0;i<arg_count;i++){
 					sll_file_write_char(out,' ',NULL);
 					node=_print_node_internal(source_file,internal_function_table,node,out,line);
 				}
@@ -502,9 +502,9 @@ static const sll_node_t* _print_node_internal(const sll_source_file_t* source_fi
 					sll_file_write(out,(source_file->string_table.data+node->data.declaration.name_string_index)->data,(source_file->string_table.data+node->data.declaration.name_string_index)->length,NULL);
 					PRINT_STATIC_STRING("#|",out);
 				}
-				sll_arg_count_t ac=node->data.declaration.arg_count;
+				sll_arg_count_t arg_count=node->data.declaration.arg_count;
 				node++;
-				for (sll_arg_count_t i=0;i<ac;i++){
+				for (sll_arg_count_t i=0;i<arg_count;i++){
 					sll_file_write_char(out,' ',NULL);
 					node=_print_node_internal(source_file,internal_function_table,node,out,line);
 				}
@@ -541,9 +541,9 @@ static const sll_node_t* _print_node_internal(const sll_source_file_t* source_fi
 		case SLL_NODE_TYPE_COMMA:
 			{
 				sll_file_write_char(out,',',NULL);
-				sll_arg_count_t ac=node->data.arg_count;
+				sll_arg_count_t arg_count=node->data.arg_count;
 				node++;
-				for (sll_arg_count_t i=0;i<ac;i++){
+				for (sll_arg_count_t i=0;i<arg_count;i++){
 					sll_file_write_char(out,' ',NULL);
 					node=_print_node_internal(source_file,internal_function_table,node,out,line);
 				}
@@ -553,9 +553,9 @@ static const sll_node_t* _print_node_internal(const sll_source_file_t* source_fi
 		case SLL_NODE_TYPE_OPERATION_LIST:
 			{
 				sll_file_write_char(out,'{',NULL);
-				sll_arg_count_t ac=node->data.arg_count;
+				sll_arg_count_t arg_count=node->data.arg_count;
 				node++;
-				for (sll_arg_count_t i=0;i<ac;i++){
+				for (sll_arg_count_t i=0;i<arg_count;i++){
 					if (i){
 						sll_file_write_char(out,' ',NULL);
 					}
@@ -594,9 +594,9 @@ static const sll_node_t* _print_node_internal(const sll_source_file_t* source_fi
 		default:
 			SLL_UNREACHABLE();
 	}
-	sll_arg_count_t ac=node->data.arg_count;
+	sll_arg_count_t arg_count=node->data.arg_count;
 	node++;
-	for (sll_arg_count_t i=0;i<ac;i++){
+	for (sll_arg_count_t i=0;i<arg_count;i++){
 		sll_file_write_char(out,' ',NULL);
 		node=_print_node_internal(source_file,internal_function_table,node,out,line);
 	}
