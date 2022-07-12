@@ -38,15 +38,16 @@ static xcb_cursor_context_t* _xcb_cursor_ctx;
 
 xcb_connection_t* _xcb_conn;
 xcb_screen_t* _xcb_screen;
-xcb_atom_t _xcb_wm_protocols;
-xcb_atom_t _xcb_wm_delete_window;
+xcb_atom_t _xcb_net_wm_icon;
 xcb_atom_t _xcb_net_wm_ping;
 xcb_atom_t _xcb_net_wm_state;
-xcb_atom_t _xcb_net_wm_state_hidden;
-xcb_atom_t _xcb_net_wm_state_maximized_vert;
-xcb_atom_t _xcb_net_wm_state_maximized_horz;
 xcb_atom_t _xcb_net_wm_state_fullscreen;
+xcb_atom_t _xcb_net_wm_state_hidden;
+xcb_atom_t _xcb_net_wm_state_maximized_horz;
+xcb_atom_t _xcb_net_wm_state_maximized_vert;
 xcb_atom_t _xcb_wm_change_state;
+xcb_atom_t _xcb_wm_delete_window;
+xcb_atom_t _xcb_wm_protocols;
 xcb_cursor_t _xcb_cursors[WINDOW_MAX_CURSOR+1];
 sll_map_container_t _window_to_parent;
 
@@ -68,15 +69,16 @@ void _deinit_platform(void){
 void _init_platform(void){
 	_xcb_conn=xcb_connect(NULL,NULL);
 	_xcb_screen=xcb_setup_roots_iterator(xcb_get_setup(_xcb_conn)).data;
-	GET_ATOM("WM_PROTOCOLS",_xcb_wm_protocols);
-	GET_ATOM("WM_DELETE_WINDOW",_xcb_wm_delete_window);
+	GET_ATOM("_NET_WM_ICON",_xcb_net_wm_icon);
 	GET_ATOM("_NET_WM_PING",_xcb_net_wm_ping);
 	GET_ATOM("_NET_WM_STATE",_xcb_net_wm_state);
-	GET_ATOM("_NET_WM_STATE_HIDDEN",_xcb_net_wm_state_hidden);
-	GET_ATOM("_NET_WM_STATE_MAXIMIZED_VERT",_xcb_net_wm_state_maximized_vert);
-	GET_ATOM("_NET_WM_STATE_MAXIMIZED_HORZ",_xcb_net_wm_state_maximized_horz);
 	GET_ATOM("_NET_WM_STATE_FULLSCREEN",_xcb_net_wm_state_fullscreen);
+	GET_ATOM("_NET_WM_STATE_HIDDEN",_xcb_net_wm_state_hidden);
+	GET_ATOM("_NET_WM_STATE_MAXIMIZED_HORZ",_xcb_net_wm_state_maximized_horz);
+	GET_ATOM("_NET_WM_STATE_MAXIMIZED_VERT",_xcb_net_wm_state_maximized_vert);
 	GET_ATOM("WM_CHANGE_STATE",_xcb_wm_change_state);
+	GET_ATOM("WM_DELETE_WINDOW",_xcb_wm_delete_window);
+	GET_ATOM("WM_PROTOCOLS",_xcb_wm_protocols);
 	xcb_cursor_context_new(_xcb_conn,_xcb_screen,&_xcb_cursor_ctx);
 	_xcb_cursors[WINDOW_CURSOR_HIDDEN]=xcb_generate_id(_xcb_conn);
 	xcb_pixmap_t empty_bitmap=xcb_create_pixmap_from_bitmap_data(_xcb_conn,_xcb_screen->root,(uint8_t*)_blank_cursor_bits,16,16,1,0,0,0);
