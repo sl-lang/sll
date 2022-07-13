@@ -232,31 +232,31 @@ typedef __SLL_U64 sll_file_offset_t;
 
 /**
  * \flags type
- * \name sll_file_data_file_t
+ * \name sll_file_source_file_t
  * \group file
  * \desc Docs!
  * \arg const sll_file_descriptor_t fd
  * \arg const sll_string_t path
  */
-typedef struct _SLL_FILE_DATA_FILE{
+typedef struct _SLL_FILE_SOURCE_FILE{
 	const sll_file_descriptor_t fd;
 	const sll_string_t path;
-} sll_file_data_file_t;
+} sll_file_source_file_t;
 
 
 
 /**
  * \flags type
- * \name sll_file_data_memory_t
+ * \name sll_file_source_memory_t
  * \group file
  * \desc Docs!
  * \arg const void* pointer
  * \arg const sll_size_t size
  */
-typedef struct _SLL_FILE_DATA_MEMORY{
+typedef struct _SLL_FILE_SOURCE_MEMORY{
 	const void* pointer;
 	const sll_size_t size;
-} sll_file_data_memory_t;
+} sll_file_source_memory_t;
 
 
 
@@ -265,12 +265,12 @@ typedef struct _SLL_FILE_DATA_MEMORY{
  * \name sll_file_source_t
  * \group file
  * \desc Docs!
- * \arg const sll_file_data_file_t file
- * \arg const sll_file_data_memory_t memory
+ * \arg const sll_file_source_file_t file
+ * \arg const sll_file_source_memory_t memory
  */
 typedef union _SLL_FILE_SOURCE{
-	const sll_file_data_file_t file;
-	const sll_file_data_memory_t memory;
+	const sll_file_source_file_t file;
+	const sll_file_source_memory_t memory;
 } sll_file_source_t;
 
 
@@ -418,13 +418,13 @@ __SLL_EXTERNAL void sll_file_close(sll_file_t* file);
 
 /**
  * \flags check_output func
- * \name sll_file_data_available
+ * \name sll_file_source_available
  * \group file
  * \desc Docs!
  * \arg sll_file_t* file
  * \ret sll_bool_t
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_file_data_available(sll_file_t* file);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_file_source_available(sll_file_t* file);
 
 
 
