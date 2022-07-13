@@ -64,13 +64,13 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_socket_conn
  * \group socket-api
  * \desc Docs!
  * \api BBD|~D
- * \arg sll_socket_ddress_family_t address_family
+ * \arg sll_socket_address_family_t address_family
  * \arg sll_socket_type_t type
  * \arg sll_socket_protocol_t protocol
  * \arg sll_file_handle_t* out
  * \ret sll_error_t
  */
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_socket_create(sll_socket_ddress_family_t address_family,sll_socket_type_t type,sll_socket_protocol_t protocol,sll_file_handle_t* out);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_socket_create(sll_socket_address_family_t address_family,sll_socket_type_t type,sll_socket_protocol_t protocol,sll_file_handle_t* out);
 
 
 
