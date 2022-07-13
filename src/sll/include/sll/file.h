@@ -369,14 +369,29 @@ typedef struct _SLL_FILE_DATA_FILE{
 
 
 /**
+ * \flags type
+ * \name sll_file_data_socket_t
+ * \group file
+ * \desc Docs!
+ * \arg const sll_file_descriptor_t fd
+ */
+typedef struct _SLL_FILE_DATA_SOCKET{
+	const sll_file_descriptor_t fd;
+} sll_file_data_socket_t;
+
+
+
+/**
  * \flags type union
  * \name sll_file_data_t
  * \group file
  * \desc Docs!
  * \arg sll_file_data_file_t file
+ * \arg sll_file_data_socket_t socket
  */
 typedef union _SLL_FILE_DATA{
 	sll_file_data_file_t file;
+	sll_file_data_socket_t socket;
 } sll_file_data_t;
 
 
