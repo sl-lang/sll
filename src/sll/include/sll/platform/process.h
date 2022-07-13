@@ -1,5 +1,6 @@
 #ifndef __SLL_PLATFORM_PROCESS_H__
 #define __SLL_PLATFORM_PROCESS_H__ 1
+#include <sll/_size_types.h>
 #include <sll/common.h>
 #include <sll/error.h>
 #include <sll/types.h>
