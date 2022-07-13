@@ -125,6 +125,10 @@ extern void sll_api_serial_encode_signed_integer(void);
 extern void sll_api_serial_encode_string(void);
 extern void sll_api_socket_accept(void);
 extern void sll_api_socket_bind(void);
+extern void sll_api_socket_connect(void);
+extern void sll_api_socket_create(void);
+extern void sll_api_socket_listen(void);
+extern void sll_api_socket_shutdown(void);
 extern void sll_api_sort_quicksort(void);
 extern void sll_api_string_checksum(void);
 extern void sll_api_string_convert(void);
@@ -801,6 +805,26 @@ static const sll_internal_function_descriptor_t _internal_function_table[]={
 		SLL_CHAR("DDW|Q")
 	},
 	{
+		SLL_CHAR("sll:socket_connect"),
+		sll_api_socket_connect,
+		SLL_CHAR("DDW|Q")
+	},
+	{
+		SLL_CHAR("sll:socket_create"),
+		sll_api_socket_create,
+		SLL_CHAR("BB|~D")
+	},
+	{
+		SLL_CHAR("sll:socket_listen"),
+		sll_api_socket_listen,
+		SLL_CHAR("DD|Q")
+	},
+	{
+		SLL_CHAR("sll:socket_shutdown"),
+		sll_api_socket_shutdown,
+		SLL_CHAR("DB|Q")
+	},
+	{
 		SLL_CHAR("sll:sort_quicksort"),
 		sll_api_sort_quicksort,
 		SLL_CHAR("&abbi|o")
@@ -1161,7 +1185,7 @@ static const sll_internal_function_descriptor_t _internal_function_table[]={
 
 static const sll_internal_function_table_descriptor_t _internal_function_table_descriptor_data={
 	(const sll_internal_function_descriptor_t*)(&_internal_function_table),
-	191
+	195
 };
 
 
