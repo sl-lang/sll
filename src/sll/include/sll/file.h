@@ -262,16 +262,16 @@ typedef struct _SLL_FILE_DATA_MEMORY{
 
 /**
  * \flags type union
- * \name sll_file_data_t
+ * \name sll_file_source_t
  * \group file
  * \desc Docs!
  * \arg const sll_file_data_file_t file
  * \arg const sll_file_data_memory_t memory
  */
-typedef union _SLL_FILE_DATA{
+typedef union _SLL_FILE_SOURCE{
 	const sll_file_data_file_t file;
 	const sll_file_data_memory_t memory;
-} sll_file_data_t;
+} sll_file_source_t;
 
 
 
@@ -295,8 +295,8 @@ typedef struct _SLL_FILE_WRITE_BUFFER_STATIC{
  * \name sll_file_write_buffer_dynamic_t
  * \group file
  * \desc Docs!
- * \arg void* b
- * \arg void* t
+ * \arg void* start
+ * \arg void* end
  * \arg sll_file_offset_t sz
  * \arg sll_file_offset_t off
  */
@@ -346,7 +346,7 @@ typedef struct _SLL_FILE_HASH{
  * \name sll_file_t
  * \group file
  * \desc Docs!
- * \arg const sll_file_data_t source
+ * \arg const sll_file_source_t source
  * \arg const sll_file_flags_t flags
  * \arg sll_file_offset_t _line_number
  * \arg sll_file_offset_t _offset
@@ -358,7 +358,7 @@ typedef struct _SLL_FILE_HASH{
  * \arg sll_lock_handle_t _lock
  */
 typedef struct _SLL_FILE{
-	const sll_file_data_t source;
+	const sll_file_source_t source;
 	const sll_file_flags_t flags;
 	sll_file_offset_t _line_number;
 	sll_file_offset_t _offset;
