@@ -103,6 +103,17 @@ typedef __SLL_U8 sll_socket_type_t;
 
 /**
  * \flags type var
+ * \name sll_protocol_t
+ * \group socket
+ * \desc Docs!
+ * \type __SLL_U8
+ */
+typedef __SLL_U8 sll_protocol_t;
+
+
+
+/**
+ * \flags type var
  * \name sll_address_t
  * \group socket
  * \desc Docs!
