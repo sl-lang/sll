@@ -35,11 +35,39 @@
 (= window_image_module_type (&:
 	(~ type_type) window_image_type
 	(~ type_type) window_pixel_type
+	(~ func_type) create
 	(~ func_type) get_pixel
 	(~ func_type) set_pixel
 ))
 
 
+
+ (= create (,,, width height pixel
+ 	(= width (:: width int_type))
+ 	(= height (:: height int_type))
+ 	(? (||
+ 		(! width)
+ 		(! height)
+ 	) (@@ (. window_image_type
+ 		0
+ 		0
+ 		""
+ 	)))
+ 	(= pixel (?: pixel (:: pixel window_pixel_type) (. window_pixel_type 255 255 255 255)))
+ 	(@@ (. window_image_type
+ 		width
+ 		height
+ 		(*
+ 			(+
+ 				(:: pixel$red string_type)
+ 				pixel$green
+ 				pixel$blue
+ 				pixel$alpha
+ 			)
+ 			(* width height)
+ 		)
+ 	))
+ ))
 
 (= get_pixel (,,, image x y
 	(? (! image) (@@ nil))
@@ -92,6 +120,7 @@
 (= window_image (. window_image_module_type
 	window_image_type
 	window_pixel_type
+	create
 	get_pixel
 	set_pixel
 ))
