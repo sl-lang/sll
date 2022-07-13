@@ -167,10 +167,10 @@
  * \name SLL_FILE_GET_LINE_NUMBER
  * \group file
  * \desc Docs!
- * \arg sll_file_t* file
+ * \arg sll_file_t* file_
  * \ret sll_file_offset_t
  */
-#define SLL_FILE_GET_LINE_NUMBER(file) ((file)->_line_number)
+#define SLL_FILE_GET_LINE_NUMBER(file_) (((file_)->flags&SLL_FILE_FLAG_SOCKET)?0:(file_)->data.file._line_number)
 
 
 
@@ -179,10 +179,10 @@
  * \name SLL_FILE_GET_OFFSET
  * \group file
  * \desc Docs!
- * \arg sll_file_t* file
+ * \arg sll_file_t* file_
  * \ret sll_file_offset_t
  */
-#define SLL_FILE_GET_OFFSET(file) ((file)->_offset)
+#define SLL_FILE_GET_OFFSET(file_) (((file_)->flags&SLL_FILE_FLAG_SOCKET)?0:(file_)->data.file._offset)
 
 
 
@@ -343,11 +343,10 @@ typedef struct _SLL_FILE_HASH{
 
 /**
  * \flags type
- * \name sll_file_t
+ * \name sll_file_data_file_t
  * \group file
  * \desc Docs!
  * \arg const sll_file_source_t source
- * \arg const sll_file_flags_t flags
  * \arg sll_file_offset_t _line_number
  * \arg sll_file_offset_t _offset
  * \arg sll_char_t* _read_buffer
@@ -355,11 +354,9 @@ typedef struct _SLL_FILE_HASH{
  * \arg sll_file_offset_t _read_buffer_size
  * \arg sll_file_write_buffer_t _write_buffer
  * \arg sll_file_hash_t _hash
- * \arg sll_lock_handle_t _lock
  */
-typedef struct _SLL_FILE{
+typedef struct _SLL_FILE_DATA_FILE{
 	const sll_file_source_t source;
-	const sll_file_flags_t flags;
 	sll_file_offset_t _line_number;
 	sll_file_offset_t _offset;
 	sll_char_t* _read_buffer;
@@ -367,6 +364,35 @@ typedef struct _SLL_FILE{
 	sll_file_offset_t _read_buffer_size;
 	sll_file_write_buffer_t _write_buffer;
 	sll_file_hash_t _hash;
+} sll_file_data_file_t;
+
+
+
+/**
+ * \flags type union
+ * \name sll_file_data_t
+ * \group file
+ * \desc Docs!
+ * \arg sll_file_data_file_t file
+ */
+typedef union _SLL_FILE_DATA{
+	sll_file_data_file_t file;
+} sll_file_data_t;
+
+
+
+/**
+ * \flags type
+ * \name sll_file_t
+ * \group file
+ * \desc Docs!
+ * \arg const sll_file_flags_t flags
+ * \arg sll_file_data_t data
+ * \arg sll_lock_handle_t _lock
+ */
+typedef struct _SLL_FILE{
+	const sll_file_flags_t flags;
+	sll_file_data_t data;
 	sll_lock_handle_t _lock;
 } sll_file_t;
 
@@ -418,13 +444,13 @@ __SLL_EXTERNAL void sll_file_close(sll_file_t* file);
 
 /**
  * \flags check_output func
- * \name sll_file_source_available
+ * \name sll_file_data_available
  * \group file
  * \desc Docs!
  * \arg sll_file_t* file
  * \ret sll_bool_t
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_file_source_available(sll_file_t* file);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_file_data_available(sll_file_t* file);
 
 
 

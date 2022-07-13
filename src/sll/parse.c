@@ -1084,5 +1084,5 @@ __SLL_EXTERNAL void sll_parse_nodes(sll_file_t* file,sll_compilation_data_t* com
 	sll_deallocate(nv_dt.data);
 	_file_end_hash(file);
 	sf->file_size=SLL_FILE_GET_OFFSET(file);
-	sf->file_hash=file->_hash.hash;
+	sf->file_hash=file->data.file._hash.hash;
 }
