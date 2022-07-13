@@ -315,9 +315,9 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_file_t* sll_file_from_handle(sll_file_hand
 
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_file_handle_t sll_file_to_handle(sll_file_t* f){
-	sll_file_handle_t o=_alloc_file();
-	extended_file_t* data=*(_file_data.data+o);
+	sll_file_handle_t out=_alloc_file();
+	extended_file_t* data=*(_file_data.data+out);
 	data->data.pointer=f;
 	data->is_pointer=1;
-	return o+1;
+	return out+1;
 }
