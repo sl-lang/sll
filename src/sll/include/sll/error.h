@@ -129,6 +129,18 @@
 
 /**
  * \flags macro var
+ * \name SLL_ERROR_NOT_A_SOCKET
+ * \group error
+ * \subgroup error-type
+ * \desc Docs!
+ * \type sll_error_t
+ */
+#define SLL_ERROR_NOT_A_SOCKET 10
+
+
+
+/**
+ * \flags macro var
  * \name SLL_UNMAPPED_SYSTEM_ERROR
  * \group error
  * \desc Docs!
