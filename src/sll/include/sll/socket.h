@@ -58,6 +58,28 @@
 
 
 /**
+ * \flags macro var
+ * \name SLL_SOCKET_SHUTDOWN_FLAG_READ
+ * \group socket
+ * \desc Docs!
+ * \type sll_socket_shutdown_flags_t
+ */
+#define SLL_SOCKET_SHUTDOWN_FLAG_READ 1
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_SOCKET_SHUTDOWN_FLAG_WRITE
+ * \group socket
+ * \desc Docs!
+ * \type sll_socket_shutdown_flags_t
+ */
+#define SLL_SOCKET_SHUTDOWN_FLAG_WRITE 2
+
+
+
+/**
  * \flags type var
  * \name sll_address_family_t
  * \group socket
@@ -109,6 +131,17 @@ typedef __SLL_U16 sll_port_t;
  * \type __SLL_U32
  */
 typedef __SLL_U32 sll_socket_queue_size_t;
+
+
+
+/**
+ * \flags type var
+ * \name sll_socket_shutdown_flags_t
+ * \group socket
+ * \desc Docs!
+ * \type __SLL_U8
+ */
+typedef __SLL_U8 sll_socket_shutdown_flags_t;
 
 
 
@@ -177,6 +210,19 @@ __SLL_EXTERNAL sll_error_t sll_socket_create(sll_address_family_t address_family
  * \ret sll_error_t
  */
 __SLL_EXTERNAL sll_error_t sll_socket_listen(sll_file_t* socket,sll_socket_queue_size_t queue_size);
+
+
+
+/**
+ * \flags func
+ * \name sll_socket_shutdown
+ * \group socket
+ * \desc Docs!
+ * \arg sll_file_t* socket
+ * \arg sll_socket_shutdown_flags_t flags
+ * \ret sll_error_t
+ */
+__SLL_EXTERNAL sll_error_t sll_socket_shutdown(sll_file_t* socket,sll_socket_shutdown_flags_t flags);
 
 
 
