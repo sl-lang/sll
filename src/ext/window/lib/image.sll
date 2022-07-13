@@ -65,7 +65,7 @@
 	))
 ))
 
-(= set_pixel (,,, image x y color
+(= set_pixel (,,, image x y pixel
 	(? (! image) (@@ nil))
 	(= image (:: image window_image_type))
 	(= x (:: x int_type))
@@ -76,15 +76,15 @@
 		(>= x image$width)
 		(>= y image$height)
 	) (@@ nil))
-	(= color (:: color window_pixel_type))
+	(= pixel (:: pixel window_pixel_type))
 	(= offset (* (+
 		x
 		(* y image$width)
 	) 4))
-	(= (: image$data offset) color$red)
-	(= (: image$data (+ offset 1)) color$green)
-	(= (: image$data (+ offset 2)) color$blue)
-	(= (: image$data (+ offset 3)) color$alpha)
+	(= (: image$data offset) pixel$red)
+	(= (: image$data (+ offset 1)) pixel$green)
+	(= (: image$data (+ offset 2)) pixel$blue)
+	(= (: image$data (+ offset 3)) pixel$alpha)
 ))
 
 
