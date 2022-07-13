@@ -34,6 +34,7 @@ __SLL_EXTERNAL sll_error_t sll_socket_connect(sll_file_t* socket,sll_address_t h
 
 
 __SLL_EXTERNAL sll_error_t sll_socket_create(sll_address_family_t address_family,sll_socket_type_t type,sll_file_t* out){
+	out->flags=SLL_FILE_FLAG_ASYNC|SLL_FILE_FLAG_SOCKET;
 	SLL_UNIMPLEMENTED();
 }
 
