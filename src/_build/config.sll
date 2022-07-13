@@ -119,6 +119,7 @@
 	(~ map_type) PREPROCESSOR_DEFINITION_PREFIX
 	(~ array_type) PREPROCESSOR_DEFINITIONS
 	(~ map_type) ROOT_PLATFORM_SOURCE_FILE_PATH
+	(~ string_type) ROOT_SHARED_PLATFORM_SOURCE_FILE_PATH
 	(~ string_type) ROOT_SOURCE_FILE_PATH
 	(~ array_type) SOURCE_FILE_EXTENSIONS
 	(~ map_type) TYPE_REPLACEMENTS
@@ -526,6 +527,7 @@
 		"linux" "src/sll/platform/linux/"
 		"windows" "src/sll/platform/windows/"
 	>
+	"src/sll/platform/shared/"
 	"src/sll/"
 	[".c" ".asm"]
 	<

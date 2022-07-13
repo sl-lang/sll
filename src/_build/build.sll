@@ -337,6 +337,7 @@
 			(? (|: fp "platform") (<<<))
 			fp
 		)
+		(<- path$list_dir config$ROOT_SHARED_PLATFORM_SOURCE_FILE_PATH true)
 		(<- path$list_dir (: config$ROOT_PLATFORM_SOURCE_FILE_PATH sys$PLATFORM) true)
 	))
 	(= files ([> (= i 0) (< i ($ files))
