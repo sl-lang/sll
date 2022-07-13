@@ -812,7 +812,7 @@ static const sll_internal_function_descriptor_t _internal_function_table[]={
 	{
 		SLL_CHAR("sll:socket_create"),
 		sll_api_socket_create,
-		SLL_CHAR("BB|~D")
+		SLL_CHAR("BBD|~D")
 	},
 	{
 		SLL_CHAR("sll:socket_listen"),

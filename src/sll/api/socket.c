@@ -35,9 +35,9 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_socket_conn
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_socket_create(sll_address_family_t address_family,sll_socket_type_t type,sll_file_handle_t* out){
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_socket_create(sll_address_family_t address_family,sll_socket_type_t type,sll_protocol_t protocol,sll_file_handle_t* out){
 	sll_file_t socket;
-	sll_error_t err=sll_socket_create(address_family,type,&socket);
+	sll_error_t err=sll_socket_create(address_family,type,protocol,&socket);
 	if (err==SLL_NO_ERROR){
 		*out=sll_file_to_handle(&socket);
 	}

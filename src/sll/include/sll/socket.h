@@ -106,9 +106,9 @@ typedef __SLL_U8 sll_socket_type_t;
  * \name sll_protocol_t
  * \group socket
  * \desc Docs!
- * \type __SLL_U8
+ * \type __SLL_U32
  */
-typedef __SLL_U8 sll_protocol_t;
+typedef __SLL_U32 sll_protocol_t;
 
 
 
@@ -204,10 +204,11 @@ __SLL_EXTERNAL sll_error_t sll_socket_connect(sll_file_t* socket,sll_address_t h
  * \desc Docs!
  * \arg sll_address_family_t address_family
  * \arg sll_socket_type_t type
+ * \arg sll_protocol_t protocol
  * \arg sll_file_t* out
  * \ret sll_error_t
  */
-__SLL_EXTERNAL sll_error_t sll_socket_create(sll_address_family_t address_family,sll_socket_type_t type,sll_file_t* out);
+__SLL_EXTERNAL sll_error_t sll_socket_create(sll_address_family_t address_family,sll_socket_type_t type,sll_protocol_t protocol,sll_file_t* out);
 
 
 
