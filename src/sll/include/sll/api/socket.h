@@ -3,6 +3,7 @@
 #include <sll/api/file.h>
 #include <sll/common.h>
 #include <sll/error.h>
+#include <sll/platform/socket.h>
 #include <sll/socket.h>
 #include <sll/types.h>
 /**
@@ -71,6 +72,25 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_socket_conn
  * \ret sll_error_t
  */
 __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_socket_create(sll_socket_address_family_t address_family,sll_socket_type_t type,sll_socket_protocol_t protocol,sll_file_handle_t* out);
+
+
+
+/**
+ * \flags check_output func
+ * \name sll_api_socket_get_address_info
+ * \group socket-api
+ * \desc Docs!
+ * \api #s#sBBDB|~a
+ * \arg const sll_string_t* node
+ * \arg const sll_string_t* service
+ * \arg sll_socket_address_family_t address_family
+ * \arg sll_socket_type_t type
+ * \arg sll_socket_protocol_t protocol
+ * \arg sll_address_info_flags_t flags
+ * \arg sll_array_t* out
+ * \ret sll_error_t
+ */
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_error_t sll_api_socket_get_address_info(const sll_string_t* node,const sll_string_t* service,sll_socket_address_family_t address_family,sll_socket_type_t type,sll_socket_protocol_t protocol,sll_address_info_flags_t flags,sll_array_t* out);
 
 
 

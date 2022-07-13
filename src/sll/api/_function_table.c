@@ -127,6 +127,7 @@ extern void sll_api_socket_accept(void);
 extern void sll_api_socket_bind(void);
 extern void sll_api_socket_connect(void);
 extern void sll_api_socket_create(void);
+extern void sll_api_socket_get_address_info(void);
 extern void sll_api_socket_listen(void);
 extern void sll_api_socket_shutdown(void);
 extern void sll_api_sort_quicksort(void);
@@ -815,6 +816,11 @@ static const sll_internal_function_descriptor_t _internal_function_table[]={
 		SLL_CHAR("BBD|~D")
 	},
 	{
+		SLL_CHAR("sll:socket_get_address_info"),
+		sll_api_socket_get_address_info,
+		SLL_CHAR("#s#sBBDB|~a")
+	},
+	{
 		SLL_CHAR("sll:socket_listen"),
 		sll_api_socket_listen,
 		SLL_CHAR("DD|Q")
@@ -1185,7 +1191,7 @@ static const sll_internal_function_descriptor_t _internal_function_table[]={
 
 static const sll_internal_function_table_descriptor_t _internal_function_table_descriptor_data={
 	(const sll_internal_function_descriptor_t*)(&_internal_function_table),
-	195
+	196
 };
 
 
