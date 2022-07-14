@@ -1,12 +1,14 @@
 (---
 	"_socket.sll"
 	"error.sll"
+	"file.sll"
 	"types.sll"
 )
 
 
 
 (= socket_moduel_type (&:
+	(~ type_type) socket_address_type
 	(~ type_type) socket_type
 	(~ int_type) AF_INET
 	(~ int_type) AF_INET6
@@ -31,6 +33,26 @@
 
 
 
+(= _parse_host (,,, host
+	(@@ (:: host int_type))
+))
+
+(= _bind_or_connect (,,, socket host port func
+	(= host (<- _parse_host host))
+	(= port (:: port int_type))
+	(= err (<- error$from_internal
+		(<- func
+			socket$_handle
+			host
+			port
+		)
+	))
+	(? (!== err nil) (@@ err))
+	(= socket$address$host host)
+	(= socket$address$port port)
+	(@@ nil)
+))
+
 (= accept (,,, socket
 	(? (! socket) (@@ nil))
 	(= socket (:: socket socket_type))
@@ -39,14 +61,25 @@
 
 (= bind (,,, socket host port
 	(? (! socket) (@@ nil))
-	(= socket (:: socket socket_type))
-	(@@ nil)
+	(@@ (<- _bind_or_connect
+		(:: socket socket_type)
+		host
+		port
+		(... "sll:socket_bind")
+	))
 ))
 
 (= connect (,,, socket host port
 	(? (! socket) (@@ nil))
 	(= socket (:: socket socket_type))
-	(@@ nil)
+	(= err (<- _bind_or_connect
+		socket
+		host
+		port
+		(... "sll:socket_connect")
+	))
+	(? (=== err nil) (= socket$flags (| socket$flags file$FLAG_READ file$FLAG_WRITE)))
+	(@@ err)
 ))
 
 (= create (,,, address_family type protocol
@@ -93,6 +126,7 @@
 
 
 (= socket (. socket_moduel_type
+	socket_address_type
 	socket_type
 	AF_INET
 	AF_INET6

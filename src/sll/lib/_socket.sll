@@ -6,6 +6,11 @@
 
 
 
+(= socket_address_type (&:
+	(~ int_type) host
+	(~ int_type) port
+))
+
 (= socket_type (&:
 	(,,, data
 		(<- (... "sll:file_inc_handle") data$_handle)
@@ -22,6 +27,7 @@
 	(~ int_type) protocol
 	int_type flags
 	int_type _handle
+	socket_address_type address
 ))
 
 
