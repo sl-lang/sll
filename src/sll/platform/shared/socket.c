@@ -60,17 +60,17 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_error_t sll_platform_socket_create(sll_soc
 		default:
 			SLL_UNIMPLEMENTED();
 	}
-	int ret=socket(address_family,type,protocol);
+	sll_file_descriptor_t ret=(sll_file_descriptor_t)PTR(socket(address_family,type,protocol));
 #ifdef __SLL_BUILD_WINDOWS
 	if (ret==INVALID_SOCKET){
 		SLL_UNIMPLEMENTED();
 	}
 #else
-	if (ret==-1){
+	if (ret==PTR(-1)){
 		return sll_platform_get_error();
 	}
 #endif
-	*out=PTR(ret);
+	*out=ret;
 	return SLL_NO_ERROR;
 }
 

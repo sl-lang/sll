@@ -30,6 +30,14 @@
 	(= address_family (:: address_family int_type))
 	(= type (:: type int_type))
 	(= protocol (:: protocol int_type))
+	(? (&&
+		(!== address_family AF_INET)
+		(!== address_family AF_INET6)
+	) (@@ nil))
+	(? (&&
+		(!== type SOCK_STREAM)
+		(!== type SOCK_DGRAM)
+	) (@@ nil))
 	(= handle (<- (... "sll:socket_create")
 		address_family
 		type
@@ -37,6 +45,9 @@
 	))
 	(? (> 0 handle) (@@ (<- error$from_internal (~ handle))))
 	(@@ (. socket_type
+		address_family
+		type
+		protocol
 		handle
 	))
 ))

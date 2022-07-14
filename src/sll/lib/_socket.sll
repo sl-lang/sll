@@ -16,6 +16,9 @@
 	(,,, data
 		(@@ (<- string$format "<handle=%u>" data$_handle))
 	) @@string@@
+	(~ int_type) address_family
+	(~ int_type) type
+	(~ int_type) protocol
 	int_type _handle
 ))
 
