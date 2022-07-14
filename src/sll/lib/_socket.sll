@@ -1,0 +1,24 @@
+(---
+	"string.sll"
+	"types.sll"
+)
+
+
+
+(= socket_type (&:
+	(,,, data
+		(<- (... "sll:file_inc_handle") data$_handle)
+	) @@copy@@
+	(,,, data
+		(? (=== data$_handle -1) (@@))
+		(<- (... "sll:file_close") data$_handle)
+	) @@delete@@
+	(,,, data
+		(@@ (<- string$format "<handle=%u>" data$_handle))
+	) @@string@@
+	int_type _handle
+))
+
+
+
+(## socket_type)

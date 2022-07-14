@@ -22,6 +22,7 @@
 	"process.sll"
 	"random.sll"
 	"serial.sll"
+	"socket.sll"
 	"sort.sll"
 	"statistics.sll"
 	"string.sll"
@@ -733,3 +734,6 @@ abc` '\n')
 	(= arg (* arg i))
 )
 (:> arg '\n')
+
+(= sock (<- socket$create socket$AF_INET socket$SOCK_STREAM))
+(:> sock '\n')

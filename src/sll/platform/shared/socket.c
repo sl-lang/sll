@@ -3,6 +3,7 @@
 #include <sll/error.h>
 #include <sll/platform/file.h>
 #include <sll/platform/socket.h>
+#include <sll/platform/util.h>
 #include <sll/socket.h>
 #include <sll/types.h>
 #ifdef __SLL_BUILD_WINDOWS
@@ -39,7 +40,38 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_error_t sll_platform_socket_connect(sll_fi
 
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_error_t sll_platform_socket_create(sll_socket_address_family_t address_family,sll_socket_type_t type,sll_socket_protocol_t protocol,sll_file_descriptor_t* out){
-	SLL_UNIMPLEMENTED();
+	switch (address_family){
+		case SLL_SOCKET_ADDRESS_FAMILY_INET:
+			address_family=AF_INET;
+			break;
+		case SLL_SOCKET_ADDRESS_FAMILY_INET6:
+			address_family=AF_INET6;
+			break;
+		default:
+			SLL_UNIMPLEMENTED();
+	}
+	switch (type){
+		case SLL_SOCKET_TYPE_STREAM:
+			type=SOCK_STREAM;
+			break;
+		case SLL_SOCKET_TYPE_DATAGRAM:
+			type=SOCK_DGRAM;
+			break;
+		default:
+			SLL_UNIMPLEMENTED();
+	}
+	int ret=socket(address_family,type,protocol);
+#ifdef __SLL_BUILD_WINDOWS
+	if (ret==INVALID_SOCKET){
+		SLL_UNIMPLEMENTED();
+	}
+#else
+	if (ret==-1){
+		return sll_platform_get_error();
+	}
+#endif
+	*out=PTR(ret);
+	return SLL_NO_ERROR;
 }
 
 

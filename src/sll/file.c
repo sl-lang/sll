@@ -175,10 +175,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_file_data_available(sll_file_t*
 
 
 __SLL_EXTERNAL sll_error_t sll_file_flush(sll_file_t* file){
-	if (file->flags&SLL_FILE_FLAG_SOCKET){
-		SLL_UNIMPLEMENTED();
-	}
-	if (!(file->flags&SLL_FILE_FLAG_WRITE)||(file->flags&SLL_FILE_FLAG_NO_BUFFER)||!file->data.file._write_buffer.static_.offset){
+	if (!(file->flags&SLL_FILE_FLAG_WRITE)||(file->flags&(SLL_FILE_FLAG_NO_BUFFER|SLL_FILE_FLAG_SOCKET))||!file->data.file._write_buffer.static_.offset){
 		return SLL_NO_ERROR;
 	}
 	sll_error_t err=SLL_NO_ERROR;

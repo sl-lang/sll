@@ -1,0 +1,54 @@
+(---
+	"_socket.sll"
+	"error.sll"
+	"types.sll"
+)
+
+
+
+(= socket_moduel_type (&:
+	(~ type_type) socket_type
+	(~ int_type) AF_INET
+	(~ int_type) AF_INET6
+	(~ int_type) SOCK_STREAM
+	(~ int_type) SOCK_DGRAM
+	(~ func_type) create
+))
+
+
+
+
+(= AF_INET 0)
+(= AF_INET6 1)
+
+(= SOCK_STREAM 0)
+(= SOCK_DGRAM 1)
+
+
+
+(= create (,,, address_family type protocol
+	(= address_family (:: address_family int_type))
+	(= type (:: type int_type))
+	(= protocol (:: protocol int_type))
+	(= handle (<- (... "sll:socket_create")
+		address_family
+		type
+		protocol
+	))
+	(? (> 0 handle) (@@ (<- error$from_internal (~ handle))))
+	(@@ (. socket_type
+		handle
+	))
+))
+
+
+
+(= socket (. socket_moduel_type
+	socket_type
+	AF_INET
+	AF_INET6
+	SOCK_STREAM
+	SOCK_DGRAM
+	create
+))
+(## socket)
