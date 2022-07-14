@@ -62,7 +62,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_error_t sll_platform_socket_create(sll_soc
 	}
 	sll_file_descriptor_t ret=(sll_file_descriptor_t)PTR(socket(address_family,type,protocol));
 #ifdef __SLL_BUILD_WINDOWS
-	if (ret==INVALID_SOCKET){
+	if (ret==PTR(INVALID_SOCKET)){
 		SLL_UNIMPLEMENTED();
 	}
 #else
