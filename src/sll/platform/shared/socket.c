@@ -9,7 +9,7 @@
 #include <sll/socket.h>
 #include <sll/types.h>
 #ifdef __SLL_BUILD_WINDOWS
-#include <winsock.h>
+#include <ws2tcpip.h>
 #include <winsock2.h>
 #else
 #include <netdb.h>
