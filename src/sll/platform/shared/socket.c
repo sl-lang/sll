@@ -1,3 +1,8 @@
+#ifdef __SLL_BUILD_WINDOWS
+#include <winsock2.h>
+#else
+#include <sys/select.h>
+#endif
 #include <sll/_internal/common.h>
 #include <sll/common.h>
 #include <sll/error.h>
@@ -39,7 +44,14 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_error_t sll_platform_socket_create(sll_soc
 
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_platform_socket_data_available(sll_file_descriptor_t socket){
-	SLL_UNIMPLEMENTED();
+	fd_set set;
+	FD_ZERO(&set);
+	FD_SET((int)ADDR(socket),&set);
+	struct timeval timeout={
+		0,
+		0
+	};
+	return select(1,&set,NULL,NULL,&timeout)>0;
 }
 
 
