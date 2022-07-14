@@ -12,8 +12,11 @@
 	(~ type_type) socket_type
 	(~ int_type) AF_INET
 	(~ int_type) AF_INET6
-	(~ int_type) SOCK_STREAM
+	(~ int_type) SHUT_RD
+	(~ int_type) SHUT_RDWR
+	(~ int_type) SHUT_WR
 	(~ int_type) SOCK_DGRAM
+	(~ int_type) SOCK_STREAM
 	(~ func_type) accept
 	(~ func_type) bind
 	(~ func_type) connect
@@ -27,6 +30,11 @@
 
 (= AF_INET 0)
 (= AF_INET6 1)
+
+
+(= SHUT_RD 1)
+(= SHUT_WR 2)
+(= SHUT_RDWR (| SHUT_RD SHUT_WR))
 
 (= SOCK_STREAM 0)
 (= SOCK_DGRAM 1)
@@ -113,14 +121,24 @@
 	(? (! socket) (@@ nil))
 	(= socket (:: socket socket_type))
 	(= queue_size (:: queue_size int_type))
-	(@@ nil)
+	(@@ (<- error$from_internal
+		(<- (... "sll:socket_listen")
+			socket$_handle
+			queue_size
+		)
+	))
 ))
 
 (= shutdown (,,, socket flags
 	(? (! socket) (@@ nil))
 	(= socket (:: socket socket_type))
 	(= flags (:: flags int_type))
-	(@@ nil)
+	(@@ (<- error$from_internal
+		(<- (... "sll:socket_shutdown")
+			socket$_handle
+			(& flags (| SHUT_RD SHUT_WR))
+		)
+	))
 ))
 
 
@@ -130,6 +148,9 @@
 	socket_type
 	AF_INET
 	AF_INET6
+	SHUT_RD
+	SHUT_RDWR
+	SHUT_WR
 	SOCK_STREAM
 	SOCK_DGRAM
 	accept
