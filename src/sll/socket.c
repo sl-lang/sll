@@ -40,7 +40,13 @@ __SLL_EXTERNAL sll_error_t sll_socket_create(sll_socket_address_family_t address
 		return err;
 	}
 	*((sll_file_flags_t*)(&(out->flags)))=SLL_FILE_FLAG_ASYNC|SLL_FILE_FLAG_SOCKET;
-	out->data.socket._queue_size=0;
+	*((sll_socket_address_family_t*)(&(out->data.socket.address_family)))=address_family;
+	*((sll_socket_address_family_t*)(&(out->data.socket.type)))=type;
+	*((sll_socket_address_family_t*)(&(out->data.socket.protocol)))=protocol;
+	out->data.socket.address=0;
+	out->data.socket.port=0;
+	out->data.socket.queue_size=0;
+	out->data.socket.shutdown_state=0;
 	return SLL_NO_ERROR;
 }
 

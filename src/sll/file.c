@@ -163,10 +163,13 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_file_data_available(sll_file_t*
 	if (!(file->flags&SLL_FILE_FLAG_ASYNC)){
 		return 1;
 	}
-	if (file->flags&SLL_FILE_FLAG_SOCKET){
+	if (file->flags&FILE_FLAG_MEMORY){
 		SLL_UNIMPLEMENTED();
 	}
-	return sll_platform_file_data_available(file->data.file.source.file.fd);
+	if (!(file->flags&SLL_FILE_FLAG_NO_BUFFER)){
+		SLL_UNIMPLEMENTED();
+	}
+	return ((file->flags&SLL_FILE_FLAG_SOCKET)?sll_platform_socket_data_available(file->data.socket.fd):sll_platform_file_data_available(file->data.file.source.file.fd));
 }
 
 

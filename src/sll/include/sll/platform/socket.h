@@ -135,6 +135,19 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_error_t sll_platform_socket_create(sll_soc
 
 /**
  * \flags check_output func
+ * \name sll_platform_socket_data_available
+ * \group platform
+ * \subgroup platform-socket
+ * \desc Docs!
+ * \arg sll_file_descriptor_t socket
+ * \ret sll_bool_t
+ */
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_platform_socket_data_available(sll_file_descriptor_t socket);
+
+
+
+/**
+ * \flags check_output func
  * \name sll_platform_socket_get_address_info
  * \group platform
  * \subgroup platform-socket

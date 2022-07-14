@@ -88,11 +88,23 @@ typedef __SLL_U8 sll_socket_shutdown_flags_t;
  * \group file
  * \desc Docs!
  * \arg const sll_file_descriptor_t fd
- * \arg sll_socket_queue_size_t _queue_size
+ * \arg const sll_socket_address_family_t address_family
+ * \arg const sll_socket_type_t type
+ * \arg const sll_socket_protocol_t protocol
+ * \arg sll_address_t address
+ * \arg sll_port_t port
+ * \arg sll_socket_queue_size_t queue_size
+ * \arg sll_socket_shutdown_flags_t shutdown_state
  */
 typedef struct _SLL_FILE_DATA_SOCKET{
 	const sll_file_descriptor_t fd;
-	sll_socket_queue_size_t _queue_size;
+	const sll_socket_address_family_t address_family;
+	const sll_socket_type_t type;
+	const sll_socket_protocol_t protocol;
+	sll_address_t address;
+	sll_port_t port;
+	sll_socket_queue_size_t queue_size;
+	sll_socket_shutdown_flags_t shutdown_state;
 } sll_file_data_socket_t;
 
 
