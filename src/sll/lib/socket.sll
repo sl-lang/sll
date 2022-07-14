@@ -32,14 +32,20 @@
 
 
 (= accept (,,, socket
+	(? (! socket) (@@ nil))
+	(= socket (:: socket socket_type))
 	(@@ nil)
 ))
 
 (= bind (,,, socket host port
+	(? (! socket) (@@ nil))
+	(= socket (:: socket socket_type))
 	(@@ nil)
 ))
 
 (= connect (,,, socket host port
+	(? (! socket) (@@ nil))
+	(= socket (:: socket socket_type))
 	(@@ nil)
 ))
 
@@ -71,10 +77,16 @@
 ))
 
 (= listen (,,, socket queue_size
+	(? (! socket) (@@ nil))
+	(= socket (:: socket socket_type))
+	(= queue_size (:: queue_size int_type))
 	(@@ nil)
 ))
 
-(= shutdown (,,, socket type
+(= shutdown (,,, socket flags
+	(? (! socket) (@@ nil))
+	(= socket (:: socket socket_type))
+	(= flags (:: flags int_type))
 	(@@ nil)
 ))
 
