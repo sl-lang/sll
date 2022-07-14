@@ -163,6 +163,18 @@
 
 
 /**
+ * \flags macro var
+ * \name SLL_FILE_FLAG_RESERVED3
+ * \group file
+ * \subgroup file-flag
+ * \desc Internally used as `FILE_FLAG_PASSIVE`
+ * \type sll_file_flags_t
+ */
+#define SLL_FILE_FLAG_RESERVED3 1024
+
+
+
+/**
  * \flags func macro
  * \name SLL_FILE_GET_LINE_NUMBER
  * \group file

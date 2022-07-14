@@ -1,4 +1,5 @@
 #include <sll/_internal/common.h>
+#include <sll/_internal/file.h>
 #include <sll/common.h>
 #include <sll/error.h>
 #include <sll/file.h>
@@ -11,6 +12,9 @@ __SLL_EXTERNAL sll_error_t sll_socket_accept(sll_file_t* socket,sll_file_t* out)
 	if (!(socket->flags&SLL_FILE_FLAG_SOCKET)){
 		return SLL_ERROR_NOT_A_SOCKET;
 	}
+	if (!(socket->flags&FILE_FLAG_PASSIVE)){
+		SLL_UNIMPLEMENTED();
+	}
 	SLL_UNIMPLEMENTED();
 }
 
@@ -20,7 +24,11 @@ __SLL_EXTERNAL sll_error_t sll_socket_bind(sll_file_t* socket,sll_address_t host
 	if (!(socket->flags&SLL_FILE_FLAG_SOCKET)){
 		return SLL_ERROR_NOT_A_SOCKET;
 	}
-	SLL_UNIMPLEMENTED();
+	sll_error_t err=sll_platform_socket_bind(socket->data.socket.fd,host,port);
+	if (err==SLL_NO_ERROR){
+		(*((sll_file_flags_t*)(&(socket->flags))))|=SLL_FILE_FLAG_READ|SLL_FILE_FLAG_WRITE;
+	}
+	return err;
 }
 
 
@@ -29,7 +37,11 @@ __SLL_EXTERNAL sll_error_t sll_socket_connect(sll_file_t* socket,sll_address_t h
 	if (!(socket->flags&SLL_FILE_FLAG_SOCKET)){
 		return SLL_ERROR_NOT_A_SOCKET;
 	}
-	SLL_UNIMPLEMENTED();
+	sll_error_t err=sll_platform_socket_connect(socket->data.socket.fd,host,port);
+	if (err==SLL_NO_ERROR){
+		(*((sll_file_flags_t*)(&(socket->flags))))|=SLL_FILE_FLAG_READ|SLL_FILE_FLAG_WRITE;
+	}
+	return err;
 }
 
 
@@ -40,13 +52,6 @@ __SLL_EXTERNAL sll_error_t sll_socket_create(sll_socket_address_family_t address
 		return err;
 	}
 	*((sll_file_flags_t*)(&(out->flags)))=SLL_FILE_FLAG_ASYNC|SLL_FILE_FLAG_SOCKET;
-	*((sll_socket_address_family_t*)(&(out->data.socket.address_family)))=address_family;
-	*((sll_socket_address_family_t*)(&(out->data.socket.type)))=type;
-	*((sll_socket_address_family_t*)(&(out->data.socket.protocol)))=protocol;
-	out->data.socket.address=0;
-	out->data.socket.port=0;
-	out->data.socket.queue_size=0;
-	out->data.socket.shutdown_state=0;
 	return SLL_NO_ERROR;
 }
 
@@ -55,6 +60,9 @@ __SLL_EXTERNAL sll_error_t sll_socket_create(sll_socket_address_family_t address
 __SLL_EXTERNAL sll_error_t sll_socket_listen(sll_file_t* socket,sll_socket_queue_size_t queue_size){
 	if (!(socket->flags&SLL_FILE_FLAG_SOCKET)){
 		return SLL_ERROR_NOT_A_SOCKET;
+	}
+	if (socket->flags&FILE_FLAG_PASSIVE){
+		SLL_UNIMPLEMENTED();
 	}
 	SLL_UNIMPLEMENTED();
 }
