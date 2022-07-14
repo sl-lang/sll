@@ -11,6 +11,7 @@
 #include <sll/platform/lock.h>
 #include <sll/platform/memory.h>
 #include <sll/platform/path.h>
+#include <sll/platform/socket.h>
 #include <sll/string.h>
 #include <sll/types.h>
 #include <sll/var_arg.h>
@@ -121,11 +122,11 @@ __SLL_EXTERNAL void sll_file_close(sll_file_t* file){
 	if (file->flags&FILE_FLAG_NO_RELEASE){
 		return;
 	}
-	if (file->flags&SLL_FILE_FLAG_SOCKET){
-		SLL_UNIMPLEMENTED();
-	}
 	SLL_CRITICAL(sll_platform_lock_delete(file->_lock));
-	if (!(file->flags&FILE_FLAG_MEMORY)){
+	if (file->flags&SLL_FILE_FLAG_SOCKET){
+		SLL_CRITICAL_ERROR(sll_platform_socket_close(file->data.socket.fd));
+	}
+	else if (!(file->flags&FILE_FLAG_MEMORY)){
 		sll_free_string((sll_string_t*)(&(file->data.file.source.file.path)));
 		if (file->data.file.source.file.fd!=SLL_UNKNOWN_FILE_DESCRIPTOR){
 			SLL_CRITICAL_ERROR(sll_platform_file_close(file->data.file.source.file.fd));
@@ -156,11 +157,14 @@ __SLL_EXTERNAL void sll_file_close(sll_file_t* file){
 
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_file_data_available(sll_file_t* file){
+	if (!(file->flags&SLL_FILE_FLAG_READ)){
+		return 0;
+	}
+	if (!(file->flags&SLL_FILE_FLAG_ASYNC)){
+		return 1;
+	}
 	if (file->flags&SLL_FILE_FLAG_SOCKET){
 		SLL_UNIMPLEMENTED();
-	}
-	if ((file->flags&(SLL_FILE_FLAG_READ|SLL_FILE_FLAG_ASYNC))!=(SLL_FILE_FLAG_READ|SLL_FILE_FLAG_ASYNC)){
-		return 1;
 	}
 	return sll_platform_file_data_available(file->data.file.source.file.fd);
 }

@@ -1,6 +1,7 @@
 #ifndef __SLL_SOCKET_H__
 #define __SLL_SOCKET_H__ 1
 #include <sll/_size_types.h>
+#include <sll/_socket_types.h>
 #include <sll/common.h>
 #include <sll/error.h>
 #include <sll/file.h>
@@ -76,83 +77,6 @@
  * \type sll_socket_shutdown_flags_t
  */
 #define SLL_SOCKET_SHUTDOWN_FLAG_WRITE 2
-
-
-
-/**
- * \flags type var
- * \name sll_socket_address_family_t
- * \group socket
- * \desc Docs!
- * \type __SLL_U8
- */
-typedef __SLL_U8 sll_socket_address_family_t;
-
-
-
-/**
- * \flags type var
- * \name sll_socket_type_t
- * \group socket
- * \desc Docs!
- * \type __SLL_U8
- */
-typedef __SLL_U8 sll_socket_type_t;
-
-
-
-/**
- * \flags type var
- * \name sll_socket_protocol_t
- * \group socket
- * \desc Docs!
- * \type __SLL_U32
- */
-typedef __SLL_U32 sll_socket_protocol_t;
-
-
-
-/**
- * \flags type var
- * \name sll_address_t
- * \group socket
- * \desc Docs!
- * \type __SLL_U32
- */
-typedef __SLL_U32 sll_address_t;
-
-
-
-/**
- * \flags type var
- * \name sll_port_t
- * \group socket
- * \desc Docs!
- * \type __SLL_U16
- */
-typedef __SLL_U16 sll_port_t;
-
-
-
-/**
- * \flags type var
- * \name sll_socket_queue_size_t
- * \group socket
- * \desc Docs!
- * \type __SLL_U32
- */
-typedef __SLL_U32 sll_socket_queue_size_t;
-
-
-
-/**
- * \flags type var
- * \name sll_socket_shutdown_flags_t
- * \group socket
- * \desc Docs!
- * \type __SLL_U8
- */
-typedef __SLL_U8 sll_socket_shutdown_flags_t;
 
 
 

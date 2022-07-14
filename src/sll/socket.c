@@ -2,6 +2,7 @@
 #include <sll/common.h>
 #include <sll/error.h>
 #include <sll/file.h>
+#include <sll/platform/socket.h>
 #include <sll/socket.h>
 
 
@@ -34,8 +35,13 @@ __SLL_EXTERNAL sll_error_t sll_socket_connect(sll_file_t* socket,sll_address_t h
 
 
 __SLL_EXTERNAL sll_error_t sll_socket_create(sll_socket_address_family_t address_family,sll_socket_type_t type,sll_socket_protocol_t protocol,sll_file_t* out){
+	sll_error_t err=sll_platform_socket_create(address_family,type,protocol,(sll_file_descriptor_t*)(&(out->data.socket.fd)));
+	if (err!=SLL_NO_ERROR){
+		return err;
+	}
 	*((sll_file_flags_t*)(&(out->flags)))=SLL_FILE_FLAG_ASYNC|SLL_FILE_FLAG_SOCKET;
-	SLL_UNIMPLEMENTED();
+	out->data.socket._queue_size=0;
+	return SLL_NO_ERROR;
 }
 
 

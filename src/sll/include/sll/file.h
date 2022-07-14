@@ -1,7 +1,7 @@
 #ifndef __SLL_FILE_H__
 #define __SLL_FILE_H__ 1
 #include <sll/_file_descriptor.h>
-#include <sll/_size_types.h>
+#include <sll/_socket_types.h>
 #include <sll/api/hash.h>
 #include <sll/common.h>
 #include <sll/error.h>
@@ -365,19 +365,6 @@ typedef struct _SLL_FILE_DATA_FILE{
 	sll_file_write_buffer_t _write_buffer;
 	sll_file_hash_t _hash;
 } sll_file_data_file_t;
-
-
-
-/**
- * \flags type
- * \name sll_file_data_socket_t
- * \group file
- * \desc Docs!
- * \arg const sll_file_descriptor_t fd
- */
-typedef struct _SLL_FILE_DATA_SOCKET{
-	const sll_file_descriptor_t fd;
-} sll_file_data_socket_t;
 
 
 

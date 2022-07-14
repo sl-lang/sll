@@ -20,6 +20,12 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_error_t sll_platform_socket_bind(sll_file_
 
 
 
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_error_t sll_platform_socket_close(sll_file_descriptor_t socket){
+	SLL_UNIMPLEMENTED();
+}
+
+
+
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_error_t sll_platform_socket_connect(sll_file_descriptor_t socket,sll_address_t host,sll_port_t port){
 	SLL_UNIMPLEMENTED();
 }

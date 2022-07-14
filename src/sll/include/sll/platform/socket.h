@@ -91,6 +91,19 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_error_t sll_platform_socket_bind(sll_file_
 
 /**
  * \flags check_output func
+ * \name sll_platform_socket_close
+ * \group platform
+ * \subgroup platform-socket
+ * \desc Docs!
+ * \arg sll_file_descriptor_t socket
+ * \ret sll_error_t
+ */
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_error_t sll_platform_socket_close(sll_file_descriptor_t socket);
+
+
+
+/**
+ * \flags check_output func
  * \name sll_platform_socket_connect
  * \group platform
  * \subgroup platform-socket
