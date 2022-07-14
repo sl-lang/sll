@@ -21,6 +21,7 @@
 	(~ func_type) bind
 	(~ func_type) connect
 	(~ func_type) create
+	(~ func_type) getaddrinfo
 	(~ func_type) listen
 	(~ func_type) shutdown
 ))
@@ -117,6 +118,23 @@
 	))
 ))
 
+(= getaddrinfo (,,, node service address_family type protocol flags
+	(= node (:: node string_type))
+	(= service (:: service string_type))
+	(= address_family (:: address_family int_type))
+	(= type (:: type int_type))
+	(= protocol (:: protocol int_type))
+	(= flags (:: flags int_type))
+	(@@ (<- (... "sll:socket_get_address_info")
+		node
+		service
+		address_family
+		type
+		protocol
+		flags
+	))
+))
+
 (= listen (,,, socket queue_size
 	(? (! socket) (@@ nil))
 	(= socket (:: socket socket_type))
@@ -157,6 +175,7 @@
 	bind
 	connect
 	create
+	getaddrinfo
 	listen
 	shutdown
 ))
