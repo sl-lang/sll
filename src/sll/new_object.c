@@ -73,6 +73,9 @@ static void _build_struct_offsets(const sll_char_t** format,sll_string_length_t*
 			*(out->converter_function_data+out->converter_function_count-1)=sll_var_arg_get(va);
 		case 'p':
 			cnt=1;
+			goto _read_offsets;
+		case 'M':
+			cnt=2;
 		case 'h':
 		case 'u':
 		case 'i':
@@ -86,6 +89,7 @@ static void _build_struct_offsets(const sll_char_t** format,sll_string_length_t*
 		case 'a':
 		case 'm':
 		case 'O':
+_read_offsets:
 			out->offset_count+=cnt;
 			out->offset_data=sll_reallocate(out->offset_data,out->offset_count*sizeof(sll_size_t));
 			*(out->offset_data+out->offset_count-1)=sll_var_arg_get_int(va);
@@ -215,6 +219,8 @@ static sll_object_t* _build_single(const sll_char_t** format,sll_string_length_t
 					SLL_UNIMPLEMENTED();
 				}
 				return sll_int_to_object((__SLL_U32)sll_var_arg_get_int(va));
+			case 'M':
+				return sll_int_to_object(_var_arg_get_mask(va));
 			case 'p':
 				return sll_int_to_object(_var_arg_get_pointer(va));
 			case 's':

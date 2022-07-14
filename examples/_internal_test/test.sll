@@ -735,5 +735,6 @@ abc` '\n')
 )
 (:> arg '\n')
 
+(:> (<- socket$getaddrinfo "www.example.com" 80) '\n')
 (= sock (<- socket$create socket$AF_INET socket$SOCK_STREAM))
 (:> sock '\n')

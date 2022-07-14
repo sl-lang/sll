@@ -21,7 +21,7 @@
  * \desc Docs!
  * \type sll_socket_address_family_t
  */
-#define SLL_SOCKET_ADDRESS_FAMILY_INET 0
+#define SLL_SOCKET_ADDRESS_FAMILY_INET 1
 
 
 
@@ -32,7 +32,7 @@
  * \desc Docs!
  * \type sll_socket_address_family_t
  */
-#define SLL_SOCKET_ADDRESS_FAMILY_INET6 1
+#define SLL_SOCKET_ADDRESS_FAMILY_INET6 2
 
 
 
@@ -43,18 +43,51 @@
  * \desc Docs!
  * \type sll_socket_type_t
  */
-#define SLL_SOCKET_TYPE_STREAM 0
+#define SLL_SOCKET_TYPE_STREAM 1
 
 
 
 /**
  * \flags macro var
- * \name SLL_SOCKET_TYPE_DATAGRAM
+ * \name SLL_SOCKET_TYPE_DGRAM
  * \group socket
  * \desc Docs!
  * \type sll_socket_type_t
  */
-#define SLL_SOCKET_TYPE_DATAGRAM 1
+#define SLL_SOCKET_TYPE_DGRAM 2
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_SOCKET_TYPE_RAW
+ * \group socket
+ * \desc Docs!
+ * \type sll_socket_type_t
+ */
+#define SLL_SOCKET_TYPE_RAW 3
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_SOCKET_TYPE_RDM
+ * \group socket
+ * \desc Docs!
+ * \type sll_socket_type_t
+ */
+#define SLL_SOCKET_TYPE_RDM 4
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_SOCKET_TYPE_SEQPACKET
+ * \group socket
+ * \desc Docs!
+ * \type sll_socket_type_t
+ */
+#define SLL_SOCKET_TYPE_SEQPACKET 5
 
 
 

@@ -30,7 +30,7 @@ sll_object_t* _var_arg_converter(sll_var_arg_list_t* va){
 	}
 	if (va->type==VAR_ARG_LIST_TYPE_STRUCT){
 		SLL_ASSERT(va->data.struct_.converter_function_count&&va->data.struct_.offset_count);
-		sll_object_t* o=((converter_func_t)(*(va->data.struct_.converter_function_data)))(*((void**)PTR(ADDR(va->data.struct_.base_pointer)+(*(va->data.struct_.offset_data)))));
+		sll_object_t* o=((converter_func_t)(*(va->data.struct_.converter_function_data)))(PTR(ADDR(va->data.struct_.base_pointer)+(*(va->data.struct_.offset_data))));
 		va->data.struct_.converter_function_data++;
 		va->data.struct_.converter_function_count--;
 		va->data.struct_.offset_data++;
@@ -60,6 +60,21 @@ addr_t _var_arg_get_pointer(sll_var_arg_list_t* va){
 	va->data.sll.pointer++;
 	va->data.sll.count--;
 	return o;
+}
+
+
+
+sll_size_t _var_arg_get_mask(sll_var_arg_list_t* va){
+	sll_size_t mask;
+	if (va->type==VAR_ARG_LIST_TYPE_STRUCT){
+		mask=*(va->data.struct_.offset_data);
+		va->data.struct_.offset_data++;
+		va->data.struct_.offset_count--;
+	}
+	else{
+		mask=(sll_size_t)sll_var_arg_get_int(va);
+	}
+	return sll_var_arg_get_int(va)&mask;
 }
 
 

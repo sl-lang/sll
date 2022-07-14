@@ -1,11 +1,84 @@
 (---
 	"_socket.sll"
+	"array.sll"
 	"error.sll"
 	"file.sll"
+	"int.sll"
+	"string.sll"
 	"types.sll"
 )
 
 
+
+(# _address_family_to_string _type_to_string)
+
+
+
+(= socket_address_unknown_type (&:
+	(,,, data
+		(@@ "<UNKNOWN ADDRESS>")
+	) @@string@@
+))
+
+(= socket_address_ipv4_type (&:
+	(,,, data
+		(@@ (<- string$format "%u:%u:%u:%u(%u)"
+			(>> data$address 24)
+			(& (>> data$address 16) 255)
+			(& (>> data$address 8) 255)
+			(& data$address 255)
+			data$port
+		))
+	) @@string@@
+	int_type address
+	int_type port
+))
+
+(= socket_address_ipv6_type (&:
+	(,,, data
+		(= arr [])
+		(-> (= i 0) (< i 8)
+			(= value (: data$address i))
+			(?
+				value (<- array$push arr (<- int$to_hex value))
+				(!== (: arr -1) "") (<- array$push arr "")
+			)
+			(++ i)
+		)
+		(? (! arr) (= arr ["::"]))
+		(@@ (<- string$format "%s(%u)"
+			(<- string$join ':' arr)
+			data$port
+		))
+	) @@string@@
+	array_type address
+	int_type flow_info
+	int_type scope_id
+	int_type port
+))
+
+(= socket_address_type (&:
+	(,,, data
+		(@@ (:: data$data string_type))
+	) @@string@@
+	int_type type
+	object_type data
+))
+
+(= socket_address_info_type (&:
+	(,,, data
+		(@@ (<- string$format "<%s, %s, %u, %s>"
+			(: _address_family_to_string data$address_family)
+			(: _type_to_string data$type)
+			data$protocol
+			data$address
+		))
+	) @@string@@
+	(~ int_type) address_family
+	(~ int_type) type
+	(~ int_type) protocol
+	(~ socket_address_type) address
+))
 
 (= socket_moduel_type (&:
 	(~ type_type) socket_address_type
@@ -16,6 +89,9 @@
 	(~ int_type) SHUT_RDWR
 	(~ int_type) SHUT_WR
 	(~ int_type) SOCK_DGRAM
+	(~ int_type) SOCK_RAW
+	(~ int_type) SOCK_RDM
+	(~ int_type) SOCK_SEQPACKET
 	(~ int_type) SOCK_STREAM
 	(~ func_type) accept
 	(~ func_type) bind
@@ -29,16 +105,39 @@
 
 
 
-(= AF_INET 0)
-(= AF_INET6 1)
-
+(= AF_INET 1)
+(= AF_INET6 2)
 
 (= SHUT_RD 1)
 (= SHUT_WR 2)
 (= SHUT_RDWR (| SHUT_RD SHUT_WR))
 
-(= SOCK_STREAM 0)
-(= SOCK_DGRAM 1)
+(= SOCK_STREAM 1)
+(= SOCK_DGRAM 2)
+(= SOCK_RAW 3)
+(= SOCK_RDM 4)
+(= SOCK_SEQPACKET 5)
+
+(= ADDRESS_TYPE_UNKNOWN 0)
+(= ADDRESS_TYPE_IPV4 1)
+(= ADDRESS_TYPE_IPV6 2)
+
+
+
+(= _address_family_to_string <
+	0 "AF_UNSPEC"
+	AF_INET "AF_INET"
+	AF_INET6 "AF_INET6"
+>)
+
+(= _type_to_string <
+	0 "SOCK_UNSPEC"
+	SOCK_STREAM "SOCK_STREAM"
+	SOCK_DGRAM "SOCK_DGRAM"
+	SOCK_RAW "SOCK_RAW"
+	SOCK_RDM "SOCK_RDM"
+	SOCK_SEQPACKET "SOCK_SEQPACKET"
+>)
 
 
 
@@ -60,6 +159,23 @@
 	(= socket$address$host host)
 	(= socket$address$port port)
 	(@@ nil)
+))
+
+(= _parse_address (,,, data
+	(?? ($ data)
+		2 (@@ (. socket_address_type
+			ADDRESS_TYPE_IPV4
+			(:: data socket_address_ipv4_type)
+		))
+		4 (@@ (. socket_address_type
+			ADDRESS_TYPE_IPV6
+			(:: data socket_address_ipv6_type)
+		))
+		(@@ (. socket_address_type
+			ADDRESS_TYPE_UNKNOWN
+			nil
+		))
+	)
 ))
 
 (= accept (,,, socket
@@ -125,13 +241,26 @@
 	(= type (:: type int_type))
 	(= protocol (:: protocol int_type))
 	(= flags (:: flags int_type))
-	(@@ (<- (... "sll:socket_get_address_info")
+	(= out (<- (... "sll:socket_get_address_info")
 		node
 		service
 		address_family
 		type
 		protocol
 		flags
+	))
+	(@@ (?: (=== (:? out) int_type)
+		(<- error$from_internal out)
+		([> (= i 0) (< i ($ out))
+			(= elem (: out i))
+			(++ i)
+			(. socket_address_info_type
+				(: elem 0)
+				(: elem 1)
+				(: elem 2)
+				(<- _parse_address (: elem 3))
+			)
+		)
 	))
 ))
 
@@ -169,8 +298,11 @@
 	SHUT_RD
 	SHUT_RDWR
 	SHUT_WR
-	SOCK_STREAM
 	SOCK_DGRAM
+	SOCK_RAW
+	SOCK_RDM
+	SOCK_SEQPACKET
+	SOCK_STREAM
 	accept
 	bind
 	connect

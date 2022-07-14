@@ -26,6 +26,7 @@ static __SLL_FORCE_INLINE __SLL_U32 FIND_LAST_SET_BIT(__SLL_U64 m){
 	return o;
 }
 #define POPULATION_COUNT(m) __popcnt64((m))
+#define SWAP_BYTES16(m) _byteswap_ushort((m))
 #define SWAP_BYTES(m) _byteswap_ulong((m))
 #define SWAP_BYTES64(m) _byteswap_uint64((m))
 #define ROTATE_BITS(a,b) _rotl((a),(b))
@@ -41,6 +42,7 @@ static __SLL_FORCE_INLINE __SLL_U32 FIND_LAST_SET_BIT(__SLL_U64 m){
 #define FIND_FIRST_SET_BIT(m) (__builtin_ffsll((m))-1)
 #define FIND_LAST_SET_BIT(m) (63-__builtin_clzll((m)))
 #define POPULATION_COUNT(m) __builtin_popcountll((m))
+#define SWAP_BYTES16(m) __builtin_bswap16((m))
 #define SWAP_BYTES(m) __builtin_bswap32((m))
 #define SWAP_BYTES64(m) __builtin_bswap64((m))
 static __SLL_FORCE_INLINE unsigned int ROTATE_BITS(unsigned int a,unsigned char b){
