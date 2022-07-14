@@ -1,8 +1,3 @@
-#ifdef __SLL_BUILD_WINDOWS
-#include <winsock2.h>
-#else
-#include <sys/select.h>
-#endif
 #include <sll/_internal/common.h>
 #include <sll/common.h>
 #include <sll/error.h>
@@ -10,6 +5,11 @@
 #include <sll/platform/socket.h>
 #include <sll/socket.h>
 #include <sll/types.h>
+#ifdef __SLL_BUILD_WINDOWS
+#include <winsock2.h>
+#else
+#include <sys/ioctl.h>
+#endif
 
 
 
@@ -44,6 +44,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_error_t sll_platform_socket_create(sll_soc
 
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_platform_socket_data_available(sll_file_descriptor_t socket){
+#ifdef __SLL_BUILD_WINDOWS
 	fd_set set;
 	FD_ZERO(&set);
 	FD_SET((int)ADDR(socket),&set);
@@ -52,6 +53,11 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_platform_socket_data_available(
 		0
 	};
 	return select(1,&set,NULL,NULL,&timeout)>0;
+#else
+	int count;
+	ioctl((int)ADDR(socket),FIONREAD,&count);
+	return !!count;
+#endif
 }
 
 
