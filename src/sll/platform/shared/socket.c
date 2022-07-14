@@ -9,9 +9,10 @@
 #include <sll/socket.h>
 #include <sll/types.h>
 #ifdef __SLL_BUILD_WINDOWS
+#include <winsock.h>
 #include <winsock2.h>
 #else
- #include <netdb.h>
+#include <netdb.h>
 #include <sys/ioctl.h>
 #include <sys/socket.h>
 #include <sys/types.h>
