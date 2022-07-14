@@ -3,6 +3,7 @@
 #include <sll/common.h>
 #include <sll/error.h>
 #include <sll/file.h>
+#include <sll/platform/lock.h>
 #include <sll/platform/socket.h>
 #include <sll/socket.h>
 
@@ -52,6 +53,7 @@ __SLL_EXTERNAL sll_error_t sll_socket_create(sll_socket_address_family_t address
 		return err;
 	}
 	*((sll_file_flags_t*)(&(out->flags)))=SLL_FILE_FLAG_ASYNC|SLL_FILE_FLAG_SOCKET;
+	out->_lock=sll_platform_lock_create(NULL);
 	return SLL_NO_ERROR;
 }
 

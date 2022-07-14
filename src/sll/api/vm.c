@@ -23,7 +23,7 @@ static __STATIC_STRING(_vm_code_name,"@code");
 
 
 __SLL_EXTERNAL __SLL_API_CALL void sll_api_vm_get_config(sll_array_t* out){
-	sll_new_object_array(SLL_CHAR("iiuuu"),out,sll_current_vm_config->stack_size,sll_current_vm_config->call_stack_size,sll_file_to_handle(sll_current_vm_config->in),sll_file_to_handle(sll_current_vm_config->out),sll_file_to_handle(sll_current_vm_config->err));
+	sll_new_object_array(SLL_CHAR("iiuuu"),out,sll_current_vm_config->stack_size,sll_current_vm_config->call_stack_size,sll_file_to_handle(sll_current_vm_config->in,0),sll_file_to_handle(sll_current_vm_config->out,0),sll_file_to_handle(sll_current_vm_config->err,0));
 }
 
 

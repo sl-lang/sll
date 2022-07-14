@@ -11,6 +11,7 @@
 #else
 #include <sys/ioctl.h>
 #include <sys/socket.h>
+#include <unistd.h>
 #endif
 
 
@@ -28,7 +29,14 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_error_t sll_platform_socket_bind(sll_file_
 
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_error_t sll_platform_socket_close(sll_file_descriptor_t socket){
-	SLL_UNIMPLEMENTED();
+#ifdef __SLL_BUILD_WINDOWS
+	if (closesocket((SOCKET)ADDR(socket))==SOCKET_ERROR){
+		SLL_UNIMPLEMENTED();
+	}
+	return SLL_NO_ERROR;
+#else
+	return (close((int)ADDR(socket))?sll_platform_get_error():SLL_NO_ERROR);
+#endif
 }
 
 

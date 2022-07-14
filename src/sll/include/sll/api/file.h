@@ -250,9 +250,10 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_file_t* sll_file_from_handle(sll_file_hand
  * \group file-api
  * \desc Desc!
  * \arg sll_file_t* f
+ * \arg sll_bool_t alloc
  * \ret sll_file_handle_t
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_file_handle_t sll_file_to_handle(sll_file_t* f);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_file_handle_t sll_file_to_handle(sll_file_t* f,sll_bool_t alloc);
 
 
 

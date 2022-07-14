@@ -314,10 +314,15 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_file_t* sll_file_from_handle(sll_file_hand
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_file_handle_t sll_file_to_handle(sll_file_t* f){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_file_handle_t sll_file_to_handle(sll_file_t* f,sll_bool_t alloc){
 	sll_file_handle_t out=_alloc_file();
 	extended_file_t* data=*(_file_data.data+out);
-	data->data.pointer=f;
-	data->is_pointer=1;
+	if (alloc){
+		sll_copy_data(f,sizeof(sll_file_t),&(data->data.struct_));
+	}
+	else{
+		data->data.pointer=f;
+	}
+	data->is_pointer=!alloc;
 	return out+1;
 }

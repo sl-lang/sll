@@ -17,7 +17,7 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_socket_acce
 	sll_file_t connection;
 	sll_error_t err=sll_socket_accept(socket_file,&connection);
 	if (err==SLL_NO_ERROR){
-		*out=sll_file_to_handle(&connection);
+		*out=sll_file_to_handle(&connection,1);
 	}
 	return err;
 }
@@ -42,7 +42,7 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_socket_crea
 	sll_file_t socket;
 	sll_error_t err=sll_socket_create(address_family,type,protocol,&socket);
 	if (err==SLL_NO_ERROR){
-		*out=sll_file_to_handle(&socket);
+		*out=sll_file_to_handle(&socket,1);
 	}
 	return err;
 }
