@@ -737,4 +737,3 @@ abc` '\n')
 
 (= sock (<- socket$create socket$AF_INET socket$SOCK_STREAM))
 (:> sock '\n')
-(<- file$close sock)

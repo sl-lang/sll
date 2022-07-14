@@ -120,7 +120,10 @@
 (= get_buffer (,,, file
 	(? (! file) (@@ ""))
 	(= file (<- _convert_type file))
-	(@@ (?: (& file$flags FLAG_WRITE)
+	(@@ (?: (&&
+			(=== (:? file) file_type)
+			(& file$flags FLAG_WRITE)
+		)
 		(<- (... "sll:file_get_buffer") file$_handle)
 		""
 	))
@@ -167,7 +170,10 @@
 	(? (! file) (@@ nil))
 	(= file (<- _convert_type file))
 	(= size (:: size int_type))
-	(? (< size 0) (@@ ""))
+	(? (||
+		(! (& file$flags FLAG_READ))
+		(< size 0)
+	) (@@ ""))
 	(= out (?: nonblocking?
 		(<- (... "sll:file_read") file$_handle size)
 		(!<- file$_handle size)
@@ -181,6 +187,7 @@
 (= read_char (,,, file nonblocking?
 	(? (! file) (@@ nil))
 	(= file (<- _convert_type file))
+	(? (! (& file$flags FLAG_READ)) (@@ (<- error$create ERROR_EOF [file])))
 	(= out (?: nonblocking?
 		(<- (... "sll:file_read_char") file$_handle)
 		(!<. file$_handle)
@@ -202,6 +209,7 @@
 (= write (,,, file @@data@@
 	(? (! file) (@@ nil))
 	(= file (<- _convert_type file))
+	(? (! (& file$flags FLAG_WRITE)) (@@ 0))
 	(= out 0)
 	(-> (= i 0) (< i ($ @@data@@))
 		(= written_count (<- (... "sll:file_write")

@@ -12,7 +12,12 @@
 	(~ int_type) AF_INET6
 	(~ int_type) SOCK_STREAM
 	(~ int_type) SOCK_DGRAM
+	(~ func_type) accept
+	(~ func_type) bind
+	(~ func_type) connect
 	(~ func_type) create
+	(~ func_type) listen
+	(~ func_type) shutdown
 ))
 
 
@@ -25,6 +30,18 @@
 (= SOCK_DGRAM 1)
 
 
+
+(= accept (,,, socket
+	(@@ nil)
+))
+
+(= bind (,,, socket host port
+	(@@ nil)
+))
+
+(= connect (,,, socket host port
+	(@@ nil)
+))
 
 (= create (,,, address_family type protocol
 	(= address_family (:: address_family int_type))
@@ -53,6 +70,14 @@
 	))
 ))
 
+(= listen (,,, socket queue_size
+	(@@ nil)
+))
+
+(= shutdown (,,, socket type
+	(@@ nil)
+))
+
 
 
 (= socket (. socket_moduel_type
@@ -61,6 +86,11 @@
 	AF_INET6
 	SOCK_STREAM
 	SOCK_DGRAM
+	accept
+	bind
+	connect
 	create
+	listen
+	shutdown
 ))
 (## socket)
