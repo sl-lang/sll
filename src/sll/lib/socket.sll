@@ -43,11 +43,12 @@
 		type
 		protocol
 	))
-	(? (> 0 handle) (@@ (<- error$from_internal (~ handle))))
+	(? (< handle 0) (@@ (<- error$from_internal (~ handle))))
 	(@@ (. socket_type
 		address_family
 		type
 		protocol
+		0
 		handle
 	))
 ))

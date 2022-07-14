@@ -175,6 +175,18 @@
 
 
 /**
+ * \flags macro var
+ * \name SLL_FILE_FLAG_RESERVED4
+ * \group file
+ * \subgroup file-flag
+ * \desc Internally used as `FILE_FLAG_BOUND`
+ * \type sll_file_flags_t
+ */
+#define SLL_FILE_FLAG_RESERVED4 2048
+
+
+
+/**
  * \flags func macro
  * \name SLL_FILE_GET_LINE_NUMBER
  * \group file
