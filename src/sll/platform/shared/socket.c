@@ -239,7 +239,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_error_t sll_platform_socket_get_address_in
 		data->address_family=_to_address_family(ai->ai_family);
 		data->type=_to_type(ai->ai_socktype);
 		data->protocol=ai->ai_protocol;
-		_build_address(ai->ai_addr,ai->ai_addrlen,&(data->address));
+		_build_address(ai->ai_addr,(socklen_t)(ai->ai_addrlen),&(data->address));
 		data++;
 	}
 	freeaddrinfo(result);
