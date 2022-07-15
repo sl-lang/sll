@@ -3,6 +3,7 @@
 #include <sll/_internal/common.h>
 #include <sll/_size_types.h>
 #include <sll/api/time.h>
+#include <sll/gc.h>
 #include <sll/types.h>
 
 
@@ -106,6 +107,10 @@ typedef __SLL_U16 fast_root_index_t;
 
 
 
+typedef __SLL_U8 gc_fast_object_pool_length_t;
+
+
+
 typedef struct _GC_PAGE_HEADER{
 	sll_size_t cnt;
 	sll_size_t garbage_cnt;
@@ -125,16 +130,16 @@ typedef struct _GC_MEMORY_PAGE_DATA{
 
 typedef struct _GC_OBJECT_POOL{
 	sll_object_t* data[GC_OBJECT_POOL_SIZE];
-	sll_array_length_t length;
+	sll_object_pool_index_t length;
 } gc_object_pool_t;
 
 
 
 typedef struct _GC_FAST_OBJECT_POOL{
 	sll_object_t* data[GC_FAST_OBJECT_POOL_SIZE];
-	__SLL_U8 read;
-	__SLL_U8 write;
-	__SLL_U8 space;
+	gc_fast_object_pool_length_t read;
+	gc_fast_object_pool_length_t write;
+	gc_fast_object_pool_length_t space;
 } gc_fast_object_pool_t;
 
 

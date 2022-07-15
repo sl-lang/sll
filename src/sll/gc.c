@@ -258,8 +258,8 @@ __SLL_EXTERNAL void sll__release_object_internal(sll_object_t* object){
 		SLL_CRITICAL_ERROR(sll_platform_free_page(pg,GC_MEMORY_PAGE_SIZE));
 	}
 	if (pool_shift){
-		sll_array_length_t i=0;
-		for (sll_array_length_t j=0;j<_gc_object_pool.length;j++){
+		sll_object_pool_index_t i=0;
+		for (sll_object_pool_index_t j=0;j<_gc_object_pool.length;j++){
 			if (_gc_object_pool.data[j]){
 				_gc_object_pool.data[i]=_gc_object_pool.data[j];
 				_gc_object_pool.data[i]->data._pool_index=i;

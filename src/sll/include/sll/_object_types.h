@@ -55,6 +55,17 @@ typedef __SLL_U64 sll_reference_count_t;
 
 
 /**
+ * \flags type var
+ * \name sll_object_pool_index_t
+ * \group gc
+ * \desc Docs!
+ * \type __SLL_U32
+ */
+typedef __SLL_U32 sll_object_pool_index_t;
+
+
+
+/**
  * \flags type
  * \name sll_array_t
  * \group array
@@ -132,7 +143,7 @@ typedef struct _SLL_OBJECT_PTR{
  * \arg sll_map_t map
  * \arg sll_object_field_t* fields
  * \arg sll_object_ptr_t _next_object
- * \arg sll_array_length_t _pool_index
+ * \arg sll_object_pool_index_t _pool_index
  */
 typedef union _SLL_OBJECT_DATA{
 	sll_integer_t int_;
@@ -144,7 +155,7 @@ typedef union _SLL_OBJECT_DATA{
 	sll_map_t map;
 	sll_object_field_t* fields;
 	sll_object_ptr_t _next_object;
-	sll_array_length_t _pool_index;
+	sll_object_pool_index_t _pool_index;
 } sll_object_data_t;
 
 
