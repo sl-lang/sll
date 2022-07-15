@@ -129,6 +129,8 @@ static socklen_t _build_sockaddr(const sll_address_t* address,struct sockaddr** 
 				*out=(struct sockaddr*)data;
 				return sizeof(struct sockaddr_in);
 			}
+		case SLL_ADDRESS_TYPE_IPV6:
+			SLL_UNIMPLEMENTED();
 	}
 	SLL_UNIMPLEMENTED();
 }
