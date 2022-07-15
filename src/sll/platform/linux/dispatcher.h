@@ -72,8 +72,8 @@ static __SLL_FORCE_INLINE event_list_length_t _platform_poll_events(raw_event_da
 		sll_char_t val;
 		if (read(dt->fd,&val,sizeof(sll_char_t))!=sizeof(sll_char_t)){
 #else
-		__SLL_U64 val;
-		if (read(dt->fd,&val,sizeof(__SLL_U64))!=sizeof(__SLL_U64)){
+		sll_size_t val;
+		if (read(dt->fd,&val,sizeof(sll_size_t))!=sizeof(sll_size_t)){
 #endif
 			SLL_UNIMPLEMENTED();
 		}
@@ -90,8 +90,8 @@ static __SLL_FORCE_INLINE void _platform_poll_start(raw_event_data_t* dt){
 	sll_char_t val=1;
 	if (write(_linux_pipe_write_end,&val,sizeof(sll_char_t))!=sizeof(sll_char_t)){
 #else
-	__SLL_U64 val=1;
-	if (write(dt->fd,&val,sizeof(__SLL_U64))!=sizeof(__SLL_U64)){
+	sll_size_t val=1;
+	if (write(dt->fd,&val,sizeof(sll_size_t))!=sizeof(sll_size_t)){
 #endif
 		SLL_UNIMPLEMENTED();
 	}
@@ -104,8 +104,8 @@ static __SLL_FORCE_INLINE void _platform_poll_stop(raw_event_data_t* dt,void** w
 	sll_char_t val=1;
 	if (write(_linux_pipe_write_end,&val,sizeof(sll_char_t))!=sizeof(sll_char_t)){
 #else
-	__SLL_U64 val=1;
-	if (write(dt->fd,&val,sizeof(__SLL_U64))!=sizeof(__SLL_U64)){
+	sll_size_t val=1;
+	if (write(dt->fd,&val,sizeof(sll_size_t))!=sizeof(sll_size_t)){
 #endif
 		SLL_UNIMPLEMENTED();
 	}
@@ -122,8 +122,8 @@ static __SLL_FORCE_INLINE void _platform_wait_for_dispatch(raw_event_data_t* dt)
 	sll_char_t val;
 	if (read(dt->fd,&val,sizeof(sll_char_t))!=sizeof(sll_char_t)){
 #else
-	__SLL_U64 val;
-	if (read(dt->fd,&val,sizeof(__SLL_U64))!=sizeof(__SLL_U64)){
+	sll_size_t val;
+	if (read(dt->fd,&val,sizeof(sll_size_t))!=sizeof(sll_size_t)){
 #endif
 		SLL_UNIMPLEMENTED();
 	}
