@@ -124,6 +124,7 @@ static socklen_t _build_sockaddr(const sll_address_t* address,struct sockaddr** 
 		case SLL_ADDRESS_TYPE_IPV4:
 			{
 				struct sockaddr_in* data=sll_allocate_stack(sizeof(struct sockaddr_in));
+				data->sin_family=AF_INET;
 				*((__SLL_U32*)(&(data->sin_addr)))=SWAP_BYTES(address->data.ipv4.address);
 				data->sin_port=SWAP_BYTES16(address->data.ipv4.port);
 				*out=(struct sockaddr*)data;
