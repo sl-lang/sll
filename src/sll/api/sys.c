@@ -37,7 +37,7 @@
 #if SLL_VERSION_HAS_SHA
 static __STATIC_STRING(_sys_full_commit,SLL_VERSION_FULL_SHA);
 #endif
-static sll_array_length_t _sys_argc=0;
+static sll_argc_t _sys_argc=0;
 static sll_string_t* _sys_argv=NULL;
 static sll_container_t _sys_library_data=SLL_CONTAINER_INIT_STRUCT;
 static sll_bool_t _sys_init=0;
@@ -227,7 +227,7 @@ __SLL_EXTERNAL const sll_loaded_library_t*const* sll_get_loaded_libraries(sll_si
 
 
 
-__SLL_EXTERNAL void sll_set_argument(sll_array_length_t index,const sll_char_t* value){
+__SLL_EXTERNAL void sll_set_argument(sll_argc_t index,const sll_char_t* value){
 	if (index>=_sys_argc){
 		return;
 	}
@@ -237,10 +237,10 @@ __SLL_EXTERNAL void sll_set_argument(sll_array_length_t index,const sll_char_t* 
 
 
 
-__SLL_EXTERNAL void sll_set_argument_count(sll_array_length_t arg_count){
+__SLL_EXTERNAL void sll_set_argument_count(sll_argc_t arg_count){
 	SLL_ASSERT(arg_count>0);
 	if (_sys_argv){
-		for (sll_array_length_t i=0;i<_sys_argc;i++){
+		for (sll_argc_t i=0;i<_sys_argc;i++){
 			sll_free_string(_sys_argv+i);
 		}
 		sll_deallocate(_sys_argv);
@@ -251,7 +251,7 @@ __SLL_EXTERNAL void sll_set_argument_count(sll_array_length_t arg_count){
 	}
 	_sys_argc=arg_count;
 	_sys_argv=sll_allocate(arg_count*sizeof(sll_string_t));
-	for (sll_array_length_t i=0;i<arg_count;i++){
+	for (sll_argc_t i=0;i<arg_count;i++){
 		SLL_INIT_STRING(_sys_argv+i);
 	}
 }

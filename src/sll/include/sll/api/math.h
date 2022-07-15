@@ -1,5 +1,6 @@
 #ifndef __SLL_API_MATH_H__
 #define __SLL_API_MATH_H__ 1
+#include <sll/_size_types.h>
 #include <sll/common.h>
 #include <sll/gc.h>
 #include <sll/parse_args.h>
@@ -38,6 +39,17 @@
  * \subgroup math-api-log
  * \desc Docs!
  */
+
+
+
+/**
+ * \flags type var
+ * \name sll_math_factor_count_t
+ * \group math-api
+ * \desc Docs!
+ * \type __SLL_U32
+ */
+typedef __SLL_U32 sll_math_factor_count_t;
 
 
 
@@ -560,10 +572,10 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_float_t sll_math_copy_sign(
  * \group math-api
  * \desc Docs!
  * \arg sll_size_t n
- * \arg sll_array_length_t* ol
+ * \arg sll_math_factor_count_t* ol
  * \ret sll_factor_t*
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_factor_t* sll_math_factors(sll_size_t n,sll_array_length_t* ol);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_factor_t* sll_math_factors(sll_size_t n,sll_math_factor_count_t* ol);
 
 
 

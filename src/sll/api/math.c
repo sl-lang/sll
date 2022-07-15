@@ -588,13 +588,13 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_float_t sll_math_copy_sign(
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_factor_t* sll_math_factors(sll_size_t v,sll_array_length_t* ol){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_factor_t* sll_math_factors(sll_size_t v,sll_math_factor_count_t* ol){
 	if (v<2){
 		*ol=0;
 		return NULL;
 	}
 	sll_factor_t* o=sll_allocate_stack(1);
-	sll_array_length_t i=0;
+	sll_math_factor_count_t i=0;
 	sll_size_t n=v;
 	sll_size_t j=FIND_FIRST_SET_BIT(n);
 	if (j){

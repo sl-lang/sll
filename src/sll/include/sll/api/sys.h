@@ -1,5 +1,6 @@
 #ifndef __SLL_API_SYS_H__
 #define __SLL_API_SYS_H__ 1
+#include <sll/_size_types.h>
 #include <sll/common.h>
 #include <sll/gc.h>
 #include <sll/platform/library.h>
@@ -13,6 +14,17 @@
  * \group sys-api
  * \desc Docs!
  */
+
+
+
+/**
+ * \flags type var
+ * \name sll_argc_t
+ * \group sys-api
+ * \desc Docs!
+ * \type __SLL_U32
+ */
+typedef __SLL_U32 sll_argc_t;
 
 
 
@@ -194,10 +206,10 @@ __SLL_EXTERNAL const sll_loaded_library_t*const* sll_get_loaded_libraries(sll_si
  * \name sll_set_argument
  * \group sys-api
  * \desc Docs!
- * \arg sll_array_length_t index
+ * \arg sll_argc_t index
  * \arg const sll_char_t* value
  */
-__SLL_EXTERNAL void sll_set_argument(sll_array_length_t index,const sll_char_t* value);
+__SLL_EXTERNAL void sll_set_argument(sll_argc_t index,const sll_char_t* value);
 
 
 
@@ -206,9 +218,9 @@ __SLL_EXTERNAL void sll_set_argument(sll_array_length_t index,const sll_char_t* 
  * \name sll_set_argument_count
  * \group sys-api
  * \desc Docs!
- * \arg sll_array_length_t value
+ * \arg sll_argc_t value
  */
-__SLL_EXTERNAL void sll_set_argument_count(sll_array_length_t value);
+__SLL_EXTERNAL void sll_set_argument_count(sll_argc_t value);
 
 
 
