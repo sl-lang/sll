@@ -132,11 +132,10 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_error_t sll_socket_accept(sll_file_t* sock
  * \group socket
  * \desc Docs!
  * \arg sll_file_t* socket
- * \arg sll_address_t host
- * \arg sll_port_t port
+ * \arg const sll_address_t* address
  * \ret sll_error_t
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_error_t sll_socket_bind(sll_file_t* socket,sll_address_t host,sll_port_t port);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_error_t sll_socket_bind(sll_file_t* socket,const sll_address_t* address);
 
 
 
@@ -146,11 +145,10 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_error_t sll_socket_bind(sll_file_t* socket
  * \group socket
  * \desc Docs!
  * \arg sll_file_t* socket
- * \arg sll_address_t host
- * \arg sll_port_t port
+ * \arg const sll_address_t* address
  * \ret sll_error_t
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_error_t sll_socket_connect(sll_file_t* socket,sll_address_t host,sll_port_t port);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_error_t sll_socket_connect(sll_file_t* socket,const sll_address_t* address);
 
 
 

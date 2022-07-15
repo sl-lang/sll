@@ -1,4 +1,5 @@
 #include <sll/_internal/common.h>
+#include <sll/_size_types.h>
 #include <sll/api/file.h>
 #include <sll/common.h>
 #include <sll/error.h>
@@ -25,6 +26,29 @@ static sll_object_t* _address_to_object(sll_address_t* address){
 
 
 
+static sll_bool_t _object_to_address(const sll_array_t* data,sll_address_t* out){
+	switch (data->length){
+		case 0:
+			out->type=SLL_ADDRESS_TYPE_UNKNOWN;
+			return 1;
+		case 2:
+			if (data->data[0]->type!=SLL_OBJECT_TYPE_INT||data->data[0]->data.int_<0||data->data[0]->data.int_>__SLL_U32_MAX||data->data[1]->type!=SLL_OBJECT_TYPE_INT||data->data[1]->data.int_<0||data->data[1]->data.int_>__SLL_U16_MAX){
+				return 0;
+			}
+			out->type=SLL_ADDRESS_TYPE_IPV4;
+			out->data.ipv4.address=data->data[0]->data.int_;
+			out->data.ipv4.port=data->data[1]->data.int_;
+			return 1;
+		case 4:
+			out->type=SLL_ADDRESS_TYPE_IPV6;
+			SLL_UNIMPLEMENTED();
+			return 1;
+	}
+	return 0;
+}
+
+
+
 __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_socket_accept(sll_file_handle_t socket,sll_file_handle_t* out){
 	sll_file_t* socket_file=sll_file_from_handle(socket);
 	if (!socket_file){
@@ -41,13 +65,29 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_socket_acce
 
 
 __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_socket_bind(sll_file_handle_t socket,const sll_array_t* array){
-	SLL_UNIMPLEMENTED();
+	sll_file_t* socket_file=sll_file_from_handle(socket);
+	if (!socket_file){
+		return SLL_ERROR_UNKNOWN_FD;
+	}
+	sll_address_t addr;
+	if (!_object_to_address(array,&addr)){
+		SLL_UNIMPLEMENTED();
+	}
+	return sll_socket_bind(socket_file,&addr);
 }
 
 
 
 __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_socket_connect(sll_file_handle_t socket,const sll_array_t* array){
-	SLL_UNIMPLEMENTED();
+	sll_file_t* socket_file=sll_file_from_handle(socket);
+	if (!socket_file){
+		return SLL_ERROR_UNKNOWN_FD;
+	}
+	sll_address_t addr;
+	if (!_object_to_address(array,&addr)){
+		SLL_UNIMPLEMENTED();
+	}
+	return sll_socket_connect(socket_file,&addr);
 }
 
 

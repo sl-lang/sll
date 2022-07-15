@@ -21,11 +21,11 @@ __SLL_EXTERNAL sll_error_t sll_socket_accept(sll_file_t* socket,sll_file_t* out)
 
 
 
-__SLL_EXTERNAL sll_error_t sll_socket_bind(sll_file_t* socket,sll_address_t host,sll_port_t port){
+__SLL_EXTERNAL sll_error_t sll_socket_bind(sll_file_t* socket,const sll_address_t* address){
 	if (!(socket->flags&SLL_FILE_FLAG_SOCKET)){
 		return SLL_ERROR_NOT_A_SOCKET;
 	}
-	sll_error_t err=sll_platform_socket_bind(socket->data.socket.fd,host,port);
+	sll_error_t err=sll_platform_socket_bind(socket->data.socket.fd,address);
 	if (err==SLL_NO_ERROR){
 		(*((sll_file_flags_t*)(&(socket->flags))))|=FILE_FLAG_BOUND;
 	}
@@ -34,11 +34,11 @@ __SLL_EXTERNAL sll_error_t sll_socket_bind(sll_file_t* socket,sll_address_t host
 
 
 
-__SLL_EXTERNAL sll_error_t sll_socket_connect(sll_file_t* socket,sll_address_t host,sll_port_t port){
+__SLL_EXTERNAL sll_error_t sll_socket_connect(sll_file_t* socket,const sll_address_t* address){
 	if (!(socket->flags&SLL_FILE_FLAG_SOCKET)){
 		return SLL_ERROR_NOT_A_SOCKET;
 	}
-	sll_error_t err=sll_platform_socket_connect(socket->data.socket.fd,host,port);
+	sll_error_t err=sll_platform_socket_connect(socket->data.socket.fd,address);
 	if (err==SLL_NO_ERROR){
 		(*((sll_file_flags_t*)(&(socket->flags))))|=SLL_FILE_FLAG_READ|SLL_FILE_FLAG_WRITE;
 	}

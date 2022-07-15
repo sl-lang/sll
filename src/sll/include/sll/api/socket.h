@@ -34,7 +34,7 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_socket_acce
  * \name sll_api_socket_bind
  * \group socket-api
  * \desc Docs!
- * \api DDW|Q
+ * \api D#a|Q
  * \arg sll_file_handle_t socket
  * \arg sll_address_t address
  * \arg sll_port_t port
@@ -49,7 +49,7 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_socket_bind
  * \name sll_api_socket_connect
  * \group socket-api
  * \desc Docs!
- * \api DDW|Q
+ * \api D#a|Q
  * \arg sll_file_handle_t socket
  * \arg sll_address_t address
  * \arg sll_port_t port

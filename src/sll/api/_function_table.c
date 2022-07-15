@@ -803,12 +803,12 @@ static const sll_internal_function_descriptor_t _internal_function_table[]={
 	{
 		SLL_CHAR("sll:socket_bind"),
 		sll_api_socket_bind,
-		SLL_CHAR("DDW|Q")
+		SLL_CHAR("D#a|Q")
 	},
 	{
 		SLL_CHAR("sll:socket_connect"),
 		sll_api_socket_connect,
-		SLL_CHAR("DDW|Q")
+		SLL_CHAR("D#a|Q")
 	},
 	{
 		SLL_CHAR("sll:socket_create"),
