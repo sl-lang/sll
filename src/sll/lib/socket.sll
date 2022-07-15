@@ -57,14 +57,6 @@
 	int_type port
 ))
 
-(= socket_address_type (&:
-	(,,, data
-		(@@ (:: data$data string_type))
-	) @@string@@
-	int_type type
-	object_type data
-))
-
 (= socket_address_info_type (&:
 	(,,, data
 		(@@ (<- string$format "<%s, %s, %u, %s>"
@@ -77,11 +69,14 @@
 	(~ int_type) address_family
 	(~ int_type) type
 	(~ int_type) protocol
-	(~ socket_address_type) address
+	(~ object_type) address
 ))
 
 (= socket_module_type (&:
-	(~ type_type) socket_address_type
+	(~ type_type) socket_address_info_type
+	(~ type_type) socket_address_ipv4_type
+	(~ type_type) socket_address_ipv6_type
+	(~ type_type) socket_address_unknown_type
 	(~ type_type) socket_type
 	(~ int_type) AF_INET
 	(~ int_type) AF_INET6
@@ -139,13 +134,14 @@
 	SOCK_SEQPACKET "SOCK_SEQPACKET"
 >)
 
+(= _length_to_type <
+	2 socket_address_ipv4_type
+	4 socket_address_ipv6_type
+>)
 
 
-(= _parse_host (,,, host
-	(@@ (:: host int_type))
-))
 
-(= _bind_or_connect (,,, socket host port func
+(= _bind_or_connect (,,, socket address func
 	(= host (<- _parse_host host))
 	(= port (:: port int_type))
 	(= err (<- error$from_internal
@@ -156,26 +152,15 @@
 		)
 	))
 	(? (!== err nil) (@@ err))
-	(= socket$address$host host)
-	(= socket$address$port port)
+	(= socket$address address)
 	(@@ nil)
 ))
 
 (= _parse_address (,,, data
-	(?? ($ data)
-		2 (@@ (. socket_address_type
-			ADDRESS_TYPE_IPV4
-			(:: data socket_address_ipv4_type)
-		))
-		4 (@@ (. socket_address_type
-			ADDRESS_TYPE_IPV6
-			(:: data socket_address_ipv6_type)
-		))
-		(@@ (. socket_address_type
-			ADDRESS_TYPE_UNKNOWN
-			nil
-		))
-	)
+	(@@ (::
+		data
+		(|| (: _length_to_type ($ data)) socket_address_unknown_type)
+	))
 ))
 
 (= accept (,,, socket
@@ -184,23 +169,21 @@
 	(@@ nil)
 ))
 
-(= bind (,,, socket host port
+(= bind (,,, socket address
 	(? (! socket) (@@ nil))
 	(@@ (<- _bind_or_connect
 		(:: socket socket_type)
-		host
-		port
+		address
 		(... "sll:socket_bind")
 	))
 ))
 
-(= connect (,,, socket host port
+(= connect (,,, socket address
 	(? (! socket) (@@ nil))
 	(= socket (:: socket socket_type))
 	(= err (<- _bind_or_connect
 		socket
-		host
-		port
+		address
 		(... "sll:socket_connect")
 	))
 	(? (=== err nil) (= socket$flags (| socket$flags file$FLAG_READ file$FLAG_WRITE)))
@@ -291,7 +274,10 @@
 
 
 (= socket (. socket_module_type
-	socket_address_type
+	socket_address_info_type
+	socket_address_ipv4_type
+	socket_address_ipv6_type
+	socket_address_unknown_type
 	socket_type
 	AF_INET
 	AF_INET6
