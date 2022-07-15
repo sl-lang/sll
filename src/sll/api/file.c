@@ -321,7 +321,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_file_handle_t sll_file_to_handle(sll_file_
 		sll_copy_data(f,sizeof(sll_file_t),&(data->data.struct_));
 	}
 	else{
-		data->data.pointer=f;
+		data->data.pointer=f;// lgtm [cpp/stack-address-escape]
 	}
 	data->is_pointer=!alloc;
 	return out+1;
