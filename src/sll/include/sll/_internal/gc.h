@@ -111,6 +111,10 @@ typedef __SLL_U8 gc_fast_object_pool_length_t;
 
 
 
+typedef __SLL_U32 gc_memory_page_data_length_t;
+
+
+
 typedef struct _GC_PAGE_HEADER{
 	sll_size_t cnt;
 	sll_size_t garbage_cnt;
@@ -123,7 +127,7 @@ typedef struct _GC_PAGE_HEADER{
 typedef struct _GC_MEMORY_PAGE_DATA{
 	gc_page_header_t* root;
 	gc_page_header_t* data[GC_PAGE_POOL_SIZE];
-	sll_array_length_t length;
+	gc_memory_page_data_length_t length;
 } gc_memory_page_data_t;
 
 

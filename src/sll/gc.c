@@ -307,7 +307,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_create_object(sll_object_typ
 		}
 		else{
 			if (!_gc_memory_page_data.length){
-				sll_array_length_t i=(_gc_memory_page_data.root?GC_PAGE_DYNAMIC_POOL_SIZE:GC_PAGE_INIT_POOL_SIZE);
+				gc_memory_page_data_length_t i=(_gc_memory_page_data.root?GC_PAGE_DYNAMIC_POOL_SIZE:GC_PAGE_INIT_POOL_SIZE);
 				while (i){
 					i--;
 					gc_page_header_t* pg=sll_platform_allocate_page_aligned(GC_MEMORY_PAGE_SIZE,GC_MEMORY_PAGE_SIZE,NULL);
