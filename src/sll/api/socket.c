@@ -36,8 +36,8 @@ static sll_bool_t _object_to_address(const sll_array_t* data,sll_address_t* out)
 				return 0;
 			}
 			out->type=SLL_ADDRESS_TYPE_IPV4;
-			out->data.ipv4.address=data->data[0]->data.int_;
-			out->data.ipv4.port=data->data[1]->data.int_;
+			out->data.ipv4.address=(__SLL_U32)(data->data[0]->data.int_);
+			out->data.ipv4.port=(sll_port_t)(data->data[1]->data.int_);
 			return 1;
 		case 4:
 			out->type=SLL_ADDRESS_TYPE_IPV6;

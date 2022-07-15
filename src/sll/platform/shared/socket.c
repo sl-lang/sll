@@ -89,7 +89,7 @@ static sll_socket_type_t _to_type(int type){
 
 
 
-static void _build_address(const struct sockaddr* addr,size_t addrlen,sll_address_t* out){
+static void _build_address(const struct sockaddr* addr,size_t addr_len,sll_address_t* out){
 	out->type=SLL_ADDRESS_TYPE_UNKNOWN;
 	switch (addr->sa_family){
 		case AF_INET:
@@ -114,6 +114,12 @@ static void _build_address(const struct sockaddr* addr,size_t addrlen,sll_addres
 				return;
 			}
 	}
+	SLL_UNIMPLEMENTED();
+}
+
+
+
+static void _build_sockaddr(const sll_address_t* address,struct sockaddr** out,size_t* out_len){
 	SLL_UNIMPLEMENTED();
 }
 
@@ -145,7 +151,21 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_error_t sll_platform_socket_close(sll_file
 
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_error_t sll_platform_socket_connect(sll_file_descriptor_t socket,const sll_address_t* address){
-	SLL_UNIMPLEMENTED();
+	struct sockaddr* addr;
+	size_t addr_len;
+	_build_sockaddr(address,&addr,&addr_len);
+	int ret=connect((int)ADDR(socket),addr,addr_len);
+	sll_deallocate(addr);
+#ifdef __SLL_BUILD_WINDOWS
+	if (ret==SOCKET_ERROR){
+		SLL_UNIMPLEMENTED();
+	}
+#else
+	if (ret==-1){
+		return sll_platform_get_error();
+	}
+#endif
+	return SLL_NO_ERROR;
 }
 
 
