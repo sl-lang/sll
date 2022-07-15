@@ -80,7 +80,7 @@
 	(~ socket_address_type) address
 ))
 
-(= socket_moduel_type (&:
+(= socket_module_type (&:
 	(~ type_type) socket_address_type
 	(~ type_type) socket_type
 	(~ int_type) AF_INET
@@ -290,7 +290,7 @@
 
 
 
-(= socket (. socket_moduel_type
+(= socket (. socket_module_type
 	socket_address_type
 	socket_type
 	AF_INET
