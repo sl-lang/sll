@@ -142,13 +142,10 @@
 
 
 (= _bind_or_connect (,,, socket address func
-	(= host (<- _parse_host host))
-	(= port (:: port int_type))
 	(= err (<- error$from_internal
 		(<- func
 			socket$_handle
-			host
-			port
+			(:: address array_type)
 		)
 	))
 	(? (!== err nil) (@@ err))
