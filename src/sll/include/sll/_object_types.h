@@ -66,6 +66,28 @@ typedef __SLL_U32 sll_object_pool_index_t;
 
 
 /**
+ * \flags type var
+ * \name sll_object_flags_t
+ * \group gc
+ * \desc Docs!
+ * \type __SLL_U32
+ */
+typedef __SLL_U32 sll_object_flags_t;
+
+
+
+/**
+ * \flags type var
+ * \name sll_object_extra_data_t
+ * \group gc
+ * \desc Docs!
+ * \type __SLL_U64
+ */
+typedef __SLL_U64 sll_object_extra_data_t;
+
+
+
+/**
  * \flags type
  * \name sll_array_t
  * \group array
@@ -167,15 +189,15 @@ typedef union _SLL_OBJECT_DATA{
  * \desc Docs!
  * \arg sll_reference_count_t rc
  * \arg const sll_object_type_t type
- * \arg __SLL_U32 _flags
- * \arg __SLL_U64 _data
+ * \arg sll_object_flags_t _flags
+ * \arg sll_object_extra_data_t _data
  * \arg sll_object_data_t data
  */
 typedef struct _SLL_OBJECT{
 	sll_reference_count_t rc;
 	const sll_object_type_t type;
-	__SLL_U32 _flags;
-	__SLL_U64 _data;
+	sll_object_flags_t _flags;
+	sll_object_extra_data_t _data;
 	sll_object_data_t data;
 } sll_object_t;
 
