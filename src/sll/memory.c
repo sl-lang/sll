@@ -29,7 +29,7 @@
 
 
 static pool_data_t _memory_pool[MEMORY_POOL_SIZE];
-static __SLL_U32 _memory_update;
+static memory_update_timer_t _memory_update;
 static stack_block_header_t* _memory_stack;
 static stack_block_header_t* _memory_stack_top;
 
@@ -233,7 +233,7 @@ static __SLL_FORCE_INLINE void* _allocate_chunk(sll_size_t size,sll_bool_t fail_
 
 void _memory_deinit(void){
 	for (sll_size_t i=0;i<MEMORY_POOL_SIZE;i++){
-		for (__SLL_U32 j=0;j<_memory_pool[i].cnt;j++){
+		for (pool_data_counter_t j=0;j<_memory_pool[i].cnt;j++){
 			free(_memory_pool[i].ptr[j]);
 		}
 	}

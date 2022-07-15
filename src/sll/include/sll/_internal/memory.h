@@ -40,6 +40,18 @@
 
 
 
+typedef __SLL_U32 pool_data_miss_bitmap_t;
+
+
+
+typedef __SLL_U32 pool_data_counter_t;
+
+
+
+typedef __SLL_U32 memory_update_timer_t;
+
+
+
 typedef struct _USER_MEM_BLOCK{
 	__SLL_U64 data;
 } user_mem_block_t;
@@ -47,10 +59,10 @@ typedef struct _USER_MEM_BLOCK{
 
 
 typedef struct _POOL_DATA{
-	__SLL_U32 alloc;
-	__SLL_U32 miss;
-	__SLL_U32 last_miss;
-	__SLL_U32 cnt;
+	pool_data_counter_t alloc;
+	pool_data_counter_t miss;
+	pool_data_miss_bitmap_t last_miss;
+	pool_data_counter_t cnt;
 	void* ptr[MEMORY_POOL_MAX_BLOCKS];
 } pool_data_t;
 
