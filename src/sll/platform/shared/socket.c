@@ -151,7 +151,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_error_t sll_platform_socket_connect(sll_fi
 
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_error_t sll_platform_socket_create(sll_socket_address_family_t address_family,sll_socket_type_t type,sll_socket_protocol_t protocol,sll_file_descriptor_t* out){
-	sll_file_descriptor_t ret=(sll_file_descriptor_t)PTR(socket(_from_address_family(address_family),_from_type(type),protocol));
+	sll_file_descriptor_t ret=(sll_file_descriptor_t)PTR(socket(_from_address_family(address_family),_from_type(type)|SOCK_NONBLOCK,protocol));
 #ifdef __SLL_BUILD_WINDOWS
 	if (ret==PTR(INVALID_SOCKET)){
 		SLL_UNIMPLEMENTED();
