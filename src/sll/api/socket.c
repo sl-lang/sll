@@ -40,16 +40,14 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_socket_acce
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_socket_bind(sll_file_handle_t socket,sll_address_t address,sll_port_t port){
-	sll_file_t* socket_file=sll_file_from_handle(socket);
-	return (!socket_file?SLL_ERROR_UNKNOWN_FD:sll_socket_bind(socket_file,address,port));
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_socket_bind(sll_file_handle_t socket,const sll_array_t* array){
+	SLL_UNIMPLEMENTED();
 }
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_socket_connect(sll_file_handle_t socket,sll_address_t address,sll_port_t port){
-	sll_file_t* socket_file=sll_file_from_handle(socket);
-	return (!socket_file?SLL_ERROR_UNKNOWN_FD:sll_socket_connect(socket_file,address,port));
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_socket_connect(sll_file_handle_t socket,const sll_array_t* array){
+	SLL_UNIMPLEMENTED();
 }
 
 

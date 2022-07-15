@@ -17,45 +17,45 @@
 
 
 
-static __SLL_FORCE_INLINE sll_object_t* STRING_TO_OBJECT(const sll_string_t* v){
-	SLL_ASSERT(v);
-	sll_object_t* o=sll_create_object(SLL_OBJECT_TYPE_STRING);
-	sll_string_clone(v,&(o->data.string));
-	return o;
+static __SLL_FORCE_INLINE sll_object_t* STRING_TO_OBJECT(const sll_string_t* str){
+	SLL_ASSERT(str);
+	sll_object_t* out=sll_create_object(SLL_OBJECT_TYPE_STRING);
+	sll_string_clone(str,&(out->data.string));
+	return out;
 }
 
 
 
 static __SLL_FORCE_INLINE sll_object_t* EMPTY_STRING_TO_OBJECT(void){
-	sll_object_t* o=sll_create_object(SLL_OBJECT_TYPE_STRING);
-	SLL_INIT_STRING(&(o->data.string));
-	return o;
+	sll_object_t* out=sll_create_object(SLL_OBJECT_TYPE_STRING);
+	SLL_INIT_STRING(&(out->data.string));
+	return out;
 }
 
 
 
-static __SLL_FORCE_INLINE sll_object_t* STRING_POINTER_TO_OBJECT(const sll_char_t* p){
-	SLL_ASSERT(p);
-	sll_object_t* o=sll_create_object(SLL_OBJECT_TYPE_STRING);
-	sll_string_from_pointer(p,&(o->data.string));
-	return o;
+static __SLL_FORCE_INLINE sll_object_t* STRING_POINTER_TO_OBJECT(const sll_char_t* pointer){
+	SLL_ASSERT(pointer);
+	sll_object_t* out=sll_create_object(SLL_OBJECT_TYPE_STRING);
+	sll_string_from_pointer(pointer,&(out->data.string));
+	return out;
 }
 
 
 
-static __SLL_FORCE_INLINE sll_object_t* STRING_POINTER_LENGTH_TO_OBJECT(const sll_char_t* p,sll_string_length_t l){
-	sll_object_t* o=sll_create_object(SLL_OBJECT_TYPE_STRING);
-	sll_string_from_pointer_length(p,l,&(o->data.string));
-	return o;
+static __SLL_FORCE_INLINE sll_object_t* STRING_POINTER_LENGTH_TO_OBJECT(const sll_char_t* pointer,sll_string_length_t length){
+	sll_object_t* out=sll_create_object(SLL_OBJECT_TYPE_STRING);
+	sll_string_from_pointer_length(pointer,length,&(out->data.string));
+	return out;
 }
 
 
 
-static __SLL_FORCE_INLINE sll_object_t* STRING_TO_OBJECT_NOCOPY(sll_string_t* v){
-	SLL_ASSERT(v);
-	sll_object_t* o=sll_create_object(SLL_OBJECT_TYPE_STRING);
-	o->data.string=*v;
-	return o;
+static __SLL_FORCE_INLINE sll_object_t* STRING_TO_OBJECT_NOCOPY(sll_string_t* str){
+	SLL_ASSERT(str);
+	sll_object_t* out=sll_create_object(SLL_OBJECT_TYPE_STRING);
+	out->data.string=*str;
+	return out;
 }
 
 

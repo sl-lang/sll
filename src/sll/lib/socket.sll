@@ -183,7 +183,7 @@
 		address
 		(... "sll:socket_connect")
 	))
-	(? (=== err nil) (= socket$flags (| socket$flags file$FLAG_READ file$FLAG_WRITE)))
+	(? (! err) (= socket$flags (| socket$flags file$FLAG_READ file$FLAG_WRITE)))
 	(@@ err)
 ))
 
