@@ -115,6 +115,10 @@ typedef __SLL_U32 gc_memory_page_data_length_t;
 
 
 
+typedef __SLL_U64 gc_multiple_root_t;
+
+
+
 typedef struct _GC_PAGE_HEADER{
 	sll_size_t cnt;
 	sll_size_t garbage_cnt;
@@ -150,7 +154,7 @@ typedef struct _GC_FAST_OBJECT_POOL{
 
 typedef struct _GC_ROOT_DATA{
 	sll_object_t* single;
-	__SLL_U64* multiple;
+	gc_multiple_root_t* multiple;
 	sll_size_t multiple_length;
 	sll_object_t* fast[GC_FAST_ROOT_DATA_COUNT];
 	fast_root_index_t fast_count;

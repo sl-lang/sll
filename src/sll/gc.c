@@ -408,7 +408,7 @@ __SLL_EXTERNAL void sll_gc_add_roots(sll_object_t*const* pointer,sll_size_t leng
 		return;
 	}
 	SLL_CRITICAL(!(length>>GC_ROOTS_LENGTH_SHIFT));
-	_gc_root_data.multiple=sll_reallocate(_gc_root_data.multiple,(_gc_root_data.multiple_length+1)*sizeof(__SLL_U64));
+	_gc_root_data.multiple=sll_reallocate(_gc_root_data.multiple,(_gc_root_data.multiple_length+1)*sizeof(gc_multiple_root_t));
 	*(_gc_root_data.multiple+_gc_root_data.multiple_length)=GC_ENCODE_ROOT(pointer,length);
 	_gc_root_data.multiple_length++;
 }
@@ -521,7 +521,7 @@ __SLL_EXTERNAL void sll_gc_remove_roots(sll_object_t*const* pointer){
 			i++;
 		}
 		_gc_root_data.multiple_length=i-1;
-		_gc_root_data.multiple=sll_reallocate(_gc_root_data.multiple,_gc_root_data.multiple_length*sizeof(__SLL_U64));
+		_gc_root_data.multiple=sll_reallocate(_gc_root_data.multiple,_gc_root_data.multiple_length*sizeof(gc_multiple_root_t));
 		return;
 	}
 }
