@@ -119,7 +119,17 @@ static void _build_address(const struct sockaddr* addr,socklen_t addr_len,sll_ad
 
 
 
-static void _build_sockaddr(const sll_address_t* address,struct sockaddr** out,socklen_t* out_len){
+static socklen_t _build_sockaddr(const sll_address_t* address,struct sockaddr** out){
+	switch (address->type){
+		case SLL_ADDRESS_TYPE_IPV4:
+			{
+				struct sockaddr_in* data=sll_allocate_stack(sizeof(struct sockaddr_in));
+				*((__SLL_U32*)(&(data->sin_addr)))=SWAP_BYTES(address->data.ipv4.address);
+				data->sin_port=SWAP_BYTES16(address->data.ipv4.port);
+				*out=(struct sockaddr*)data;
+				return sizeof(struct sockaddr_in);
+			}
+	}
 	SLL_UNIMPLEMENTED();
 }
 
@@ -152,8 +162,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_error_t sll_platform_socket_close(sll_file
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_error_t sll_platform_socket_connect(sll_file_descriptor_t socket,const sll_address_t* address){
 	struct sockaddr* addr;
-	socklen_t addr_len;
-	_build_sockaddr(address,&addr,&addr_len);
+	socklen_t addr_len=_build_sockaddr(address,&addr);
 	int ret=connect((int)ADDR(socket),addr,addr_len);
 	sll_deallocate(addr);
 #ifdef __SLL_BUILD_WINDOWS
