@@ -20,6 +20,10 @@
 
 
 
+typedef __SLL_U32 number_parser_state_digit_count_t;
+
+
+
 typedef struct _SCOPE_DATA{
 	bitmap_t* data;
 	sll_scope_t length;
@@ -53,7 +57,7 @@ typedef struct _NUMBER_PARSER_STATE{
 	sll_integer_t hi;
 	sll_integer_t lo;
 	sll_integer_t exp;
-	__SLL_U32 digit_count;
+	number_parser_state_digit_count_t digit_count;
 } number_parser_state_t;
 
 

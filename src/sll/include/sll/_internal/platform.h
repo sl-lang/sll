@@ -11,6 +11,10 @@
 
 
 
+typedef __SLL_U32 file_list_length_t;
+
+
+
 typedef struct _EXECUTE_WRAPPER_DATA{
 	sll_internal_thread_function_t function;
 	void* arg;
@@ -21,7 +25,7 @@ typedef struct _EXECUTE_WRAPPER_DATA{
 
 typedef struct _FILE_LIST_DATA{
 	sll_string_t* data;
-	sll_array_length_t length;
+	file_list_length_t length;
 } file_list_data_t;
 
 
