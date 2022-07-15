@@ -536,10 +536,10 @@
 	(++ idx)
 )
 
-(:> "CHAR: " (,
-	(<- file$flush file$stdout)
-	(<- file$read_char file$stdin)
-) "\n")
+; (:> "CHAR: " (,
+; 	(<- file$flush file$stdout)
+; 	(<- file$read_char file$stdin)
+; ) "\n")
 
 (:> `Raw String\\n ` "\a\n")
 |#|
@@ -682,46 +682,46 @@ abc` '\n')
 
 (:> (<- window_display$enumerate) '\n')
 
-(= window (<- window_window$create [0 0 900 600] nil "Example Window" true))
-(<- window_window$set_geometry window [300 300 1024 1024])
-(<- window_window$set_size_constraints window [300 900] [300 600])
-(= cursor_list [window_cursor$CURSOR_HIDDEN window_cursor$CURSOR_DEFAULT window_cursor$CURSOR_CROSS window_cursor$CURSOR_I_BEAM window_cursor$CURSOR_WAIT window_cursor$CURSOR_BUSY window_cursor$CURSOR_FORBIDDEN window_cursor$CURSOR_POINTER window_cursor$CURSOR_RESIZE_VERTICAL window_cursor$CURSOR_RESIZE_HORIZONTAL window_cursor$CURSOR_RESIZE_DIAGONAL_BT window_cursor$CURSOR_RESIZE_DIAGONAL_TB window_cursor$CURSOR_RESIZE_ALL window_cursor$CURSOR_HELP])
-(= cursor_list_index 1)
-(= example_icon (. window_image$window_image_type
-	2
-	2
-	"\xff\x00\x00\xff\x00\xff\x00\xff\x00\x00\xff\xff\xff\xff\x00\xff"
-))
-(= window$callbacks$key_down (,,, window key
-	(?? key
-		window_keyboard$KEY_ESCAPE (<- window_window$destroy window)
-		'1' (<- window_window$set_state window window_window$STATE_MINIMIZED)
-		'2' (<- window_window$set_state window window_window$STATE_NORMAL)
-		'3' (<- window_window$set_state window window_window$STATE_MAXIMIZED)
-		'4' (<- window_window$set_state window window_window$STATE_FULLSCREEN)
-		'C' (:> (<- window_cursor$get) '\n')
-		'D' (<- window_cursor$center window)
-		'K' (<- window_window$set_icon window example_icon)
-		'L' (<- window_window$set_icon window nil)
-		'S' (<- window_cursor$center)
-		window_keyboard$KEY_LEFT {
-			(? (! cursor_list_index) (= cursor_list_index ($ cursor_list)))
-			(-- cursor_list_index)
-			(<- window_window$set_cursor window (: cursor_list cursor_list_index))
-		}
-		window_keyboard$KEY_RIGHT {
-			(++ cursor_list_index)
-			(? (=== cursor_list_index ($ cursor_list)) (= cursor_list_index 0))
-			(<- window_window$set_cursor window (: cursor_list cursor_list_index))
-		}
-	)
-))
-(-> nil (&&
-	(! (<- file$read file$stdin 1 true))
-	(! (& window$flags window_window$FLAG_CLOSED))
-)
-	(<- window_event$poll true)
-)
+; (= window (<- window_window$create [0 0 900 600] nil "Example Window" true))
+; (<- window_window$set_geometry window [300 300 1024 1024])
+; (<- window_window$set_size_constraints window [300 900] [300 600])
+; (= cursor_list [window_cursor$CURSOR_HIDDEN window_cursor$CURSOR_DEFAULT window_cursor$CURSOR_CROSS window_cursor$CURSOR_I_BEAM window_cursor$CURSOR_WAIT window_cursor$CURSOR_BUSY window_cursor$CURSOR_FORBIDDEN window_cursor$CURSOR_POINTER window_cursor$CURSOR_RESIZE_VERTICAL window_cursor$CURSOR_RESIZE_HORIZONTAL window_cursor$CURSOR_RESIZE_DIAGONAL_BT window_cursor$CURSOR_RESIZE_DIAGONAL_TB window_cursor$CURSOR_RESIZE_ALL window_cursor$CURSOR_HELP])
+; (= cursor_list_index 1)
+; (= example_icon (. window_image$window_image_type
+; 	2
+; 	2
+; 	"\xff\x00\x00\xff\x00\xff\x00\xff\x00\x00\xff\xff\xff\xff\x00\xff"
+; ))
+; (= window$callbacks$key_down (,,, window key
+; 	(?? key
+; 		window_keyboard$KEY_ESCAPE (<- window_window$destroy window)
+; 		'1' (<- window_window$set_state window window_window$STATE_MINIMIZED)
+; 		'2' (<- window_window$set_state window window_window$STATE_NORMAL)
+; 		'3' (<- window_window$set_state window window_window$STATE_MAXIMIZED)
+; 		'4' (<- window_window$set_state window window_window$STATE_FULLSCREEN)
+; 		'C' (:> (<- window_cursor$get) '\n')
+; 		'D' (<- window_cursor$center window)
+; 		'K' (<- window_window$set_icon window example_icon)
+; 		'L' (<- window_window$set_icon window nil)
+; 		'S' (<- window_cursor$center)
+; 		window_keyboard$KEY_LEFT {
+; 			(? (! cursor_list_index) (= cursor_list_index ($ cursor_list)))
+; 			(-- cursor_list_index)
+; 			(<- window_window$set_cursor window (: cursor_list cursor_list_index))
+; 		}
+; 		window_keyboard$KEY_RIGHT {
+; 			(++ cursor_list_index)
+; 			(? (=== cursor_list_index ($ cursor_list)) (= cursor_list_index 0))
+; 			(<- window_window$set_cursor window (: cursor_list cursor_list_index))
+; 		}
+; 	)
+; ))
+; (-> nil (&&
+; 	(! (<- file$read file$stdin 1 true))
+; 	(! (& window$flags window_window$FLAG_CLOSED))
+; )
+; 	(<- window_event$poll true)
+; )
 (:> window '\n')
 (:> [. . . . . . . .] '\n')
 (:> "AAA" "B" '\n')
