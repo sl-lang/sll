@@ -1,4 +1,4 @@
-# Sll [0.7.26] - Ongoing
+# Sll [0.7.26] - 2022-07-16
 
 ## Added
 
@@ -18,4 +18,4 @@
 
 - Obsolete TLS API
 
-[0.7.26]: https://github.com/sl-lang/sll/compare/sll-v0.7.25...main
+[0.7.26]: https://github.com/sl-lang/sll/compare/sll-v0.7.25...sll-v0.7.26
