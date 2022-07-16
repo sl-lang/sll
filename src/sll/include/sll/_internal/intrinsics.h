@@ -12,9 +12,14 @@
 
 #ifdef __SLL_BUILD_WINDOWS
 #pragma intrinsic(_BitScanForward64)
+#pragma intrinsic(_BitScanReverse64)
+#pragma intrinsic(_byteswap_ushort)
+#pragma intrinsic(_byteswap_ulong)
+#pragma intrinsic(_byteswap_uint64)
 #pragma intrinsic(__popcnt64)
 #pragma intrinsic(_rotl)
-#pragma intrinsic(_rotl64)
+#pragma intrinsic(_rotr)
+#pragma intrinsic(_rotr64)
 static __SLL_FORCE_INLINE __SLL_U32 FIND_FIRST_SET_BIT(__SLL_U64 m){
 	unsigned long o;
 	_BitScanForward64(&o,m);
