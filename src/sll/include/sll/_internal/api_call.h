@@ -19,7 +19,6 @@
 typedef union _API_RETURN_VALUE{
 	sll_integer_t int_;
 	sll_float_t float_;
-	sll_char_t char_;
 	sll_complex_t complex_;
 	sll_number_t number;
 	sll_string_t string;

@@ -63,7 +63,7 @@ sll_object_t* _call_api_func(sll_function_index_t fn,sll_object_t*const* al,sll_
 				out=sll_float_to_object(ret_any.float_);
 				break;
 			case 'c':
-				out=SLL_FROM_CHAR(ret_any.char_);
+				out=SLL_FROM_CHAR(ret&0xff);
 				break;
 			case 'd':
 				out=sll_complex_to_object(&(ret_any.complex_));
