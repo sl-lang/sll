@@ -100,14 +100,14 @@
 		(= bracked_idx (<- string$index type '['))
 		(? (!== bracked_idx -1) (= type (: type 0 bracked_idx)))
 		(= type (<- string$trim type))
-		(? (<- string$starts type "struct ") {
+		(:> [type (<- string$starts type "struct ")] '\n')
+		(? (<- string$starts type "struct ")
 			(? (! (|: struct_decl_list type)) (<- array$push struct_decl_list type))
-		} {
 			(? (&&
 				(! (|: config$BUILTIN_TYPES type))
 				(! (|: out type))
 			) (<- array$push out type))
-		})
+		)
 		(++ i)
 	)
 	(@@ out)
@@ -302,6 +302,7 @@ extern "C" {
 		(<- file$write fh (: define_macros i) '\n')
 		(++ i)
 	)
+	(:> struct_decl_list '\n')
 	(<- log$log "    Generating types...")
 	(-> (= i 0) (< i ($ struct_decl_list))
 		(<- file$write fh (: struct_decl_list i) ";\n")
@@ -394,6 +395,7 @@ extern "C" {
 #endif
 `)
 	(<- file$close fh)
+	(<- util$fail_and_exit)
 ))
 
 
