@@ -57,6 +57,7 @@ sll_object_t* _call_api_func(sll_function_index_t fn,sll_object_t*const* al,sll_
 				break;
 			case 'Q':
 			case 'i':
+			default:
 				out=sll_int_to_object(ret);
 				break;
 			case 'f':
@@ -94,8 +95,6 @@ sll_object_t* _call_api_func(sll_function_index_t fn,sll_object_t*const* al,sll_
 			case 'v':
 				out=SLL_ACQUIRE_STATIC_INT(0);
 				break;
-			default:
-				SLL_UNREACHABLE();
 		}
 	}
 	sll_free_args(arg_state);
