@@ -21,20 +21,20 @@ static void _create_function(sll_internal_function_pointer_t fn,const sll_char_t
 __SLL_EXTERNAL void sll_clone_internal_function_table(sll_internal_function_table_t* internal_function_table,sll_internal_function_table_t* out){
 	out->length=internal_function_table->length;
 	out->data=sll_allocate(out->length*sizeof(const sll_internal_function_t));
-	sll_internal_function_t* p=(sll_internal_function_t*)(out->data);
+	sll_internal_function_t* ptr=(sll_internal_function_t*)(out->data);
 	for (sll_function_index_t i=0;i<internal_function_table->length;i++){
-		sll_string_clone(&((internal_function_table->data+i)->name),&(p->name));
-		p->function=(internal_function_table->data+i)->function;
+		sll_string_clone(&((internal_function_table->data+i)->name),&(ptr->name));
+		ptr->function=(internal_function_table->data+i)->function;
 		sll_string_length_t sz=sll_string_length((internal_function_table->data+i)->format)+1;
-		p->format=sll_allocate(sz);
-		sll_copy_data((internal_function_table->data+i)->format,sz,p->format);
-		p->_return_value=(internal_function_table->data+i)->_return_value;
-		p->_arg_count=(internal_function_table->data+i)->_arg_count;
-		p->_arg_size=(internal_function_table->data+i)->_arg_size;
-		sz=(((p->_arg_count<<1)+65)>>6)*sizeof(bitmap_t);
-		p->_registers=sll_allocate(sz);
-		sll_copy_data((internal_function_table->data+i)->_registers,sz,p->_registers);
-		p++;
+		ptr->format=sll_allocate(sz);
+		sll_copy_data((internal_function_table->data+i)->format,sz,ptr->format);
+		ptr->_return_value=(internal_function_table->data+i)->_return_value;
+		ptr->_arg_count=(internal_function_table->data+i)->_arg_count;
+		ptr->_arg_size=(internal_function_table->data+i)->_arg_size;
+		sz=(((ptr->_arg_count<<1)+65)>>6)*sizeof(bitmap_t);
+		ptr->_registers=sll_allocate(sz);
+		sll_copy_data((internal_function_table->data+i)->_registers,sz,ptr->_registers);
+		ptr++;
 	}
 }
 
