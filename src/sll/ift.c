@@ -48,12 +48,12 @@ __SLL_EXTERNAL void sll_create_internal_function_table(sll_internal_function_tab
 
 
 __SLL_EXTERNAL void sll_free_internal_function_table(sll_internal_function_table_t* internal_function_table){
-	sll_internal_function_t* f=(sll_internal_function_t*)(internal_function_table->data);
+	sll_internal_function_t* ptr=(sll_internal_function_t*)(internal_function_table->data);
 	for (sll_function_index_t i=0;i<internal_function_table->length;i++){
-		sll_free_string(&(f->name));
-		sll_deallocate(f->format);
-		sll_deallocate(f->_registers);
-		f++;
+		sll_free_string(&(ptr->name));
+		sll_deallocate(ptr->format);
+		sll_deallocate(ptr->_registers);
+		ptr++;
 	}
 	sll_deallocate(PTR(internal_function_table->data));
 	internal_function_table->data=NULL;
