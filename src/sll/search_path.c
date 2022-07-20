@@ -54,17 +54,17 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_search_path_find(const sll_sear
 	if (name->length==SLL_API_MAX_FILE_PATH_LENGTH-1){
 		return 0;
 	}
-	sll_char_t bf[SLL_API_MAX_FILE_PATH_LENGTH];
-	sll_copy_data(name->data,name->length+1,bf+SLL_API_MAX_FILE_PATH_LENGTH-name->length-1);
+	sll_char_t buffer[SLL_API_MAX_FILE_PATH_LENGTH];
+	sll_copy_data(name->data,name->length+1,buffer+SLL_API_MAX_FILE_PATH_LENGTH-name->length-1);
 	sll_string_length_t sz=SLL_API_MAX_FILE_PATH_LENGTH-name->length-2;
 	if (!sz){
 		return 0;
 	}
-	bf[sz]=SLL_API_FILE_PATH_SEPARATOR;
+	buffer[sz]=SLL_API_FILE_PATH_SEPARATOR;
 	for (sll_search_path_length_t i=0;i<search_path->length;i++){
 		if ((search_path->data+i)->length<=sz){
-			sll_copy_data((search_path->data+i)->data,(search_path->data+i)->length,bf+sz-(search_path->data+i)->length);
-			if (sll_platform_path_exists(bf+sz-(search_path->data+i)->length)){
+			sll_copy_data((search_path->data+i)->data,(search_path->data+i)->length,buffer+sz-(search_path->data+i)->length);
+			if (sll_platform_path_exists(buffer+sz-(search_path->data+i)->length)){
 				const sll_string_t* dt[2]={
 					search_path->data+i,
 					name
