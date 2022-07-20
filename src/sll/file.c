@@ -63,20 +63,20 @@ void _file_end_hash(sll_file_t* file){
 	if ((file->flags&(SLL_FILE_FLAG_READ|SLL_FILE_FLAG_SOCKET))!=SLL_FILE_FLAG_READ||file->data.file._hash.buffer_offset==DISABLE_FILE_HASH){
 		return;
 	}
-	sll_char_t tmp[128];
-	sll_set_memory(tmp,128,0);
-	sll_copy_data(file->data.file._hash.buffer,file->data.file._hash.buffer_offset,tmp);
+	sll_char_t buffer[128];
+	sll_zero_memory(buffer,128);
+	sll_copy_data(file->data.file._hash.buffer,file->data.file._hash.buffer_offset,buffer);
 	__SLL_U8 offset=(file->data.file._hash.buffer_offset<56?56:120);
-	tmp[file->data.file._hash.buffer_offset]=128;
-	tmp[offset]=(file->data.file._offset>>53)&0xff;
-	tmp[offset+1]=(file->data.file._offset>>45)&0xff;
-	tmp[offset+2]=(file->data.file._offset>>37)&0xff;
-	tmp[offset+3]=(file->data.file._offset>>29)&0xff;
-	tmp[offset+4]=(file->data.file._offset>>21)&0xff;
-	tmp[offset+5]=(file->data.file._offset>>13)&0xff;
-	tmp[offset+6]=(file->data.file._offset>>5)&0xff;
-	tmp[offset+7]=(file->data.file._offset<<3)&0xff;
-	sll_hash_sha256(&(file->data.file._hash.hash),tmp,(file->data.file._hash.buffer_offset<56?64:128));
+	buffer[file->data.file._hash.buffer_offset]=128;
+	buffer[offset]=(file->data.file._offset>>53)&0xff;
+	buffer[offset+1]=(file->data.file._offset>>45)&0xff;
+	buffer[offset+2]=(file->data.file._offset>>37)&0xff;
+	buffer[offset+3]=(file->data.file._offset>>29)&0xff;
+	buffer[offset+4]=(file->data.file._offset>>21)&0xff;
+	buffer[offset+5]=(file->data.file._offset>>13)&0xff;
+	buffer[offset+6]=(file->data.file._offset>>5)&0xff;
+	buffer[offset+7]=(file->data.file._offset<<3)&0xff;
+	sll_hash_sha256(&(file->data.file._hash.hash),buffer,(file->data.file._hash.buffer_offset<56?64:128));
 }
 
 
