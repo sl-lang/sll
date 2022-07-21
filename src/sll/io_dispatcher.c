@@ -41,18 +41,18 @@ static sll_thread_index_t _restart_thread(event_list_length_t idx){
 		SLL_UNIMPLEMENTED();
 	}
 	else{
-		sll_string_t bf;
-		sll_string_create(evt->size,&bf);
+		sll_string_t buffer;
+		sll_string_create(evt->size,&buffer);
 		sll_error_t err;
-		sll_size_t sz=sll_file_read(evt->file,bf.data,evt->size,&err);
+		sll_size_t sz=sll_file_read(evt->file,buffer.data,evt->size,&err);
 		if (!sz&&err!=SLL_NO_ERROR){
-			sll_free_string(&bf);
+			sll_free_string(&buffer);
 			out=sll_int_to_object(err);
 		}
 		else{
-			sll_string_decrease(&bf,(sll_string_length_t)sz);
-			sll_string_calculate_checksum(&bf);
-			out=STRING_TO_OBJECT_NOCOPY(&bf);
+			sll_string_decrease(&buffer,(sll_string_length_t)sz);
+			sll_string_calculate_checksum(&buffer);
+			out=STRING_TO_OBJECT_NOCOPY(&buffer);
 		}
 	}
 	sll_thread_index_t tid=evt->thread_index;
