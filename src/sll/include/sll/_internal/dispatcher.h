@@ -13,12 +13,12 @@
 
 
 #ifdef __SLL_BUILD_WINDOWS
-#define INIT_RAW_EVENT(r,f) (*(r)=(f))
+#define INIT_RAW_EVENT(raw,fd) (*(raw)=(fd))
 #else
-#define INIT_RAW_EVENT(r,f) \
+#define INIT_RAW_EVENT(raw,fd) \
 	do{ \
-		(r)->fd=(int)ADDR((f)); \
-		(r)->events=POLLIN; \
+		(raw)->fd=(int)ADDR((fd)); \
+		(raw)->events=POLLIN; \
 	} while (0)
 #endif
 
