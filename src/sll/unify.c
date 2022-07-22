@@ -221,7 +221,10 @@ __SLL_EXTERNAL void sll_unify_compilation_data(const sll_compilation_data_t* com
 					SLL_IDENTIFIER_SET_STRING_INDEX(output_identifier_list->data+off+j,*(source_file_mapping_data.string_map+SLL_IDENTIFIER_GET_STRING_INDEX(identifier_list->data+j)),SLL_IDENTIFIER_IS_TLS(identifier_list->data+j));
 				}
 			}
-			if (source_file->identifier_table.long_data_length){
+			if (!source_file->identifier_table.long_data_length){
+				source_file_mapping_data.identifier_index_offset[SLL_MAX_SHORT_IDENTIFIER_LENGTH]=NULL;
+			}
+			else{
 				sll_identifier_list_length_t off=out->identifier_table.long_data_length;
 				source_file_mapping_data.identifier_index_offset[SLL_MAX_SHORT_IDENTIFIER_LENGTH]=sll_allocate_stack(source_file->identifier_table.long_data_length*sizeof(sll_identifier_index_t));
 				out->identifier_table.long_data_length+=source_file->identifier_table.long_data_length;
@@ -231,9 +234,6 @@ __SLL_EXTERNAL void sll_unify_compilation_data(const sll_compilation_data_t* com
 					(out->identifier_table.long_data+off+i)->scope=(source_file->identifier_table.long_data+i)->scope+out->_next_scope;
 					SLL_IDENTIFIER_SET_STRING_INDEX(out->identifier_table.long_data+off+i,*(source_file_mapping_data.string_map+SLL_IDENTIFIER_GET_STRING_INDEX(source_file->identifier_table.long_data+i)),SLL_IDENTIFIER_IS_TLS(source_file->identifier_table.long_data+i));
 				}
-			}
-			else{
-				source_file_mapping_data.identifier_index_offset[SLL_MAX_SHORT_IDENTIFIER_LENGTH]=NULL;
 			}
 			for (sll_import_index_t i=0;i<source_file->import_table.length;i++){
 				sll_import_file_t* k=*(source_file->import_table.data+i);
