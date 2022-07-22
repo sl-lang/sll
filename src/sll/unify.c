@@ -48,20 +48,20 @@ static const sll_node_t* _clone_node(const sll_node_t* src,sll_source_file_t* ou
 			return src+1;
 		case SLL_NODE_TYPE_ARRAY:
 			{
-				sll_array_length_t l=src->data.array_length;
+				sll_array_length_t length=src->data.array_length;
 				src++;
-				while (l){
-					l--;
+				while (length){
+					length--;
 					src=_clone_node(src,out,source_file_mapping_data);
 				}
 				return src;
 			}
 		case SLL_NODE_TYPE_MAP:
 			{
-				sll_map_length_t l=src->data.map_length;
+				sll_map_length_t length=src->data.map_length;
 				src++;
-				while (l){
-					l--;
+				while (length){
+					length--;
 					src=_clone_node(src,out,source_file_mapping_data);
 				}
 				return src;
@@ -73,10 +73,10 @@ static const sll_node_t* _clone_node(const sll_node_t* src,sll_source_file_t* ou
 			}
 		case SLL_NODE_TYPE_INTERNAL_FUNC:
 			{
-				sll_arg_count_t l=src->data.function.arg_count;
+				sll_arg_count_t length=src->data.function.arg_count;
 				src++;
-				while (l){
-					l--;
+				while (length){
+					length--;
 					src=_clone_node(src,out,source_file_mapping_data);
 				}
 				return src;
