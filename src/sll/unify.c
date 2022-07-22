@@ -205,20 +205,20 @@ __SLL_EXTERNAL void sll_unify_compilation_data(const sll_compilation_data_t* com
 				out->file_path_string_index=dbg->data.string_index;
 			}
 			for (unsigned int i=0;i<SLL_MAX_SHORT_IDENTIFIER_LENGTH;i++){
-				const sll_identifier_list_t* il=source_file->identifier_table.short_+i;
-				if (!il->length){
+				const sll_identifier_list_t* identifier_list=source_file->identifier_table.short_+i;
+				if (!identifier_list->length){
 					source_file_mapping_data.identifier_index_offset[i]=NULL;
 					continue;
 				}
 				sll_identifier_list_t* output_identifier_list=out->identifier_table.short_+i;
 				sll_identifier_list_length_t off=output_identifier_list->length;
-				source_file_mapping_data.identifier_index_offset[i]=sll_allocate_stack(il->length*sizeof(sll_identifier_index_t));
-				output_identifier_list->length+=il->length;
+				source_file_mapping_data.identifier_index_offset[i]=sll_allocate_stack(identifier_list->length*sizeof(sll_identifier_index_t));
+				output_identifier_list->length+=identifier_list->length;
 				output_identifier_list->data=sll_reallocate(output_identifier_list->data,output_identifier_list->length*sizeof(sll_identifier_t));
-				for (sll_identifier_list_length_t j=0;j<il->length;j++){
+				for (sll_identifier_list_length_t j=0;j<identifier_list->length;j++){
 					*(source_file_mapping_data.identifier_index_offset[i]+j)=SLL_CREATE_IDENTIFIER(off+j,i);
-					(output_identifier_list->data+off+j)->scope=(il->data+j)->scope+out->_next_scope;
-					SLL_IDENTIFIER_SET_STRING_INDEX(output_identifier_list->data+off+j,*(source_file_mapping_data.string_map+SLL_IDENTIFIER_GET_STRING_INDEX(il->data+j)),SLL_IDENTIFIER_IS_TLS(il->data+j));
+					(output_identifier_list->data+off+j)->scope=(identifier_list->data+j)->scope+out->_next_scope;
+					SLL_IDENTIFIER_SET_STRING_INDEX(output_identifier_list->data+off+j,*(source_file_mapping_data.string_map+SLL_IDENTIFIER_GET_STRING_INDEX(identifier_list->data+j)),SLL_IDENTIFIER_IS_TLS(identifier_list->data+j));
 				}
 			}
 			if (source_file->identifier_table.long_data_length){
