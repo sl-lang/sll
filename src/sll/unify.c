@@ -92,10 +92,10 @@ static const sll_node_t* _clone_node(const sll_node_t* src,sll_source_file_t* ou
 				if (source_file_mapping_data){
 					dst->data.loop.scope+=source_file_mapping_data->scope_offset;
 				}
-				sll_arg_count_t l=src->data.loop.arg_count;
+				sll_arg_count_t length=src->data.loop.arg_count;
 				src++;
-				while (l){
-					l--;
+				while (length){
+					length--;
 					src=_clone_node(src,out,source_file_mapping_data);
 				}
 				return src;
@@ -105,19 +105,19 @@ static const sll_node_t* _clone_node(const sll_node_t* src,sll_source_file_t* ou
 				if (source_file_mapping_data&&dst->data.declaration.name_string_index!=SLL_MAX_STRING_INDEX){
 					dst->data.declaration.name_string_index=*(source_file_mapping_data->string_map+dst->data.declaration.name_string_index);
 				}
-				sll_arg_count_t l=src->data.declaration.arg_count;
+				sll_arg_count_t length=src->data.declaration.arg_count;
 				src++;
-				while (l){
-					l--;
+				while (length){
+					length--;
 					src=_clone_node(src,out,source_file_mapping_data);
 				}
 				return src;
 			}
 	}
-	sll_arg_count_t l=src->data.arg_count;
+	sll_arg_count_t length=src->data.arg_count;
 	src++;
-	while (l){
-		l--;
+	while (length){
+		length--;
 		src=_clone_node(src,out,source_file_mapping_data);
 	}
 	return src;
