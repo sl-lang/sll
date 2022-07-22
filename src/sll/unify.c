@@ -238,16 +238,16 @@ __SLL_EXTERNAL void sll_unify_compilation_data(const sll_compilation_data_t* com
 			for (sll_import_index_t i=0;i<source_file->import_table.length;i++){
 				sll_import_file_t* k=*(source_file->import_table.data+i);
 				SLL_ASSERT(k->source_file_index);
-				sll_identifier_index_t* ex_dt=*(export_identifiers+k->source_file_index-1);
+				sll_identifier_index_t* export_data=*(export_identifiers+k->source_file_index-1);
 				for (sll_identifier_list_length_t j=0;j<k->length;j++){
-					*(source_file_mapping_data.identifier_index_offset[SLL_IDENTIFIER_GET_ARRAY_ID(k->data[j])]+SLL_IDENTIFIER_GET_ARRAY_INDEX(k->data[j]))=*(ex_dt+j);
+					*(source_file_mapping_data.identifier_index_offset[SLL_IDENTIFIER_GET_ARRAY_ID(k->data[j])]+SLL_IDENTIFIER_GET_ARRAY_INDEX(k->data[j]))=*(export_data+j);
 				}
 			}
 			if (compilation_data_index){
-				sll_identifier_index_t* ex_dt=sll_allocate_stack(source_file->export_table.length*sizeof(sll_identifier_index_t));
-				*(export_identifiers+compilation_data_index-1)=ex_dt;
+				sll_identifier_index_t* export_data=sll_allocate_stack(source_file->export_table.length*sizeof(sll_identifier_index_t));
+				*(export_identifiers+compilation_data_index-1)=export_data;
 				for (sll_export_table_length_t i=0;i<source_file->export_table.length;i++){
-					*(ex_dt+i)=*(source_file_mapping_data.identifier_index_offset[SLL_IDENTIFIER_GET_ARRAY_ID(*(source_file->export_table.data+i))]+SLL_IDENTIFIER_GET_ARRAY_INDEX(*(source_file->export_table.data+i)));
+					*(export_data+i)=*(source_file_mapping_data.identifier_index_offset[SLL_IDENTIFIER_GET_ARRAY_ID(*(source_file->export_table.data+i))]+SLL_IDENTIFIER_GET_ARRAY_INDEX(*(source_file->export_table.data+i)));
 				}
 			}
 			if (source_file->function_table.length){
