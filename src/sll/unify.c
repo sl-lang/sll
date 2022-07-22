@@ -254,15 +254,15 @@ __SLL_EXTERNAL void sll_unify_compilation_data(const sll_compilation_data_t* com
 				out->function_table.length+=source_file->function_table.length;
 				out->function_table.data=sll_reallocate(out->function_table.data,out->function_table.length*sizeof(sll_function_t*));
 				for (sll_function_index_t i=0;i<source_file->function_table.length;i++){
-					const sll_function_t* s=*(source_file->function_table.data+i);
-					sll_function_t* d=sll_allocate(sizeof(sll_function_t)+s->arg_count*sizeof(sll_identifier_index_t));
-					*(out->function_table.data+source_file_mapping_data.function_index_offset+i)=d;
-					d->offset=s->offset+out->_stack.offset;
-					d->name_string_index=(s->name_string_index==SLL_MAX_STRING_INDEX?SLL_MAX_STRING_INDEX:*(source_file_mapping_data.string_map+s->name_string_index));
-					d->description_string_index=(s->description_string_index==SLL_MAX_STRING_INDEX?SLL_MAX_STRING_INDEX:*(source_file_mapping_data.string_map+s->description_string_index));
-					d->arg_count=s->arg_count;
-					for (sll_arg_count_t j=0;j<SLL_FUNCTION_GET_ARGUMENT_COUNT(s);j++){
-						d->args[j]=*(source_file_mapping_data.identifier_index_offset[SLL_IDENTIFIER_GET_ARRAY_ID(s->args[j])]+SLL_IDENTIFIER_GET_ARRAY_INDEX(s->args[j]));
+					const sll_function_t* function=*(source_file->function_table.data+i);
+					sll_function_t* out_function=sll_allocate(sizeof(sll_function_t)+function->arg_count*sizeof(sll_identifier_index_t));
+					*(out->function_table.data+source_file_mapping_data.function_index_offset+i)=out_function;
+					out_function->offset=function->offset+out->_stack.offset;
+					out_function->name_string_index=(function->name_string_index==SLL_MAX_STRING_INDEX?SLL_MAX_STRING_INDEX:*(source_file_mapping_data.string_map+function->name_string_index));
+					out_function->description_string_index=(function->description_string_index==SLL_MAX_STRING_INDEX?SLL_MAX_STRING_INDEX:*(source_file_mapping_data.string_map+function->description_string_index));
+					out_function->arg_count=function->arg_count;
+					for (sll_arg_count_t j=0;j<SLL_FUNCTION_GET_ARGUMENT_COUNT(function);j++){
+						out_function->args[j]=*(source_file_mapping_data.identifier_index_offset[SLL_IDENTIFIER_GET_ARRAY_ID(function->args[j])]+SLL_IDENTIFIER_GET_ARRAY_INDEX(function->args[j]));
 					}
 				}
 			}
