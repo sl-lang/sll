@@ -5,30 +5,6 @@
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_identifier_index_t sll_identifier_add_index(sll_identifier_index_t identifier_index,sll_identifier_index_t delta_index){
-	return SLL_IDENTIFIER_ADD_INDEX(identifier_index,delta_index);
-}
-
-
-
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_identifier_index_t sll_identifier_create(sll_identifier_index_t index,sll_identifier_index_t id){
-	return SLL_CREATE_IDENTIFIER(index,id);
-}
-
-
-
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_identifier_index_t sll_identifier_get_array_id(sll_identifier_index_t identifier_index){
-	return SLL_IDENTIFIER_GET_ARRAY_ID(identifier_index);
-}
-
-
-
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_identifier_index_t sll_identifier_get_array_index(sll_identifier_index_t identifier_index){
-	return SLL_IDENTIFIER_GET_ARRAY_INDEX(identifier_index);
-}
-
-
-
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_index_t sll_identifier_get_string_index(sll_identifier_t* identifier){
 	return SLL_IDENTIFIER_GET_STRING_INDEX(identifier);
 }

@@ -41,18 +41,10 @@ typedef struct _IDENTIFIER_DATA{
 
 
 typedef struct _IDENTIFIER_MAP_DATA{
-	identifier_data_t* short_identifier_map[SLL_MAX_SHORT_IDENTIFIER_LENGTH];
-	identifier_data_t* long_identifier_map;
+	identifier_data_t* data;
 	sll_variable_index_t variable_count;
 	sll_variable_index_t tls_variable_count;
 } identifier_map_data_t;
-
-
-
-typedef struct _IDENTIFIER_REMOVE_DATA{
-	void** short_[SLL_MAX_SHORT_IDENTIFIER_LENGTH];
-	void** long_;
-} identifier_remove_data_t;
 
 
 
@@ -68,7 +60,7 @@ typedef struct _ASSEMBLY_GENERATOR_DATA{
 	const sll_source_file_t* source_file;
 	identifier_map_data_t identifier_map;
 	assembly_instruction_label_t next_label;
-	identifier_remove_data_t identifier_remove_data;
+	void** identifier_remove_data;
 	loop_t loop_data;
 	assembly_instruction_label_t return_label;
 	sll_stack_offset_t stack_offset;

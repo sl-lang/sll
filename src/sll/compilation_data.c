@@ -37,15 +37,9 @@ __SLL_EXTERNAL void sll_free_source_file(sll_source_file_t* source_file){
 	source_file->time=0;
 	source_file->file_size=0;
 	source_file->first_node=NULL;
-	for (unsigned int i=0;i<SLL_MAX_SHORT_IDENTIFIER_LENGTH;i++){
-		sll_identifier_list_t* e=source_file->identifier_table.short_+i;
-		sll_deallocate(e->data);
-		e->data=NULL;
-		e->length=0;
-	}
-	sll_deallocate(source_file->identifier_table.long_data);
-	source_file->identifier_table.long_data=NULL;
-	source_file->identifier_table.long_data_length=0;
+	sll_deallocate(source_file->identifier_table.data);
+	source_file->identifier_table.data=NULL;
+	source_file->identifier_table.length=0;
 	sll_deallocate(source_file->export_table.data);
 	source_file->export_table.data=NULL;
 	source_file->export_table.length=0;
@@ -89,12 +83,8 @@ __SLL_EXTERNAL void sll_init_compilation_data(const sll_char_t* file_path,sll_co
 	sf->time=sll_platform_get_current_time();
 	sf->file_size=0;
 	sf->first_node=NULL;
-	for (unsigned int i=0;i<SLL_MAX_SHORT_IDENTIFIER_LENGTH;i++){
-		sf->identifier_table.short_[i].data=NULL;
-		sf->identifier_table.short_[i].length=0;
-	}
-	sf->identifier_table.long_data=NULL;
-	sf->identifier_table.long_data_length=0;
+	sf->identifier_table.data=NULL;
+	sf->identifier_table.length=0;
 	sf->export_table.data=NULL;
 	sf->export_table.length=0;
 	sf->function_table.data=NULL;

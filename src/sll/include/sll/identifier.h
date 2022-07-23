@@ -1,6 +1,5 @@
 #ifndef __SLL_IDENTIFIER_H__
 #define __SLL_IDENTIFIER_H__ 1
-#include <sll/_identifier.h>
 #include <sll/_size_types.h>
 #include <sll/common.h>
 #include <sll/string_table.h>
@@ -33,67 +32,6 @@
  * \type sll_identifier_index_t
  */
 #define SLL_MAX_IDENTIFIER_INDEX __SLL_U32_MAX
-
-
-
-/**
- * \flags macro var
- * \name SLL_MAX_IDENTIFIER_LIST_LENGTH
- * \group identifier
- * \desc Docs!
- * \type sll_identifier_list_length_t
- */
-#define SLL_MAX_IDENTIFIER_LIST_LENGTH __SLL_U32_MAX
-
-
-
-/**
- * \flags func macro
- * \name SLL_IDENTIFIER_GET_ARRAY_ID
- * \group identifier
- * \desc Docs!
- * \arg sll_identifier_index_t identifier_index
- * \ret sll_identifier_index_t
- */
-#define SLL_IDENTIFIER_GET_ARRAY_ID(identifier_index) ((identifier_index)&0xf)
-
-
-
-/**
- * \flags func macro
- * \name SLL_IDENTIFIER_GET_ARRAY_INDEX
- * \group identifier
- * \desc Docs!
- * \arg sll_identifier_index_t identifier_index
- * \ret sll_identifier_index_t
- */
-#define SLL_IDENTIFIER_GET_ARRAY_INDEX(identifier_index) ((identifier_index)>>4)
-
-
-
-/**
- * \flags func macro
- * \name SLL_IDENTIFIER_ADD_INDEX
- * \group identifier
- * \desc Docs!
- * \arg sll_identifier_index_t identifier_index
- * \arg sll_identifier_index_t delta_index
- * \ret sll_identifier_index_t
- */
-#define SLL_IDENTIFIER_ADD_INDEX(identifier_index,delta_index) ((identifier_index)+((delta_index)<<4))
-
-
-
-/**
- * \flags func macro
- * \name SLL_CREATE_IDENTIFIER
- * \group identifier
- * \desc Docs!
- * \arg sll_identifier_index_t index
- * \arg sll_identifier_index_t id
- * \ret sll_identifier_index_t
- */
-#define SLL_CREATE_IDENTIFIER(index,id) (((index)<<4)|(id))
 
 
 
@@ -159,12 +97,12 @@ typedef __SLL_U32 sll_identifier_index_t;
 
 /**
  * \flags type var
- * \name sll_identifier_list_length_t
+ * \name sll_identifier_table_length_t
  * \group identifier
  * \desc Docs!
  * \type __SLL_U32
  */
-typedef __SLL_U32 sll_identifier_list_length_t;
+typedef __SLL_U32 sll_identifier_table_length_t;
 
 
 
@@ -196,83 +134,16 @@ typedef struct _SLL_IDENTIFIER{
 
 /**
  * \flags type
- * \name sll_identifier_list_t
- * \group identifier
- * \desc Docs!
- * \arg sll_identifier_t* data
- * \arg sll_identifier_list_length_t length
- */
-typedef struct _SLL_IDENTIFIER_LIST{
-	sll_identifier_t* data;
-	sll_identifier_list_length_t length;
-} sll_identifier_list_t;
-
-
-
-/**
- * \flags type
  * \name sll_identifier_table_t
  * \group identifier
  * \desc Docs!
- * \arg sll_identifier_list_t[SLL_MAX_SHORT_IDENTIFIER_LENGTH] short_
- * \arg sll_identifier_t* long_data
- * \arg sll_identifier_list_length_t long_data_length
+ * \arg sll_identifier_t* data
+ * \arg sll_identifier_table_length_t length
  */
 typedef struct _SLL_IDENTIFIER_TABLE{
-	sll_identifier_list_t short_[SLL_MAX_SHORT_IDENTIFIER_LENGTH];
-	sll_identifier_t* long_data;
-	sll_identifier_list_length_t long_data_length;
+	sll_identifier_t* data;
+	sll_identifier_table_length_t length;
 } sll_identifier_table_t;
-
-
-
-/**
- * \flags func
- * \name sll_identifier_add_index
- * \group identifier
- * \desc Docs!
- * \arg sll_identifier_index_t identifier_index
- * \arg sll_identifier_index_t delta_index
- * \ret sll_identifier_index_t
- */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_identifier_index_t sll_identifier_add_index(sll_identifier_index_t identifier_index,sll_identifier_index_t delta_index);
-
-
-
-/**
- * \flags func
- * \name sll_identifier_create
- * \group identifier
- * \desc Docs!
- * \arg sll_identifier_index_t index
- * \arg sll_identifier_index_t id
- * \ret sll_identifier_index_t
- */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_identifier_index_t sll_identifier_create(sll_identifier_index_t index,sll_identifier_index_t id);
-
-
-
-/**
- * \flags func
- * \name sll_identifier_get_array_id
- * \group identifier
- * \desc Docs!
- * \arg sll_identifier_index_t identifier_index
- * \ret sll_identifier_index_t
- */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_identifier_index_t sll_identifier_get_array_id(sll_identifier_index_t identifier_index);
-
-
-
-/**
- * \flags func
- * \name sll_identifier_get_array_index
- * \group identifier
- * \desc Docs!
- * \arg sll_identifier_index_t identifier_index
- * \ret sll_identifier_index_t
- */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_identifier_index_t sll_identifier_get_array_index(sll_identifier_index_t identifier_index);
 
 
 

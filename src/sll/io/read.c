@@ -157,19 +157,11 @@ static sll_bool_t _read_source_file(sll_file_t* file,sll_source_file_t* source_f
 	CHECK_ERROR(file,source_file->time,sll_time_t);
 	CHECK_ERROR(file,source_file->file_size,sll_file_offset_t);
 	READ_FIELD(source_file->file_hash,file);
-	for (sll_identifier_index_t i=0;i<SLL_MAX_SHORT_IDENTIFIER_LENGTH;i++){
-		CHECK_ERROR(file,source_file->identifier_table.short_[i].length,sll_identifier_list_length_t);
-		source_file->identifier_table.short_[i].data=sll_allocate(source_file->identifier_table.short_[i].length*sizeof(sll_identifier_t));
-		for (sll_identifier_list_length_t j=0;j<source_file->identifier_table.short_[i].length;j++){
-			CHECK_ERROR(file,(source_file->identifier_table.short_[i].data+j)->scope,sll_scope_t);
-			CHECK_ERROR(file,(source_file->identifier_table.short_[i].data+j)->name_string_index,sll_string_index_t);
-		}
-	}
-	CHECK_ERROR(file,source_file->identifier_table.long_data_length,sll_identifier_list_length_t);
-	source_file->identifier_table.long_data=sll_allocate(source_file->identifier_table.long_data_length*sizeof(sll_identifier_t));
-	for (sll_identifier_list_length_t i=0;i<source_file->identifier_table.long_data_length;i++){
-		CHECK_ERROR(file,(source_file->identifier_table.long_data+i)->scope,sll_scope_t);
-		CHECK_ERROR(file,(source_file->identifier_table.long_data+i)->name_string_index,sll_string_index_t);
+	CHECK_ERROR(file,source_file->identifier_table.length,sll_identifier_table_length_t);
+	source_file->identifier_table.data=sll_allocate(source_file->identifier_table.length*sizeof(sll_identifier_t));
+	for (sll_identifier_table_length_t i=0;i<source_file->identifier_table.length;i++){
+		CHECK_ERROR(file,(source_file->identifier_table.data+i)->scope,sll_scope_t);
+		CHECK_ERROR(file,(source_file->identifier_table.data+i)->name_string_index,sll_string_index_t);
 	}
 	CHECK_ERROR(file,source_file->export_table.length,sll_export_table_length_t);
 	source_file->export_table.data=sll_allocate(source_file->export_table.length*sizeof(sll_identifier_index_t));
@@ -207,13 +199,13 @@ static sll_bool_t _read_source_file(sll_file_t* file,sll_source_file_t* source_f
 	for (sll_import_index_t i=0;i<source_file->import_table.length;i++){
 		sll_source_file_index_t sfi;
 		CHECK_ERROR(file,sfi,sll_source_file_index_t);
-		sll_identifier_list_length_t l;
-		CHECK_ERROR(file,l,sll_identifier_list_length_t);
+		sll_identifier_table_length_t l;
+		CHECK_ERROR(file,l,sll_identifier_table_length_t);
 		sll_import_file_t* if_=sll_allocate(sizeof(sll_import_file_t)+l*sizeof(sll_identifier_index_t));
 		*(source_file->import_table.data+i)=if_;
 		if_->source_file_index=sfi;
 		if_->length=l;
-		for (sll_identifier_list_length_t j=0;j<l;j++){
+		for (sll_identifier_table_length_t j=0;j<l;j++){
 			CHECK_ERROR(file,if_->data[j],sll_identifier_index_t);
 		}
 	}

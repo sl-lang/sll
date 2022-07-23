@@ -42,7 +42,7 @@
 		} \
 	} while (0)
 #define GET_SIGN_ENCODED_INTEGER(x) ((x)<0?((~(x))<<1)|1:(x)<<1)
-#define GET_VARIABLE_INDEX(o,g_dt) (SLL_IDENTIFIER_GET_ARRAY_ID((o)->data.identifier_index)==SLL_MAX_SHORT_IDENTIFIER_LENGTH?((g_dt)->identifier_map.long_identifier_map+SLL_IDENTIFIER_GET_ARRAY_INDEX((o)->data.identifier_index))->variable:((g_dt)->identifier_map.short_identifier_map[SLL_IDENTIFIER_GET_ARRAY_ID((o)->data.identifier_index)]+SLL_IDENTIFIER_GET_ARRAY_INDEX((o)->data.identifier_index))->variable)
+#define GET_VARIABLE_INDEX(o,g_dt) (((g_dt)->identifier_map.data+(o)->data.identifier_index)->variable)
 #define NEXT_LABEL(g_dt) ((g_dt)->next_label++)
 
 #define PUSH (g_dt->stack_offset++)
@@ -82,48 +82,23 @@ static const sll_node_t* _map_identifiers(const sll_node_t* o,const sll_source_f
 			return o+1;
 		case SLL_NODE_TYPE_IDENTIFIER:
 			{
-				sll_identifier_index_t i=SLL_IDENTIFIER_GET_ARRAY_INDEX(o->data.identifier_index);
-				sll_identifier_index_t j=SLL_IDENTIFIER_GET_ARRAY_ID(o->data.identifier_index);
-				if (j==SLL_MAX_SHORT_IDENTIFIER_LENGTH){
-					sll_identifier_t* id=sf->identifier_table.long_data+i;
-					if ((g_dt->identifier_map.long_identifier_map+i)->variable==SLL_MAX_VARIABLE_INDEX){
-						if (SLL_IDENTIFIER_IS_TLS(id)){
-							(g_dt->identifier_map.long_identifier_map+i)->variable=(g_dt->identifier_map.tls_variable_count<<1)|1;
-							g_dt->identifier_map.tls_variable_count++;
-						}
-						else{
-							(g_dt->identifier_map.long_identifier_map+i)->variable=g_dt->identifier_map.variable_count<<1;
-							g_dt->identifier_map.variable_count++;
-						}
+				sll_identifier_t* id=sf->identifier_table.data+o->data.identifier_index;
+				if ((g_dt->identifier_map.data+o->data.identifier_index)->variable==SLL_MAX_VARIABLE_INDEX){
+					if (SLL_IDENTIFIER_IS_TLS(id)){
+						(g_dt->identifier_map.data+o->data.identifier_index)->variable=(g_dt->identifier_map.tls_variable_count<<1)|1;
+						g_dt->identifier_map.tls_variable_count++;
 					}
-					if (*(g_dt->identifier_remove_data.long_+i)!=VARIABLE_OFFSET_NEVER_DELETE){
-						if (fn_sc==SLL_MAX_SCOPE||id->scope>=fn_sc){
-							*(g_dt->identifier_remove_data.long_+i)=PTR(o);
-						}
-						else{
-							*(g_dt->identifier_remove_data.long_+i)=VARIABLE_OFFSET_NEVER_DELETE;
-						}
+					else{
+						(g_dt->identifier_map.data+o->data.identifier_index)->variable=g_dt->identifier_map.variable_count<<1;
+						g_dt->identifier_map.variable_count++;
 					}
 				}
-				else{
-					sll_identifier_t* id=sf->identifier_table.short_[j].data+i;
-					if ((g_dt->identifier_map.short_identifier_map[j]+i)->variable==SLL_MAX_VARIABLE_INDEX){
-						if (SLL_IDENTIFIER_IS_TLS(id)){
-							(g_dt->identifier_map.short_identifier_map[j]+i)->variable=(g_dt->identifier_map.tls_variable_count<<1)|1;
-							g_dt->identifier_map.tls_variable_count++;
-						}
-						else{
-							(g_dt->identifier_map.short_identifier_map[j]+i)->variable=g_dt->identifier_map.variable_count<<1;
-							g_dt->identifier_map.variable_count++;
-						}
+				if (*(g_dt->identifier_remove_data+o->data.identifier_index)!=VARIABLE_OFFSET_NEVER_DELETE){
+					if (fn_sc==SLL_MAX_SCOPE||id->scope>=fn_sc){
+						*(g_dt->identifier_remove_data+o->data.identifier_index)=PTR(o);
 					}
-					if (*(g_dt->identifier_remove_data.short_[j]+i)!=VARIABLE_OFFSET_NEVER_DELETE){
-						if (fn_sc==SLL_MAX_SCOPE||id->scope>=fn_sc){
-							*(g_dt->identifier_remove_data.short_[j]+i)=PTR(o);
-						}
-						else{
-							*(g_dt->identifier_remove_data.short_[j]+i)=VARIABLE_OFFSET_NEVER_DELETE;
-						}
+					else{
+						*(g_dt->identifier_remove_data+o->data.identifier_index)=VARIABLE_OFFSET_NEVER_DELETE;
 					}
 				}
 				return o+1;
@@ -340,18 +315,10 @@ static const sll_node_t* _generate_cond_jump(const sll_node_t* o,assembly_genera
 static void _generate_identifier(const sll_node_t* n,assembly_generator_data_t* g_dt){
 	sll_assembly_instruction_t* ai=_acquire_next_instruction(g_dt->assembly_data);
 	ai->type=SLL_ASSEMBLY_INSTRUCTION_TYPE_LOAD;
-	if (SLL_IDENTIFIER_GET_ARRAY_ID(n->data.identifier_index)==SLL_MAX_SHORT_IDENTIFIER_LENGTH){
-		if (*(g_dt->identifier_remove_data.long_+SLL_IDENTIFIER_GET_ARRAY_INDEX(n->data.identifier_index))==n){
-			ai->type=SLL_ASSEMBLY_INSTRUCTION_TYPE_LOAD_DEL;
-		}
-		ai->data.variable=(g_dt->identifier_map.long_identifier_map+SLL_IDENTIFIER_GET_ARRAY_INDEX(n->data.identifier_index))->variable;
+	if (*(g_dt->identifier_remove_data+n->data.identifier_index)==n){
+		ai->type=SLL_ASSEMBLY_INSTRUCTION_TYPE_LOAD_DEL;
 	}
-	else{
-		if (*(g_dt->identifier_remove_data.short_[SLL_IDENTIFIER_GET_ARRAY_ID(n->data.identifier_index)]+SLL_IDENTIFIER_GET_ARRAY_INDEX(n->data.identifier_index))==n){
-			ai->type=SLL_ASSEMBLY_INSTRUCTION_TYPE_LOAD_DEL;
-		}
-		ai->data.variable=(g_dt->identifier_map.short_identifier_map[SLL_IDENTIFIER_GET_ARRAY_ID(n->data.identifier_index)]+SLL_IDENTIFIER_GET_ARRAY_INDEX(n->data.identifier_index))->variable;
-	}
+	ai->data.variable=(g_dt->identifier_map.data+n->data.identifier_index)->variable;
 	PUSH;
 }
 
@@ -693,7 +660,7 @@ static const sll_node_t* _generate_assign(const sll_node_t* o,assembly_generator
 	}
 	const sll_node_t* io=o;
 	if (io->type==SLL_NODE_TYPE_IDENTIFIER){
-		if ((SLL_IDENTIFIER_GET_ARRAY_ID(io->data.identifier_index)==SLL_MAX_SHORT_IDENTIFIER_LENGTH&&*(g_dt->identifier_remove_data.long_+SLL_IDENTIFIER_GET_ARRAY_INDEX(io->data.identifier_index))==io)||(SLL_IDENTIFIER_GET_ARRAY_ID(io->data.identifier_index)!=SLL_MAX_SHORT_IDENTIFIER_LENGTH&&*(g_dt->identifier_remove_data.short_[SLL_IDENTIFIER_GET_ARRAY_ID(io->data.identifier_index)]+SLL_IDENTIFIER_GET_ARRAY_INDEX(io->data.identifier_index))==io)){
+		if (*(g_dt->identifier_remove_data+io->data.identifier_index)==io){
 			o++;
 			l--;
 			do{
@@ -836,22 +803,11 @@ static const sll_node_t* _mark_loop_delete(const sll_node_t* o,const assembly_ge
 			}
 		case SLL_NODE_TYPE_IDENTIFIER:
 			{
-				sll_identifier_index_t i=SLL_IDENTIFIER_GET_ARRAY_INDEX(o->data.identifier_index);
-				if (SLL_IDENTIFIER_GET_ARRAY_ID(o->data.identifier_index)==SLL_MAX_SHORT_IDENTIFIER_LENGTH){
-					sll_identifier_t* id=g_dt->source_file->identifier_table.long_data+i;
-					if (id->scope<=sc&&*(g_dt->identifier_remove_data.long_+i)==o){
-						*(g_dt->identifier_remove_data.long_+i)=VARIABLE_OFFSET_NEVER_DELETE;
-						sll_variable_index_t k=(g_dt->identifier_map.long_identifier_map+SLL_IDENTIFIER_GET_ARRAY_INDEX(o->data.identifier_index))->variable;
-						*(v_st+(k>>6))|=1ull<<(k&63);
-					}
-				}
-				else{
-					sll_identifier_t* id=g_dt->source_file->identifier_table.short_[SLL_IDENTIFIER_GET_ARRAY_ID(o->data.identifier_index)].data+i;
-					if (id->scope<=sc&&*(g_dt->identifier_remove_data.short_[SLL_IDENTIFIER_GET_ARRAY_ID(o->data.identifier_index)]+i)==o){
-						*(g_dt->identifier_remove_data.short_[SLL_IDENTIFIER_GET_ARRAY_ID(o->data.identifier_index)]+i)=VARIABLE_OFFSET_NEVER_DELETE;
-						sll_variable_index_t k=(g_dt->identifier_map.short_identifier_map[SLL_IDENTIFIER_GET_ARRAY_ID(o->data.identifier_index)]+SLL_IDENTIFIER_GET_ARRAY_INDEX(o->data.identifier_index))->variable;
-						*(v_st+(k>>6))|=1ull<<(k&63);
-					}
+				const sll_identifier_t* id=g_dt->source_file->identifier_table.data+o->data.identifier_index;
+				if (id->scope<=sc&&*(g_dt->identifier_remove_data+o->data.identifier_index)==o){
+					*(g_dt->identifier_remove_data+o->data.identifier_index)=VARIABLE_OFFSET_NEVER_DELETE;
+					sll_variable_index_t k=(g_dt->identifier_map.data+o->data.identifier_index)->variable;
+					*(v_st+(k>>6))|=1ull<<(k&63);
 				}
 				return o+1;
 			}
@@ -1700,19 +1656,10 @@ static const sll_node_t* _generate(const sll_node_t* o,assembly_generator_data_t
 			}
 		case SLL_NODE_TYPE_IDENTIFIER:
 			{
-				if (SLL_IDENTIFIER_GET_ARRAY_ID(o->data.identifier_index)==SLL_MAX_SHORT_IDENTIFIER_LENGTH){
-					if (*(g_dt->identifier_remove_data.long_+SLL_IDENTIFIER_GET_ARRAY_INDEX(o->data.identifier_index))==o){
-						sll_assembly_instruction_t* ai=_acquire_next_instruction(g_dt->assembly_data);
-						ai->type=SLL_ASSEMBLY_INSTRUCTION_TYPE_DEL;
-						ai->data.variable=(g_dt->identifier_map.long_identifier_map+SLL_IDENTIFIER_GET_ARRAY_INDEX(o->data.identifier_index))->variable;
-					}
-				}
-				else{
-					if (*(g_dt->identifier_remove_data.short_[SLL_IDENTIFIER_GET_ARRAY_ID(o->data.identifier_index)]+SLL_IDENTIFIER_GET_ARRAY_INDEX(o->data.identifier_index))==o){
-						sll_assembly_instruction_t* ai=_acquire_next_instruction(g_dt->assembly_data);
-						ai->type=SLL_ASSEMBLY_INSTRUCTION_TYPE_DEL;
-						ai->data.variable=(g_dt->identifier_map.short_identifier_map[SLL_IDENTIFIER_GET_ARRAY_ID(o->data.identifier_index)]+SLL_IDENTIFIER_GET_ARRAY_INDEX(o->data.identifier_index))->variable;
-					}
+				if (*(g_dt->identifier_remove_data+o->data.identifier_index)==o){
+					sll_assembly_instruction_t* ai=_acquire_next_instruction(g_dt->assembly_data);
+					ai->type=SLL_ASSEMBLY_INSTRUCTION_TYPE_DEL;
+					ai->data.variable=(g_dt->identifier_map.data+o->data.identifier_index)->variable;
 				}
 				return o+1;
 			}
@@ -1977,18 +1924,10 @@ static const sll_node_t* _generate(const sll_node_t* o,assembly_generator_data_t
 				if (o->type==SLL_NODE_TYPE_IDENTIFIER){
 					sll_assembly_instruction_t* ai=_acquire_next_instruction(g_dt->assembly_data);
 					ai->type=ai_t|SLL_ASSEMBLY_INSTRUCTION_FLAG_INPLACE;
-					if (SLL_IDENTIFIER_GET_ARRAY_ID(o->data.identifier_index)==SLL_MAX_SHORT_IDENTIFIER_LENGTH){
-						if (*(g_dt->identifier_remove_data.long_+SLL_IDENTIFIER_GET_ARRAY_INDEX(o->data.identifier_index))==o){
-							SLL_UNIMPLEMENTED();
-						}
-						ai->data.variable=(g_dt->identifier_map.long_identifier_map+SLL_IDENTIFIER_GET_ARRAY_INDEX(o->data.identifier_index))->variable;
+					if (*(g_dt->identifier_remove_data+o->data.identifier_index)==o){
+						SLL_UNIMPLEMENTED();
 					}
-					else{
-						if (*(g_dt->identifier_remove_data.short_[SLL_IDENTIFIER_GET_ARRAY_ID(o->data.identifier_index)]+SLL_IDENTIFIER_GET_ARRAY_INDEX(o->data.identifier_index))==o){
-							SLL_UNIMPLEMENTED();
-						}
-						ai->data.variable=(g_dt->identifier_map.short_identifier_map[SLL_IDENTIFIER_GET_ARRAY_ID(o->data.identifier_index)]+SLL_IDENTIFIER_GET_ARRAY_INDEX(o->data.identifier_index))->variable;
-					}
+					ai->data.variable=(g_dt->identifier_map.data+o->data.identifier_index)->variable;
 					l--;
 					o++;
 				}
@@ -2208,14 +2147,12 @@ __SLL_EXTERNAL void sll_generate_assembly(const sll_source_file_t* source_file,s
 		out,
 		source_file,
 		{
-			.long_identifier_map=sll_allocate(source_file->identifier_table.long_data_length*sizeof(identifier_data_t)),
+			.data=sll_allocate(source_file->identifier_table.length*sizeof(identifier_data_t)),
 			.variable_count=0,
 			.tls_variable_count=0
 		},
 		0,
-		{
-			.long_=sll_allocate(source_file->identifier_table.long_data_length*sizeof(void*))
-		},
+		sll_allocate(source_file->identifier_table.length*sizeof(void*)),
 		{
 			MAX_ASSEMBLY_INSTRUCTION_LABEL,
 			MAX_ASSEMBLY_INSTRUCTION_LABEL
@@ -2223,17 +2160,9 @@ __SLL_EXTERNAL void sll_generate_assembly(const sll_source_file_t* source_file,s
 		MAX_ASSEMBLY_INSTRUCTION_LABEL,
 		0
 	};
-	for (sll_identifier_index_t i=0;i<SLL_MAX_SHORT_IDENTIFIER_LENGTH;i++){
-		g_dt.identifier_map.short_identifier_map[i]=sll_allocate(source_file->identifier_table.short_[i].length*sizeof(identifier_data_t));
-		g_dt.identifier_remove_data.short_[i]=sll_allocate(source_file->identifier_table.short_[i].length*sizeof(void*));
-		for (sll_identifier_list_length_t j=0;j<source_file->identifier_table.short_[i].length;j++){
-			(g_dt.identifier_map.short_identifier_map[i]+j)->variable=SLL_MAX_VARIABLE_INDEX;
-			*(g_dt.identifier_remove_data.short_[i]+j)=NULL;
-		}
-	}
-	for (sll_identifier_list_length_t i=0;i<source_file->identifier_table.long_data_length;i++){
-		(g_dt.identifier_map.long_identifier_map+i)->variable=SLL_MAX_VARIABLE_INDEX;
-		*(g_dt.identifier_remove_data.long_+i)=NULL;
+	for (sll_identifier_table_length_t i=0;i<source_file->identifier_table.length;i++){
+		(g_dt.identifier_map.data+i)->variable=SLL_MAX_VARIABLE_INDEX;
+		*(g_dt.identifier_remove_data+i)=NULL;
 	}
 	_map_identifiers(source_file->first_node,source_file,&g_dt,SLL_MAX_SCOPE);
 	sll_variable_index_t g_vc=g_dt.identifier_map.variable_count;
@@ -2244,12 +2173,7 @@ __SLL_EXTERNAL void sll_generate_assembly(const sll_source_file_t* source_file,s
 		const sll_function_t* k=*(source_file->function_table.data+i);
 		for (sll_arg_count_t j=0;j<SLL_FUNCTION_GET_ARGUMENT_COUNT(k);j++){
 			sll_identifier_index_t ii=k->args[j];
-			if (SLL_IDENTIFIER_GET_ARRAY_ID(ii)==SLL_MAX_SHORT_IDENTIFIER_LENGTH){
-				(g_dt.identifier_map.long_identifier_map+SLL_IDENTIFIER_GET_ARRAY_INDEX(ii))->variable=g_dt.identifier_map.variable_count<<1;
-			}
-			else{
-				(g_dt.identifier_map.short_identifier_map[SLL_IDENTIFIER_GET_ARRAY_ID(ii)]+SLL_IDENTIFIER_GET_ARRAY_INDEX(ii))->variable=g_dt.identifier_map.variable_count<<1;
-			}
+			(g_dt.identifier_map.data+ii)->variable=g_dt.identifier_map.variable_count<<1;
 			g_dt.identifier_map.variable_count++;
 		}
 		g_dt.stack_offset=0;
@@ -2314,12 +2238,8 @@ __SLL_EXTERNAL void sll_generate_assembly(const sll_source_file_t* source_file,s
 		GENERATE_OPCODE(&g_dt,SLL_ASSEMBLY_INSTRUCTION_TYPE_RET_ZERO);
 	}
 	sll_deallocate(fn_vc);
-	for (sll_identifier_index_t i=0;i<SLL_MAX_SHORT_IDENTIFIER_LENGTH;i++){
-		sll_deallocate(g_dt.identifier_map.short_identifier_map[i]);
-		sll_deallocate(g_dt.identifier_remove_data.short_[i]);
-	}
-	sll_deallocate(g_dt.identifier_map.long_identifier_map);
-	sll_deallocate(g_dt.identifier_remove_data.long_);
+	sll_deallocate(g_dt.identifier_map.data);
+	sll_deallocate(g_dt.identifier_remove_data);
 	sll_assembly_instruction_t* ai=out->first_instruction;
 	sll_assembly_instruction_t* stack[5]={
 		&_assembly_nop,

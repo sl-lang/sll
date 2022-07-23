@@ -118,14 +118,14 @@ static void _print_int(sll_integer_t value,sll_file_t* out){
 
 
 static void _print_identifier(sll_identifier_index_t identifier_index,const sll_source_file_t* source_file,sll_file_t* out){
-	const sll_identifier_t* id=(SLL_IDENTIFIER_GET_ARRAY_ID(identifier_index)==SLL_MAX_SHORT_IDENTIFIER_LENGTH?source_file->identifier_table.long_data:source_file->identifier_table.short_[SLL_IDENTIFIER_GET_ARRAY_ID(identifier_index)].data)+SLL_IDENTIFIER_GET_ARRAY_INDEX(identifier_index);
-	const sll_string_t* string=source_file->string_table.data+SLL_IDENTIFIER_GET_STRING_INDEX(id);
-	if (SLL_IDENTIFIER_IS_TLS(id)){
+	const sll_identifier_t* identifier=source_file->identifier_table.data+identifier_index;
+	const sll_string_t* string=source_file->string_table.data+SLL_IDENTIFIER_GET_STRING_INDEX(identifier);
+	if (SLL_IDENTIFIER_IS_TLS(identifier)){
 		sll_file_write_char(out,'!',NULL);
 	}
 	sll_file_write(out,string->data,string->length,NULL);
 	PRINT_STATIC_STRING("|#",out);
-	_print_int(id->scope,out);
+	_print_int(identifier->scope,out);
 	PRINT_STATIC_STRING("#|",out);
 }
 

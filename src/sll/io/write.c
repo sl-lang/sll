@@ -142,18 +142,10 @@ static void _write_source_file(const sll_source_file_t* source_file,sll_file_t* 
 	SLL_CRITICAL_ERROR(sll_encode_integer(out,source_file->time));
 	SLL_CRITICAL_ERROR(sll_encode_integer(out,source_file->file_size));
 	sll_file_write(out,&(source_file->file_hash),sizeof(sll_sha256_data_t),NULL);
-	for (sll_identifier_index_t i=0;i<SLL_MAX_SHORT_IDENTIFIER_LENGTH;i++){
-		const sll_identifier_list_t* l=source_file->identifier_table.short_+i;
-		SLL_CRITICAL_ERROR(sll_encode_integer(out,l->length));
-		for (sll_identifier_list_length_t j=0;j<l->length;j++){
-			SLL_CRITICAL_ERROR(sll_encode_integer(out,(l->data+j)->scope));
-			SLL_CRITICAL_ERROR(sll_encode_integer(out,(l->data+j)->name_string_index));
-		}
-	}
-	SLL_CRITICAL_ERROR(sll_encode_integer(out,source_file->identifier_table.long_data_length));
-	for (sll_identifier_list_length_t i=0;i<source_file->identifier_table.long_data_length;i++){
-		SLL_CRITICAL_ERROR(sll_encode_integer(out,(source_file->identifier_table.long_data+i)->scope));
-		SLL_CRITICAL_ERROR(sll_encode_integer(out,(source_file->identifier_table.long_data+i)->name_string_index));
+	SLL_CRITICAL_ERROR(sll_encode_integer(out,source_file->identifier_table.length));
+	for (sll_identifier_table_length_t i=0;i<source_file->identifier_table.length;i++){
+		SLL_CRITICAL_ERROR(sll_encode_integer(out,(source_file->identifier_table.data+i)->scope));
+		SLL_CRITICAL_ERROR(sll_encode_integer(out,(source_file->identifier_table.data+i)->name_string_index));
 	}
 	SLL_CRITICAL_ERROR(sll_encode_integer(out,source_file->export_table.length));
 	for (sll_export_table_length_t i=0;i<source_file->export_table.length;i++){
@@ -179,7 +171,7 @@ static void _write_source_file(const sll_source_file_t* source_file,sll_file_t* 
 		sll_import_file_t* if_=*(source_file->import_table.data+i);
 		SLL_CRITICAL_ERROR(sll_encode_integer(out,if_->source_file_index));
 		SLL_CRITICAL_ERROR(sll_encode_integer(out,if_->length));
-		for (sll_identifier_list_length_t j=0;j<if_->length;j++){
+		for (sll_identifier_table_length_t j=0;j<if_->length;j++){
 			SLL_CRITICAL_ERROR(sll_encode_integer(out,if_->data[j]));
 		}
 	}

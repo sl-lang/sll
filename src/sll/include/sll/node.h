@@ -1325,12 +1325,12 @@ typedef struct _SLL_FUNCTION_TABLE{
  * \group node
  * \desc Docs!
  * \arg sll_source_file_index_t source_file_index
- * \arg sll_identifier_list_length_t length
+ * \arg sll_identifier_table_length_t length
  * \arg sll_identifier_index_t[] data
  */
 typedef struct _SLL_IMPORT_FILE{
 	sll_source_file_index_t source_file_index;
-	sll_identifier_list_length_t length;
+	sll_identifier_table_length_t length;
 	sll_identifier_index_t data[];
 } sll_import_file_t;
 

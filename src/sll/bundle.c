@@ -33,14 +33,9 @@ static sll_source_file_index_t _add_source_file(const sll_bundle_t* b,const sll_
 	sf->time=bsf_sf.time;
 	sf->file_size=bsf_sf.file_size;
 	sf->file_hash=bsf_sf.file_hash;
-	for (sll_identifier_index_t i=0;i<SLL_MAX_SHORT_IDENTIFIER_LENGTH;i++){
-		sf->identifier_table.short_[i].length=bsf_sf.identifier_table.short_[i].length;
-		sf->identifier_table.short_[i].data=sll_allocate(sf->identifier_table.short_[i].length*sizeof(sll_identifier_t));
-		sll_copy_data(bsf_sf.identifier_table.short_[i].data,sf->identifier_table.short_[i].length*sizeof(sll_identifier_t),sf->identifier_table.short_[i].data);
-	}
-	sf->identifier_table.long_data_length=bsf_sf.identifier_table.long_data_length;
-	sf->identifier_table.long_data=sll_allocate(sf->identifier_table.long_data_length*sizeof(sll_identifier_t));
-	sll_copy_data(bsf_sf.identifier_table.long_data,sf->identifier_table.long_data_length*sizeof(sll_identifier_t),sf->identifier_table.long_data);
+	sf->identifier_table.length=bsf_sf.identifier_table.length;
+	sf->identifier_table.data=sll_allocate(sf->identifier_table.length*sizeof(sll_identifier_t));
+	sll_copy_data(bsf_sf.identifier_table.data,sf->identifier_table.length*sizeof(sll_identifier_t),sf->identifier_table.data);
 	sf->export_table.length=bsf_sf.export_table.length;
 	sf->export_table.data=sll_allocate(sf->export_table.length*sizeof(sll_identifier_index_t));
 	sll_copy_data(bsf_sf.export_table.data,sf->export_table.length*sizeof(sll_identifier_index_t),sf->export_table.data);

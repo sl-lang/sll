@@ -43,7 +43,7 @@ static const sll_node_t* _clone_node(const sll_node_t* src,sll_source_file_t* ou
 			return src+1;
 		case SLL_NODE_TYPE_IDENTIFIER:
 			if (source_file_mapping_data){
-				dst->data.identifier_index=*(source_file_mapping_data->identifier_index_offset[SLL_IDENTIFIER_GET_ARRAY_ID(dst->data.identifier_index)]+SLL_IDENTIFIER_GET_ARRAY_INDEX(dst->data.identifier_index));
+				dst->data.identifier_index=*(source_file_mapping_data->identifier_index_offset+dst->data.identifier_index);
 			}
 			return src+1;
 		case SLL_NODE_TYPE_ARRAY:
@@ -161,16 +161,9 @@ __SLL_EXTERNAL void sll_unify_compilation_data(const sll_compilation_data_t* com
 			sll_node_t* dbg=_acquire_next_node(out);
 			dbg->type=SLL_NODE_TYPE_DBG;
 			dbg->data.string_index=source_file->file_path_string_index;
-			for (unsigned int i=0;i<SLL_MAX_SHORT_IDENTIFIER_LENGTH;i++){
-				const sll_identifier_list_t* identifier_list=source_file->identifier_table.short_+i;
-				sll_identifier_list_t* output_identifier_list=out->identifier_table.short_+i;
-				output_identifier_list->length=identifier_list->length;
-				output_identifier_list->data=sll_allocate(identifier_list->length*sizeof(sll_identifier_t));
-				sll_copy_data(identifier_list->data,identifier_list->length*sizeof(sll_identifier_t),output_identifier_list->data);
-			}
-			out->identifier_table.long_data_length=source_file->identifier_table.long_data_length;
-			out->identifier_table.long_data=sll_allocate(source_file->identifier_table.long_data_length*sizeof(sll_identifier_t));
-			sll_copy_data(source_file->identifier_table.long_data,source_file->identifier_table.long_data_length*sizeof(sll_identifier_t),out->identifier_table.long_data);
+			out->identifier_table.length=source_file->identifier_table.length;
+			out->identifier_table.data=sll_allocate(source_file->identifier_table.length*sizeof(sll_identifier_t));
+			sll_copy_data(source_file->identifier_table.data,source_file->identifier_table.length*sizeof(sll_identifier_t),out->identifier_table.data);
 			out->function_table.length=source_file->function_table.length;
 			out->function_table.data=sll_allocate(source_file->function_table.length*sizeof(sll_function_t*));
 			for (sll_function_index_t i=0;i<source_file->function_table.length;i++){
@@ -204,50 +197,33 @@ __SLL_EXTERNAL void sll_unify_compilation_data(const sll_compilation_data_t* com
 			if (!compilation_data_index){
 				out->file_path_string_index=dbg->data.string_index;
 			}
-			for (unsigned int i=0;i<SLL_MAX_SHORT_IDENTIFIER_LENGTH;i++){
-				const sll_identifier_list_t* identifier_list=source_file->identifier_table.short_+i;
-				if (!identifier_list->length){
-					source_file_mapping_data.identifier_index_offset[i]=NULL;
-					continue;
-				}
-				sll_identifier_list_t* output_identifier_list=out->identifier_table.short_+i;
-				sll_identifier_list_length_t off=output_identifier_list->length;
-				source_file_mapping_data.identifier_index_offset[i]=sll_allocate_stack(identifier_list->length*sizeof(sll_identifier_index_t));
-				output_identifier_list->length+=identifier_list->length;
-				output_identifier_list->data=sll_reallocate(output_identifier_list->data,output_identifier_list->length*sizeof(sll_identifier_t));
-				for (sll_identifier_list_length_t j=0;j<identifier_list->length;j++){
-					*(source_file_mapping_data.identifier_index_offset[i]+j)=SLL_CREATE_IDENTIFIER(off+j,i);
-					(output_identifier_list->data+off+j)->scope=(identifier_list->data+j)->scope+out->_next_scope;
-					SLL_IDENTIFIER_SET_STRING_INDEX(output_identifier_list->data+off+j,*(source_file_mapping_data.string_map+SLL_IDENTIFIER_GET_STRING_INDEX(identifier_list->data+j)),SLL_IDENTIFIER_IS_TLS(identifier_list->data+j));
-				}
-			}
-			if (!source_file->identifier_table.long_data_length){
-				source_file_mapping_data.identifier_index_offset[SLL_MAX_SHORT_IDENTIFIER_LENGTH]=NULL;
+			if (!source_file->identifier_table.length){
+				source_file_mapping_data.identifier_index_offset=NULL;
 			}
 			else{
-				sll_identifier_list_length_t off=out->identifier_table.long_data_length;
-				source_file_mapping_data.identifier_index_offset[SLL_MAX_SHORT_IDENTIFIER_LENGTH]=sll_allocate_stack(source_file->identifier_table.long_data_length*sizeof(sll_identifier_index_t));
-				out->identifier_table.long_data_length+=source_file->identifier_table.long_data_length;
-				out->identifier_table.long_data=sll_reallocate(out->identifier_table.long_data,out->identifier_table.long_data_length*sizeof(sll_identifier_t));
-				for (sll_identifier_list_length_t i=0;i<source_file->identifier_table.long_data_length;i++){
-					*(source_file_mapping_data.identifier_index_offset[SLL_MAX_SHORT_IDENTIFIER_LENGTH]+i)=SLL_CREATE_IDENTIFIER(off+i,SLL_MAX_SHORT_IDENTIFIER_LENGTH);
-					(out->identifier_table.long_data+off+i)->scope=(source_file->identifier_table.long_data+i)->scope+out->_next_scope;
-					SLL_IDENTIFIER_SET_STRING_INDEX(out->identifier_table.long_data+off+i,*(source_file_mapping_data.string_map+SLL_IDENTIFIER_GET_STRING_INDEX(source_file->identifier_table.long_data+i)),SLL_IDENTIFIER_IS_TLS(source_file->identifier_table.long_data+i));
+				sll_identifier_table_length_t off=out->identifier_table.length;
+				source_file_mapping_data.identifier_index_offset=sll_allocate_stack(source_file->identifier_table.length*sizeof(sll_identifier_index_t));
+				out->identifier_table.length+=source_file->identifier_table.length;
+				out->identifier_table.data=sll_reallocate(out->identifier_table.data,out->identifier_table.length*sizeof(sll_identifier_t));
+				for (sll_identifier_table_length_t i=0;i<source_file->identifier_table.length;i++){
+					*(source_file_mapping_data.identifier_index_offset+i)=off+i;
+					(out->identifier_table.data+off+i)->scope=(source_file->identifier_table.data+i)->scope+out->_next_scope;
+					SLL_IDENTIFIER_SET_STRING_INDEX(out->identifier_table.data+off+i,*(source_file_mapping_data.string_map+SLL_IDENTIFIER_GET_STRING_INDEX(source_file->identifier_table.data+i)),SLL_IDENTIFIER_IS_TLS(source_file->identifier_table.data+i));
 				}
 			}
 			for (sll_import_index_t i=0;i<source_file->import_table.length;i++){
 				sll_import_file_t* k=*(source_file->import_table.data+i);
 				SLL_ASSERT(k->source_file_index);
 				sll_identifier_index_t* export_data=*(export_identifiers+k->source_file_index-1);
-				for (sll_identifier_list_length_t j=0;j<k->length;j++){
-					*(source_file_mapping_data.identifier_index_offset[SLL_IDENTIFIER_GET_ARRAY_ID(k->data[j])]+SLL_IDENTIFIER_GET_ARRAY_INDEX(k->data[j]))=*(export_data+j);
+				for (sll_identifier_table_length_t j=0;j<k->length;j++){
+					*(source_file_mapping_data.identifier_index_offset+k->data[j])=*(export_data+j);
 				}
 			}
 			if (compilation_data_index){
 				sll_identifier_index_t* export_data=sll_allocate_stack(source_file->export_table.length*sizeof(sll_identifier_index_t));
 				*(export_identifiers+compilation_data_index-1)=export_data;
 				for (sll_export_table_length_t i=0;i<source_file->export_table.length;i++){
-					*(export_data+i)=*(source_file_mapping_data.identifier_index_offset[SLL_IDENTIFIER_GET_ARRAY_ID(*(source_file->export_table.data+i))]+SLL_IDENTIFIER_GET_ARRAY_INDEX(*(source_file->export_table.data+i)));
+					*(export_data+i)=*(source_file_mapping_data.identifier_index_offset+(*(source_file->export_table.data+i)));
 				}
 			}
 			if (source_file->function_table.length){
@@ -262,14 +238,12 @@ __SLL_EXTERNAL void sll_unify_compilation_data(const sll_compilation_data_t* com
 					out_function->description_string_index=(function->description_string_index==SLL_MAX_STRING_INDEX?SLL_MAX_STRING_INDEX:*(source_file_mapping_data.string_map+function->description_string_index));
 					out_function->arg_count=function->arg_count;
 					for (sll_arg_count_t j=0;j<SLL_FUNCTION_GET_ARGUMENT_COUNT(function);j++){
-						out_function->args[j]=*(source_file_mapping_data.identifier_index_offset[SLL_IDENTIFIER_GET_ARRAY_ID(function->args[j])]+SLL_IDENTIFIER_GET_ARRAY_INDEX(function->args[j]));
+						out_function->args[j]=*(source_file_mapping_data.identifier_index_offset+function->args[j]);
 					}
 				}
 			}
 			_clone_node(source_file->first_node,out,&source_file_mapping_data);
-			for (unsigned int i=0;i<=SLL_MAX_SHORT_IDENTIFIER_LENGTH;i++){
-				sll_deallocate(source_file_mapping_data.identifier_index_offset[i]);
-			}
+			sll_deallocate(source_file_mapping_data.identifier_index_offset);
 			sll_deallocate(source_file_mapping_data.string_map);
 		}
 		out->_next_scope+=source_file->_next_scope;

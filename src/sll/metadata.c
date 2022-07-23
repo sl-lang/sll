@@ -171,14 +171,8 @@ __SLL_EXTERNAL void sll_optimize_metadata(sll_compilation_data_t* compilation_da
 		sll_string_index_t ml=(sf->string_table.length>>6)+1;
 		bitmap_t* m=sll_zero_allocate_stack(ml*sizeof(bitmap_t));
 		*(m+(sf->file_path_string_index>>6))|=1ull<<(sf->file_path_string_index&63);
-		for (sll_identifier_index_t i=0;i<SLL_MAX_SHORT_IDENTIFIER_LENGTH;i++){
-			sll_identifier_list_t* l=sf->identifier_table.short_+i;
-			for (sll_identifier_list_length_t j=0;j<l->length;j++){
-				*(m+(SLL_IDENTIFIER_GET_STRING_INDEX(l->data+j)>>6))|=1ull<<(SLL_IDENTIFIER_GET_STRING_INDEX(l->data+j)&63);
-			}
-		}
-		for (sll_identifier_list_length_t i=0;i<sf->identifier_table.long_data_length;i++){
-			*(m+(SLL_IDENTIFIER_GET_STRING_INDEX(sf->identifier_table.long_data+i)>>6))|=1ull<<(SLL_IDENTIFIER_GET_STRING_INDEX(sf->identifier_table.long_data+i)&63);
+		for (sll_identifier_table_length_t i=0;i<sf->identifier_table.length;i++){
+			*(m+(SLL_IDENTIFIER_GET_STRING_INDEX(sf->identifier_table.data+i)>>6))|=1ull<<(SLL_IDENTIFIER_GET_STRING_INDEX(sf->identifier_table.data+i)&63);
 		}
 		for (sll_function_index_t i=0;i<sf->function_table.length;i++){
 			sll_string_index_t j=(*(sf->function_table.data+i))->name_string_index;
@@ -221,14 +215,8 @@ __SLL_EXTERNAL void sll_optimize_metadata(sll_compilation_data_t* compilation_da
 		if (l){
 			sf->string_table.length-=l;
 			sf->string_table.data=sll_reallocate(sf->string_table.data,sf->string_table.length*sizeof(sll_string_t));
-			for (sll_identifier_index_t i=0;i<SLL_MAX_SHORT_IDENTIFIER_LENGTH;i++){
-				sll_identifier_list_t* e=sf->identifier_table.short_+i;
-				for (sll_identifier_list_length_t j=0;j<e->length;j++){
-					SLL_IDENTIFIER_UPDATE_STRING_INDEX(e->data+j,*(sm+SLL_IDENTIFIER_GET_STRING_INDEX(e->data+j)));
-				}
-			}
-			for (sll_identifier_list_length_t i=0;i<sf->identifier_table.long_data_length;i++){
-				SLL_IDENTIFIER_UPDATE_STRING_INDEX(sf->identifier_table.long_data+i,*(sm+SLL_IDENTIFIER_GET_STRING_INDEX(sf->identifier_table.long_data+i)));
+			for (sll_identifier_table_length_t i=0;i<sf->identifier_table.length;i++){
+				SLL_IDENTIFIER_UPDATE_STRING_INDEX(sf->identifier_table.data+i,*(sm+SLL_IDENTIFIER_GET_STRING_INDEX(sf->identifier_table.data+i)));
 			}
 			for (sll_function_index_t i=0;i<sf->function_table.length;i++){
 				if ((*(sf->function_table.data+i))->name_string_index!=SLL_MAX_STRING_INDEX){
