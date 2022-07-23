@@ -8,17 +8,14 @@
 %define __SYMBOL(nm) _ %+ nm
 %define __CALL(nm) _ %+ nm
 %define __EXTERNAL(nm) extern _ %+ nm
-%define __EXTERNAL_CALL_STACK_SPACE 8
 %elifdef __SLL_BUILD_WINDOWS
 %define __SYMBOL(nm) nm
 %define __CALL(nm) QWORD [__imp_ %+ nm]
 %define __EXTERNAL(nm) extern __imp_ %+ nm
-%define __EXTERNAL_CALL_STACK_SPACE 40
 %else
 %define __SYMBOL(nm) nm
 %define __CALL(nm) nm wrt ..plt
 %define __EXTERNAL(nm) extern nm
-%define __EXTERNAL_CALL_STACK_SPACE 8
 %endif
 
 
@@ -152,7 +149,6 @@ __SYMBOL(clib_api_function_call):
 	; rax - Integer return value
 	; rbx - Return type
 	; xmm0 - Floating-point return value
-	sub rsp, __EXTERNAL_CALL_STACK_SPACE
 	bt ebx, 0
 	jnc ._return_float
 %ifdef __SLL_BUILD_WINDOWS
