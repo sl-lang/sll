@@ -58,7 +58,7 @@ __SLL_EXPORT _call_api_func_assembly
 	mov al, 32
 	mov rsi, QWORD [rdx]
 	mov r10, rsp
-	test r9d, r9d
+	test r9b, r9b
 	jz ._no_args
 ._next_arg:
 	mov ecx, esi
@@ -99,7 +99,7 @@ __SLL_EXPORT _call_api_func_assembly
 	; rsi - Current bitmap
 	; xmm0 - Floating-point return value
 	; [rbp+16] - Return value structure pointer
-	mov ecx, esi
+	mov cl, sil
 	mov rsi, QWORD [rbp-8]
 	leave
 
@@ -109,10 +109,10 @@ __SLL_EXPORT _call_api_func_assembly
 	; r8 - Integer return value
 	; xmm0 - Floating-point return value
 	; [rsp+8] - Return value structure pointer
-	test ecx, ecx
+	test cl, cl
 	mov rdx, QWORD [rsp+8]
 	jz ._write_float_to_struct
-	cmp ecx, 1
+	cmp cl, 1
 	jz ._return
 	mov r8, rax
 	add rax, 1
