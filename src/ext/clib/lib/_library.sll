@@ -13,8 +13,8 @@
 (= clib_library_type (&:
 	(,,, data
 		(@@ (<- string$format (?: data$_handle
-			"<%s at %#.16llx>"
-			"<%s at (unloaded)>"
+			"<%s @%#.16llx>"
+			"<%s @(unloaded)>"
 		) data$file_path data$_handle))
 	) @@string@@
 	(,,, data

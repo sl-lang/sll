@@ -12,7 +12,7 @@
 
 (= clib_function_type (&:
 	(,,, data
-		(@@ (<- string$format "<%s:%s @ %#.16llx>" data$library$file_path data$name data$address))
+		(@@ (<- string$format "<%s:%s @%#.16llx>" data$library$file_path data$name data$address))
 	) @@string@@
 	(~ string_type) name
 	(~ int_type) address
@@ -70,8 +70,11 @@
 		value
 	))
 	(@@ (<- func$return$_decode (<- (... "clib:function_call")
-		(| func$address (<< func$calling_convenction 63))
-		(! (& func$return$flags (| clib_types$FLAG_INTEGER clib_types$FLAG_POINTER)))
+		func$address
+		(|
+			(!! (& func$return$flags (| clib_types$FLAG_INTEGER clib_types$FLAG_POINTER)))
+			(<< func$calling_convenction 1)
+		)
 		args
 	) arg))
 ))

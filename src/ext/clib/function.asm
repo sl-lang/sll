@@ -8,14 +8,17 @@
 %define __SYMBOL(nm) _ %+ nm
 %define __CALL(nm) _ %+ nm
 %define __EXTERNAL(nm) extern _ %+ nm
+%define __EXTERNAL_CALL_STACK_SPACE 8
 %elifdef __SLL_BUILD_WINDOWS
 %define __SYMBOL(nm) nm
 %define __CALL(nm) QWORD [__imp_ %+ nm]
 %define __EXTERNAL(nm) extern __imp_ %+ nm
+%define __EXTERNAL_CALL_STACK_SPACE 40
 %else
 %define __SYMBOL(nm) nm
 %define __CALL(nm) nm wrt ..plt
 %define __EXTERNAL(nm) extern nm
+%define __EXTERNAL_CALL_STACK_SPACE 8
 %endif
 
 
@@ -42,6 +45,21 @@ __SYMBOL(clib_api_function_call):
 	push rbp
 	mov rbp, rsp
 	push rbx
+%ifndef __SLL_BUILD_WINDOWS
+	push rdi
+	push rsi
+	sub rsp, 168
+	vmovaps OWORD [rsp], xmm6
+	vmovaps OWORD [rsp+16], xmm7
+	vmovaps OWORD [rsp+32], xmm8
+	vmovaps OWORD [rsp+48], xmm9
+	vmovaps OWORD [rsp+64], xmm10
+	vmovaps OWORD [rsp+80], xmm11
+	vmovaps OWORD [rsp+96], xmm12
+	vmovaps OWORD [rsp+112], xmm13
+	vmovaps OWORD [rsp+128], xmm14
+	vmovaps OWORD [rsp+144], xmm15
+%endif
 
 	; rcx - Function pointer
 	; rdx - Return type
@@ -102,7 +120,7 @@ __SYMBOL(clib_api_function_call):
 	; rbx - Return type
 	; rcx - Function pointer
 	mov rax, rcx
-	btr rax, 63
+	bt ebx, 1
 	jc ._system_v_calling_convention
 	mov rcx, QWORD [rsp]
 	mov rdx, QWORD [rsp+8]
@@ -134,18 +152,35 @@ __SYMBOL(clib_api_function_call):
 	; rax - Integer return value
 	; rbx - Return type
 	; xmm0 - Floating-point return value
-	test rbx, rbx
-	mov rbx, QWORD [rbp-8]
-	leave
-
-	; rax - Integer return value
-	; xmm0 - Floating-point return value
-	jnz ._return_float
+	sub rsp, __EXTERNAL_CALL_STACK_SPACE
+	bt ebx, 0
+	jnc ._return_float
 %ifdef __SLL_BUILD_WINDOWS
 	mov rcx, rax
 %else
 	mov rdi, rax
 %endif
-	jmp __CALL(sll_int_to_object)
+	call __CALL(sll_int_to_object)
+._cleanup:
+%ifndef __SLL_BUILD_WINDOWS
+	lea rsp, [rbp-192]
+	vmovaps xmm6, OWORD [rsp]
+	vmovaps xmm7, OWORD [rsp+16]
+	vmovaps xmm8, OWORD [rsp+32]
+	vmovaps xmm9, OWORD [rsp+48]
+	vmovaps xmm10, OWORD [rsp+64]
+	vmovaps xmm11, OWORD [rsp+80]
+	vmovaps xmm12, OWORD [rsp+96]
+	vmovaps xmm13, OWORD [rsp+112]
+	vmovaps xmm14, OWORD [rsp+128]
+	vmovaps xmm15, OWORD [rsp+144]
+	add rsp, 168
+	pop rsi
+	pop rdi
+%endif
+	mov rbx, QWORD [rbp-8]
+	leave
+	ret
 ._return_float:
-	jmp __CALL(sll_float_to_object)
+	call __CALL(sll_float_to_object)
+	jmp ._cleanup
