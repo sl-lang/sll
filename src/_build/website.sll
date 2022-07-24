@@ -136,7 +136,7 @@
 				(= out (+ out "    " (<- _format_type_with_name arg$type arg$name) ";\n"))
 				(++ i)
 			)
-			(= out (+ out `} <span class="code-name">` symbol$name `</span>;`))
+			(= out (+ out '}' (* `<span class="code-type-pointer">*</span>` (!! (& symbol$flags documentation$FLAG_POINTER))) ` <span class="code-name">` symbol$name `</span>;`))
 		})
 	} {
 		(? (& symbol$flags documentation$FLAG_MACRO) {
