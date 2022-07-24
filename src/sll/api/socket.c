@@ -49,7 +49,7 @@ static sll_bool_t _object_to_address(const sll_array_t* data,sll_address_t* out)
 				if (elem->type!=SLL_OBJECT_TYPE_INT||elem->data.int_<0||elem->data.int_>__SLL_U16_MAX){
 					return 0;
 				}
-				out->data.ipv6.address[i]=elem->data.int_;
+				out->data.ipv6.address[i]=(__SLL_U16)(elem->data.int_);
 			}
 			out->data.ipv6.flow_info=(__SLL_U32)(data->data[1]->data.int_);
 			out->data.ipv6.scope_id=(__SLL_U32)(data->data[2]->data.int_);
