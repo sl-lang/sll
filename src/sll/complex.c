@@ -5,8 +5,8 @@
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_float_t sll_complex_abs(const sll_complex_t* a){
-	return COMPLEX_ABS(*a);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_float_t sll_complex_abs(const sll_complex_t* number){
+	return COMPLEX_ABS(*number);
 }
 
 
@@ -35,17 +35,17 @@ __SLL_EXTERNAL void sll_complex_div_float(const sll_complex_t* a,sll_float_t b,s
 
 
 
-__SLL_EXTERNAL void sll_complex_exp(const sll_complex_t* a,sll_complex_t* out){
-	sll_float_t r=exp(a->real);
-	out->real=r*cos(a->imag);
-	out->imag=r*sin(a->imag);
+__SLL_EXTERNAL void sll_complex_exp(const sll_complex_t* number,sll_complex_t* out){
+	sll_float_t r=exp(number->real);
+	out->real=r*cos(number->imag);
+	out->imag=r*sin(number->imag);
 }
 
 
 
-__SLL_EXTERNAL void sll_complex_log(const sll_complex_t* a,sll_complex_t* out){
-	out->real=log(a->real*a->real+a->imag*a->imag)/2;
-	out->imag=atan2(a->imag,a->real);
+__SLL_EXTERNAL void sll_complex_log(const sll_complex_t* number,sll_complex_t* out){
+	out->real=log(number->real*number->real+number->imag*number->imag)/2;
+	out->imag=atan2(number->imag,number->real);
 }
 
 
@@ -62,8 +62,8 @@ __SLL_EXTERNAL void sll_complex_mult_float(const sll_complex_t* a,sll_float_t b,
 
 
 
-__SLL_EXTERNAL void sll_complex_neg(const sll_complex_t* a,sll_complex_t* out){
-	*out=COMPLEX_NEG(*a);
+__SLL_EXTERNAL void sll_complex_neg(const sll_complex_t* number,sll_complex_t* out){
+	*out=COMPLEX_NEG(*number);
 }
 
 
@@ -144,8 +144,8 @@ __SLL_EXTERNAL void sll_complex_pow_int(const sll_complex_t* a,sll_integer_t b,s
 
 
 
-__SLL_EXTERNAL void sll_complex_reciprocal(const sll_complex_t* a,sll_complex_t* out){
-	*out=COMPLEX_RECIPROCAL(*a);
+__SLL_EXTERNAL void sll_complex_reciprocal(const sll_complex_t* number,sll_complex_t* out){
+	*out=COMPLEX_RECIPROCAL(*number);
 }
 
 

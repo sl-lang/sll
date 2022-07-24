@@ -42,10 +42,10 @@
  * \name sll_complex_abs
  * \group complex
  * \desc Docs!
- * \arg const sll_complex_t* a
+ * \arg const sll_complex_t* number
  * \ret sll_float_t
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_float_t sll_complex_abs(const sll_complex_t* a);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_float_t sll_complex_abs(const sll_complex_t* number);
 
 
 
@@ -105,10 +105,10 @@ __SLL_EXTERNAL void sll_complex_div_float(const sll_complex_t* a,sll_float_t b,s
  * \name sll_complex_exp
  * \group complex
  * \desc Docs!
- * \arg const sll_complex_t* a
+ * \arg const sll_complex_t* number
  * \arg sll_complex_t* out
  */
-__SLL_EXTERNAL void sll_complex_exp(const sll_complex_t* a,sll_complex_t* out);
+__SLL_EXTERNAL void sll_complex_exp(const sll_complex_t* number,sll_complex_t* out);
 
 
 
@@ -117,10 +117,10 @@ __SLL_EXTERNAL void sll_complex_exp(const sll_complex_t* a,sll_complex_t* out);
  * \name sll_complex_log
  * \group complex
  * \desc Docs!
- * \arg const sll_complex_t* a
+ * \arg const sll_complex_t* number
  * \arg sll_complex_t* out
  */
-__SLL_EXTERNAL void sll_complex_log(const sll_complex_t* a,sll_complex_t* out);
+__SLL_EXTERNAL void sll_complex_log(const sll_complex_t* number,sll_complex_t* out);
 
 
 
@@ -155,10 +155,10 @@ __SLL_EXTERNAL void sll_complex_mult_float(const sll_complex_t* a,sll_float_t b,
  * \name sll_complex_neg
  * \group complex
  * \desc Docs!
- * \arg const sll_complex_t* a
+ * \arg const sll_complex_t* number
  * \arg sll_complex_t* out
  */
-__SLL_EXTERNAL void sll_complex_neg(const sll_complex_t* a,sll_complex_t* out);
+__SLL_EXTERNAL void sll_complex_neg(const sll_complex_t* number,sll_complex_t* out);
 
 
 
@@ -206,10 +206,10 @@ __SLL_EXTERNAL void sll_complex_pow_int(const sll_complex_t* a,sll_integer_t b,s
  * \name sll_complex_reciprocal
  * \group complex
  * \desc Docs!
- * \arg const sll_complex_t* a
+ * \arg const sll_complex_t* number
  * \arg sll_complex_t* out
  */
-__SLL_EXTERNAL void sll_complex_reciprocal(const sll_complex_t* a,sll_complex_t* out);
+__SLL_EXTERNAL void sll_complex_reciprocal(const sll_complex_t* number,sll_complex_t* out);
 
 
 
