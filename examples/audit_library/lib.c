@@ -20,7 +20,7 @@ Sll Audit Library Example
 
 EXPORT_SYMBOL void SLL_ABI_AUDIT_CALL(const sll_string_t* nm,const sll_array_t* args){
 	sll_file_write_format(sll_stdout,SLL_CHAR("!!! {%s} "),NULL,nm->data);
-	sll_object_t* tmp=sll_array_to_object(args);
+	sll_object_t tmp=sll_array_to_object(args);
 	sll_string_t str;
 	sll_api_string_convert(&tmp,1,&str);
 	sll_release_object(tmp);

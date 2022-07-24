@@ -173,7 +173,7 @@ sll_return_code_t _scheduler_run(void){
 		cpu_dt++;
 	}
 	_cpu_core_worker(NULL);
-	sll_object_t* rc_o=sll_operator_cast(_thread_get(0)->return_value,sll_static_int[SLL_OBJECT_TYPE_INT]);
+	sll_object_t rc_o=sll_operator_cast(_thread_get(0)->return_value,sll_static_int[SLL_OBJECT_TYPE_INT]);
 	sll_return_code_t o=(sll_return_code_t)(rc_o->data.int_);
 	SLL_RELEASE(rc_o);
 	sll_gc_collect();

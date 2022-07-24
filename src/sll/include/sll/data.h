@@ -116,11 +116,11 @@ __SLL_EXTERNAL void sll_copy_data(const void* source,sll_size_t length,void* tar
  * \name sll_copy_objects
  * \group data
  * \desc Docs!
- * \arg sll_object_t*const* source
+ * \arg const sll_object_t* source
  * \arg sll_size_t count
- * \arg sll_object_t** target
+ * \arg sll_object_t* target
  */
-__SLL_EXTERNAL void sll_copy_objects(sll_object_t*const* source,sll_size_t count,sll_object_t** target);
+__SLL_EXTERNAL void sll_copy_objects(const sll_object_t* source,sll_size_t count,sll_object_t* target);
 
 
 

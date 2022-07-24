@@ -214,7 +214,7 @@ __SLL_EXTERNAL void sll_string_format_list(const sll_char_t* format,sll_string_l
 			_format_string(f,w,p,&s,out);
 		}
 		else if (*format=='S'){
-			sll_object_t* obj=sll_var_arg_get_object(va);
+			sll_object_t obj=sll_var_arg_get_object(va);
 			sll_string_t s;
 			sll_api_string_convert(&obj,1,&s);
 			SLL_RELEASE(obj);

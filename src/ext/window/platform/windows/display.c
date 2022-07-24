@@ -39,7 +39,7 @@ __WINDOW_API_CALL void window_api_display_enumerate(sll_array_t* out){
 		if (!settings.dmPosition.x&&!settings.dmPosition.y){
 			flags|=WINDOW_DISPLAY_FLAG_MAIN_DISPLAY;
 		}
-		sll_object_t* display=sll_new_object(SLL_CHAR("u[hhuu]fi"),id,settings.dmPosition.x,settings.dmPosition.y,settings.dmPelsWidth,settings.dmPelsHeight,rotation,flags);
+		sll_object_t display=sll_new_object(SLL_CHAR("u[hhuu]fi"),id,settings.dmPosition.x,settings.dmPosition.y,settings.dmPelsWidth,settings.dmPelsHeight,rotation,flags);
 		sll_array_push(NULL,display,out);
 		SLL_RELEASE(display);
 _next_display:

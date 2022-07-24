@@ -11,7 +11,7 @@
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_bool_t sll_api_log_log(sll_object_t*const* args,sll_arg_count_t arg_count){
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_bool_t sll_api_log_log(const sll_object_t* args,sll_arg_count_t arg_count){
 	sll_string_index_t fp;
 	sll_string_index_t fn;
 	sll_file_offset_t ln=sll_get_location(sll_current_runtime_data->assembly_data,sll_thread_get_instruction_index(SLL_UNKNOWN_THREAD_INDEX),&fp,&fn);

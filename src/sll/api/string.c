@@ -92,7 +92,7 @@ static void _write_char(sll_char_t c,sll_string_t* o){
 
 
 
-static void _object_to_string(sll_object_t* a,sll_string_t* o,address_list_t* addr_list){
+static void _object_to_string(sll_object_t a,sll_string_t* o,address_list_t* addr_list){
 	if (!SLL_GET_OBJECT_REFERENCE_COUNTER(a)){
 		sll_string_increase(o,17);
 		sll_copy_string(SLL_CHAR("<released object>"),o->data+o->length);
@@ -251,9 +251,9 @@ static void _object_to_string(sll_object_t* a,sll_string_t* o,address_list_t* ad
 				}
 				const sll_object_type_data_t* dt=*(sll_current_runtime_data->type_table->data+a->type-SLL_MAX_OBJECT_TYPE-1);
 				if (dt->functions[SLL_OBJECT_FUNC_STRING]){
-					sll_object_t* v=sll_execute_function(dt->functions[SLL_OBJECT_FUNC_STRING],&a,1,0);
+					sll_object_t v=sll_execute_function(dt->functions[SLL_OBJECT_FUNC_STRING],&a,1,0);
 					if (v){
-						sll_object_t* str=sll_operator_cast(v,sll_static_int[SLL_OBJECT_TYPE_STRING]);
+						sll_object_t str=sll_operator_cast(v,sll_static_int[SLL_OBJECT_TYPE_STRING]);
 						SLL_RELEASE(v);
 						sll_string_increase(o,str->data.string.length);
 						sll_copy_data(str->data.string.data,str->data.string.length,o->data+o->length);
@@ -285,7 +285,7 @@ static void _object_to_string(sll_object_t* a,sll_string_t* o,address_list_t* ad
 					sll_string_increase(o,1);
 					o->data[o->length]=' ';
 					o->length++;
-					sll_object_t* tmp;
+					sll_object_t tmp;
 					switch (dt->fields[i].type){
 						case SLL_OBJECT_TYPE_INT:
 							tmp=sll_int_to_object(p->int_);
@@ -322,10 +322,10 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_string_checksum_t sll_api_s
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL void sll_api_string_convert(sll_object_t*const* args,sll_arg_count_t len,sll_string_t* out){
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_string_convert(const sll_object_t* args,sll_arg_count_t len,sll_string_t* out){
 	STRING_INIT_STACK(out);
 	for (sll_array_length_t i=0;i<len;i++){
-		sll_object_t* v=*(args+i);
+		sll_object_t v=*(args+i);
 		if (v->type==SLL_OBJECT_TYPE_CHAR){
 			sll_string_increase(out,1);
 			out->data[out->length]=v->data.char_;
@@ -379,7 +379,7 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_string_flip_case(const sll_string_t* 
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL void sll_api_string_format(const sll_string_t* fmt,sll_object_t*const* args,sll_arg_count_t len,sll_string_t* out){
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_string_format(const sll_string_t* fmt,const sll_object_t* args,sll_arg_count_t len,sll_string_t* out){
 	sll_var_arg_list_t dt;
 	SLL_VAR_ARG_INIT_SLL(&dt,args,len);
 	sll_string_format_list(fmt->data,fmt->length,&dt,out);

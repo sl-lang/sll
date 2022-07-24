@@ -32,10 +32,10 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_map_extend(sll_map_t* map,const sll_m
  * \desc Docs!
  * \api mo|D
  * \arg sll_map_t* map
- * \arg sll_object_t* key
+ * \arg sll_object_t key
  * \ret sll_map_length_t
  */
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_map_length_t sll_api_map_remove(sll_map_t* map,sll_object_t* key);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_map_length_t sll_api_map_remove(sll_map_t* map,sll_object_t key);
 
 
 

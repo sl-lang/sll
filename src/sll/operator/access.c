@@ -11,7 +11,7 @@
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_access(sll_object_t* a,sll_object_t* b){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t sll_operator_access(sll_object_t a,sll_object_t b){
 	if (a->type==SLL_OBJECT_TYPE_STRING){
 		if (b->type==SLL_OBJECT_TYPE_INT){
 			if (!a->data.string.length){
@@ -33,7 +33,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_access(sll_object_t
 			if (idx<0||idx>=a->data.array.length){
 				return SLL_ACQUIRE_STATIC_INT(0);
 			}
-			sll_object_t* o=a->data.array.data[idx];
+			sll_object_t o=a->data.array.data[idx];
 			SLL_ACQUIRE(o);
 			return o;
 		}
@@ -49,15 +49,15 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_access(sll_object_t
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_access_range(sll_object_t* a,sll_object_t* b,sll_object_t* c){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t sll_operator_access_range(sll_object_t a,sll_object_t b,sll_object_t c){
 	if (b->type==SLL_OBJECT_TYPE_INT&&c->type==SLL_OBJECT_TYPE_INT){
 		if (a->type==SLL_OBJECT_TYPE_STRING){
-			sll_object_t* o=sll_create_object(SLL_OBJECT_TYPE_STRING);
+			sll_object_t o=sll_create_object(SLL_OBJECT_TYPE_STRING);
 			sll_string_select(&(a->data.string),b->data.int_,c->data.int_,1,&(o->data.string));
 			return o;
 		}
 		else if (a->type==SLL_OBJECT_TYPE_ARRAY){
-			sll_object_t* o=sll_create_object(SLL_OBJECT_TYPE_ARRAY);
+			sll_object_t o=sll_create_object(SLL_OBJECT_TYPE_ARRAY);
 			sll_array_select(&(a->data.array),b->data.int_,c->data.int_,1,&(o->data.array));
 			return o;
 		}
@@ -67,15 +67,15 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_access_range(sll_ob
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_access_range_step(sll_object_t* a,sll_object_t* b,sll_object_t* c,sll_object_t* d){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t sll_operator_access_range_step(sll_object_t a,sll_object_t b,sll_object_t c,sll_object_t d){
 	if (b->type==SLL_OBJECT_TYPE_INT&&c->type==SLL_OBJECT_TYPE_INT&&d->type==SLL_OBJECT_TYPE_INT){
 		if (a->type==SLL_OBJECT_TYPE_STRING){
-			sll_object_t* o=sll_create_object(SLL_OBJECT_TYPE_STRING);
+			sll_object_t o=sll_create_object(SLL_OBJECT_TYPE_STRING);
 			sll_string_select(&(a->data.string),b->data.int_,c->data.int_,d->data.int_,&(o->data.string));
 			return o;
 		}
 		else if (a->type==SLL_OBJECT_TYPE_ARRAY){
-			sll_object_t* o=sll_create_object(SLL_OBJECT_TYPE_ARRAY);
+			sll_object_t o=sll_create_object(SLL_OBJECT_TYPE_ARRAY);
 			sll_array_select(&(a->data.array),b->data.int_,c->data.int_,d->data.int_,&(o->data.array));
 			return o;
 		}

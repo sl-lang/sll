@@ -32,9 +32,9 @@
  * \group new-object
  * \desc Docs!
  * \arg const sll_char_t* format
- * \ret sll_object_t*
+ * \ret sll_object_t
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_new_object(const sll_char_t* format,...);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t sll_new_object(const sll_char_t* format,...);
 
 
 
@@ -72,9 +72,9 @@ __SLL_EXTERNAL void sll_new_object_array_list(const sll_char_t* format,sll_strin
  * \arg const sll_char_t* format
  * \arg sll_string_length_t format_length
  * \arg sll_var_arg_list_t* va
- * \ret sll_object_t*
+ * \ret sll_object_t
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_new_object_list(const sll_char_t* format,sll_string_length_t format_length,sll_var_arg_list_t* va);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t sll_new_object_list(const sll_char_t* format,sll_string_length_t format_length,sll_var_arg_list_t* va);
 
 
 

@@ -22,7 +22,7 @@ static void _call_user_callback(const sll_string_t* name,const sll_array_t* args
 	if (!_audit_callback){
 		return;
 	}
-	sll_object_t* dt[2]={
+	sll_object_t dt[2]={
 		STRING_TO_OBJECT(name),
 		sll_array_to_object(args)
 	};
@@ -55,7 +55,7 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_audit__init(sll_integer_t callback){
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL void sll_api_audit_audit(const sll_string_t* name,const sll_string_t* format,sll_object_t*const* args,sll_arg_count_t arg_count){
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_audit_audit(const sll_string_t* name,const sll_string_t* format,const sll_object_t* args,sll_arg_count_t arg_count){
 	sll_var_arg_list_t dt;
 	SLL_VAR_ARG_INIT_SLL(&dt,args,arg_count);
 	sll_audit_list(name->data,format->data,&dt);

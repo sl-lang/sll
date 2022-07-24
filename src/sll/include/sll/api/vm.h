@@ -67,10 +67,10 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_vm_get_location(sll_instruction_index
  * \group vm-api
  * \desc Docs!
  * \api o|D
- * \arg sll_object_t* object
+ * \arg sll_object_t object
  * \ret sll_reference_count_t
  */
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_reference_count_t sll_api_vm_get_ref_count(sll_object_t* object);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_reference_count_t sll_api_vm_get_ref_count(sll_object_t object);
 
 
 
@@ -80,9 +80,9 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_reference_count_t sll_api_v
  * \group vm-api
  * \desc Docs!
  * \arg sll_instruction_index_t instruction_index
- * \ret sll_object_t*
+ * \ret sll_object_t
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_instruction_to_location(sll_instruction_index_t instruction_index);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t sll_instruction_to_location(sll_instruction_index_t instruction_index);
 
 
 

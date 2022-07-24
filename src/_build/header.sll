@@ -347,7 +347,9 @@ extern "C" {
 					(++ j)
 				)
 				(= str (+ str
-					"} "
+					'}'
+					(* "*" (!! (& symbol$flags documentation$FLAG_POINTER)))
+					' '
 					symbol$name
 				))
 			}

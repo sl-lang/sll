@@ -75,7 +75,7 @@ sll_thread_index_t _thread_new(void){
 		ptr=sll_platform_allocate_page(THREAD_SIZE,0,NULL);
 	}
 	thread_data_t* n=ptr;
-	n->stack=PTR(ADDR(ptr)+sizeof(thread_data_t)+sll_current_vm_config->call_stack_size*sizeof(sll_call_stack_frame_t)+sll_current_runtime_data->assembly_data->tls_variable_count*sizeof(sll_object_t*));
+	n->stack=PTR(ADDR(ptr)+sizeof(thread_data_t)+sll_current_vm_config->call_stack_size*sizeof(sll_call_stack_frame_t)+sll_current_runtime_data->assembly_data->tls_variable_count*sizeof(sll_object_t));
 	n->stack[0]=NULL;
 	sll_gc_add_roots(n->stack,sll_current_vm_config->stack_size);
 	n->tls=PTR(ADDR(ptr)+sizeof(thread_data_t)+sll_current_vm_config->call_stack_size*sizeof(sll_call_stack_frame_t));
@@ -104,7 +104,7 @@ sll_thread_index_t _thread_new(void){
 
 
 
-void _thread_terminate(sll_object_t* return_value){
+void _thread_terminate(sll_object_t return_value){
 	SLL_ASSERT(_scheduler_current_thread->state==THREAD_STATE_RUNNING&&!(_scheduler_current_thread->flags&THREAD_FLAG_SUSPENDED));
 	SLL_ACQUIRE(return_value);
 	sll_thread_index_t thread_index=_scheduler_current_thread_index;
@@ -162,7 +162,7 @@ sll_bool_t _thread_wait(sll_integer_t thread_index){
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_thread_index_t sll_thread_create(sll_integer_t function,sll_object_t*const* args,sll_arg_count_t arg_count){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_thread_index_t sll_thread_create(sll_integer_t function,const sll_object_t* args,sll_arg_count_t arg_count){
 	if (function&&function<=sll_current_runtime_data->assembly_data->function_table.length){
 		sll_thread_index_t o=_thread_new();
 		thread_data_t* thr=*(_thread_data.data+o);

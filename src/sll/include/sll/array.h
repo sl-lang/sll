@@ -100,10 +100,10 @@ __SLL_EXTERNAL void sll_array_clone(const sll_array_t* array,sll_array_t* out);
  * \subgroup array-op
  * \desc Docs!
  * \arg const sll_array_t* array
- * \arg sll_object_t* object
+ * \arg sll_object_t object
  * \ret sll_array_length_t
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_array_length_t sll_array_count(const sll_array_t* array,sll_object_t* object);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_array_length_t sll_array_count(const sll_array_t* array,sll_object_t object);
 
 
 
@@ -114,11 +114,11 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_array_length_t sll_array_count(const sll_a
  * \subgroup array-op
  * \desc Docs!
  * \arg const sll_array_t* array
- * \arg sll_object_t*const* object_data
+ * \arg const sll_object_t* object_data
  * \arg sll_array_length_t object_count
  * \ret sll_array_length_t
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_array_length_t sll_array_count_multiple(const sll_array_t* array,sll_object_t*const* object_data,sll_array_length_t object_count);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_array_length_t sll_array_count_multiple(const sll_array_t* array,const sll_object_t* object_data,sll_array_length_t object_count);
 
 
 
@@ -265,9 +265,9 @@ __SLL_EXTERNAL void sll_array_extend(const sll_array_t* base,const sll_array_t* 
  * \desc Docs!
  * \arg const sll_array_t* array
  * \arg sll_array_length_t index
- * \ret sll_object_t*
+ * \ret sll_object_t
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_array_get(const sll_array_t* array,sll_array_length_t index);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t sll_array_get(const sll_array_t* array,sll_array_length_t index);
 
 
 
@@ -277,10 +277,10 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_array_get(const sll_array_t*
  * \group array
  * \desc Docs!
  * \arg const sll_array_t* array
- * \arg sll_object_t* object
+ * \arg sll_object_t object
  * \ret sll_bool_t
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_array_includes(const sll_array_t* array,sll_object_t* object);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_array_includes(const sll_array_t* array,sll_object_t object);
 
 
 
@@ -292,10 +292,10 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_array_includes(const sll_array_
  * \desc Docs!
  * \arg const sll_array_t*const* array_data
  * \arg sll_array_length_t array_count
- * \arg sll_object_t* infix
+ * \arg sll_object_t infix
  * \arg sll_array_t* out
  */
-__SLL_EXTERNAL void sll_array_join_arrays(const sll_array_t*const* array_data,sll_array_length_t array_count,sll_object_t* infix,sll_array_t* out);
+__SLL_EXTERNAL void sll_array_join_arrays(const sll_array_t*const* array_data,sll_array_length_t array_count,sll_object_t infix,sll_array_t* out);
 
 
 
@@ -388,9 +388,9 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_integer_t sll_array_parse_int(const sll_ar
  * \desc Docs!
  * \arg const sll_array_t* array
  * \arg sll_array_t* out
- * \ret sll_object_t*
+ * \ret sll_object_t
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_array_pop(const sll_array_t* array,sll_array_t* out);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t sll_array_pop(const sll_array_t* array,sll_array_t* out);
 
 
 
@@ -401,10 +401,10 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_array_pop(const sll_array_t*
  * \subgroup array-data
  * \desc Docs!
  * \arg const sll_array_t* array
- * \arg sll_object_t* object
+ * \arg sll_object_t object
  * \arg sll_array_t* out
  */
-__SLL_EXTERNAL void sll_array_push(const sll_array_t* array,sll_object_t* object,sll_array_t* out);
+__SLL_EXTERNAL void sll_array_push(const sll_array_t* array,sll_object_t object,sll_array_t* out);
 
 
 
@@ -429,10 +429,10 @@ __SLL_EXTERNAL void sll_array_range(sll_integer_t start,sll_integer_t end,sll_in
  * \subgroup array-data
  * \desc Docs!
  * \arg const sll_array_t* array
- * \arg sll_object_t* object
+ * \arg sll_object_t object
  * \arg sll_array_t* out
  */
-__SLL_EXTERNAL void sll_array_remove(const sll_array_t* array,sll_object_t* object,sll_array_t* out);
+__SLL_EXTERNAL void sll_array_remove(const sll_array_t* array,sll_object_t object,sll_array_t* out);
 
 
 
@@ -443,11 +443,11 @@ __SLL_EXTERNAL void sll_array_remove(const sll_array_t* array,sll_object_t* obje
  * \subgroup array-data
  * \desc Docs!
  * \arg const sll_array_t* array
- * \arg sll_object_t** object_data
+ * \arg sll_object_t* object_data
  * \arg sll_array_length_t object_count
  * \arg sll_array_t* out
  */
-__SLL_EXTERNAL void sll_array_remove_multiple(const sll_array_t* array,sll_object_t** object_data,sll_array_length_t object_count,sll_array_t* out);
+__SLL_EXTERNAL void sll_array_remove_multiple(const sll_array_t* array,sll_object_t* object_data,sll_array_length_t object_count,sll_array_t* out);
 
 
 
@@ -458,11 +458,11 @@ __SLL_EXTERNAL void sll_array_remove_multiple(const sll_array_t* array,sll_objec
  * \subgroup array-data
  * \desc Docs!
  * \arg const sll_array_t* array
- * \arg sll_object_t* key
- * \arg sll_object_t* value
+ * \arg sll_object_t key
+ * \arg sll_object_t value
  * \arg sll_array_t* out
  */
-__SLL_EXTERNAL void sll_array_replace(const sll_array_t* array,sll_object_t* key,sll_object_t* value,sll_array_t* out);
+__SLL_EXTERNAL void sll_array_replace(const sll_array_t* array,sll_object_t key,sll_object_t value,sll_array_t* out);
 
 
 
@@ -516,10 +516,10 @@ __SLL_EXTERNAL void sll_array_select(const sll_array_t* array,sll_integer_t star
  * \subgroup array-op
  * \desc Docs!
  * \arg const sll_array_t* array
- * \arg sll_object_t* object
+ * \arg sll_object_t object
  * \arg sll_array_t* out
  */
-__SLL_EXTERNAL void sll_array_split(const sll_array_t* array,sll_object_t* object,sll_array_t* out);
+__SLL_EXTERNAL void sll_array_split(const sll_array_t* array,sll_object_t object,sll_array_t* out);
 
 
 
@@ -531,9 +531,9 @@ __SLL_EXTERNAL void sll_array_split(const sll_array_t* array,sll_object_t* objec
  * \desc Docs!
  * \arg const sll_array_t* array
  * \arg sll_array_length_t index
- * \arg sll_object_t* object
+ * \arg sll_object_t object
  */
-__SLL_EXTERNAL void sll_array_set(const sll_array_t* array,sll_array_length_t index,sll_object_t* object);
+__SLL_EXTERNAL void sll_array_set(const sll_array_t* array,sll_array_length_t index,sll_object_t object);
 
 
 
@@ -545,9 +545,9 @@ __SLL_EXTERNAL void sll_array_set(const sll_array_t* array,sll_array_length_t in
  * \desc Docs!
  * \arg const sll_array_t* array
  * \arg sll_array_t* out
- * \ret sll_object_t*
+ * \ret sll_object_t
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_array_shift(const sll_array_t* array,sll_array_t* out);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t sll_array_shift(const sll_array_t* array,sll_array_t* out);
 
 
 
@@ -570,10 +570,10 @@ __SLL_EXTERNAL void sll_array_to_map(const sll_array_t* array,sll_map_t* out);
  * \subgroup array-data
  * \desc Docs!
  * \arg const sll_array_t* array
- * \arg sll_object_t* object
+ * \arg sll_object_t object
  * \arg sll_array_t* out
  */
-__SLL_EXTERNAL void sll_array_unshift(const sll_array_t* array,sll_object_t* object,sll_array_t* out);
+__SLL_EXTERNAL void sll_array_unshift(const sll_array_t* array,sll_object_t object,sll_array_t* out);
 
 
 

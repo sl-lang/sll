@@ -69,7 +69,7 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_serial_deco
 		return SLL_ERROR_UNKNOWN_FD;
 	}
 	sll_error_t err;
-	sll_object_t* o=sll_decode_object(file,&err);
+	sll_object_t o=sll_decode_object(file,&err);
 	if (err==SLL_NO_ERROR){
 		sll_new_object_array(SLL_CHAR("O!"),out,o);
 	}
@@ -212,7 +212,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_integer_t sll_decode_signed_integer(sll_fi
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_decode_object(sll_file_t* file,sll_error_t* err){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t sll_decode_object(sll_file_t* file,sll_error_t* err){
 	ERROR_PTR_RESET;
 	if (!file){
 		if (err){
@@ -292,7 +292,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_decode_object(sll_file_t* fi
 					}
 					return sll_array_to_object(NULL);
 				}
-				sll_object_t* o=sll_array_length_to_object(l);
+				sll_object_t o=sll_array_length_to_object(l);
 				for (sll_array_length_t i=0;i<l;i++){
 					o->data.array.data[i]=sll_decode_object(file,err);
 					if (err&&*err!=SLL_NO_ERROR){
@@ -312,7 +312,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_decode_object(sll_file_t* fi
 					}
 					return sll_map_to_object(NULL);
 				}
-				sll_object_t* o=sll_map_length_to_object(l);
+				sll_object_t o=sll_map_length_to_object(l);
 				for (sll_map_length_t i=0;i<(l<<1);i++){
 					o->data.map.data[i]=sll_decode_object(file,err);
 					if (err&&*err!=SLL_NO_ERROR){
@@ -426,12 +426,12 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_error_t sll_encode_signed_integer(sll_file
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_error_t sll_encode_object(sll_file_t* file,sll_object_t*const* args,sll_arg_count_t arg_count){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_error_t sll_encode_object(sll_file_t* file,const sll_object_t* args,sll_arg_count_t arg_count){
 	if (!file){
 		return SLL_ERROR_UNKNOWN_FD;
 	}
 	while (arg_count){
-		sll_object_t* k=*args;
+		sll_object_t k=*args;
 		args++;
 		arg_count--;
 		if (k->type>sll_current_runtime_data->type_table->length+SLL_MAX_OBJECT_TYPE){

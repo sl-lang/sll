@@ -14,7 +14,7 @@
 
 
 #define THREAD_SCHEDULER_INSTRUCTION_COUNT 10
-#define THREAD_SIZE SLL_ROUND_PAGE(sizeof(thread_data_t)+sll_current_vm_config->call_stack_size*sizeof(sll_call_stack_frame_t)+(sll_current_vm_config->stack_size+sll_current_runtime_data->assembly_data->tls_variable_count)*sizeof(sll_object_t*))
+#define THREAD_SIZE SLL_ROUND_PAGE(sizeof(thread_data_t)+sll_current_vm_config->call_stack_size*sizeof(sll_call_stack_frame_t)+(sll_current_vm_config->stack_size+sll_current_runtime_data->assembly_data->tls_variable_count)*sizeof(sll_object_t))
 
 #define THREAD_ALLOCATOR_CACHE_POOL_SIZE 32
 
@@ -47,13 +47,13 @@ typedef __SLL_U32 thread_list_length_t;
 
 
 typedef struct _THREAD_DATA{
-	sll_object_t** stack;
-	sll_object_t** tls;
+	sll_object_t* stack;
+	sll_object_t* tls;
 	sll_instruction_index_t instruction_index;
 	sll_stack_offset_t stack_index;
 	sll_thread_index_t next;
 	sll_thread_index_t wait;
-	sll_object_t* return_value;
+	sll_object_t return_value;
 	sll_call_stack_t call_stack;
 	sll_sandbox_flags_t sandbox;
 	sll_char_t time_quantum;
@@ -77,7 +77,7 @@ sll_thread_index_t _thread_new(void);
 
 
 
-void _thread_terminate(sll_object_t* return_value);
+void _thread_terminate(sll_object_t return_value);
 
 
 

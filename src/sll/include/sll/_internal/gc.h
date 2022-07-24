@@ -41,8 +41,8 @@
 		(pg)->cnt-=2; \
 	} while (0)
 
-#define GC_GET_PREV_OBJECT(o) ((sll_object_t*)PTR(((o)->_data&0x1fffffffffffull)<<3))
-#define GC_GET_NEXT_OBJECT(o) ((sll_object_t*)PTR((((o)->_flags>>6)|(((o)->_data>>45)<<26))<<3))
+#define GC_GET_PREV_OBJECT(o) ((sll_object_t)PTR(((o)->_data&0x1fffffffffffull)<<3))
+#define GC_GET_NEXT_OBJECT(o) ((sll_object_t)PTR((((o)->_flags>>6)|(((o)->_data>>45)<<26))<<3))
 #define GC_SET_PREV_OBJECT(o,prev) \
 	do{ \
 		SLL_ASSERT((ADDR(prev)&0xfffffffffff8ull)==ADDR(prev)); \
@@ -65,7 +65,7 @@
 #define GC_ROOTS_POINTER_SHIFT 45
 #define GC_ROOTS_LENGTH_SHIFT (64-GC_ROOTS_POINTER_SHIFT)
 #define GC_ENCODE_ROOT(data,length) ((length)|((ADDR(data)>>3)<<GC_ROOTS_LENGTH_SHIFT))
-#define GC_GET_ROOT(data) ((sll_object_t*const*)PTR(((data)>>GC_ROOTS_LENGTH_SHIFT)<<3))
+#define GC_GET_ROOT(data) ((const sll_object_t*)PTR(((data)>>GC_ROOTS_LENGTH_SHIFT)<<3))
 #define GC_GET_LENGTH(data) ((sll_size_t)((data)&((1<<GC_ROOTS_LENGTH_SHIFT)-1)))
 
 #define GC_IS_MARKED(o) (((o)->_flags&GC_FLAG_STATIC)||(((o)->_flags>>5)&1)==_gc_data.object_marker_signature)
@@ -76,7 +76,7 @@
 
 #define GC_RELEASE_CHECK_ZERO_REF(o) \
 	do{ \
-		sll_object_t* __o=(o); \
+		sll_object_t __o=(o); \
 		if (!SLL_GET_OBJECT_REFERENCE_COUNTER(__o)){ \
 			if (!_gc_data.cleanup_in_progress){ \
 				sll__gc_error(__o); \
@@ -137,14 +137,14 @@ typedef struct _GC_MEMORY_PAGE_DATA{
 
 
 typedef struct _GC_OBJECT_POOL{
-	sll_object_t* data[GC_OBJECT_POOL_SIZE];
+	sll_object_t data[GC_OBJECT_POOL_SIZE];
 	sll_object_pool_index_t length;
 } gc_object_pool_t;
 
 
 
 typedef struct _GC_FAST_OBJECT_POOL{
-	sll_object_t* data[GC_FAST_OBJECT_POOL_SIZE];
+	sll_object_t data[GC_FAST_OBJECT_POOL_SIZE];
 	gc_fast_object_pool_length_t read;
 	gc_fast_object_pool_length_t write;
 	gc_fast_object_pool_length_t space;
@@ -153,10 +153,10 @@ typedef struct _GC_FAST_OBJECT_POOL{
 
 
 typedef struct _GC_ROOT_DATA{
-	sll_object_t* single;
+	sll_object_t single;
 	gc_multiple_root_t* multiple;
 	sll_size_t multiple_length;
-	sll_object_t* fast[GC_FAST_ROOT_DATA_COUNT];
+	sll_object_t fast[GC_FAST_ROOT_DATA_COUNT];
 	fast_root_index_t fast_count;
 	fast_root_index_t fast_empty_index;
 } gc_root_data_t;

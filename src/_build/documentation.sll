@@ -89,6 +89,7 @@
 	(~ int_type) FLAG_FUNC
 	(~ int_type) FLAG_GROUP
 	(~ int_type) FLAG_MACRO
+	(~ int_type) FLAG_POINTER
 	(~ int_type) FLAG_SUBGROUP
 	(~ int_type) FLAG_TYPE
 	(~ int_type) FLAG_UNION
@@ -103,17 +104,19 @@
 (= FLAG_FUNC 2)
 (= FLAG_GROUP 4)
 (= FLAG_MACRO 8)
-(= FLAG_SUBGROUP 16)
-(= FLAG_TYPE 32)
-(= FLAG_UNION 64)
-(= FLAG_VAR 128)
-(= FLAG_VAR_ARG 256)
+(= FLAG_POINTER 16)
+(= FLAG_SUBGROUP 32)
+(= FLAG_TYPE 64)
+(= FLAG_UNION 128)
+(= FLAG_VAR 256)
+(= FLAG_VAR_ARG 512)
 
 (= FLAGS <
 	"check_output" FLAG_CHECK_OUTPUT
 	"func" FLAG_FUNC
 	"group" FLAG_GROUP
 	"macro" FLAG_MACRO
+	"pointer" FLAG_POINTER
 	"subgroup" FLAG_SUBGROUP
 	"type" FLAG_TYPE
 	"union" FLAG_UNION
@@ -269,6 +272,7 @@
 	FLAG_FUNC
 	FLAG_GROUP
 	FLAG_MACRO
+	FLAG_POINTER
 	FLAG_SUBGROUP
 	FLAG_TYPE
 	FLAG_UNION

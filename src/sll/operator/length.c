@@ -9,7 +9,7 @@
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_len(sll_object_t* a){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t sll_operator_len(sll_object_t a){
 	switch (a->type){
 		case SLL_OBJECT_TYPE_INT:
 			return sll_int_to_object((a->data.int_<0?-a->data.int_:a->data.int_));

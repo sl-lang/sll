@@ -20,11 +20,11 @@
  * \desc Docs!
  * \api #so!|o
  * \arg const sll_string_t* format
- * \arg sll_object_t*const* args
+ * \arg const sll_object_t* args
  * \arg sll_arg_count_t lenngth
- * \ret sll_object_t*
+ * \ret sll_object_t
  */
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_object_t* sll_api_object_new(const sll_string_t* format,sll_object_t*const* args,sll_arg_count_t lenngth);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_object_t sll_api_object_new(const sll_string_t* format,const sll_object_t* args,sll_arg_count_t lenngth);
 
 
 

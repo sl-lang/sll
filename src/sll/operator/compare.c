@@ -18,7 +18,7 @@
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_compare_result_t sll_operator_compare(sll_object_t* a,sll_object_t* b){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_compare_result_t sll_operator_compare(sll_object_t a,sll_object_t b){
 	switch (COMBINED_ARGS){
 		case COMBINED_TYPE_II:
 			return COMPARE_RESULT(a->data.int_,b->data.int_);

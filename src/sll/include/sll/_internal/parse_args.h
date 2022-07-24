@@ -27,7 +27,7 @@ typedef __SLL_U8 arg_parse_flags_t;
 
 typedef struct _ARG_STATE{
 	sll_size_t length;
-	sll_object_t* data[];
+	sll_object_t data[];
 } arg_state_t;
 
 
@@ -57,7 +57,7 @@ sll_arg_count_t _parse_arg_count(const sll_char_t* t,__SLL_U16 ret,bitmap_t** re
 
 
 
-sll_arg_state_t _parse_args_raw(const sll_char_t* t,sll_object_t*const* al,sll_arg_count_t all,arg_output_t* va);
+sll_arg_state_t _parse_args_raw(const sll_char_t* t,const sll_object_t* al,sll_arg_count_t all,arg_output_t* va);
 
 
 

@@ -14,7 +14,7 @@ __WINDOW_API_CALL void window_api_event_poll(sll_bool_t blocking,sll_array_t* ou
 	SLL_INIT_ARRAY(out);
 	const xcb_generic_event_t* event=(blocking?xcb_wait_for_event:xcb_poll_for_event)(_xcb_conn);
 	while (event){
-		sll_object_t* arg=NULL;
+		sll_object_t arg=NULL;
 		uint8_t type=event->response_type&0x7f;
 		sll_bool_t is_send_event=event->response_type>>7;
 		switch (type){

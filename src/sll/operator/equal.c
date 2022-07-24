@@ -12,7 +12,7 @@
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_operator_equal(sll_object_t* a,sll_object_t* b){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_operator_equal(sll_object_t a,sll_object_t b){
 	switch (COMBINED_ARGS){
 		case COMBINED_TYPE_II:
 			return a->data.int_==b->data.int_;
@@ -120,7 +120,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_operator_equal(sll_object_t* a,
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_operator_strict_equal(sll_object_t* a,sll_object_t* b){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_operator_strict_equal(sll_object_t a,sll_object_t b){
 	if (a->type!=b->type){
 		return 0;
 	}

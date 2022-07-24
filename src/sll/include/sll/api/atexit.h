@@ -19,10 +19,10 @@
  * \desc Docs!
  * \api io!|
  * \arg sll_integer_t function
- * \arg sll_object_t*const* args
+ * \arg const sll_object_t* args
  * \arg sll_arg_count_t arg_count
  */
-__SLL_EXTERNAL __SLL_API_CALL void sll_api_atexit_register(sll_integer_t function,sll_object_t*const* args,sll_arg_count_t arg_count);
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_atexit_register(sll_integer_t function,const sll_object_t* args,sll_arg_count_t arg_count);
 
 
 

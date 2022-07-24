@@ -70,7 +70,7 @@
  * \group var-arg
  * \desc Docs!
  * \arg sll_var_arg_list_t* va
- * \arg sll_object_t*const* pointer_
+ * \arg const sll_object_t* pointer_
  * \arg sll_arg_count_t count_
  */
 #define SLL_VAR_ARG_INIT_SLL(va,pointer_,count_) \
@@ -99,11 +99,11 @@ typedef __SLL_U8 sll_var_arg_list_type_t;
  * \name sll_var_arg_list_data_sll_t
  * \group var-arg
  * \desc Docs!
- * \arg sll_object_t*const* pointer
+ * \arg const sll_object_t* pointer
  * \arg sll_arg_count_t count
  */
 typedef struct _SLL_VAR_ARG_LIST_DATA_SLL{
-	sll_object_t*const* pointer;
+	const sll_object_t* pointer;
 	sll_arg_count_t count;
 } sll_var_arg_list_data_sll_t;
 
@@ -228,9 +228,9 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_integer_t sll_var_arg_get_int(sll_var_arg_
  * \group var-arg
  * \desc Docs!
  * \arg sll_var_arg_list_t* va
- * \ret sll_object_t*
+ * \ret sll_object_t
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_var_arg_get_object(sll_var_arg_list_t* va);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t sll_var_arg_get_object(sll_var_arg_list_t* va);
 
 
 

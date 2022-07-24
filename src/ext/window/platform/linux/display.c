@@ -48,7 +48,7 @@ __WINDOW_API_CALL void window_api_display_enumerate(sll_array_t* out){
 		free(crtc);
 		free(output);
 	}
-	sll_allocator_resize((void**)(&(out->data)),i*sizeof(sll_object_t*));
+	sll_allocator_resize((void**)(&(out->data)),i*sizeof(sll_object_t));
 	out->length=i;
 	free(reply);
 }

@@ -33,11 +33,11 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_string_checksum_t sll_api_s
  * \group string-api
  * \desc Docs!
  * \api o!|s
- * \arg sll_object_t*const* args
+ * \arg const sll_object_t* args
  * \arg sll_arg_count_t len
  * \arg sll_string_t* out
  */
-__SLL_EXTERNAL __SLL_API_CALL void sll_api_string_convert(sll_object_t*const* args,sll_arg_count_t len,sll_string_t* out);
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_string_convert(const sll_object_t* args,sll_arg_count_t len,sll_string_t* out);
 
 
 
@@ -117,11 +117,11 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_string_flip_case(const sll_string_t* 
  * \desc Docs!
  * \api #so!|s
  * \arg const sll_string_t* fmt
- * \arg sll_object_t*const* args
+ * \arg const sll_object_t* args
  * \arg sll_arg_count_t len
  * \arg sll_string_t* out
  */
-__SLL_EXTERNAL __SLL_API_CALL void sll_api_string_format(const sll_string_t* fmt,sll_object_t*const* args,sll_arg_count_t len,sll_string_t* out);
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_string_format(const sll_string_t* fmt,const sll_object_t* args,sll_arg_count_t len,sll_string_t* out);
 
 
 

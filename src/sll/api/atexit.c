@@ -53,7 +53,7 @@ void _atexit_execute(void){
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL void sll_api_atexit_register(sll_integer_t function,sll_object_t*const* args,sll_arg_count_t arg_count){
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_atexit_register(sll_integer_t function,const sll_object_t* args,sll_arg_count_t arg_count){
 	if (!function||!_atexit_enable){
 		return;
 	}
@@ -62,7 +62,7 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_atexit_register(sll_integer_t functio
 		sll_register_cleanup(_cleanup_data,SLL_CLEANUP_TYPE_GLOBAL);
 	}
 	SLL_CRITICAL_ERROR(sll_platform_lock_acquire(_atexit_lock));
-	atexit_function_t* function_data=sll_allocate(sizeof(atexit_function_t)+arg_count*sizeof(sll_object_t*));
+	atexit_function_t* function_data=sll_allocate(sizeof(atexit_function_t)+arg_count*sizeof(sll_object_t));
 	function_data->function=function;
 	function_data->arg_count=arg_count;
 	sll_copy_objects(args,arg_count,function_data->args);

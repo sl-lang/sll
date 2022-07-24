@@ -11,10 +11,10 @@
 
 
 
-__SLL_EXTERNAL void sll_operator_assign(sll_object_t* a,sll_object_t* b,sll_object_t* v){
+__SLL_EXTERNAL void sll_operator_assign(sll_object_t a,sll_object_t b,sll_object_t v){
 	if (a->type==SLL_OBJECT_TYPE_STRING){
 		if (b->type==SLL_OBJECT_TYPE_INT){
-			sll_object_t* tmp=sll_operator_cast(v,sll_static_int[SLL_OBJECT_TYPE_CHAR]);
+			sll_object_t tmp=sll_operator_cast(v,sll_static_int[SLL_OBJECT_TYPE_CHAR]);
 			SLL_ASSERT(tmp->type==SLL_OBJECT_TYPE_CHAR);
 			sll_integer_t idx=b->data.int_-b->data.int_/a->data.string.length*a->data.string.length;
 			if (idx<0){
@@ -43,12 +43,12 @@ __SLL_EXTERNAL void sll_operator_assign(sll_object_t* a,sll_object_t* b,sll_obje
 
 
 
-__SLL_EXTERNAL void sll_operator_assign_range(sll_object_t* a,sll_object_t* b,sll_object_t* c,sll_object_t* v){
+__SLL_EXTERNAL void sll_operator_assign_range(sll_object_t a,sll_object_t b,sll_object_t c,sll_object_t v){
 	SLL_UNIMPLEMENTED();
 }
 
 
 
-__SLL_EXTERNAL void sll_operator_assign_range_step(sll_object_t* a,sll_object_t* b,sll_object_t* c,sll_object_t* d,sll_object_t* v){
+__SLL_EXTERNAL void sll_operator_assign_range_step(sll_object_t a,sll_object_t b,sll_object_t c,sll_object_t d,sll_object_t v){
 	SLL_UNIMPLEMENTED();
 }

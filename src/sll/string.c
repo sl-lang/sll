@@ -266,7 +266,7 @@ __SLL_EXTERNAL void sll_string_combinations(const sll_string_t* a,const sll_stri
 		return;
 	}
 	out->length=a->length*b->length;
-	out->data=sll_allocator_init(out->length*sizeof(sll_object_t*));
+	out->data=sll_allocator_init(out->length*sizeof(sll_object_t));
 	sll_array_length_t i=0;
 	for (sll_string_length_t j=0;j<a->length;j++){
 		for (sll_string_length_t k=0;k<b->length;k++){
@@ -701,7 +701,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_string_equal_array(const sll_st
 		return 0;
 	}
 	for (sll_string_length_t i=0;i<string->length;i++){
-		sll_object_t* e=array->data[i];
+		sll_object_t e=array->data[i];
 		if ((e->type==SLL_OBJECT_TYPE_CHAR&&e->data.char_==string->data[i])||(e->type==SLL_OBJECT_TYPE_INT&&e->data.int_==string->data[i])||(e->type==SLL_OBJECT_TYPE_STRING&&e->data.string.length==1&&e->data.string.data[0]==string->data[i])){
 			continue;
 		}
@@ -717,7 +717,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_string_equal_map(const sll_stri
 		return 0;
 	}
 	for (sll_map_length_t i=0;i<(map->length<<1);i+=2){
-		sll_object_t* e=map->data[i];
+		sll_object_t e=map->data[i];
 		if (e->type!=SLL_OBJECT_TYPE_INT||e->data.int_<0||e->data.int_>=string->length){
 			return 0;
 		}
@@ -761,13 +761,13 @@ __SLL_EXTERNAL void sll_string_from_char(sll_char_t char_,sll_string_t* out){
 
 
 
-__SLL_EXTERNAL void sll_string_from_data(sll_object_t** object_data,sll_string_length_t object_count,sll_string_t* out){
+__SLL_EXTERNAL void sll_string_from_data(sll_object_t* object_data,sll_string_length_t object_count,sll_string_t* out){
 	out->length=object_count;
 	out->checksum=0;
 	out->data=sll_allocator_init(SLL_STRING_ALIGN_LENGTH(object_count)*sizeof(sll_char_t));
 	INIT_PADDING(out->data,object_count);
 	for (sll_string_length_t i=0;i<object_count;i++){
-		sll_object_t* n=sll_operator_cast(*(object_data+i),sll_static_int[SLL_OBJECT_TYPE_CHAR]);
+		sll_object_t n=sll_operator_cast(*(object_data+i),sll_static_int[SLL_OBJECT_TYPE_CHAR]);
 		SLL_ASSERT(n->type==SLL_OBJECT_TYPE_CHAR);
 		out->data[i]=n->data.char_;
 		out->checksum^=ROTATE_BITS(n->data.char_,(i&3)<<3);
@@ -1283,7 +1283,7 @@ __SLL_EXTERNAL void sll_string_inv(const sll_string_t* string,sll_string_t* out)
 
 
 
-__SLL_EXTERNAL void sll_string_join(const sll_string_t* string,sll_object_t*const* object_data,sll_array_length_t object_count,sll_string_t* out){
+__SLL_EXTERNAL void sll_string_join(const sll_string_t* string,const sll_object_t* object_data,sll_array_length_t object_count,sll_string_t* out){
 	STRING_INIT_STACK(out);
 	for (sll_array_length_t i=0;i<object_count;i++){
 		if (i){
@@ -1291,7 +1291,7 @@ __SLL_EXTERNAL void sll_string_join(const sll_string_t* string,sll_object_t*cons
 			sll_copy_data(string->data,string->length,out->data+out->length);
 			out->length+=string->length;
 		}
-		sll_object_t* n=sll_operator_cast(*(object_data+i),sll_static_int[SLL_OBJECT_TYPE_STRING]);
+		sll_object_t n=sll_operator_cast(*(object_data+i),sll_static_int[SLL_OBJECT_TYPE_STRING]);
 		sll_string_increase(out,n->data.string.length);
 		sll_copy_data(n->data.string.data,n->data.string.length,out->data+out->length);
 		out->length+=n->data.string.length;
@@ -1303,7 +1303,7 @@ __SLL_EXTERNAL void sll_string_join(const sll_string_t* string,sll_object_t*cons
 
 
 
-__SLL_EXTERNAL void sll_string_join_char(sll_char_t char_,sll_object_t*const* object_data,sll_array_length_t object_count,sll_string_t* out){
+__SLL_EXTERNAL void sll_string_join_char(sll_char_t char_,const sll_object_t* object_data,sll_array_length_t object_count,sll_string_t* out){
 	STRING_INIT_STACK(out);
 	for (sll_array_length_t i=0;i<object_count;i++){
 		if (i){
@@ -1311,7 +1311,7 @@ __SLL_EXTERNAL void sll_string_join_char(sll_char_t char_,sll_object_t*const* ob
 			out->data[out->length]=char_;
 			out->length++;
 		}
-		sll_object_t* n=sll_operator_cast(*(object_data+i),sll_static_int[SLL_OBJECT_TYPE_STRING]);
+		sll_object_t n=sll_operator_cast(*(object_data+i),sll_static_int[SLL_OBJECT_TYPE_STRING]);
 		sll_string_increase(out,n->data.string.length);
 		sll_copy_data(n->data.string.data,n->data.string.length,out->data+out->length);
 		out->length+=n->data.string.length;
@@ -1370,8 +1370,8 @@ __SLL_EXTERNAL void sll_string_op(const sll_string_t* a,const sll_string_t* b,sl
 	out->data=sll_allocator_init(SLL_STRING_ALIGN_LENGTH(out->length)*sizeof(sll_char_t));
 	INIT_PADDING(out->data,out->length);
 	for (sll_string_length_t i=0;i<e;i++){
-		sll_object_t* v=operator(sll_static_char[a->data[i]],sll_static_char[b->data[i]]);
-		sll_object_t* c=sll_operator_cast(v,sll_static_int[SLL_OBJECT_TYPE_CHAR]);
+		sll_object_t v=operator(sll_static_char[a->data[i]],sll_static_char[b->data[i]]);
+		sll_object_t c=sll_operator_cast(v,sll_static_int[SLL_OBJECT_TYPE_CHAR]);
 		SLL_RELEASE(v);
 		SLL_ASSERT(c->type==SLL_OBJECT_TYPE_CHAR);
 		out->data[i]=c->data.char_;
@@ -1396,7 +1396,7 @@ __SLL_EXTERNAL void sll_string_op_array(const sll_string_t* string,const sll_arr
 		e=string->length;
 		out->length=array->length;
 	}
-	out->data=sll_allocator_init(out->length*sizeof(sll_object_t*));
+	out->data=sll_allocator_init(out->length*sizeof(sll_object_t));
 	for (sll_array_length_t i=0;i<e;i++){
 		out->data[i]=(inv?operator(array->data[i],sll_static_char[string->data[i]]):operator(sll_static_char[string->data[i]],array->data[i]));
 	}
@@ -1422,7 +1422,7 @@ __SLL_EXTERNAL void sll_string_op_array(const sll_string_t* string,const sll_arr
 
 __SLL_EXTERNAL void sll_string_op_map(const sll_string_t* string,const sll_map_t* map,sll_binary_operator_t operator,sll_bool_t inv,sll_map_t* out){
 	out->length=string->length+map->length;
-	out->data=sll_allocate((string->length<<1)*sizeof(sll_object_t*));
+	out->data=sll_allocate((string->length<<1)*sizeof(sll_object_t));
 	sll_string_length_t sml=(string->length+63)>>6;
 	bitmap_t* sm=sll_zero_allocate_stack(sml*sizeof(bitmap_t));
 	sll_map_length_t i=0;
@@ -1456,7 +1456,7 @@ __SLL_EXTERNAL void sll_string_op_map(const sll_string_t* string,const sll_map_t
 	sll_deallocate(sm);
 	if ((i>>1)!=out->length){
 		out->length=i>>1;
-		out->data=sll_reallocate(out->data,i*sizeof(sll_object_t*));
+		out->data=sll_reallocate(out->data,i*sizeof(sll_object_t));
 	}
 }
 
@@ -1938,7 +1938,7 @@ __SLL_EXTERNAL void sll_string_shift(const sll_string_t* string,sll_integer_t de
 __SLL_EXTERNAL void sll_string_split(const sll_string_t* string,const sll_string_t* substring,sll_array_t* out){
 	if (!string->length){
 		out->length=1;
-		out->data=sll_allocator_init(sizeof(sll_object_t*));
+		out->data=sll_allocator_init(sizeof(sll_object_t));
 		out->data[0]=EMPTY_STRING_TO_OBJECT();
 		return;
 	}
@@ -1952,14 +1952,14 @@ __SLL_EXTERNAL void sll_string_split(const sll_string_t* string,const sll_string
 	}
 	if (sll_string_equal(string,substring)){
 		out->length=2;
-		out->data=sll_allocator_init(2*sizeof(sll_object_t*));
+		out->data=sll_allocator_init(2*sizeof(sll_object_t));
 		out->data[0]=EMPTY_STRING_TO_OBJECT();
 		out->data[1]=EMPTY_STRING_TO_OBJECT();
 		return;
 	}
 	if (substring->length>=string->length){
 		out->length=1;
-		out->data=sll_allocator_init(sizeof(sll_object_t*));
+		out->data=sll_allocator_init(sizeof(sll_object_t));
 		out->data[0]=STRING_TO_OBJECT(string);
 		return;
 	}
@@ -1968,7 +1968,7 @@ __SLL_EXTERNAL void sll_string_split(const sll_string_t* string,const sll_string
 	sll_string_length_t j=0;
 	while (j<string->length-substring->length){
 		if (sll_compare_data(string->data+j,substring->data,substring->length)==SLL_COMPARE_RESULT_EQUAL){
-			sll_object_t* x=(i==j?EMPTY_STRING_TO_OBJECT():STRING_POINTER_LENGTH_TO_OBJECT(string->data+i,j-i));
+			sll_object_t x=(i==j?EMPTY_STRING_TO_OBJECT():STRING_POINTER_LENGTH_TO_OBJECT(string->data+i,j-i));
 			sll_array_push(NULL,x,out);
 			SLL_RELEASE(x);
 			j+=substring->length;
@@ -1978,7 +1978,7 @@ __SLL_EXTERNAL void sll_string_split(const sll_string_t* string,const sll_string
 			j++;
 		}
 	}
-	sll_object_t* x=(i==string->length?EMPTY_STRING_TO_OBJECT():STRING_POINTER_LENGTH_TO_OBJECT(string->data+i,string->length-i));
+	sll_object_t x=(i==string->length?EMPTY_STRING_TO_OBJECT():STRING_POINTER_LENGTH_TO_OBJECT(string->data+i,string->length-i));
 	sll_array_push(NULL,x,out);
 	SLL_RELEASE(x);
 }
@@ -1988,7 +1988,7 @@ __SLL_EXTERNAL void sll_string_split(const sll_string_t* string,const sll_string
 __SLL_EXTERNAL void sll_string_split_char(const sll_string_t* string,sll_char_t char_,sll_array_t* out){
 	if (!string->length){
 		out->length=1;
-		out->data=sll_allocator_init(sizeof(sll_object_t*));
+		out->data=sll_allocator_init(sizeof(sll_object_t));
 		out->data[0]=EMPTY_STRING_TO_OBJECT();
 		return;
 	}
@@ -2004,7 +2004,7 @@ __SLL_EXTERNAL void sll_string_split_char(const sll_string_t* string,sll_char_t 
 		while (v){
 			sll_string_length_t l=(k<<3)|(FIND_FIRST_SET_BIT(v)>>3);
 			out->length++;
-			sll_allocator_resize((void**)(&(out->data)),out->length*sizeof(sll_object_t*));
+			sll_allocator_resize((void**)(&(out->data)),out->length*sizeof(sll_object_t));
 			out->data[i]=(j<l?STRING_POINTER_LENGTH_TO_OBJECT(string->data+j,l-j):EMPTY_STRING_TO_OBJECT());
 			i++;
 			j=l+1;
@@ -2012,7 +2012,7 @@ __SLL_EXTERNAL void sll_string_split_char(const sll_string_t* string,sll_char_t 
 		}
 	}
 	out->length++;
-	sll_allocator_resize((void**)(&(out->data)),out->length*sizeof(sll_object_t*));
+	sll_allocator_resize((void**)(&(out->data)),out->length*sizeof(sll_object_t));
 	out->data[i]=(j<string->length?STRING_POINTER_LENGTH_TO_OBJECT(string->data+j,string->length-j):EMPTY_STRING_TO_OBJECT());
 }
 
@@ -2040,7 +2040,7 @@ __SLL_EXTERNAL void sll_string_subtract_array(const sll_string_t* string,const s
 			return;
 		}
 		out->length=array->length;
-		out->data=sll_allocator_init(array->length*sizeof(sll_object_t*));
+		out->data=sll_allocator_init(array->length*sizeof(sll_object_t));
 		sll_string_length_t i=0;
 		for (;i<string->length;i++){
 			out->data[i]=sll_operator_sub(sll_static_char[string->data[i]],array->data[i]);
@@ -2056,7 +2056,7 @@ __SLL_EXTERNAL void sll_string_subtract_array(const sll_string_t* string,const s
 		return;
 	}
 	out->length=string->length;
-	out->data=sll_allocator_init(string->length*sizeof(sll_object_t*));
+	out->data=sll_allocator_init(string->length*sizeof(sll_object_t));
 	STRING_DATA_PTR(out->data);
 	sll_array_length_t i=0;
 	do{
@@ -2104,7 +2104,7 @@ __SLL_EXTERNAL void sll_string_title_case(const sll_string_t* string,sll_string_
 
 __SLL_EXTERNAL void sll_string_to_array(const sll_string_t* string,sll_array_t* out){
 	out->length=string->length;
-	out->data=sll_allocator_init(string->length*sizeof(sll_object_t*));
+	out->data=sll_allocator_init(string->length*sizeof(sll_object_t));
 	for (sll_string_length_t i=0;i<string->length;i++){
 		out->data[i]=SLL_FROM_CHAR(string->data[i]);
 	}
@@ -2119,7 +2119,7 @@ __SLL_EXTERNAL void sll_string_to_map(const sll_string_t* string,sll_map_t* out)
 	}
 	out->length=string->length;
 	sll_map_length_t e=string->length<<1;
-	out->data=sll_allocate(e*sizeof(sll_object_t*));
+	out->data=sll_allocate(e*sizeof(sll_object_t));
 	sll_string_length_t i=0;
 	for (sll_map_length_t j=0;j<e;j+=2){
 		out->data[j]=sll_int_to_object(i);

@@ -8,7 +8,7 @@
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_operator_includes(sll_object_t* a,sll_object_t* b){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_operator_includes(sll_object_t a,sll_object_t b){
 	if (a->type==SLL_OBJECT_TYPE_STRING){
 		if (b->type==SLL_OBJECT_TYPE_CHAR){
 			return sll_string_includes_char(&(a->data.string),b->data.char_);

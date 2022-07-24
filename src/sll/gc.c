@@ -21,7 +21,7 @@
 
 
 
-static sll_object_t* _gc_next_object=NULL;
+static sll_object_t _gc_next_object=NULL;
 static gc_memory_page_data_t _gc_memory_page_data={
 	NULL,
 	.length=0
@@ -50,7 +50,7 @@ static gc_data_t _gc_data={
 
 
 
-static void _mark_objects(sll_object_t* object){
+static void _mark_objects(sll_object_t object){
 	SLL_ASSERT(SLL_GET_OBJECT_REFERENCE_COUNTER(object));
 	if ((object->_flags&GC_FLAG_STATIC)||GC_IS_MARKED(object)){
 		return;
@@ -96,8 +96,8 @@ void _gc_release_data(void){
 	sll_bool_t err=0;
 	while (_gc_memory_page_data.root){
 		if (_gc_memory_page_data.root->cnt){
-			sll_object_t* c=PTR(ADDR(_gc_memory_page_data.root)+sizeof(gc_page_header_t));
-			sll_object_t* e=PTR(ADDR(_gc_memory_page_data.root)+sizeof(gc_page_header_t)+(GC_MEMORY_PAGE_SIZE-sizeof(gc_page_header_t))/sizeof(sll_object_t)*sizeof(sll_object_t));
+			sll_object_t c=PTR(ADDR(_gc_memory_page_data.root)+sizeof(gc_page_header_t));
+			sll_object_t e=PTR(ADDR(_gc_memory_page_data.root)+sizeof(gc_page_header_t)+(GC_MEMORY_PAGE_SIZE-sizeof(gc_page_header_t))/sizeof(struct _SLL_OBJECT)*sizeof(struct _SLL_OBJECT));
 			while (c<e){
 				if (SLL_GET_OBJECT_REFERENCE_COUNTER(c)){
 					err=1;
@@ -125,13 +125,13 @@ void _gc_release_data(void){
 
 
 
-__SLL_EXTERNAL void sll__gc_error(sll_object_t* object){
+__SLL_EXTERNAL void sll__gc_error(sll_object_t object){
 	SLL_CRITICAL(SLL_GET_OBJECT_REFERENCE_COUNTER(object));
 }
 
 
 
-__SLL_EXTERNAL void sll__release_object_internal(sll_object_t* object){
+__SLL_EXTERNAL void sll__release_object_internal(sll_object_t object){
 	SLL_ASSERT(!SLL_GET_OBJECT_REFERENCE_COUNTER(object));
 	if (object->_flags&GC_FLAG_HAS_WEAKREF){
 		object->rc++;
@@ -216,8 +216,8 @@ __SLL_EXTERNAL void sll__release_object_internal(sll_object_t* object){
 	while (GC_MEMORY_PAGE_HEADER(_gc_next_object)==pg){
 		_gc_next_object=_gc_next_object->data._next_object.next;
 	}
-	sll_object_t* c=PTR(ADDR(pg)+sizeof(gc_page_header_t));
-	sll_object_t* e=PTR(ADDR(pg)+sizeof(gc_page_header_t)+(GC_MEMORY_PAGE_SIZE-sizeof(gc_page_header_t))/sizeof(sll_object_t)*sizeof(sll_object_t));
+	sll_object_t c=PTR(ADDR(pg)+sizeof(gc_page_header_t));
+	sll_object_t e=PTR(ADDR(pg)+sizeof(gc_page_header_t)+(GC_MEMORY_PAGE_SIZE-sizeof(gc_page_header_t))/sizeof(struct _SLL_OBJECT)*sizeof(struct _SLL_OBJECT));
 	sll_bool_t pool_shift=0;
 	do{
 		SLL_ASSERT(c!=_gc_next_object);
@@ -280,14 +280,14 @@ _check_garbage_collect:
 
 
 
-__SLL_EXTERNAL void sll_acquire_object(sll_object_t* object){
+__SLL_EXTERNAL void sll_acquire_object(sll_object_t object){
 	object->rc++;
 }
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_create_object(sll_object_type_t type){
-	sll_object_t* o;
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t sll_create_object(sll_object_type_t type){
+	sll_object_t o;
 	if (_gc_fast_object_pool.space!=GC_FAST_OBJECT_POOL_SIZE){
 		o=_gc_fast_object_pool.data[_gc_fast_object_pool.read];
 		_gc_fast_object_pool.read=(_gc_fast_object_pool.read+1)&(GC_FAST_OBJECT_POOL_SIZE-1);
@@ -325,9 +325,9 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_create_object(sll_object_typ
 			_gc_memory_page_data.length--;
 			gc_page_header_t* pg=_gc_memory_page_data.data[_gc_memory_page_data.length];
 			o=PTR(ADDR(pg)+sizeof(gc_page_header_t));
-			SLL_ASSERT((GC_MEMORY_PAGE_SIZE-sizeof(gc_page_header_t)-sizeof(sll_object_t))/sizeof(sll_object_t)<=GC_OBJECT_POOL_SIZE);
-			sll_object_t* c=o+1;
-			while (_gc_object_pool.length<(GC_MEMORY_PAGE_SIZE-sizeof(gc_page_header_t)-sizeof(sll_object_t))/sizeof(sll_object_t)){
+			SLL_ASSERT((GC_MEMORY_PAGE_SIZE-sizeof(gc_page_header_t)-sizeof(struct _SLL_OBJECT))/sizeof(struct _SLL_OBJECT)<=GC_OBJECT_POOL_SIZE);
+			sll_object_t c=o+1;
+			while (_gc_object_pool.length<(GC_MEMORY_PAGE_SIZE-sizeof(gc_page_header_t)-sizeof(struct _SLL_OBJECT))/sizeof(struct _SLL_OBJECT)){
 				c->rc=0;
 				c->_flags=GC_FLAG_IN_FAST_POOL;
 				c->data._pool_index=_gc_object_pool.length;
@@ -347,7 +347,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_create_object(sll_object_typ
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_destroy_object(sll_object_t* object){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_destroy_object(sll_object_t object){
 	SLL_ASSERT(SLL_GET_OBJECT_REFERENCE_COUNTER(object));
 	object->rc--;
 	if (SLL_GET_OBJECT_REFERENCE_COUNTER(object)){
@@ -360,7 +360,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_destroy_object(sll_object_t* ob
 
 
 
-__SLL_EXTERNAL void sll_gc_add_root(sll_object_t* object,sll_bool_t fast){
+__SLL_EXTERNAL void sll_gc_add_root(sll_object_t object,sll_bool_t fast){
 	if (object->_flags&GC_FLAG_STATIC){
 		return;
 	}
@@ -403,7 +403,7 @@ __SLL_EXTERNAL void sll_gc_add_root(sll_object_t* object,sll_bool_t fast){
 
 
 
-__SLL_EXTERNAL void sll_gc_add_roots(sll_object_t*const* pointer,sll_size_t length){
+__SLL_EXTERNAL void sll_gc_add_roots(const sll_object_t* pointer,sll_size_t length){
 	if (!length){
 		return;
 	}
@@ -436,13 +436,13 @@ __SLL_EXTERNAL void sll_gc_collect(void){
 			}
 		}
 	}
-	sll_object_t* object=_gc_root_data.single;
+	sll_object_t object=_gc_root_data.single;
 	while (object){
 		_mark_objects(object);
 		object=GC_GET_NEXT_OBJECT(object);
 	}
 	for (sll_size_t i=0;i<_gc_root_data.multiple_length;i++){
-		sll_object_t*const* pointer=GC_GET_ROOT(*(_gc_root_data.multiple+i));
+		const sll_object_t* pointer=GC_GET_ROOT(*(_gc_root_data.multiple+i));
 		sll_size_t length=GC_GET_LENGTH(*(_gc_root_data.multiple+i));
 		while (length&&*pointer&&SLL_GET_OBJECT_REFERENCE_COUNTER(*pointer)){
 			_mark_objects(*pointer);
@@ -454,8 +454,8 @@ __SLL_EXTERNAL void sll_gc_collect(void){
 	do{
 		sll_size_t cnt=page->garbage_cnt;
 		if (cnt){
-			sll_object_t* c=PTR(ADDR(page)+sizeof(gc_page_header_t));
-			sll_object_t* e=PTR(ADDR(page)+sizeof(gc_page_header_t)+(GC_MEMORY_PAGE_SIZE-sizeof(gc_page_header_t))/sizeof(sll_object_t)*sizeof(sll_object_t));
+			sll_object_t c=PTR(ADDR(page)+sizeof(gc_page_header_t));
+			sll_object_t e=PTR(ADDR(page)+sizeof(gc_page_header_t)+(GC_MEMORY_PAGE_SIZE-sizeof(gc_page_header_t))/sizeof(struct _SLL_OBJECT)*sizeof(struct _SLL_OBJECT));
 			while (c<e){
 				if (SLL_GET_OBJECT_REFERENCE_COUNTER(c)&&!GC_IS_MARKED(c)){
 					cnt--;
@@ -474,7 +474,7 @@ __SLL_EXTERNAL void sll_gc_collect(void){
 
 
 
-__SLL_EXTERNAL void sll_gc_remove_root(sll_object_t* object){
+__SLL_EXTERNAL void sll_gc_remove_root(sll_object_t object){
 	if (object->_flags&GC_FLAG_STATIC){
 		return;
 	}
@@ -492,8 +492,8 @@ __SLL_EXTERNAL void sll_gc_remove_root(sll_object_t* object){
 		object->_data=0;
 		return;
 	}
-	sll_object_t* prev=GC_GET_PREV_OBJECT(object);
-	sll_object_t* next=GC_GET_NEXT_OBJECT(object);
+	sll_object_t prev=GC_GET_PREV_OBJECT(object);
+	sll_object_t next=GC_GET_NEXT_OBJECT(object);
 	if (_gc_root_data.single==object){
 		_gc_root_data.single=(prev?prev:next);
 	}
@@ -508,7 +508,7 @@ __SLL_EXTERNAL void sll_gc_remove_root(sll_object_t* object){
 
 
 
-__SLL_EXTERNAL void sll_gc_remove_roots(sll_object_t*const* pointer){
+__SLL_EXTERNAL void sll_gc_remove_roots(const sll_object_t* pointer){
 	sll_size_t i=_gc_root_data.multiple_length;
 	while (i){
 		i--;
@@ -528,6 +528,6 @@ __SLL_EXTERNAL void sll_gc_remove_roots(sll_object_t*const* pointer){
 
 
 
-__SLL_EXTERNAL void sll_release_object(sll_object_t* object){
+__SLL_EXTERNAL void sll_release_object(sll_object_t object){
 	SLL_RELEASE(object);
 }

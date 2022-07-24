@@ -578,11 +578,11 @@ __SLL_EXTERNAL void sll_string_from_char(sll_char_t char_,sll_string_t* out);
  * \name sll_string_from_data
  * \group string
  * \desc Docs!
- * \arg sll_object_t** object_data
+ * \arg sll_object_t* object_data
  * \arg sll_string_length_t object_count
  * \arg sll_string_t* out
  */
-__SLL_EXTERNAL void sll_string_from_data(sll_object_t** object_data,sll_string_length_t object_count,sll_string_t* out);
+__SLL_EXTERNAL void sll_string_from_data(sll_object_t* object_data,sll_string_length_t object_count,sll_string_t* out);
 
 
 
@@ -819,11 +819,11 @@ __SLL_EXTERNAL void sll_string_inv(const sll_string_t* string,sll_string_t* out)
  * \subgroup string-data
  * \desc Docs!
  * \arg const sll_string_t* string
- * \arg sll_object_t*const* object_data
+ * \arg const sll_object_t* object_data
  * \arg sll_array_length_t object_count
  * \arg sll_string_t* out
  */
-__SLL_EXTERNAL void sll_string_join(const sll_string_t* string,sll_object_t*const* object_data,sll_array_length_t object_count,sll_string_t* out);
+__SLL_EXTERNAL void sll_string_join(const sll_string_t* string,const sll_object_t* object_data,sll_array_length_t object_count,sll_string_t* out);
 
 
 
@@ -834,11 +834,11 @@ __SLL_EXTERNAL void sll_string_join(const sll_string_t* string,sll_object_t*cons
  * \subgroup string-data
  * \desc Docs!
  * \arg sll_char_t char_
- * \arg sll_object_t*const* object_data
+ * \arg const sll_object_t* object_data
  * \arg sll_array_length_t object_count
  * \arg sll_string_t* out
  */
-__SLL_EXTERNAL void sll_string_join_char(sll_char_t char_,sll_object_t*const* object_data,sll_array_length_t object_count,sll_string_t* out);
+__SLL_EXTERNAL void sll_string_join_char(sll_char_t char_,const sll_object_t* object_data,sll_array_length_t object_count,sll_string_t* out);
 
 
 

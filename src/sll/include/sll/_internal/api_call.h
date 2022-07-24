@@ -24,13 +24,13 @@ typedef union _API_RETURN_VALUE{
 	sll_string_t string;
 	sll_array_t array;
 	sll_map_t map;
-	sll_object_t* object;
+	sll_object_t object;
 	sll_error_t error;
 } api_return_value_t;
 
 
 
-sll_object_t* _call_api_func(sll_function_index_t fn,sll_object_t*const* al,sll_arg_count_t all);
+sll_object_t _call_api_func(sll_function_index_t fn,const sll_object_t* al,sll_arg_count_t all);
 
 
 

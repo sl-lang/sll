@@ -277,12 +277,12 @@ typedef struct _SLL_OBJECT_TYPE_TABLE{
  * \group object
  * \desc Docs!
  * \arg sll_object_type_table_t* type_table
- * \arg sll_object_t*const* object_data
+ * \arg const sll_object_t* object_data
  * \arg sll_arg_count_t field_count
  * \arg const sll_string_t* name
  * \ret sll_object_type_t
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_type_t sll_add_type(sll_object_type_table_t* type_table,sll_object_t*const* object_data,sll_arg_count_t field_count,const sll_string_t* name);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_type_t sll_add_type(sll_object_type_table_t* type_table,const sll_object_t* object_data,sll_arg_count_t field_count,const sll_string_t* name);
 
 
 
@@ -292,9 +292,9 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_type_t sll_add_type(sll_object_type
  * \group object
  * \desc Docs!
  * \arg sll_object_type_table_t* type_table
- * \ret sll_object_t*
+ * \ret sll_object_t
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_create_new_object_type(sll_object_type_table_t* type_table);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t sll_create_new_object_type(sll_object_type_table_t* type_table);
 
 
 
@@ -305,11 +305,11 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_create_new_object_type(sll_o
  * \desc Docs!
  * \arg const sll_object_type_table_t* type_table
  * \arg sll_object_type_t type
- * \arg sll_object_t*const* args
+ * \arg const sll_object_t* args
  * \arg sll_arg_count_t arg_count
- * \ret sll_object_t*
+ * \ret sll_object_t
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_create_object_type(const sll_object_type_table_t* type_table,sll_object_type_t type,sll_object_t*const* args,sll_arg_count_t arg_count);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t sll_create_object_type(const sll_object_type_table_t* type_table,sll_object_type_t type,const sll_object_t* args,sll_arg_count_t arg_count);
 
 
 
@@ -357,11 +357,11 @@ __SLL_EXTERNAL void sll_get_type_name(const sll_object_type_table_t* type_table,
  * \group object
  * \desc Docs!
  * \arg const sll_object_type_table_t* type_table
- * \arg sll_object_t* object
+ * \arg sll_object_t object
  * \arg sll_bool_t deep
- * \ret sll_object_t*
+ * \ret sll_object_t
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_object_clone(const sll_object_type_table_t* type_table,sll_object_t* object,sll_bool_t deep);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t sll_object_clone(const sll_object_type_table_t* type_table,sll_object_t object,sll_bool_t deep);
 
 
 
@@ -371,11 +371,11 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_object_clone(const sll_objec
  * \group object
  * \desc Docs!
  * \arg const sll_object_type_table_t* type_table
- * \arg sll_object_t* object
+ * \arg sll_object_t object
  * \arg const sll_string_t* field_name
- * \ret sll_object_t*
+ * \ret sll_object_t
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_object_get_field(const sll_object_type_table_t* type_table,sll_object_t* object,const sll_string_t* field_name);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t sll_object_get_field(const sll_object_type_table_t* type_table,sll_object_t object,const sll_string_t* field_name);
 
 
 
@@ -385,11 +385,11 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_object_get_field(const sll_o
  * \group object
  * \desc Docs!
  * \arg const sll_object_type_table_t* type_table
- * \arg sll_object_t* object
+ * \arg sll_object_t object
  * \arg const sll_string_t* field_name
- * \arg sll_object_t* value
+ * \arg sll_object_t value
  */
-__SLL_EXTERNAL void sll_object_set_field(const sll_object_type_table_t* type_table,sll_object_t* object,const sll_string_t* field_name,sll_object_t* value);
+__SLL_EXTERNAL void sll_object_set_field(const sll_object_type_table_t* type_table,sll_object_t object,const sll_string_t* field_name,sll_object_t value);
 
 
 
@@ -399,10 +399,10 @@ __SLL_EXTERNAL void sll_object_set_field(const sll_object_type_table_t* type_tab
  * \group object
  * \desc Docs!
  * \arg const sll_object_type_table_t* type_table
- * \arg sll_object_t* object
+ * \arg sll_object_t object
  * \arg sll_array_t* out
  */
-__SLL_EXTERNAL void sll_object_to_array(const sll_object_type_table_t* type_table,sll_object_t* object,sll_array_t* out);
+__SLL_EXTERNAL void sll_object_to_array(const sll_object_type_table_t* type_table,sll_object_t object,sll_array_t* out);
 
 
 
@@ -412,10 +412,10 @@ __SLL_EXTERNAL void sll_object_to_array(const sll_object_type_table_t* type_tabl
  * \group object
  * \desc Docs!
  * \arg const sll_object_type_table_t* type_table
- * \arg sll_object_t* object
+ * \arg sll_object_t object
  * \arg sll_map_t* out
  */
-__SLL_EXTERNAL void sll_object_to_map(const sll_object_type_table_t* type_table,sll_object_t* object,sll_map_t* out);
+__SLL_EXTERNAL void sll_object_to_map(const sll_object_type_table_t* type_table,sll_object_t object,sll_map_t* out);
 
 
 

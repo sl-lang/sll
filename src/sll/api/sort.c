@@ -12,17 +12,17 @@
 
 
 
-static void _quicksort(sll_object_t** elements,sll_array_length_t length,sll_compare_result_t cmp){
+static void _quicksort(sll_object_t* elements,sll_array_length_t length,sll_compare_result_t cmp){
 	sll_array_length_t i=0;
 	for (sll_array_length_t j=0;j<length;j++){
 		if (sll_operator_compare(*(elements+j),*(elements+length))==cmp){
-			sll_object_t* t=*(elements+i);
+			sll_object_t t=*(elements+i);
 			*(elements+i)=*(elements+j);
 			*(elements+j)=t;
 			i++;
 		}
 	}
-	sll_object_t* t=*(elements+i);
+	sll_object_t t=*(elements+i);
 	*(elements+i)=*(elements+length);
 	*(elements+length)=t;
 	if (i>1){
@@ -36,11 +36,11 @@ static void _quicksort(sll_object_t** elements,sll_array_length_t length,sll_com
 
 
 
-static void _quicksort_with_keys(sll_object_t** keys,sll_object_t** elements,sll_array_length_t length,sll_compare_result_t cmp){
+static void _quicksort_with_keys(sll_object_t* keys,sll_object_t* elements,sll_array_length_t length,sll_compare_result_t cmp){
 	sll_array_length_t i=0;
 	for (sll_array_length_t j=0;j<length;j++){
 		if (sll_operator_compare(*(keys+j),*(keys+length))==cmp){
-			sll_object_t* t=*(elements+i);
+			sll_object_t t=*(elements+i);
 			*(elements+i)=*(elements+j);
 			*(elements+j)=t;
 			t=*(keys+i);
@@ -49,7 +49,7 @@ static void _quicksort_with_keys(sll_object_t** keys,sll_object_t** elements,sll
 			i++;
 		}
 	}
-	sll_object_t* t=*(elements+i);
+	sll_object_t t=*(elements+i);
 	*(elements+i)=*(elements+length);
 	*(elements+length)=t;
 	t=*(keys+i);
@@ -66,7 +66,7 @@ static void _quicksort_with_keys(sll_object_t** keys,sll_object_t** elements,sll
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_object_t* sll_api_sort_quicksort(sll_object_t* arr,sll_bool_t reverse,sll_bool_t inplace,sll_integer_t key_fn){
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_object_t sll_api_sort_quicksort(sll_object_t arr,sll_bool_t reverse,sll_bool_t inplace,sll_integer_t key_fn){
 	if (inplace){
 		SLL_ACQUIRE(arr);
 	}
@@ -81,12 +81,12 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_object_t* sll_api_sort_quic
 
 
 
-__SLL_EXTERNAL void sll_quicksort(sll_object_t** elements,sll_array_length_t length,sll_compare_result_t cmp,sll_integer_t key_fn){
+__SLL_EXTERNAL void sll_quicksort(sll_object_t* elements,sll_array_length_t length,sll_compare_result_t cmp,sll_integer_t key_fn){
 	if (!key_fn){
 		_quicksort(elements,length-1,cmp);
 		return;
 	}
-	sll_object_t** keys=sll_allocate_stack(length*sizeof(sll_object_t*));
+	sll_object_t* keys=sll_allocate_stack(length*sizeof(sll_object_t));
 	for (sll_array_length_t i=0;i<length;i++){
 		*(keys+i)=sll_execute_function(key_fn,elements+i,1,0);
 	}

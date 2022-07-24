@@ -82,10 +82,10 @@ __SLL_EXTERNAL sll_file_offset_t sll_get_location(const sll_assembly_data_t* ass
  * \name sll_get_name
  * \group location
  * \desc Docs!
- * \arg sll_object_t* object
+ * \arg sll_object_t object
  * \arg sll_string_t* out
  */
-__SLL_EXTERNAL void sll_get_name(sll_object_t* object,sll_string_t* out);
+__SLL_EXTERNAL void sll_get_name(sll_object_t object,sll_string_t* out);
 
 
 

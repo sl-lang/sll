@@ -9,7 +9,7 @@
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_object_t* sll_api_object_new(const sll_string_t* format,sll_object_t*const* args,sll_arg_count_t length){
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_object_t sll_api_object_new(const sll_string_t* format,const sll_object_t* args,sll_arg_count_t length){
 	sll_var_arg_list_t dt;
 	SLL_VAR_ARG_INIT_SLL(&dt,args,length);
 	sll_audit(SLL_CHAR("sll.object.new"),SLL_CHAR("sO+"),format,args,length);

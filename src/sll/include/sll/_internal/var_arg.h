@@ -10,11 +10,11 @@
 
 
 
-typedef sll_object_t* (*converter_func_t)(void* arg);
+typedef sll_object_t (*converter_func_t)(void* arg);
 
 
 
-sll_object_t* _var_arg_converter(sll_var_arg_list_t* va);
+sll_object_t _var_arg_converter(sll_var_arg_list_t* va);
 
 
 

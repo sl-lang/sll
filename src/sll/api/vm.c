@@ -49,14 +49,14 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_vm_get_location(sll_instruction_index
 		instruction_index--;
 	}
 	sll_audit(SLL_CHAR("sll.vm.location"),SLL_CHAR("h"),instruction_index);
-	sll_object_t* o=sll_instruction_to_location(instruction_index);
+	sll_object_t o=sll_instruction_to_location(instruction_index);
 	*out=o->data.array;
 	SLL_CRITICAL(sll_destroy_object(o));
 }
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_reference_count_t sll_api_vm_get_ref_count(sll_object_t* object){
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_reference_count_t sll_api_vm_get_ref_count(sll_object_t object){
 	if (sll_get_sandbox_flag(SLL_SANDBOX_FLAG_DISABLE_REFERENCE_COUNTER)){
 		return 0;
 	}
@@ -66,7 +66,7 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_reference_count_t sll_api_v
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_instruction_to_location(sll_instruction_index_t instruction_index){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t sll_instruction_to_location(sll_instruction_index_t instruction_index){
 	sll_string_index_t fp_i;
 	sll_string_index_t fn_i;
 	sll_file_offset_t ln=sll_get_location(sll_current_runtime_data->assembly_data,instruction_index,&fp_i,&fn_i);

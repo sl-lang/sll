@@ -12,7 +12,7 @@
 
 
 
-static sll_object_t* _address_to_object(sll_address_t* address){
+static sll_object_t _address_to_object(sll_address_t* address){
 	switch (address->type){
 		case SLL_ADDRESS_TYPE_UNKNOWN:
 			return sll_array_to_object(NULL);
@@ -108,7 +108,7 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_socket_get_
 	sll_address_info_count_t count;
 	sll_error_t err=sll_platform_socket_get_address_info(node->data,service->data,address_family,type,protocol,flags,&data,&count);
 	if (err==SLL_NO_ERROR){
-		sll_object_t* tmp=sll_new_object(SLL_CHAR("{MMu#}"),data,count,sizeof(sll_address_info_t),SLL_OFFSETOF(sll_address_info_t,address_family),0xffull,SLL_OFFSETOF(sll_address_info_t,type),0xffull,SLL_OFFSETOF(sll_address_info_t,protocol),_address_to_object,SLL_OFFSETOF(sll_address_info_t,address));
+		sll_object_t tmp=sll_new_object(SLL_CHAR("{MMu#}"),data,count,sizeof(sll_address_info_t),SLL_OFFSETOF(sll_address_info_t,address_family),0xffull,SLL_OFFSETOF(sll_address_info_t,type),0xffull,SLL_OFFSETOF(sll_address_info_t,protocol),_address_to_object,SLL_OFFSETOF(sll_address_info_t,address));
 		*out=tmp->data.array;
 		SLL_CRITICAL(sll_destroy_object(tmp));
 	}

@@ -32,7 +32,7 @@ static sll_weak_reference_t _create_new(addr_t object){
 
 
 
-static sll_bool_t _execute_destructors(sll_weak_reference_t wr,weakref_object_data_t* value,sll_object_t* object){
+static sll_bool_t _execute_destructors(sll_weak_reference_t wr,weakref_object_data_t* value,sll_object_t object){
 	if (value->object!=ADDR(object)){
 		return 0;
 	}
@@ -55,7 +55,7 @@ void _weakref_cleanup_data(void){
 
 
 
-void _weakref_delete(sll_object_t* object){
+void _weakref_delete(sll_object_t object){
 	SLL_ASSERT(object->_flags&GC_FLAG_HAS_WEAKREF);
 	sll_map_container_filter(&_weakref_data,(sll_map_container_filter_callback_t)_execute_destructors,object);
 }
@@ -72,7 +72,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_weak_reference_t sll_weakref_clone(sll_wea
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_weak_reference_t sll_weakref_create(sll_object_t* object){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_weak_reference_t sll_weakref_create(sll_object_t object){
 	object->_flags|=GC_FLAG_HAS_WEAKREF;
 	return _create_new(ADDR(object));
 }
@@ -90,7 +90,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_weakref_delete(sll_weak_referen
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_weakref_get(sll_weak_reference_t wr){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t sll_weakref_get(sll_weak_reference_t wr){
 	if (!_weakref_next){
 		return NULL;
 	}

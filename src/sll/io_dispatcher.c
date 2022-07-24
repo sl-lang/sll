@@ -31,7 +31,7 @@ static raw_event_data_t* _io_dispatcher_raw_event;
 static sll_thread_index_t _restart_thread(event_list_length_t idx){
 	event_data_t* evt=_io_dispatcher_event+idx;
 	SLL_ASSERT(evt->file);
-	sll_object_t* out=NULL;
+	sll_object_t out=NULL;
 	if (evt->size==SLL_MAX_STRING_LENGTH){
 		sll_error_t err;
 		sll_read_char_t chr=sll_file_read_char(evt->file,&err);

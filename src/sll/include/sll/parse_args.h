@@ -183,11 +183,11 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_arg_count_t sll_parse_arg_count(const sll_
  * \group parse-args
  * \desc Docs!
  * \arg const sll_char_t* format
- * \arg sll_object_t*const* args
+ * \arg const sll_object_t* args
  * \arg sll_arg_count_t arg_count
  * \ret sll_arg_state_t
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_arg_state_t sll_parse_args(const sll_char_t* format,sll_object_t*const* args,sll_arg_count_t arg_count,...);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_arg_state_t sll_parse_args(const sll_char_t* format,const sll_object_t* args,sll_arg_count_t arg_count,...);
 
 
 
@@ -197,12 +197,12 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_arg_state_t sll_parse_args(const sll_char_
  * \group parse-args
  * \desc Docs!
  * \arg const sll_char_t* format
- * \arg sll_object_t*const* args
+ * \arg const sll_object_t* args
  * \arg sll_arg_count_t arg_count
  * \arg va_list* va
  * \ret sll_arg_state_t
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_arg_state_t sll_parse_args_list(const sll_char_t* format,sll_object_t*const* args,sll_arg_count_t arg_count,va_list* va);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_arg_state_t sll_parse_args_list(const sll_char_t* format,const sll_object_t* args,sll_arg_count_t arg_count,va_list* va);
 
 
 

@@ -16,7 +16,7 @@
 
 
 
-sll_object_t* _call_api_func(sll_function_index_t fn,sll_object_t*const* al,sll_arg_count_t all){
+sll_object_t _call_api_func(sll_function_index_t fn,const sll_object_t* al,sll_arg_count_t all){
 	const sll_internal_function_t* dt=sll_current_runtime_data->internal_function_table->data+fn;
 	void* buffer=sll_allocate_stack(dt->_arg_size);
 	arg_output_t arg_output={
@@ -31,7 +31,7 @@ sll_object_t* _call_api_func(sll_function_index_t fn,sll_object_t*const* al,sll_
 	sll_arg_state_t arg_state=_parse_args_raw(dt->format,al,all,&arg_output);
 	api_return_value_t ret_any;
 	sll_integer_t ret=_call_api_func_assembly(&ret_any,dt->_registers,buffer,dt->_arg_count,dt->function);
-	sll_object_t* out;
+	sll_object_t out;
 	if ((dt->_return_value&RETURN_VALUE_FLAG_ERROR)&&ret){
 		if (RETURN_VALUE_GET_TYPE(dt->_return_value)=='b'||RETURN_VALUE_GET_TYPE(dt->_return_value)=='B'||RETURN_VALUE_GET_TYPE(dt->_return_value)=='W'||RETURN_VALUE_GET_TYPE(dt->_return_value)=='D'||RETURN_VALUE_GET_TYPE(dt->_return_value)=='Q'||RETURN_VALUE_GET_TYPE(dt->_return_value)=='i'){
 			ret_any.error=~ret_any.error;

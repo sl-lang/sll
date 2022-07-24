@@ -183,7 +183,7 @@ typedef union _SLL_OBJECT_DATA{
 
 
 /**
- * \flags type
+ * \flags pointer type
  * \name sll_object_t
  * \group gc
  * \desc Docs!
@@ -199,7 +199,7 @@ typedef struct _SLL_OBJECT{
 	sll_object_flags_t _flags;
 	sll_object_extra_data_t _data;
 	sll_object_data_t data;
-} sll_object_t;
+}* sll_object_t;
 
 
 

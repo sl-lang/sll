@@ -63,7 +63,7 @@
 #define COMMUTATIVE_OPERATOR \
 	sll_bool_t inv=0; \
 	if (a->type>b->type){ \
-		sll_object_t* __tmp=a; \
+		sll_object_t __tmp=a; \
 		a=b; \
 		b=__tmp; \
 		inv=1; \

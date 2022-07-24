@@ -271,7 +271,7 @@ STATIC_INT_OBJECT(255);
 
 
 
-__SLL_EXTERNAL sll_object_t* sll_static_int[256]={
+__SLL_EXTERNAL sll_object_t sll_static_int[256]={
 	&_int_0_static_data,&_int_1_static_data,&_int_2_static_data,&_int_3_static_data,&_int_4_static_data,&_int_5_static_data,
 	&_int_6_static_data,&_int_7_static_data,&_int_8_static_data,&_int_9_static_data,&_int_10_static_data,&_int_11_static_data,
 	&_int_12_static_data,&_int_13_static_data,&_int_14_static_data,&_int_15_static_data,&_int_16_static_data,&_int_17_static_data,
@@ -338,7 +338,7 @@ STATIC_NEG_INT_OBJECT(16);
 
 
 
-__SLL_EXTERNAL sll_object_t* sll_static_negative_int[16]={
+__SLL_EXTERNAL sll_object_t sll_static_negative_int[16]={
 	&_int_neg_1_static_data,&_int_neg_2_static_data,&_int_neg_3_static_data,&_int_neg_4_static_data,&_int_neg_5_static_data,
 	&_int_neg_6_static_data,&_int_neg_7_static_data,&_int_neg_8_static_data,&_int_neg_9_static_data,&_int_neg_10_static_data,
 	&_int_neg_11_static_data,&_int_neg_12_static_data,&_int_neg_13_static_data,&_int_neg_14_static_data,&_int_neg_15_static_data,
@@ -618,7 +618,7 @@ STATIC_CHAR_OBJECT(255);
 
 
 
-__SLL_EXTERNAL sll_object_t* sll_static_char[256]={
+__SLL_EXTERNAL sll_object_t sll_static_char[256]={
 	&_char_0_static_data,&_char_1_static_data,&_char_2_static_data,&_char_3_static_data,&_char_4_static_data,&_char_5_static_data,
 	&_char_6_static_data,&_char_7_static_data,&_char_8_static_data,&_char_9_static_data,&_char_10_static_data,&_char_11_static_data,
 	&_char_12_static_data,&_char_13_static_data,&_char_14_static_data,&_char_15_static_data,&_char_16_static_data,&_char_17_static_data,
@@ -670,16 +670,16 @@ STATIC_OBJECT(complex_zero,SLL_OBJECT_TYPE_COMPLEX,complex_,SLL_INIT_COMPLEX_STR
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_array_length_to_object(sll_array_length_t length){
-	sll_object_t* o=sll_create_object(SLL_OBJECT_TYPE_ARRAY);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t sll_array_length_to_object(sll_array_length_t length){
+	sll_object_t o=sll_create_object(SLL_OBJECT_TYPE_ARRAY);
 	sll_array_create(length,&(o->data.array));
 	return o;
 }
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_array_to_object(const sll_array_t* array){
-	sll_object_t* o=sll_create_object(SLL_OBJECT_TYPE_ARRAY);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t sll_array_to_object(const sll_array_t* array){
+	sll_object_t o=sll_create_object(SLL_OBJECT_TYPE_ARRAY);
 	if (array){
 		sll_array_clone(array,&(o->data.array));
 	}
@@ -691,43 +691,43 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_array_to_object(const sll_ar
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_array_to_object_nocopy(sll_array_t* array){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t sll_array_to_object_nocopy(sll_array_t* array){
 	SLL_ASSERT(array);
-	sll_object_t* o=sll_create_object(SLL_OBJECT_TYPE_ARRAY);
+	sll_object_t o=sll_create_object(SLL_OBJECT_TYPE_ARRAY);
 	o->data.array=*array;
 	return o;
 }
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_char_to_object(sll_char_t char_){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t sll_char_to_object(sll_char_t char_){
 	SLL_ACQUIRE(sll_static_char[char_]);
 	return sll_static_char[char_];
 }
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_char_to_string_object(sll_char_t char_){
-	sll_object_t* o=sll_create_object(SLL_OBJECT_TYPE_STRING);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t sll_char_to_string_object(sll_char_t char_){
+	sll_object_t o=sll_create_object(SLL_OBJECT_TYPE_STRING);
 	sll_string_from_char(char_,&(o->data.string));
 	return o;
 }
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_complex_to_object(const sll_complex_t* complex_){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t sll_complex_to_object(const sll_complex_t* complex_){
 	if (!complex_->real&&!complex_->imag){
 		SLL_ACQUIRE(sll_static_complex_zero);
 		return sll_static_complex_zero;
 	}
-	sll_object_t* o=sll_create_object(SLL_OBJECT_TYPE_COMPLEX);
+	sll_object_t o=sll_create_object(SLL_OBJECT_TYPE_COMPLEX);
 	o->data.complex_=*complex_;
 	return o;
 }
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_float_to_object(sll_float_t float_){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t sll_float_to_object(sll_float_t float_){
 	if (!float_){
 		SLL_ACQUIRE(sll_static_float_zero);
 		return sll_static_float_zero;
@@ -740,14 +740,14 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_float_to_object(sll_float_t 
 		SLL_ACQUIRE(sll_static_float_half);
 		return sll_static_float_half;
 	}
-	sll_object_t* o=sll_create_object(SLL_OBJECT_TYPE_FLOAT);
+	sll_object_t o=sll_create_object(SLL_OBJECT_TYPE_FLOAT);
 	o->data.float_=float_;
 	return o;
 }
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_int_to_object(sll_integer_t int_){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t sll_int_to_object(sll_integer_t int_){
 	if (int_>-1&&int_<256){
 		SLL_ACQUIRE(sll_static_int[int_]);
 		return sll_static_int[int_];
@@ -756,23 +756,23 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_int_to_object(sll_integer_t 
 		SLL_ACQUIRE(sll_static_negative_int[-int_-1]);
 		return sll_static_negative_int[-int_-1];
 	}
-	sll_object_t* o=sll_create_object(SLL_OBJECT_TYPE_INT);
+	sll_object_t o=sll_create_object(SLL_OBJECT_TYPE_INT);
 	o->data.int_=int_;
 	return o;
 }
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_map_length_to_object(sll_map_length_t length){
-	sll_object_t* o=sll_create_object(SLL_OBJECT_TYPE_MAP);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t sll_map_length_to_object(sll_map_length_t length){
+	sll_object_t o=sll_create_object(SLL_OBJECT_TYPE_MAP);
 	sll_map_create(length,&(o->data.map));
 	return o;
 }
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_map_to_object(const sll_map_t* map){
-	sll_object_t* o=sll_create_object(SLL_OBJECT_TYPE_MAP);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t sll_map_to_object(const sll_map_t* map){
+	sll_object_t o=sll_create_object(SLL_OBJECT_TYPE_MAP);
 	if (map){
 		sll_map_clone(map,&(o->data.map));
 	}
@@ -784,29 +784,29 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_map_to_object(const sll_map_
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_map_to_object_nocopy(sll_map_t* map){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t sll_map_to_object_nocopy(sll_map_t* map){
 	SLL_ASSERT(map);
-	sll_object_t* o=sll_create_object(SLL_OBJECT_TYPE_MAP);
+	sll_object_t o=sll_create_object(SLL_OBJECT_TYPE_MAP);
 	o->data.map=*map;
 	return o;
 }
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_string_pointer_to_object(const sll_char_t* pointer){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t sll_string_pointer_to_object(const sll_char_t* pointer){
 	return STRING_POINTER_TO_OBJECT(pointer);
 }
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_string_pointer_length_to_object(const sll_char_t* pointer,sll_string_length_t length){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t sll_string_pointer_length_to_object(const sll_char_t* pointer,sll_string_length_t length){
 	return STRING_POINTER_LENGTH_TO_OBJECT(pointer,length);
 }
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_string_to_object(const sll_string_t* string){
-	sll_object_t* o=sll_create_object(SLL_OBJECT_TYPE_STRING);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t sll_string_to_object(const sll_string_t* string){
+	sll_object_t o=sll_create_object(SLL_OBJECT_TYPE_STRING);
 	if (string){
 		sll_string_clone(string,&(o->data.string));
 	}
@@ -818,6 +818,6 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_string_to_object(const sll_s
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_string_to_object_nocopy(sll_string_t* string){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t sll_string_to_object_nocopy(sll_string_t* string){
 	return STRING_TO_OBJECT_NOCOPY(string);
 }

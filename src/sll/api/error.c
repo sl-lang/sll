@@ -14,7 +14,7 @@
 
 
 
-static sll_object_t* _wrapper(sll_instruction_index_t* ii){
+static sll_object_t _wrapper(sll_instruction_index_t* ii){
 	return sll_instruction_to_location(*ii);
 }
 
@@ -27,7 +27,7 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_error_get_call_stack(sll_call_stack_s
 		SLL_INIT_ARRAY(out);
 		return;
 	}
-	sll_object_t* o=sll_new_object(SLL_CHAR("{#(hh)}"),c_st->data,c_st->length-pop,sizeof(const sll_call_stack_frame_t),_wrapper,SLL_OFFSETOF(sll_call_stack_frame_t,_instruction_index),SLL_OFFSETOF(sll_call_stack_frame_t,_instruction_index),SLL_OFFSETOF(sll_call_stack_frame_t,_stack_offset));
+	sll_object_t o=sll_new_object(SLL_CHAR("{#(hh)}"),c_st->data,c_st->length-pop,sizeof(const sll_call_stack_frame_t),_wrapper,SLL_OFFSETOF(sll_call_stack_frame_t,_instruction_index),SLL_OFFSETOF(sll_call_stack_frame_t,_instruction_index),SLL_OFFSETOF(sll_call_stack_frame_t,_stack_offset));
 	*out=o->data.array;
 	SLL_CRITICAL(sll_destroy_object(o));
 }

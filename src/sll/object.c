@@ -43,7 +43,7 @@ static const sll_string_t* _object_fn_list[SLL_MAX_OBJECT_FUNC+1]={
 
 
 
-static void _init_struct(const sll_object_type_table_t* type_table,sll_object_t* object,sll_object_t*const* object_data,sll_arg_count_t object_count);
+static void _init_struct(const sll_object_type_table_t* type_table,sll_object_t object,const sll_object_t* object_data,sll_arg_count_t object_count);
 
 
 
@@ -78,7 +78,7 @@ static void _zero_struct(const sll_object_type_table_t* type_table,const sll_obj
 				break;
 			default:
 				{
-					sll_object_t* n=sll_create_object(type_descriptor->fields[field_count].type);
+					sll_object_t n=sll_create_object(type_descriptor->fields[field_count].type);
 					const sll_object_type_data_t* n_dt=*(type_table->data+n->type-SLL_MAX_OBJECT_TYPE-1);
 					n->data.fields=sll_allocate(n_dt->field_count*sizeof(sll_object_field_t));
 					_zero_struct(type_table,n_dt,n->data.fields,0);
@@ -96,7 +96,7 @@ static void _zero_struct(const sll_object_type_table_t* type_table,const sll_obj
 
 
 
-static void _set_field(const sll_object_type_table_t* type_table,sll_object_field_t* field,sll_object_type_t type,sll_object_t* value){
+static void _set_field(const sll_object_type_table_t* type_table,sll_object_field_t* field,sll_object_type_t type,sll_object_t value){
 	if ((type>SLL_MAX_OBJECT_TYPE&&value->type==type)||type==SLL_OBJECT_TYPE_OBJECT){
 		SLL_ACQUIRE(value);
 		field->any=value;
@@ -123,7 +123,7 @@ static void _set_field(const sll_object_type_table_t* type_table,sll_object_fiel
 			return;
 		default:
 			{
-				sll_object_t* n=sll_create_object(type);
+				sll_object_t n=sll_create_object(type);
 				const sll_object_type_data_t* dt=*(type_table->data+type-SLL_MAX_OBJECT_TYPE-1);
 				n->data.fields=sll_allocate(dt->field_count*sizeof(sll_object_field_t));
 				_init_struct(type_table,n,value->data.array.data,value->data.array.length);
@@ -136,7 +136,7 @@ static void _set_field(const sll_object_type_table_t* type_table,sll_object_fiel
 
 
 
-static void _init_struct(const sll_object_type_table_t* type_table,sll_object_t* object,sll_object_t*const* object_data,sll_arg_count_t object_count){
+static void _init_struct(const sll_object_type_table_t* type_table,sll_object_t object,const sll_object_t* object_data,sll_arg_count_t object_count){
 	SLL_ASSERT(object->type>SLL_MAX_OBJECT_TYPE);
 	const sll_object_type_data_t* dt=*(type_table->data+object->type-SLL_MAX_OBJECT_TYPE-1);
 	sll_object_field_t* d=object->data.fields;
@@ -157,7 +157,7 @@ static void _init_struct(const sll_object_type_table_t* type_table,sll_object_t*
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_type_t sll_add_type(sll_object_type_table_t* type_table,sll_object_t*const* object_data,sll_arg_count_t field_count,const sll_string_t* name){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_type_t sll_add_type(sll_object_type_table_t* type_table,const sll_object_t* object_data,sll_arg_count_t field_count,const sll_string_t* name){
 	sll_object_type_t current_type=type_table->length+SLL_MAX_OBJECT_TYPE+1;
 	sll_object_type_data_t* n=sll_allocate(sizeof(sll_object_type_data_t)+field_count*sizeof(sll_object_type_data_field_t));
 	if (name){
@@ -169,7 +169,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_type_t sll_add_type(sll_object_type
 	sll_zero_memory(n->functions,(SLL_MAX_OBJECT_FUNC+1)*sizeof(sll_integer_t));
 	sll_arg_count_t i=0;
 	while (i<field_count){
-		sll_object_t* v=sll_operator_cast((sll_object_t*)(*object_data),sll_static_int[SLL_OBJECT_TYPE_INT]);
+		sll_object_t v=sll_operator_cast((sll_object_t)(*object_data),sll_static_int[SLL_OBJECT_TYPE_INT]);
 		sll_integer_t vv=v->data.int_;
 		SLL_RELEASE(v);
 		n->fields[i].read_only=0;
@@ -188,7 +188,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_type_t sll_add_type(sll_object_type
 			n->fields[i].type=(sll_object_type_t)vv;
 		}
 		object_data++;
-		v=sll_operator_cast((sll_object_t*)(*object_data),sll_static_int[SLL_OBJECT_TYPE_STRING]);
+		v=sll_operator_cast((sll_object_t)(*object_data),sll_static_int[SLL_OBJECT_TYPE_STRING]);
 		object_data++;
 		sll_string_t str=v->data.string;
 		SLL_RELEASE(v);
@@ -249,7 +249,7 @@ _skip_next:;
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_create_new_object_type(sll_object_type_table_t* type_table){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t sll_create_new_object_type(sll_object_type_table_t* type_table){
 	type_table->length++;
 	SLL_ASSERT(type_table->length+SLL_MAX_OBJECT_TYPE<SLL_OBJECT_TYPE_SELF);
 	type_table->data=sll_reallocate(PTR(type_table->data),type_table->length*sizeof(const sll_object_type_data_t*));
@@ -258,14 +258,14 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_create_new_object_type(sll_o
 	n->field_count=0;
 	sll_zero_memory(n->functions,(SLL_MAX_OBJECT_FUNC+1)*sizeof(sll_integer_t));
 	*(type_table->data+type_table->length-1)=n;
-	sll_object_t* o=sll_create_object(type_table->length+SLL_MAX_OBJECT_TYPE);
+	sll_object_t o=sll_create_object(type_table->length+SLL_MAX_OBJECT_TYPE);
 	o->data.fields=NULL;
 	return o;
 }
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_create_object_type(const sll_object_type_table_t* type_table,sll_object_type_t type,sll_object_t*const* args,sll_arg_count_t arg_count){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t sll_create_object_type(const sll_object_type_table_t* type_table,sll_object_type_t type,const sll_object_t* args,sll_arg_count_t arg_count){
 	switch (type){
 		case SLL_OBJECT_TYPE_INT:
 			return (arg_count?sll_operator_cast(*args,sll_static_int[SLL_OBJECT_TYPE_INT]):SLL_ACQUIRE_STATIC_INT(0));
@@ -281,8 +281,8 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_create_object_type(const sll
 				if (arg_count==1){
 					return sll_operator_cast(*args,sll_static_int[SLL_OBJECT_TYPE_COMPLEX]);
 				}
-				sll_object_t* real=sll_operator_cast(*args,sll_static_int[SLL_OBJECT_TYPE_FLOAT]);
-				sll_object_t* imag=sll_operator_cast(*(args+1),sll_static_int[SLL_OBJECT_TYPE_FLOAT]);
+				sll_object_t real=sll_operator_cast(*args,sll_static_int[SLL_OBJECT_TYPE_FLOAT]);
+				sll_object_t imag=sll_operator_cast(*(args+1),sll_static_int[SLL_OBJECT_TYPE_FLOAT]);
 				sll_complex_t v={
 					real->data.float_,
 					imag->data.float_
@@ -297,7 +297,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_create_object_type(const sll
 		case SLL_OBJECT_TYPE_MAP_KEYS:
 		case SLL_OBJECT_TYPE_MAP_VALUES:
 			{
-				sll_object_t* o=sll_array_length_to_object(arg_count);
+				sll_object_t o=sll_array_length_to_object(arg_count);
 				sll_copy_objects(args,arg_count,o->data.array.data);
 				return o;
 			}
@@ -306,7 +306,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_create_object_type(const sll
 				if (!arg_count){
 					return sll_map_to_object(NULL);
 				}
-				sll_object_t* o=sll_map_length_to_object((arg_count+1)>>1);
+				sll_object_t o=sll_map_length_to_object((arg_count+1)>>1);
 				sll_copy_objects(args,arg_count,o->data.map.data);
 				if (arg_count&1){
 					o->data.map.data[arg_count]=SLL_ACQUIRE_STATIC_INT(0);
@@ -318,7 +318,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_create_object_type(const sll
 		return SLL_ACQUIRE_STATIC_INT(0);
 	}
 	SLL_ASSERT(type-SLL_MAX_OBJECT_TYPE-1<type_table->length);
-	sll_object_t* o=sll_create_object(type);
+	sll_object_t o=sll_create_object(type);
 	o->data.fields=sll_allocate((*(type_table->data+type-SLL_MAX_OBJECT_TYPE-1))->field_count*sizeof(sll_object_field_t));
 	_init_struct(type_table,o,args,arg_count);
 	return o;
@@ -408,9 +408,9 @@ __SLL_EXTERNAL void sll_get_type_name(const sll_object_type_table_t* type_table,
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_object_clone(const sll_object_type_table_t* type_table,sll_object_t* object,sll_bool_t deep){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t sll_object_clone(const sll_object_type_table_t* type_table,sll_object_t object,sll_bool_t deep){
 	const sll_object_type_data_t* dt=*(type_table->data+object->type-SLL_MAX_OBJECT_TYPE-1);
-	sll_object_t* n=sll_create_object(object->type);
+	sll_object_t n=sll_create_object(object->type);
 	n->data.fields=sll_allocate(dt->field_count*sizeof(sll_object_field_t));
 	const sll_object_field_t* src=object->data.fields;
 	sll_object_field_t* dst=n->data.fields;
@@ -444,7 +444,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_object_clone(const sll_objec
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_object_get_field(const sll_object_type_table_t* type_table,sll_object_t* object,const sll_string_t* field_name){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t sll_object_get_field(const sll_object_type_table_t* type_table,sll_object_t object,const sll_string_t* field_name){
 	sll_arg_count_t off=sll_get_offset(type_table,object->type,field_name);
 	if (off==SLL_MAX_ARG_COUNT){
 		return SLL_ACQUIRE_STATIC_INT(0);
@@ -464,7 +464,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_object_get_field(const sll_o
 
 
 
-__SLL_EXTERNAL void sll_object_set_field(const sll_object_type_table_t* type_table,sll_object_t* object,const sll_string_t* field_name,sll_object_t* value){
+__SLL_EXTERNAL void sll_object_set_field(const sll_object_type_table_t* type_table,sll_object_t object,const sll_string_t* field_name,sll_object_t value){
 	sll_arg_count_t off=sll_get_offset(type_table,object->type,field_name);
 	if (off==SLL_MAX_ARG_COUNT){
 		return;
@@ -481,7 +481,7 @@ __SLL_EXTERNAL void sll_object_set_field(const sll_object_type_table_t* type_tab
 
 
 
-__SLL_EXTERNAL void sll_object_to_array(const sll_object_type_table_t* type_table,sll_object_t* object,sll_array_t* out){
+__SLL_EXTERNAL void sll_object_to_array(const sll_object_type_table_t* type_table,sll_object_t object,sll_array_t* out){
 	SLL_ASSERT(object->type>SLL_MAX_OBJECT_TYPE&&object->type-SLL_MAX_OBJECT_TYPE-1<type_table->length);
 	const sll_object_type_data_t* dt=*(type_table->data+object->type-SLL_MAX_OBJECT_TYPE-1);
 	sll_array_create(dt->field_count,out);
@@ -508,7 +508,7 @@ __SLL_EXTERNAL void sll_object_to_array(const sll_object_type_table_t* type_tabl
 
 
 
-__SLL_EXTERNAL void sll_object_to_map(const sll_object_type_table_t* type_table,sll_object_t* object,sll_map_t* out){
+__SLL_EXTERNAL void sll_object_to_map(const sll_object_type_table_t* type_table,sll_object_t object,sll_map_t* out){
 	SLL_ASSERT(object->type>SLL_MAX_OBJECT_TYPE&&object->type-SLL_MAX_OBJECT_TYPE-1<type_table->length);
 	const sll_object_type_data_t* dt=*(type_table->data+object->type-SLL_MAX_OBJECT_TYPE-1);
 	sll_map_create(dt->field_count,out);

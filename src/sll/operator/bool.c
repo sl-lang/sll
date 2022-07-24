@@ -5,7 +5,7 @@
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_operator_bool(sll_object_t* a){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_operator_bool(sll_object_t a){
 	switch (a->type){
 		case SLL_OBJECT_TYPE_INT:
 			return !!a->data.int_;

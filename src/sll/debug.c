@@ -24,7 +24,7 @@ __SLL_EXTERNAL void sll_debug_print_node(const sll_node_t* node,const sll_source
 
 
 
-__SLL_EXTERNAL void sll_debug_print_object(sll_object_t* object){
+__SLL_EXTERNAL void sll_debug_print_object(sll_object_t object){
 	if (object->type==SLL_OBJECT_TYPE_STRING){
 		sll_file_write(sll_stdout,object->data.string.data,object->data.string.length*sizeof(sll_char_t),NULL);
 	}

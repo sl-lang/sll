@@ -8,7 +8,7 @@
 typedef struct _ATEXIT_FUNCTION{
 	sll_integer_t function;
 	sll_arg_count_t arg_count;
-	sll_object_t* args[];
+	sll_object_t args[];
 } atexit_function_t;
 
 

@@ -7,7 +7,7 @@
 __CLIB_API_CALL void clib_api_library_get_loaded_list(sll_array_t* out){
 	sll_size_t count;
 	const sll_loaded_library_t*const* data=sll_get_loaded_libraries(&count);
-	sll_object_t* tmp=sll_new_object(SLL_CHAR("{si}"),data,count,0,SLL_OFFSETOF(sll_loaded_library_t,name),SLL_OFFSETOF(sll_loaded_library_t,handle));
+	sll_object_t tmp=sll_new_object(SLL_CHAR("{si}"),data,count,0,SLL_OFFSETOF(sll_loaded_library_t,name),SLL_OFFSETOF(sll_loaded_library_t,handle));
 	*out=tmp->data.array;
 	if (!sll_destroy_object(tmp)){
 		SLL_INIT_ARRAY(out);

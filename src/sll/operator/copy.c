@@ -9,7 +9,7 @@
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_copy(sll_object_t* a,sll_bool_t d){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t sll_operator_copy(sll_object_t a,sll_bool_t d){
 	switch (a->type){
 		case SLL_OBJECT_TYPE_INT:
 		case SLL_OBJECT_TYPE_FLOAT:
@@ -21,7 +21,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_copy(sll_object_t* 
 			return STRING_TO_OBJECT(&(a->data.string));
 		case SLL_OBJECT_TYPE_ARRAY:
 			{
-				sll_object_t* o=sll_array_length_to_object(a->data.array.length);
+				sll_object_t o=sll_array_length_to_object(a->data.array.length);
 				for (sll_map_length_t i=0;i<a->data.array.length;i++){
 					if (d){
 						o->data.array.data[i]=sll_operator_copy(a->data.array.data[i],1);
@@ -35,7 +35,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t* sll_operator_copy(sll_object_t* 
 			}
 		case SLL_OBJECT_TYPE_MAP:
 			{
-				sll_object_t* o=sll_map_length_to_object(a->data.map.length);
+				sll_object_t o=sll_map_length_to_object(a->data.map.length);
 				for (sll_map_length_t i=0;i<(a->data.map.length<<1);i++){
 					if (d){
 						o->data.map.data[i]=sll_operator_copy(a->data.map.data[i],1);

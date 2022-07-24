@@ -275,11 +275,11 @@ typedef struct _SLL_JSON_MAP_KEYPAIR{
  * \group json-api
  * \desc Docs!
  * \api ooo|
- * \arg sll_object_t* null_obj
- * \arg sll_object_t* true_obj
- * \arg sll_object_t* false_obj
+ * \arg sll_object_t null_obj
+ * \arg sll_object_t true_obj
+ * \arg sll_object_t false_obj
  */
-__SLL_EXTERNAL __SLL_API_CALL void sll_api_json__init(sll_object_t* null_obj,sll_object_t* true_obj,sll_object_t* false_obj);
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_json__init(sll_object_t null_obj,sll_object_t true_obj,sll_object_t false_obj);
 
 
 
@@ -290,9 +290,9 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_json__init(sll_object_t* null_obj,sll
  * \desc Docs!
  * \api #s|o
  * \arg const sll_string_t* string
- * \ret sll_object_t*
+ * \ret sll_object_t
  */
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_object_t* sll_api_json_parse(const sll_string_t* string);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_object_t sll_api_json_parse(const sll_string_t* string);
 
 
 
@@ -302,10 +302,10 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_object_t* sll_api_json_pars
  * \group json-api
  * \desc Docs!
  * \api o|s
- * \arg sll_object_t* json
+ * \arg sll_object_t json
  * \arg sll_string_t* out
  */
-__SLL_EXTERNAL __SLL_API_CALL void sll_api_json_stringify(sll_object_t* json,sll_string_t* out);
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_json_stringify(sll_object_t json,sll_string_t* out);
 
 
 

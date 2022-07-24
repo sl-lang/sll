@@ -214,7 +214,7 @@ __SLL_EXTERNAL void sll_copy_data(const void* source,sll_size_t length,void* tar
 
 
 
-__SLL_EXTERNAL void sll_copy_objects(sll_object_t*const* source,sll_size_t count,sll_object_t** target){
+__SLL_EXTERNAL void sll_copy_objects(const sll_object_t* source,sll_size_t count,sll_object_t* target){
 	while (count){
 		*target=*source;
 		SLL_ACQUIRE(*target);

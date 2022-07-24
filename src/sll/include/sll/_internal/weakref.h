@@ -18,7 +18,7 @@ void _weakref_cleanup_data(void);
 
 
 
-void _weakref_delete(sll_object_t* o);
+void _weakref_delete(sll_object_t o);
 
 
 

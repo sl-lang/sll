@@ -12,7 +12,7 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_map_extend(sll_map_t* map,const sll_m
 
 
 
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_map_length_t sll_api_map_remove(sll_map_t* map,sll_object_t* key){
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_map_length_t sll_api_map_remove(sll_map_t* map,sll_object_t key){
 	SLL_RELEASE(sll_map_remove(NULL,key,map));
 	return map->length;
 }

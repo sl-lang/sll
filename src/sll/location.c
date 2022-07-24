@@ -52,7 +52,7 @@ __SLL_EXTERNAL sll_file_offset_t sll_get_location(const sll_assembly_data_t* ass
 
 
 
-__SLL_EXTERNAL void sll_get_name(sll_object_t* object,sll_string_t* out){
+__SLL_EXTERNAL void sll_get_name(sll_object_t object,sll_string_t* out){
 	SLL_INIT_STRING(out);
 	if (object->type==SLL_OBJECT_TYPE_INT){
 		if (object->data.int_<0){

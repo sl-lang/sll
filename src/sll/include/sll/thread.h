@@ -43,11 +43,11 @@
  * \group thread
  * \desc Docs!
  * \arg sll_integer_t function
- * \arg sll_object_t*const* args
+ * \arg const sll_object_t* args
  * \arg sll_arg_count_t arg_count
  * \ret sll_thread_index_t
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_thread_index_t sll_thread_create(sll_integer_t function,sll_object_t*const* args,sll_arg_count_t arg_count);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_thread_index_t sll_thread_create(sll_integer_t function,const sll_object_t* args,sll_arg_count_t arg_count);
 
 
 
