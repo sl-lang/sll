@@ -3,6 +3,7 @@
 ## Added
 
 - Implemented `sll_platform_socket_read` and `sll_platform_socket_write`
+- Implemented `sll_std_file_type_t`
 
 ## Changed
 

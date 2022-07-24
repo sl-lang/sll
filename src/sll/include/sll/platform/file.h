@@ -1,6 +1,7 @@
 #ifndef __SLL_PLATFORM_FILE_H__
 #define __SLL_PLATFORM_FILE_H__ 1
 #include <sll/_file_descriptor.h>
+#include <sll/_size_types.h>
 #include <sll/common.h>
 #include <sll/error.h>
 #include <sll/file.h>
@@ -21,7 +22,7 @@
  * \group platform
  * \subgroup platform-file
  * \desc Docs!
- * \type sll_char_t
+ * \type sll_std_file_type_t
  */
 #define SLL_PLATFORM_STREAM_INPUT 0
 
@@ -33,7 +34,7 @@
  * \group platform
  * \subgroup platform-file
  * \desc Docs!
- * \type sll_char_t
+ * \type sll_std_file_type_t
  */
 #define SLL_PLATFORM_STREAM_OUTPUT 1
 
@@ -45,7 +46,7 @@
  * \group platform
  * \subgroup platform-file
  * \desc Docs!
- * \type sll_char_t
+ * \type sll_std_file_type_t
  */
 #define SLL_PLATFORM_STREAM_ERROR 2
 
@@ -72,6 +73,18 @@
  * \type sll_file_descriptor_t
  */
 #define SLL_UNKNOWN_FILE_DESCRIPTOR ((sll_file_descriptor_t)0xffffffffffffffffull)
+
+
+
+/**
+ * \flags type var
+ * \name sll_std_file_type_t
+ * \group platform
+ * \subgroup platform-file
+ * \desc Docs!
+ * \type __SLL_U8
+ */
+typedef __SLL_U8 sll_std_file_type_t;
 
 
 
@@ -195,10 +208,10 @@ __SLL_EXTERNAL sll_size_t sll_platform_file_write(sll_file_descriptor_t fd,const
  * \group platform
  * \subgroup platform-file
  * \desc Docs!
- * \arg sll_char_t type
+ * \arg sll_std_file_type_t type
  * \ret sll_file_descriptor_t
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_file_descriptor_t sll_platform_get_default_stream_descriptor(sll_char_t type);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_file_descriptor_t sll_platform_get_default_stream_descriptor(sll_std_file_type_t type);
 
 
 

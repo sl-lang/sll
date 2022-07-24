@@ -121,7 +121,7 @@ __SLL_EXTERNAL sll_size_t sll_platform_file_write(sll_file_descriptor_t fd,const
 
 
 
-sll_file_descriptor_t sll_platform_get_default_stream_descriptor(sll_char_t type){
+__SLL_EXTERNAL sll_file_descriptor_t sll_platform_get_default_stream_descriptor(sll_std_file_type_t type){
 	if (type==SLL_PLATFORM_STREAM_INPUT){
 		return TO_HANDLE(dup(STDIN_FILENO));
 	}
