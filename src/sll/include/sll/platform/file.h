@@ -120,12 +120,12 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_platform_file_data_available(sl
  * \group platform
  * \subgroup platform-file
  * \desc Docs!
- * \arg const sll_char_t* fp
- * \arg sll_file_flags_t ff
+ * \arg const sll_char_t* file_path
+ * \arg sll_file_flags_t flags
  * \arg sll_error_t* err
  * \ret sll_file_descriptor_t
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_file_descriptor_t sll_platform_file_open(const sll_char_t* fp,sll_file_flags_t ff,sll_error_t* err);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_file_descriptor_t sll_platform_file_open(const sll_char_t* file_path,sll_file_flags_t flags,sll_error_t* err);
 
 
 
@@ -136,12 +136,12 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_file_descriptor_t sll_platform_file_open(c
  * \subgroup platform-file
  * \desc Docs!
  * \arg sll_file_descriptor_t fd
- * \arg void* p
- * \arg sll_size_t sz
+ * \arg void* pointer
+ * \arg sll_size_t size
  * \arg sll_error_t* err
  * \ret sll_size_t
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_size_t sll_platform_file_read(sll_file_descriptor_t fd,void* p,sll_size_t sz,sll_error_t* err);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_size_t sll_platform_file_read(sll_file_descriptor_t fd,void* pointer,sll_size_t size,sll_error_t* err);
 
 
 
@@ -152,10 +152,10 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_size_t sll_platform_file_read(sll_file_des
  * \subgroup platform-file
  * \desc Docs!
  * \arg sll_file_descriptor_t fd
- * \arg sll_file_offset_t off
+ * \arg sll_file_offset_t offset
  * \ret sll_error_t
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_error_t sll_platform_file_seek(sll_file_descriptor_t fd,sll_file_offset_t off);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_error_t sll_platform_file_seek(sll_file_descriptor_t fd,sll_file_offset_t offset);
 
 
 
@@ -180,12 +180,12 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_size_t sll_platform_file_size(sll_file_des
  * \subgroup platform-file
  * \desc Docs!
  * \arg sll_file_descriptor_t fd
- * \arg const void* p
- * \arg sll_size_t sz
+ * \arg const void* pointer
+ * \arg sll_size_t size
  * \arg sll_error_t* err
  * \ret sll_size_t
  */
-__SLL_EXTERNAL sll_size_t sll_platform_file_write(sll_file_descriptor_t fd,const void* p,sll_size_t sz,sll_error_t* err);
+__SLL_EXTERNAL sll_size_t sll_platform_file_write(sll_file_descriptor_t fd,const void* pointer,sll_size_t size,sll_error_t* err);
 
 
 
@@ -195,10 +195,10 @@ __SLL_EXTERNAL sll_size_t sll_platform_file_write(sll_file_descriptor_t fd,const
  * \group platform
  * \subgroup platform-file
  * \desc Docs!
- * \arg sll_char_t t
+ * \arg sll_char_t type
  * \ret sll_file_descriptor_t
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_file_descriptor_t sll_platform_get_default_stream_descriptor(sll_char_t t);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_file_descriptor_t sll_platform_get_default_stream_descriptor(sll_char_t type);
 
 
 

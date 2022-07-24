@@ -54,22 +54,22 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_platform_file_data_available(sl
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_file_descriptor_t sll_platform_file_open(const sll_char_t* fp,sll_file_flags_t ff,sll_error_t* err){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_file_descriptor_t sll_platform_file_open(const sll_char_t* file_path,sll_file_flags_t flags,sll_error_t* err){
 	ERROR_PTR_RESET;
 	int fl=O_RDONLY;
-	if ((ff&(SLL_FILE_FLAG_READ|SLL_FILE_FLAG_WRITE))==(SLL_FILE_FLAG_READ|SLL_FILE_FLAG_WRITE)){
+	if ((flags&(SLL_FILE_FLAG_READ|SLL_FILE_FLAG_WRITE))==(SLL_FILE_FLAG_READ|SLL_FILE_FLAG_WRITE)){
 		fl=O_RDWR;
 	}
-	else if (ff&SLL_FILE_FLAG_WRITE){
+	else if (flags&SLL_FILE_FLAG_WRITE){
 		fl=O_WRONLY;
 	}
-	if (ff&SLL_FILE_FLAG_APPEND){
+	if (flags&SLL_FILE_FLAG_APPEND){
 		fl|=O_APPEND;
 	}
-	else if (ff&SLL_FILE_FLAG_WRITE){
+	else if (flags&SLL_FILE_FLAG_WRITE){
 		fl|=O_CREAT|O_TRUNC;
 	}
-	int o=open((char*)fp,fl,S_IRWXU|S_IRWXG|S_IRWXO);
+	int o=open((char*)file_path,fl,S_IRWXU|S_IRWXG|S_IRWXO);
 	if (o==-1){
 		ERROR_PTR_SYSTEM;
 		return SLL_UNKNOWN_FILE_DESCRIPTOR;
@@ -79,9 +79,9 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_file_descriptor_t sll_platform_file_open(c
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_size_t sll_platform_file_read(sll_file_descriptor_t fd,void* p,sll_size_t sz,sll_error_t* err){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_size_t sll_platform_file_read(sll_file_descriptor_t fd,void* pointer,sll_size_t size,sll_error_t* err){
 	ERROR_PTR_RESET;
-	ssize_t o=read(FROM_HANDLE(fd),p,sz);
+	ssize_t o=read(FROM_HANDLE(fd),pointer,size);
 	if (o==-1){
 		ERROR_PTR_SYSTEM;
 		return SLL_NO_FILE_SIZE;
@@ -103,15 +103,15 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_size_t sll_platform_file_size(sll_file_des
 
 
 
-__SLL_EXTERNAL sll_error_t sll_platform_file_seek(sll_file_descriptor_t fd,sll_file_offset_t off){
-	return (lseek(FROM_HANDLE(fd),off,SEEK_SET)==-1?sll_platform_get_error():SLL_NO_ERROR);
+__SLL_EXTERNAL sll_error_t sll_platform_file_seek(sll_file_descriptor_t fd,sll_file_offset_t offset){
+	return (lseek(FROM_HANDLE(fd),offset,SEEK_SET)==-1?sll_platform_get_error():SLL_NO_ERROR);
 }
 
 
 
-__SLL_EXTERNAL sll_size_t sll_platform_file_write(sll_file_descriptor_t fd,const void* p,sll_size_t sz,sll_error_t* err){
+__SLL_EXTERNAL sll_size_t sll_platform_file_write(sll_file_descriptor_t fd,const void* pointer,sll_size_t size,sll_error_t* err){
 	ERROR_PTR_RESET;
-	ssize_t o=write(FROM_HANDLE(fd),p,sz);
+	ssize_t o=write(FROM_HANDLE(fd),pointer,size);
 	if (o==-1){
 		ERROR_PTR_SYSTEM;
 		return SLL_NO_FILE_SIZE;
@@ -121,16 +121,16 @@ __SLL_EXTERNAL sll_size_t sll_platform_file_write(sll_file_descriptor_t fd,const
 
 
 
-sll_file_descriptor_t sll_platform_get_default_stream_descriptor(sll_char_t t){
-	if (t==SLL_PLATFORM_STREAM_INPUT){
+sll_file_descriptor_t sll_platform_get_default_stream_descriptor(sll_char_t type){
+	if (type==SLL_PLATFORM_STREAM_INPUT){
 		return TO_HANDLE(dup(STDIN_FILENO));
 	}
 #ifdef __SLL_BUILD_FUZZER
 	return TO_HANDLE(dup(_fuzzer_fileno));
 #endif
-	if (t==SLL_PLATFORM_STREAM_OUTPUT){
+	if (type==SLL_PLATFORM_STREAM_OUTPUT){
 		return TO_HANDLE(dup(STDOUT_FILENO));
 	}
-	SLL_ASSERT(t==SLL_PLATFORM_STREAM_ERROR);
+	SLL_ASSERT(type==SLL_PLATFORM_STREAM_ERROR);
 	return TO_HANDLE(dup(STDERR_FILENO));
 }
