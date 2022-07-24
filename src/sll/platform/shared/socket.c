@@ -1,7 +1,7 @@
 #ifdef __SLL_BUILD_WINDOWS
 #include <ws2tcpip.h>
 #include <winsock2.h>
-#include <stdint.h>
+#include <stddef.h>
 #else
 #include <netdb.h>
 #include <sys/ioctl.h>
@@ -27,6 +27,7 @@
 #define FROM_HANDLE(x) ((SOCKET)ADDR(x))
 #else
 #define FROM_HANDLE(x) ((int)ADDR(x))
+#define SOCKET_ERROR -1
 #endif
 #define TO_HANDLE(x) (PTR(x))
 
@@ -179,15 +180,9 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_error_t sll_platform_socket_connect(sll_fi
 	socklen_t addr_len=_build_sockaddr(address,&addr);
 	int ret=connect(FROM_HANDLE(socket),addr,addr_len);
 	sll_deallocate(addr);
-#ifdef __SLL_BUILD_WINDOWS
 	if (ret==SOCKET_ERROR){
-		SLL_UNIMPLEMENTED();
-	}
-#else
-	if (ret==-1){
 		return sll_platform_get_error();
 	}
-#endif
 	return SLL_NO_ERROR;
 }
 
@@ -195,15 +190,9 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_error_t sll_platform_socket_connect(sll_fi
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_error_t sll_platform_socket_create(sll_socket_address_family_t address_family,sll_socket_type_t type,sll_socket_protocol_t protocol,sll_file_descriptor_t* out){
 	sll_file_descriptor_t ret=(sll_file_descriptor_t)PTR(socket(_from_address_family(address_family),_from_type(type),protocol));
-#ifdef __SLL_BUILD_WINDOWS
-	if (ret==PTR(INVALID_SOCKET)){
-		SLL_UNIMPLEMENTED();
-	}
-#else
-	if (ret==PTR(-1)){
+	if (ret==PTR(SOCKET_ERROR)){
 		return sll_platform_get_error();
 	}
-#endif
 	*out=ret;
 	return SLL_NO_ERROR;
 }
@@ -280,7 +269,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_error_t sll_platform_socket_listen(sll_fil
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_size_t sll_platform_socket_read(sll_file_descriptor_t socket,void* pointer,sll_size_t size,sll_error_t* err){
 	ERROR_PTR_RESET;
 	ssize_t o=(ssize_t)recv(FROM_HANDLE(socket),pointer,size,0);
-	if (o==-1){
+	if (o==SOCKET_ERROR){
 		ERROR_PTR_SYSTEM;
 		return SLL_NO_FILE_SIZE;
 	}
@@ -298,7 +287,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_error_t sll_platform_socket_shutdown(sll_f
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_size_t sll_platform_socket_write(sll_file_descriptor_t socket,const void* pointer,sll_size_t size,sll_error_t* err){
 	ERROR_PTR_RESET;
 	ssize_t o=(ssize_t)send(FROM_HANDLE(socket),pointer,size,0);
-	if (o==-1){
+	if (o==SOCKET_ERROR){
 		ERROR_PTR_SYSTEM;
 		return SLL_NO_FILE_SIZE;
 	}
