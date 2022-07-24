@@ -237,7 +237,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_error_t sll_platform_socket_get_address_in
 #ifdef __SLL_BUILD_WINDOWS
 		SLL_UNIMPLEMENTED();
 #else
-		SLL_UNIMPLEMENTED();
+		return sll_error_from_string_pointer(SLL_CHAR(gai_strerror(err)));
 #endif
 	}
 	sll_address_info_count_t i=0;

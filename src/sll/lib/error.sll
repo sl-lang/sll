@@ -172,7 +172,7 @@
 
 (= _get_error_backtrace (,,,
 	(= call_stack (<- (... "sll:error_get_call_stack") 0 (!.)))
-	(@@ ([> (= i 0) (< i ($ call_stack))
+	(@@ ([> (= i 0) (< i (- ($ call_stack) 1))
 		(= k (: call_stack i))
 		(++ i)
 		(:: (: k 0) vm$location_type)
