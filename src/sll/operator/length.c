@@ -25,8 +25,6 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t sll_operator_len(sll_object_t a){
 			return sll_int_to_object(a->data.array.length);
 		case SLL_OBJECT_TYPE_MAP:
 			return sll_int_to_object(a->data.map.length);
-		default:
-			SLL_UNREACHABLE();
 	}
 	return SLL_ACQUIRE_STATIC_INT(0);
 }
