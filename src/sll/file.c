@@ -322,7 +322,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_size_t sll_file_read(sll_file_t* file,void
 		return 0;
 	}
 	if (file->flags&SLL_FILE_FLAG_SOCKET){
-		SLL_UNIMPLEMENTED();
+		return sll_platform_socket_read(file->data.socket.fd,pointer,size,err);
 	}
 	sll_size_t o;
 	if (file->flags&FILE_FLAG_MEMORY){
