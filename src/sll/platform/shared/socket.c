@@ -1,7 +1,6 @@
 #ifdef __SLL_BUILD_WINDOWS
 #include <ws2tcpip.h>
 #include <winsock2.h>
-#include <stddef.h>
 #else
 #include <netdb.h>
 #include <sys/ioctl.h>
@@ -30,6 +29,12 @@
 #define SOCKET_ERROR -1
 #endif
 #define TO_HANDLE(x) (PTR(x))
+
+
+
+#ifdef __SLL_BUILD_WINDOWS
+typedef __SLL_S64 ssize_t;
+#endif
 
 
 
