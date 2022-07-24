@@ -1,3 +1,14 @@
+#ifdef __SLL_BUILD_WINDOWS
+#include <ws2tcpip.h>
+#include <winsock2.h>
+#include <stdint.h>
+#else
+#include <netdb.h>
+#include <sys/ioctl.h>
+#include <sys/socket.h>
+#include <sys/types.h>
+#include <unistd.h>
+#endif
 #include <sll/_internal/common.h>
 #include <sll/_internal/error.h>
 #include <sll/_internal/intrinsics.h>
@@ -9,16 +20,6 @@
 #include <sll/platform/util.h>
 #include <sll/socket.h>
 #include <sll/types.h>
-#ifdef __SLL_BUILD_WINDOWS
-#include <ws2tcpip.h>
-#include <winsock2.h>
-#else
-#include <netdb.h>
-#include <sys/ioctl.h>
-#include <sys/socket.h>
-#include <sys/types.h>
-#include <unistd.h>
-#endif
 
 
 
@@ -278,7 +279,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_error_t sll_platform_socket_listen(sll_fil
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_size_t sll_platform_socket_read(sll_file_descriptor_t socket,void* pointer,sll_size_t size,sll_error_t* err){
 	ERROR_PTR_RESET;
-	ssize_t o=read(FROM_HANDLE(socket),pointer,size);
+	ssize_t o=(ssize_t)recv(FROM_HANDLE(socket),pointer,size,0);
 	if (o==-1){
 		ERROR_PTR_SYSTEM;
 		return SLL_NO_FILE_SIZE;
@@ -296,7 +297,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_error_t sll_platform_socket_shutdown(sll_f
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_size_t sll_platform_socket_write(sll_file_descriptor_t socket,const void* pointer,sll_size_t size,sll_error_t* err){
 	ERROR_PTR_RESET;
-	ssize_t o=write(FROM_HANDLE(socket),pointer,size);
+	ssize_t o=(ssize_t)send(FROM_HANDLE(socket),pointer,size,0);
 	if (o==-1){
 		ERROR_PTR_SYSTEM;
 		return SLL_NO_FILE_SIZE;
