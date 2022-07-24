@@ -121,7 +121,7 @@ static void _build_address(const struct sockaddr* addr,socklen_t addr_len,sll_ad
 			{
 				const struct sockaddr_in6* ipv6_addr=(const struct sockaddr_in6*)addr;
 				out->type=SLL_ADDRESS_TYPE_IPV6;
-				__SLL_U16* data=(__SLL_U16*)(&(ipv6_addr->sin6_addr));
+				const __SLL_U16* data=(__SLL_U16*)(&(ipv6_addr->sin6_addr));
 				for (sll_array_length_t i=0;i<8;i++){
 					out->data.ipv6.address[i]=SWAP_BYTES16(*(data+i));
 				}
@@ -148,7 +148,19 @@ static socklen_t _build_sockaddr(const sll_address_t* address,struct sockaddr** 
 				return sizeof(struct sockaddr_in);
 			}
 		case SLL_ADDRESS_TYPE_IPV6:
-			SLL_UNIMPLEMENTED();
+			{
+				struct sockaddr_in6* data=sll_allocate_stack(sizeof(struct sockaddr_in6));
+				data->sin6_family=AF_INET6;
+				__SLL_U16* address_data=(__SLL_U16*)(&(data->sin6_addr));
+				for (sll_array_length_t i=0;i<8;i++){
+					*(address_data+i)=SWAP_BYTES16(address->data.ipv6.address[i]);
+				}
+				data->sin6_flowinfo=address->data.ipv6.flow_info;
+				data->sin6_scope_id=address->data.ipv6.scope_id;
+				data->sin6_port=SWAP_BYTES16(address->data.ipv6.port);
+				*out=(struct sockaddr*)data;
+				return sizeof(struct sockaddr_in6);
+			}
 	}
 	SLL_UNIMPLEMENTED();
 }

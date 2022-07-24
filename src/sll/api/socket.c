@@ -40,8 +40,20 @@ static sll_bool_t _object_to_address(const sll_array_t* data,sll_address_t* out)
 			out->data.ipv4.port=(sll_port_t)(data->data[1]->data.int_);
 			return 1;
 		case 4:
+			if (data->data[0]->type!=SLL_OBJECT_TYPE_ARRAY||data->data[0]->data.array.length!=8||data->data[1]->type!=SLL_OBJECT_TYPE_INT||data->data[1]->data.int_<0||data->data[1]->data.int_>__SLL_U32_MAX||data->data[2]->type!=SLL_OBJECT_TYPE_INT||data->data[2]->data.int_<0||data->data[2]->data.int_>__SLL_U32_MAX||data->data[3]->type!=SLL_OBJECT_TYPE_INT||data->data[3]->data.int_<0||data->data[3]->data.int_>__SLL_U16_MAX){
+				return 0;
+			}
 			out->type=SLL_ADDRESS_TYPE_IPV6;
-			SLL_UNIMPLEMENTED();
+			for (sll_array_length_t i=0;i<8;i++){
+				sll_object_t elem=data->data[0]->data.array.data[i];
+				if (elem->type!=SLL_OBJECT_TYPE_INT||elem->data.int_<0||elem->data.int_>__SLL_U16_MAX){
+					return 0;
+				}
+				out->data.ipv6.address[i]=elem->data.int_;
+			}
+			out->data.ipv6.flow_info=(__SLL_U32)(data->data[1]->data.int_);
+			out->data.ipv6.scope_id=(__SLL_U32)(data->data[2]->data.int_);
+			out->data.ipv6.port=(sll_port_t)(data->data[3]->data.int_);
 			return 1;
 	}
 	return 0;
