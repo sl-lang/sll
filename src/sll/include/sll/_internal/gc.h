@@ -83,7 +83,7 @@
 			} \
 		} \
 		else{ \
-			__o->rc--; \
+			__o->reference_count--; \
 			if (!SLL_GET_OBJECT_REFERENCE_COUNTER(__o)){ \
 				sll__release_object_internal(__o); \
 			} \
@@ -97,9 +97,9 @@
 
 #define GC_ROOT_COUNTER_SHIFT 48
 
-#define GC_IS_ANY_ROOT(x) (!!((x)->rc>>GC_ROOT_COUNTER_SHIFT))
-#define GC_DECREASE_ROOT(x) ((x)->rc-=1ull<<GC_ROOT_COUNTER_SHIFT)
-#define GC_INCREASE_ROOT(x) ((x)->rc+=1ull<<GC_ROOT_COUNTER_SHIFT)
+#define GC_IS_ANY_ROOT(x) (!!((x)->reference_count>>GC_ROOT_COUNTER_SHIFT))
+#define GC_DECREASE_ROOT(x) ((x)->reference_count-=1ull<<GC_ROOT_COUNTER_SHIFT)
+#define GC_INCREASE_ROOT(x) ((x)->reference_count+=1ull<<GC_ROOT_COUNTER_SHIFT)
 
 
 

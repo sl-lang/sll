@@ -33,7 +33,7 @@
  * \arg sll_object_t o
  * \ret sll_reference_count_t
  */
-#define SLL_GET_OBJECT_REFERENCE_COUNTER(o) ((o)->rc&SLL_OBJECT_REFERENCE_COUNTER_MASK)
+#define SLL_GET_OBJECT_REFERENCE_COUNTER(o) ((o)->reference_count&SLL_OBJECT_REFERENCE_COUNTER_MASK)
 
 
 
@@ -44,7 +44,7 @@
  * \desc Docs!
  * \arg sll_object_t object
  */
-#define SLL_ACQUIRE(object) ((object)->rc++)
+#define SLL_ACQUIRE(object) ((object)->reference_count++)
 
 
 
@@ -62,7 +62,7 @@
 		if (!SLL_GET_OBJECT_REFERENCE_COUNTER(__o)){ \
 			sll__gc_error(__o); \
 		} \
-		__o->rc--; \
+		__o->reference_count--; \
 		if (!SLL_GET_OBJECT_REFERENCE_COUNTER(__o)){ \
 			sll__release_object_internal(__o); \
 		} \
@@ -71,7 +71,7 @@
 #define SLL_RELEASE(object) \
 	do{ \
 		sll_object_t __o=(object); \
-		__o->rc--; \
+		__o->reference_count--; \
 		if (!SLL_GET_OBJECT_REFERENCE_COUNTER(__o)){ \
 			sll__release_object_internal(__o); \
 		} \

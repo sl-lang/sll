@@ -79,7 +79,7 @@ sll_thread_index_t _thread_new(void){
 	n->stack[0]=NULL;
 	sll_gc_add_roots(n->stack,sll_current_vm_config->stack_size);
 	n->tls=PTR(ADDR(ptr)+sizeof(thread_data_t)+sll_current_vm_config->call_stack_size*sizeof(sll_call_stack_frame_t));
-	sll_static_int[0]->rc+=sll_current_runtime_data->assembly_data->tls_variable_count;
+	sll_static_int[0]->reference_count+=sll_current_runtime_data->assembly_data->tls_variable_count;
 	for (sll_variable_index_t i=0;i<sll_current_runtime_data->assembly_data->tls_variable_count;i++){
 		*(n->tls+i)=sll_static_int[0];
 	}

@@ -15,7 +15,7 @@ typedef union _EXTENDED_FILE_DATA{
 
 typedef struct _EXTENDED_FILE{
 	extended_file_data_t data;
-	sll_reference_count_t rc;
+	sll_reference_count_t reference_count;
 	sll_bool_t is_pointer;
 	void* data_pointer;
 } extended_file_t;

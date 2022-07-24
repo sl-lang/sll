@@ -42,7 +42,7 @@ static sll_file_handle_t _alloc_file(void){
 	sll_size_t o;
 	SLL_HANDLE_CONTAINER_ALLOC(&_file_data,&o);
 	extended_file_t* data=sll_allocate(sizeof(extended_file_t));
-	data->rc=1;
+	data->reference_count=1;
 	data->is_pointer=0;
 	data->data_pointer=NULL;
 	*(_file_data.data+o)=data;
@@ -57,8 +57,8 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_bool_t sll_api_file_close(s
 		return 0;
 	}
 	extended_file_t* file=*(_file_data.data+handle);
-	file->rc--;
-	if (file->rc){
+	file->reference_count--;
+	if (file->reference_count){
 		return 1;
 	}
 	sll_file_close((file->is_pointer?file->data.pointer:&(file->data.struct_)));
@@ -152,7 +152,7 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_file_inc_handle(sll_file_handle_t han
 	if (!SLL_HANDLE_CONTAINER_CHECK(&_file_data,handle)){
 		return;
 	}
-	((extended_file_t*)(*(_file_data.data+handle)))->rc++;
+	((extended_file_t*)(*(_file_data.data+handle)))->reference_count++;
 }
 
 

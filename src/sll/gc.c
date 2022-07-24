@@ -134,9 +134,9 @@ __SLL_EXTERNAL void sll__gc_error(sll_object_t object){
 __SLL_EXTERNAL void sll__release_object_internal(sll_object_t object){
 	SLL_ASSERT(!SLL_GET_OBJECT_REFERENCE_COUNTER(object));
 	if (object->_flags&GC_FLAG_HAS_WEAKREF){
-		object->rc++;
+		object->reference_count++;
 		_weakref_delete(object);
-		object->rc--;
+		object->reference_count--;
 		if (SLL_GET_OBJECT_REFERENCE_COUNTER(object)){
 			return;
 		}
@@ -163,9 +163,9 @@ __SLL_EXTERNAL void sll__release_object_internal(sll_object_t object){
 			const sll_object_type_data_t* dt=*(sll_current_runtime_data->type_table->data+object->type-SLL_MAX_OBJECT_TYPE-1);
 			if (_scheduler_current_thread_index!=SLL_UNKNOWN_THREAD_INDEX&&dt->functions[SLL_OBJECT_FUNC_DELETE]){
 				_gc_data.enabled=1;
-				object->rc++;
+				object->reference_count++;
 				SLL_RELEASE(sll_execute_function(dt->functions[SLL_OBJECT_FUNC_DELETE],&object,1,0));
-				object->rc--;
+				object->reference_count--;
 				if (SLL_GET_OBJECT_REFERENCE_COUNTER(object)){
 					_gc_data.enabled=gc_state;
 					return;
@@ -281,7 +281,7 @@ _check_garbage_collect:
 
 
 __SLL_EXTERNAL void sll_acquire_object(sll_object_t object){
-	object->rc++;
+	object->reference_count++;
 }
 
 
@@ -328,7 +328,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t sll_create_object(sll_object_type
 			SLL_ASSERT((GC_MEMORY_PAGE_SIZE-sizeof(gc_page_header_t)-sizeof(struct _SLL_OBJECT))/sizeof(struct _SLL_OBJECT)<=GC_OBJECT_POOL_SIZE);
 			sll_object_t c=o+1;
 			while (_gc_object_pool.length<(GC_MEMORY_PAGE_SIZE-sizeof(gc_page_header_t)-sizeof(struct _SLL_OBJECT))/sizeof(struct _SLL_OBJECT)){
-				c->rc=0;
+				c->reference_count=0;
 				c->_flags=GC_FLAG_IN_FAST_POOL;
 				c->data._pool_index=_gc_object_pool.length;
 				_gc_object_pool.data[_gc_object_pool.length]=c;
@@ -340,7 +340,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t sll_create_object(sll_object_type
 		o->_flags=0;
 	}
 	GC_SET_MARKED(o);
-	o->rc=1;
+	o->reference_count=1;
 	*((sll_object_type_t*)(&(o->type)))=type;
 	return o;
 }
@@ -349,7 +349,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t sll_create_object(sll_object_type
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_destroy_object(sll_object_t object){
 	SLL_ASSERT(SLL_GET_OBJECT_REFERENCE_COUNTER(object));
-	object->rc--;
+	object->reference_count--;
 	if (SLL_GET_OBJECT_REFERENCE_COUNTER(object)){
 		return 0;
 	}

@@ -187,14 +187,14 @@ typedef union _SLL_OBJECT_DATA{
  * \name sll_object_t
  * \group gc
  * \desc Docs!
- * \arg sll_reference_count_t rc
+ * \arg sll_reference_count_t reference_count
  * \arg const sll_object_type_t type
  * \arg sll_object_flags_t _flags
  * \arg sll_object_extra_data_t _data
  * \arg sll_object_data_t data
  */
 typedef struct _SLL_OBJECT{
-	sll_reference_count_t rc;
+	sll_reference_count_t reference_count;
 	const sll_object_type_t type;
 	sll_object_flags_t _flags;
 	sll_object_extra_data_t _data;

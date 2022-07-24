@@ -118,10 +118,10 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_process_start(const sll_array_t* args
 	if (!(flags&SLL_PROCESS_FLAG_WAIT)){
 		SLL_UNIMPLEMENTED();
 	}
-	sll_return_code_t rc;
+	sll_return_code_t reference_count;
 	do{
-		rc=sll_platform_wait_process(ph,&err);
-	} while (rc!=SLL_NO_ERROR&&SLL_ERROR_GET_TYPE(err)==SLL_ERROR_FLAG_SYSTEM&&SLL_ERROR_GET_VALUE(err)==4);
+		reference_count=sll_platform_wait_process(ph,&err);
+	} while (reference_count!=SLL_NO_ERROR&&SLL_ERROR_GET_TYPE(err)==SLL_ERROR_FLAG_SYSTEM&&SLL_ERROR_GET_VALUE(err)==4);
 	if (err!=SLL_NO_ERROR){
 		SLL_UNIMPLEMENTED();
 	}
@@ -130,7 +130,7 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_process_start(const sll_array_t* args
 		sll_deallocate(*(raw_args+i));
 	}
 	sll_deallocate(raw_args);
-	sll_new_object_array(SLL_CHAR("a(sh)h(sZZ)"),out,args,cwd,flags,rc,stdin);
+	sll_new_object_array(SLL_CHAR("a(sh)h(sZZ)"),out,args,cwd,flags,reference_count,stdin);
 }
 
 

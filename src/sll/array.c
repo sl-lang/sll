@@ -167,7 +167,7 @@ __SLL_EXTERNAL void sll_array_create_zero(sll_array_length_t length,sll_array_t*
 	}
 	out->length=length;
 	out->data=sll_allocator_init(length*sizeof(sll_object_t));
-	sll_static_int[0]->rc+=length;
+	sll_static_int[0]->reference_count+=length;
 	for (sll_array_length_t i=0;i<length;i++){
 		out->data[i]=sll_static_int[0];
 	}
@@ -207,20 +207,20 @@ __SLL_EXTERNAL void sll_array_duplicate(const sll_array_t* array,sll_integer_t c
 		sll_array_length_t i=array->length-1;
 		for (sll_array_length_t j=0;j<i;j++){
 			out->data[i]=array->data[j];
-			out->data[i]->rc+=m;
+			out->data[i]->reference_count+=m;
 			out->data[j]=array->data[i];
-			out->data[j]->rc+=m;
+			out->data[j]->reference_count+=m;
 			i--;
 		}
 		if (array->length&1){
 			out->data[i]=array->data[i];
-			out->data[i]->rc+=m;
+			out->data[i]->reference_count+=m;
 		}
 	}
 	else{
 		for (sll_array_length_t i=0;i<array->length;i++){
 			out->data[i]=array->data[i];
-			out->data[i]->rc+=m;
+			out->data[i]->reference_count+=m;
 		}
 	}
 	sll_array_length_t i=array->length;
@@ -334,7 +334,7 @@ __SLL_EXTERNAL void sll_array_join_arrays(const sll_array_t*const* array_data,sl
 		return;
 	}
 	out->length=array_count-1;
-	infix->rc+=out->length;
+	infix->reference_count+=out->length;
 	for (sll_array_length_t i=0;i<array_count;i++){
 		out->length+=(*(array_data+i))->length;
 	}

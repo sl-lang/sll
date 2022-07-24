@@ -37,7 +37,7 @@ static sll_object_t _array_from_length(sll_integer_t len){
 		return sll_array_to_object(NULL);
 	}
 	sll_object_t o=sll_array_length_to_object((sll_array_length_t)len);
-	sll_static_int[0]->rc+=o->data.array.length;
+	sll_static_int[0]->reference_count+=o->data.array.length;
 	for (sll_array_length_t i=0;i<o->data.array.length;i++){
 		o->data.array.data[i]=sll_static_int[0];
 	}

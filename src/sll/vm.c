@@ -197,7 +197,7 @@ void _call_function(thread_data_t* thr,sll_function_index_t fn,sll_arg_count_t a
 	if (SLL_ASSEMBLY_FUNCTION_IS_VAR_ARG(af)){
 		sll_object_t tos;
 		if (SLL_ASSEMBLY_FUNCTION_GET_ARGUMENT_COUNT(af)>ac){
-			sll_static_int[0]->rc+=SLL_ASSEMBLY_FUNCTION_GET_ARGUMENT_COUNT(af)-ac-1;
+			sll_static_int[0]->reference_count+=SLL_ASSEMBLY_FUNCTION_GET_ARGUMENT_COUNT(af)-ac-1;
 			for (sll_arg_count_t i=0;i<SLL_ASSEMBLY_FUNCTION_GET_ARGUMENT_COUNT(af)-ac-1;i++){
 				*(thr->stack+thr->stack_index)=sll_static_int[0];
 				thr->stack_index++;
@@ -218,7 +218,7 @@ void _call_function(thread_data_t* thr,sll_function_index_t fn,sll_arg_count_t a
 	else{
 		if (ac!=SLL_ASSEMBLY_FUNCTION_GET_ARGUMENT_COUNT(af)){
 			if (SLL_ASSEMBLY_FUNCTION_GET_ARGUMENT_COUNT(af)>ac){
-				sll_static_int[0]->rc+=SLL_ASSEMBLY_FUNCTION_GET_ARGUMENT_COUNT(af)-ac;
+				sll_static_int[0]->reference_count+=SLL_ASSEMBLY_FUNCTION_GET_ARGUMENT_COUNT(af)-ac;
 				for (sll_arg_count_t i=0;i<SLL_ASSEMBLY_FUNCTION_GET_ARGUMENT_COUNT(af)-ac;i++){
 					*(thr->stack+thr->stack_index+i)=sll_static_int[0];
 				}
@@ -271,7 +271,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_code_t sll_execute_assembly(const s
 	if (assembly_data->variable_count){
 		_vm_var_data=sll_platform_allocate_page(SLL_ROUND_PAGE(assembly_data->variable_count*sizeof(sll_object_t)),0,NULL);
 	}
-	sll_static_int[0]->rc+=assembly_data->variable_count;
+	sll_static_int[0]->reference_count+=assembly_data->variable_count;
 	for (sll_variable_index_t i=0;i<assembly_data->variable_count;i++){
 		*(_vm_var_data+i)=sll_static_int[0];
 	}
@@ -286,11 +286,11 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_code_t sll_execute_assembly(const s
 	};
 	sll_current_runtime_data=&r_dt;// lgtm [cpp/stack-address-escape]
 	sll_audit(SLL_CHAR("sll.vm.init"),SLL_CHAR(""));
-	sll_return_code_t rc=_scheduler_run();
+	sll_return_code_t return_code=_scheduler_run();
 	sll_current_runtime_data=NULL;
 	sll_free_internal_function_table(&ift);
 	sll_free_object_type_list(&tt);
-	return rc;
+	return return_code;
 }
 
 
@@ -448,7 +448,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t sll_wait_thread(sll_thread_index_
 				thr->stack_index++;
 				break;
 			case SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_STACK:
-				sll_static_int[0]->rc+=ai->data.stack_offset;
+				sll_static_int[0]->reference_count+=ai->data.stack_offset;
 				for (sll_stack_offset_t i=0;i<ai->data.stack_offset;i++){
 					*(thr->stack+thr->stack_index)=sll_static_int[0];
 					thr->stack_index++;
