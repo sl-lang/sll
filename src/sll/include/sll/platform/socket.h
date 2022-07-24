@@ -192,4 +192,20 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_error_t sll_platform_socket_shutdown(sll_f
 
 
 
+/**
+ * \flags check_output func
+ * \name sll_platform_socket_write
+ * \group platform
+ * \subgroup platform-socket
+ * \desc Docs!
+ * \arg sll_file_descriptor_t socket
+ * \arg const void* pointer
+ * \arg sll_size_t size
+ * \arg sll_error_t* err
+ * \ret sll_size_t
+ */
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_size_t sll_platform_socket_write(sll_file_descriptor_t socket,const void* pointer,sll_size_t size,sll_error_t* err);
+
+
+
 #endif

@@ -1,4 +1,5 @@
 #include <sll/_internal/common.h>
+#include <sll/_internal/error.h>
 #include <sll/_internal/intrinsics.h>
 #include <sll/common.h>
 #include <sll/error.h>
@@ -18,6 +19,15 @@
 #include <sys/types.h>
 #include <unistd.h>
 #endif
+
+
+
+#ifdef __SLL_BUILD_WINDOWS
+#define FROM_HANDLE(x) ((SOCKET)ADDR(x))
+#else
+#define FROM_HANDLE(x) ((int)ADDR(x))
+#endif
+#define TO_HANDLE(x) (PTR(x))
 
 
 
@@ -152,12 +162,12 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_error_t sll_platform_socket_bind(sll_file_
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_error_t sll_platform_socket_close(sll_file_descriptor_t socket){
 #ifdef __SLL_BUILD_WINDOWS
-	if (closesocket((SOCKET)ADDR(socket))==SOCKET_ERROR){
+	if (closesocket(FROM_HANDLE(socket))==SOCKET_ERROR){
 		SLL_UNIMPLEMENTED();
 	}
 	return SLL_NO_ERROR;
 #else
-	return (close((int)ADDR(socket))?sll_platform_get_error():SLL_NO_ERROR);
+	return (close(FROM_HANDLE(socket))?sll_platform_get_error():SLL_NO_ERROR);
 #endif
 }
 
@@ -166,7 +176,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_error_t sll_platform_socket_close(sll_file
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_error_t sll_platform_socket_connect(sll_file_descriptor_t socket,const sll_address_t* address){
 	struct sockaddr* addr;
 	socklen_t addr_len=_build_sockaddr(address,&addr);
-	int ret=connect((int)ADDR(socket),addr,addr_len);
+	int ret=connect(FROM_HANDLE(socket),addr,addr_len);
 	sll_deallocate(addr);
 #ifdef __SLL_BUILD_WINDOWS
 	if (ret==SOCKET_ERROR){
@@ -203,7 +213,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_platform_socket_data_available(
 #ifdef __SLL_BUILD_WINDOWS
 	fd_set set;
 	FD_ZERO(&set);
-	FD_SET((int)ADDR(socket),&set);
+	FD_SET(FROM_HANDLE(socket),&set);
 	struct timeval timeout={
 		0,
 		0
@@ -211,7 +221,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_platform_socket_data_available(
 	return select(1,&set,NULL,NULL,&timeout)>0;
 #else
 	int count;
-	ioctl((int)ADDR(socket),FIONREAD,&count);
+	ioctl(FROM_HANDLE(socket),FIONREAD,&count);
 	return !!count;
 #endif
 }
@@ -268,4 +278,16 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_error_t sll_platform_socket_listen(sll_fil
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_error_t sll_platform_socket_shutdown(sll_file_descriptor_t socket,sll_socket_shutdown_flags_t flags){
 	SLL_UNIMPLEMENTED();
+}
+
+
+
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_size_t sll_platform_socket_write(sll_file_descriptor_t socket,const void* pointer,sll_size_t size,sll_error_t* err){
+	ERROR_PTR_RESET;
+	ssize_t o=write(FROM_HANDLE(socket),pointer,size);
+	if (o==-1){
+		ERROR_PTR_SYSTEM;
+		return SLL_NO_FILE_SIZE;
+	}
+	return o;
 }

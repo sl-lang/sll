@@ -543,7 +543,7 @@ __SLL_EXTERNAL sll_size_t sll_file_write(sll_file_t* file,const void* pointer,sl
 		return 0;
 	}
 	if (file->flags&SLL_FILE_FLAG_SOCKET){
-		SLL_UNIMPLEMENTED();
+		return sll_platform_socket_write(file->data.socket.fd,pointer,size,err);
 	}
 	if (file->flags&FILE_FLAG_MEMORY){
 		LOCK;
@@ -573,8 +573,7 @@ __SLL_EXTERNAL sll_size_t sll_file_write(sll_file_t* file,const void* pointer,sl
 		return 0;
 	}
 	if (file->flags&SLL_FILE_FLAG_NO_BUFFER){
-		sll_size_t o=sll_platform_file_write(file->data.file.source.file.fd,pointer,size,err);
-		return o;
+		return sll_platform_file_write(file->data.file.source.file.fd,pointer,size,err);
 	}
 	sll_bool_t flush=((file->flags&SLL_FILE_FLUSH_ON_NEWLINE)?sll_contains_character(pointer,size,'\n'):0);
 	LOCK;
