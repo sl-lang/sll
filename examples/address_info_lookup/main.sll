@@ -1,0 +1,15 @@
+; Sll `socket$getaddrinfo` example
+; @krzem5, 2022-07-24
+
+
+
+(--- "socket.sll")
+
+
+
+(= NODE "www.example.com")
+(= SERVICE "80")
+
+
+
+(:> (<- socket$getaddrinfo NODE SERVICE) '\n')
