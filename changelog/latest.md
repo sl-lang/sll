@@ -7,6 +7,7 @@
 ## Changed
 
 - Fixed crashes related to overriden registers in CLib function calls
+- Fixed file deadlocks
 - Fixed socket address info lookup errors
 - Fixed unwanted frames in `error$create` and `error$from_internal`
 
