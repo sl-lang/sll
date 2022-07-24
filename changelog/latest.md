@@ -7,6 +7,7 @@
 
 ## Changed
 
+- Fixed API calls with `>256` arguments
 - Fixed crashes related to overriden registers in CLib function calls
 - Fixed file deadlocks
 - Fixed socket address info lookup errors

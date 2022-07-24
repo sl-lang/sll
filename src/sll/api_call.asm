@@ -58,7 +58,7 @@ __SLL_EXPORT _call_api_func_assembly
 	mov al, 32
 	mov rsi, QWORD [rdx]
 	mov r10, rsp
-	test r9b, r9b
+	test r9d, r9d
 	jz ._no_args
 ._next_arg:
 	mov ecx, esi
