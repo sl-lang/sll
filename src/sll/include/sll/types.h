@@ -22,17 +22,6 @@
 
 
 /**
- * \flags macro var
- * \name SLL_MAX_SIZE
- * \group types
- * \desc Docs!
- * \type sll_size_t
- */
-#define SLL_MAX_SIZE __SLL_U64_MAX
-
-
-
-/**
  * \flags type var
  * \name sll_bool_t
  * \group types
