@@ -276,6 +276,18 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_error_t sll_platform_socket_listen(sll_fil
 
 
 
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_size_t sll_platform_socket_read(sll_file_descriptor_t socket,void* pointer,sll_size_t size,sll_error_t* err){
+	ERROR_PTR_RESET;
+	ssize_t o=read(FROM_HANDLE(socket),pointer,size);
+	if (o==-1){
+		ERROR_PTR_SYSTEM;
+		return SLL_NO_FILE_SIZE;
+	}
+	return o;
+}
+
+
+
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_error_t sll_platform_socket_shutdown(sll_file_descriptor_t socket,sll_socket_shutdown_flags_t flags){
 	SLL_UNIMPLEMENTED();
 }

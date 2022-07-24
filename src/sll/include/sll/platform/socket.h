@@ -180,6 +180,22 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_error_t sll_platform_socket_listen(sll_fil
 
 /**
  * \flags check_output func
+ * \name sll_platform_socket_read
+ * \group platform
+ * \subgroup platform-socket
+ * \desc Docs!
+ * \arg sll_file_descriptor_t socket
+ * \arg void* pointer
+ * \arg sll_size_t size
+ * \arg sll_error_t* err
+ * \ret sll_size_t
+ */
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_size_t sll_platform_socket_read(sll_file_descriptor_t socket,void* pointer,sll_size_t size,sll_error_t* err);
+
+
+
+/**
+ * \flags check_output func
  * \name sll_platform_socket_shutdown
  * \group platform
  * \subgroup platform-socket

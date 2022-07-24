@@ -1,5 +1,9 @@
 # Sll [0.7.28] - Ongoing
 
+## Added
+
+- Implemented `sll_platform_socket_read` and `sll_platform_socket_write`
+
 ## Changed
 
 - Fixed crashes related to overriden registers in CLib function calls
