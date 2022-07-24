@@ -70,15 +70,11 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_bool_t sll_api_weakref_dele
 
 __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_object_t sll_api_weakref_get(sll_weak_reference_t weak_reference){
 	sll_object_t o=sll_weakref_get(weak_reference);
-	if (o){
-		SLL_ACQUIRE(o);
-		return o;
+	if (!o){
+		o=(_weakref_no_object_ret?_weakref_no_object_ret:sll_static_int[0]);
 	}
-	if (_weakref_no_object_ret){
-		SLL_ACQUIRE(_weakref_no_object_ret);
-		return _weakref_no_object_ret;
-	}
-	return SLL_ACQUIRE_STATIC_INT(0);
+	SLL_ACQUIRE(o);
+	return o;
 }
 
 
