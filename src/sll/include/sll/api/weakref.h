@@ -44,10 +44,10 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_weak_reference_t sll_api_we
  * \group weakref-api
  * \desc Docs!
  * \api Q|b
- * \arg sll_weak_reference_t wr
+ * \arg sll_weak_reference_t weak_reference
  * \ret sll_bool_t
  */
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_bool_t sll_api_weakref_delete(sll_weak_reference_t wr);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_bool_t sll_api_weakref_delete(sll_weak_reference_t weak_reference);
 
 
 
@@ -57,10 +57,10 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_bool_t sll_api_weakref_dele
  * \group weakref-api
  * \desc Docs!
  * \api Q|o
- * \arg sll_weak_reference_t wr
+ * \arg sll_weak_reference_t weak_reference
  * \ret sll_object_t
  */
-__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_object_t sll_api_weakref_get(sll_weak_reference_t wr);
+__SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_object_t sll_api_weakref_get(sll_weak_reference_t weak_reference);
 
 
 
@@ -70,10 +70,10 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_object_t sll_api_weakref_ge
  * \group weakref-api
  * \desc Docs!
  * \api Qo|
- * \arg sll_weak_reference_t wr
+ * \arg sll_weak_reference_t weak_reference
  * \arg sll_object_t callback
  */
-__SLL_EXTERNAL __SLL_API_CALL void sll_api_weakref_set_callback_data(sll_weak_reference_t wr,sll_object_t callback);
+__SLL_EXTERNAL __SLL_API_CALL void sll_api_weakref_set_callback_data(sll_weak_reference_t weak_reference,sll_object_t callback);
 
 
 

@@ -28,11 +28,11 @@ typedef void* sll_weak_reference_t;
  * \name sll_weak_ref_destructor_t
  * \group weakref
  * \desc Docs!
- * \arg sll_weak_reference_t wr
+ * \arg sll_weak_reference_t weak_reference
  * \arg sll_object_t object
  * \arg void* arg
  */
-typedef void (*sll_weak_ref_destructor_t)(sll_weak_reference_t wr,sll_object_t object,void* arg);
+typedef void (*sll_weak_ref_destructor_t)(sll_weak_reference_t weak_reference,sll_object_t object,void* arg);
 
 
 
@@ -41,10 +41,10 @@ typedef void (*sll_weak_ref_destructor_t)(sll_weak_reference_t wr,sll_object_t o
  * \name sll_weakref_clone
  * \group weakref
  * \desc Docs!
- * \arg sll_weak_reference_t wr
+ * \arg sll_weak_reference_t weak_reference
  * \ret sll_weak_reference_t
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_weak_reference_t sll_weakref_clone(sll_weak_reference_t wr);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_weak_reference_t sll_weakref_clone(sll_weak_reference_t weak_reference);
 
 
 
@@ -65,10 +65,10 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_weak_reference_t sll_weakref_create(sll_ob
  * \name sll_weakref_delete
  * \group weakref
  * \desc Docs!
- * \arg sll_weak_reference_t wr
+ * \arg sll_weak_reference_t weak_reference
  * \ret sll_bool_t
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_weakref_delete(sll_weak_reference_t wr);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_weakref_delete(sll_weak_reference_t weak_reference);
 
 
 
@@ -77,10 +77,10 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_weakref_delete(sll_weak_referen
  * \name sll_weakref_get
  * \group weakref
  * \desc Docs!
- * \arg sll_weak_reference_t wr
+ * \arg sll_weak_reference_t weak_reference
  * \ret sll_object_t
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t sll_weakref_get(sll_weak_reference_t wr);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t sll_weakref_get(sll_weak_reference_t weak_reference);
 
 
 
@@ -89,11 +89,11 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t sll_weakref_get(sll_weak_referenc
  * \name sll_weakref_set_callback
  * \group weakref
  * \desc Docs!
- * \arg sll_weak_reference_t wr
+ * \arg sll_weak_reference_t weak_reference
  * \arg sll_weak_ref_destructor_t destructor
  * \arg void* arg
  */
-__SLL_EXTERNAL void sll_weakref_set_callback(sll_weak_reference_t wr,sll_weak_ref_destructor_t destructor,void* arg);
+__SLL_EXTERNAL void sll_weakref_set_callback(sll_weak_reference_t weak_reference,sll_weak_ref_destructor_t destructor,void* arg);
 
 
 

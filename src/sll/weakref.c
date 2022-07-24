@@ -32,11 +32,11 @@ static sll_weak_reference_t _create_new(addr_t object){
 
 
 
-static sll_bool_t _execute_destructors(sll_weak_reference_t wr,weakref_object_data_t* value,sll_object_t object){
+static sll_bool_t _execute_destructors(sll_weak_reference_t weak_reference,weakref_object_data_t* value,sll_object_t object){
 	if (value->object!=ADDR(object)){
 		return 0;
 	}
-	value->destructor(wr,object,value->ctx);
+	value->destructor(weak_reference,object,value->ctx);
 	sll_deallocate(value);
 	return 1;
 }
@@ -62,11 +62,11 @@ void _weakref_delete(sll_object_t object){
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_weak_reference_t sll_weakref_clone(sll_weak_reference_t wr){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_weak_reference_t sll_weakref_clone(sll_weak_reference_t weak_reference){
 	if (!_weakref_next){
 		return NULL;
 	}
-	weakref_object_data_t* data=sll_map_container_get(&_weakref_data,wr,NULL);
+	weakref_object_data_t* data=sll_map_container_get(&_weakref_data,weak_reference,NULL);
 	return (data?_create_new(data->object):NULL);
 }
 
@@ -79,32 +79,32 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_weak_reference_t sll_weakref_create(sll_ob
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_weakref_delete(sll_weak_reference_t wr){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_weakref_delete(sll_weak_reference_t weak_reference){
 	if (!_weakref_next){
 		return 0;
 	}
-	weakref_object_data_t* data=sll_map_container_delete(&_weakref_data,wr,NULL);
+	weakref_object_data_t* data=sll_map_container_delete(&_weakref_data,weak_reference,NULL);
 	sll_deallocate(data);
 	return !!data;
 }
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t sll_weakref_get(sll_weak_reference_t wr){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t sll_weakref_get(sll_weak_reference_t weak_reference){
 	if (!_weakref_next){
 		return NULL;
 	}
-	weakref_object_data_t* data=sll_map_container_get(&_weakref_data,wr,NULL);
+	weakref_object_data_t* data=sll_map_container_get(&_weakref_data,weak_reference,NULL);
 	return (data?PTR(data->object):NULL);
 }
 
 
 
-__SLL_EXTERNAL void sll_weakref_set_callback(sll_weak_reference_t wr,sll_weak_ref_destructor_t destructor,void* arg){
+__SLL_EXTERNAL void sll_weakref_set_callback(sll_weak_reference_t weak_reference,sll_weak_ref_destructor_t destructor,void* arg){
 	if (!_weakref_next){
 		return;
 	}
-	weakref_object_data_t* data=sll_map_container_get(&_weakref_data,wr,NULL);
+	weakref_object_data_t* data=sll_map_container_get(&_weakref_data,weak_reference,NULL);
 	if (data){
 		data->destructor=destructor;
 		data->ctx=arg;

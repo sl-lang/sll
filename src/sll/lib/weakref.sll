@@ -37,20 +37,20 @@
 
 
 
-(= _execute_callbacks (,,, wr obj
-	(-> (= i 0) (< i ($ wr$callbacks))
-		(<- (: wr$callbacks i) obj wr)
+(= _execute_callbacks (,,, weak_reference obj
+	(-> (= i 0) (< i ($ weak_reference$callbacks))
+		(<- (: weak_reference$callbacks i) obj weak_reference)
 		(++ i)
 	)
 ))
 
-(= get (,,, wr
-	(? (=== wr nil) (@@ WEAKREF_NO_OBJECT))
-	(= wr (:: wr weakref_type))
-	(? (! wr$_id) (@@ WEAKREF_NO_OBJECT))
-	(= out (<- (... "sll:weakref_get") wr$_id))
+(= get (,,, weak_reference
+	(? (=== weak_reference nil) (@@ WEAKREF_NO_OBJECT))
+	(= weak_reference (:: weak_reference weakref_type))
+	(? (! weak_reference$_id) (@@ WEAKREF_NO_OBJECT))
+	(= out (<- (... "sll:weakref_get") weak_reference$_id))
 	(? (=== out WEAKREF_NO_OBJECT)
-		(= wr$_id nil)
+		(= weak_reference$_id nil)
 	)
 	(@@ out)
 ))
