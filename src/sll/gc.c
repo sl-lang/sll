@@ -96,19 +96,19 @@ void _gc_release_data(void){
 	sll_bool_t err=0;
 	while (_gc_memory_page_data.root){
 		if (_gc_memory_page_data.root->cnt){
-			sll_object_t c=PTR(ADDR(_gc_memory_page_data.root)+sizeof(gc_page_header_t));
-			sll_object_t e=PTR(ADDR(_gc_memory_page_data.root)+sizeof(gc_page_header_t)+(GC_MEMORY_PAGE_SIZE-sizeof(gc_page_header_t))/sizeof(struct _SLL_OBJECT)*sizeof(struct _SLL_OBJECT));
-			while (c<e){
-				if (SLL_GET_OBJECT_REFERENCE_COUNTER(c)){
+			sll_object_t current=PTR(ADDR(_gc_memory_page_data.root)+sizeof(gc_page_header_t));
+			sll_object_t end=PTR(ADDR(_gc_memory_page_data.root)+sizeof(gc_page_header_t)+(GC_MEMORY_PAGE_SIZE-sizeof(gc_page_header_t))/sizeof(struct _SLL_OBJECT)*sizeof(struct _SLL_OBJECT));
+			while (current<end){
+				if (SLL_GET_OBJECT_REFERENCE_COUNTER(current)){
 					err=1;
-					sll_file_write_format(sll_stderr,SLL_CHAR("[%p]: "),NULL,c);
+					sll_file_write_format(sll_stderr,SLL_CHAR("[%p]: "),NULL,current);
 					sll_string_t str;
-					sll_api_string_convert(&c,1,&str);
+					sll_api_string_convert(&current,1,&str);
 					sll_file_write(sll_stderr,str.data,str.length*sizeof(sll_char_t),NULL);
 					sll_free_string(&str);
 					sll_file_write_char(sll_stderr,'\n',NULL);
 				}
-				c++;
+				current++;
 			}
 		}
 		gc_page_header_t* nxt=_gc_memory_page_data.root->next;
