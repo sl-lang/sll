@@ -59,11 +59,8 @@ unsigned __int64 _window_wnd_proc(void* id,unsigned int msg,unsigned __int64 w_p
 				break;
 			}
 		case WM_SIZE:
-			SLL_LOG("WM_SIZE");
-			return 0;
-		case WM_SIZING:
-			SLL_LOG("WM_SIZING");
-			return 0;
+			arg=sll_new_object(SLL_CHAR("uuuu"),WINDOW_EVENT_RESIZE,id,LOWORD(l_param),HIWORD(l_param));
+			break;
 	}
 	if (arg){
 		sll_array_push(NULL,arg,&_events);
