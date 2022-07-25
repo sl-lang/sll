@@ -10,7 +10,7 @@ __WINDOW_EXTERNAL sll_bool_t SLL_ABI_INIT(sll_version_t version){
 	}
 	_init_platform();
 	sll_zero_memory(_scancode_to_keycode,512*sizeof(window_key_t));
-	sll_zero_memory(_keycode_to_scancode,WINDOW_MAX_KEY+1);
+	sll_zero_memory(_keycode_to_scancode,(WINDOW_MAX_KEY+1)*sizeof(window_scancode_t));
 	_setup_key_mapping();
 	return 1;
 }

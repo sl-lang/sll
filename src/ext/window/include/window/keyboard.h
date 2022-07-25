@@ -134,12 +134,12 @@ typedef uint16_t window_key_t;
 
 
 
-typedef uint16_t window_scan_code_t;
+typedef uint16_t window_scancode_t;
 
 
 
 extern window_key_t _scancode_to_keycode[512];
-extern window_scan_code_t _keycode_to_scancode[WINDOW_MAX_KEY+1];
+extern window_scancode_t _keycode_to_scancode[WINDOW_MAX_KEY+1];
 
 
 
