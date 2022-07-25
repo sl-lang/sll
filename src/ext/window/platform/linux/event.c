@@ -49,11 +49,10 @@ __WINDOW_API_CALL void window_api_event_poll(sll_bool_t blocking,sll_array_t* ou
 					arg=sll_new_object(SLL_CHAR("uuuu"),WINDOW_EVENT_MOUSE,motion_event->event,motion_event->event_x,motion_event->event_y);
 					break;
 				}
-			case XCB_ENTER_NOTIFY:
 			case XCB_LEAVE_NOTIFY:
 				{
-					const xcb_enter_notify_event_t* enter_event=(const xcb_enter_notify_event_t*)event;
-					arg=sll_new_object(SLL_CHAR("uuu"),WINDOW_EVENT_MOUSE_ENTER,enter_event->event,(type==XCB_ENTER_NOTIFY));
+					const xcb_leave_notify_event_t* leave_event=(const xcb_leave_notify_event_t*)event;
+					arg=sll_new_object(SLL_CHAR("uu"),WINDOW_EVENT_MOUSE_LEAVE,leave_event->event);
 					break;
 				}
 			case XCB_FOCUS_IN:

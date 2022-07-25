@@ -45,8 +45,8 @@ unsigned __int64 _window_wnd_proc(void* id,unsigned int msg,unsigned __int64 w_p
 			SLL_LOG("scroll");
 			return 0;
 		case WM_MOUSELEAVE:
-			SLL_LOG("WM_MOUSELEAVE");
-			return 0;
+			arg=sll_new_object(SLL_CHAR("uu"),WINDOW_EVENT_MOUSE_LEAVE,id);
+			break;
 		case WM_MOUSEMOVE:
 			arg=sll_new_object(SLL_CHAR("uuuu"),WINDOW_EVENT_MOUSE,id,(signed short)LOWORD(l_param),(signed short)HIWORD(l_param));
 			break;
@@ -56,8 +56,7 @@ unsigned __int64 _window_wnd_proc(void* id,unsigned int msg,unsigned __int64 w_p
 		case WM_PAINT:
 			{
 				PAINTSTRUCT ps;
-				HDC hdc=BeginPaint(id,&ps);
-				FillRect(hdc,&ps.rcPaint,(HBRUSH)COLOR_WINDOW);
+				FillRect(BeginPaint(id,&ps),&(ps.rcPaint),(HBRUSH)COLOR_WINDOW);
 				EndPaint(id,&ps);
 				break;
 			}

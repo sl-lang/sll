@@ -81,21 +81,20 @@
 			3 {
 				(= window$inputs$mouse_x (: event 0))
 				(= window$inputs$mouse_y (: event 1))
+				(? (! (& window$flags window_window$FLAG_HAS_MOUSE)) {
+					(= window$flags (| window$flags window_window$FLAG_HAS_MOUSE))
+					(<- window$callbacks$mouse_state window true)
+					(<- window$callbacks$mouse_enter window)
+				})
 				(<- window$callbacks$mouse window (: event 0) (: event 1))
 				(? (: event 0) (< window$callbacks$mouse_x (: event 0)))
 				(? (: event 1) (< window$callbacks$mouse_y (: event 1)))
 			}
 			4 {
 				(= state (: event 0))
-				(= window$flags (?: state
-					(| window$flags window_window$FLAG_HAS_MOUSE)
-					(& window$flags (~ window_window$FLAG_HAS_MOUSE))
-				))
-				(<- window$callbacks$mouse_state window state)
-				(<- (?: state
-					window$callbacks$mouse_enter
-					window$callbacks$mouse_leave
-				) window)
+				(= window$flags (& window$flags (~ window_window$FLAG_HAS_MOUSE)))
+				(<- window$callbacks$mouse_state window false)
+				(<- window$callbacks$mouse_leave window)
 			}
 			5 {
 				(= state (: event 0))
