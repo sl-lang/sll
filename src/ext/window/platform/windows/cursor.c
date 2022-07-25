@@ -1,3 +1,5 @@
+#undef NOUSER
+#include <windows.h>
 #include <sll.h>
 #include <stdint.h>
 #include <window/common.h>
@@ -12,7 +14,9 @@ __WINDOW_API_CALL void window_api_cursor_apply_to_window(window_handle_t id,wind
 
 
 __WINDOW_API_CALL void window_api_cursor_get_position(sll_array_t* out){
-	SLL_INIT_ARRAY(out);
+	POINT pos;
+	GetCursorPos(&pos);
+	sll_new_object_array(SLL_CHAR("hh"),out,pos.x,pos.y);
 }
 
 

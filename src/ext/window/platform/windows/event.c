@@ -49,7 +49,7 @@ unsigned __int64 _window_wnd_proc(void* id,unsigned int msg,unsigned __int64 w_p
 			break;
 		case WM_MOUSEMOVE:
 		case WM_MOVE:
-			arg=sll_new_object(SLL_CHAR("uuuu"),(msg==WM_MOUSEMOVE?WINDOW_EVENT_MOUSE:WINDOW_EVENT_POSITION),id,(signed short)LOWORD(l_param),(signed short)HIWORD(l_param));
+			arg=sll_new_object(SLL_CHAR("uuhh"),(msg==WM_MOUSEMOVE?WINDOW_EVENT_MOUSE:WINDOW_EVENT_POSITION),id,(signed short)LOWORD(l_param),(signed short)HIWORD(l_param));
 			break;
 		case WM_PAINT:
 			{
