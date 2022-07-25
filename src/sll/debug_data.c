@@ -12,6 +12,7 @@ static sll_node_t* _remove_debug_data(sll_node_t* node){
 		}
 		node=(node->type==SLL_NODE_TYPE_CHANGE_STACK?node->data._next_node:node+1);
 	}
+	sll_arg_count_t arg_count;
 	switch (node->type){
 		case SLL_NODE_TYPE_INT:
 		case SLL_NODE_TYPE_FLOAT:
@@ -23,36 +24,15 @@ static sll_node_t* _remove_debug_data(sll_node_t* node){
 		case SLL_NODE_TYPE_FUNCTION_ID:
 			return node+1;
 		case SLL_NODE_TYPE_ARRAY:
-			{
-				sll_array_length_t l=node->data.array_length;
-				node++;
-				while (l){
-					l--;
-					node=_remove_debug_data(node);
-				}
-				return node;
-			}
+			arg_count=node->data.array_length;
+			break;
 		case SLL_NODE_TYPE_MAP:
-			{
-				sll_map_length_t l=node->data.map_length;
-				node++;
-				while (l){
-					l--;
-					node=_remove_debug_data(node);
-				}
-				return node;
-			}
+			arg_count=node->data.map_length;
+			break;
 		case SLL_NODE_TYPE_FUNC:
 		case SLL_NODE_TYPE_INTERNAL_FUNC:
-			{
-				sll_arg_count_t l=node->data.function.arg_count;
-				node++;
-				while (l){
-					l--;
-					node=_remove_debug_data(node);
-				}
-				return node;
-			}
+			arg_count=node->data.function.arg_count;
+			break;
 		case SLL_NODE_TYPE_FOR:
 		case SLL_NODE_TYPE_WHILE:
 		case SLL_NODE_TYPE_LOOP:
@@ -60,20 +40,15 @@ static sll_node_t* _remove_debug_data(sll_node_t* node){
 		case SLL_NODE_TYPE_WHILE_ARRAY:
 		case SLL_NODE_TYPE_FOR_MAP:
 		case SLL_NODE_TYPE_WHILE_MAP:
-			{
-				sll_arg_count_t l=node->data.loop.arg_count;
-				node++;
-				while (l){
-					l--;
-					node=_remove_debug_data(node);
-				}
-				return node;
-			}
+			arg_count=node->data.loop.arg_count;
+			break;
+		default:
+			arg_count=node->data.arg_count;
+			break;
 	}
-	sll_arg_count_t l=node->data.arg_count;
 	node++;
-	while (l){
-		l--;
+	while (arg_count){
+		arg_count--;
 		node=_remove_debug_data(node);
 	}
 	return node;
