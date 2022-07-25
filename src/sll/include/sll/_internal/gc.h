@@ -101,7 +101,8 @@
 #define GC_DECREASE_ROOT(x) ((x)->reference_count-=1ull<<GC_ROOT_COUNTER_SHIFT)
 #define GC_INCREASE_ROOT(x) ((x)->reference_count+=1ull<<GC_ROOT_COUNTER_SHIFT)
 
-#define GC_ITER_PAGE_OBJECTS(page) for (sll_object_t current=PTR(ADDR((page))+sizeof(gc_page_header_t)),end=PTR(ADDR((page))+sizeof(gc_page_header_t)+(GC_MEMORY_PAGE_SIZE-sizeof(gc_page_header_t))/sizeof(struct _SLL_OBJECT)*sizeof(struct _SLL_OBJECT));current<end;current++)
+#define GC_PAGE_OBJECT_COUNT ((GC_MEMORY_PAGE_SIZE-sizeof(gc_page_header_t))/sizeof(struct _SLL_OBJECT))
+#define GC_ITER_PAGE_OBJECTS(page) for (sll_object_t current=PTR(ADDR((page))+sizeof(gc_page_header_t)),end=current+GC_PAGE_OBJECT_COUNT;current<end;current++)
 
 
 

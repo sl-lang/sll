@@ -319,9 +319,9 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t sll_create_object(sll_object_type
 			_gc_memory_page_data.length--;
 			gc_page_header_t* pg=_gc_memory_page_data.data[_gc_memory_page_data.length];
 			o=PTR(ADDR(pg)+sizeof(gc_page_header_t));
-			SLL_ASSERT((GC_MEMORY_PAGE_SIZE-sizeof(gc_page_header_t)-sizeof(struct _SLL_OBJECT))/sizeof(struct _SLL_OBJECT)<=GC_OBJECT_POOL_SIZE);
+			SLL_ASSERT(GC_PAGE_OBJECT_COUNT<GC_OBJECT_POOL_SIZE);
 			sll_object_t c=o+1;
-			while (_gc_object_pool.length<(GC_MEMORY_PAGE_SIZE-sizeof(gc_page_header_t)-sizeof(struct _SLL_OBJECT))/sizeof(struct _SLL_OBJECT)){
+			while (_gc_object_pool.length<GC_PAGE_OBJECT_COUNT-1){
 				c->reference_count=0;
 				c->_flags=GC_FLAG_IN_FAST_POOL;
 				c->data._pool_index=_gc_object_pool.length;
