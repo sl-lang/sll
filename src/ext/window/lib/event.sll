@@ -129,7 +129,7 @@
 				(<- window$callbacks$redraw window (: event 0) (: event 1) (: event 2) (: event 3))
 			}
 			9 {
-				(? (! (<- window$callbacks$ignore_close_request? window)) (<- destroy window))
+				(? (! (<- window$callbacks$ignore_close_request? window)) (<- window_window$destroy window))
 			}
 			10 {
 				(= window$layout$state (: event 0))
