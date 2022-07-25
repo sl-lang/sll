@@ -9,6 +9,7 @@
 
 
 __WINDOW_API_CALL void window_api_cursor_apply_to_window(window_handle_t id,window_cursor_t cursor){
+	ShowCursor(cursor!=WINDOW_CURSOR_HIDDEN);
 }
 
 
