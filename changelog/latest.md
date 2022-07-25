@@ -11,7 +11,7 @@
 - Fixed crashes related to overriden registers in CLib function calls
 - Fixed file deadlocks
 - Fixed socket address info lookup errors
-- *\[Window only\]* Fixed socket initialization
+- *\[Windows only\]* Fixed socket initialization
 - Fixed unwanted frames in `error$create` and `error$from_internal`
 - Object type (`sll_object_t`) is now a pointer to a structure
 
