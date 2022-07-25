@@ -59,7 +59,7 @@ unsigned __int64 _window_wnd_proc(void* id,unsigned int msg,unsigned __int64 w_p
 				break;
 			}
 		case WM_SIZE:
-			arg=sll_new_object(SLL_CHAR("uuuu"),WINDOW_EVENT_RESIZE,id,LOWORD(l_param),HIWORD(l_param));
+			arg=sll_new_object(SLL_CHAR("uuuu"),WINDOW_EVENT_SIZE,id,LOWORD(l_param),HIWORD(l_param));
 			break;
 	}
 	if (arg){
