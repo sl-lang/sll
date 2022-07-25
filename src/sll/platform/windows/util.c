@@ -3,6 +3,8 @@
 #include <immintrin.h>
 #include <io.h>
 #include <signal.h>
+#include <stdio.h>
+#include <winsock2.h>
 #include <sll/_internal/common.h>
 #include <sll/_internal/platform.h>
 #include <sll/_internal/static_string.h>
@@ -33,6 +35,7 @@ __SLL_EXTERNAL const sll_string_t* sll_platform_string=&_win_platform_str;
 
 void _deinit_platform(void){
 	_mm_setcsr(_win_csr);
+	WSACleanup();
 	SetConsoleMode(GetStdHandle(STD_INPUT_HANDLE),_win_stdin_cm);
 	SetConsoleMode(GetStdHandle(STD_OUTPUT_HANDLE),_win_stdout_cm);
 	SetConsoleMode(GetStdHandle(STD_ERROR_HANDLE),_win_stderr_cm);
@@ -47,6 +50,11 @@ __SLL_NO_RETURN void _force_exit_platform(void){
 
 
 void _init_platform(void){
+	WSADATA wsa_data;
+	if (WSAStartup(0x0202,&wsa_data)||wsa_data.wVersion!=0x0202){
+		fputs("Unable to initalize WinSock DLL!\n",stderr);
+		_force_exit_platform();
+	}
 	HANDLE h=GetStdHandle(STD_INPUT_HANDLE);
 	GetConsoleMode(h,&_win_stdin_cm);
 	SetConsoleMode(h,_win_stdin_cm&(~ENABLE_LINE_INPUT));
