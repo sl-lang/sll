@@ -32,6 +32,7 @@ void _init_platform(void){
 		"_sll_window_extension_default_class"
 	};
 	RegisterClassA(&wnd_class);
+	SetProcessDpiAwarenessContext(DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE_V2);
 }
 
 
