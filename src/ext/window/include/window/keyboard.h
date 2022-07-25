@@ -130,7 +130,7 @@
 
 
 
-typedef uint16_t window_key_t;
+typedef uint8_t window_key_t;
 
 
 
