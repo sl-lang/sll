@@ -6,6 +6,7 @@
 #include <sll.h>
 #include <window/common.h>
 #include <window/event.h>
+#include <window/keyboard.h>
 
 
 
@@ -15,17 +16,16 @@ static sll_array_t _events=SLL_INIT_ARRAY_STRUCT;
 
 unsigned __int64 _window_wnd_proc(void* id,unsigned int msg,unsigned __int64 w_param,__int64 l_param){
 	sll_object_t arg=NULL;
-	unsigned __int64 ret=0;
 	switch (msg){
 		case WM_CLOSE:
 			arg=sll_new_object(SLL_CHAR("uu"),WINDOW_EVENT_CLOSE,id);
 			break;
 		case WM_KEYDOWN:
-			SLL_LOG("WM_KEYDOWN");
-			return 0;
 		case WM_KEYUP:
-			SLL_LOG("WM_KEYUP");
-			return 0;
+		case WM_SYSKEYDOWN:
+		case WM_SYSKEYUP:
+			arg=sll_new_object(SLL_CHAR("uuuu"),WINDOW_EVENT_KEY,id,_scancode_to_keycode[(HIWORD(l_param)&(KF_EXTENDED|0xff))],!(HIWORD(l_param)&KF_UP));
+			break;
 		case WM_KILLFOCUS:
 			SLL_LOG("WM_KILLFOCUS");
 			return 0;
@@ -48,8 +48,8 @@ unsigned __int64 _window_wnd_proc(void* id,unsigned int msg,unsigned __int64 w_p
 			SLL_LOG("WM_MOUSELEAVE");
 			return 0;
 		case WM_MOUSEMOVE:
-			SLL_LOG("WM_MOUSEMOVE");
-			return 0;
+			arg=sll_new_object(SLL_CHAR("uuuu"),WINDOW_EVENT_MOUSE,id,(signed short)LOWORD(l_param),(signed short)HIWORD(l_param));
+			break;
 		case WM_MOUSEWHEEL:
 			SLL_LOG("WM_MOUSEWHEEL");
 			return 0;
@@ -62,7 +62,7 @@ unsigned __int64 _window_wnd_proc(void* id,unsigned int msg,unsigned __int64 w_p
 				HDC hdc=BeginPaint(id,&ps);
 				FillRect(hdc,&ps.rcPaint,(HBRUSH)COLOR_WINDOW);
 				EndPaint(id,&ps);
-				return 0;
+				break;
 			}
 		case WM_RBUTTONDOWN:
 			SLL_LOG("WM_RBUTTONDOWN");
@@ -79,12 +79,6 @@ unsigned __int64 _window_wnd_proc(void* id,unsigned int msg,unsigned __int64 w_p
 		case WM_SIZING:
 			SLL_LOG("WM_SIZING");
 			return 0;
-		case WM_SYSKEYDOWN:
-			SLL_LOG("WM_SYSKEYDOWN");
-			return 0;
-		case WM_SYSKEYUP:
-			SLL_LOG("WM_SYSKEYUP");
-			return 0;
 		case WM_XBUTTONDOWN:
 			SLL_LOG("WM_XBUTTONDOWN");
 			return 0;
@@ -95,7 +89,7 @@ unsigned __int64 _window_wnd_proc(void* id,unsigned int msg,unsigned __int64 w_p
 	if (arg){
 		sll_array_push(NULL,arg,&_events);
 		SLL_RELEASE(arg);
-		return ret;
+		return 0;
 	}
 	return DefWindowProcA(id,msg,w_param,l_param);
 }
