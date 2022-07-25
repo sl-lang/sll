@@ -251,11 +251,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_error_t sll_platform_socket_get_address_in
 	struct addrinfo* result;
 	int err=getaddrinfo((const char*)node,(const char*)service,&hints,&result);
 	if (err){
-#ifdef __SLL_BUILD_WINDOWS
-		SLL_UNIMPLEMENTED();
-#else
 		return sll_error_from_string_pointer(SLL_CHAR(gai_strerror(err)));
-#endif
 	}
 	sll_address_info_count_t i=0;
 	for (struct addrinfo* ai=result;ai;ai=ai->ai_next){
