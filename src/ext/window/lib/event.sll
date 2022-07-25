@@ -134,6 +134,18 @@
 				(= window$layout$state (: event 0))
 				(<- window$callbacks$state window (: event 0))
 			}
+			11 {
+				(= window$layout$geometry$x (: event 0))
+				(= window$layout$geometry$y (: event 1))
+				(<- window$callbacks$geometry window window$layout$geometry)
+				(<- window$callbacks$position window (: event 0) (: event 1))
+			}
+			12 {
+				(= window$layout$geometry$width (: event 0))
+				(= window$layout$geometry$height (: event 1))
+				(<- window$callbacks$geometry window window$layout$geometry)
+				(<- window$callbacks$size window (: event 0) (: event 1))
+			}
 		)
 	)
 ))

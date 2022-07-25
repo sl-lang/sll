@@ -48,11 +48,9 @@ unsigned __int64 _window_wnd_proc(void* id,unsigned int msg,unsigned __int64 w_p
 			arg=sll_new_object(SLL_CHAR("uu"),WINDOW_EVENT_MOUSE_LEAVE,id);
 			break;
 		case WM_MOUSEMOVE:
-			arg=sll_new_object(SLL_CHAR("uuuu"),WINDOW_EVENT_MOUSE,id,(signed short)LOWORD(l_param),(signed short)HIWORD(l_param));
-			break;
 		case WM_MOVE:
-			SLL_LOG("WM_MOVE");
-			return 0;
+			arg=sll_new_object(SLL_CHAR("uuuu"),(msg==WM_MOUSEMOVE?WINDOW_EVENT_MOUSE:WINDOW_EVENT_POSITION),id,(signed short)LOWORD(l_param),(signed short)HIWORD(l_param));
+			break;
 		case WM_PAINT:
 			{
 				PAINTSTRUCT ps;
