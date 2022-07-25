@@ -27,22 +27,22 @@ unsigned __int64 _window_wnd_proc(void* id,unsigned int msg,unsigned __int64 w_p
 			arg=sll_new_object(SLL_CHAR("uuuu"),WINDOW_EVENT_KEY,id,_scancode_to_keycode[(HIWORD(l_param)&(KF_EXTENDED|0xff))],!(HIWORD(l_param)&KF_UP));
 			break;
 		case WM_KILLFOCUS:
-			SLL_LOG("WM_KILLFOCUS");
-			return 0;
+		case WM_SETFOCUS:
+			arg=sll_new_object(SLL_CHAR("uuu"),WINDOW_EVENT_FOCUS,id,(msg==WM_SETFOCUS));
+			break;
 		case WM_LBUTTONDOWN:
-			SLL_LOG("WM_LBUTTONDOWN");
-			return 0;
 		case WM_LBUTTONUP:
-			SLL_LOG("WM_LBUTTONUP");
-			return 0;
 		case WM_MBUTTONDOWN:
-			SLL_LOG("WM_MBUTTONDOWN");
-			return 0;
 		case WM_MBUTTONUP:
-			SLL_LOG("WM_MBUTTONUP");
+		case WM_RBUTTONDOWN:
+		case WM_RBUTTONUP:
+		case WM_XBUTTONDOWN:
+		case WM_XBUTTONUP:
+			SLL_LOG("mouse_button");
 			return 0;
 		case WM_MOUSEHWHEEL:
-			SLL_LOG("WM_MOUSEHWHEEL");
+		case WM_MOUSEWHEEL:
+			SLL_LOG("scroll");
 			return 0;
 		case WM_MOUSELEAVE:
 			SLL_LOG("WM_MOUSELEAVE");
@@ -50,9 +50,6 @@ unsigned __int64 _window_wnd_proc(void* id,unsigned int msg,unsigned __int64 w_p
 		case WM_MOUSEMOVE:
 			arg=sll_new_object(SLL_CHAR("uuuu"),WINDOW_EVENT_MOUSE,id,(signed short)LOWORD(l_param),(signed short)HIWORD(l_param));
 			break;
-		case WM_MOUSEWHEEL:
-			SLL_LOG("WM_MOUSEWHEEL");
-			return 0;
 		case WM_MOVE:
 			SLL_LOG("WM_MOVE");
 			return 0;
@@ -64,26 +61,11 @@ unsigned __int64 _window_wnd_proc(void* id,unsigned int msg,unsigned __int64 w_p
 				EndPaint(id,&ps);
 				break;
 			}
-		case WM_RBUTTONDOWN:
-			SLL_LOG("WM_RBUTTONDOWN");
-			return 0;
-		case WM_RBUTTONUP:
-			SLL_LOG("WM_RBUTTONUP");
-			return 0;
-		case WM_SETFOCUS:
-			SLL_LOG("WM_SETFOCUS");
-			return 0;
 		case WM_SIZE:
 			SLL_LOG("WM_SIZE");
 			return 0;
 		case WM_SIZING:
 			SLL_LOG("WM_SIZING");
-			return 0;
-		case WM_XBUTTONDOWN:
-			SLL_LOG("WM_XBUTTONDOWN");
-			return 0;
-		case WM_XBUTTONUP:
-			SLL_LOG("WM_XBUTTONUP");
 			return 0;
 	}
 	if (arg){
