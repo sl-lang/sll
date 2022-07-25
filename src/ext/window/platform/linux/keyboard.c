@@ -141,8 +141,8 @@ static const xcb_to_window_key_t _key_mapping[]={
 
 
 
-window_key_t _scancode_to_keycode[256];
-uint8_t _keycode_to_scancode[WINDOW_MAX_KEY+1];
+window_key_t _scancode_to_keycode[512];
+window_scan_code_t _keycode_to_scancode[WINDOW_MAX_KEY+1];
 
 
 
@@ -161,8 +161,6 @@ static window_key_t _lookup_key(const char* name){
 
 void _setup_key_mapping(void){
 	free(xcb_xkb_use_extension_reply(_xcb_conn,xcb_xkb_use_extension(_xcb_conn,XCB_XKB_MAJOR_VERSION,XCB_XKB_MINOR_VERSION),NULL));
-	sll_zero_memory(_scancode_to_keycode,256*sizeof(window_key_t));
-	sll_zero_memory(_keycode_to_scancode,WINDOW_MAX_KEY+1);
 	xcb_xkb_get_names_reply_t* names=xcb_xkb_get_names_reply(_xcb_conn,xcb_xkb_get_names(_xcb_conn,XCB_XKB_ID_USE_CORE_KBD,XCB_XKB_NAME_DETAIL_KEY_NAMES|XCB_XKB_NAME_DETAIL_KEY_ALIASES),NULL);
 	xcb_xkb_get_names_value_list_t name_list;
 	xcb_xkb_get_names_value_list_unpack(xcb_xkb_get_names_value_list(names),names->nTypes,names->indicators,names->virtualMods,names->groupNames,names->nKeys,names->nKeyAliases,names->nRadioGroups,names->which,&name_list);
