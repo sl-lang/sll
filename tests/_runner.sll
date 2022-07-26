@@ -23,30 +23,28 @@
 		sys$EXECUTABLE
 		"-I" "@test|tests"
 	])
-	(= list (<- path$list_dir "tests" true))
-	(<- sort$sort list false true)
-	(-> (= i 0) (< i ($ list))
-		(= fp (: list i))
+	(= file_list (<- path$list_dir "tests" true))
+	(<- sort$sort file_list false true)
+	(-> (= i 0) (< i ($ file_list))
+		(= file_path (: file_list i))
 		(++ i)
 		(? (||
-			(=== (: (: (<- path$split fp) 1) 0) '_')
-			(!== (>> fp (<- string$index_reverse fp '.')) ".sll")
+			(=== (: (: (<- path$split file_path) 1) 0) '_')
+			(!== (>> file_path (<- string$index_reverse file_path '.')) ".sll")
 		) (<<<))
-		(<- array$push args fp)
+		(<- array$push args file_path)
 	)
 	(@@ args)
 ))
 
 (= read_results (,,, path
-	(= f (<- file$open path "r"))
-	(? (=== f nil) {
-		(? GH_ACTIONS {
-			(:> "::error file=tests/_runner.sll,title=Test runner::Test result file missing\n")
-		})
+	(= fh (<- file$open path "r"))
+	(? (=== fh nil) {
+		(? GH_ACTIONS (:> "::error file=tests/_runner.sll,title=Test runner::Test result file missing\n"))
 		(:> "No test result file found!\n")
 		(<- thread$exit 1)
 	})
-	(@@ (<- json$parse (<- file$read f)))
+	(@@ (<- json$parse (<- file$read fh)))
 ))
 
 (= print_stats (,,, results
@@ -71,8 +69,8 @@
 ))
 
 (= generate_summary (,,, results out_path
-	(= f (<- file$open out_path "w"))
-	(<- file$write f
+	(= fh (<- file$open out_path "w"))
+	(<- file$write fh
 `<table>
 	<tr>
 		<th>Name</th>
@@ -89,7 +87,7 @@
 		(= v (: data i))
 		(= passed (+ passed v$success))
 		(= failed (+ failed ($ v$error)))
-		(<- file$write f
+		(<- file$write fh
 `	<tr>
 		<td>` v$name `</td>
 		<td><code>` v$file `</code></td>
@@ -100,7 +98,7 @@
 `)
 		(++ i)
 	)
-	(<- file$write f
+	(<- file$write fh
 `	<tr>
 		<td colspan="2"><strong>Total</strong></td>
 		<td>` passed `</td>
@@ -109,7 +107,7 @@
 	</tr>
 </table>
 `)
-	(<- file$close f)
+	(<- file$close fh)
 ))
 
 
