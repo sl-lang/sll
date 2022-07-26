@@ -140,8 +140,6 @@ jobs:
         run: ${{env.SETUP_LINUX}} lcov
       - name: Build
         run: ${{env.BUILD_COMMAND_LINUX}} --coverage
-        env:
-          GENERATE_COVERAGE: 1
       - name: Delete previous coverage
         run: rm -f build/objects/*.gcda
       - name: Execute tests
