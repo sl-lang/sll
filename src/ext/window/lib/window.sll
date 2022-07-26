@@ -306,6 +306,7 @@
 		window$id
 		state
 	)
+	(= window$layout$state state)
 ))
 
 (= set_title (,,, window title
