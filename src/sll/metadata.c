@@ -109,45 +109,9 @@ static sll_node_t* _update(sll_node_t* o,sll_string_index_t* sm){
 		case SLL_NODE_TYPE_IDENTIFIER:
 		case SLL_NODE_TYPE_FUNCTION_ID:
 			return o+1;
-		case SLL_NODE_TYPE_FUNC:
-		case SLL_NODE_TYPE_INTERNAL_FUNC:
-			{
-				sll_arg_count_t l=o->data.function.arg_count;
-				o++;
-				while (l){
-					l--;
-					o=_update(o,sm);
-				}
-				return o;
-			}
-		case SLL_NODE_TYPE_FOR:
-		case SLL_NODE_TYPE_WHILE:
-		case SLL_NODE_TYPE_LOOP:
-		case SLL_NODE_TYPE_FOR_ARRAY:
-		case SLL_NODE_TYPE_WHILE_ARRAY:
-		case SLL_NODE_TYPE_FOR_MAP:
-		case SLL_NODE_TYPE_WHILE_MAP:
-			{
-				sll_arg_count_t l=o->data.loop.arg_count;
-				o++;
-				while (l){
-					l--;
-					o=_update(o,sm);
-				}
-				return o;
-			}
 		case SLL_NODE_TYPE_DECL:
-			{
-				if (o->data.declaration.name_string_index!=SLL_MAX_STRING_INDEX){
-					o->data.declaration.name_string_index=*(sm+o->data.declaration.name_string_index);
-				}
-				sll_arg_count_t l=o->data.declaration.arg_count;
-				o++;
-				while (l){
-					l--;
-					o=_update(o,sm);
-				}
-				return o;
+			if (o->data.declaration.name_string_index!=SLL_MAX_STRING_INDEX){
+				o->data.declaration.name_string_index=*(sm+o->data.declaration.name_string_index);
 			}
 	}
 	sll_arg_count_t l=o->data.arg_count;
