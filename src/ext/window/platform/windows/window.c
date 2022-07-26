@@ -38,7 +38,7 @@ __WINDOW_API_CALL void window_api_window_set_size_constraints(window_handle_t id
 
 
 
-__WINDOW_API_CALL void window_api_window_set_state(window_handle_t id,sll_char_t state){
+__WINDOW_API_CALL void window_api_window_set_state(window_handle_t id,window_state_t state){
 	switch (state){
 		case WINDOW_STATE_MINIMIZED:
 			ShowWindow(id,SW_MINIMIZE);

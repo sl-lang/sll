@@ -17,6 +17,10 @@ typedef void* window_handle_t;
 
 
 
+typedef uint8_t window_state_t;
+
+
+
 __WINDOW_API_CALL window_handle_t window_api_window_create(int32_t x,int32_t y,uint32_t w,uint32_t h,window_handle_t parent);
 
 
@@ -37,7 +41,7 @@ __WINDOW_API_CALL void window_api_window_set_size_constraints(window_handle_t id
 
 
 
-__WINDOW_API_CALL void window_api_window_set_state(window_handle_t id,sll_char_t state);
+__WINDOW_API_CALL void window_api_window_set_state(window_handle_t id,window_state_t state);
 
 
 

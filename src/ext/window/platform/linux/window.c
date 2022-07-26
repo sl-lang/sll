@@ -74,7 +74,7 @@ __WINDOW_API_CALL void window_api_window_set_size_constraints(window_handle_t id
 
 
 
-__WINDOW_API_CALL void window_api_window_set_state(window_handle_t id,sll_char_t state){
+__WINDOW_API_CALL void window_api_window_set_state(window_handle_t id,window_state_t state){
 	xcb_client_message_event_t event={
 		XCB_CLIENT_MESSAGE,
 		32,
