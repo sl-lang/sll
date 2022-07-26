@@ -1,1 +1,16 @@
-(--- "window/window.sll")
+(---
+	"@test/_common.sll"
+	"window/window.sll"
+)
+
+
+
+(= empty_test (,,,
+	(<- expect true true)
+))
+
+
+
+(<- run "Window extension" (,,,
+	(<- empty_test)
+))

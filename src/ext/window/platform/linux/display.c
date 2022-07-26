@@ -12,6 +12,10 @@ __WINDOW_API_CALL void window_api_display_enumerate(sll_array_t* out){
 	xcb_randr_get_screen_resources_current_reply_t* reply=xcb_randr_get_screen_resources_current_reply(
 			_xcb_conn,xcb_randr_get_screen_resources_current(_xcb_conn,_xcb_screen->root),NULL);
 	int count=xcb_randr_get_screen_resources_current_outputs_length(reply);
+	if (!count){
+		SLL_INIT_ARRAY(out);
+		return;
+	}
 	sll_array_create(count,out);
 	xcb_randr_output_t* data=xcb_randr_get_screen_resources_current_outputs(reply);
 	xcb_randr_get_output_primary_reply_t* primary_reply=xcb_randr_get_output_primary_reply(_xcb_conn,xcb_randr_get_output_primary(_xcb_conn,_xcb_screen->root),NULL);

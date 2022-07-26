@@ -5,10 +5,9 @@
 
 
 __WINDOW_EXTERNAL sll_bool_t SLL_ABI_INIT(sll_version_t version){
-	if (version!=SLL_VERSION){
+	if (version!=SLL_VERSION||!_init_platform()){
 		return 0;
 	}
-	_init_platform();
 	sll_zero_memory(_scancode_to_keycode,512*sizeof(window_key_t));
 	sll_zero_memory(_keycode_to_scancode,(WINDOW_MAX_KEY+1)*sizeof(window_scancode_t));
 	_setup_key_mapping();

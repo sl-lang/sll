@@ -8,7 +8,8 @@ void _deinit_platform(void){
 
 
 
-void _init_platform(void){
+sll_bool_t _init_platform(void){
+	return 1;
 }
 
 

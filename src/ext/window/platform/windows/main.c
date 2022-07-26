@@ -19,7 +19,7 @@ void _deinit_platform(void){
 
 
 
-void _init_platform(void){
+sll_bool_t _init_platform(void){
 	_winapi_hinstance=GetModuleHandle(NULL);
 	sll_map_container_init(NULL,NULL,&_window_size_constraints);
 	WNDCLASSA wnd_class={
@@ -36,6 +36,7 @@ void _init_platform(void){
 	};
 	RegisterClassA(&wnd_class);
 	SetProcessDpiAwarenessContext(DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE_V2);
+	return 1;
 }
 
 

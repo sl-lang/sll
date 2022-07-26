@@ -1,3 +1,16 @@
 (---
+	"@test/_common.sll"
 	"clib/library.sll"
 )
+
+
+
+(= empty_test (,,,
+	(<- expect true true)
+))
+
+
+
+(<- run "CLib extension" (,,,
+	(<- empty_test)
+))

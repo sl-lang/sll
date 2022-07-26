@@ -66,9 +66,17 @@ void _deinit_platform(void){
 
 
 
-void _init_platform(void){
+sll_bool_t _init_platform(void){
 	_xcb_conn=xcb_connect(NULL,NULL);
+	if (xcb_connection_has_error(_xcb_conn)){
+		SLL_WARN("Failed to create an XCB connection!");
+		return 0;
+	}
 	_xcb_screen=xcb_setup_roots_iterator(xcb_get_setup(_xcb_conn)).data;
+	if (!_xcb_screen){
+		SLL_WARN("Unable to locate an XCB screen!");
+		return 0;
+	}
 	GET_ATOM("_NET_WM_ICON",_xcb_net_wm_icon);
 	GET_ATOM("_NET_WM_PING",_xcb_net_wm_ping);
 	GET_ATOM("_NET_WM_STATE",_xcb_net_wm_state);
@@ -98,6 +106,7 @@ void _init_platform(void){
 	LOAD_CURSOR(WINDOW_CURSOR_RESIZE_ALL,"fleur","size_all");
 	LOAD_CURSOR(WINDOW_CURSOR_HELP,"whats_this","help","question_arrow","5c6cd98b3f3ebcb1f9c7f1c204630408","d9ce0ab605698f320427677b458ad60b");
 	sll_map_container_init(NULL,NULL,&_window_to_parent);
+	return 1;
 }
 
 
