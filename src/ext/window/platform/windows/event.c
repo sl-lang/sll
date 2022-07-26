@@ -38,8 +38,32 @@ unsigned __int64 _window_wnd_proc(void* id,unsigned int msg,unsigned __int64 w_p
 		case WM_RBUTTONUP:
 		case WM_XBUTTONDOWN:
 		case WM_XBUTTONUP:
-			SLL_LOG("mouse_button");
-			return 0;
+			{
+				unsigned int index=0;
+				unsigned int state=0;
+				switch (msg){
+					case WM_LBUTTONDOWN:
+						state=1;
+						break;
+					case WM_MBUTTONDOWN:
+						state=1;
+					case WM_MBUTTONUP:
+						index=1;
+						break;
+					case WM_RBUTTONDOWN:
+						state=1;
+					case WM_RBUTTONUP:
+						index=2;
+						break;
+					case WM_XBUTTONDOWN:
+						state=1;
+					case WM_XBUTTONUP:
+						index=3+(HIWORD(w_param)==XBUTTON2);
+						break;
+				}
+				arg=sll_new_object(SLL_CHAR("uuuu"),WINDOW_EVENT_BUTTON,id,index,state);
+				break;
+			}
 		case WM_MOUSEHWHEEL:
 		case WM_MOUSEWHEEL:
 			arg=sll_new_object(SLL_CHAR("uuuh"),WINDOW_EVENT_SCROLL,id,(msg==WM_MOUSEWHEEL),GET_WHEEL_DELTA_WPARAM(w_param));
