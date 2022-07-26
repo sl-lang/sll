@@ -69,7 +69,7 @@ static sll_source_file_index_t _add_source_file(const sll_bundle_t* bundle,const
 
 
 __SLL_EXTERNAL void sll_bundle_add_file(const sll_char_t* name,sll_compilation_data_t* compilation_data,sll_bundle_t* out){
-	sll_source_file_index_t* idx_m=sll_allocate_stack(compilation_data->length*sizeof(sll_source_file_index_t));
+	sll_source_file_index_t* import_mapping=sll_allocate_stack(compilation_data->length*sizeof(sll_source_file_index_t));
 	for (sll_source_file_index_t idx=0;idx<compilation_data->length;idx++){
 		sll_source_file_t* source_file=*(compilation_data->data+idx);
 		sll_source_file_index_t bundle_source_file_i=0;
@@ -80,7 +80,7 @@ __SLL_EXTERNAL void sll_bundle_add_file(const sll_char_t* name,sll_compilation_d
 			}
 			bundle_source_file_i++;
 		}
-		*(idx_m+idx)=bundle_source_file_i;
+		*(import_mapping+idx)=bundle_source_file_i;
 		if (bundle_source_file_i<out->length){
 			sll_free_source_file(source_file);
 			if (!idx){
@@ -89,7 +89,7 @@ __SLL_EXTERNAL void sll_bundle_add_file(const sll_char_t* name,sll_compilation_d
 					sll_string_from_pointer(name,&(bundle_source_file->name));
 				}
 			}
-			(*(idx_m+idx))|=BUNDLE_DO_NOT_REMAP_IMPORT;
+			(*(import_mapping+idx))|=BUNDLE_DO_NOT_REMAP_IMPORT;
 			continue;
 		}
 		out->length++;
@@ -106,16 +106,16 @@ __SLL_EXTERNAL void sll_bundle_add_file(const sll_char_t* name,sll_compilation_d
 	}
 	for (sll_source_file_index_t i=0;i<compilation_data->length;i++){
 		sll_deallocate(*(compilation_data->data+i));
-		if ((*(idx_m+i))&BUNDLE_DO_NOT_REMAP_IMPORT){
+		if ((*(import_mapping+i))&BUNDLE_DO_NOT_REMAP_IMPORT){
 			continue;
 		}
-		sll_bundle_source_file_t* bundle_source_file=*(out->data+(*(idx_m+i)));
+		sll_bundle_source_file_t* bundle_source_file=*(out->data+(*(import_mapping+i)));
 		for (sll_import_index_t j=0;j<bundle_source_file->data.import_table.length;j++){
-			sll_import_file_t* bundle_source_file_if=*(bundle_source_file->data.import_table.data+j);
-			bundle_source_file_if->source_file_index=BUNDLE_GET_INDEX(idx_m+bundle_source_file_if->source_file_index);
+			sll_import_file_t* import_file=*(bundle_source_file->data.import_table.data+j);
+			import_file->source_file_index=BUNDLE_GET_INDEX(import_mapping+import_file->source_file_index);
 		}
 	}
-	sll_deallocate(idx_m);
+	sll_deallocate(import_mapping);
 	sll_deallocate(compilation_data->data);
 	compilation_data->data=NULL;
 	compilation_data->length=0;
