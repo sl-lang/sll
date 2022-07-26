@@ -26,11 +26,10 @@ static void _delete_deep_children(optimizer_node_children_data_t* children,child
 
 static sll_node_t* _visit_node(sll_source_file_t* source_file,sll_node_t* node,optimizer_node_children_data_t* parent,child_level_count_t child_level_count_required){
 	parent->node=node;
-	child_count_t* child_count_ptr=_get_child_count(node);
-	if (!child_count_ptr){
+	if (!SLL_NODE_HAS_CHILDREN(node)){
 		return node+1;
 	}
-	child_count_t child_count=*child_count_ptr;
+	child_count_t child_count=node->data.arg_count;
 	optimizer_node_children_data_t* children=sll_zero_allocate(child_count*sizeof(optimizer_node_children_data_t));
 	parent->children=children;
 	parent->child_count=child_count;
@@ -51,13 +50,13 @@ static sll_node_t* _visit_node(sll_source_file_t* source_file,sll_node_t* node,o
 
 static sll_node_t* _delete_node_raw(sll_node_t* node){
 	SKIP_NODE_NOP(node);
-	child_count_t* child_count_ptr=_get_child_count(node);
+	sll_bool_t has_children=SLL_NODE_HAS_CHILDREN(node);
 	node->type=SLL_NODE_TYPE_NOP;
-	node++;
-	if (!child_count_ptr){
-		return node;
+	if (!has_children){
+		return node+1;
 	}
-	child_count_t child_count=*child_count_ptr;
+	child_count_t child_count=node->data.arg_count;
+	node++;
 	while (child_count){
 		child_count--;
 		node=_delete_node_raw(node);
@@ -92,7 +91,7 @@ static void _delete_recursive_children_optimizer_objects(optimizer_node_children
 
 
 void _delete_node(optimizer_node_children_data_t* data,sll_node_t* parent){
-	(*_get_child_count(parent))--;
+	parent->data.arg_count--;
 	_delete_recursive_children(data);
 	sll_zero_memory(data,sizeof(optimizer_node_children_data_t));
 }
@@ -100,12 +99,11 @@ void _delete_node(optimizer_node_children_data_t* data,sll_node_t* parent){
 
 
 void _expand_node(optimizer_node_children_data_t* data,sll_node_t* parent){
-	child_count_t* child_count_ptr=_get_child_count(data->node);
-	if (!child_count_ptr){
+	if (!SLL_NODE_HAS_CHILDREN(data->node)){
 		_delete_node(data,parent);
 		return;
 	}
-	(*_get_child_count(parent))+=(*child_count_ptr)-1;
+	parent->data.arg_count+=data->node->data.arg_count-1;
 	_set_nop(data);
 }
 

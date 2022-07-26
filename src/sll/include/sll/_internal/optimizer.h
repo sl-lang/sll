@@ -31,39 +31,6 @@ typedef struct __OPTIMIZER_NODE_CHILDREN_DATA{
 
 
 
-static __SLL_FORCE_INLINE child_count_t* _get_child_count(sll_node_t* node){
-	switch (node->type){
-		case SLL_NODE_TYPE_INT:
-		case SLL_NODE_TYPE_FLOAT:
-		case SLL_NODE_TYPE_CHAR:
-		case SLL_NODE_TYPE_COMPLEX:
-		case SLL_NODE_TYPE_STRING:
-		case SLL_NODE_TYPE_IDENTIFIER:
-		case SLL_NODE_TYPE_FIELD:
-		case SLL_NODE_TYPE_FUNCTION_ID:
-			return NULL;
-		case SLL_NODE_TYPE_ARRAY:
-			return &(node->data.array_length);
-		case SLL_NODE_TYPE_MAP:
-			return &(node->data.map_length);
-		case SLL_NODE_TYPE_FUNC:
-		case SLL_NODE_TYPE_INTERNAL_FUNC:
-			return &(node->data.function.arg_count);
-		case SLL_NODE_TYPE_FOR:
-		case SLL_NODE_TYPE_WHILE:
-		case SLL_NODE_TYPE_LOOP:
-		case SLL_NODE_TYPE_FOR_ARRAY:
-		case SLL_NODE_TYPE_WHILE_ARRAY:
-		case SLL_NODE_TYPE_FOR_MAP:
-		case SLL_NODE_TYPE_WHILE_MAP:
-			return &(node->data.loop.arg_count);
-		default:
-			return &(node->data.arg_count);
-	}
-}
-
-
-
 void _delete_node(optimizer_node_children_data_t* data,sll_node_t* parent);
 
 

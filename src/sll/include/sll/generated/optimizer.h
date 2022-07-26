@@ -414,7 +414,7 @@ static void __SLL_FORCE_INLINE _optimizer_execute(sll_source_file_t* source_file
 				}
 				if ((data1->node->type==10&&(idx0+1<end0&&(data1+1)->node&&(data1+1)->node->type==SLL_NODE_TYPE_PRINT))){
 					
-	(*_get_child_count(data0->node))--;
+	data0->node->data.arg_count--;
 	data1->node->data.arg_count+=(data1+1)->node->data.arg_count;
 	_set_nop(data1+1);
 ;
