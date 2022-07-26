@@ -22,6 +22,7 @@
 	(= args [
 		sys$EXECUTABLE
 		"-I" "@test|tests"
+		"-v"
 	])
 	(= file_list (<- path$list_dir "tests" true))
 	(<- sort$sort file_list false true)
@@ -34,7 +35,6 @@
 		) (<<<))
 		(<- array$push args file_path)
 	)
-	(:> args '\n')
 	(@@ args)
 ))
 
