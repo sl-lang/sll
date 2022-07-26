@@ -401,19 +401,19 @@
 			""
 		)
 		"linux" (. platform_extension_command_list_type
-			["gcc" "-fno-exceptions" "-fno-stack-protector" "-fdiagnostics-color=always" "-fPIC" "-c" "-fvisibility=hidden" "-Wall" "-g" "-O0" "-Werror" "-I" "build" "-I" COMMAND_MARKER_INCLUDE "-mavx" "-mavx2" "-o" COMMAND_MARKER_OUTPUT COMMAND_MARKER_INPUT]
+			(+ ["gcc" "-fno-exceptions" "-fno-stack-protector" "-fdiagnostics-color=always" "-fPIC" "-c" "-fvisibility=hidden" "-Wall" "-g" "-O0" "-Werror" "-I" "build" "-I" COMMAND_MARKER_INCLUDE "-mavx" "-mavx2" "-o" COMMAND_MARKER_OUTPUT COMMAND_MARKER_INPUT] (* ["--coverage"] options$COVERAGE))
 			["nasm" "-I" COMMAND_MARKER_INCLUDE "-D__SLL_BUILD_LINUX" "-DDEBUG_BUILD" "-o" COMMAND_MARKER_OUTPUT "-O0" "-Wall" "-Werror" "-gdwarf" "-f" "elf64" COMMAND_MARKER_INPUT]
 			["strip" "-x" "-o" COMMAND_MARKER_OUTPUT COMMAND_MARKER_OUTPUT]
-			["gcc" "-fno-exceptions" "-fno-stack-protector" "-fdiagnostics-color=always" "-shared" "-fPIC" "-fvisibility=hidden" "-Wall" "-Werror" "-g" "-O0" "-mavx" "-mavx2" output_library "-o" COMMAND_MARKER_OUTPUT COMMAND_MARKER_INPUT]
+			(+ ["gcc" "-fno-exceptions" "-fno-stack-protector" "-fdiagnostics-color=always" "-shared" "-fPIC" "-fvisibility=hidden" "-Wall" "-Werror" "-g" "-O0" "-mavx" "-mavx2" output_library "-o" COMMAND_MARKER_OUTPUT COMMAND_MARKER_INPUT] (* ["--coverage"] options$COVERAGE))
 			nil
 			""
 			""
 		)
 		"linux_clang" (. platform_extension_command_list_type
-			["clang" "-fno-exceptions" "-fno-stack-protector" "-fdiagnostics-color=always" "-fPIC" "-c" "-fvisibility=hidden" "-Wall" "-g" "-O0" "-Werror" "-I" "build" "-I" COMMAND_MARKER_INCLUDE "-mavx" "-mavx2" "-o" COMMAND_MARKER_OUTPUT COMMAND_MARKER_INPUT]
+			(+ ["clang" "-fno-exceptions" "-fno-stack-protector" "-fdiagnostics-color=always" "-fPIC" "-c" "-fvisibility=hidden" "-Wall" "-g" "-O0" "-Werror" "-I" "build" "-I" COMMAND_MARKER_INCLUDE "-mavx" "-mavx2" "-o" COMMAND_MARKER_OUTPUT COMMAND_MARKER_INPUT] (* ["--coverage"] options$COVERAGE))
 			["nasm" "-I" COMMAND_MARKER_INCLUDE "-D__SLL_BUILD_LINUX" "-DDEBUG_BUILD" "-o" COMMAND_MARKER_OUTPUT "-O0" "-Wall" "-Werror" "-gdwarf" "-f" "elf64" COMMAND_MARKER_INPUT]
 			["strip" "-x" "-o" COMMAND_MARKER_OUTPUT COMMAND_MARKER_OUTPUT]
-			["clang" "-fno-exceptions" "-fno-stack-protector" "-fdiagnostics-color=always" "-shared" "-fPIC" "-fvisibility=hidden" "-Wall" "-Werror" "-g" "-O0" "-mavx" "-mavx2" output_library "-o" COMMAND_MARKER_OUTPUT COMMAND_MARKER_INPUT]
+			(+ ["clang" "-fno-exceptions" "-fno-stack-protector" "-fdiagnostics-color=always" "-shared" "-fPIC" "-fvisibility=hidden" "-Wall" "-Werror" "-g" "-O0" "-mavx" "-mavx2" output_library "-o" COMMAND_MARKER_OUTPUT COMMAND_MARKER_INPUT] (* ["--coverage"] options$COVERAGE))
 			nil
 			""
 			""
