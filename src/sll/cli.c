@@ -265,7 +265,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_code_t sll_cli_main(sll_array_lengt
 		return 0;
 	}
 	sll_init();
-	sll_return_code_t ec=0;
+	sll_return_code_t return_code=0;
 	_cli_flags=0;
 	_check_release_mode(argc,argv);
 	_cli_include_list=NULL;
@@ -774,7 +774,7 @@ _read_file_argument:
 			else{
 				SLL_WARN("Unable to find file '%s'",tmp.data);
 				if (_cli_flags&SLL_CLI_FLAG_ENABLE_ERRORS){
-					ec=1;
+					return_code=1;
 					goto _cleanup;
 				}
 				sll_init_compilation_data(tmp.data,&compilation_data);
@@ -803,7 +803,7 @@ _read_file_argument:
 			else{
 				sll_free_assembly_data(&assembly_data);
 			}
-			ec=1;
+			return_code=1;
 			goto _cleanup;
 		}
 		_cli_enable_file_lookup=0;
@@ -905,7 +905,7 @@ _read_file_argument:
 			}
 		}
 		if (!(_cli_flags&SLL_CLI_FLAG_NO_RUN)){
-			sll_vm_config_t cfg={
+			sll_vm_config_t config={
 				CLI_VM_STACK_SIZE,
 				CLI_VM_CALL_STACK_SIZE,
 				&_cli_ift,
@@ -915,7 +915,7 @@ _read_file_argument:
 			};
 			sll_file_flush(sll_stdout);
 			sll_file_flush(sll_stderr);
-			ec=sll_execute_assembly(&assembly_data,&cfg);
+			return_code=sll_execute_assembly(&assembly_data,&config);
 			sll_file_flush(sll_stdout);
 			sll_file_flush(sll_stderr);
 		}
@@ -1008,7 +1008,7 @@ _cleanup:
 	sll_free_internal_function_table(&_cli_ift);
 	sll_deinit();
 	_cli_resolver_table_size=0;
-	return ec;
+	return return_code;
 }
 
 
