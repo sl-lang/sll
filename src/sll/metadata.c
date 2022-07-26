@@ -23,6 +23,9 @@ static sll_node_t* _mark(sll_node_t* o,bitmap_t* m){
 		}
 	}
 	switch (o->type){
+		case SLL_NODE_TYPE_STRING:
+		case SLL_NODE_TYPE_FIELD:
+			*(m+(o->data.string_index>>6))|=1ull<<(o->data.string_index&63);
 		case SLL_NODE_TYPE_INT:
 		case SLL_NODE_TYPE_FLOAT:
 		case SLL_NODE_TYPE_CHAR:
@@ -30,49 +33,9 @@ static sll_node_t* _mark(sll_node_t* o,bitmap_t* m){
 		case SLL_NODE_TYPE_IDENTIFIER:
 		case SLL_NODE_TYPE_FUNCTION_ID:
 			return o+1;
-		case SLL_NODE_TYPE_STRING:
-		case SLL_NODE_TYPE_FIELD:
-			*(m+(o->data.string_index>>6))|=1ull<<(o->data.string_index&63);
-			return o+1;
-		case SLL_NODE_TYPE_FUNC:
-		case SLL_NODE_TYPE_INTERNAL_FUNC:
-			{
-				sll_arg_count_t l=o->data.function.arg_count;
-				o++;
-				while (l){
-					l--;
-					o=_mark(o,m);
-				}
-				return o;
-			}
-		case SLL_NODE_TYPE_FOR:
-		case SLL_NODE_TYPE_WHILE:
-		case SLL_NODE_TYPE_LOOP:
-		case SLL_NODE_TYPE_FOR_ARRAY:
-		case SLL_NODE_TYPE_WHILE_ARRAY:
-		case SLL_NODE_TYPE_FOR_MAP:
-		case SLL_NODE_TYPE_WHILE_MAP:
-			{
-				sll_arg_count_t l=o->data.loop.arg_count;
-				o++;
-				while (l){
-					l--;
-					o=_mark(o,m);
-				}
-				return o;
-			}
 		case SLL_NODE_TYPE_DECL:
-			{
-				if (o->data.declaration.name_string_index!=SLL_MAX_STRING_INDEX){
-					*(m+(o->data.declaration.name_string_index>>6))|=1ull<<(o->data.declaration.name_string_index&63);
-				}
-				sll_arg_count_t l=o->data.declaration.arg_count;
-				o++;
-				while (l){
-					l--;
-					o=_mark(o,m);
-				}
-				return o;
+			if (o->data.declaration.name_string_index!=SLL_MAX_STRING_INDEX){
+				*(m+(o->data.declaration.name_string_index>>6))|=1ull<<(o->data.declaration.name_string_index&63);
 			}
 	}
 	sll_arg_count_t l=o->data.arg_count;
