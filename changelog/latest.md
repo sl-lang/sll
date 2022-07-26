@@ -4,7 +4,7 @@
 
 - Implemented `sll_platform_socket_read` and `sll_platform_socket_write`
 - Implemented `sll_std_file_type_t`
-- Macro fro checking if a node has children: `SLL_NODE_HAS_CHILDREN`
+- Macro for checking if a node has children: `SLL_NODE_HAS_CHILDREN`
 
 ## Changed
 
