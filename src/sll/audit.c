@@ -41,9 +41,9 @@ __SLL_EXTERNAL void sll_audit(const sll_char_t* name,const sll_char_t* format,..
 
 
 __SLL_EXTERNAL sll_bool_t sll_audit_enable(sll_bool_t enable){
-	sll_bool_t o=_audit_enable;
+	sll_bool_t out=_audit_enable;
 	_audit_enable=enable;
-	return o;
+	return out;
 }
 
 
