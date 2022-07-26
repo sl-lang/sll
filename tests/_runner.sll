@@ -34,6 +34,7 @@
 		) (<<<))
 		(<- array$push args file_path)
 	)
+	(:> args '\n')
 	(@@ args)
 ))
 
