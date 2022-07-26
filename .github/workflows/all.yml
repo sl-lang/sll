@@ -145,7 +145,9 @@ jobs:
       - name: Execute tests
         run: build/sll tests/_runner.sll
       - name: Generate coverage report
-        run: lcov -c -d build/objects -o coverage.info
+        run: |
+          lcov -c -d build/objects -o coverage.info
+          lcov -r coverage.info -o coverage.info "/usr/*"
       - name: Upload coverage
         uses: coverallsapp/github-action@master
         with:
