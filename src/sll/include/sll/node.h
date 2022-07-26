@@ -95,37 +95,13 @@
 
 /**
  * \flags macro var
- * \name SLL_NODE_TYPE_ARRAY
- * \group node
- * \subgroup node-type
- * \desc Docs!
- * \type sll_node_type_t
- */
-#define SLL_NODE_TYPE_ARRAY 5
-
-
-
-/**
- * \flags macro var
- * \name SLL_NODE_TYPE_MAP
- * \group node
- * \subgroup node-type
- * \desc Docs!
- * \type sll_node_type_t
- */
-#define SLL_NODE_TYPE_MAP 6
-
-
-
-/**
- * \flags macro var
  * \name SLL_NODE_TYPE_IDENTIFIER
  * \group node
  * \subgroup node-type
  * \desc Docs!
  * \type sll_node_type_t
  */
-#define SLL_NODE_TYPE_IDENTIFIER 7
+#define SLL_NODE_TYPE_IDENTIFIER 5
 
 
 
@@ -137,7 +113,7 @@
  * \desc Docs!
  * \type sll_node_type_t
  */
-#define SLL_NODE_TYPE_FIELD 8
+#define SLL_NODE_TYPE_FIELD 6
 
 
 
@@ -149,7 +125,31 @@
  * \desc Docs!
  * \type sll_node_type_t
  */
-#define SLL_NODE_TYPE_FUNCTION_ID 9
+#define SLL_NODE_TYPE_FUNCTION_ID 7
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_NODE_TYPE_ARRAY
+ * \group node
+ * \subgroup node-type
+ * \desc Docs!
+ * \type sll_node_type_t
+ */
+#define SLL_NODE_TYPE_ARRAY 8
+
+
+
+/**
+ * \flags macro var
+ * \name SLL_NODE_TYPE_MAP
+ * \group node
+ * \subgroup node-type
+ * \desc Docs!
+ * \type sll_node_type_t
+ */
+#define SLL_NODE_TYPE_MAP 9
 
 
 

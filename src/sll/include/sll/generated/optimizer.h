@@ -384,24 +384,24 @@ static void __SLL_FORCE_INLINE _optimizer_execute(sll_source_file_t* source_file
 			end0=data0->child_count;
 			step0=1;
 		}
-		if ((data0->child_type_bitmap[0]&927)){
+		if ((data0->child_type_bitmap[0]&255)){
 			for (child_count_t idx0=start0;idx0<end0;idx0+=step0){
 				optimizer_node_children_data_t* data1=data0->children+idx0;
 				if (!data1->node){
 					continue;
 				}
-				if (data1->node->type==0||data1->node->type==1||data1->node->type==2||data1->node->type==3||data1->node->type==4||data1->node->type==7||data1->node->type==8||data1->node->type==9){
+				if (data1->node->type==0||data1->node->type==1||data1->node->type==2||data1->node->type==3||data1->node->type==4||data1->node->type==5||data1->node->type==6||data1->node->type==7){
 					_delete_node(data1,data0->node);
 				}
 			}
 		}
-		if ((data0->child_type_bitmap[0]&96)||(data0->child_type_bitmap[2]&96)){
+		if ((data0->child_type_bitmap[0]&768)||(data0->child_type_bitmap[2]&96)){
 			for (child_count_t idx0=start0;idx0<end0;idx0+=step0){
 				optimizer_node_children_data_t* data1=data0->children+idx0;
 				if (!data1->node){
 					continue;
 				}
-				if (data1->node->type==5||data1->node->type==6||data1->node->type==69||data1->node->type==70){
+				if (data1->node->type==8||data1->node->type==9||data1->node->type==69||data1->node->type==70){
 					_expand_node(data1,data0->node);
 				}
 			}
@@ -472,13 +472,13 @@ static void __SLL_FORCE_INLINE _optimizer_execute(sll_source_file_t* source_file
 		child_count_t start0=1;
 		child_count_t end0=2;
 		child_count_t step0=1;
-		if ((data0->child_type_bitmap[0]&1061192815)||(data0->child_type_bitmap[2]&16214)){
+		if ((data0->child_type_bitmap[0]&1061193487)||(data0->child_type_bitmap[2]&16214)){
 			for (child_count_t idx0=start0;idx0<end0;idx0+=step0){
 				optimizer_node_children_data_t* data1=data0->children+idx0;
 				if (!data1->node){
 					continue;
 				}
-				if ((data1->node->type==0&&data1->node->data.int_==0)||(data1->node->type==1&&data1->node->data.float_==0)||(data1->node->type==2&&data1->node->data.char_==0)||(data1->node->type==3&&data1->node->data.complex_.real==0&&data1->node->data.complex_.imag==0)||(data1->node->type==5&&data1->node->data.array_length==0)||(data1->node->type==6&&data1->node->data.map_length==0)||data1->node->type==10||data1->node->type==15||data1->node->type==22||data1->node->type==24||data1->node->type==25||data1->node->type==26||data1->node->type==27||data1->node->type==28||data1->node->type==29||data1->node->type==65||data1->node->type==66||data1->node->type==68||data1->node->type==70||data1->node->type==72||data1->node->type==73||data1->node->type==74||data1->node->type==75||data1->node->type==76||data1->node->type==77){
+				if ((data1->node->type==0&&data1->node->data.int_==0)||(data1->node->type==1&&data1->node->data.float_==0)||(data1->node->type==2&&data1->node->data.char_==0)||(data1->node->type==3&&data1->node->data.complex_.real==0&&data1->node->data.complex_.imag==0)||(data1->node->type==8&&data1->node->data.array_length==0)||(data1->node->type==9&&data1->node->data.map_length==0)||data1->node->type==10||data1->node->type==15||data1->node->type==22||data1->node->type==24||data1->node->type==25||data1->node->type==26||data1->node->type==27||data1->node->type==28||data1->node->type==29||data1->node->type==65||data1->node->type==66||data1->node->type==68||data1->node->type==70||data1->node->type==72||data1->node->type==73||data1->node->type==74||data1->node->type==75||data1->node->type==76||data1->node->type==77){
 					data0->node->type=70;
 					child_count_t del_end=data0->child_count;
 					for (child_count_t del=2;del<del_end;del++){
@@ -535,12 +535,12 @@ static void __SLL_FORCE_INLINE _optimizer_execute(sll_source_file_t* source_file
 		return;
 	}
 	if ((data0->node->type==61&&data0->child_count==0)||(data0->node->type==62&&data0->child_count==0)){
-		data0->node->type=5;
+		data0->node->type=8;
 		data0->node->data.array_length=0;
 		return;
 	}
 	if ((data0->node->type==63&&data0->child_count==0)||(data0->node->type==64&&data0->child_count==0)){
-		data0->node->type=6;
+		data0->node->type=9;
 		data0->node->data.map_length=0;
 		return;
 	}
