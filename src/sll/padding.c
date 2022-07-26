@@ -19,81 +19,19 @@ static sll_node_t* _remove_padding_internal(sll_node_t* src,sll_source_file_t* s
 	if ((*dst)->type==SLL_NODE_TYPE_CHANGE_STACK){
 		(*dst)=(*dst)->data._next_node;
 	}
-	switch (src->type){
-		case SLL_NODE_TYPE_INT:
-		case SLL_NODE_TYPE_FLOAT:
-		case SLL_NODE_TYPE_CHAR:
-		case SLL_NODE_TYPE_COMPLEX:
-		case SLL_NODE_TYPE_STRING:
-		case SLL_NODE_TYPE_IDENTIFIER:
-		case SLL_NODE_TYPE_FIELD:
-		case SLL_NODE_TYPE_FUNCTION_ID:
-			return src+1;
-		case SLL_NODE_TYPE_ARRAY:
-			{
-				sll_array_length_t l=src->data.array_length;
-				src++;
-				while (l){
-					l--;
-					src=_remove_padding_internal(src,source_file,dst,removal_offset);
-				}
-				return src;
-			}
-		case SLL_NODE_TYPE_MAP:
-			{
-				sll_map_length_t l=src->data.map_length;
-				src++;
-				while (l){
-					l--;
-					src=_remove_padding_internal(src,source_file,dst,removal_offset);
-				}
-				return src;
-			}
-		case SLL_NODE_TYPE_FUNC:
-			(*(source_file->function_table.data+src->data.function.function_index))->offset-=*removal_offset;
-		case SLL_NODE_TYPE_INTERNAL_FUNC:
-			{
-				sll_arg_count_t l=src->data.function.arg_count;
-				src++;
-				while (l){
-					l--;
-					src=_remove_padding_internal(src,source_file,dst,removal_offset);
-				}
-				return src;
-			}
-		case SLL_NODE_TYPE_FOR:
-		case SLL_NODE_TYPE_WHILE:
-		case SLL_NODE_TYPE_LOOP:
-		case SLL_NODE_TYPE_FOR_ARRAY:
-		case SLL_NODE_TYPE_WHILE_ARRAY:
-		case SLL_NODE_TYPE_FOR_MAP:
-		case SLL_NODE_TYPE_WHILE_MAP:
-			{
-				sll_arg_count_t l=src->data.loop.arg_count;
-				src++;
-				while (l){
-					l--;
-					src=_remove_padding_internal(src,source_file,dst,removal_offset);
-				}
-				return src;
-			}
-		case SLL_NODE_TYPE_DECL:
-			{
-				sll_arg_count_t l=src->data.declaration.arg_count;
-				src++;
-				while (l){
-					l--;
-					src=_remove_padding_internal(src,source_file,dst,removal_offset);
-				}
-				return src;
-			}
-		case SLL_NODE_TYPE_DBG:
-			return _remove_padding_internal(src+1,source_file,dst,removal_offset);
+	if (!SLL_NODE_HAS_CHILDREN(src)){
+		return src+1;
 	}
-	sll_arg_count_t l=src->data.arg_count;
+	sll_arg_count_t arg_count=src->data.arg_count;
+	if (src->type==SLL_NODE_TYPE_FUNC){
+		(*(source_file->function_table.data+src->data.function.function_index))->offset-=*removal_offset;
+	}
+	else if (src->type==SLL_NODE_TYPE_DBG){
+		arg_count=1;
+	}
 	src++;
-	while (l){
-		l--;
+	while (arg_count){
+		arg_count--;
 		src=_remove_padding_internal(src,source_file,dst,removal_offset);
 	}
 	return src;
