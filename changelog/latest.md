@@ -4,6 +4,7 @@
 
 - Implemented `sll_platform_socket_read` and `sll_platform_socket_write`
 - Implemented `sll_std_file_type_t`
+- Macro fro checking if a node has children: `SLL_NODE_HAS_CHILDREN`
 
 ## Changed
 
@@ -18,5 +19,6 @@
 ## Removed
 
 - Unused macro constant: `SLL_MAX_SIZE`
+- Unused macros: `SLL_IS_OBJECT_TYPE_IF` and `SLL_IS_OBJECT_TYPE_NOT_TYPE`
 
 [0.7.28]: https://github.com/sl-lang/sll/compare/sll-v0.7.27...main

@@ -162,7 +162,7 @@ static const sll_node_t* _print_node_internal(const sll_source_file_t* source_fi
 		}
 		node=(node->type==SLL_NODE_TYPE_CHANGE_STACK?node->data._next_node:node+1);
 	}
-	if (SLL_IS_OBJECT_TYPE_NOT_TYPE(node)&&node->type!=SLL_NODE_TYPE_VAR_ACCESS&&node->type!=SLL_NODE_TYPE_OPERATION_LIST&&node->type!=SLL_NODE_TYPE_DBG){
+	if (SLL_NODE_HAS_CHILDREN(node)&&node->type!=SLL_NODE_TYPE_VAR_ACCESS&&node->type!=SLL_NODE_TYPE_OPERATION_LIST&&node->type!=SLL_NODE_TYPE_DBG){
 		sll_file_write_char(out,'(',NULL);
 	}
 	switch (node->type){

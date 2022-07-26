@@ -1043,25 +1043,13 @@
 
 /**
  * \flags func macro
- * \name SLL_IS_OBJECT_TYPE_NOT_TYPE
+ * \name SLL_NODE_HAS_CHILDREN
  * \group node
  * \desc Docs!
  * \arg const sll_node_t* node
  * \ret sll_bool_t
  */
-#define SLL_IS_OBJECT_TYPE_NOT_TYPE(node) ((node)->type>SLL_NODE_TYPE_FUNCTION_ID)
-
-
-
-/**
- * \flags func macro
- * \name SLL_IS_OBJECT_TYPE_IF
- * \group node
- * \desc Docs!
- * \arg const sll_node_t* node
- * \ret sll_bool_t
- */
-#define SLL_IS_OBJECT_TYPE_IF(node) ((node)->type>=SLL_NODE_TYPE_IF&&(node)->type<=SLL_NODE_TYPE_SWITCH)
+#define SLL_NODE_HAS_CHILDREN(node) ((node)->type>SLL_NODE_TYPE_FUNCTION_ID)
 
 
 
