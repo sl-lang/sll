@@ -1,9 +1,20 @@
 #ifndef __WINDOW_PLATFORM_WINDOWS_H__
 #define __WINDOW_PLATFORM_WINDOWS_H__ 1
+#include <sll.h>
+#include <stdint.h>
 
 
 
 extern void* _winapi_hinstance;
+extern sll_map_container_t _window_size_constraints;
+
+
+typedef struct _WINDOW_SIZE_CONSTRAINTS{
+	uint32_t min_w;
+	uint32_t min_h;
+	uint32_t max_w;
+	uint32_t max_h;
+} window_size_constraints_t;
 
 
 

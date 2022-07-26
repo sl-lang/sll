@@ -8,10 +8,12 @@
 
 
 void* _winapi_hinstance;
+sll_map_container_t _window_size_constraints;
 
 
 
 void _deinit_platform(void){
+	sll_map_container_deinit(&_window_size_constraints);
 	UnregisterClassA("_sll_window_extension_default_class",_winapi_hinstance);
 }
 
@@ -19,6 +21,7 @@ void _deinit_platform(void){
 
 void _init_platform(void){
 	_winapi_hinstance=GetModuleHandle(NULL);
+	sll_map_container_init(NULL,NULL,&_window_size_constraints);
 	WNDCLASSA wnd_class={
 		0,
 		_window_wnd_proc,

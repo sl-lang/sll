@@ -7,6 +7,7 @@
 #include <window/common.h>
 #include <window/event.h>
 #include <window/keyboard.h>
+#include <window/platform/windows.h>
 
 
 
@@ -20,6 +21,18 @@ unsigned __int64 _window_wnd_proc(void* id,unsigned int msg,unsigned __int64 w_p
 		case WM_CLOSE:
 			arg=sll_new_object(SLL_CHAR("uu"),WINDOW_EVENT_CLOSE,id);
 			break;
+		case WM_GETMINMAXINFO:
+			{
+				MINMAXINFO* data=(MINMAXINFO*)l_param;
+				window_size_constraints_t* constraints=sll_map_container_get(&_window_size_constraints,id,NULL);
+				if (constraints){
+					data->ptMinTrackSize.x=constraints->min_w;
+					data->ptMinTrackSize.y=constraints->min_h;
+					data->ptMaxTrackSize.x=constraints->max_w;
+					data->ptMaxTrackSize.y=constraints->max_h;
+				}
+				return 0;
+			}
 		case WM_KEYDOWN:
 		case WM_KEYUP:
 		case WM_SYSKEYDOWN:
