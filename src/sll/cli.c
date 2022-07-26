@@ -116,9 +116,9 @@ static void _check_release_mode(sll_array_length_t argc,const sll_char_t*const*a
 static cli_include_dir_t* _alloc_include_dir(void){
 	_cli_include_list_len++;
 	_cli_include_list=sll_reallocate(_cli_include_list,_cli_include_list_len*sizeof(cli_include_dir_t*));
-	cli_include_dir_t* o=sll_allocate(sizeof(cli_include_dir_t));
-	*(_cli_include_list+_cli_include_list_len-1)=o;
-	return o;
+	cli_include_dir_t* out=sll_allocate(sizeof(cli_include_dir_t));
+	*(_cli_include_list+_cli_include_list_len-1)=out;
+	return out;
 }
 
 
@@ -180,9 +180,9 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_cli_lookup_result_t sll_cli_lookup_file(co
 		sll_array_length_t i=_cli_bundle_list_len;
 		do{
 			i--;
-			cli_bundle_source_t* b_dt=*(_cli_bundle_list+i);
-			SLL_LOG("Trying to open file '%s/%s'...",b_dt->name,path->data);
-			if (sll_bundle_fetch(&(b_dt->bundle),path,&(out->data.compilation_data))){
+			cli_bundle_source_t* bundle_data=*(_cli_bundle_list+i);
+			SLL_LOG("Trying to open file '%s/%s'...",bundle_data->name,path->data);
+			if (sll_bundle_fetch(&(bundle_data->bundle),path,&(out->data.compilation_data))){
 				SLL_LOG("File successfully read.");
 				return SLL_LOOKUP_RESULT_COMPILED_OBJECT;
 			}
