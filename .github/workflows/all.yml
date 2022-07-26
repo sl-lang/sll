@@ -147,12 +147,12 @@ jobs:
       - name: Execute tests
         run: build/sll tests/_runner.sll
       - name: Generate coverage report
-        run: gcov -a -b -c -f -l -p $(find build/objects -type f -name *.gcno)
+        run: lcov -c -d build/objects -o coverage.info
       - name: Upload coverage
-        uses: codecov/codecov-action@v3
+        uses: coverallsapp/github-action@master
         with:
-          directory: ./
-          verbose: true
+          github-token: ${{secrets.GITHUB_TOKEN}}
+          path-to-lcov: coverage.info
   nightly-release:
     name: Create nighly release
     needs:
