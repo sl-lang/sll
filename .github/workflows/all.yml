@@ -137,7 +137,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
       - name: Setup environment
-        run: ${{env.SETUP_LINUX}}
+        run: ${{env.SETUP_LINUX}} lcov
       - name: Build
         run: ${{env.BUILD_COMMAND_LINUX}} --coverage
         env:
