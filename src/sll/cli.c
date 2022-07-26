@@ -92,20 +92,20 @@ static void _load_bundle(const sll_char_t* name,sll_file_t* rf){
 
 static void _check_release_mode(sll_array_length_t argc,const sll_char_t*const*argv){
 	do{
-		const sll_char_t* e=*argv;
+		const sll_char_t* flag=*argv;
 		argc--;
 		argv++;
-		sll_char_t nm=(*e=='-'&&*(e+1)&&!(*(e+2))?*(e+1):0);
-		if (nm=='A'||sll_string_compare_pointer(e,SLL_CHAR("--args"))==SLL_COMPARE_RESULT_EQUAL){
+		sll_char_t short_flag=(*flag=='-'&&*(flag+1)&&!(*(flag+2))?*(flag+1):0);
+		if (short_flag=='A'||sll_string_compare_pointer(flag,SLL_CHAR("--args"))==SLL_COMPARE_RESULT_EQUAL){
 			break;
 		}
-		else if (nm=='B'||nm=='f'||nm=='F'||nm=='i'||nm=='I'||nm=='L'||nm=='N'||nm=='o'||nm=='s'||nm=='S'||nm=='x'||sll_string_compare_pointer(e,SLL_CHAR("--file"))==SLL_COMPARE_RESULT_EQUAL||sll_string_compare_pointer(e,SLL_CHAR("--file-path-resolver"))==SLL_COMPARE_RESULT_EQUAL||sll_string_compare_pointer(e,SLL_CHAR("--install-path"))==SLL_COMPARE_RESULT_EQUAL||sll_string_compare_pointer(e,SLL_CHAR("--include"))==SLL_COMPARE_RESULT_EQUAL||sll_string_compare_pointer(e,SLL_CHAR("--audit-library"))==SLL_COMPARE_RESULT_EQUAL||sll_string_compare_pointer(e,SLL_CHAR("--bundle-name"))==SLL_COMPARE_RESULT_EQUAL||sll_string_compare_pointer(e,SLL_CHAR("--output"))==SLL_COMPARE_RESULT_EQUAL||sll_string_compare_pointer(e,SLL_CHAR("--bundle-output"))==SLL_COMPARE_RESULT_EQUAL||sll_string_compare_pointer(e,SLL_CHAR("--source"))==SLL_COMPARE_RESULT_EQUAL||sll_string_compare_pointer(e,SLL_CHAR("--sandbox"))==SLL_COMPARE_RESULT_EQUAL||sll_string_compare_pointer(e,SLL_CHAR("--optimization-rounds"))==SLL_COMPARE_RESULT_EQUAL){
+		else if (short_flag=='B'||short_flag=='f'||short_flag=='F'||short_flag=='i'||short_flag=='I'||short_flag=='L'||short_flag=='N'||short_flag=='o'||short_flag=='s'||short_flag=='S'||short_flag=='x'||sll_string_compare_pointer(flag,SLL_CHAR("--file"))==SLL_COMPARE_RESULT_EQUAL||sll_string_compare_pointer(flag,SLL_CHAR("--file-path-resolver"))==SLL_COMPARE_RESULT_EQUAL||sll_string_compare_pointer(flag,SLL_CHAR("--install-path"))==SLL_COMPARE_RESULT_EQUAL||sll_string_compare_pointer(flag,SLL_CHAR("--include"))==SLL_COMPARE_RESULT_EQUAL||sll_string_compare_pointer(flag,SLL_CHAR("--audit-library"))==SLL_COMPARE_RESULT_EQUAL||sll_string_compare_pointer(flag,SLL_CHAR("--bundle-name"))==SLL_COMPARE_RESULT_EQUAL||sll_string_compare_pointer(flag,SLL_CHAR("--output"))==SLL_COMPARE_RESULT_EQUAL||sll_string_compare_pointer(flag,SLL_CHAR("--bundle-output"))==SLL_COMPARE_RESULT_EQUAL||sll_string_compare_pointer(flag,SLL_CHAR("--source"))==SLL_COMPARE_RESULT_EQUAL||sll_string_compare_pointer(flag,SLL_CHAR("--sandbox"))==SLL_COMPARE_RESULT_EQUAL||sll_string_compare_pointer(flag,SLL_CHAR("--optimization-rounds"))==SLL_COMPARE_RESULT_EQUAL){
 			if (argc){
 				argc--;
 				argv++;
 			}
 		}
-		else if (nm=='r'||sll_string_compare_pointer(e,SLL_CHAR("--release-mode"))==SLL_COMPARE_RESULT_EQUAL){
+		else if (short_flag=='r'||sll_string_compare_pointer(flag,SLL_CHAR("--release-mode"))==SLL_COMPARE_RESULT_EQUAL){
 			_cli_flags|=SLL_CLI_FLAG_RELEASE_MODE;
 		}
 	} while (argc);
