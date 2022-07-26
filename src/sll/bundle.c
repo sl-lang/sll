@@ -136,17 +136,17 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_bundle_fetch(const sll_bundle_t
 	if (!sll_string_starts(name,&(bundle->name))){
 		return 0;
 	}
-	sll_string_t f_nm_str;
-	sll_string_resize(name,-((sll_integer_t)(bundle->name.length)),&f_nm_str);
+	sll_string_t file_name_str;
+	sll_string_resize(name,-((sll_integer_t)(bundle->name.length)),&file_name_str);
 	const sll_bundle_source_file_t* bundle_source_file=NULL;
 	for (sll_source_file_index_t i=0;i<bundle->length;i++){
 		bundle_source_file=*(bundle->data+i);
-		if (STRING_EQUAL(&(bundle_source_file->name),&f_nm_str)){
+		if (STRING_EQUAL(&(bundle_source_file->name),&file_name_str)){
 			break;
 		}
 		bundle_source_file=NULL;
 	}
-	sll_free_string(&f_nm_str);
+	sll_free_string(&file_name_str);
 	if (!bundle_source_file){
 		return 0;
 	}
@@ -155,43 +155,44 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_bundle_fetch(const sll_bundle_t
 		0
 	};
 	_add_source_file(bundle,bundle_source_file,&source_file_list);
-	sll_source_file_index_t* sf_idx_map=sll_allocate_stack(source_file_list.length*sizeof(sll_source_file_index_t));
-	for (sll_source_file_index_t idx=1;idx<source_file_list.length;idx++){
-		*(sf_idx_map+idx)=idx;
+	sll_source_file_index_t* source_file_index_map=sll_allocate_stack(source_file_list.length*sizeof(sll_source_file_index_t));
+	for (sll_source_file_index_t i=1;i<source_file_list.length;i++){
+		*(source_file_index_map+i)=i;
 	}
 	sll_source_file_index_t idx=1;
 	while (idx<source_file_list.length){
 		source_file_with_index_t source_file=*(source_file_list.data+idx);
-		sll_source_file_index_t off=0;
+		sll_source_file_index_t offset=1;
 		for (sll_import_index_t i=0;i<source_file.source_file->import_table.length;i++){
-			sll_import_file_t* if_=*(source_file.source_file->import_table.data+i);
-			sll_source_file_index_t j=*(sf_idx_map+if_->source_file_index);
+			sll_import_file_t* import_file=*(source_file.source_file->import_table.data+i);
+			sll_source_file_index_t j=*(source_file_index_map+import_file->source_file_index);
 			if (j<idx){
-				*(sf_idx_map+if_->source_file_index)=idx;
+				*(source_file_index_map+import_file->source_file_index)=idx;
 				source_file_with_index_t mv=*(source_file_list.data+j);
 				for (sll_source_file_index_t k=j;k<idx;k++){
 					source_file_with_index_t* e=source_file_list.data+k+1;
-					(*(sf_idx_map+e->index))--;
+					(*(source_file_index_map+e->index))--;
 					*(source_file_list.data+k)=*e;
 				}
 				*(source_file_list.data+idx)=mv;
-				off++;
+				offset--;
 			}
 		}
-		idx+=1-off;
+		idx+=offset;
 	}
 	out->length=source_file_list.length;
 	out->data=sll_allocate(source_file_list.length*sizeof(sll_source_file_t*));
-	for (idx=0;idx<out->length;idx++){
+	while (idx){
+		idx--;
 		source_file_with_index_t* source_file=source_file_list.data+idx;
 		*(out->data+idx)=source_file->source_file;
 		for (sll_import_index_t i=0;i<source_file->source_file->import_table.length;i++){
-			sll_import_file_t* if_=*(source_file->source_file->import_table.data+i);
-			if_->source_file_index=*(sf_idx_map+if_->source_file_index);
-			SLL_ASSERT(if_->source_file_index>idx);
+			sll_import_file_t* import_file=*(source_file->source_file->import_table.data+i);
+			import_file->source_file_index=*(source_file_index_map+import_file->source_file_index);
+			SLL_ASSERT(import_file->source_file_index>idx);
 		}
 	}
-	sll_deallocate(sf_idx_map);
+	sll_deallocate(source_file_index_map);
 	sll_deallocate(source_file_list.data);
 	return 1;
 }
