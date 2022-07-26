@@ -54,10 +54,10 @@ static sll_bool_t _cli_had_warning;
 
 
 static sll_bool_t _import_file(const sll_string_t* path,sll_compilation_data_t* out){
-	sll_cli_lookup_data_t res_data;
-	sll_cli_lookup_result_t res=sll_cli_lookup_file(path,1,&res_data);
+	sll_cli_lookup_data_t data;
+	sll_cli_lookup_result_t res=sll_cli_lookup_file(path,1,&data);
 	if (res==SLL_LOOKUP_RESULT_ASSEMBLY){
-		sll_free_assembly_data(&(res_data.data.assembly_data));
+		sll_free_assembly_data(&(data.data.assembly_data));
 		SLL_WARN(SLL_CHAR("Importing assembly into compiled programs is not allowed"));
 		_cli_had_warning=1;
 		return 0;
@@ -67,25 +67,25 @@ static sll_bool_t _import_file(const sll_string_t* path,sll_compilation_data_t* 
 		_cli_had_warning=1;
 		return 0;
 	}
-	*out=res_data.data.compilation_data;
+	*out=data.data.compilation_data;
 	return 1;
 }
 
 
 
-static void _load_bundle(const sll_char_t* nm,sll_file_t* rf){
-	sll_bundle_t b_dt;
-	if (!sll_load_bundle(rf,&b_dt)){
+static void _load_bundle(const sll_char_t* name,sll_file_t* rf){
+	sll_bundle_t bundle;
+	if (!sll_load_bundle(rf,&bundle)){
 		return;
 	}
 	_cli_bundle_list_len++;
 	_cli_bundle_list=sll_reallocate(_cli_bundle_list,_cli_bundle_list_len*sizeof(cli_bundle_source_t*));
-	cli_bundle_source_t* b=sll_allocate(sizeof(cli_bundle_source_t));
-	sll_string_length_t nml=sll_string_length(nm)+1;
-	b->name=sll_allocate(nml);
-	sll_copy_data(nm,nml,b->name);
-	b->bundle=b_dt;
-	*(_cli_bundle_list+_cli_bundle_list_len-1)=b;
+	cli_bundle_source_t* bundle_data=sll_allocate(sizeof(cli_bundle_source_t));
+	sll_string_length_t name_length=sll_string_length(name)+1;
+	bundle_data->name=sll_allocate(name_length);
+	sll_copy_data(name,name_length,bundle_data->name);
+	bundle_data->bundle=bundle;
+	*(_cli_bundle_list+_cli_bundle_list_len-1)=bundle_data;
 }
 
 
