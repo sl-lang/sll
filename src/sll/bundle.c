@@ -168,13 +168,13 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_bundle_fetch(const sll_bundle_t
 			sll_source_file_index_t j=*(source_file_index_map+import_file->source_file_index);
 			if (j<idx){
 				*(source_file_index_map+import_file->source_file_index)=idx;
-				source_file_with_index_t mv=*(source_file_list.data+j);
+				source_file_with_index_t tmp=*(source_file_list.data+j);
 				for (sll_source_file_index_t k=j;k<idx;k++){
-					source_file_with_index_t* e=source_file_list.data+k+1;
-					(*(source_file_index_map+e->index))--;
-					*(source_file_list.data+k)=*e;
+					source_file_with_index_t* elem=source_file_list.data+k+1;
+					(*(source_file_index_map+elem->index))--;
+					*(source_file_list.data+k)=*elem;
 				}
-				*(source_file_list.data+idx)=mv;
+				*(source_file_list.data+idx)=tmp;
 				offset--;
 			}
 		}
