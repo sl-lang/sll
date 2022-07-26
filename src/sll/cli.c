@@ -979,10 +979,10 @@ _cleanup:
 	sll_audit(SLL_CHAR("sll.cli.deinit"),SLL_CHAR(""));
 	while (_cli_bundle_list_len){
 		_cli_bundle_list_len--;
-		cli_bundle_source_t* b=*(_cli_bundle_list+_cli_bundle_list_len);
-		sll_deallocate(b->name);
-		sll_free_bundle(&(b->bundle));
-		sll_deallocate(b);
+		cli_bundle_source_t* bundle_data=*(_cli_bundle_list+_cli_bundle_list_len);
+		sll_deallocate(bundle_data->name);
+		sll_free_bundle(&(bundle_data->bundle));
+		sll_deallocate(bundle_data);
 	}
 	while (audit_library_list_len){
 		audit_library_list_len--;
