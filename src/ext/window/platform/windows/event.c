@@ -42,8 +42,8 @@ unsigned __int64 _window_wnd_proc(void* id,unsigned int msg,unsigned __int64 w_p
 			return 0;
 		case WM_MOUSEHWHEEL:
 		case WM_MOUSEWHEEL:
-			SLL_LOG("scroll");
-			return 0;
+			arg=sll_new_object(SLL_CHAR("uuuh"),WINDOW_EVENT_SCROLL,id,(msg==WM_MOUSEWHEEL),GET_WHEEL_DELTA_WPARAM(w_param));
+			break;
 		case WM_MOUSELEAVE:
 			arg=sll_new_object(SLL_CHAR("uu"),WINDOW_EVENT_MOUSE_LEAVE,id);
 			break;

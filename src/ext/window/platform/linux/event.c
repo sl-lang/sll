@@ -36,7 +36,7 @@ __WINDOW_API_CALL void window_api_event_poll(sll_bool_t blocking,sll_array_t* ou
 				{
 					const xcb_button_press_event_t* button_event=(const xcb_button_press_event_t*)event;
 					if (button_event->detail>3&&button_event->detail<8){
-						arg=sll_new_object(SLL_CHAR("uuu"),WINDOW_EVENT_SCROLL,button_event->event,button_event->detail-4);
+						arg=sll_new_object(SLL_CHAR("uuuh"),WINDOW_EVENT_SCROLL,button_event->event,button_event->detail<6,(((button_event->detail-1)&3)>1)*240-120);
 					}
 					else{
 						arg=sll_new_object(SLL_CHAR("uuuu"),WINDOW_EVENT_BUTTON,button_event->event,button_event->detail-(button_event->detail>7?4:0),(type==XCB_BUTTON_PRESS));

@@ -19,11 +19,6 @@
 #define WINDOW_EVENT_POSITION 11
 #define WINDOW_EVENT_SIZE 12
 
-#define WINDOW_SCROLL_DOWN 0
-#define WINDOW_SCROLL_UP 1
-#define WINDOW_SCROLL_RIGHT 2
-#define WINDOW_SCROLL_LEFT 3
-
 
 
 __WINDOW_API_CALL void window_api_event_poll(sll_bool_t blocking,sll_array_t* out);
