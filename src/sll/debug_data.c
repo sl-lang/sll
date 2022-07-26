@@ -108,9 +108,9 @@ static sll_node_t* _remove_type_names(sll_node_t* node){
 
 __SLL_EXTERNAL void sll_remove_debug_data(sll_compilation_data_t* compilation_data){
 	for (sll_source_file_index_t i=0;i<compilation_data->length;i++){
-		sll_node_t* p=(*(compilation_data->data+i))->first_node;
-		if (p){
-			_remove_debug_data(p);
+		sll_node_t* node=(*(compilation_data->data+i))->first_node;
+		if (node){
+			_remove_debug_data(node);
 		}
 	}
 }
