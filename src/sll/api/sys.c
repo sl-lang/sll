@@ -171,7 +171,8 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_sys_load_li
 	if (!fn||!fn(SLL_VERSION)){
 		SLL_CRITICAL_ERROR(sll_platform_unload_library(h));
 		sll_free_string(&full_lib_path);
-		SLL_UNIMPLEMENTED();
+		err=SLL_ERROR_INITIALIZATION;
+		goto _error;
 	}
 	sll_loaded_library_t* data=sll_allocate(sizeof(sll_loaded_library_t));
 	sll_copy_data(&full_lib_path,sizeof(sll_string_t),(sll_string_t*)(&(data->name)));

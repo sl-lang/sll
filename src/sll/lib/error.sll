@@ -49,11 +49,13 @@
 	(~ type_type) ERROR_ANY
 	(~ type_type) ERROR_EOF
 	(~ type_type) ERROR_FILE_NOT_FOUND
+	(~ type_type) ERROR_INITIALIZATION
 	(~ type_type) ERROR_INTERNAL_ERROR
 	(~ type_type) ERROR_INVALID_BASE64_CHARACTER
 	(~ type_type) ERROR_INVALID_BASE64_PADDING
 	(~ type_type) ERROR_INVALID_FILE_DESCRIPTOR
 	(~ type_type) ERROR_LENGTH_MISMATCH
+	(~ type_type) ERROR_NOT_A_SOCKET
 	(~ type_type) ERROR_NOT_ENOUGH_DATA
 	(~ type_type) ERROR_OUT_OF_RANGE
 	(~ type_type) ERROR_PATH_TOO_LONG
@@ -89,6 +91,12 @@
 	(~ string_type) fp
 ))
 
+(= ERROR_INITIALIZATION (&:
+	(,,,
+		(@@ "Initialization failure")
+	) @@string@@
+))
+
 (= ERROR_INVALID_BASE64_CHARACTER (&:
 	(,,, data
 		(@@ (<- string$format "Invalid Base64 character at offset %llu: '%c'" data$offset data$character))
@@ -115,6 +123,12 @@
 	) @@string@@
 	(~ int_type) len_a
 	(~ int_type) len_b
+))
+
+(= ERROR_NOT_A_SOCKET (&:
+	(,,,
+		(@@ "Not a osocket")
+	) @@string@@
 ))
 
 (= ERROR_NOT_ENOUGH_DATA (&:
@@ -224,6 +238,8 @@
 			9 (= error_data (. ERROR_UNKNOWN_FUNCTION
 				(: data "function")
 			))
+			10 (= error_data (. ERROR_NOT_A_SOCKET))
+			11 (= error_data (. ERROR_INITIALIZATION))
 		)
 	)
 	(? (=== error_data nil)
@@ -256,11 +272,13 @@
 	ERROR_ANY
 	ERROR_EOF
 	ERROR_FILE_NOT_FOUND
+	ERROR_INITIALIZATION
 	error_codes$ERROR_INTERNAL_ERROR
 	ERROR_INVALID_BASE64_CHARACTER
 	ERROR_INVALID_BASE64_PADDING
 	ERROR_INVALID_FILE_DESCRIPTOR
 	ERROR_LENGTH_MISMATCH
+	ERROR_NOT_A_SOCKET
 	ERROR_NOT_ENOUGH_DATA
 	ERROR_OUT_OF_RANGE
 	ERROR_PATH_TOO_LONG
