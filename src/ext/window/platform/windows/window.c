@@ -39,6 +39,17 @@ __WINDOW_API_CALL void window_api_window_set_size_constraints(window_handle_t id
 
 
 __WINDOW_API_CALL void window_api_window_set_state(window_handle_t id,sll_char_t state){
+	switch (state){
+		case WINDOW_STATE_MINIMIZED:
+			ShowWindow(id,SW_MINIMIZE);
+			break;
+		case WINDOW_STATE_MAXIMIZED:
+			ShowWindow(id,SW_MAXIMIZE);
+			break;
+		default:
+			ShowWindow(id,SW_RESTORE);
+			break;
+	}
 }
 
 
@@ -50,5 +61,23 @@ __WINDOW_API_CALL void window_api_window_set_title(window_handle_t id,const sll_
 
 
 __WINDOW_API_CALL void window_api_window_set_visibility(window_handle_t id,sll_bool_t show){
-	ShowWindow(id,(show?SW_SHOWNORMAL:SW_HIDE));
+	if (!show){
+		ShowWindow(id,SW_HIDE);
+		return;
+	}
+	WINDOWPLACEMENT data={
+		sizeof(WINDOWPLACEMENT)
+	};
+	GetWindowPlacement(id,&data);
+	int state=SW_NORMAL;
+	switch (data.showCmd){
+		case SW_SHOWMAXIMIZED:
+			state=SW_SHOWMAXIMIZED;
+			break;
+		case SW_SHOWMINIMIZED:
+			state=SW_RESTORE;
+			break;
+	}
+	ShowWindow(id,state);
+	SetForegroundWindow(id);
 }
