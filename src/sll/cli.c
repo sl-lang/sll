@@ -921,15 +921,15 @@ _read_file_argument:
 		}
 		sll_free_assembly_data(&assembly_data);
 		if (j<file_list_length&&generated_type==SLL_LOOKUP_RESULT_COMPILED_OBJECT&&(_cli_flags&SLL_CLI_FLAG_GENERATE_BUNDLE)){
-			sll_string_t b_f_nm;
-			sll_string_from_pointer(argv[*(file_list+j)],&b_f_nm);
-			sll_string_length_t off=((_cli_flags&SLL_CLI_FLAG_NO_PATHS)?sll_path_split(&b_f_nm):0);
-			if (sll_string_ends(&b_f_nm,&_cli_slc_suffix)){
-				sll_string_set_char(&b_f_nm,0,b_f_nm.length-_cli_slc_suffix.length);
+			sll_string_t bundle_file_name;
+			sll_string_from_pointer(argv[*(file_list+j)],&bundle_file_name);
+			sll_string_length_t offset=((_cli_flags&SLL_CLI_FLAG_NO_PATHS)?sll_path_split(&bundle_file_name):0);
+			if (sll_string_ends(&bundle_file_name,&_cli_slc_suffix)){
+				sll_string_set_char(&bundle_file_name,0,bundle_file_name.length-_cli_slc_suffix.length);
 			}
-			SLL_LOG("Adding file '%s' as '%s' to bundle...",file_path,b_f_nm.data+off);
-			sll_bundle_add_file(b_f_nm.data+off,&compilation_data,&bundle);
-			sll_free_string(&b_f_nm);
+			SLL_LOG("Adding file '%s' as '%s' to bundle...",file_path,bundle_file_name.data+offset);
+			sll_bundle_add_file(bundle_file_name.data+offset,&compilation_data,&bundle);
+			sll_free_string(&bundle_file_name);
 		}
 		else{
 			sll_free_compilation_data(&compilation_data);
@@ -938,33 +938,33 @@ _read_file_argument:
 	if (_cli_flags&SLL_CLI_FLAG_GENERATE_BUNDLE){
 		sll_char_t buffer[SLL_API_MAX_FILE_PATH_LENGTH];
 		if (bundle_output_file_path){
-			sll_string_length_t l=sll_string_length(bundle_output_file_path);
-			if (l>SLL_API_MAX_FILE_PATH_LENGTH-1){
-				l=SLL_API_MAX_FILE_PATH_LENGTH-1;
+			sll_string_length_t length=sll_string_length(bundle_output_file_path);
+			if (length>SLL_API_MAX_FILE_PATH_LENGTH-1){
+				length=SLL_API_MAX_FILE_PATH_LENGTH-1;
 			}
-			sll_copy_data(bundle_output_file_path,l,buffer);
-			buffer[l]=0;
+			sll_copy_data(bundle_output_file_path,length,buffer);
+			buffer[length]=0;
 		}
 		else{
-			sll_string_length_t l=bundle.name.length;
-			if (l>SLL_API_MAX_FILE_PATH_LENGTH-1){
-				l=SLL_API_MAX_FILE_PATH_LENGTH-1;
+			sll_string_length_t length=bundle.name.length;
+			if (length>SLL_API_MAX_FILE_PATH_LENGTH-1){
+				length=SLL_API_MAX_FILE_PATH_LENGTH-1;
 			}
-			sll_copy_data(bundle.name.data,l,buffer);
-			buffer[l]=0;
+			sll_copy_data(bundle.name.data,length,buffer);
+			buffer[length]=0;
 		}
-		if (!buffer[0]){
+		if (!(*buffer)){
 			SLL_WARN(SLL_CHAR("No bundle output path supplied"));
 			_cli_had_warning=1;
 			sll_free_bundle(&bundle);
 			goto _cleanup;
 		}
 		SLL_LOG("Writing bundle to '%s'...",buffer);
-		sll_file_t of;
-		sll_file_open(buffer,SLL_FILE_FLAG_WRITE,&of);
-		sll_write_bundle(&bundle,&of);
+		sll_file_t out_file;
+		sll_file_open(buffer,SLL_FILE_FLAG_WRITE,&out_file);
+		sll_write_bundle(&bundle,&out_file);
 		SLL_LOG("File written successfully.");
-		sll_file_close(&of);
+		sll_file_close(&out_file);
 		sll_free_bundle(&bundle);
 	}
 _cleanup:
