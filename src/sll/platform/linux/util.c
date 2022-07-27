@@ -69,10 +69,10 @@ void _init_platform(void){
 	_linux_csr=_mm_getcsr();
 	_mm_setcsr(_linux_csr|CSR_REGISTER_FLAGS);
 	if (!tcgetattr(STDIN_FILENO,&_linux_stdin_cfg)){
-		struct termios bf=_linux_stdin_cfg;
-		bf.c_iflag=(bf.c_iflag&(~INLCR))|ICRNL;
-		bf.c_lflag=(bf.c_lflag&(~ICANON))|ISIG;
-		tcsetattr(STDIN_FILENO,TCSANOW,&bf);
+		struct termios buffer=_linux_stdin_cfg;
+		buffer.c_iflag=(buffer.c_iflag&(~INLCR))|ICRNL;
+		buffer.c_lflag=(buffer.c_lflag&(~ICANON))|ISIG;
+		tcsetattr(STDIN_FILENO,TCSANOW,&buffer);
 	}
 	struct sigaction sa={
 		.sa_sigaction=_exception_handler,
@@ -91,22 +91,22 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_error_t sll_platform_get_error(void){
 
 
 
-__SLL_EXTERNAL void sll_platform_random(void* bf,sll_size_t l){
+__SLL_EXTERNAL void sll_platform_random(void* buffer,sll_size_t l){
 	while (l){
 #ifdef __SLL_BUILD_DARWIN
 		sll_size_t n=(l>256?256:l);
-		if (getentropy(bf,n)<0){
+		if (getentropy(buffer,n)<0){
 #else
-		ssize_t n=getrandom(bf,l,0);
+		ssize_t n=getrandom(buffer,l,0);
 		if (n==-1){
 #endif
 			if (errno==EINTR){
 				continue;
 			}
-			sll_set_memory(bf,l,0);
+			sll_set_memory(buffer,l,0);
 			return;
 		}
 		l-=n;
-		bf=PTR(ADDR(bf)+n);
+		buffer=PTR(ADDR(buffer)+n);
 	}
 }
