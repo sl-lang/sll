@@ -756,7 +756,7 @@ _read_file_argument:
 	for (sll_string_length_t j=0;j<file_list_length+console_code_list_length;j++){
 		sll_assembly_data_t assembly_data=SLL_INIT_ASSEMBLY_DATA_STRUCT;
 		sll_compilation_data_t compilation_data=SLL_INIT_COMPILATION_DATA_STRUCT;
-		sll_char_t f_fp[SLL_API_MAX_FILE_PATH_LENGTH];
+		sll_char_t file_path[SLL_API_MAX_FILE_PATH_LENGTH];
 		sll_cli_lookup_result_t generated_type=SLL_LOOKUP_RESULT_COMPILED_OBJECT;
 		_cli_enable_file_lookup=1;
 		if (j<file_list_length){
@@ -780,7 +780,7 @@ _read_file_argument:
 				sll_init_compilation_data(tmp.data,&compilation_data);
 			}
 			sll_free_string(&tmp);
-			sll_copy_data(res_data.path,SLL_API_FILE_PATH_SEPARATOR,f_fp);
+			sll_copy_data(res_data.path,SLL_API_FILE_PATH_SEPARATOR,file_path);
 			sll_char_t buffer[SLL_API_MAX_FILE_PATH_LENGTH];
 			sll_cli_expand_path(argv[*(file_list+j)],buffer);
 			sll_set_argument(0,buffer);
@@ -850,10 +850,10 @@ _read_file_argument:
 		if (j<file_list_length&&(_cli_flags&(SLL_CLI_FLAG_GENERATE_ASSEMBLY|SLL_CLI_FLAG_GENERATE_COMPILED_OBJECT))){
 			sll_char_t buffer[SLL_API_MAX_FILE_PATH_LENGTH];
 			sll_string_length_t k=0;
-			sll_string_length_t f_fp_l=sll_string_length(f_fp);
+			sll_string_length_t file_path_length=sll_string_length(file_path);
 			if (!output_file_path){
-				sll_copy_data(f_fp,f_fp_l,buffer);
-				k=f_fp_l-1;
+				sll_copy_data(file_path,file_path_length,buffer);
+				k=file_path_length-1;
 			}
 			else{
 				k=sll_string_length(output_file_path);
@@ -870,12 +870,12 @@ _read_file_argument:
 						k--;
 					}
 					k++;
-					sll_string_length_t l=f_fp_l;
-					while (l&&*(f_fp+l-1)!='\\'&&*(f_fp+l-1)!='/'){
+					sll_string_length_t l=file_path_length;
+					while (l&&*(file_path+l-1)!='\\'&&*(file_path+l-1)!='/'){
 						l--;
 					}
-					sll_copy_data(f_fp+l,f_fp_l-l,buffer+k);
-					k+=f_fp_l-l-1;
+					sll_copy_data(file_path+l,file_path_length-l,buffer+k);
+					k+=file_path_length-l-1;
 				}
 			}
 			buffer[k+1]='.';
@@ -927,7 +927,7 @@ _read_file_argument:
 			if (sll_string_ends(&b_f_nm,&_cli_slc_suffix)){
 				sll_string_set_char(&b_f_nm,0,b_f_nm.length-_cli_slc_suffix.length);
 			}
-			SLL_LOG("Adding file '%s' as '%s' to bundle...",f_fp,b_f_nm.data+off);
+			SLL_LOG("Adding file '%s' as '%s' to bundle...",file_path,b_f_nm.data+off);
 			sll_bundle_add_file(b_f_nm.data+off,&compilation_data,&bundle);
 			sll_free_string(&b_f_nm);
 		}
