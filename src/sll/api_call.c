@@ -44,17 +44,13 @@ sll_object_t _call_api_func(sll_function_index_t fn,const sll_object_t* al,sll_a
 		}
 		switch (RETURN_VALUE_GET_TYPE(dt->_return_value)){
 			case 'b':
-				out=SLL_ACQUIRE_STATIC_INT(ret&1);
-				break;
+				ret&=1;
 			case 'B':
-				out=sll_int_to_object(ret&0xff);
-				break;
+				ret&=0xff;
 			case 'W':
-				out=sll_int_to_object(ret&0xffff);
-				break;
+				ret&=0xffff;
 			case 'D':
-				out=sll_int_to_object(ret&0xffffffff);
-				break;
+				ret&=0xffffffff;
 			case 'Q':
 			case 'i':
 			default:
