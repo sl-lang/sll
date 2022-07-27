@@ -362,26 +362,26 @@ static void _stringify_object(sll_object_t o,sll_string_t* s){
 					v=-v;
 				}
 				sll_string_length_t i=0;
-				sll_char_t bf[20];
+				sll_char_t buffer[20];
 				do{
-					bf[i]=v%10;
+					buffer[i]=v%10;
 					i++;
 					v/=10;
 				} while (v);
 				sll_string_increase(s,i);
 				while (i){
 					i--;
-					s->data[s->length]=bf[i]+48;
+					s->data[s->length]=buffer[i]+48;
 					s->length++;
 				}
 				return;
 			}
 		case SLL_OBJECT_TYPE_FLOAT:
 			{
-				sll_char_t bf[256];
-				sll_string_length_t l=snprintf((char*)bf,256,"%.16lf",o->data.float_);
+				sll_char_t buffer[256];
+				sll_string_length_t l=snprintf((char*)buffer,256,"%.16lf",o->data.float_);
 				sll_string_increase(s,l);
-				sll_copy_data(bf,l,s->data+s->length);
+				sll_copy_data(buffer,l,s->data+s->length);
 				s->length+=l;
 				return;
 			}

@@ -30,45 +30,45 @@
 
 
 static void _print_char(sll_char_t char_,sll_file_t* out){
-	sll_char_t bf[4]={'\\'};
+	sll_char_t buffer[4]={'\\'};
 	sll_string_length_t bfl=2;
 	if (char_=='\''||char_=='"'||char_=='\\'){
-		bf[1]=char_;
+		buffer[1]=char_;
 	}
 	else if (char_=='\t'){
-		bf[1]='t';
+		buffer[1]='t';
 	}
 	else if (char_=='\n'){
-		bf[1]='n';
+		buffer[1]='n';
 	}
 	else if (char_=='\v'){
-		bf[1]='v';
+		buffer[1]='v';
 	}
 	else if (char_=='\f'){
-		bf[1]='f';
+		buffer[1]='f';
 	}
 	else if (char_=='\r'){
-		bf[1]='r';
+		buffer[1]='r';
 	}
 	else if (char_<32||char_>126){
-		bf[1]='x';
-		bf[2]=(char_>>4)+(char_>159?87:48);
-		bf[3]=(char_&0xf)+((char_&0xf)>9?87:48);
+		buffer[1]='x';
+		buffer[2]=(char_>>4)+(char_>159?87:48);
+		buffer[3]=(char_&0xf)+((char_&0xf)>9?87:48);
 		bfl=4;
 	}
 	else{
 		sll_file_write_char(out,char_,NULL);
 		return;
 	}
-	sll_file_write(out,bf,bfl,NULL);
+	sll_file_write(out,buffer,bfl,NULL);
 }
 
 
 
 static void _print_float(sll_float_t value,sll_file_t* out){
-	char bf[128];
-	int sz=snprintf(bf,128,"%.16lg",value);
-	sll_file_write(out,bf,sz*sizeof(char),NULL);
+	char buffer[128];
+	int sz=snprintf(buffer,128,"%.16lg",value);
+	sll_file_write(out,buffer,sz*sizeof(char),NULL);
 }
 
 
@@ -102,16 +102,16 @@ static void _print_int(sll_integer_t value,sll_file_t* out){
 		value=-value;
 		sll_file_write_char(out,'-',NULL);
 	}
-	sll_char_t bf[20];
+	sll_char_t buffer[20];
 	sll_string_length_t i=0;
 	while (value){
-		bf[i]=value%10;
+		buffer[i]=value%10;
 		value/=10;
 		i++;
 	}
 	while (i){
 		i--;
-		sll_file_write_char(out,bf[i]+48,NULL);
+		sll_file_write_char(out,buffer[i]+48,NULL);
 	}
 }
 

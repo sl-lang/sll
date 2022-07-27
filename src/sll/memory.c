@@ -21,7 +21,7 @@
 		do{ \
 			j-=4; \
 			sll_char_t c=(ptr>>j)&15; \
-			bf[i]=c+(c>9?87:48); \
+			buffer[i]=c+(c>9?87:48); \
 			i++; \
 		} while (j); \
 	} while (0)
@@ -50,22 +50,22 @@ static __SLL_NO_RETURN void _raise_error(sll_char_t type,void* pointer,sll_size_
 			nm=SLL_CHAR("sll_reallocate");
 			break;
 	}
-	sll_char_t bf[64];
+	sll_char_t buffer[64];
 	sll_string_length_t i=sll_string_length(nm);
-	sll_copy_data(nm,i,bf);
-	bf[i]='(';
+	sll_copy_data(nm,i,buffer);
+	buffer[i]='(';
 	i++;
 	if (type==2){
 		POINTER_TO_STRING(pointer);
-		bf[i]=',';
+		buffer[i]=',';
 		i++;
 	}
 	POINTER_TO_STRING(size);
-	bf[i]=')';
-	bf[i+1]=0;
+	buffer[i]=')';
+	buffer[i+1]=0;
 	sll_file_descriptor_t fd=sll_platform_get_default_stream_descriptor(SLL_PLATFORM_STREAM_ERROR);
 	sll_platform_file_write(fd,MEMORY_FAIL_START,MEMORY_FAIL_START_SIZE,NULL);
-	sll_platform_file_write(fd,bf,i+2,NULL);
+	sll_platform_file_write(fd,buffer,i+2,NULL);
 	sll_platform_file_write(fd,MEMORY_FAIL_END,MEMORY_FAIL_END_SIZE,NULL);
 	_force_exit_platform();
 }

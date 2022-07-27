@@ -193,11 +193,11 @@ __SLL_EXTERNAL void sll_file_from_data(const void* pointer,sll_size_t size,sll_f
 	}
 	if (flags&SLL_FILE_FLAG_WRITE){
 		flags|=FILE_FLAG_DYNAMIC_BUFFERS;
-		dynamic_buffer_chunk_t* bf=sll_platform_allocate_page(SLL_ROUND_PAGE(FILE_DYNAMIC_BUFFER_ALLOC_SIZE),0,NULL);
-		bf->size=SLL_ROUND_PAGE(FILE_DYNAMIC_BUFFER_ALLOC_SIZE);
-		bf->next=NULL;
-		out->data.file._write_buffer.dynamic.start=bf;
-		out->data.file._write_buffer.dynamic.end=bf;
+		dynamic_buffer_chunk_t* buffer=sll_platform_allocate_page(SLL_ROUND_PAGE(FILE_DYNAMIC_BUFFER_ALLOC_SIZE),0,NULL);
+		buffer->size=SLL_ROUND_PAGE(FILE_DYNAMIC_BUFFER_ALLOC_SIZE);
+		buffer->next=NULL;
+		out->data.file._write_buffer.dynamic.start=buffer;
+		out->data.file._write_buffer.dynamic.end=buffer;
 		out->data.file._write_buffer.dynamic.size=0;
 		out->data.file._write_buffer.dynamic.offset=0;
 	}

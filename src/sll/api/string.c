@@ -22,16 +22,16 @@
 
 static void _write_int(sll_size_t v,sll_string_t* o){
 	sll_string_length_t i=0;
-	sll_char_t bf[20];
+	sll_char_t buffer[20];
 	do{
-		bf[i]=v%10;
+		buffer[i]=v%10;
 		i++;
 		v/=10;
 	} while (v);
 	sll_string_increase(o,i);
 	while (i){
 		i--;
-		o->data[o->length]=bf[i]+48;
+		o->data[o->length]=buffer[i]+48;
 		o->length++;
 	}
 }
@@ -140,10 +140,10 @@ static void _object_to_string(sll_object_t a,sll_string_t* o,address_list_t* add
 			}
 		case SLL_OBJECT_TYPE_FLOAT:
 			{
-				sll_char_t bf[256];
-				sll_string_length_t bfl=snprintf((char*)bf,256,"%.16lf",a->data.float_);
+				sll_char_t buffer[256];
+				sll_string_length_t bfl=snprintf((char*)buffer,256,"%.16lf",a->data.float_);
 				sll_string_increase(o,bfl);
-				sll_copy_data(bf,bfl,o->data+o->length);
+				sll_copy_data(buffer,bfl,o->data+o->length);
 				o->length+=bfl;
 				return;
 			}
@@ -158,11 +158,11 @@ static void _object_to_string(sll_object_t a,sll_string_t* o,address_list_t* add
 			return;
 		case SLL_OBJECT_TYPE_COMPLEX:
 			{
-				sll_char_t bf[256];
+				sll_char_t buffer[256];
 				if (a->data.complex_.real){
-					sll_string_length_t bfl=snprintf((char*)bf,256,"%.16lf",a->data.complex_.real);
+					sll_string_length_t bfl=snprintf((char*)buffer,256,"%.16lf",a->data.complex_.real);
 					sll_string_increase(o,bfl);
-					sll_copy_data(bf,bfl,o->data+o->length);
+					sll_copy_data(buffer,bfl,o->data+o->length);
 					o->length+=bfl;
 					if (a->data.complex_.imag){
 						sll_float_t v=a->data.complex_.imag;
@@ -175,16 +175,16 @@ static void _object_to_string(sll_object_t a,sll_string_t* o,address_list_t* add
 							o->data[o->length]='+';
 						}
 						o->length++;
-						bfl=snprintf((char*)bf,256,"%.16lfi",v);
+						bfl=snprintf((char*)buffer,256,"%.16lfi",v);
 						sll_string_increase(o,bfl);
-						sll_copy_data(bf,bfl,o->data+o->length);
+						sll_copy_data(buffer,bfl,o->data+o->length);
 						o->length+=bfl;
 					}
 				}
 				else if (a->data.complex_.imag){
-					sll_string_length_t bfl=snprintf((char*)bf,256,"%.16lfi",a->data.complex_.imag);
+					sll_string_length_t bfl=snprintf((char*)buffer,256,"%.16lfi",a->data.complex_.imag);
 					sll_string_increase(o,bfl);
-					sll_copy_data(bf,bfl,o->data+o->length);
+					sll_copy_data(buffer,bfl,o->data+o->length);
 					o->length+=bfl;
 				}
 				else{

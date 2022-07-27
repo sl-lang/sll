@@ -42,14 +42,14 @@ static void _write_number(sll_file_descriptor_t fd,sll_file_offset_t n){
 		sll_platform_file_write(fd,"0",1,NULL);
 		return;
 	}
-	sll_char_t bf[20];
+	sll_char_t buffer[20];
 	sll_string_length_t i=20;
 	while (n){
 		i--;
-		bf[i]=(n%10)+48;
+		buffer[i]=(n%10)+48;
 		n/=10;
 	}
-	sll_platform_file_write(fd,bf+i,20-i,NULL);
+	sll_platform_file_write(fd,buffer+i,20-i,NULL);
 }
 
 

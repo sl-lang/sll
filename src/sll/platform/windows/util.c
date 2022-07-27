@@ -168,14 +168,14 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_error_t sll_platform_get_error(void){
 
 
 
-__SLL_EXTERNAL void sll_platform_random(void* bf,sll_size_t l){
+__SLL_EXTERNAL void sll_platform_random(void* buffer,sll_size_t l){
 	while (l){
 		ULONG n=(l>__SLL_U32_MAX?__SLL_U32_MAX:(ULONG)l);
-		if (BCryptGenRandom(NULL,bf,n,BCRYPT_USE_SYSTEM_PREFERRED_RNG)<0){
-			sll_set_memory(bf,l,0);
+		if (BCryptGenRandom(NULL,buffer,n,BCRYPT_USE_SYSTEM_PREFERRED_RNG)<0){
+			sll_set_memory(buffer,l,0);
 		}
 		l-=n;
-		bf=PTR(ADDR(bf)+n);
+		buffer=PTR(ADDR(buffer)+n);
 	}
 }
 

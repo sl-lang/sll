@@ -14,21 +14,21 @@ int main(void){
 	if (!__argc){
 		return 0;
 	}
-	char bf[MAX_PATH+STRLEN(LIBRARY_NAME)];
-	DWORD bfl=GetModuleFileNameA(NULL,bf,MAX_PATH);
-	while (bfl&&bf[bfl]!='\\'&&bf[bfl]!='/'){
+	char buffer[MAX_PATH+STRLEN(LIBRARY_NAME)];
+	DWORD bfl=GetModuleFileNameA(NULL,buffer,MAX_PATH);
+	while (bfl&&buffer[bfl]!='\\'&&buffer[bfl]!='/'){
 		bfl--;
 	}
 	if (!bfl){
-		bf[0]='/';
+		buffer[0]='/';
 		bfl=1;
 	}
 	bfl++;
 	for (unsigned int i=0;i<STRLEN(LIBRARY_NAME);i++){
-		bf[bfl+i]=LIBRARY_NAME[i];
+		buffer[bfl+i]=LIBRARY_NAME[i];
 	}
-	bf[bfl+STRLEN(LIBRARY_NAME)]=0;
-	HMODULE lh=LoadLibraryExA(bf,NULL,0);
+	buffer[bfl+STRLEN(LIBRARY_NAME)]=0;
+	HMODULE lh=LoadLibraryExA(buffer,NULL,0);
 	if (!lh){
 		return 0;
 	}

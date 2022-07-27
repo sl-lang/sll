@@ -345,8 +345,8 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_error_t sll_decode_string(sll_file_t* file
 		}
 	}
 	else{
-		sll_char_t bf[1<<STRING_COMPRESSION_OFFSET_BIT_COUNT];
-		sll_zero_memory(bf,((1<<STRING_COMPRESSION_OFFSET_BIT_COUNT)-(1<<STRING_COMPRESSION_LENGTH_BIT_COUNT)-1));
+		sll_char_t buffer[1<<STRING_COMPRESSION_OFFSET_BIT_COUNT];
+		sll_zero_memory(buffer,((1<<STRING_COMPRESSION_OFFSET_BIT_COUNT)-(1<<STRING_COMPRESSION_LENGTH_BIT_COUNT)-1));
 		wide_data_t v;
 		if (sll_file_read(file,&v,sizeof(wide_data_t),&err)!=sizeof(wide_data_t)){
 			goto _error;
@@ -378,7 +378,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_error_t sll_decode_string(sll_file_t* file
 			}
 			if (el==8){
 				out->data[i]=(sll_char_t)e;
-				bf[r]=(sll_char_t)e;
+				buffer[r]=(sll_char_t)e;
 				i++;
 				r=(r+1)&((1<<STRING_COMPRESSION_OFFSET_BIT_COUNT)-1);
 			}
@@ -386,8 +386,8 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_error_t sll_decode_string(sll_file_t* file
 				unsigned int k=e>>STRING_COMPRESSION_LENGTH_BIT_COUNT;
 				unsigned int l=k+(e&((1<<STRING_COMPRESSION_LENGTH_BIT_COUNT)-1))+2;
 				do{
-					bf[r]=bf[k&((1<<STRING_COMPRESSION_OFFSET_BIT_COUNT)-1)];
-					out->data[i]=bf[r];
+					buffer[r]=buffer[k&((1<<STRING_COMPRESSION_OFFSET_BIT_COUNT)-1)];
+					out->data[i]=buffer[r];
 					i++;
 					r=(r+1)&((1<<STRING_COMPRESSION_OFFSET_BIT_COUNT)-1);
 					k++;
@@ -405,16 +405,16 @@ _error:
 
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_error_t sll_encode_integer(sll_file_t* file,sll_size_t v){
-	sll_char_t bf[9];
+	sll_char_t buffer[9];
 	sll_string_length_t i=0;
 	while (i<8&&v>0x7f){
-		bf[i]=(v&0x7f)|0x80;
+		buffer[i]=(v&0x7f)|0x80;
 		v>>=7;
 		i++;
 	}
-	bf[i]=(sll_char_t)v;
+	buffer[i]=(sll_char_t)v;
 	sll_error_t err;
-	sll_file_write(file,bf,i+1,&err);
+	sll_file_write(file,buffer,i+1,&err);
 	return err;
 }
 
@@ -565,12 +565,12 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_error_t sll_encode_string(sll_file_t* file
 	}
 	wide_data_t v=0;
 	unsigned int bc=64;
-	sll_char_t bf[1<<(STRING_COMPRESSION_OFFSET_BIT_COUNT+1)];
-	sll_zero_memory(bf,((1<<STRING_COMPRESSION_OFFSET_BIT_COUNT)-(1<<STRING_COMPRESSION_LENGTH_BIT_COUNT)-1));
+	sll_char_t buffer[1<<(STRING_COMPRESSION_OFFSET_BIT_COUNT+1)];
+	sll_zero_memory(buffer,((1<<STRING_COMPRESSION_OFFSET_BIT_COUNT)-(1<<STRING_COMPRESSION_LENGTH_BIT_COUNT)-1));
 	sll_string_length_t si=0;
 	unsigned int i=((1<<STRING_COMPRESSION_OFFSET_BIT_COUNT)-(1<<STRING_COMPRESSION_LENGTH_BIT_COUNT)-1);
 	do{
-		bf[i]=string->data[si];
+		buffer[i]=string->data[si];
 		i++;
 		si++;
 	} while (si<string->length&&i<(1<<(STRING_COMPRESSION_OFFSET_BIT_COUNT+1)));
@@ -582,11 +582,11 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_error_t sll_encode_string(sll_file_t* file
 		if (mn>(1<<STRING_COMPRESSION_LENGTH_BIT_COUNT)+1){
 			mn=(1<<STRING_COMPRESSION_LENGTH_BIT_COUNT)+1;
 		}
-		sll_char_t c=bf[r];
+		sll_char_t c=buffer[r];
 		for (unsigned int j=r-(((1<<STRING_COMPRESSION_OFFSET_BIT_COUNT)-(1<<STRING_COMPRESSION_LENGTH_BIT_COUNT)-1));j<r;j++){
-			if (bf[j]==c){
+			if (buffer[j]==c){
 				unsigned int k=1;
-				while (k<mn&&bf[j+k]==bf[r+k]){
+				while (k<mn&&buffer[j+k]==buffer[r+k]){
 					k++;
 				}
 				if (k>l){
@@ -622,12 +622,12 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_error_t sll_encode_string(sll_file_t* file
 		r+=l;
 		if (r>=(1<<(STRING_COMPRESSION_OFFSET_BIT_COUNT+1))-(1<<STRING_COMPRESSION_LENGTH_BIT_COUNT)-1){
 			for (unsigned int j=0;j<(1<<STRING_COMPRESSION_OFFSET_BIT_COUNT);j++){
-				bf[j]=bf[j+(1<<STRING_COMPRESSION_OFFSET_BIT_COUNT)];
+				buffer[j]=buffer[j+(1<<STRING_COMPRESSION_OFFSET_BIT_COUNT)];
 			}
 			i-=1<<STRING_COMPRESSION_OFFSET_BIT_COUNT;
 			r-=1<<STRING_COMPRESSION_OFFSET_BIT_COUNT;
 			while (i<(1<<(STRING_COMPRESSION_OFFSET_BIT_COUNT+1))&&si<string->length){
-				bf[i]=string->data[si];
+				buffer[i]=string->data[si];
 				i++;
 				si++;
 			}

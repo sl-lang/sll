@@ -21,49 +21,49 @@ int main(int argc,const char*const* argv){
 	if (!argc){
 		return 0;
 	}
-	char bf[PATH_MAX+STATIC_STRLEN(LIBRARY_NAME)];
+	char buffer[PATH_MAX+STATIC_STRLEN(LIBRARY_NAME)];
 #ifdef __SLL_BUILD_DARWIN
 	uint32_t bfl=PATH_MAX;
-	if (!_NSGetExecutablePath(bf,&bfl)){
+	if (!_NSGetExecutablePath(buffer,&bfl)){
 		bfl=0;
-		while (bf[bfl]){
+		while (buffer[bfl]){
 			bfl++;
 		}
 #else
-	ssize_t bfl=readlink("/proc/self/exe",bf,PATH_MAX);
+	ssize_t bfl=readlink("/proc/self/exe",buffer,PATH_MAX);
 	if (bfl!=-1){
 #endif
-		while (bfl&&bf[bfl]!='/'){
+		while (bfl&&buffer[bfl]!='/'){
 			bfl--;
 		}
 		if (!bfl){
-			bf[0]='/';
+			buffer[0]='/';
 		}
 	}
 	else{
-		bf[0]='/';
+		buffer[0]='/';
 		bfl=0;
 	}
 	bfl++;
 	if (bfl>=STATIC_STRLEN(APT_INSTALL_PATH)){
 		for (unsigned int i=0;i<STATIC_STRLEN(APT_INSTALL_PATH);i++){
-			if (bf[i]!=APT_INSTALL_PATH[i]){
+			if (buffer[i]!=APT_INSTALL_PATH[i]){
 				goto _not_apt;
 			}
 		}
 		for (unsigned int i=0;i<STATIC_STRLEN(APT_LIB_PATH);i++){
-			bf[i]=APT_LIB_PATH[i];
+			buffer[i]=APT_LIB_PATH[i];
 		}
-		bf[STATIC_STRLEN(APT_LIB_PATH)]=0;
+		buffer[STATIC_STRLEN(APT_LIB_PATH)]=0;
 	}
 	else{
 _not_apt:
 		for (unsigned int i=0;i<STATIC_STRLEN(LIBRARY_NAME);i++){
-			bf[bfl+i]=LIBRARY_NAME[i];
+			buffer[bfl+i]=LIBRARY_NAME[i];
 		}
-		bf[bfl+STATIC_STRLEN(LIBRARY_NAME)]=0;
+		buffer[bfl+STATIC_STRLEN(LIBRARY_NAME)]=0;
 	}
-	void* lh=dlopen(bf,RTLD_LAZY);
+	void* lh=dlopen(buffer,RTLD_LAZY);
 	if (!lh){
 		return 0;
 	}

@@ -69,36 +69,36 @@
 
 (= read_word_le (,,, f
 	(? (=== f nil) (@@ nil))
-	(= bf (<- file$read (:: f file$file_type) 2))
+	(= buffer (<- file$read (:: f file$file_type) 2))
 	(@@ (|
-		(: bf 0)
-		(<< (: bf 1) 8)
+		(: buffer 0)
+		(<< (: buffer 1) 8)
 	))
 ))
 
 (= read_dword_le (,,, f
 	(? (=== f nil) (@@ nil))
-	(= bf (<- file$read (:: f file$file_type) 4))
+	(= buffer (<- file$read (:: f file$file_type) 4))
 	(@@ (|
-		(: bf 0)
-		(<< (: bf 1) 8)
-		(<< (: bf 2) 16)
-		(<< (: bf 3) 24)
+		(: buffer 0)
+		(<< (: buffer 1) 8)
+		(<< (: buffer 2) 16)
+		(<< (: buffer 3) 24)
 	))
 ))
 
 (= read_qword_le (,,, f
 	(? (=== f nil) (@@ nil))
-	(= bf (<- file$read (:: f file$file_type) 8))
+	(= buffer (<- file$read (:: f file$file_type) 8))
 	(@@ (|
-		(: bf 0)
-		(<< (: bf 1) 8)
-		(<< (: bf 2) 16)
-		(<< (: bf 3) 24)
-		(<< (: bf 4) 32)
-		(<< (: bf 5) 40)
-		(<< (: bf 6) 48)
-		(<< (: bf 7) 56)
+		(: buffer 0)
+		(<< (: buffer 1) 8)
+		(<< (: buffer 2) 16)
+		(<< (: buffer 3) 24)
+		(<< (: buffer 4) 32)
+		(<< (: buffer 5) 40)
+		(<< (: buffer 6) 48)
+		(<< (: buffer 7) 56)
 	))
 ))
 
@@ -121,36 +121,36 @@
 
 (= read_word_be (,,, f
 	(? (=== f nil) (@@ nil))
-	(= bf (<- file$read (:: f file$file_type) 2))
+	(= buffer (<- file$read (:: f file$file_type) 2))
 	(@@ (|
-		(<< (: bf 0) 8)
-		(: bf 1)
+		(<< (: buffer 0) 8)
+		(: buffer 1)
 	))
 ))
 
 (= read_dword_be (,,, f
 	(? (=== f nil) (@@ nil))
-	(= bf (<- file$read (:: f file$file_type) 4))
+	(= buffer (<- file$read (:: f file$file_type) 4))
 	(@@ (|
-		(<< (: bf 0) 24)
-		(<< (: bf 1) 16)
-		(<< (: bf 2) 8)
-		(: bf 3)
+		(<< (: buffer 0) 24)
+		(<< (: buffer 1) 16)
+		(<< (: buffer 2) 8)
+		(: buffer 3)
 	))
 ))
 
 (= read_qword_be (,,, f
 	(? (=== f nil) (@@ nil))
-	(= bf (<- file$read (:: f file$file_type) 8))
+	(= buffer (<- file$read (:: f file$file_type) 8))
 	(@@ (|
-		(<< (: bf 0) 56)
-		(<< (: bf 1) 48)
-		(<< (: bf 2) 40)
-		(<< (: bf 3) 32)
-		(<< (: bf 4) 24)
-		(<< (: bf 5) 16)
-		(<< (: bf 6) 8)
-		(: bf 7)
+		(<< (: buffer 0) 56)
+		(<< (: buffer 1) 48)
+		(<< (: buffer 2) 40)
+		(<< (: buffer 3) 32)
+		(<< (: buffer 4) 24)
+		(<< (: buffer 5) 16)
+		(<< (: buffer 6) 8)
+		(: buffer 7)
 	))
 ))
 

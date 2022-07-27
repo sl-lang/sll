@@ -43,13 +43,13 @@ static void _write_input(const sll_char_t* data,sll_size_t size){
 	sll_string_length_t i=0;
 	if (size>2){
 		do{
-			char bf[4]={
+			char buffer[4]={
 				_base64_alphabet[data[i]>>2],
 				_base64_alphabet[((data[i]<<4)&0x3f)|(data[i+1]>>4)],
 				_base64_alphabet[((data[i+1]<<2)&0x3f)|(data[i+2]>>6)],
 				_base64_alphabet[data[i+2]&0x3f]
 			};
-			fwrite(bf,4,1,_output_file);
+			fwrite(buffer,4,1,_output_file);
 			i+=3;
 		} while (i<size-2);
 	}
@@ -98,13 +98,13 @@ int LLVMFuzzerTestOneInput(const sll_char_t* data,sll_size_t size){
 	}
 	chdir(_base_cwd);
 	_write_input(data,size);
-	sll_char_t bf[MAX_INPUT_LENGTH];
+	sll_char_t buffer[MAX_INPUT_LENGTH];
 	size=(size>MAX_INPUT_LENGTH-1?MAX_INPUT_LENGTH-1:size);
-	sll_copy_data(data,size,bf);
-	bf[size]=0;
+	sll_copy_data(data,size,buffer);
+	buffer[size]=0;
 	const sll_char_t* args[2]={
 		SLL_CHAR("-s"),
-		bf
+		buffer
 	};
 	(void)sll_cli_main(2,args);
 	return 0;

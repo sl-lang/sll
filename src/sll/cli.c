@@ -175,7 +175,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_cli_lookup_result_t sll_cli_lookup_file(co
 		}
 	}
 	sll_audit(SLL_CHAR("sll.cli.find"),SLL_CHAR("S"),path);
-	sll_char_t bf[SLL_API_MAX_FILE_PATH_LENGTH];
+	sll_char_t buffer[SLL_API_MAX_FILE_PATH_LENGTH];
 	if (_cli_bundle_list_len){
 		sll_array_length_t i=_cli_bundle_list_len;
 		do{
@@ -193,15 +193,15 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_cli_lookup_result_t sll_cli_lookup_file(co
 		if (!_starts_with_path_prefix(path,&(inc->name))){
 			continue;
 		}
-		sll_copy_data(inc->path.data,inc->path.length,bf);
-		sll_copy_data(path->data+inc->name.length,path->length-inc->name.length,bf+inc->path.length);
+		sll_copy_data(inc->path.data,inc->path.length,buffer);
+		sll_copy_data(path->data+inc->name.length,path->length-inc->name.length,buffer+inc->path.length);
 		sll_string_length_t j=inc->path.length+path->length-inc->name.length;
-		sll_copy_data(_cli_slc_suffix.data,_cli_slc_suffix.length+1,bf+j);
-		SLL_LOG("Trying to open file '%s'...",bf);
+		sll_copy_data(_cli_slc_suffix.data,_cli_slc_suffix.length+1,buffer+j);
+		SLL_LOG("Trying to open file '%s'...",buffer);
 		sll_file_t f;
-		if (sll_platform_path_exists(bf)){
-			sll_file_open(bf,SLL_FILE_FLAG_READ,&f);
-			sll_cli_expand_path(bf,out->path);
+		if (sll_platform_path_exists(buffer)){
+			sll_file_open(buffer,SLL_FILE_FLAG_READ,&f);
+			sll_cli_expand_path(buffer,out->path);
 			SLL_LOG("Found file '%s'",out->path);
 			if (sll_load_compiled_node(&f,&(out->data.compilation_data))){
 				sll_file_close(&f);
@@ -211,13 +211,13 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_cli_lookup_result_t sll_cli_lookup_file(co
 			sll_file_close(&f);
 			SLL_LOG("File is not a compiled program");
 		}
-		bf[j]=0;
-		SLL_LOG("Trying to open file '%s'...",bf);
-		if (!sll_platform_path_exists(bf)){
+		buffer[j]=0;
+		SLL_LOG("Trying to open file '%s'...",buffer);
+		if (!sll_platform_path_exists(buffer)){
 			continue;
 		}
-		sll_file_open(bf,SLL_FILE_FLAG_READ,&f);
-		sll_cli_expand_path(bf,out->path);
+		sll_file_open(buffer,SLL_FILE_FLAG_READ,&f);
+		sll_cli_expand_path(buffer,out->path);
 		SLL_LOG("Found file '%s'",out->path);
 		if (sll_load_assembly(&f,&(out->data.assembly_data))){
 			sll_file_close(&f);
@@ -781,9 +781,9 @@ _read_file_argument:
 			}
 			sll_free_string(&tmp);
 			sll_copy_data(res_data.path,SLL_API_FILE_PATH_SEPARATOR,f_fp);
-			sll_char_t bf[SLL_API_MAX_FILE_PATH_LENGTH];
-			sll_cli_expand_path(argv[*(fp+j)],bf);
-			sll_set_argument(0,bf);
+			sll_char_t buffer[SLL_API_MAX_FILE_PATH_LENGTH];
+			sll_cli_expand_path(argv[*(fp+j)],buffer);
+			sll_set_argument(0,buffer);
 		}
 		else{
 			sll_audit(SLL_CHAR("sll.cli.load.source"),SLL_CHAR("S"),argv[*(sl+j-fpl)]);
@@ -848,16 +848,16 @@ _read_file_argument:
 			sll_file_write_char(sll_stdout,'\n',NULL);
 		}
 		if (j<fpl&&(_cli_flags&(SLL_CLI_FLAG_GENERATE_ASSEMBLY|SLL_CLI_FLAG_GENERATE_COMPILED_OBJECT))){
-			sll_char_t bf[SLL_API_MAX_FILE_PATH_LENGTH];
+			sll_char_t buffer[SLL_API_MAX_FILE_PATH_LENGTH];
 			sll_string_length_t k=0;
 			sll_string_length_t f_fp_l=sll_string_length(f_fp);
 			if (!o_fp){
-				sll_copy_data(f_fp,f_fp_l,bf);
+				sll_copy_data(f_fp,f_fp_l,buffer);
 				k=f_fp_l-1;
 			}
 			else{
 				k=sll_string_length(o_fp);
-				sll_copy_data(o_fp,k,bf);
+				sll_copy_data(o_fp,k,buffer);
 				if (_cli_flags&CLI_FLAG_SINGLE_OUTPUT){
 					k-=1;
 				}
@@ -874,31 +874,31 @@ _read_file_argument:
 					while (l&&*(f_fp+l-1)!='\\'&&*(f_fp+l-1)!='/'){
 						l--;
 					}
-					sll_copy_data(f_fp+l,f_fp_l-l,bf+k);
+					sll_copy_data(f_fp+l,f_fp_l-l,buffer+k);
 					k+=f_fp_l-l-1;
 				}
 			}
-			bf[k+1]='.';
-			bf[k+2]='s';
-			bf[k+3]='l';
-			bf[k+5]=0;
+			buffer[k+1]='.';
+			buffer[k+2]='s';
+			buffer[k+3]='l';
+			buffer[k+5]=0;
 			k+=4;
 			if (_cli_flags&SLL_CLI_FLAG_GENERATE_ASSEMBLY){
-				bf[k]='a';
-				sll_audit(SLL_CHAR("sll.cli.save.assembly"),SLL_CHAR("S"),bf);
-				SLL_LOG("Writing assembly to file '%s'...",bf);
+				buffer[k]='a';
+				sll_audit(SLL_CHAR("sll.cli.save.assembly"),SLL_CHAR("S"),buffer);
+				SLL_LOG("Writing assembly to file '%s'...",buffer);
 				sll_file_t of;
-				SLL_CRITICAL_ERROR(sll_file_open(bf,SLL_FILE_FLAG_WRITE,&of));
+				SLL_CRITICAL_ERROR(sll_file_open(buffer,SLL_FILE_FLAG_WRITE,&of));
 				sll_write_assembly(&assembly_data,&of);
 				SLL_LOG("File written successfully.");
 				sll_file_close(&of);
 			}
 			if (_cli_flags&SLL_CLI_FLAG_GENERATE_COMPILED_OBJECT){
-				bf[k]='c';
-				sll_audit(SLL_CHAR("sll.cli.save.compiled"),SLL_CHAR("S"),bf);
-				SLL_LOG("Writing compiled program to file '%s'...",bf);
+				buffer[k]='c';
+				sll_audit(SLL_CHAR("sll.cli.save.compiled"),SLL_CHAR("S"),buffer);
+				SLL_LOG("Writing compiled program to file '%s'...",buffer);
 				sll_file_t of;
-				SLL_CRITICAL_ERROR(sll_file_open(bf,SLL_FILE_FLAG_WRITE,&of));
+				SLL_CRITICAL_ERROR(sll_file_open(buffer,SLL_FILE_FLAG_WRITE,&of));
 				sll_write_compiled_node(&compilation_data,&of);
 				SLL_LOG("File written successfully.");
 				sll_file_close(&of);
@@ -936,32 +936,32 @@ _read_file_argument:
 		}
 	}
 	if (_cli_flags&SLL_CLI_FLAG_GENERATE_BUNDLE){
-		sll_char_t bf[SLL_API_MAX_FILE_PATH_LENGTH];
+		sll_char_t buffer[SLL_API_MAX_FILE_PATH_LENGTH];
 		if (b_o_fp){
 			sll_string_length_t l=sll_string_length(b_o_fp);
 			if (l>SLL_API_MAX_FILE_PATH_LENGTH-1){
 				l=SLL_API_MAX_FILE_PATH_LENGTH-1;
 			}
-			sll_copy_data(b_o_fp,l,bf);
-			bf[l]=0;
+			sll_copy_data(b_o_fp,l,buffer);
+			buffer[l]=0;
 		}
 		else{
 			sll_string_length_t l=bundle.name.length;
 			if (l>SLL_API_MAX_FILE_PATH_LENGTH-1){
 				l=SLL_API_MAX_FILE_PATH_LENGTH-1;
 			}
-			sll_copy_data(bundle.name.data,l,bf);
-			bf[l]=0;
+			sll_copy_data(bundle.name.data,l,buffer);
+			buffer[l]=0;
 		}
-		if (!bf[0]){
+		if (!buffer[0]){
 			SLL_WARN(SLL_CHAR("No bundle output path supplied"));
 			_cli_had_warning=1;
 			sll_free_bundle(&bundle);
 			goto _cleanup;
 		}
-		SLL_LOG("Writing bundle to '%s'...",bf);
+		SLL_LOG("Writing bundle to '%s'...",buffer);
 		sll_file_t of;
-		sll_file_open(bf,SLL_FILE_FLAG_WRITE,&of);
+		sll_file_open(buffer,SLL_FILE_FLAG_WRITE,&of);
 		sll_write_bundle(&bundle,&of);
 		SLL_LOG("File written successfully.");
 		sll_file_close(&of);

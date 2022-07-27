@@ -203,9 +203,9 @@ __SLL_EXTERNAL void sll_string_format_list(const sll_char_t* format,sll_string_l
 			}
 		}
 		else if (*format=='f'){
-			sll_char_t bf[256];
+			sll_char_t buffer[256];
 			sll_string_t s;
-			sll_string_from_pointer_length(bf,snprintf((char*)bf,256,"%.16lf",sll_var_arg_get_float(va)),&s);
+			sll_string_from_pointer_length(buffer,snprintf((char*)buffer,256,"%.16lf",sll_var_arg_get_float(va)),&s);
 			_format_string(f,w,p,&s,out);
 		}
 		else if (*format=='s'){

@@ -42,15 +42,15 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_length_t sll_platform_get_library_f
 #else
 	struct link_map* map;
 	if (!dlinfo(h,RTLD_DI_LINKMAP,&map)&&map){
-		sll_char_t bf[SLL_API_MAX_FILE_PATH_LENGTH];
-		if (!realpath(map->l_name,(char*)bf)){
+		sll_char_t buffer[SLL_API_MAX_FILE_PATH_LENGTH];
+		if (!realpath(map->l_name,(char*)buffer)){
 			SLL_UNIMPLEMENTED();
 		}
-		sll_string_length_t l=sll_string_length(bf);
+		sll_string_length_t l=sll_string_length(buffer);
 		if (l>=fpl){
 			l=fpl-1;
 		}
-		sll_copy_data(bf,l,fp);
+		sll_copy_data(buffer,l,fp);
 		fp[l]=0;
 		return l;
 	}

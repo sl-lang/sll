@@ -26,11 +26,11 @@ __CLIB_API_CALL sll_error_t clib_api_library_load(const sll_string_t* name,sll_a
 	sll_error_t err;
 	sll_library_handle_t lib=sll_platform_load_library(name->data,&err);
 	if (err==SLL_NO_ERROR){
-		sll_char_t bf[SLL_API_MAX_FILE_PATH_LENGTH];
-		sll_string_length_t len=sll_platform_get_library_file_path(lib,bf,SLL_API_MAX_FILE_PATH_LENGTH,&err);
+		sll_char_t buffer[SLL_API_MAX_FILE_PATH_LENGTH];
+		sll_string_length_t len=sll_platform_get_library_file_path(lib,buffer,SLL_API_MAX_FILE_PATH_LENGTH,&err);
 		if (err==SLL_NO_ERROR){
-			sll_new_object_array(SLL_CHAR("iS"),out,lib,bf,len);
-			sll_audit(SLL_CHAR("clib.library.load"),SLL_CHAR("siS"),name,lib,bf,len);
+			sll_new_object_array(SLL_CHAR("iS"),out,lib,buffer,len);
+			sll_audit(SLL_CHAR("clib.library.load"),SLL_CHAR("siS"),name,lib,buffer,len);
 			return SLL_NO_ERROR;
 		}
 	}

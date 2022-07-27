@@ -64,10 +64,10 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_error_t sll_platform_get_error(void);
  * \name sll_platform_random
  * \group platform
  * \desc Docs!
- * \arg void* bf
+ * \arg void* buffer
  * \arg sll_size_t l
  */
-__SLL_EXTERNAL void sll_platform_random(void* bf,sll_size_t l);
+__SLL_EXTERNAL void sll_platform_random(void* buffer,sll_size_t l);
 
 
 

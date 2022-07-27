@@ -270,11 +270,11 @@ __SLL_EXTERNAL void sll_string_combinations(const sll_string_t* a,const sll_stri
 	sll_array_length_t i=0;
 	for (sll_string_length_t j=0;j<a->length;j++){
 		for (sll_string_length_t k=0;k<b->length;k++){
-			sll_char_t bf[2]={
+			sll_char_t buffer[2]={
 				a->data[j],
 				b->data[k]
 			};
-			out->data[i]=STRING_POINTER_LENGTH_TO_OBJECT(bf,2);
+			out->data[i]=STRING_POINTER_LENGTH_TO_OBJECT(buffer,2);
 			i++;
 		}
 	}
@@ -791,11 +791,11 @@ __SLL_EXTERNAL void sll_string_from_int(sll_integer_t int_,sll_string_t* out){
 		int_=-int_;
 		n=1;
 	}
-	sll_char_t bf[20];
+	sll_char_t buffer[20];
 	sll_string_length_t i=20;
 	do{
 		i--;
-		bf[i]=int_%10;
+		buffer[i]=int_%10;
 		int_/=10;
 	} while (int_);
 	out->length=n+(20-i);
@@ -805,7 +805,7 @@ __SLL_EXTERNAL void sll_string_from_int(sll_integer_t int_,sll_string_t* out){
 		out->data[0]='-';
 	}
 	for (sll_string_length_t j=0;j<20-i;j++){
-		out->data[j+n]=bf[i+j];
+		out->data[j+n]=buffer[i+j];
 	}
 	sll_string_calculate_checksum(out);
 }

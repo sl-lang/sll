@@ -14,16 +14,16 @@
 
 
 static __STATIC_STRING_CODE(_win_executable_fp,{
-	sll_char_t bf[SLL_API_MAX_FILE_PATH_LENGTH];
-	sll_string_from_pointer_length(bf,GetModuleFileNameA(NULL,bf,SLL_API_MAX_FILE_PATH_LENGTH),out);
+	sll_char_t buffer[SLL_API_MAX_FILE_PATH_LENGTH];
+	sll_string_from_pointer_length(buffer,GetModuleFileNameA(NULL,buffer,SLL_API_MAX_FILE_PATH_LENGTH),out);
 });
 static __STATIC_STRING_CODE(_win_library_fp,{
-	sll_char_t bf[SLL_API_MAX_FILE_PATH_LENGTH];
-	sll_string_from_pointer_length(bf,GetModuleFileNameA((HMODULE)_win_dll_handle,bf,SLL_API_MAX_FILE_PATH_LENGTH),out);
+	sll_char_t buffer[SLL_API_MAX_FILE_PATH_LENGTH];
+	sll_string_from_pointer_length(buffer,GetModuleFileNameA((HMODULE)_win_dll_handle,buffer,SLL_API_MAX_FILE_PATH_LENGTH),out);
 });
 static __STATIC_STRING_CODE(_win_temporary_fp,{
-	sll_char_t bf[SLL_API_MAX_FILE_PATH_LENGTH];
-	sll_string_from_pointer_length(bf,GetTempPathA(SLL_API_MAX_FILE_PATH_LENGTH,bf),out);
+	sll_char_t buffer[SLL_API_MAX_FILE_PATH_LENGTH];
+	sll_string_from_pointer_length(buffer,GetTempPathA(SLL_API_MAX_FILE_PATH_LENGTH,buffer),out);
 });
 
 
@@ -34,11 +34,11 @@ __SLL_EXTERNAL const sll_string_t* sll_temporary_file_path=&_win_temporary_fp;
 
 
 
-static sll_error_t _list_dir_files(sll_char_t* bf,sll_string_length_t i,file_list_data_t* o){
+static sll_error_t _list_dir_files(sll_char_t* buffer,sll_string_length_t i,file_list_data_t* o){
 	WIN32_FIND_DATAA dt;
-	bf[i]='*';
-	bf[i+1]=0;
-	HANDLE fh=FindFirstFileA(bf,&dt);
+	buffer[i]='*';
+	buffer[i+1]=0;
+	HANDLE fh=FindFirstFileA(buffer,&dt);
 	if (fh==INVALID_HANDLE_VALUE){
 		return sll_platform_get_error();
 	}
@@ -48,9 +48,9 @@ static sll_error_t _list_dir_files(sll_char_t* bf,sll_string_length_t i,file_lis
 				continue;
 			}
 			sll_string_length_t j=sll_string_length(SLL_CHAR(dt.cFileName));
-			sll_copy_data(dt.cFileName,j,bf+i);
-			bf[i+j]='\\';
-			sll_error_t err=_list_dir_files(bf,i+j+1,o);
+			sll_copy_data(dt.cFileName,j,buffer+i);
+			buffer[i+j]='\\';
+			sll_error_t err=_list_dir_files(buffer,i+j+1,o);
 			if (err!=SLL_NO_ERROR){
 				FindClose(fh);
 				return err;
@@ -62,7 +62,7 @@ static sll_error_t _list_dir_files(sll_char_t* bf,sll_string_length_t i,file_lis
 			o->data=sll_reallocate(o->data,o->length*sizeof(sll_string_t));
 			sll_string_t* s=o->data+o->length-1;
 			sll_string_create(i+j,s);
-			sll_string_insert_pointer_length(bf,i,0,s);
+			sll_string_insert_pointer_length(buffer,i,0,s);
 			sll_string_insert_pointer_length(dt.cFileName,j,i,s);
 		}
 	} while (FindNextFileA(fh,&dt));
@@ -101,17 +101,17 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_length_t sll_platform_get_current_w
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_array_length_t sll_platform_list_directory(const sll_char_t* fp,sll_string_t** o,sll_error_t* err){
 	ERROR_PTR_RESET;
-	char bf[MAX_PATH+1];
+	char buffer[MAX_PATH+1];
 	sll_string_length_t fpl=sll_string_length(fp);
-	sll_copy_data(fp,fpl,bf);
-	if (bf[fpl-1]!='/'&&bf[fpl-1]!='\\'){
-		bf[fpl]='\\';
+	sll_copy_data(fp,fpl,buffer);
+	if (buffer[fpl-1]!='/'&&buffer[fpl-1]!='\\'){
+		buffer[fpl]='\\';
 		fpl++;
 	}
-	bf[fpl]='*';
-	bf[fpl+1]=0;
+	buffer[fpl]='*';
+	buffer[fpl+1]=0;
 	WIN32_FIND_DATAA dt;
-	HANDLE fh=FindFirstFileA(bf,&dt);
+	HANDLE fh=FindFirstFileA(buffer,&dt);
 	if (fh==INVALID_HANDLE_VALUE){
 		ERROR_PTR_SYSTEM;
 		*o=NULL;
@@ -145,18 +145,18 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_array_length_t sll_platform_list_directory
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_array_length_t sll_platform_list_directory_recursive(const sll_char_t* fp,sll_string_t** o,sll_error_t* err){
 	ERROR_PTR_RESET;
-	sll_char_t bf[MAX_PATH+1];
+	sll_char_t buffer[MAX_PATH+1];
 	sll_string_length_t i=sll_string_length(fp);
-	sll_copy_data(fp,i,bf);
-	if (bf[i-1]!='/'&&bf[i-1]!='\\'){
-		bf[i]='\\';
+	sll_copy_data(fp,i,buffer);
+	if (buffer[i-1]!='/'&&buffer[i-1]!='\\'){
+		buffer[i]='\\';
 		i++;
 	}
 	file_list_data_t dt={
 		sll_allocate_stack(1),
 		0
 	};
-	sll_error_t v=_list_dir_files(bf,i,&dt);
+	sll_error_t v=_list_dir_files(buffer,i,&dt);
 	if (v!=SLL_NO_ERROR){
 		*err=v;
 		sll_deallocate(dt.data);

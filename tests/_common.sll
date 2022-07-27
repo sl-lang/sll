@@ -203,9 +203,9 @@
 	(= _test_results <>)
 	(= f (<- file$open "build/test_results.json" "r"))
 	(? (=== f$error_data nil) {
-		(= bf (<- file$read f))
+		(= buffer (<- file$read f))
 		(<- file$close f)
-		(? bf (= _test_results (<- json$parse bf)))
+		(? buffer (= _test_results (<- json$parse buffer)))
 	})
 	(= id (: (<- string$split (: (<- path$split (: sys$ARGV 0)) 1) ".") 0))
 	(= _test_data <

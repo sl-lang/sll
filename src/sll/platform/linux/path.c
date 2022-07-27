@@ -29,23 +29,23 @@
 
 
 static __STATIC_STRING_CODE(_linux_executable_fp,{
-	sll_char_t bf[SLL_API_MAX_FILE_PATH_LENGTH];
+	sll_char_t buffer[SLL_API_MAX_FILE_PATH_LENGTH];
 #ifdef __SLL_BUILD_DARWIN
 	sll_string_length_t l=SLL_API_MAX_FILE_PATH_LENGTH;
-	if (_NSGetExecutablePath((char*)bf,&l)==-1){
+	if (_NSGetExecutablePath((char*)buffer,&l)==-1){
 		SLL_INIT_STRING(out);
 		return;
 	}
 #else
-	ssize_t i=readlink("/proc/self/exe",(char*)bf,SLL_API_MAX_FILE_PATH_LENGTH-1);
+	ssize_t i=readlink("/proc/self/exe",(char*)buffer,SLL_API_MAX_FILE_PATH_LENGTH-1);
 	if (i==-1){
 		SLL_INIT_STRING(out);
 		return;
 	}
-	*(bf+i)=0;
+	*(buffer+i)=0;
 #endif
 	sll_char_t abs_bf[SLL_API_MAX_FILE_PATH_LENGTH];
-	sll_string_from_pointer_length(abs_bf,sll_platform_absolute_path(bf,abs_bf,SLL_API_MAX_FILE_PATH_LENGTH),out);
+	sll_string_from_pointer_length(abs_bf,sll_platform_absolute_path(buffer,abs_bf,SLL_API_MAX_FILE_PATH_LENGTH),out);
 });
 static __STATIC_STRING_CODE(_linux_library_fp,{
 	Dl_info dt;
@@ -53,8 +53,8 @@ static __STATIC_STRING_CODE(_linux_library_fp,{
 		SLL_INIT_STRING(out);
 		return;
 	}
-	sll_char_t bf[SLL_API_MAX_FILE_PATH_LENGTH];
-	sll_string_from_pointer_length(bf,sll_platform_absolute_path((const sll_char_t*)(dt.dli_fname),bf,SLL_API_MAX_FILE_PATH_LENGTH),out);
+	sll_char_t buffer[SLL_API_MAX_FILE_PATH_LENGTH];
+	sll_string_from_pointer_length(buffer,sll_platform_absolute_path((const sll_char_t*)(dt.dli_fname),buffer,SLL_API_MAX_FILE_PATH_LENGTH),out);
 });
 static __STATIC_STRING_CODE(_linux_temporary_fp,{
 	sll_string_t k;
@@ -74,9 +74,9 @@ __SLL_EXTERNAL const sll_string_t* sll_temporary_file_path=&_linux_temporary_fp;
 
 
 
-static sll_error_t _list_dir_files(sll_char_t* bf,sll_string_length_t i,file_list_data_t* o){
-	bf[i]=0;
-	DIR* d=opendir((char*)bf);
+static sll_error_t _list_dir_files(sll_char_t* buffer,sll_string_length_t i,file_list_data_t* o){
+	buffer[i]=0;
+	DIR* d=opendir((char*)buffer);
 	if (!d){
 		return sll_platform_get_error();
 	}
@@ -88,7 +88,7 @@ static sll_error_t _list_dir_files(sll_char_t* bf,sll_string_length_t i,file_lis
 			o->data=sll_reallocate(o->data,o->length*sizeof(sll_string_t));
 			sll_string_t* s=o->data+o->length-1;
 			sll_string_create(i+j,s);
-			sll_string_insert_pointer_length(bf,i,0,s);
+			sll_string_insert_pointer_length(buffer,i,0,s);
 			sll_string_insert_pointer_length(SLL_CHAR(dt->d_name),j,i,s);
 		}
 		else if (dt->d_type==DT_DIR){
@@ -96,9 +96,9 @@ static sll_error_t _list_dir_files(sll_char_t* bf,sll_string_length_t i,file_lis
 				continue;
 			}
 			sll_string_length_t j=sll_string_length(SLL_CHAR(dt->d_name));
-			sll_copy_data(dt->d_name,j,bf+i);
-			bf[i+j]='/';
-			sll_error_t err=_list_dir_files(bf,i+j+1,o);
+			sll_copy_data(dt->d_name,j,buffer+i);
+			buffer[i+j]='/';
+			sll_error_t err=_list_dir_files(buffer,i+j+1,o);
 			if (err!=SLL_NO_ERROR){
 				closedir(d);
 				return err;
@@ -118,15 +118,15 @@ __SLL_EXTERNAL sll_string_length_t sll_platform_absolute_path(const sll_char_t* 
 		}
 		return sll_string_length(o);
 	}
-	sll_char_t bf[PATH_MAX];
-	if (!realpath((const char*)lnk,(char*)bf)){
+	sll_char_t buffer[PATH_MAX];
+	if (!realpath((const char*)lnk,(char*)buffer)){
 		return 0;
 	}
-	sll_string_length_t l=sll_string_length(bf)+1;
+	sll_string_length_t l=sll_string_length(buffer)+1;
 	if (l>ol){
 		l=ol;
 	}
-	sll_copy_data(bf,l,o);
+	sll_copy_data(buffer,l,o);
 	return l;
 }
 
@@ -190,18 +190,18 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_array_length_t sll_platform_list_directory
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_array_length_t sll_platform_list_directory_recursive(const sll_char_t* fp,sll_string_t** o,sll_error_t* err){
 	ERROR_PTR_RESET;
-	sll_char_t bf[PATH_MAX+1];
+	sll_char_t buffer[PATH_MAX+1];
 	sll_string_length_t l=sll_string_length(fp);
-	sll_copy_data(fp,l,bf);
-	if (bf[l-1]!='/'&&bf[l-1]!='\\'){
-		bf[l]='/';
+	sll_copy_data(fp,l,buffer);
+	if (buffer[l-1]!='/'&&buffer[l-1]!='\\'){
+		buffer[l]='/';
 		l++;
 	}
 	file_list_data_t dt={
 		sll_allocate_stack(1),
 		0
 	};
-	sll_error_t v=_list_dir_files(bf,l,&dt);
+	sll_error_t v=_list_dir_files(buffer,l,&dt);
 	if (v!=SLL_NO_ERROR){
 		*err=v;
 		sll_deallocate(dt.data);

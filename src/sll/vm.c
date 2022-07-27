@@ -1242,25 +1242,25 @@ _load_new_thread:;
 						_io_dispatcher_queue(f,l);
 						goto _load_new_thread;
 					}
-					sll_string_t bf;
+					sll_string_t buffer;
 					sll_error_t err;
 					if (!sz){
-						err=sll_file_read_all(f,&bf);
+						err=sll_file_read_all(f,&buffer);
 					}
 					else{
-						sll_string_create(l,&bf);
-						sll_size_t r_sz=sll_file_read(f,bf.data,l,&err);
+						sll_string_create(l,&buffer);
+						sll_size_t r_sz=sll_file_read(f,buffer.data,l,&err);
 						if (err==SLL_NO_ERROR){
-							sll_string_decrease(&bf,(sll_string_length_t)r_sz);
-							sll_string_calculate_checksum(&bf);
+							sll_string_decrease(&buffer,(sll_string_length_t)r_sz);
+							sll_string_calculate_checksum(&buffer);
 						}
 					}
 					if (err!=SLL_NO_ERROR){
-						sll_free_string(&bf);
+						sll_free_string(&buffer);
 						*(thr->stack+thr->stack_index)=sll_int_to_object(err);
 					}
 					else{
-						*(thr->stack+thr->stack_index)=STRING_TO_OBJECT_NOCOPY(&bf);
+						*(thr->stack+thr->stack_index)=STRING_TO_OBJECT_NOCOPY(&buffer);
 					}
 					thr->stack_index++;
 					break;
