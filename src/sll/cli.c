@@ -292,23 +292,23 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_code_t sll_cli_main(sll_array_lengt
 		SLL_COPY_STRING_NULL(SLL_CHAR("lib_debug/"),_cli_lib_path+_cli_lib_path_len);
 		_cli_lib_path_len+=10;
 	}
-	sll_string_t* b_fl=NULL;
-	sll_array_length_t b_fll=sll_platform_list_directory(_cli_lib_path,&b_fl,NULL);
-	while (b_fll){
-		b_fll--;
-		sll_string_t* str=b_fl+b_fll;
+	sll_string_t* bundle_file_list=NULL;
+	sll_array_length_t bundle_file_list_length=sll_platform_list_directory(_cli_lib_path,&bundle_file_list,NULL);
+	while (bundle_file_list_length){
+		bundle_file_list_length--;
+		sll_string_t* str=bundle_file_list+bundle_file_list_length;
 		sll_copy_data(str->data,str->length+1,_cli_lib_path+_cli_lib_path_len);
 		sll_free_string(str);
 		if (!sll_platform_path_is_directory(_cli_lib_path)){
-			sll_file_t bundle_fh;
-			if (sll_file_open(_cli_lib_path,SLL_FILE_FLAG_READ,&bundle_fh)==SLL_NO_ERROR){
-				_load_bundle(_cli_lib_path,&bundle_fh);
-				sll_file_close(&bundle_fh);
+			sll_file_t bundle_file;
+			if (sll_file_open(_cli_lib_path,SLL_FILE_FLAG_READ,&bundle_file)==SLL_NO_ERROR){
+				_load_bundle(_cli_lib_path,&bundle_file);
+				sll_file_close(&bundle_file);
 			}
 		}
 	}
 	_cli_lib_path[_cli_lib_path_len]=0;
-	sll_deallocate(b_fl);
+	sll_deallocate(bundle_file_list);
 	sll_array_length_t* fp=NULL;
 	sll_string_length_t fpl=0;
 	sll_array_length_t* sl=NULL;
