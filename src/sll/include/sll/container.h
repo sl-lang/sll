@@ -31,11 +31,11 @@
  * \name SLL_CONTAINER_CLEAR
  * \group container
  * \desc Docs!
- * \arg sll_container_t* c
+ * \arg sll_container_t* container
  */
-#define SLL_CONTAINER_CLEAR(c) \
+#define SLL_CONTAINER_CLEAR(container) \
 	do{ \
-		sll_container_t* __c=(c); \
+		sll_container_t* __c=(container); \
 		sll_allocator_release(__c->data); \
 		__c->data=NULL; \
 		__c->size=0; \
@@ -48,15 +48,15 @@
  * \name SLL_CONTAINER_FILTER
  * \group container
  * \desc Docs!
- * \arg sll_container_t* c
+ * \arg sll_container_t* container
  * \arg __type__ type
  * \arg __identifier__ var
  * \arg __code__ check
  * \arg __code__ delete
  */
-#define SLL_CONTAINER_FILTER(c,type,var,check,delete) \
+#define SLL_CONTAINER_FILTER(container,type,var,check,delete) \
 	do{ \
-		sll_container_t* __c=(c); \
+		sll_container_t* __c=(container); \
 		sll_size_t __i=0; \
 		type* __ptr=(type*)(__c->data); \
 		for (sll_size_t __j=0;__j<__c->size;__j++){ \
@@ -82,11 +82,11 @@
  * \name SLL_CONTAINER_INIT
  * \group container
  * \desc Docs!
- * \arg sll_container_t* c
+ * \arg sll_container_t* container
  */
-#define SLL_CONTAINER_INIT(c) \
+#define SLL_CONTAINER_INIT(container) \
 	do{ \
-		sll_container_t* __c=(c); \
+		sll_container_t* __c=(container); \
 		__c->data=NULL; \
 		__c->size=0; \
 	} while (0)
@@ -109,14 +109,14 @@
  * \name SLL_CONTAINER_ITER
  * \group container
  * \desc Docs!
- * \arg sll_container_t* c
+ * \arg sll_container_t* container
  * \arg __type__ type
  * \arg __identifier__ var
  * \arg __code__ code
  */
-#define SLL_CONTAINER_ITER(c,type,var,code) \
+#define SLL_CONTAINER_ITER(container,type,var,code) \
 	do{ \
-		sll_container_t* __c=(c); \
+		sll_container_t* __c=(container); \
 		type* __ptr=(type*)(__c->data); \
 		for (sll_size_t __i=0;__i<__c->size;__i++){ \
 			type var=*(__ptr+__i); \
@@ -131,14 +131,14 @@
  * \name SLL_CONTAINER_ITER_CLEAR
  * \group container
  * \desc Docs!
- * \arg sll_container_t* c
+ * \arg sll_container_t* container
  * \arg __type__ type
  * \arg __identifier__ var
  * \arg __code__ code
  */
-#define SLL_CONTAINER_ITER_CLEAR(c,type,var,code) \
+#define SLL_CONTAINER_ITER_CLEAR(container,type,var,code) \
 	do{ \
-		sll_container_t* __c_tmp=(c); \
+		sll_container_t* __c_tmp=(container); \
 		SLL_CONTAINER_ITER(__c_tmp,type,var,code); \
 		SLL_CONTAINER_CLEAR(__c_tmp); \
 	} while (0)
@@ -150,13 +150,13 @@
  * \name SLL_CONTAINER_PUSH
  * \group container
  * \desc Docs!
- * \arg sll_container_t* c
+ * \arg sll_container_t* container
  * \arg __type__ type
  * \arg __any__ elem
  */
-#define SLL_CONTAINER_PUSH(c,type,elem) \
+#define SLL_CONTAINER_PUSH(container,type,elem) \
 	do{ \
-		sll_container_t* __c=(c); \
+		sll_container_t* __c=(container); \
 		__c->size++; \
 		sll_allocator_resize(&(__c->data),__c->size*sizeof(type)); \
 		*(((type*)(__c->data))+__c->size-1)=(elem); \
@@ -170,12 +170,12 @@
  * \group container
  * \subgroup container-handle
  * \desc Docs!
- * \arg sll_handle_container_t* c
+ * \arg sll_handle_container_t* container
  * \arg sll_size_t* idx
  */
-#define SLL_HANDLE_CONTAINER_ALLOC(c,idx) \
+#define SLL_HANDLE_CONTAINER_ALLOC(container,idx) \
 	do{ \
-		sll_handle_container_t* __c=(c); \
+		sll_handle_container_t* __c=(container); \
 		sll_size_t* __idx=(idx); \
 		if (__c->index!=0xffffffffffffffffull){ \
 			sll_size_t __i=__c->index&0x7fffffffffffffffull; \
@@ -197,10 +197,10 @@
  * \group container
  * \subgroup container-handle
  * \desc Docs!
- * \arg sll_handle_container_t* c
+ * \arg sll_handle_container_t* container
  * \arg sll_size_t index
  */
-#define SLL_HANDLE_CONTAINER_CHECK(c,index) ((index)<(c)->size&&!(((sll_size_t)(*((c)->data+(index))))>>63))
+#define SLL_HANDLE_CONTAINER_CHECK(container,index) ((index)<(container)->size&&!(((sll_size_t)(*((container)->data+(index))))>>63))
 
 
 
@@ -210,11 +210,11 @@
  * \group container
  * \subgroup container-handle
  * \desc Docs!
- * \arg sll_handle_container_t* c
+ * \arg sll_handle_container_t* container
  */
-#define SLL_HANDLE_CONTAINER_CLEAR(c) \
+#define SLL_HANDLE_CONTAINER_CLEAR(container) \
 	do{ \
-		sll_handle_container_t* __c=(c); \
+		sll_handle_container_t* __c=(container); \
 		sll_allocator_release(__c->data); \
 		__c->data=NULL; \
 		__c->size=0; \
@@ -229,12 +229,12 @@
  * \group container
  * \subgroup container-handle
  * \desc Docs!
- * \arg sll_handle_container_t* c
+ * \arg sll_handle_container_t* container
  * \arg sll_size_t idx
  */
-#define SLL_HANDLE_CONTAINER_DEALLOC(c,idx) \
+#define SLL_HANDLE_CONTAINER_DEALLOC(container,idx) \
 	do{ \
-		sll_handle_container_t* __c=(c); \
+		sll_handle_container_t* __c=(container); \
 		sll_size_t __i=(idx); \
 		*(__c->data+__i)=(void*)(__c->index|0x8000000000000000ull); \
 		__c->index=__i; \
@@ -248,11 +248,11 @@
  * \group container
  * \subgroup container-handle
  * \desc Docs!
- * \arg sll_handle_container_t* c
+ * \arg sll_handle_container_t* container
  * \arg sll_size_t index
  * \ret void*
  */
-#define SLL_HANDLE_CONTAINER_GET(c,index) ((index)<(c)->size&&!(((sll_size_t)(*((c)->data+(index))))>>63)?*((c)->data+(index)):NULL)
+#define SLL_HANDLE_CONTAINER_GET(container,index) ((index)<(container)->size&&!(((sll_size_t)(*((container)->data+(index))))>>63)?*((container)->data+(index)):NULL)
 
 
 
@@ -262,11 +262,11 @@
  * \group container
  * \subgroup container-handle
  * \desc Docs!
- * \arg sll_handle_container_t* c
+ * \arg sll_handle_container_t* container
  */
-#define SLL_HANDLE_CONTAINER_INIT(c) \
+#define SLL_HANDLE_CONTAINER_INIT(container) \
 	do{ \
-		sll_handle_container_t* __c=(c); \
+		sll_handle_container_t* __c=(container); \
 		__c->data=NULL; \
 		__c->size=0; \
 		__c->index=0xffffffffffffffffull; \
@@ -292,14 +292,14 @@
  * \group container
  * \subgroup container-handle
  * \desc Docs!
- * \arg sll_handle_container_t* c
+ * \arg sll_handle_container_t* container
  * \arg __type__ type
  * \arg __identifier__ var
  * \arg __code__ code
  */
-#define SLL_HANDLE_CONTAINER_ITER(c,type,var,code) \
+#define SLL_HANDLE_CONTAINER_ITER(container,type,var,code) \
 	do{ \
-		sll_handle_container_t* __c=(c); \
+		sll_handle_container_t* __c=(container); \
 		for (sll_size_t __i=0;__i<__c->size;__i++){ \
 			type* var=(type*)(*(__c->data+__i)); \
 			if (((sll_size_t)var)>>63){ \
@@ -317,14 +317,14 @@
  * \group container
  * \subgroup container-handle
  * \desc Docs!
- * \arg sll_handle_container_t* c
+ * \arg sll_handle_container_t* container
  * \arg __type__ type
  * \arg __identifier__ var
  * \arg __code__ code
  */
-#define SLL_HANDLE_CONTAINER_ITER_CLEAR(c,type,var,code) \
+#define SLL_HANDLE_CONTAINER_ITER_CLEAR(container,type,var,code) \
 	do{ \
-		sll_handle_container_t* __c_tmp=(c); \
+		sll_handle_container_t* __c_tmp=(container); \
 		SLL_HANDLE_CONTAINER_ITER(__c_tmp,type,var,code); \
 		SLL_HANDLE_CONTAINER_CLEAR(__c_tmp); \
 	} while (0)
@@ -537,9 +537,9 @@ typedef struct _SLL_MAP_CONTAINER{
  * \name sll_container_clear
  * \group container
  * \desc Docs!
- * \arg sll_container_t* c
+ * \arg sll_container_t* container
  */
-__SLL_EXTERNAL void sll_container_clear(sll_container_t* c);
+__SLL_EXTERNAL void sll_container_clear(sll_container_t* container);
 
 
 
@@ -548,12 +548,12 @@ __SLL_EXTERNAL void sll_container_clear(sll_container_t* c);
  * \name sll_container_filter
  * \group container
  * \desc Docs!
- * \arg sll_container_t* c
+ * \arg sll_container_t* container
  * \arg sll_size_t elem_size
  * \arg sll_container_check_callback_t check
  * \arg sll_container_callback_t delete
  */
-__SLL_EXTERNAL void sll_container_filter(sll_container_t* c,sll_size_t elem_size,sll_container_check_callback_t check,sll_container_callback_t delete);
+__SLL_EXTERNAL void sll_container_filter(sll_container_t* container,sll_size_t elem_size,sll_container_check_callback_t check,sll_container_callback_t delete);
 
 
 
@@ -562,9 +562,9 @@ __SLL_EXTERNAL void sll_container_filter(sll_container_t* c,sll_size_t elem_size
  * \name sll_container_init
  * \group container
  * \desc Docs!
- * \arg sll_container_t* c
+ * \arg sll_container_t* container
  */
-__SLL_EXTERNAL void sll_container_init(sll_container_t* c);
+__SLL_EXTERNAL void sll_container_init(sll_container_t* container);
 
 
 
@@ -573,11 +573,11 @@ __SLL_EXTERNAL void sll_container_init(sll_container_t* c);
  * \name sll_container_iter
  * \group container
  * \desc Docs!
- * \arg sll_container_t* c
+ * \arg sll_container_t* container
  * \arg sll_size_t elem_size
  * \arg sll_container_callback_t callback
  */
-__SLL_EXTERNAL void sll_container_iter(sll_container_t* c,sll_size_t elem_size,sll_container_callback_t callback);
+__SLL_EXTERNAL void sll_container_iter(sll_container_t* container,sll_size_t elem_size,sll_container_callback_t callback);
 
 
 
@@ -586,11 +586,11 @@ __SLL_EXTERNAL void sll_container_iter(sll_container_t* c,sll_size_t elem_size,s
  * \name sll_container_iter_clear
  * \group container
  * \desc Docs!
- * \arg sll_container_t* c
+ * \arg sll_container_t* container
  * \arg sll_size_t elem_size
  * \arg sll_container_callback_t callback
  */
-__SLL_EXTERNAL void sll_container_iter_clear(sll_container_t* c,sll_size_t elem_size,sll_container_callback_t callback);
+__SLL_EXTERNAL void sll_container_iter_clear(sll_container_t* container,sll_size_t elem_size,sll_container_callback_t callback);
 
 
 
@@ -599,11 +599,11 @@ __SLL_EXTERNAL void sll_container_iter_clear(sll_container_t* c,sll_size_t elem_
  * \name sll_container_push
  * \group container
  * \desc Docs!
- * \arg sll_container_t* c
+ * \arg sll_container_t* container
  * \arg const void* elem
  * \arg sll_size_t elem_size
  */
-__SLL_EXTERNAL void sll_container_push(sll_container_t* c,const void* elem,sll_size_t elem_size);
+__SLL_EXTERNAL void sll_container_push(sll_container_t* container,const void* elem,sll_size_t elem_size);
 
 
 
@@ -613,10 +613,10 @@ __SLL_EXTERNAL void sll_container_push(sll_container_t* c,const void* elem,sll_s
  * \group container
  * \subgroup container-handle
  * \desc Docs!
- * \arg sll_handle_container_t* c
+ * \arg sll_handle_container_t* container
  * \ret sll_size_t
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_size_t sll_handle_container_alloc(sll_handle_container_t* c);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_size_t sll_handle_container_alloc(sll_handle_container_t* container);
 
 
 
@@ -626,9 +626,9 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_size_t sll_handle_container_alloc(sll_hand
  * \group container
  * \subgroup container-handle
  * \desc Docs!
- * \arg sll_handle_container_t* c
+ * \arg sll_handle_container_t* container
  */
-__SLL_EXTERNAL void sll_handle_container_clear(sll_handle_container_t* c);
+__SLL_EXTERNAL void sll_handle_container_clear(sll_handle_container_t* container);
 
 
 
@@ -638,11 +638,11 @@ __SLL_EXTERNAL void sll_handle_container_clear(sll_handle_container_t* c);
  * \group container
  * \subgroup container-handle
  * \desc Docs!
- * \arg sll_handle_container_t* c
+ * \arg sll_handle_container_t* container
  * \arg sll_size_t index
  * \ret sll_bool_t
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_handle_container_check(sll_handle_container_t* c,sll_size_t index);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_handle_container_check(sll_handle_container_t* container,sll_size_t index);
 
 
 
@@ -652,10 +652,10 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_handle_container_check(sll_hand
  * \group container
  * \subgroup container-handle
  * \desc Docs!
- * \arg sll_handle_container_t* c
+ * \arg sll_handle_container_t* container
  * \arg sll_size_t index
  */
-__SLL_EXTERNAL void sll_handle_container_dealloc(sll_handle_container_t* c,sll_size_t index);
+__SLL_EXTERNAL void sll_handle_container_dealloc(sll_handle_container_t* container,sll_size_t index);
 
 
 
@@ -665,11 +665,11 @@ __SLL_EXTERNAL void sll_handle_container_dealloc(sll_handle_container_t* c,sll_s
  * \group container
  * \subgroup container-handle
  * \desc Docs!
- * \arg sll_handle_container_t* c
+ * \arg sll_handle_container_t* container
  * \arg sll_size_t index
  * \ret void*
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT void* sll_handle_container_get(sll_handle_container_t* c,sll_size_t index);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT void* sll_handle_container_get(sll_handle_container_t* container,sll_size_t index);
 
 
 
@@ -679,9 +679,9 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT void* sll_handle_container_get(sll_handle_cont
  * \group container
  * \subgroup container-handle
  * \desc Docs!
- * \arg sll_handle_container_t* c
+ * \arg sll_handle_container_t* container
  */
-__SLL_EXTERNAL void sll_handle_container_init(sll_handle_container_t* c);
+__SLL_EXTERNAL void sll_handle_container_init(sll_handle_container_t* container);
 
 
 
@@ -691,10 +691,10 @@ __SLL_EXTERNAL void sll_handle_container_init(sll_handle_container_t* c);
  * \group container
  * \subgroup container-handle
  * \desc Docs!
- * \arg sll_handle_container_t* c
+ * \arg sll_handle_container_t* container
  * \arg sll_container_callback_t callback
  */
-__SLL_EXTERNAL void sll_handle_container_iter(sll_handle_container_t* c,sll_container_callback_t callback);
+__SLL_EXTERNAL void sll_handle_container_iter(sll_handle_container_t* container,sll_container_callback_t callback);
 
 
 
@@ -704,10 +704,10 @@ __SLL_EXTERNAL void sll_handle_container_iter(sll_handle_container_t* c,sll_cont
  * \group container
  * \subgroup container-handle
  * \desc Docs!
- * \arg sll_handle_container_t* c
+ * \arg sll_handle_container_t* container
  * \arg sll_container_callback_t callback
  */
-__SLL_EXTERNAL void sll_handle_container_iter_clear(sll_handle_container_t* c,sll_container_callback_t callback);
+__SLL_EXTERNAL void sll_handle_container_iter_clear(sll_handle_container_t* container,sll_container_callback_t callback);
 
 
 
@@ -717,9 +717,9 @@ __SLL_EXTERNAL void sll_handle_container_iter_clear(sll_handle_container_t* c,sl
  * \group container
  * \subgroup container-map
  * \desc Docs!
- * \arg sll_map_container_t* c
+ * \arg sll_map_container_t* container
  */
-__SLL_EXTERNAL void sll_map_container_clear(sll_map_container_t* c);
+__SLL_EXTERNAL void sll_map_container_clear(sll_map_container_t* container);
 
 
 
@@ -729,11 +729,11 @@ __SLL_EXTERNAL void sll_map_container_clear(sll_map_container_t* c);
  * \group container
  * \subgroup container-map
  * \desc Docs!
- * \arg sll_map_container_t* c
+ * \arg sll_map_container_t* container
  * \arg const void* key
  * \ret sll_bool_t
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_map_container_contains(sll_map_container_t* c,const void* key);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_map_container_contains(sll_map_container_t* container,const void* key);
 
 
 
@@ -743,9 +743,9 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_map_container_contains(sll_map_
  * \group container
  * \subgroup container-map
  * \desc Docs!
- * \arg sll_map_container_t* c
+ * \arg sll_map_container_t* container
  */
-__SLL_EXTERNAL void sll_map_container_deinit(sll_map_container_t* c);
+__SLL_EXTERNAL void sll_map_container_deinit(sll_map_container_t* container);
 
 
 
@@ -755,12 +755,12 @@ __SLL_EXTERNAL void sll_map_container_deinit(sll_map_container_t* c);
  * \group container
  * \subgroup container-map
  * \desc Docs!
- * \arg sll_map_container_t* c
+ * \arg sll_map_container_t* container
  * \arg const void* key
  * \arg void* default_
  * \ret void*
  */
-__SLL_EXTERNAL void* sll_map_container_delete(sll_map_container_t* c,const void* key,void* default_);
+__SLL_EXTERNAL void* sll_map_container_delete(sll_map_container_t* container,const void* key,void* default_);
 
 
 
@@ -770,12 +770,12 @@ __SLL_EXTERNAL void* sll_map_container_delete(sll_map_container_t* c,const void*
  * \group container
  * \subgroup container-map
  * \desc Docs!
- * \arg sll_map_container_t* c
+ * \arg sll_map_container_t* container
  * \arg sll_map_container_filter_callback_t callback
  * \arg void* ctx
  * \ret sll_bool_t
  */
-__SLL_EXTERNAL sll_bool_t sll_map_container_filter(sll_map_container_t* c,sll_map_container_filter_callback_t callback,void* ctx);
+__SLL_EXTERNAL sll_bool_t sll_map_container_filter(sll_map_container_t* container,sll_map_container_filter_callback_t callback,void* ctx);
 
 
 
@@ -785,12 +785,12 @@ __SLL_EXTERNAL sll_bool_t sll_map_container_filter(sll_map_container_t* c,sll_ma
  * \group container
  * \subgroup container-map
  * \desc Docs!
- * \arg sll_map_container_t* c
+ * \arg sll_map_container_t* container
  * \arg const void* key
  * \arg void* default_
  * \ret void*
  */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT void* sll_map_container_get(sll_map_container_t* c,const void* key,void* default_);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT void* sll_map_container_get(sll_map_container_t* container,const void* key,void* default_);
 
 
 
@@ -814,10 +814,10 @@ __SLL_EXTERNAL void sll_map_container_init(sll_map_container_hash_callback_t has
  * \group container
  * \subgroup container-map
  * \desc Docs!
- * \arg sll_map_container_t* c
+ * \arg sll_map_container_t* container
  * \arg sll_container_callback_t callback
  */
-__SLL_EXTERNAL void sll_map_container_iter(sll_map_container_t* c,sll_container_callback_t callback);
+__SLL_EXTERNAL void sll_map_container_iter(sll_map_container_t* container,sll_container_callback_t callback);
 
 
 
@@ -827,10 +827,10 @@ __SLL_EXTERNAL void sll_map_container_iter(sll_map_container_t* c,sll_container_
  * \group container
  * \subgroup container-map
  * \desc Docs!
- * \arg sll_map_container_t* c
+ * \arg sll_map_container_t* container
  * \arg sll_container_callback_t callback
  */
-__SLL_EXTERNAL void sll_map_container_iter_clear(sll_map_container_t* c,sll_container_callback_t callback);
+__SLL_EXTERNAL void sll_map_container_iter_clear(sll_map_container_t* container,sll_container_callback_t callback);
 
 
 
@@ -840,11 +840,11 @@ __SLL_EXTERNAL void sll_map_container_iter_clear(sll_map_container_t* c,sll_cont
  * \group container
  * \subgroup container-map
  * \desc Docs!
- * \arg sll_map_container_t* c
+ * \arg sll_map_container_t* container
  * \arg const void* key
  * \arg void* value
  */
-__SLL_EXTERNAL void sll_map_container_set(sll_map_container_t* c,const void* key,void* value);
+__SLL_EXTERNAL void sll_map_container_set(sll_map_container_t* container,const void* key,void* value);
 
 
 
