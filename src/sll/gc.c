@@ -69,12 +69,12 @@ static void _mark_objects(sll_object_t object){
 	}
 	else if (object->type>SLL_MAX_OBJECT_TYPE&&object->type<SLL_OBJECT_TYPE_SELF&&sll_current_runtime_data&&object->type<=sll_current_runtime_data->type_table->length+SLL_MAX_OBJECT_TYPE){
 		const sll_object_type_data_t* dt=*(sll_current_runtime_data->type_table->data+object->type-SLL_MAX_OBJECT_TYPE-1);
-		sll_object_field_t* p=object->data.fields;
+		sll_object_field_t* pointer=object->data.fields;
 		for (sll_arg_count_t i=0;i<dt->field_count;i++){
 			if (dt->fields[i].type>SLL_OBJECT_TYPE_CHAR){
-				_mark_objects(p->any);
+				_mark_objects(pointer->any);
 			}
-			p++;
+			pointer++;
 		}
 	}
 }
