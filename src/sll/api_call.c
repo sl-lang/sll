@@ -100,25 +100,25 @@ sll_object_t _call_api_func(sll_function_index_t function,const sll_object_t* ar
 
 
 
-void _parse_api_call_format(const sll_char_t* fmt,sll_internal_function_t* out){
+void _parse_api_call_format(const sll_char_t* format,sll_internal_function_t* out){
 	sll_string_length_t off=0;
-	while (*(fmt+off)&&*(fmt+off)!='|'){
+	while (*(format+off)&&*(format+off)!='|'){
 		off++;
 	}
 	out->format=sll_allocate(off+1);
-	sll_copy_data(fmt,off,out->format);
+	sll_copy_data(format,off,out->format);
 	out->format[off]=0;
 	out->_return_value='v';
 	__SLL_U16 flags=0;
-	fmt+=off;
-	while (*fmt){
-		if (*fmt=='b'||*fmt=='B'||*fmt=='W'||*fmt=='D'||*fmt=='Q'||*fmt=='i'||*fmt=='f'||*fmt=='c'||*fmt=='d'||*fmt=='x'||*fmt=='s'||*fmt=='a'||*fmt=='m'||*fmt=='o'||*fmt=='v'){
-			out->_return_value=*fmt;
+	format+=off;
+	while (*format){
+		if (*format=='b'||*format=='B'||*format=='W'||*format=='D'||*format=='Q'||*format=='i'||*format=='f'||*format=='c'||*format=='d'||*format=='x'||*format=='s'||*format=='a'||*format=='m'||*format=='o'||*format=='v'){
+			out->_return_value=*format;
 		}
-		else if (*fmt=='~'){
+		else if (*format=='~'){
 			flags|=RETURN_VALUE_FLAG_ERROR;
 		}
-		fmt++;
+		format++;
 	}
 	if (out->_return_value=='x'&&(flags&RETURN_VALUE_FLAG_ERROR)){
 		SLL_UNIMPLEMENTED();

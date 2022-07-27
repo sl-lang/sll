@@ -38,7 +38,7 @@ __SLL_API_CALL sll_integer_t _call_api_func_assembly(api_return_value_t* return_
 
 
 
-void _parse_api_call_format(const sll_char_t* fmt,sll_internal_function_t* out);
+void _parse_api_call_format(const sll_char_t* format,sll_internal_function_t* out);
 
 
 
