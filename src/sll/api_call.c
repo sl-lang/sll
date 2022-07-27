@@ -16,8 +16,8 @@
 
 
 
-sll_object_t _call_api_func(sll_function_index_t fn,const sll_object_t* al,sll_arg_count_t all){
-	const sll_internal_function_t* dt=sll_current_runtime_data->internal_function_table->data+fn;
+sll_object_t _call_api_func(sll_function_index_t function,const sll_object_t* args,sll_arg_count_t arg_count){
+	const sll_internal_function_t* dt=sll_current_runtime_data->internal_function_table->data+function;
 	void* buffer=sll_allocate_stack(dt->_arg_size);
 	arg_output_t arg_output={
 		ARG_OUTPUT_TYPE_ARRAY,
@@ -28,7 +28,7 @@ sll_object_t _call_api_func(sll_function_index_t fn,const sll_object_t* al,sll_a
 			}
 		}
 	};
-	sll_arg_state_t arg_state=_parse_args_raw(dt->format,al,all,&arg_output);
+	sll_arg_state_t arg_state=_parse_args_raw(dt->format,args,arg_count,&arg_output);
 	api_return_value_t ret_any;
 	sll_integer_t ret=_call_api_func_assembly(&ret_any,dt->_registers,buffer,dt->_arg_count,dt->function);
 	sll_object_t out;

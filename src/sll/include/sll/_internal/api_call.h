@@ -30,7 +30,7 @@ typedef union _API_RETURN_VALUE{
 
 
 
-sll_object_t _call_api_func(sll_function_index_t fn,const sll_object_t* al,sll_arg_count_t all);
+sll_object_t _call_api_func(sll_function_index_t function,const sll_object_t* args,sll_arg_count_t arg_count);
 
 
 
