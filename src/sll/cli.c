@@ -942,6 +942,7 @@ _read_file_argument:
 			length=SLL_API_MAX_FILE_PATH_LENGTH-1;
 		}
 		sll_copy_data((bundle_output_file_path?bundle_output_file_path:bundle.name.data),length,buffer);
+		buffer[length]=0;
 		if (!(*buffer)){
 			SLL_WARN("No bundle output path supplied");
 			_cli_had_warning=1;
@@ -950,7 +951,7 @@ _read_file_argument:
 		}
 		SLL_LOG("Writing bundle to '%s'...",buffer);
 		sll_file_t out_file;
-		sll_file_open(buffer,SLL_FILE_FLAG_WRITE,&out_file);
+		SLL_CRITICAL_ERROR(sll_file_open(buffer,SLL_FILE_FLAG_WRITE,&out_file));
 		sll_write_bundle(&bundle,&out_file);
 		SLL_LOG("File written successfully.");
 		sll_file_close(&out_file);
