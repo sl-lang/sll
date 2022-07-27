@@ -849,59 +849,59 @@ _read_file_argument:
 		}
 		if (j<file_list_length&&(_cli_flags&(SLL_CLI_FLAG_GENERATE_ASSEMBLY|SLL_CLI_FLAG_GENERATE_COMPILED_OBJECT))){
 			sll_char_t buffer[SLL_API_MAX_FILE_PATH_LENGTH];
-			sll_string_length_t k=0;
+			sll_string_length_t offset=0;
 			sll_string_length_t file_path_length=sll_string_length(file_path);
 			if (!output_file_path){
 				sll_copy_data(file_path,file_path_length,buffer);
-				k=file_path_length-1;
+				offset=file_path_length-1;
 			}
 			else{
-				k=sll_string_length(output_file_path);
-				sll_copy_data(output_file_path,k,buffer);
+				offset=sll_string_length(output_file_path);
+				sll_copy_data(output_file_path,offset,buffer);
 				if (_cli_flags&CLI_FLAG_SINGLE_OUTPUT){
-					k-=1;
+					offset-=1;
 				}
 				else{
-					while (*(output_file_path+k)!='\\'&&*(output_file_path+k)!='/'){
-						if (!k){
-							k--;
+					while (*(output_file_path+offset)!='\\'&&*(output_file_path+offset)!='/'){
+						if (!offset){
+							offset--;
 							break;
 						}
+						offset--;
+					}
+					offset++;
+					sll_string_length_t k=file_path_length;
+					while (k&&*(file_path+k-1)!='\\'&&*(file_path+k-1)!='/'){
 						k--;
 					}
-					k++;
-					sll_string_length_t l=file_path_length;
-					while (l&&*(file_path+l-1)!='\\'&&*(file_path+l-1)!='/'){
-						l--;
-					}
-					sll_copy_data(file_path+l,file_path_length-l,buffer+k);
-					k+=file_path_length-l-1;
+					sll_copy_data(file_path+k,file_path_length-k,buffer+offset);
+					offset+=file_path_length-k-1;
 				}
 			}
-			buffer[k+1]='.';
-			buffer[k+2]='s';
-			buffer[k+3]='l';
-			buffer[k+5]=0;
-			k+=4;
+			buffer[offset+1]='.';
+			buffer[offset+2]='s';
+			buffer[offset+3]='l';
+			buffer[offset+5]=0;
+			offset+=4;
 			if (_cli_flags&SLL_CLI_FLAG_GENERATE_ASSEMBLY){
-				buffer[k]='a';
+				buffer[offset]='a';
 				sll_audit(SLL_CHAR("console_code_list_length.cli.save.assembly"),SLL_CHAR("S"),buffer);
 				SLL_LOG("Writing assembly to file '%s'...",buffer);
-				sll_file_t of;
-				SLL_CRITICAL_ERROR(sll_file_open(buffer,SLL_FILE_FLAG_WRITE,&of));
-				sll_write_assembly(&assembly_data,&of);
+				sll_file_t out_file;
+				SLL_CRITICAL_ERROR(sll_file_open(buffer,SLL_FILE_FLAG_WRITE,&out_file));
+				sll_write_assembly(&assembly_data,&out_file);
 				SLL_LOG("File written successfully.");
-				sll_file_close(&of);
+				sll_file_close(&out_file);
 			}
 			if (_cli_flags&SLL_CLI_FLAG_GENERATE_COMPILED_OBJECT){
-				buffer[k]='c';
+				buffer[offset]='c';
 				sll_audit(SLL_CHAR("console_code_list_length.cli.save.compiled"),SLL_CHAR("S"),buffer);
 				SLL_LOG("Writing compiled program to file '%s'...",buffer);
-				sll_file_t of;
-				SLL_CRITICAL_ERROR(sll_file_open(buffer,SLL_FILE_FLAG_WRITE,&of));
-				sll_write_compiled_node(&compilation_data,&of);
+				sll_file_t out_file;
+				SLL_CRITICAL_ERROR(sll_file_open(buffer,SLL_FILE_FLAG_WRITE,&out_file));
+				sll_write_compiled_node(&compilation_data,&out_file);
 				SLL_LOG("File written successfully.");
-				sll_file_close(&of);
+				sll_file_close(&out_file);
 			}
 		}
 		if (!(_cli_flags&SLL_CLI_FLAG_NO_RUN)){
