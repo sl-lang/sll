@@ -55,11 +55,11 @@ __SLL_EXTERNAL void sll_free_source_file(sll_source_file_t* source_file){
 	sll_deallocate(source_file->string_table.data);
 	source_file->string_table.data=NULL;
 	source_file->string_table.length=0;
-	void* pg=source_file->_stack.start;
-	while (pg){
-		void* n=*((void**)pg);
-		SLL_CRITICAL_ERROR(sll_platform_free_page(pg,SLL_ROUND_PAGE(NODE_STACK_ALLOC_SIZE)));
-		pg=n;
+	void* page=source_file->_stack.start;
+	while (page){
+		void* next=*((void**)page);
+		SLL_CRITICAL_ERROR(sll_platform_free_page(page,SLL_ROUND_PAGE(NODE_STACK_ALLOC_SIZE)));
+		page=next;
 	}
 	for (sll_import_index_t i=0;i<source_file->import_table.length;i++){
 		sll_deallocate(*(source_file->import_table.data+i));
