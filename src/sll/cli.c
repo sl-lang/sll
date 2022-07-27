@@ -937,22 +937,11 @@ _read_file_argument:
 	}
 	if (_cli_flags&SLL_CLI_FLAG_GENERATE_BUNDLE){
 		sll_char_t buffer[SLL_API_MAX_FILE_PATH_LENGTH];
-		if (bundle_output_file_path){
-			sll_string_length_t length=sll_string_length(bundle_output_file_path);
-			if (length>SLL_API_MAX_FILE_PATH_LENGTH-1){
-				length=SLL_API_MAX_FILE_PATH_LENGTH-1;
-			}
-			sll_copy_data(bundle_output_file_path,length,buffer);
-			buffer[length]=0;
+		sll_string_length_t length=(bundle_output_file_path?sll_string_length(bundle_output_file_path):bundle.name.length);
+		if (length>SLL_API_MAX_FILE_PATH_LENGTH-1){
+			length=SLL_API_MAX_FILE_PATH_LENGTH-1;
 		}
-		else{
-			sll_string_length_t length=bundle.name.length;
-			if (length>SLL_API_MAX_FILE_PATH_LENGTH-1){
-				length=SLL_API_MAX_FILE_PATH_LENGTH-1;
-			}
-			sll_copy_data(bundle.name.data,length,buffer);
-			buffer[length]=0;
-		}
+		sll_copy_data((bundle_output_file_path?bundle_output_file_path:bundle.name.data),length,buffer);
 		if (!(*buffer)){
 			SLL_WARN(SLL_CHAR("No bundle output path supplied"));
 			_cli_had_warning=1;
