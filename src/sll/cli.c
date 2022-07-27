@@ -881,8 +881,8 @@ _read_file_argument:
 			buffer[offset+1]='.';
 			buffer[offset+2]='s';
 			buffer[offset+3]='l';
-			buffer[offset+5]=0;
 			offset+=4;
+			buffer[offset+1]=0;
 			if (_cli_flags&SLL_CLI_FLAG_GENERATE_ASSEMBLY){
 				buffer[offset]='a';
 				sll_audit(SLL_CHAR("console_code_list_length.cli.save.assembly"),SLL_CHAR("S"),buffer);
