@@ -290,9 +290,9 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_read_char_t sll_file_peek_char(sll_file_t*
 	}
 	if (file->flags&FILE_FLAG_MEMORY){
 		LOCK;
-		sll_read_char_t o=(file->data.file._offset==file->data.file.source.memory.size?SLL_END_OF_DATA:*((sll_char_t*)(PTR(ADDR(file->data.file.source.memory.pointer)+file->data.file._offset))));
+		sll_read_char_t out=(file->data.file._offset==file->data.file.source.memory.size?SLL_END_OF_DATA:*((sll_char_t*)(PTR(ADDR(file->data.file.source.memory.pointer)+file->data.file._offset))));
 		UNLOCK;
-		return o;
+		return out;
 	}
 	if (file->data.file.source.file.fd==SLL_UNKNOWN_FILE_DESCRIPTOR){
 		ERROR_PTR(SLL_ERROR_UNKNOWN_FD);
@@ -309,9 +309,9 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_read_char_t sll_file_peek_char(sll_file_t*
 			return SLL_END_OF_DATA;
 		}
 	}
-	sll_char_t o=file->data.file._read_buffer[file->data.file._read_buffer_offset];
+	sll_char_t out=file->data.file._read_buffer[file->data.file._read_buffer_offset];
 	UNLOCK;
-	return o;
+	return out;
 }
 
 
@@ -327,14 +327,14 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_size_t sll_file_read(sll_file_t* file,void
 		UNLOCK;
 		return out;
 	}
-	sll_size_t o;
+	sll_size_t out;
 	if (file->flags&FILE_FLAG_MEMORY){
 		if (file->data.file._offset+size>=file->data.file.source.memory.size){
 			size=file->data.file.source.memory.size-file->data.file._offset;
 		}
 		sll_copy_data(PTR(ADDR(file->data.file.source.memory.pointer)+file->data.file._offset),size,pointer);
 		file->data.file._offset+=size;
-		o=size;
+		out=size;
 		goto _hash_data;
 	}
 	if (file->data.file.source.file.fd==SLL_UNKNOWN_FILE_DESCRIPTOR){
@@ -345,7 +345,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_size_t sll_file_read(sll_file_t* file,void
 	if (file->flags&SLL_FILE_FLAG_NO_BUFFER){
 		size=sll_platform_file_read(file->data.file.source.file.fd,pointer,size,err);
 		file->data.file._offset+=size;
-		o=size;
+		out=size;
 		goto _hash_data;
 	}
 	if (!file->data.file._read_buffer_offset&&!file->data.file._read_buffer_size){
@@ -362,13 +362,13 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_size_t sll_file_read(sll_file_t* file,void
 			file->data.file._read_buffer_offset=0;
 			file->data.file._read_buffer_size=sll_platform_file_read(file->data.file.source.file.fd,file->data.file._read_buffer,FILE_BUFFER_SIZE,err);
 		}
-		o=size;
+		out=size;
 		goto _hash_data;
 	}
-	o=file->data.file._read_buffer_size-file->data.file._read_buffer_offset;
-	size-=o;
-	sll_copy_data(file->data.file._read_buffer+file->data.file._read_buffer_offset,o,pointer);
-	pointer=PTR(ADDR(pointer)+o);
+	out=file->data.file._read_buffer_size-file->data.file._read_buffer_offset;
+	size-=out;
+	sll_copy_data(file->data.file._read_buffer+file->data.file._read_buffer_offset,out,pointer);
+	pointer=PTR(ADDR(pointer)+out);
 	while (size>FILE_BUFFER_SIZE){
 		file->data.file._read_buffer_size=sll_platform_file_read(file->data.file.source.file.fd,pointer,FILE_BUFFER_SIZE,err);
 		if (file->data.file._read_buffer_size!=FILE_BUFFER_SIZE){
@@ -377,19 +377,19 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_size_t sll_file_read(sll_file_t* file,void
 			file->data.file._read_buffer_size=0;
 			goto _hash_data;
 		}
-		o+=FILE_BUFFER_SIZE;
+		out+=FILE_BUFFER_SIZE;
 		size-=FILE_BUFFER_SIZE;
 		pointer=PTR(ADDR(pointer)+FILE_BUFFER_SIZE);
 	}
 	file->data.file._read_buffer_size=sll_platform_file_read(file->data.file.source.file.fd,file->data.file._read_buffer,FILE_BUFFER_SIZE,err);
 	if (file->data.file._read_buffer_size<size){
-		o+=file->data.file._read_buffer_size;
+		out+=file->data.file._read_buffer_size;
 		sll_copy_data(file->data.file._read_buffer,file->data.file._read_buffer_size,pointer);
 		file->data.file._read_buffer_offset=0;
 		file->data.file._read_buffer_size=0;
 		goto _hash_data;
 	}
-	o+=size;
+	out+=size;
 	file->data.file._read_buffer_offset=size;
 	sll_copy_data(file->data.file._read_buffer,size,pointer);
 _hash_data:
@@ -397,7 +397,7 @@ _hash_data:
 		SLL_UNIMPLEMENTED();
 	}
 	UNLOCK;
-	return ZERO_IF_ERROR_PTR(o);
+	return ZERO_IF_ERROR_PTR(out);
 }
 
 
@@ -453,9 +453,9 @@ __SLL_EXTERNAL sll_read_char_t sll_file_read_char(sll_file_t* file,sll_error_t* 
 		return SLL_END_OF_DATA;
 	}
 	LOCK;
-	sll_char_t o;
+	sll_char_t out;
 	if (file->flags&SLL_FILE_FLAG_SOCKET){
-		sll_read_char_t ret=(sll_platform_socket_read(file->data.socket.fd,&o,1,err)?o:SLL_END_OF_DATA);
+		sll_read_char_t ret=(sll_platform_socket_read(file->data.socket.fd,&out,1,err)?out:SLL_END_OF_DATA);
 		UNLOCK;
 		return ret;
 	}
@@ -464,7 +464,7 @@ __SLL_EXTERNAL sll_read_char_t sll_file_read_char(sll_file_t* file,sll_error_t* 
 			UNLOCK;
 			return SLL_END_OF_DATA;
 		}
-		o=*((sll_char_t*)(PTR(ADDR(file->data.file.source.memory.pointer)+file->data.file._offset)));
+		out=*((sll_char_t*)(PTR(ADDR(file->data.file.source.memory.pointer)+file->data.file._offset)));
 	}
 	else if (file->data.file.source.file.fd==SLL_UNKNOWN_FILE_DESCRIPTOR){
 		ERROR_PTR(SLL_ERROR_UNKNOWN_FD);
@@ -472,7 +472,7 @@ __SLL_EXTERNAL sll_read_char_t sll_file_read_char(sll_file_t* file,sll_error_t* 
 		return SLL_END_OF_DATA;
 	}
 	else if (file->flags&SLL_FILE_FLAG_NO_BUFFER){
-		if (!sll_platform_file_read(file->data.file.source.file.fd,&o,sizeof(sll_char_t),err)){
+		if (!sll_platform_file_read(file->data.file.source.file.fd,&out,sizeof(sll_char_t),err)){
 			UNLOCK;
 			return SLL_END_OF_DATA;
 		}
@@ -485,7 +485,7 @@ __SLL_EXTERNAL sll_read_char_t sll_file_read_char(sll_file_t* file,sll_error_t* 
 				return SLL_END_OF_DATA;
 			}
 		}
-		o=file->data.file._read_buffer[file->data.file._read_buffer_offset];
+		out=file->data.file._read_buffer[file->data.file._read_buffer_offset];
 		file->data.file._read_buffer_offset++;
 		if (file->data.file._read_buffer_offset==file->data.file._read_buffer_size){
 			file->data.file._read_buffer_offset=0;
@@ -493,11 +493,11 @@ __SLL_EXTERNAL sll_read_char_t sll_file_read_char(sll_file_t* file,sll_error_t* 
 		}
 	}
 	file->data.file._offset++;
-	if (o=='\n'){
+	if (out=='\n'){
 		file->data.file._line_number++;
 	}
 	if (file->data.file._hash.buffer_offset!=DISABLE_FILE_HASH){
-		file->data.file._hash.buffer[file->data.file._hash.buffer_offset]=o;
+		file->data.file._hash.buffer[file->data.file._hash.buffer_offset]=out;
 		if (file->data.file._hash.buffer_offset==63){
 			file->data.file._hash.buffer_offset=0;
 			sll_hash_sha256(&(file->data.file._hash.hash),file->data.file._hash.buffer,64);
@@ -507,7 +507,7 @@ __SLL_EXTERNAL sll_read_char_t sll_file_read_char(sll_file_t* file,sll_error_t* 
 		}
 	}
 	UNLOCK;
-	return DATA_IF_ERROR_PTR(o,SLL_END_OF_DATA);
+	return DATA_IF_ERROR_PTR(out,SLL_END_OF_DATA);
 }
 
 
@@ -603,7 +603,7 @@ __SLL_EXTERNAL sll_size_t sll_file_write(sll_file_t* file,const void* pointer,sl
 	sll_copy_data(pointer,i,file->data.file._write_buffer.static_.pointer+file->data.file._write_buffer.static_.offset);
 	sll_platform_file_write(file->data.file.source.file.fd,file->data.file._write_buffer.static_.pointer,FILE_BUFFER_SIZE,err);
 	const sll_char_t* v=((const sll_char_t*)pointer)+i;
-	sll_size_t o=size;
+	sll_size_t out=size;
 	size-=i;
 	i=size&(FILE_BUFFER_SIZE-1);
 	size-=i;
@@ -619,7 +619,7 @@ __SLL_EXTERNAL sll_size_t sll_file_write(sll_file_t* file,const void* pointer,sl
 	if (flush){
 		sll_file_flush(file);
 	}
-	return ZERO_IF_ERROR_PTR(o);
+	return ZERO_IF_ERROR_PTR(out);
 }
 
 
@@ -661,8 +661,8 @@ __SLL_EXTERNAL sll_bool_t sll_file_write_char(sll_file_t* file,sll_char_t char_,
 		return 0;
 	}
 	if (file->flags&SLL_FILE_FLAG_NO_BUFFER){
-		sll_bool_t o=sll_platform_file_write(file->data.file.source.file.fd,&char_,sizeof(sll_char_t),err);
-		return o;
+		sll_bool_t out=sll_platform_file_write(file->data.file.source.file.fd,&char_,sizeof(sll_char_t),err);
+		return out;
 	}
 	LOCK;
 	SLL_ASSERT(file->data.file._write_buffer.static_.offset+1<=FILE_BUFFER_SIZE);
@@ -707,12 +707,12 @@ __SLL_EXTERNAL sll_size_t sll_file_write_char_count(sll_file_t* file,sll_char_t 
 		return 0;
 	}
 	if (file->flags&SLL_FILE_FLAG_NO_BUFFER){
-		sll_size_t o=0;
+		sll_size_t out=0;
 		while (count){
-			o+=sll_platform_file_write(file->data.file.source.file.fd,&char_,sizeof(sll_char_t),err);
+			out+=sll_platform_file_write(file->data.file.source.file.fd,&char_,sizeof(sll_char_t),err);
 			count--;
 		}
-		return ZERO_IF_ERROR_PTR(o);
+		return ZERO_IF_ERROR_PTR(out);
 	}
 	LOCK;
 	if (count+file->data.file._write_buffer.static_.offset<=FILE_BUFFER_SIZE){
@@ -731,7 +731,7 @@ __SLL_EXTERNAL sll_size_t sll_file_write_char_count(sll_file_t* file,sll_char_t 
 	sll_size_t i=FILE_BUFFER_SIZE-file->data.file._write_buffer.static_.offset;
 	sll_set_memory(file->data.file._write_buffer.static_.pointer+file->data.file._write_buffer.static_.offset,i,char_);
 	sll_platform_file_write(file->data.file.source.file.fd,file->data.file._write_buffer.static_.pointer,FILE_BUFFER_SIZE,err);
-	sll_size_t o=count;
+	sll_size_t out=count;
 	count-=i;
 	i=count&(FILE_BUFFER_SIZE-1);
 	count-=i;
@@ -750,7 +750,7 @@ __SLL_EXTERNAL sll_size_t sll_file_write_char_count(sll_file_t* file,sll_char_t 
 	if ((file->flags&SLL_FILE_FLUSH_ON_NEWLINE)&&char_=='\n'){
 		sll_file_flush(file);
 	}
-	return ZERO_IF_ERROR_PTR(o);
+	return ZERO_IF_ERROR_PTR(out);
 }
 
 
@@ -774,9 +774,9 @@ __SLL_EXTERNAL sll_size_t sll_file_write_format(sll_file_t* file,const sll_char_
 	sll_string_t str;
 	sll_string_format_list(format,sll_string_length(format),&dt,&str);
 	va_end(va);
-	sll_size_t o=sll_file_write(file,str.data,str.length,err);
+	sll_size_t out=sll_file_write(file,str.data,str.length,err);
 	sll_free_string(&str);
-	return o;
+	return out;
 }
 
 
