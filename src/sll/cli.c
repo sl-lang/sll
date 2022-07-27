@@ -189,26 +189,26 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_cli_lookup_result_t sll_cli_lookup_file(co
 		} while(i);
 	}
 	for (sll_string_length_t i=0;i<_cli_include_list_len;i++){
-		cli_include_dir_t* inc=*(_cli_include_list+i);
-		if (!_starts_with_path_prefix(path,&(inc->name))){
+		cli_include_dir_t* include_directory=*(_cli_include_list+i);
+		if (!_starts_with_path_prefix(path,&(include_directory->name))){
 			continue;
 		}
-		sll_copy_data(inc->path.data,inc->path.length,buffer);
-		sll_copy_data(path->data+inc->name.length,path->length-inc->name.length,buffer+inc->path.length);
-		sll_string_length_t j=inc->path.length+path->length-inc->name.length;
+		sll_copy_data(include_directory->path.data,include_directory->path.length,buffer);
+		sll_copy_data(path->data+include_directory->name.length,path->length-include_directory->name.length,buffer+include_directory->path.length);
+		sll_string_length_t j=include_directory->path.length+path->length-include_directory->name.length;
 		sll_copy_data(_cli_slc_suffix.data,_cli_slc_suffix.length+1,buffer+j);
 		SLL_LOG("Trying to open file '%s'...",buffer);
-		sll_file_t f;
+		sll_file_t fh;
 		if (sll_platform_path_exists(buffer)){
-			sll_file_open(buffer,SLL_FILE_FLAG_READ,&f);
+			sll_file_open(buffer,SLL_FILE_FLAG_READ,&fh);
 			sll_cli_expand_path(buffer,out->path);
 			SLL_LOG("Found file '%s'",out->path);
-			if (sll_load_compiled_node(&f,&(out->data.compilation_data))){
-				sll_file_close(&f);
+			if (sll_load_compiled_node(&fh,&(out->data.compilation_data))){
+				sll_file_close(&fh);
 				SLL_LOG("File successfully read.");
 				return SLL_LOOKUP_RESULT_COMPILED_OBJECT;
 			}
-			sll_file_close(&f);
+			sll_file_close(&fh);
 			SLL_LOG("File is not a compiled program");
 		}
 		buffer[j]=0;
@@ -216,24 +216,24 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_cli_lookup_result_t sll_cli_lookup_file(co
 		if (!sll_platform_path_exists(buffer)){
 			continue;
 		}
-		sll_file_open(buffer,SLL_FILE_FLAG_READ,&f);
+		sll_file_open(buffer,SLL_FILE_FLAG_READ,&fh);
 		sll_cli_expand_path(buffer,out->path);
 		SLL_LOG("Found file '%s'",out->path);
-		if (sll_load_assembly(&f,&(out->data.assembly_data))){
-			sll_file_close(&f);
+		if (sll_load_assembly(&fh,&(out->data.assembly_data))){
+			sll_file_close(&fh);
 			SLL_LOG("File successfully read.");
 			return SLL_LOOKUP_RESULT_ASSEMBLY;
 		}
-		sll_file_reset(&f);
-		if (sll_load_compiled_node(&f,&(out->data.compilation_data))){
-			sll_file_close(&f);
+		sll_file_reset(&fh);
+		if (sll_load_compiled_node(&fh,&(out->data.compilation_data))){
+			sll_file_close(&fh);
 			SLL_LOG("File successfully read.");
 			return SLL_LOOKUP_RESULT_COMPILED_OBJECT;
 		}
-		sll_file_reset(&f);
+		sll_file_reset(&fh);
 		sll_init_compilation_data(out->path,&(out->data.compilation_data));
-		sll_parse_nodes(&f,&(out->data.compilation_data),&_cli_ift,_import_file);
-		sll_file_close(&f);
+		sll_parse_nodes(&fh,&(out->data.compilation_data),&_cli_ift,_import_file);
+		sll_file_close(&fh);
 		SLL_LOG("File successfully read.");
 		return SLL_LOOKUP_RESULT_COMPILED_OBJECT;
 	}
@@ -241,17 +241,17 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_cli_lookup_result_t sll_cli_lookup_file(co
 		sll_copy_data(path->data,path->length,_cli_lib_path+_cli_lib_path_len);
 		sll_copy_data(_cli_slc_suffix.data,_cli_slc_suffix.length+1,_cli_lib_path+_cli_lib_path_len+path->length);
 		SLL_LOG("Trying to open file '%s'...",_cli_lib_path);
-		sll_file_t f;
 		if (sll_platform_path_exists(_cli_lib_path)){
-			sll_file_open(_cli_lib_path,SLL_FILE_FLAG_READ,&f);
+			sll_file_t fh;
+			sll_file_open(_cli_lib_path,SLL_FILE_FLAG_READ,&fh);
 			sll_cli_expand_path(_cli_lib_path,out->path);
 			SLL_LOG("Found file '%s'",out->path);
-			if (sll_load_compiled_node(&f,&(out->data.compilation_data))){
-				sll_file_close(&f);
+			if (sll_load_compiled_node(&fh,&(out->data.compilation_data))){
+				sll_file_close(&fh);
 				SLL_LOG("File successfully read.");
 				return SLL_LOOKUP_RESULT_COMPILED_OBJECT;
 			}
-			sll_file_close(&f);
+			sll_file_close(&fh);
 			SLL_LOG("File is not a compiled program");
 		}
 	}
@@ -274,9 +274,9 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_code_t sll_cli_main(sll_array_lengt
 	_cli_bundle_list_len=0;
 	_cli_optimization_count=1;
 	_cli_had_warning=0;
-	cli_include_dir_t* inc=_alloc_include_dir();
-	SLL_INIT_STRING(&(inc->name));
-	SLL_INIT_STRING(&(inc->path));
+	cli_include_dir_t* include_directory=_alloc_include_dir();
+	SLL_INIT_STRING(&(include_directory->name));
+	SLL_INIT_STRING(&(include_directory->path));
 	SLL_ASSERT(sll_library_file_path->length<SLL_API_MAX_FILE_PATH_LENGTH);
 	_cli_lib_path_len=sll_library_file_path->length;
 	while (_cli_lib_path_len&&sll_library_file_path->data[_cli_lib_path_len]!='/'&&sll_library_file_path->data[_cli_lib_path_len]!='\\'){
@@ -461,14 +461,14 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_code_t sll_cli_main(sll_array_lengt
 					if (!sll_platform_path_is_directory(tmp.data+split+1)){
 						SLL_UNIMPLEMENTED();
 					}
-					inc=_alloc_include_dir();
-					_ensure_path_separator(tmp.data,split,&(inc->name));
-					_ensure_path_separator(tmp.data+split+1,tmp.length-split-1,&(inc->path));
+					include_directory=_alloc_include_dir();
+					_ensure_path_separator(tmp.data,split,&(include_directory->name));
+					_ensure_path_separator(tmp.data+split+1,tmp.length-split-1,&(include_directory->path));
 				}
 				else if (sll_platform_path_is_directory(e)){
-					inc=_alloc_include_dir();
-					SLL_INIT_STRING(&(inc->name));
-					_ensure_path_separator(tmp.data,tmp.length,&(inc->path));
+					include_directory=_alloc_include_dir();
+					SLL_INIT_STRING(&(include_directory->name));
+					_ensure_path_separator(tmp.data,tmp.length,&(include_directory->path));
 				}
 				else{
 					sll_file_t bundle_fh;
@@ -721,12 +721,12 @@ _read_file_argument:
 			SLL_LOG("  '%s' (bundle)",(*(_cli_bundle_list+j))->name);
 		}
 		for (sll_string_length_t j=0;j<_cli_include_list_len;j++){
-			inc=*(_cli_include_list+j);
-			if (inc->name.length){
-				SLL_LOG("  '%s' -> '%s'",inc->name.data,inc->path.data);
+			include_directory=*(_cli_include_list+j);
+			if (include_directory->name.length){
+				SLL_LOG("  '%s' -> '%s'",include_directory->name.data,include_directory->path.data);
 			}
 			else{
-				SLL_LOG("  '%s'",inc->path.data);
+				SLL_LOG("  '%s'",include_directory->path.data);
 			}
 		}
 		SLL_LOG("Library path: '%s'",_cli_lib_path);
@@ -970,10 +970,10 @@ _read_file_argument:
 _cleanup:
 	while (_cli_include_list_len){
 		_cli_include_list_len--;
-		inc=*(_cli_include_list+_cli_include_list_len);
-		sll_free_string(&(inc->name));
-		sll_free_string(&(inc->path));
-		sll_deallocate(inc);
+		include_directory=*(_cli_include_list+_cli_include_list_len);
+		sll_free_string(&(include_directory->name));
+		sll_free_string(&(include_directory->path));
+		sll_deallocate(include_directory);
 	}
 	sll_deallocate(_cli_include_list);
 	sll_audit(SLL_CHAR("sll.cli.deinit"),SLL_CHAR(""));
