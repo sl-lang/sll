@@ -174,7 +174,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_cli_lookup_result_t sll_cli_lookup_file(co
 			}
 		}
 	}
-	sll_audit(SLL_CHAR("sll.cli.find"),SLL_CHAR("S"),path);
+	sll_audit(SLL_CHAR("console_code_list_length.cli.find"),SLL_CHAR("S"),path);
 	sll_char_t buffer[SLL_API_MAX_FILE_PATH_LENGTH];
 	if (_cli_bundle_list_len){
 		sll_array_length_t i=_cli_bundle_list_len;
@@ -309,10 +309,10 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_code_t sll_cli_main(sll_array_lengt
 	}
 	_cli_lib_path[_cli_lib_path_len]=0;
 	sll_deallocate(bundle_file_list);
-	sll_array_length_t* fp=NULL;
-	sll_string_length_t fpl=0;
-	sll_array_length_t* sl=NULL;
-	sll_string_length_t sll=0;
+	sll_array_length_t* file_list=NULL;
+	sll_string_length_t file_list_length=0;
+	sll_array_length_t* console_code_list=NULL;
+	sll_string_length_t console_code_list_length=0;
 	cli_audit_library_t* audit_library_list=NULL;
 	sll_array_length_t audit_library_list_len=0;
 	sll_library_handle_t* path_resolver_list=NULL;
@@ -545,9 +545,9 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_return_code_t sll_cli_main(sll_array_lengt
 			if (i==argc){
 				break;
 			}
-			sll++;
-			sl=sll_reallocate(sl,sll*sizeof(sll_array_length_t));
-			*(sl+sll-1)=i;
+			console_code_list_length++;
+			console_code_list=sll_reallocate(console_code_list,console_code_list_length*sizeof(sll_array_length_t));
+			*(console_code_list+console_code_list_length-1)=i;
 		}
 		else if (nm=='S'||sll_string_compare_pointer(e,SLL_CHAR("--sandbox"))==SLL_COMPARE_RESULT_EQUAL){
 			i++;
@@ -652,15 +652,15 @@ _skip_warning:;
 			}
 			else{
 _read_file_argument:
-				fpl++;
-				fp=sll_reallocate(fp,fpl*sizeof(sll_array_length_t));
-				*(fp+fpl-1)=i;
+				file_list_length++;
+				file_list=sll_reallocate(file_list,file_list_length*sizeof(sll_array_length_t));
+				*(file_list+file_list_length-1)=i;
 			}
 		}
 		i++;
 	} while (i<argc);
-	sll_audit(SLL_CHAR("sll.cli.init.raw"),SLL_CHAR("S+"),argv,argc);
-	sll_audit(SLL_CHAR("sll.cli.init"),SLL_CHAR("uS{ss}{Si}{Sp}Si"),_cli_flags,o_fp,_cli_include_list,_cli_include_list_len,0ull,SLL_OFFSETOF(cli_include_dir_t,name),SLL_OFFSETOF(cli_include_dir_t,path),audit_library_list,audit_library_list_len,sizeof(cli_audit_library_t),SLL_OFFSETOF(cli_audit_library_t,name),SLL_OFFSETOF(cli_audit_library_t,handle),_cli_bundle_list,_cli_bundle_list_len,0ull,SLL_OFFSETOF(cli_bundle_source_t,name),SLL_OFFSETOF(cli_bundle_source_t,bundle),b_nm,sll_get_sandbox_flags());
+	sll_audit(SLL_CHAR("console_code_list_length.cli.init.raw"),SLL_CHAR("S+"),argv,argc);
+	sll_audit(SLL_CHAR("console_code_list_length.cli.init"),SLL_CHAR("uS{ss}{Si}{Sp}Si"),_cli_flags,o_fp,_cli_include_list,_cli_include_list_len,0ull,SLL_OFFSETOF(cli_include_dir_t,name),SLL_OFFSETOF(cli_include_dir_t,path),audit_library_list,audit_library_list_len,sizeof(cli_audit_library_t),SLL_OFFSETOF(cli_audit_library_t,name),SLL_OFFSETOF(cli_audit_library_t,handle),_cli_bundle_list,_cli_bundle_list_len,0ull,SLL_OFFSETOF(cli_bundle_source_t,name),SLL_OFFSETOF(cli_bundle_source_t,bundle),b_nm,sll_get_sandbox_flags());
 	if (_cli_flags&SLL_CLI_FLAG_VERBOSE){
 		SLL_CRITICAL(sll_set_log_flags(NULL,NULL,SLL_LOG_FLAG_SHOW,1));
 		SLL_CRITICAL(sll_set_log_flags(SLL_CHAR(__FILE__),NULL,SLL_LOG_FLAG_NO_HEADER,1));
@@ -668,7 +668,7 @@ _read_file_argument:
 	if (_cli_flags&SLL_CLI_FLAG_VERSION){
 		sll_date_t d;
 		sll_date_from_time_ns(SLL_VERSION_BUILD_TIME,sll_platform_time_zone,&d);
-		sll_file_write_format(sll_stdout,SLL_CHAR("sll "SLL_VERSION_STRING" ("CLI_BUILD_TYPE_STRING", %.4u/%.2u/%.2u %.2u:%.2u:%.2u)\n"),NULL,d.year,d.month+1,d.day+1,d.hour,d.minute,floor(d.second));
+		sll_file_write_format(sll_stdout,SLL_CHAR("console_code_list_length "SLL_VERSION_STRING" ("CLI_BUILD_TYPE_STRING", %.4u/%.2u/%.2u %.2u:%.2u:%.2u)\n"),NULL,d.year,d.month+1,d.day+1,d.hour,d.minute,floor(d.second));
 		goto _cleanup;
 	}
 	if (_cli_flags&SLL_CLI_FLAG_HELP){
@@ -738,7 +738,7 @@ _read_file_argument:
 			SLL_LOG("  '%s'",(audit_library_list+j)->name);
 		}
 	}
-	if (fpl+sll==1){
+	if (file_list_length+console_code_list_length==1){
 		if (!o_fp){
 			_cli_flags|=CLI_FLAG_SINGLE_OUTPUT;
 		}
@@ -753,16 +753,16 @@ _read_file_argument:
 	if (_cli_flags&SLL_CLI_FLAG_GENERATE_BUNDLE){
 		sll_bundle_create((!b_nm||((b_nm[0]=='\\'||b_nm[0]=='/')&&!b_nm[1])?NULL:b_nm),&bundle);
 	}
-	for (sll_string_length_t j=0;j<fpl+sll;j++){
+	for (sll_string_length_t j=0;j<file_list_length+console_code_list_length;j++){
 		sll_assembly_data_t assembly_data=SLL_INIT_ASSEMBLY_DATA_STRUCT;
 		sll_compilation_data_t compilation_data=SLL_INIT_COMPILATION_DATA_STRUCT;
 		sll_char_t f_fp[SLL_API_MAX_FILE_PATH_LENGTH];
 		sll_cli_lookup_result_t generated_type=SLL_LOOKUP_RESULT_COMPILED_OBJECT;
 		_cli_enable_file_lookup=1;
-		if (j<fpl){
-			sll_audit(SLL_CHAR("sll.cli.load"),SLL_CHAR("S"),argv[*(fp+j)]);
+		if (j<file_list_length){
+			sll_audit(SLL_CHAR("console_code_list_length.cli.load"),SLL_CHAR("S"),argv[*(file_list+j)]);
 			sll_string_t tmp;
-			sll_string_from_pointer(argv[*(fp+j)],&tmp);
+			sll_string_from_pointer(argv[*(file_list+j)],&tmp);
 			sll_cli_lookup_data_t res_data;
 			generated_type=sll_cli_lookup_file(&tmp,1,&res_data);
 			if (generated_type==SLL_LOOKUP_RESULT_COMPILED_OBJECT){
@@ -782,15 +782,15 @@ _read_file_argument:
 			sll_free_string(&tmp);
 			sll_copy_data(res_data.path,SLL_API_FILE_PATH_SEPARATOR,f_fp);
 			sll_char_t buffer[SLL_API_MAX_FILE_PATH_LENGTH];
-			sll_cli_expand_path(argv[*(fp+j)],buffer);
+			sll_cli_expand_path(argv[*(file_list+j)],buffer);
 			sll_set_argument(0,buffer);
 		}
 		else{
-			sll_audit(SLL_CHAR("sll.cli.load.source"),SLL_CHAR("S"),argv[*(sl+j-fpl)]);
+			sll_audit(SLL_CHAR("console_code_list_length.cli.load.source"),SLL_CHAR("S"),argv[*(console_code_list+j-file_list_length)]);
 			SLL_LOG("Compiling console input...");
 			sll_init_compilation_data(SLL_CHAR("@console"),&compilation_data);
 			sll_file_t f;
-			sll_file_from_data(PTR(argv[*(sl+j-fpl)]),sll_string_length(argv[*(sl+j-fpl)]),SLL_FILE_FLAG_READ,&f);
+			sll_file_from_data(PTR(argv[*(console_code_list+j-file_list_length)]),sll_string_length(argv[*(console_code_list+j-file_list_length)]),SLL_FILE_FLAG_READ,&f);
 			sll_parse_nodes(&f,&compilation_data,&_cli_ift,_import_file);
 			sll_file_close(&f);
 			SLL_LOG("Input successfully read.");
@@ -847,7 +847,7 @@ _read_file_argument:
 			sll_print_assembly(&assembly_data,sll_stdout);
 			sll_file_write_char(sll_stdout,'\n',NULL);
 		}
-		if (j<fpl&&(_cli_flags&(SLL_CLI_FLAG_GENERATE_ASSEMBLY|SLL_CLI_FLAG_GENERATE_COMPILED_OBJECT))){
+		if (j<file_list_length&&(_cli_flags&(SLL_CLI_FLAG_GENERATE_ASSEMBLY|SLL_CLI_FLAG_GENERATE_COMPILED_OBJECT))){
 			sll_char_t buffer[SLL_API_MAX_FILE_PATH_LENGTH];
 			sll_string_length_t k=0;
 			sll_string_length_t f_fp_l=sll_string_length(f_fp);
@@ -885,7 +885,7 @@ _read_file_argument:
 			k+=4;
 			if (_cli_flags&SLL_CLI_FLAG_GENERATE_ASSEMBLY){
 				buffer[k]='a';
-				sll_audit(SLL_CHAR("sll.cli.save.assembly"),SLL_CHAR("S"),buffer);
+				sll_audit(SLL_CHAR("console_code_list_length.cli.save.assembly"),SLL_CHAR("S"),buffer);
 				SLL_LOG("Writing assembly to file '%s'...",buffer);
 				sll_file_t of;
 				SLL_CRITICAL_ERROR(sll_file_open(buffer,SLL_FILE_FLAG_WRITE,&of));
@@ -895,7 +895,7 @@ _read_file_argument:
 			}
 			if (_cli_flags&SLL_CLI_FLAG_GENERATE_COMPILED_OBJECT){
 				buffer[k]='c';
-				sll_audit(SLL_CHAR("sll.cli.save.compiled"),SLL_CHAR("S"),buffer);
+				sll_audit(SLL_CHAR("console_code_list_length.cli.save.compiled"),SLL_CHAR("S"),buffer);
 				SLL_LOG("Writing compiled program to file '%s'...",buffer);
 				sll_file_t of;
 				SLL_CRITICAL_ERROR(sll_file_open(buffer,SLL_FILE_FLAG_WRITE,&of));
@@ -920,9 +920,9 @@ _read_file_argument:
 			sll_file_flush(sll_stderr);
 		}
 		sll_free_assembly_data(&assembly_data);
-		if (j<fpl&&generated_type==SLL_LOOKUP_RESULT_COMPILED_OBJECT&&(_cli_flags&SLL_CLI_FLAG_GENERATE_BUNDLE)){
+		if (j<file_list_length&&generated_type==SLL_LOOKUP_RESULT_COMPILED_OBJECT&&(_cli_flags&SLL_CLI_FLAG_GENERATE_BUNDLE)){
 			sll_string_t b_f_nm;
-			sll_string_from_pointer(argv[*(fp+j)],&b_f_nm);
+			sll_string_from_pointer(argv[*(file_list+j)],&b_f_nm);
 			sll_string_length_t off=((_cli_flags&SLL_CLI_FLAG_NO_PATHS)?sll_path_split(&b_f_nm):0);
 			if (sll_string_ends(&b_f_nm,&_cli_slc_suffix)){
 				sll_string_set_char(&b_f_nm,0,b_f_nm.length-_cli_slc_suffix.length);
@@ -976,7 +976,7 @@ _cleanup:
 		sll_deallocate(include_directory);
 	}
 	sll_deallocate(_cli_include_list);
-	sll_audit(SLL_CHAR("sll.cli.deinit"),SLL_CHAR(""));
+	sll_audit(SLL_CHAR("console_code_list_length.cli.deinit"),SLL_CHAR(""));
 	while (_cli_bundle_list_len){
 		_cli_bundle_list_len--;
 		cli_bundle_source_t* bundle_data=*(_cli_bundle_list+_cli_bundle_list_len);
@@ -1001,8 +1001,8 @@ _cleanup:
 		SLL_CRITICAL_ERROR(sll_platform_unload_library(*(path_resolver_list+path_resolver_list_len)));
 	}
 	sll_deallocate(_cli_bundle_list);
-	sll_deallocate(fp);
-	sll_deallocate(sl);
+	sll_deallocate(file_list);
+	sll_deallocate(console_code_list);
 	sll_deallocate(audit_library_list);
 	sll_deallocate(path_resolver_list);
 	sll_free_internal_function_table(&_cli_ift);
