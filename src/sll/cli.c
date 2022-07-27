@@ -943,7 +943,7 @@ _read_file_argument:
 		}
 		sll_copy_data((bundle_output_file_path?bundle_output_file_path:bundle.name.data),length,buffer);
 		if (!(*buffer)){
-			SLL_WARN(SLL_CHAR("No bundle output path supplied"));
+			SLL_WARN("No bundle output path supplied");
 			_cli_had_warning=1;
 			sll_free_bundle(&bundle);
 			goto _cleanup;
