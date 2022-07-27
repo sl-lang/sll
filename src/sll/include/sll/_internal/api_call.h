@@ -34,7 +34,7 @@ sll_object_t _call_api_func(sll_function_index_t function,const sll_object_t* ar
 
 
 
-__SLL_API_CALL sll_integer_t _call_api_func_assembly(api_return_value_t* ret,const bitmap_t* regs,const void* data,sll_arg_count_t ac,sll_internal_function_pointer_t fn);
+__SLL_API_CALL sll_integer_t _call_api_func_assembly(api_return_value_t* return_value,const bitmap_t* registers,const void* data,sll_arg_count_t arg_count,sll_internal_function_pointer_t function);
 
 
 
