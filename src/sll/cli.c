@@ -666,9 +666,9 @@ _read_file_argument:
 		SLL_CRITICAL(sll_set_log_flags(SLL_CHAR(__FILE__),NULL,SLL_LOG_FLAG_NO_HEADER,1));
 	}
 	if (_cli_flags&SLL_CLI_FLAG_VERSION){
-		sll_date_t d;
-		sll_date_from_time_ns(SLL_VERSION_BUILD_TIME,sll_platform_time_zone,&d);
-		sll_file_write_format(sll_stdout,SLL_CHAR("console_code_list_length "SLL_VERSION_STRING" ("CLI_BUILD_TYPE_STRING", %.4u/%.2u/%.2u %.2u:%.2u:%.2u)\n"),NULL,d.year,d.month+1,d.day+1,d.hour,d.minute,floor(d.second));
+		sll_date_t date;
+		sll_date_from_time_ns(SLL_VERSION_BUILD_TIME,sll_platform_time_zone,&date);
+		sll_file_write_format(sll_stdout,SLL_CHAR("console_code_list_length "SLL_VERSION_STRING" ("CLI_BUILD_TYPE_STRING", %.4u/%.2u/%.2u %.2u:%.2u:%.2u)\n"),NULL,date.year,date.month+1,date.day+1,date.hour,date.minute,floor(date.second));
 		goto _cleanup;
 	}
 	if (_cli_flags&SLL_CLI_FLAG_HELP){
@@ -743,8 +743,8 @@ _read_file_argument:
 			_cli_flags|=CLI_FLAG_SINGLE_OUTPUT;
 		}
 		else{
-			sll_char_t last=output_file_path[sll_string_length(output_file_path)-1];
-			if (last!='\\'&&last!='/'){
+			sll_char_t last_char=output_file_path[sll_string_length(output_file_path)-1];
+			if (last_char!='\\'&&last_char!='/'){
 				_cli_flags|=CLI_FLAG_SINGLE_OUTPUT;
 			}
 		}
