@@ -10,80 +10,80 @@
 
 
 
-static sll_node_t* _mark(sll_node_t* o,bitmap_t* m){
-	while (o->type==SLL_NODE_TYPE_NOP||o->type==SLL_NODE_TYPE_DBG||o->type==SLL_NODE_TYPE_CHANGE_STACK){
-		if (o->type==SLL_NODE_TYPE_CHANGE_STACK){
-			o=o->data._next_node;
+static const sll_node_t* _mark(const sll_node_t* node,bitmap_t* bitmap){
+	while (node->type==SLL_NODE_TYPE_NOP||node->type==SLL_NODE_TYPE_DBG||node->type==SLL_NODE_TYPE_CHANGE_STACK){
+		if (node->type==SLL_NODE_TYPE_CHANGE_STACK){
+			node=node->data._next_node;
 		}
 		else{
-			if (o->type==SLL_NODE_TYPE_DBG&&o->data.string_index!=SLL_MAX_STRING_INDEX){
-				*(m+(o->data.string_index>>6))|=1ull<<(o->data.string_index&63);
+			if (node->type==SLL_NODE_TYPE_DBG&&node->data.string_index!=SLL_MAX_STRING_INDEX){
+				*(bitmap+(node->data.string_index>>6))|=1ull<<(node->data.string_index&63);
 			}
-			o++;
+			node++;
 		}
 	}
-	switch (o->type){
+	switch (node->type){
 		case SLL_NODE_TYPE_STRING:
 		case SLL_NODE_TYPE_FIELD:
-			*(m+(o->data.string_index>>6))|=1ull<<(o->data.string_index&63);
+			*(bitmap+(node->data.string_index>>6))|=1ull<<(node->data.string_index&63);
 		case SLL_NODE_TYPE_INT:
 		case SLL_NODE_TYPE_FLOAT:
 		case SLL_NODE_TYPE_CHAR:
 		case SLL_NODE_TYPE_COMPLEX:
 		case SLL_NODE_TYPE_IDENTIFIER:
 		case SLL_NODE_TYPE_FUNCTION_ID:
-			return o+1;
+			return node+1;
 		case SLL_NODE_TYPE_DECL:
-			if (o->data.declaration.name_string_index!=SLL_MAX_STRING_INDEX){
-				*(m+(o->data.declaration.name_string_index>>6))|=1ull<<(o->data.declaration.name_string_index&63);
+			if (node->data.declaration.name_string_index!=SLL_MAX_STRING_INDEX){
+				*(bitmap+(node->data.declaration.name_string_index>>6))|=1ull<<(node->data.declaration.name_string_index&63);
 			}
 	}
-	sll_arg_count_t l=o->data.arg_count;
-	o++;
+	sll_arg_count_t l=node->data.arg_count;
+	node++;
 	while (l){
 		l--;
-		o=_mark(o,m);
+		node=_mark(node,bitmap);
 	}
-	return o;
+	return node;
 }
 
 
 
-static sll_node_t* _update(sll_node_t* o,sll_string_index_t* sm){
-	while (o->type==SLL_NODE_TYPE_NOP||o->type==SLL_NODE_TYPE_DBG||o->type==SLL_NODE_TYPE_CHANGE_STACK){
-		if (o->type==SLL_NODE_TYPE_CHANGE_STACK){
-			o=o->data._next_node;
+static sll_node_t* _update(sll_node_t* node,sll_string_index_t* sm){
+	while (node->type==SLL_NODE_TYPE_NOP||node->type==SLL_NODE_TYPE_DBG||node->type==SLL_NODE_TYPE_CHANGE_STACK){
+		if (node->type==SLL_NODE_TYPE_CHANGE_STACK){
+			node=node->data._next_node;
 		}
 		else{
-			if (o->type==SLL_NODE_TYPE_DBG&&o->data.string_index!=SLL_MAX_STRING_INDEX){
-				o->data.string_index=*(sm+o->data.string_index);
+			if (node->type==SLL_NODE_TYPE_DBG&&node->data.string_index!=SLL_MAX_STRING_INDEX){
+				node->data.string_index=*(sm+node->data.string_index);
 			}
-			o++;
+			node++;
 		}
 	}
-	switch (o->type){
+	switch (node->type){
 		case SLL_NODE_TYPE_STRING:
 		case SLL_NODE_TYPE_FIELD:
-			o->data.string_index=*(sm+o->data.string_index);
+			node->data.string_index=*(sm+node->data.string_index);
 		case SLL_NODE_TYPE_INT:
 		case SLL_NODE_TYPE_FLOAT:
 		case SLL_NODE_TYPE_CHAR:
 		case SLL_NODE_TYPE_COMPLEX:
 		case SLL_NODE_TYPE_IDENTIFIER:
 		case SLL_NODE_TYPE_FUNCTION_ID:
-			return o+1;
+			return node+1;
 		case SLL_NODE_TYPE_DECL:
-			if (o->data.declaration.name_string_index!=SLL_MAX_STRING_INDEX){
-				o->data.declaration.name_string_index=*(sm+o->data.declaration.name_string_index);
+			if (node->data.declaration.name_string_index!=SLL_MAX_STRING_INDEX){
+				node->data.declaration.name_string_index=*(sm+node->data.declaration.name_string_index);
 			}
 	}
-	sll_arg_count_t l=o->data.arg_count;
-	o++;
+	sll_arg_count_t l=node->data.arg_count;
+	node++;
 	while (l){
 		l--;
-		o=_update(o,sm);
+		node=_update(node,sm);
 	}
-	return o;
+	return node;
 }
 
 
