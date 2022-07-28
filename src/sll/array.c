@@ -69,28 +69,28 @@ __SLL_EXTERNAL void sll_array_clone(const sll_array_t* array,sll_array_t* out){
 
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_array_length_t sll_array_count(const sll_array_t* array,sll_object_t object){
-	sll_array_length_t o=0;
+	sll_array_length_t out=0;
 	for (sll_array_length_t i=0;i<array->length;i++){
 		if (sll_operator_strict_equal(array->data[i],object)){
-			o++;
+			out++;
 		}
 	}
-	return o;
+	return out;
 }
 
 
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_array_length_t sll_array_count_multiple(const sll_array_t* array,const sll_object_t* object_data,sll_array_length_t object_count){
-	sll_array_length_t o=0;
+	sll_array_length_t out=0;
 	for (sll_array_length_t i=0;i<array->length;i++){
 		for (sll_array_length_t j=0;j<object_count;j++){
 			if (sll_operator_strict_equal(array->data[i],*(object_data+j))){
-				o++;
+				out++;
 				break;
 			}
 		}
 	}
-	return o;
+	return out;
 }
 
 
