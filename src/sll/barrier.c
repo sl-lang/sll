@@ -64,13 +64,13 @@ sll_bool_t _barrier_wait(sll_integer_t barrier_index,sll_integer_t value,sll_boo
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_barrier_index_t sll_barrier_create(void){
 	SLL_CRITICAL_ERROR(sll_platform_lock_acquire(_barrier_lock));
-	sll_size_t o;
-	SLL_HANDLE_CONTAINER_ALLOC(&_barrier_data,&o);
+	sll_size_t out;
+	SLL_HANDLE_CONTAINER_ALLOC(&_barrier_data,&out);
 	barrier_t* data=sll_allocate(sizeof(barrier_t));
-	*(_barrier_data.data+o)=data;
+	*(_barrier_data.data+out)=data;
 	data->count=0;
 	SLL_CRITICAL(sll_platform_lock_release(_barrier_lock));
-	return (sll_barrier_index_t)o;
+	return (sll_barrier_index_t)out;
 }
 
 
