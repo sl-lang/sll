@@ -11,7 +11,7 @@
 ## Changed
 
 - Fixed API calls with multiples of 256 arguments
-- Fixed crashes related to overriden registers in CLib function calls
+- Fixed crashes related to modified registers in CLib function calls
 - Fixed file deadlocks
 - Fixed issue with environment variable creation via `sll_set_environment_variable`
 - Fixed socket address info lookup errors
