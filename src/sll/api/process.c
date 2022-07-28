@@ -135,23 +135,23 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_process_start(const sll_array_t* args
 
 
 
-__SLL_EXTERNAL void sll_process_join_args(const sll_char_t*const* a,sll_string_t* o){
-	STRING_INIT_STACK(o);
+__SLL_EXTERNAL void sll_process_join_args(const sll_char_t*const* a,sll_string_t* out){
+	STRING_INIT_STACK(out);
 	SLL_ASSERT(*a);
 	do{
-		if (o->length){
-			sll_string_increase(o,1);
-			o->data[o->length]=' ';
-			o->length++;
+		if (out->length){
+			sll_string_increase(out,1);
+			out->data[out->length]=' ';
+			out->length++;
 		}
 		sll_string_t tmp;
 		sll_string_from_pointer(*a,&tmp);
 		a++;
 		if (!tmp.length){
-			sll_string_increase(o,2);
-			o->data[o->length]='"';
-			o->data[o->length+1]='"';
-			o->length+=2;
+			sll_string_increase(out,2);
+			out->data[out->length]='"';
+			out->data[out->length+1]='"';
+			out->length+=2;
 			goto _continue;
 		}
 		for (sll_string_length_t i=0;i<tmp.length;i++){
@@ -159,33 +159,33 @@ __SLL_EXTERNAL void sll_process_join_args(const sll_char_t*const* a,sll_string_t
 				goto _quote;
 			}
 		}
-		sll_string_increase(o,tmp.length);
-		sll_copy_data(tmp.data,tmp.length,o->data+o->length);
-		o->length+=tmp.length;
+		sll_string_increase(out,tmp.length);
+		sll_copy_data(tmp.data,tmp.length,out->data+out->length);
+		out->length+=tmp.length;
 		goto _continue;
 _quote:
-		sll_string_increase(o,1);
-		o->data[o->length]='"';
-		o->length++;
+		sll_string_increase(out,1);
+		out->data[out->length]='"';
+		out->length++;
 		for (sll_string_length_t i=0;i<tmp.length;i++){
 			if (tmp.data[i]=='"'){
-				sll_string_increase(o,3);
-				o->data[o->length]='"';
-				o->data[o->length+1]='"';
-				o->data[o->length+2]='"';
-				o->length+=3;
+				sll_string_increase(out,3);
+				out->data[out->length]='"';
+				out->data[out->length+1]='"';
+				out->data[out->length+2]='"';
+				out->length+=3;
 			}
 			else{
-				sll_string_increase(o,1);
-				o->data[o->length]=tmp.data[i];
-				o->length++;
+				sll_string_increase(out,1);
+				out->data[out->length]=tmp.data[i];
+				out->length++;
 			}
 		}
-		sll_string_increase(o,1);
-		o->data[o->length]='"';
-		o->length++;
+		sll_string_increase(out,1);
+		out->data[out->length]='"';
+		out->length++;
 _continue:
 		sll_free_string(&tmp);
 	} while (*a);
-	sll_allocator_move((void**)(&(o->data)),SLL_MEMORY_MOVE_DIRECTION_FROM_STACK);
+	sll_allocator_move((void**)(&(out->data)),SLL_MEMORY_MOVE_DIRECTION_FROM_STACK);
 }

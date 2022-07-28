@@ -178,8 +178,8 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_length_t sll_path_split(const sll_s
 		'/',
 		'\\'
 	};
-	sll_string_length_t o=sll_string_index_reverse_multiple(s,dt,2,0);
-	return (o==SLL_MAX_STRING_LENGTH?0:o+1);
+	sll_string_length_t out=sll_string_index_reverse_multiple(s,dt,2,0);
+	return (out==SLL_MAX_STRING_LENGTH?0:out+1);
 }
 
 

@@ -25,10 +25,10 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_float_t sll_api_random_get_
 	SLL_RANDOM_BITS(v);
 	v&=0xfffffffffffffull;
 	sll_size_t l=FIND_LAST_SET_BIT(v);
-	f64_data_t o={
+	f64_data_t out={
 		.data=((l+971)<<52)|((v<<(52-l))&0xfffffffffffffull)
 	};
-	return o.value*(max-min)+min;
+	return out.value*(max-min)+min;
 }
 
 
@@ -47,12 +47,12 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_random_ge
 	}
 	sll_size_t v=(sll_size_t)(max-min);
 	sll_size_t m=0xffffffffffffffffull>>(63-FIND_LAST_SET_BIT(v));
-	sll_size_t o;
+	sll_size_t out;
 	do{
-		SLL_RANDOM_BITS(o);
-		o&=m;
-	} while (o>v);
-	return min+o;
+		SLL_RANDOM_BITS(out);
+		out&=m;
+	} while (out>v);
+	return min+out;
 }
 
 
