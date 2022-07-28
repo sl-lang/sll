@@ -30,7 +30,7 @@ static const sll_node_t* _get_node_size(const sll_node_t* node,sll_node_offset_t
 
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_node_offset_t sll_get_node_size(const sll_node_t* node){
-	sll_node_offset_t sz=0;
-	_get_node_size(node,&sz);
-	return sz;
+	sll_node_offset_t out=0;
+	_get_node_size(node,&out);
+	return out;
 }
