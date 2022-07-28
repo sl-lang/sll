@@ -27,19 +27,19 @@ __SLL_EXTERNAL void sll_free_map(sll_map_t* map){
 
 
 __SLL_EXTERNAL void sll_map_add(const sll_map_t* map,sll_object_t key,sll_object_t value,sll_map_t* out){
-	sll_map_length_t l=map->length<<1;
+	sll_map_length_t length=map->length<<1;
 	SLL_ACQUIRE(value);
 	out->length=map->length+1;
-	out->data=sll_allocate((l+2)*sizeof(sll_object_t));
-	for (sll_map_length_t i=0;i<l;i+=2){
+	out->data=sll_allocate((length+2)*sizeof(sll_object_t));
+	for (sll_map_length_t i=0;i<length;i+=2){
 		out->data[i]=map->data[i];
 		SLL_ACQUIRE(out->data[i]);
 		if (sll_operator_strict_equal(map->data[i],key)){
 			out->length--;
-			out->data=sll_reallocate(out->data,l*sizeof(sll_object_t));
+			out->data=sll_reallocate(out->data,length*sizeof(sll_object_t));
 			out->data[i+1]=value;
 			i+=2;
-			while (i<l){
+			while (i<length){
 				out->data[i]=map->data[i];
 				SLL_ACQUIRE(out->data[i]);
 				i++;
@@ -49,8 +49,8 @@ __SLL_EXTERNAL void sll_map_add(const sll_map_t* map,sll_object_t key,sll_object
 		out->data[i+1]=map->data[i+1];
 		SLL_ACQUIRE(out->data[i+1]);
 	}
-	out->data[l]=key;
-	out->data[l+1]=value;
+	out->data[length]=key;
+	out->data[length+1]=value;
 	SLL_ACQUIRE(key);
 }
 
