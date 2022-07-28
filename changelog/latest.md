@@ -13,6 +13,7 @@
 - Fixed API calls with multiples of 256 arguments
 - Fixed crashes related to overriden registers in CLib function calls
 - Fixed file deadlocks
+- Fixed issue with environment variable creation via `sll_set_environment_variable`
 - Fixed socket address info lookup errors
 - *\[Windows only\]* Fixed socket initialization
 - Fixed unwanted frames in `error$create` and `error$from_internal`
