@@ -30,12 +30,12 @@ sll_object_t _var_arg_converter(sll_var_arg_list_t* va){
 	}
 	if (va->type==VAR_ARG_LIST_TYPE_STRUCT){
 		SLL_ASSERT(va->data.struct_.converter_function_count&&va->data.struct_.offset_count);
-		sll_object_t o=((converter_func_t)(*(va->data.struct_.converter_function_data)))(PTR(ADDR(va->data.struct_.base_pointer)+(*(va->data.struct_.offset_data))));
+		sll_object_t out=((converter_func_t)(*(va->data.struct_.converter_function_data)))(PTR(ADDR(va->data.struct_.base_pointer)+(*(va->data.struct_.offset_data))));
 		va->data.struct_.converter_function_data++;
 		va->data.struct_.converter_function_count--;
 		va->data.struct_.offset_data++;
 		va->data.struct_.offset_count--;
-		return o;
+		return out;
 	}
 	SLL_UNIMPLEMENTED();
 }
@@ -56,10 +56,10 @@ addr_t _var_arg_get_pointer(sll_var_arg_list_t* va){
 	if (!va->data.sll.count){
 		return 0;
 	}
-	addr_t o=ADDR(*(va->data.sll.pointer));
+	addr_t out=ADDR(*(va->data.sll.pointer));
 	va->data.sll.pointer++;
 	va->data.sll.count--;
-	return o;
+	return out;
 }
 
 
@@ -87,10 +87,10 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT void* sll_var_arg_get(sll_var_arg_list_t* va){
 	if (!va->data.sll.count){
 		return NULL;
 	}
-	void* o=*(va->data.sll.pointer);
+	void* out=*(va->data.sll.pointer);
 	va->data.sll.pointer++;
 	va->data.sll.count--;
-	return o;
+	return out;
 }
 
 
@@ -104,11 +104,11 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_char_t sll_var_arg_get_char(sll_var_arg_li
 		return 0;
 	}
 	sll_object_t n=sll_operator_cast((sll_object_t)(*(va->data.sll.pointer)),sll_static_int[SLL_OBJECT_TYPE_CHAR]);
-	sll_char_t o=n->data.char_;
+	sll_char_t out=n->data.char_;
 	SLL_RELEASE(n);
 	va->data.sll.pointer++;
 	va->data.sll.count--;
-	return o;
+	return out;
 }
 
 
@@ -147,11 +147,11 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_float_t sll_var_arg_get_float(sll_var_arg_
 		return 0;
 	}
 	sll_object_t n=sll_operator_cast((sll_object_t)(*(va->data.sll.pointer)),sll_static_int[SLL_OBJECT_TYPE_FLOAT]);
-	sll_float_t o=n->data.float_;
+	sll_float_t out=n->data.float_;
 	SLL_RELEASE(n);
 	va->data.sll.pointer++;
 	va->data.sll.count--;
-	return o;
+	return out;
 }
 
 
@@ -165,11 +165,11 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_integer_t sll_var_arg_get_int(sll_var_arg_
 		return 0;
 	}
 	sll_object_t n=sll_operator_cast((sll_object_t)(*(va->data.sll.pointer)),sll_static_int[SLL_OBJECT_TYPE_INT]);
-	sll_integer_t o=n->data.int_;
+	sll_integer_t out=n->data.int_;
 	SLL_RELEASE(n);
 	va->data.sll.pointer++;
 	va->data.sll.count--;
-	return o;
+	return out;
 }
 
 
@@ -179,28 +179,28 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t sll_var_arg_get_object(sll_var_ar
 		if (!va->data.sll.count){
 			return SLL_ACQUIRE_STATIC_INT(0);
 		}
-		sll_object_t o=*(va->data.sll.pointer);
-		SLL_ACQUIRE(o);
+		sll_object_t out=*(va->data.sll.pointer);
+		SLL_ACQUIRE(out);
 		va->data.sll.pointer++;
 		va->data.sll.count--;
-		return o;
+		return out;
 	}
-	sll_object_t o;
+	sll_object_t out;
 	if (va->type==SLL_VAR_ARG_LIST_TYPE_C){
-		o=va_arg(*(va->data.c),sll_object_t);
+		out=va_arg(*(va->data.c),sll_object_t);
 	}
 	else{
 		SLL_ASSERT(va->data.struct_.offset_count);
 		sll_size_t off=*(va->data.struct_.offset_data);
 		va->data.struct_.offset_data++;
 		va->data.struct_.offset_count--;
-		o=*((sll_object_t*)PTR(ADDR(va->data.struct_.base_pointer)+off));
+		out=*((sll_object_t*)PTR(ADDR(va->data.struct_.base_pointer)+off));
 	}
-	if (!o){
+	if (!out){
 		return SLL_ACQUIRE_STATIC_INT(0);
 	}
-	SLL_ACQUIRE(o);
-	return o;
+	SLL_ACQUIRE(out);
+	return out;
 }
 
 

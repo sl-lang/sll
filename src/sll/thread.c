@@ -64,8 +64,8 @@ void _thread_init(void){
 
 sll_thread_index_t _thread_new(void){
 	SLL_CRITICAL_ERROR(sll_platform_lock_acquire(_thread_lock));
-	sll_size_t o;
-	SLL_HANDLE_CONTAINER_ALLOC(&_thread_data,&o);
+	sll_size_t out;
+	SLL_HANDLE_CONTAINER_ALLOC(&_thread_data,&out);
 	void* ptr=NULL;
 	if (_scheduler_allocator_cache_pool_len){
 		_scheduler_allocator_cache_pool_len--;
@@ -96,10 +96,10 @@ sll_thread_index_t _thread_new(void){
 	n->state=THREAD_STATE_INITIALIZED;
 	n->flags=0;
 	n->_last_instruction=NULL;
-	*(_thread_data.data+o)=n;
+	*(_thread_data.data+out)=n;
 	_thread_active_count++;
 	SLL_CRITICAL(sll_platform_lock_release(_thread_lock));
-	return (sll_thread_index_t)o;
+	return (sll_thread_index_t)out;
 }
 
 
@@ -164,12 +164,12 @@ sll_bool_t _thread_wait(sll_integer_t thread_index){
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_thread_index_t sll_thread_create(sll_integer_t function,const sll_object_t* args,sll_arg_count_t arg_count){
 	if (function&&function<=sll_current_runtime_data->assembly_data->function_table.length){
-		sll_thread_index_t o=_thread_new();
-		thread_data_t* thr=*(_thread_data.data+o);
+		sll_thread_index_t out=_thread_new();
+		thread_data_t* thr=*(_thread_data.data+out);
 		sll_copy_objects(args,arg_count,thr->stack);
 		thr->stack_index+=arg_count;
 		_call_function(thr,(sll_function_index_t)(function-1),arg_count,0);
-		return o;
+		return out;
 	}
 	SLL_UNIMPLEMENTED();
 }
