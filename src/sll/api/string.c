@@ -20,7 +20,7 @@
 
 
 
-static void _write_int(sll_size_t v,sll_string_t* o){
+static void _write_int(sll_size_t v,sll_string_t* out){
 	sll_string_length_t i=0;
 	sll_char_t buffer[20];
 	do{
@@ -28,75 +28,75 @@ static void _write_int(sll_size_t v,sll_string_t* o){
 		i++;
 		v/=10;
 	} while (v);
-	sll_string_increase(o,i);
+	sll_string_increase(out,i);
 	while (i){
 		i--;
-		o->data[o->length]=buffer[i]+48;
-		o->length++;
+		out->data[out->length]=buffer[i]+48;
+		out->length++;
 	}
 }
 
 
 
-static void _write_char(sll_char_t c,sll_string_t* o){
+static void _write_char(sll_char_t c,sll_string_t* out){
 	if (c=='\"'||c=='\''||c=='\\'){
-		sll_string_increase(o,2);
-		o->data[o->length]='\\';
-		o->data[o->length+1]=c;
-		o->length+=2;
+		sll_string_increase(out,2);
+		out->data[out->length]='\\';
+		out->data[out->length+1]=c;
+		out->length+=2;
 	}
 	else if (c=='\t'){
-		sll_string_increase(o,2);
-		o->data[o->length]='\\';
-		o->data[o->length+1]='t';
-		o->length+=2;
+		sll_string_increase(out,2);
+		out->data[out->length]='\\';
+		out->data[out->length+1]='t';
+		out->length+=2;
 	}
 	else if (c=='\n'){
-		sll_string_increase(o,2);
-		o->data[o->length]='\\';
-		o->data[o->length+1]='n';
-		o->length+=2;
+		sll_string_increase(out,2);
+		out->data[out->length]='\\';
+		out->data[out->length+1]='n';
+		out->length+=2;
 	}
 	else if (c=='\v'){
-		sll_string_increase(o,2);
-		o->data[o->length]='\\';
-		o->data[o->length+1]='v';
-		o->length+=2;
+		sll_string_increase(out,2);
+		out->data[out->length]='\\';
+		out->data[out->length+1]='v';
+		out->length+=2;
 	}
 	else if (c=='\f'){
-		sll_string_increase(o,2);
-		o->data[o->length]='\\';
-		o->data[o->length+1]='f';
-		o->length+=2;
+		sll_string_increase(out,2);
+		out->data[out->length]='\\';
+		out->data[out->length+1]='f';
+		out->length+=2;
 	}
 	else if (c=='\r'){
-		sll_string_increase(o,2);
-		o->data[o->length]='\\';
-		o->data[o->length+1]='r';
-		o->length+=2;
+		sll_string_increase(out,2);
+		out->data[out->length]='\\';
+		out->data[out->length+1]='r';
+		out->length+=2;
 	}
 	else if (SLL_STRING_HEX_ESCAPE(c)){
-		sll_string_increase(o,4);
-		o->data[o->length]='\\';
-		o->data[o->length+1]='x';
-		o->data[o->length+2]=(c>>4)+((c>>4)>9?87:48);
-		o->data[o->length+3]=(c&15)+((c&15)>9?87:48);
-		o->length+=4;
+		sll_string_increase(out,4);
+		out->data[out->length]='\\';
+		out->data[out->length+1]='x';
+		out->data[out->length+2]=(c>>4)+((c>>4)>9?87:48);
+		out->data[out->length+3]=(c&15)+((c&15)>9?87:48);
+		out->length+=4;
 	}
 	else{
-		sll_string_increase(o,1);
-		o->data[o->length]=c;
-		o->length++;
+		sll_string_increase(out,1);
+		out->data[out->length]=c;
+		out->length++;
 	}
 }
 
 
 
-static void _object_to_string(sll_object_t a,sll_string_t* o,address_list_t* addr_list){
+static void _object_to_string(sll_object_t a,sll_string_t* out,address_list_t* addr_list){
 	if (!SLL_GET_OBJECT_REFERENCE_COUNTER(a)){
-		sll_string_increase(o,17);
-		sll_copy_string(SLL_CHAR("<released object>"),o->data+o->length);
-		o->length+=17;
+		sll_string_increase(out,17);
+		sll_copy_string(SLL_CHAR("<released object>"),out->data+out->length);
+		out->length+=17;
 		return;
 	}
 	address_list_t new_addr_list={
@@ -105,22 +105,22 @@ static void _object_to_string(sll_object_t a,sll_string_t* o,address_list_t* add
 	};
 	while (addr_list){
 		if (ADDR(a)==addr_list->addr){
-			sll_string_increase(o,20);
-			o->data[o->length]='%';
-			o->length++;
-			o->data[o->length]='%';
-			o->length++;
+			sll_string_increase(out,20);
+			out->data[out->length]='%';
+			out->length++;
+			out->data[out->length]='%';
+			out->length++;
 			__SLL_U32 i=64;
 			do{
 				i-=4;
 				sll_char_t v=(ADDR(a)>>i)&15;
-				o->data[o->length]=v+(v>9?87:48);
-				o->length++;
+				out->data[out->length]=v+(v>9?87:48);
+				out->length++;
 			} while (i);
-			o->data[o->length]='%';
-			o->length++;
-			o->data[o->length]='%';
-			o->length++;
+			out->data[out->length]='%';
+			out->length++;
+			out->data[out->length]='%';
+			out->length++;
 			return;
 		}
 		addr_list=addr_list->next;
@@ -130,123 +130,123 @@ static void _object_to_string(sll_object_t a,sll_string_t* o,address_list_t* add
 			{
 				sll_integer_t v=a->data.int_;
 				if (v<0){
-					sll_string_increase(o,1);
-					o->data[o->length]='-';
+					sll_string_increase(out,1);
+					out->data[out->length]='-';
 					v=-v;
-					o->length++;
+					out->length++;
 				}
-				_write_int(v,o);
+				_write_int(v,out);
 				return;
 			}
 		case SLL_OBJECT_TYPE_FLOAT:
 			{
 				sll_char_t buffer[256];
 				sll_string_length_t bfl=snprintf((char*)buffer,256,"%.16lf",a->data.float_);
-				sll_string_increase(o,bfl);
-				sll_copy_data(buffer,bfl,o->data+o->length);
-				o->length+=bfl;
+				sll_string_increase(out,bfl);
+				sll_copy_data(buffer,bfl,out->data+out->length);
+				out->length+=bfl;
 				return;
 			}
 		case SLL_OBJECT_TYPE_CHAR:
-			sll_string_increase(o,1);
-			o->data[o->length]='\'';
-			o->length++;
-			_write_char(a->data.char_,o);
-			sll_string_increase(o,1);
-			o->data[o->length]='\'';
-			o->length++;
+			sll_string_increase(out,1);
+			out->data[out->length]='\'';
+			out->length++;
+			_write_char(a->data.char_,out);
+			sll_string_increase(out,1);
+			out->data[out->length]='\'';
+			out->length++;
 			return;
 		case SLL_OBJECT_TYPE_COMPLEX:
 			{
 				sll_char_t buffer[256];
 				if (a->data.complex_.real){
 					sll_string_length_t bfl=snprintf((char*)buffer,256,"%.16lf",a->data.complex_.real);
-					sll_string_increase(o,bfl);
-					sll_copy_data(buffer,bfl,o->data+o->length);
-					o->length+=bfl;
+					sll_string_increase(out,bfl);
+					sll_copy_data(buffer,bfl,out->data+out->length);
+					out->length+=bfl;
 					if (a->data.complex_.imag){
 						sll_float_t v=a->data.complex_.imag;
-						sll_string_increase(o,1);
+						sll_string_increase(out,1);
 						if (v<0){
-							o->data[o->length]='-';
+							out->data[out->length]='-';
 							v=-v;
 						}
 						else{
-							o->data[o->length]='+';
+							out->data[out->length]='+';
 						}
-						o->length++;
+						out->length++;
 						bfl=snprintf((char*)buffer,256,"%.16lfi",v);
-						sll_string_increase(o,bfl);
-						sll_copy_data(buffer,bfl,o->data+o->length);
-						o->length+=bfl;
+						sll_string_increase(out,bfl);
+						sll_copy_data(buffer,bfl,out->data+out->length);
+						out->length+=bfl;
 					}
 				}
 				else if (a->data.complex_.imag){
 					sll_string_length_t bfl=snprintf((char*)buffer,256,"%.16lfi",a->data.complex_.imag);
-					sll_string_increase(o,bfl);
-					sll_copy_data(buffer,bfl,o->data+o->length);
-					o->length+=bfl;
+					sll_string_increase(out,bfl);
+					sll_copy_data(buffer,bfl,out->data+out->length);
+					out->length+=bfl;
 				}
 				else{
-					sll_string_increase(o,1);
-					o->data[o->length]='0';
-					o->length++;
+					sll_string_increase(out,1);
+					out->data[out->length]='0';
+					out->length++;
 				}
 				return;
 			}
 		case SLL_OBJECT_TYPE_STRING:
-			sll_string_increase(o,1);
-			o->data[o->length]='\"';
-			o->length++;
+			sll_string_increase(out,1);
+			out->data[out->length]='\"';
+			out->length++;
 			for (sll_string_length_t i=0;i<a->data.string.length;i++){
-				_write_char(a->data.string.data[i],o);
+				_write_char(a->data.string.data[i],out);
 			}
-			sll_string_increase(o,1);
-			o->data[o->length]='\"';
-			o->length++;
+			sll_string_increase(out,1);
+			out->data[out->length]='\"';
+			out->length++;
 			return;
 		case SLL_OBJECT_TYPE_ARRAY:
-			sll_string_increase(o,1);
-			o->data[o->length]='[';
-			o->length++;
+			sll_string_increase(out,1);
+			out->data[out->length]='[';
+			out->length++;
 			for (sll_array_length_t i=0;i<a->data.array.length;i++){
 				if (i){
-					sll_string_increase(o,1);
-					o->data[o->length]=' ';
-					o->length++;
+					sll_string_increase(out,1);
+					out->data[out->length]=' ';
+					out->length++;
 				}
-				_object_to_string(*(a->data.array.data+i),o,&new_addr_list);
+				_object_to_string(*(a->data.array.data+i),out,&new_addr_list);
 			}
-			sll_string_increase(o,1);
-			o->data[o->length]=']';
-			o->length++;
+			sll_string_increase(out,1);
+			out->data[out->length]=']';
+			out->length++;
 			return;
 		case SLL_OBJECT_TYPE_MAP:
-			sll_string_increase(o,1);
-			o->data[o->length]='<';
-			o->length++;
+			sll_string_increase(out,1);
+			out->data[out->length]='<';
+			out->length++;
 			for (sll_array_length_t i=0;i<(a->data.map.length<<1);i++){
 				if (i){
-					sll_string_increase(o,1);
-					o->data[o->length]=' ';
-					o->length++;
+					sll_string_increase(out,1);
+					out->data[out->length]=' ';
+					out->length++;
 				}
-				_object_to_string(*(a->data.map.data+i),o,&new_addr_list);
+				_object_to_string(*(a->data.map.data+i),out,&new_addr_list);
 			}
-			sll_string_increase(o,1);
-			o->data[o->length]='>';
-			o->length++;
+			sll_string_increase(out,1);
+			out->data[out->length]='>';
+			out->length++;
 			return;
 		default:
 			{
 				if (!sll_current_runtime_data||a->type>sll_current_runtime_data->type_table->length+SLL_MAX_OBJECT_TYPE){
-					sll_string_increase(o,3);
-					sll_copy_string(SLL_CHAR("<&:"),o->data+o->length);
-					o->length+=3;
-					_write_int(a->type,o);
-					sll_string_increase(o,5);
-					sll_copy_string(SLL_CHAR(" ...>"),o->data+o->length);
-					o->length+=5;
+					sll_string_increase(out,3);
+					sll_copy_string(SLL_CHAR("<&:"),out->data+out->length);
+					out->length+=3;
+					_write_int(a->type,out);
+					sll_string_increase(out,5);
+					sll_copy_string(SLL_CHAR(" ...>"),out->data+out->length);
+					out->length+=5;
 					return;
 				}
 				const sll_object_type_data_t* dt=*(sll_current_runtime_data->type_table->data+a->type-SLL_MAX_OBJECT_TYPE-1);
@@ -255,36 +255,36 @@ static void _object_to_string(sll_object_t a,sll_string_t* o,address_list_t* add
 					if (v){
 						sll_object_t str=sll_operator_cast(v,sll_static_int[SLL_OBJECT_TYPE_STRING]);
 						SLL_RELEASE(v);
-						sll_string_increase(o,str->data.string.length);
-						sll_copy_data(str->data.string.data,str->data.string.length,o->data+o->length);
-						o->length+=str->data.string.length;
+						sll_string_increase(out,str->data.string.length);
+						sll_copy_data(str->data.string.data,str->data.string.length,out->data+out->length);
+						out->length+=str->data.string.length;
 						SLL_RELEASE(str);
 						return;
 					}
 				}
-				sll_string_increase(o,3);
-				sll_copy_string(SLL_CHAR("<&:"),o->data+o->length);
-				o->length+=3;
+				sll_string_increase(out,3);
+				sll_copy_string(SLL_CHAR("<&:"),out->data+out->length);
+				out->length+=3;
 				if (!dt->name.length){
-					_write_int(a->type,o);
+					_write_int(a->type,out);
 				}
 				else{
-					sll_string_increase(o,dt->name.length);
-					sll_copy_data(dt->name.data,dt->name.length,o->data+o->length);
-					o->length+=dt->name.length;
+					sll_string_increase(out,dt->name.length);
+					sll_copy_data(dt->name.data,dt->name.length,out->data+out->length);
+					out->length+=dt->name.length;
 				}
 				sll_object_field_t* p=a->data.fields;
 				for (sll_arg_count_t i=0;i<dt->field_count;i++){
 					sll_string_t s=dt->fields[i].name;
-					sll_string_increase(o,1);
-					o->data[o->length]=' ';
-					o->length++;
+					sll_string_increase(out,1);
+					out->data[out->length]=' ';
+					out->length++;
 					for (sll_string_length_t j=0;j<s.length;j++){
-						_write_char(s.data[j],o);
+						_write_char(s.data[j],out);
 					}
-					sll_string_increase(o,1);
-					o->data[o->length]=' ';
-					o->length++;
+					sll_string_increase(out,1);
+					out->data[out->length]=' ';
+					out->length++;
 					sll_object_t tmp;
 					switch (dt->fields[i].type){
 						case SLL_OBJECT_TYPE_INT:
@@ -301,13 +301,13 @@ static void _object_to_string(sll_object_t a,sll_string_t* o,address_list_t* add
 							SLL_ACQUIRE(tmp);
 							break;
 					}
-					_object_to_string(tmp,o,&new_addr_list);
+					_object_to_string(tmp,out,&new_addr_list);
 					SLL_RELEASE(tmp);
 					p++;
 				}
-				sll_string_increase(o,1);
-				o->data[o->length]='>';
-				o->length++;
+				sll_string_increase(out,1);
+				out->data[out->length]='>';
+				out->length++;
 				return;
 			}
 	}
@@ -388,29 +388,29 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_string_format(const sll_string_t* fmt
 
 
 __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_string_index(const sll_string_t* str,const sll_char_string_t* substr,sll_string_length_t start){
-	sll_string_length_t o=(substr->type==SLL_PARSE_ARGS_TYPE_CHAR?sll_string_index_char(str,substr->data.char_,0,start):sll_string_index(str,substr->data.string,start));
-	return (o==SLL_MAX_STRING_LENGTH?(sll_integer_t)-1:o);
+	sll_string_length_t out=(substr->type==SLL_PARSE_ARGS_TYPE_CHAR?sll_string_index_char(str,substr->data.char_,0,start):sll_string_index(str,substr->data.string,start));
+	return (out==SLL_MAX_STRING_LENGTH?(sll_integer_t)-1:out);
 }
 
 
 
 __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_string_index_list(const sll_string_t* str,const sll_char_string_t* substr,sll_bool_t inv){
-	sll_string_length_t o=(substr->type==SLL_PARSE_ARGS_TYPE_CHAR?sll_string_index_char(str,substr->data.char_,inv,0):sll_string_index_multiple(str,substr->data.string->data,substr->data.string->length,inv));
-	return (o==SLL_MAX_STRING_LENGTH?(sll_integer_t)-1:o);
+	sll_string_length_t out=(substr->type==SLL_PARSE_ARGS_TYPE_CHAR?sll_string_index_char(str,substr->data.char_,inv,0):sll_string_index_multiple(str,substr->data.string->data,substr->data.string->length,inv));
+	return (out==SLL_MAX_STRING_LENGTH?(sll_integer_t)-1:out);
 }
 
 
 
 __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_string_index_reverse(const sll_string_t* str,const sll_char_string_t* substr){
-	sll_string_length_t o=(substr->type==SLL_PARSE_ARGS_TYPE_CHAR?sll_string_index_reverse_char(str,substr->data.char_,0):sll_string_index_reverse(str,substr->data.string));
-	return (o==SLL_MAX_STRING_LENGTH?(sll_integer_t)-1:o);
+	sll_string_length_t out=(substr->type==SLL_PARSE_ARGS_TYPE_CHAR?sll_string_index_reverse_char(str,substr->data.char_,0):sll_string_index_reverse(str,substr->data.string));
+	return (out==SLL_MAX_STRING_LENGTH?(sll_integer_t)-1:out);
 }
 
 
 
 __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_string_index_reverse_list(const sll_string_t* str,const sll_char_string_t* substr,sll_bool_t inv){
-	sll_string_length_t o=(substr->type==SLL_PARSE_ARGS_TYPE_CHAR?sll_string_index_reverse_char(str,substr->data.char_,inv):sll_string_index_reverse_multiple(str,substr->data.string->data,substr->data.string->length,inv));
-	return (o==SLL_MAX_STRING_LENGTH?(sll_integer_t)-1:o);
+	sll_string_length_t out=(substr->type==SLL_PARSE_ARGS_TYPE_CHAR?sll_string_index_reverse_char(str,substr->data.char_,inv):sll_string_index_reverse_multiple(str,substr->data.string->data,substr->data.string->length,inv));
+	return (out==SLL_MAX_STRING_LENGTH?(sll_integer_t)-1:out);
 }
 
 

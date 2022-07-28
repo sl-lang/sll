@@ -49,9 +49,9 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_vm_get_location(sll_instruction_index
 		instruction_index--;
 	}
 	sll_audit(SLL_CHAR("sll.vm.location"),SLL_CHAR("h"),instruction_index);
-	sll_object_t o=sll_instruction_to_location(instruction_index);
-	*out=o->data.array;
-	SLL_CRITICAL(sll_destroy_object(o));
+	sll_object_t object=sll_instruction_to_location(instruction_index);
+	*out=object->data.array;
+	SLL_CRITICAL(sll_destroy_object(object));
 }
 
 
