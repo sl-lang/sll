@@ -15,32 +15,32 @@ int main(void){
 		return 0;
 	}
 	char buffer[MAX_PATH+STRLEN(LIBRARY_NAME)];
-	DWORD bfl=GetModuleFileNameA(NULL,buffer,MAX_PATH);
-	while (bfl&&buffer[bfl]!='\\'&&buffer[bfl]!='/'){
-		bfl--;
+	DWORD buffer_length=GetModuleFileNameA(NULL,buffer,MAX_PATH);
+	while (buffer_length&&buffer[buffer_length]!='\\'&&buffer[buffer_length]!='/'){
+		buffer_length--;
 	}
-	if (!bfl){
+	if (!buffer_length){
 		buffer[0]='/';
-		bfl=1;
+		buffer_length=1;
 	}
-	bfl++;
+	buffer_length++;
 	for (unsigned int i=0;i<STRLEN(LIBRARY_NAME);i++){
-		buffer[bfl+i]=LIBRARY_NAME[i];
+		buffer[buffer_length+i]=LIBRARY_NAME[i];
 	}
-	buffer[bfl+STRLEN(LIBRARY_NAME)]=0;
-	HMODULE lh=LoadLibraryExA(buffer,NULL,0);
-	if (!lh){
+	buffer[buffer_length+STRLEN(LIBRARY_NAME)]=0;
+	HMODULE library_handle=LoadLibraryExA(buffer,NULL,0);
+	if (!library_handle){
 		return 0;
 	}
-	sll_version_t (*ver)(void)=(void*)GetProcAddress(lh,"sll_version");
+	sll_version_t (*ver)(void)=(void*)GetProcAddress(library_handle,"sll_version");
 	if (!ver||ver()!=SLL_VERSION){
-		FreeLibrary(lh);
+		FreeLibrary(library_handle);
 		return 0;
 	}
-	sll_return_code_t (*cli)(sll_array_length_t argc,const sll_char_t*const* argv)=(void*)GetProcAddress(lh,"sll_cli_main");
-	sll_return_code_t o=(cli?cli(__argc-1,__argv+1):0);
-	FreeLibrary(lh);
-	return o;
+	sll_return_code_t (*cli)(sll_array_length_t argc,const sll_char_t*const* argv)=(void*)GetProcAddress(library_handle,"sll_cli_main");
+	sll_return_code_t out=(cli?cli(__argc-1,__argv+1):0);
+	FreeLibrary(library_handle);
+	return out;
 }
 
 
