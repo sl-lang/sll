@@ -328,16 +328,16 @@
 		(:> "[init: \"" a "\"]")
 	}) @@init@@
 	(,,, a {
-		(= a$cnt (+ a$cnt 1))
+		(= a$count (+ a$count 1))
 		(:> "[copy: \"" a "\"]")
 	}) @@copy@@
 	(,,, a {
-		(@@ (<- string$format "<counter=%u>" a$cnt))
+		(@@ (<- string$format "<counter=%u>" a$count))
 	}) @@string@@
 	(,,, a {
 		(:> "[delete: \"" a "\"]")
 	}) @@delete@@
-	int_type cnt
+	int_type count
 ))
 
 (= test (. extra_func_type))

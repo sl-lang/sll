@@ -27,18 +27,18 @@
 
 #define GC_PAGE_HEADER_DEALLOCATION_THRESHOLD 256
 
-#define GC_PAGE_HEADER_CAN_DELETE(pg) ((pg)->cnt==1)
+#define GC_PAGE_HEADER_CAN_DELETE(pg) ((pg)->count==1)
 #define GC_PAGE_HEADER_INCREASE(pg) \
 	do{ \
 		gc_page_header_t* __pg=(pg); \
-		__pg->cnt+=2; \
-		if (__pg->cnt>=(GC_PAGE_HEADER_DEALLOCATION_THRESHOLD<<1)){ \
-			__pg->cnt|=1; \
+		__pg->count+=2; \
+		if (__pg->count>=(GC_PAGE_HEADER_DEALLOCATION_THRESHOLD<<1)){ \
+			__pg->count|=1; \
 		} \
 	} while (0)
 #define GC_PAGE_HEADER_DECREASE(pg) \
 	do{ \
-		(pg)->cnt-=2; \
+		(pg)->count-=2; \
 	} while (0)
 
 #define GC_GET_PREV_OBJECT(o) ((sll_object_t)PTR(((o)->_data&0x1fffffffffffull)<<3))
@@ -123,8 +123,8 @@ typedef __SLL_U64 gc_multiple_root_t;
 
 
 typedef struct _GC_PAGE_HEADER{
-	sll_size_t cnt;
-	sll_size_t garbage_cnt;
+	sll_size_t count;
+	sll_size_t garbage_count;
 	struct _GC_PAGE_HEADER* prev;
 	struct _GC_PAGE_HEADER* next;
 } gc_page_header_t;

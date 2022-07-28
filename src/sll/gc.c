@@ -56,7 +56,7 @@ static void _mark_objects(sll_object_t object){
 		return;
 	}
 	GC_SET_MARKED(object);
-	GC_MEMORY_PAGE_HEADER(object)->garbage_cnt--;
+	GC_MEMORY_PAGE_HEADER(object)->garbage_count--;
 	if (object->type==SLL_OBJECT_TYPE_ARRAY){
 		for (sll_array_length_t i=0;i<object->data.array.length;i++){
 			_mark_objects(object->data.array.data[i]);
@@ -95,7 +95,7 @@ void _gc_release_data(void){
 	SLL_ASSERT(_gc_fast_object_pool.read==_gc_fast_object_pool.write);
 	sll_bool_t err=0;
 	while (_gc_memory_page_data.root){
-		if (_gc_memory_page_data.root->cnt){
+		if (_gc_memory_page_data.root->count){
 			GC_ITER_PAGE_OBJECTS(_gc_memory_page_data.root){
 				if (SLL_GET_OBJECT_REFERENCE_COUNTER(current)){
 					err=1;
@@ -310,7 +310,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t sll_create_object(sll_object_type
 					}
 					pg->prev=NULL;
 					pg->next=_gc_memory_page_data.root;
-					pg->cnt=0;
+					pg->count=0;
 					_gc_memory_page_data.root=pg;
 					_gc_memory_page_data.data[_gc_memory_page_data.length]=pg;
 					_gc_memory_page_data.length++;
@@ -417,7 +417,7 @@ __SLL_EXTERNAL void sll_gc_collect(void){
 	}
 	_gc_data.cleanup_in_progress=1;
 	do{
-		page->garbage_cnt=page->cnt>>1;
+		page->garbage_count=page->count>>1;
 		page=page->next;
 	} while (page);
 	_gc_data.object_marker_signature=!_gc_data.object_marker_signature;
@@ -446,13 +446,13 @@ __SLL_EXTERNAL void sll_gc_collect(void){
 	}
 	page=_gc_memory_page_data.root;
 	do{
-		sll_size_t cnt=page->garbage_cnt;
-		if (cnt){
+		sll_size_t count=page->garbage_count;
+		if (count){
 			GC_ITER_PAGE_OBJECTS(page){
 				if (SLL_GET_OBJECT_REFERENCE_COUNTER(current)&&!GC_IS_MARKED(current)){
-					cnt--;
+					count--;
 					SLL_RELEASE(current);
-					if (!cnt){
+					if (!count){
 						break;
 					}
 				}

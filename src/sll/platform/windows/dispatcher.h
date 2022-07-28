@@ -22,22 +22,22 @@ static __SLL_FORCE_INLINE void _platform_init_io_dispatcher(raw_event_data_t* r_
 
 
 
-static __SLL_FORCE_INLINE event_list_length_t _platform_poll_events(raw_event_data_t* dt,void* wait,event_list_length_t cnt){
-	if (cnt>MAXIMUM_WAIT_OBJECTS){
+static __SLL_FORCE_INLINE event_list_length_t _platform_poll_events(raw_event_data_t* dt,void* wait,event_list_length_t count){
+	if (count>MAXIMUM_WAIT_OBJECTS){
 		SLL_UNIMPLEMENTED();
 	}
-	DWORD o=WaitForMultipleObjects(cnt,dt,FALSE,INFINITE);
+	DWORD o=WaitForMultipleObjects(count,dt,FALSE,INFINITE);
 	if (o==WAIT_FAILED){
-		return cnt;
+		return count;
 	}
 	o-=WAIT_OBJECT_0;
-	SLL_ASSERT(o<cnt);
+	SLL_ASSERT(o<count);
 	if (!o){
 		ResetEvent(*dt);
 		SetEvent(wait);
 		return 0;
 	}
-	return (sll_platform_file_data_available(*(dt+o))?o:cnt);
+	return (sll_platform_file_data_available(*(dt+o))?o:count);
 }
 
 

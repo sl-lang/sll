@@ -30,14 +30,14 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_platform_file_data_available(sl
 				DWORD size;
 				while (GetNumberOfConsoleInputEvents((HANDLE)fd,&size)&&size){
 					INPUT_RECORD ir;
-					DWORD cnt;
-					if (!PeekConsoleInput((HANDLE)fd,&ir,1,&cnt)||!cnt){
+					DWORD count;
+					if (!PeekConsoleInput((HANDLE)fd,&ir,1,&count)||!count){
 						return 0;
 					}
 					if (ir.EventType==KEY_EVENT){
 						return 1;
 					}
-					if (!ReadConsoleInput((HANDLE)fd,&ir,1,&cnt)){
+					if (!ReadConsoleInput((HANDLE)fd,&ir,1,&count)){
 						return 0;
 					}
 				}

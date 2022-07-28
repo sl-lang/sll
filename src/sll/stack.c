@@ -70,18 +70,18 @@ sll_node_t* _acquire_next_node(sll_source_file_t* sf){
 void _clone_node_stack(const sll_source_file_t* src_sf,sll_source_file_t* dst_sf){
 	_init_node_stack(dst_sf);
 	dst_sf->first_node=dst_sf->_stack.next_node;
-	sll_node_offset_t cnt=((SLL_ROUND_PAGE(NODE_STACK_ALLOC_SIZE)-sizeof(node_stack_page_t)-sizeof(sll_node_t)*2)/sizeof(sll_node_t));
+	sll_node_offset_t count=((SLL_ROUND_PAGE(NODE_STACK_ALLOC_SIZE)-sizeof(node_stack_page_t)-sizeof(sll_node_t)*2)/sizeof(sll_node_t));
 	node_stack_page_t* src=src_sf->_stack.start;
 	node_stack_page_t* dst=dst_sf->_stack.start;
 	sll_node_offset_t src_cnt=src_sf->_stack.offset;
 	while (1){
 		if (!src->next){
-			cnt=src_cnt;
+			count=src_cnt;
 		}
-		sll_copy_data(PTR(ADDR(src)+sizeof(node_stack_page_t)+sizeof(sll_node_t)),cnt*sizeof(sll_node_t),PTR(ADDR(dst)+sizeof(node_stack_page_t)+sizeof(sll_node_t)));
-		dst_sf->_stack.offset+=cnt;
-		dst_sf->_stack.next_node+=cnt;
-		src_cnt-=cnt;
+		sll_copy_data(PTR(ADDR(src)+sizeof(node_stack_page_t)+sizeof(sll_node_t)),count*sizeof(sll_node_t),PTR(ADDR(dst)+sizeof(node_stack_page_t)+sizeof(sll_node_t)));
+		dst_sf->_stack.offset+=count;
+		dst_sf->_stack.next_node+=count;
+		src_cnt-=count;
 		if (!src->next){
 			return;
 		}
@@ -94,11 +94,11 @@ void _clone_node_stack(const sll_source_file_t* src_sf,sll_source_file_t* dst_sf
 
 
 sll_assembly_instruction_t* _get_instruction_at_offset(const sll_assembly_data_t* assembly_data,sll_instruction_index_t off){
-	sll_instruction_index_t cnt=(sll_instruction_index_t)(((SLL_ROUND_PAGE(ASSEMBLY_INSTRUCTION_STACK_ALLOC_SIZE)-sizeof(assembly_stack_page_t)-sizeof(sll_assembly_instruction_t)*2)/sizeof(sll_assembly_instruction_t)));
+	sll_instruction_index_t count=(sll_instruction_index_t)(((SLL_ROUND_PAGE(ASSEMBLY_INSTRUCTION_STACK_ALLOC_SIZE)-sizeof(assembly_stack_page_t)-sizeof(sll_assembly_instruction_t)*2)/sizeof(sll_assembly_instruction_t)));
 	assembly_stack_page_t* pg=assembly_data->_instruction_stack.start;
-	while (off>=cnt){
+	while (off>=count){
 		pg=pg->next;
-		off-=cnt;
+		off-=count;
 	}
 	return PTR(ADDR(pg)+sizeof(assembly_stack_page_t)+sizeof(sll_assembly_instruction_t)*(off+1));
 }
@@ -106,11 +106,11 @@ sll_assembly_instruction_t* _get_instruction_at_offset(const sll_assembly_data_t
 
 
 sll_node_t* _get_node_at_offset(const sll_source_file_t* sf,sll_node_offset_t off){
-	sll_node_offset_t cnt=(sll_node_offset_t)(((SLL_ROUND_PAGE(NODE_STACK_ALLOC_SIZE)-sizeof(node_stack_page_t)-sizeof(sll_node_t)*2)/sizeof(sll_node_t)));
+	sll_node_offset_t count=(sll_node_offset_t)(((SLL_ROUND_PAGE(NODE_STACK_ALLOC_SIZE)-sizeof(node_stack_page_t)-sizeof(sll_node_t)*2)/sizeof(sll_node_t)));
 	node_stack_page_t* pg=sf->_stack.start;
-	while (off>=cnt){
+	while (off>=count){
 		pg=pg->next;
-		off-=cnt;
+		off-=count;
 	}
 	return PTR(ADDR(pg)+sizeof(node_stack_page_t)+sizeof(sll_node_t)*(off+1));
 }

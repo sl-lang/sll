@@ -58,10 +58,10 @@ static void _build_struct_offsets(const sll_char_t** format,sll_string_length_t*
 	(*format_length)--;
 	sll_char_t st=**format;
 	(*format)++;
-	sll_arg_count_t cnt=1;
+	sll_arg_count_t count=1;
 	while (*format_length&&(**format==' '||(**format>8&&**format<14)||**format=='!'||**format=='+'||**format=='*')){
 		if (**format=='+'){
-			cnt=2;
+			count=2;
 		}
 		(*format_length)--;
 		(*format)++;
@@ -72,10 +72,10 @@ static void _build_struct_offsets(const sll_char_t** format,sll_string_length_t*
 			out->converter_function_data=sll_reallocate(out->converter_function_data,out->converter_function_count*sizeof(void*));
 			*(out->converter_function_data+out->converter_function_count-1)=sll_var_arg_get(va);
 		case 'p':
-			cnt=1;
+			count=1;
 			goto _read_offsets;
 		case 'M':
-			cnt=2;
+			count=2;
 		case 'h':
 		case 'u':
 		case 'i':
@@ -90,10 +90,10 @@ static void _build_struct_offsets(const sll_char_t** format,sll_string_length_t*
 		case 'm':
 		case 'O':
 _read_offsets:
-			out->offset_count+=cnt;
+			out->offset_count+=count;
 			out->offset_data=sll_reallocate(out->offset_data,out->offset_count*sizeof(sll_size_t));
 			*(out->offset_data+out->offset_count-1)=sll_var_arg_get_int(va);
-			if (cnt==2){
+			if (count==2){
 				*(out->offset_data+out->offset_count-2)=sll_var_arg_get_int(va);
 			}
 			return;

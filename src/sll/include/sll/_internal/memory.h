@@ -62,7 +62,7 @@ typedef struct _POOL_DATA{
 	pool_data_counter_t alloc;
 	pool_data_counter_t miss;
 	pool_data_miss_bitmap_t last_miss;
-	pool_data_counter_t cnt;
+	pool_data_counter_t count;
 	void* ptr[MEMORY_POOL_MAX_BLOCKS];
 } pool_data_t;
 

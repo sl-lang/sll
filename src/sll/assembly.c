@@ -795,17 +795,17 @@ static const sll_node_t* _mark_loop_delete(const sll_node_t* o,const assembly_ge
 
 
 
-static void _init_loop_data(assembly_generator_data_t* g_dt,assembly_loop_generator_data_t* lg_dt,assembly_instruction_label_t cnt,assembly_instruction_label_t brk){
+static void _init_loop_data(assembly_generator_data_t* g_dt,assembly_loop_generator_data_t* lg_dt,assembly_instruction_label_t count,assembly_instruction_label_t brk){
 	lg_dt->last_loop_data=g_dt->loop_data;
-	g_dt->loop_data.continue_=cnt;
+	g_dt->loop_data.continue_=count;
 	g_dt->loop_data.break_=brk;
 	lg_dt->variable_data=sll_zero_allocate(g_dt->loop_variable_count*sizeof(bitmap_t));
 }
 
 
 
-static const sll_node_t* _generate_loop_start(assembly_generator_data_t* g_dt,const sll_node_t* o,assembly_loop_generator_data_t* lg_dt,assembly_instruction_label_t cnt,assembly_instruction_label_t brk){
-	_init_loop_data(g_dt,lg_dt,cnt,brk);
+static const sll_node_t* _generate_loop_start(assembly_generator_data_t* g_dt,const sll_node_t* o,assembly_loop_generator_data_t* lg_dt,assembly_instruction_label_t count,assembly_instruction_label_t brk){
+	_init_loop_data(g_dt,lg_dt,count,brk);
 	SLL_ASSERT(o->data.loop.arg_count);
 	sll_arg_count_t l=o->data.loop.arg_count-1;
 	sll_scope_t sc=o->data.loop.scope;

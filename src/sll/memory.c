@@ -83,13 +83,13 @@ static void _update_pool_extra(void){
 			if (new*b_sz>=MEMORY_POOL_MAX_NEW_SIZE){
 				new=MEMORY_POOL_MAX_NEW_SIZE/b_sz;
 			}
-			if (new>MEMORY_POOL_MAX_BLOCKS-_memory_pool[i].cnt){
-				new=MEMORY_POOL_MAX_BLOCKS-_memory_pool[i].cnt;
+			if (new>MEMORY_POOL_MAX_BLOCKS-_memory_pool[i].count){
+				new=MEMORY_POOL_MAX_BLOCKS-_memory_pool[i].count;
 			}
 			while (new){
 				new--;
-				_memory_pool[i].ptr[_memory_pool[i].cnt]=malloc(b_sz);
-				_memory_pool[i].cnt++;
+				_memory_pool[i].ptr[_memory_pool[i].count]=malloc(b_sz);
+				_memory_pool[i].count++;
 			}
 		}
 		_memory_pool[i].alloc=0;
@@ -124,12 +124,12 @@ static __SLL_FORCE_INLINE void _pool_add(user_mem_block_t* block){
 	SLL_ASSERT(!(block->data&USER_MEM_BLOCK_FLAG_STACK));
 	SLL_ASSERT(!(USER_MEM_BLOCK_GET_SIZE(block)&15));
 	sll_size_t sz=(USER_MEM_BLOCK_GET_SIZE(block)>>4)-1;
-	if (sz>=MEMORY_POOL_SIZE||_memory_pool[sz].cnt==MEMORY_POOL_MAX_BLOCKS){
+	if (sz>=MEMORY_POOL_SIZE||_memory_pool[sz].count==MEMORY_POOL_MAX_BLOCKS){
 		free(block);
 		return;
 	}
-	_memory_pool[sz].ptr[_memory_pool[sz].cnt]=block;
-	_memory_pool[sz].cnt++;
+	_memory_pool[sz].ptr[_memory_pool[sz].count]=block;
+	_memory_pool[sz].count++;
 }
 
 
@@ -143,12 +143,12 @@ static __SLL_FORCE_INLINE void* _pool_get(sll_size_t size){
 		_update_pool_extra();
 	}
 	_memory_pool[size].alloc++;
-	if (!_memory_pool[size].cnt){
+	if (!_memory_pool[size].count){
 		_memory_pool[size].miss++;
 		return NULL;
 	}
-	_memory_pool[size].cnt--;
-	return _memory_pool[size].ptr[_memory_pool[size].cnt];
+	_memory_pool[size].count--;
+	return _memory_pool[size].ptr[_memory_pool[size].count];
 }
 
 
@@ -233,7 +233,7 @@ static __SLL_FORCE_INLINE void* _allocate_chunk(sll_size_t size,sll_bool_t fail_
 
 void _memory_deinit(void){
 	for (sll_size_t i=0;i<MEMORY_POOL_SIZE;i++){
-		for (pool_data_counter_t j=0;j<_memory_pool[i].cnt;j++){
+		for (pool_data_counter_t j=0;j<_memory_pool[i].count;j++){
 			free(_memory_pool[i].ptr[j]);
 		}
 	}
@@ -248,7 +248,7 @@ void _memory_init(void){
 		_memory_pool[i].alloc=0;
 		_memory_pool[i].miss=0;
 		_memory_pool[i].last_miss=0;
-		_memory_pool[i].cnt=0;
+		_memory_pool[i].count=0;
 	}
 	_memory_stack=sll_platform_allocate_page(SLL_ROUND_LARGE_PAGE(MEMORY_STACK_SIZE),1,NULL);
 	_memory_stack_top=_memory_stack;

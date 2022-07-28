@@ -52,20 +52,20 @@ static __SLL_FORCE_INLINE void _platform_init_io_dispatcher(raw_event_data_t* r_
 
 
 
-static __SLL_FORCE_INLINE event_list_length_t _platform_poll_events(raw_event_data_t* dt,void* wait,event_list_length_t cnt){
-	int o=poll(dt,cnt,-1);
+static __SLL_FORCE_INLINE event_list_length_t _platform_poll_events(raw_event_data_t* dt,void* wait,event_list_length_t count){
+	int o=poll(dt,count,-1);
 	if (o<1){
-		return cnt;
+		return count;
 	}
 	o=0;
-	while (o<cnt){
+	while (o<count){
 		if ((dt+o)->revents&POLLIN){
 			break;
 		}
 		o++;
 	}
-	if (o==cnt){
-		return cnt;
+	if (o==count){
+		return count;
 	}
 	if (!o){
 #ifdef __SLL_BUILD_DARWIN
@@ -80,7 +80,7 @@ static __SLL_FORCE_INLINE event_list_length_t _platform_poll_events(raw_event_da
 		sem_post(wait);
 		return 0;
 	}
-	return (sll_platform_file_data_available(TO_HANDLE((dt+o)->fd))?o:cnt);
+	return (sll_platform_file_data_available(TO_HANDLE((dt+o)->fd))?o:count);
 }
 
 
