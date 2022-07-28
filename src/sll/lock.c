@@ -59,13 +59,13 @@ sll_bool_t _lock_wait(sll_integer_t lock_index){
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_lock_index_t sll_lock_create(void){
 	SLL_CRITICAL_ERROR(sll_platform_lock_acquire(_lock_lock));
-	sll_size_t o;
-	SLL_HANDLE_CONTAINER_ALLOC(&_lock_data,&o);
+	sll_size_t out;
+	SLL_HANDLE_CONTAINER_ALLOC(&_lock_data,&out);
 	lock_t* data=sll_allocate(sizeof(lock_t));
 	data->lock=SLL_UNKNOWN_THREAD_INDEX;
-	*(_lock_data.data+o)=data;
+	*(_lock_data.data+out)=data;
 	SLL_CRITICAL(sll_platform_lock_release(_lock_lock));
-	return (sll_lock_index_t)o;
+	return (sll_lock_index_t)out;
 }
 
 

@@ -195,19 +195,19 @@ static __SLL_FORCE_INLINE void* _stack_get(sll_size_t size){
 	if (!_memory_stack_top||STACK_BLOCK_GET_SIZE(_memory_stack_top)<size){
 		return NULL;
 	}
-	stack_block_header_t* o=_memory_stack_top;
-	sll_size_t blk_sz=STACK_BLOCK_GET_SIZE(o);
+	stack_block_header_t* out=_memory_stack_top;
+	sll_size_t blk_sz=STACK_BLOCK_GET_SIZE(out);
 	if (blk_sz==size){
 		_memory_stack_top=NULL;
 	}
 	else{
-		o->data=STACK_BLOCK_INIT(size);
-		STACK_BLOCK_SET_END(o);
-		_memory_stack_top=STACK_BLOCK_GET_NEXT(o);
+		out->data=STACK_BLOCK_INIT(size);
+		STACK_BLOCK_SET_END(out);
+		_memory_stack_top=STACK_BLOCK_GET_NEXT(out);
 		_init_stack_node(_memory_stack_top,blk_sz-size-sizeof(stack_block_end_t));
 	}
-	o->data=USER_MEM_BLOCK_INIT(size)|USER_MEM_BLOCK_FLAG_STACK;
-	return o;
+	out->data=USER_MEM_BLOCK_INIT(size)|USER_MEM_BLOCK_FLAG_STACK;
+	return out;
 }
 
 
@@ -427,12 +427,12 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT void* sll_zero_allocate_raw(sll_size_t size,sl
 	if (!size){
 		return NULL;
 	}
-	void* o=sll_allocate_raw(size,0);
-	if (!o){
+	void* out=sll_allocate_raw(size,0);
+	if (!out){
 		return NULL;
 	}
-	_fill_zero(o,size);
-	return o;
+	_fill_zero(out,size);
+	return out;
 }
 
 
@@ -447,10 +447,10 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT void* sll_zero_allocate_stack_raw(sll_size_t s
 	if (!size){
 		return NULL;
 	}
-	void* o=sll_allocate_stack_raw(size,fail_on_error);
-	if (!o){
+	void* out=sll_allocate_stack_raw(size,fail_on_error);
+	if (!out){
 		return NULL;
 	}
-	_fill_zero(o,size);
-	return o;
+	_fill_zero(out,size);
+	return out;
 }

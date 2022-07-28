@@ -34,13 +34,13 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_compressed_integer_t sll_compress_integer(
 
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_size_t sll_decompress_integer(sll_compressed_integer_t compressed_int){
-	sll_size_t o=compressed_int>>7;
+	sll_size_t out=compressed_int>>7;
 	if (compressed_int&64){
-		o=~o;
+		out=~out;
 	}
 	sll_size_t shift=compressed_int&63;
 	if (shift){
-		o+=1ull<<(shift+6);
+		out+=1ull<<(shift+6);
 	}
-	return o;
+	return out;
 }
