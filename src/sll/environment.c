@@ -157,7 +157,7 @@ __SLL_EXTERNAL void sll_set_environment_variable(const sll_string_t* key,const s
 	(*((sll_environment_length_t*)(&(sll_environment->length))))++;
 	*((const sll_environment_variable_t*const**)(&(sll_environment->data)))=sll_reallocate(PTR(sll_environment->data),sll_environment->length*sizeof(sll_environment_variable_t*));
 	sll_environment_variable_t* new=sll_allocate(sizeof(sll_environment_variable_t));
-	sll_string_clone(key,(sll_string_t*)(&(new->key)));
+	sll_string_clone(lowercase_key,(sll_string_t*)(&(new->key)));
 	sll_string_clone(value,(sll_string_t*)(&(new->value)));
 	*(((const sll_environment_variable_t**)(sll_environment->data))+sll_environment->length-1)=new;
 _end:
