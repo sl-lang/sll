@@ -23,29 +23,29 @@ int main(int argc,const char*const* argv){
 	}
 	char buffer[PATH_MAX+STATIC_STRLEN(LIBRARY_NAME)];
 #ifdef __SLL_BUILD_DARWIN
-	uint32_t bfl=PATH_MAX;
-	if (!_NSGetExecutablePath(buffer,&bfl)){
-		bfl=0;
-		while (buffer[bfl]){
-			bfl++;
+	uint32_t buffer_length=PATH_MAX;
+	if (!_NSGetExecutablePath(buffer,&buffer_length)){
+		buffer_length=0;
+		while (buffer[buffer_length]){
+			buffer_length++;
 		}
 #else
-	ssize_t bfl=readlink("/proc/self/exe",buffer,PATH_MAX);
-	if (bfl!=-1){
+	ssize_t buffer_length=readlink("/proc/self/exe",buffer,PATH_MAX);
+	if (buffer_length!=-1){
 #endif
-		while (bfl&&buffer[bfl]!='/'){
-			bfl--;
+		while (buffer_length&&buffer[buffer_length]!='/'){
+			buffer_length--;
 		}
-		if (!bfl){
+		if (!buffer_length){
 			buffer[0]='/';
 		}
 	}
 	else{
 		buffer[0]='/';
-		bfl=0;
+		buffer_length=0;
 	}
-	bfl++;
-	if (bfl>=STATIC_STRLEN(APT_INSTALL_PATH)){
+	buffer_length++;
+	if (buffer_length>=STATIC_STRLEN(APT_INSTALL_PATH)){
 		for (unsigned int i=0;i<STATIC_STRLEN(APT_INSTALL_PATH);i++){
 			if (buffer[i]!=APT_INSTALL_PATH[i]){
 				goto _not_apt;
@@ -59,21 +59,21 @@ int main(int argc,const char*const* argv){
 	else{
 _not_apt:
 		for (unsigned int i=0;i<STATIC_STRLEN(LIBRARY_NAME);i++){
-			buffer[bfl+i]=LIBRARY_NAME[i];
+			buffer[buffer_length+i]=LIBRARY_NAME[i];
 		}
-		buffer[bfl+STATIC_STRLEN(LIBRARY_NAME)]=0;
+		buffer[buffer_length+STATIC_STRLEN(LIBRARY_NAME)]=0;
 	}
-	void* lh=dlopen(buffer,RTLD_LAZY);
-	if (!lh){
+	void* library_handle=dlopen(buffer,RTLD_LAZY);
+	if (!library_handle){
 		return 0;
 	}
-	sll_version_t (*ver)(void)=dlsym(lh,"sll_version");
+	sll_version_t (*ver)(void)=dlsym(library_handle,"sll_version");
 	if (!ver||ver()!=SLL_VERSION){
-		dlclose(lh);
+		dlclose(library_handle);
 		return 0;
 	}
-	sll_return_code_t (*cli)(sll_array_length_t,const sll_char_t*const*)=dlsym(lh,"sll_cli_main");
-	sll_return_code_t o=(cli?cli(argc-1,(const sll_char_t*const*)(argv+1)):0);
-	dlclose(lh);
-	return o;
+	sll_return_code_t (*cli)(sll_array_length_t,const sll_char_t*const*)=dlsym(library_handle,"sll_cli_main");
+	sll_return_code_t out=(cli?cli(argc-1,(const sll_char_t*const*)(argv+1)):0);
+	dlclose(library_handle);
+	return out;
 }
