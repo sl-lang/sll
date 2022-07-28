@@ -97,8 +97,8 @@ sll_thread_index_t _scheduler_queue_pop(void){
 			return SLL_UNKNOWN_THREAD_INDEX;
 		}
 	}
-	sll_thread_index_t o=*(cpu_dt->queue+cpu_dt->queue_idx);
-	thread_data_t* thr=*(_thread_data.data+o);
+	sll_thread_index_t out=*(cpu_dt->queue+cpu_dt->queue_idx);
+	thread_data_t* thr=*(_thread_data.data+out);
 	if (thr->flags&THREAD_FLAG_SUSPENDED){
 		SLL_UNIMPLEMENTED();
 	}
@@ -116,7 +116,7 @@ sll_thread_index_t _scheduler_queue_pop(void){
 		cpu_dt->queue_idx--;
 	}
 	thr->state=THREAD_STATE_UNDEFINED;
-	return o;
+	return out;
 }
 
 
@@ -174,7 +174,7 @@ sll_return_code_t _scheduler_run(void){
 	}
 	_cpu_core_worker(NULL);
 	sll_object_t rc_o=sll_operator_cast(_thread_get(0)->return_value,sll_static_int[SLL_OBJECT_TYPE_INT]);
-	sll_return_code_t o=(sll_return_code_t)(rc_o->data.int_);
+	sll_return_code_t out=(sll_return_code_t)(rc_o->data.int_);
 	SLL_RELEASE(rc_o);
 	sll_gc_collect();
 	_cleanup_vm_exit_tables();
@@ -199,7 +199,7 @@ sll_return_code_t _scheduler_run(void){
 	_io_dispatcher_deinit();
 	_thread_deinit();
 	_scheduler_current_thread_index=SLL_UNKNOWN_THREAD_INDEX;
-	return o;
+	return out;
 }
 
 

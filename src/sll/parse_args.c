@@ -699,19 +699,19 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_arg_state_t sll_parse_args(const sll_char_
 	}
 	va_list va;
 	va_start(va,arg_count);
-	sll_arg_state_t o=sll_parse_args_list(format,args,arg_count,&va);
+	sll_arg_state_t out=sll_parse_args_list(format,args,arg_count,&va);
 	va_end(va);
-	return o;
+	return out;
 }
 
 
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_arg_state_t sll_parse_args_list(const sll_char_t* format,const sll_object_t* args,sll_arg_count_t arg_count,va_list* va){
-	arg_output_t o={
+	arg_output_t out={
 		ARG_OUTPUT_TYPE_C,
 		{
 			.c=va
 		}
 	};
-	return _parse_args_raw(format,args,arg_count,&o);
+	return _parse_args_raw(format,args,arg_count,&out);
 }

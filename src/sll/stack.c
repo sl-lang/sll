@@ -29,7 +29,7 @@ static void _request_new_node_page(sll_source_file_t* sf){
 
 
 sll_assembly_instruction_t* _acquire_next_instruction(sll_assembly_data_t* assembly_data){
-	sll_assembly_instruction_t* o=assembly_data->_instruction_stack.next_instruction;
+	sll_assembly_instruction_t* out=assembly_data->_instruction_stack.next_instruction;
 	assembly_data->instruction_count++;
 	assembly_data->_instruction_stack.count--;
 	assembly_data->_instruction_stack.next_instruction++;
@@ -49,20 +49,20 @@ sll_assembly_instruction_t* _acquire_next_instruction(sll_assembly_data_t* assem
 		s->data._next_instruction=NULL;
 		assembly_data->_instruction_stack.end=n;
 	}
-	return o;
+	return out;
 }
 
 
 
 sll_node_t* _acquire_next_node(sll_source_file_t* sf){
-	sll_node_t* o=sf->_stack.next_node;
+	sll_node_t* out=sf->_stack.next_node;
 	sf->_stack.offset++;
 	sf->_stack.count--;
 	sf->_stack.next_node++;
 	if (!sf->_stack.count){
 		_request_new_node_page(sf);
 	}
-	return o;
+	return out;
 }
 
 

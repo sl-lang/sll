@@ -57,14 +57,14 @@ sll_bool_t _semaphore_wait(sll_integer_t sempahore_index){
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_semaphore_index_t sll_semaphore_create(sll_semaphore_counter_t count){
 	SLL_CRITICAL_ERROR(sll_platform_lock_acquire(_semaphore_lock));
-	sll_size_t o;
-	SLL_HANDLE_CONTAINER_ALLOC(&_semaphore_data,&o);
+	sll_size_t out;
+	SLL_HANDLE_CONTAINER_ALLOC(&_semaphore_data,&out);
 	semaphore_t* data=sll_allocate(sizeof(semaphore_t));
 	data->count=count;
 	data->first=SLL_UNKNOWN_THREAD_INDEX;
-	*(_semaphore_data.data+o)=data;
+	*(_semaphore_data.data+out)=data;
 	SLL_CRITICAL(sll_platform_lock_release(_semaphore_lock));
-	return (sll_semaphore_index_t)o;
+	return (sll_semaphore_index_t)out;
 }
 
 

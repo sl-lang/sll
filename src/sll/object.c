@@ -258,9 +258,9 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t sll_create_new_object_type(sll_ob
 	n->field_count=0;
 	sll_zero_memory(n->functions,(SLL_MAX_OBJECT_FUNC+1)*sizeof(sll_integer_t));
 	*(type_table->data+type_table->length-1)=n;
-	sll_object_t o=sll_create_object(type_table->length+SLL_MAX_OBJECT_TYPE);
-	o->data.fields=NULL;
-	return o;
+	sll_object_t out=sll_create_object(type_table->length+SLL_MAX_OBJECT_TYPE);
+	out->data.fields=NULL;
+	return out;
 }
 
 
@@ -297,31 +297,31 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t sll_create_object_type(const sll_
 		case SLL_OBJECT_TYPE_MAP_KEYS:
 		case SLL_OBJECT_TYPE_MAP_VALUES:
 			{
-				sll_object_t o=sll_array_length_to_object(arg_count);
-				sll_copy_objects(args,arg_count,o->data.array.data);
-				return o;
+				sll_object_t out=sll_array_length_to_object(arg_count);
+				sll_copy_objects(args,arg_count,out->data.array.data);
+				return out;
 			}
 		case SLL_OBJECT_TYPE_MAP:
 			{
 				if (!arg_count){
 					return sll_map_to_object(NULL);
 				}
-				sll_object_t o=sll_map_length_to_object((arg_count+1)>>1);
-				sll_copy_objects(args,arg_count,o->data.map.data);
+				sll_object_t out=sll_map_length_to_object((arg_count+1)>>1);
+				sll_copy_objects(args,arg_count,out->data.map.data);
 				if (arg_count&1){
-					o->data.map.data[arg_count]=SLL_ACQUIRE_STATIC_INT(0);
+					out->data.map.data[arg_count]=SLL_ACQUIRE_STATIC_INT(0);
 				}
-				return o;
+				return out;
 			}
 	}
 	if (!type_table){
 		return SLL_ACQUIRE_STATIC_INT(0);
 	}
 	SLL_ASSERT(type-SLL_MAX_OBJECT_TYPE-1<type_table->length);
-	sll_object_t o=sll_create_object(type);
-	o->data.fields=sll_allocate((*(type_table->data+type-SLL_MAX_OBJECT_TYPE-1))->field_count*sizeof(sll_object_field_t));
-	_init_struct(type_table,o,args,arg_count);
-	return o;
+	sll_object_t out=sll_create_object(type);
+	out->data.fields=sll_allocate((*(type_table->data+type-SLL_MAX_OBJECT_TYPE-1))->field_count*sizeof(sll_object_field_t));
+	_init_struct(type_table,out,args,arg_count);
+	return out;
 }
 
 

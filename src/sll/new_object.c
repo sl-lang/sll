@@ -414,9 +414,9 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t sll_new_object(const sll_char_t* 
 	va_start(va,format);
 	sll_var_arg_list_t dt;
 	SLL_VAR_ARG_INIT_C(&dt,&va);
-	sll_object_t o=sll_new_object_list(format,sll_string_length(format),&dt);
+	sll_object_t out=sll_new_object_list(format,sll_string_length(format),&dt);
 	va_end(va);
-	return o;
+	return out;
 }
 
 
@@ -457,13 +457,13 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t sll_new_object_list(const sll_cha
 	if (!format_length){
 		return e;
 	}
-	sll_object_t o=sll_array_length_to_object(1);
-	o->data.array.data[0]=e;
+	sll_object_t out=sll_array_length_to_object(1);
+	out->data.array.data[0]=e;
 	do{
-		o->data.array.length++;
-		sll_allocator_resize((void**)(&(o->data.array.data)),o->data.array.length*sizeof(sll_object_t));
-		o->data.array.data[o->data.array.length-1]=_build_single(&format,&format_length,va);
+		out->data.array.length++;
+		sll_allocator_resize((void**)(&(out->data.array.data)),out->data.array.length*sizeof(sll_object_t));
+		out->data.array.data[out->data.array.length-1]=_build_single(&format,&format_length,va);
 	} while (format_length);
-	sll_allocator_collapse((void**)(&(o->data.array.data)),o->data.array.length*sizeof(sll_object_t));
-	return o;
+	sll_allocator_collapse((void**)(&(out->data.array.data)),out->data.array.length*sizeof(sll_object_t));
+	return out;
 }

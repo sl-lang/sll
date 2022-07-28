@@ -49,14 +49,14 @@ static const sll_node_t* _mark(const sll_node_t* node,bitmap_t* bitmap){
 
 
 
-static sll_node_t* _update(sll_node_t* node,sll_string_index_t* sm){
+static sll_node_t* _update(sll_node_t* node,const sll_string_index_t* string_map){
 	while (node->type==SLL_NODE_TYPE_NOP||node->type==SLL_NODE_TYPE_DBG||node->type==SLL_NODE_TYPE_CHANGE_STACK){
 		if (node->type==SLL_NODE_TYPE_CHANGE_STACK){
 			node=node->data._next_node;
 		}
 		else{
 			if (node->type==SLL_NODE_TYPE_DBG&&node->data.string_index!=SLL_MAX_STRING_INDEX){
-				node->data.string_index=*(sm+node->data.string_index);
+				node->data.string_index=*(string_map+node->data.string_index);
 			}
 			node++;
 		}
@@ -64,7 +64,7 @@ static sll_node_t* _update(sll_node_t* node,sll_string_index_t* sm){
 	switch (node->type){
 		case SLL_NODE_TYPE_STRING:
 		case SLL_NODE_TYPE_FIELD:
-			node->data.string_index=*(sm+node->data.string_index);
+			node->data.string_index=*(string_map+node->data.string_index);
 		case SLL_NODE_TYPE_INT:
 		case SLL_NODE_TYPE_FLOAT:
 		case SLL_NODE_TYPE_CHAR:
@@ -74,14 +74,14 @@ static sll_node_t* _update(sll_node_t* node,sll_string_index_t* sm){
 			return node+1;
 		case SLL_NODE_TYPE_DECL:
 			if (node->data.declaration.name_string_index!=SLL_MAX_STRING_INDEX){
-				node->data.declaration.name_string_index=*(sm+node->data.declaration.name_string_index);
+				node->data.declaration.name_string_index=*(string_map+node->data.declaration.name_string_index);
 			}
 	}
 	sll_arg_count_t l=node->data.arg_count;
 	node++;
 	while (l){
 		l--;
-		node=_update(node,sm);
+		node=_update(node,string_map);
 	}
 	return node;
 }
@@ -113,7 +113,7 @@ __SLL_EXTERNAL void sll_optimize_metadata(sll_compilation_data_t* compilation_da
 		if (sf->first_node){
 			_mark(sf->first_node,m);
 		}
-		sll_string_index_t* sm=sll_allocate_stack(sf->string_table.length*sizeof(sll_string_index_t));
+		sll_string_index_t* string_map=sll_allocate_stack(sf->string_table.length*sizeof(sll_string_index_t));
 		sll_string_index_t k=0;
 		sll_string_index_t l=0;
 		for (sll_string_index_t i=0;i<ml;i++){
@@ -126,7 +126,7 @@ __SLL_EXTERNAL void sll_optimize_metadata(sll_compilation_data_t* compilation_da
 				sll_free_string(sf->string_table.data+j);
 				for (sll_string_index_t n=k;n<j;n++){
 					*(sf->string_table.data+n-l)=*(sf->string_table.data+n);
-					*(sm+n)=n-l;
+					*(string_map+n)=n-l;
 				}
 				k=j+1;
 				l++;
@@ -136,27 +136,27 @@ __SLL_EXTERNAL void sll_optimize_metadata(sll_compilation_data_t* compilation_da
 		sll_deallocate(m);
 		for (sll_string_index_t i=k;i<sf->string_table.length;i++){
 			*(sf->string_table.data+i-l)=*(sf->string_table.data+i);
-			*(sm+i)=i-l;
+			*(string_map+i)=i-l;
 		}
 		if (l){
 			sf->string_table.length-=l;
 			sf->string_table.data=sll_reallocate(sf->string_table.data,sf->string_table.length*sizeof(sll_string_t));
 			for (sll_identifier_table_length_t i=0;i<sf->identifier_table.length;i++){
-				SLL_IDENTIFIER_UPDATE_STRING_INDEX(sf->identifier_table.data+i,*(sm+SLL_IDENTIFIER_GET_STRING_INDEX(sf->identifier_table.data+i)));
+				SLL_IDENTIFIER_UPDATE_STRING_INDEX(sf->identifier_table.data+i,*(string_map+SLL_IDENTIFIER_GET_STRING_INDEX(sf->identifier_table.data+i)));
 			}
 			for (sll_function_index_t i=0;i<sf->function_table.length;i++){
 				if ((*(sf->function_table.data+i))->name_string_index!=SLL_MAX_STRING_INDEX){
-					(*(sf->function_table.data+i))->name_string_index=*(sm+(*(sf->function_table.data+i))->name_string_index);
+					(*(sf->function_table.data+i))->name_string_index=*(string_map+(*(sf->function_table.data+i))->name_string_index);
 				}
 				if ((*(sf->function_table.data+i))->description_string_index!=SLL_MAX_STRING_INDEX){
-					(*(sf->function_table.data+i))->description_string_index=*(sm+(*(sf->function_table.data+i))->description_string_index);
+					(*(sf->function_table.data+i))->description_string_index=*(string_map+(*(sf->function_table.data+i))->description_string_index);
 				}
 			}
-			sf->file_path_string_index=*(sm+sf->file_path_string_index);
+			sf->file_path_string_index=*(string_map+sf->file_path_string_index);
 			if (sf->first_node){
-				_update(sf->first_node,sm);
+				_update(sf->first_node,string_map);
 			}
 		}
-		sll_deallocate(sm);
+		sll_deallocate(string_map);
 	}
 }
