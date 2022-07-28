@@ -183,9 +183,9 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_date_split(sll_float_t time,sll_array
  * \desc Docs!
  * \arg sll_float_t time
  * \arg const sll_time_zone_t* time_zone
- * \arg sll_date_t* o
+ * \arg sll_date_t* out
  */
-__SLL_EXTERNAL void sll_date_from_time(sll_float_t time,const sll_time_zone_t* time_zone,sll_date_t* o);
+__SLL_EXTERNAL void sll_date_from_time(sll_float_t time,const sll_time_zone_t* time_zone,sll_date_t* out);
 
 
 
@@ -196,9 +196,9 @@ __SLL_EXTERNAL void sll_date_from_time(sll_float_t time,const sll_time_zone_t* t
  * \desc Docs!
  * \arg sll_time_t time
  * \arg const sll_time_zone_t* time_zone
- * \arg sll_date_t* o
+ * \arg sll_date_t* out
  */
-__SLL_EXTERNAL void sll_date_from_time_ns(sll_time_t time,const sll_time_zone_t* time_zone,sll_date_t* o);
+__SLL_EXTERNAL void sll_date_from_time_ns(sll_time_t time,const sll_time_zone_t* time_zone,sll_date_t* out);
 
 
 

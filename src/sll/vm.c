@@ -306,22 +306,22 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t sll_execute_function(sll_integer_
 	else{
 		sll_audit(SLL_CHAR("sll.thread.create"),SLL_CHAR("iO+u"),function,args,arg_count,tid);
 	}
-	sll_object_t o;
+	sll_object_t out;
 	if (flags&SLL_EXECUTE_FUNCTION_ASYNC){
-		o=sll_wait_thread(tid);
+		out=sll_wait_thread(tid);
 	}
 	else{
 		sll_thread_index_t s_tid=_scheduler_current_thread_index;
 		_scheduler_current_thread_index=SLL_UNKNOWN_THREAD_INDEX;
 		_scheduler_set_thread(tid);
-		o=sll_wait_thread(tid);
+		out=sll_wait_thread(tid);
 		SLL_ASSERT(_scheduler_current_thread_index==SLL_UNKNOWN_THREAD_INDEX);
 		if (s_tid!=SLL_UNKNOWN_THREAD_INDEX){
 			_scheduler_set_thread(s_tid);
 		}
 	}
 	SLL_CRITICAL(sll_thread_delete(tid));
-	return o;
+	return out;
 }
 
 

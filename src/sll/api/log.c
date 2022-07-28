@@ -17,9 +17,9 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_bool_t sll_api_log_log(cons
 	sll_file_offset_t ln=sll_get_location(sll_current_runtime_data->assembly_data,sll_thread_get_instruction_index(SLL_UNKNOWN_THREAD_INDEX),&fp,&fn);
 	sll_string_t s;
 	sll_api_string_convert(args,arg_count,&s);
-	sll_bool_t o=sll_log_raw((fp==SLL_MAX_STRING_INDEX?SLL_CHAR("@console"):(sll_current_runtime_data->assembly_data->string_table.data+fp)->data),(fn==SLL_MAX_STRING_INDEX?SLL_CHAR("@code"):(sll_current_runtime_data->assembly_data->string_table.data+fn)->data),ln,0,&s);
+	sll_bool_t out=sll_log_raw((fp==SLL_MAX_STRING_INDEX?SLL_CHAR("@console"):(sll_current_runtime_data->assembly_data->string_table.data+fp)->data),(fn==SLL_MAX_STRING_INDEX?SLL_CHAR("@code"):(sll_current_runtime_data->assembly_data->string_table.data+fn)->data),ln,0,&s);
 	sll_free_string(&s);
-	return o;
+	return out;
 }
 
 

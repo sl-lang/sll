@@ -59,41 +59,41 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_date_split(sll_float_t time,sll_array
 
 
 
-__SLL_EXTERNAL void sll_date_from_time(sll_float_t time,const sll_time_zone_t* time_zone,sll_date_t* o){
+__SLL_EXTERNAL void sll_date_from_time(sll_float_t time,const sll_time_zone_t* time_zone,sll_date_t* out){
 	// Based on http://howardhinnant.github.io/date_algorithms.html#civil_from_days
 	if (!time_zone){
 		time_zone=sll_utc_time_zone;
 	}
-	o->time_zone=*time_zone;
-	time+=o->time_zone.offset*60;
+	out->time_zone=*time_zone;
+	time+=out->time_zone.offset*60;
 	sll_float_t hms=sll_math_mod(time,86400)+(time<0?86400:0);
-	o->second=sll_math_mod(hms,60);
+	out->second=sll_math_mod(hms,60);
 	sll_integer_t hms_i=((sll_integer_t)hms)/60;
-	o->minute=hms_i%60;
-	o->hour=(hms_i/60)%60;
+	out->minute=hms_i%60;
+	out->hour=(hms_i/60)%60;
 	sll_integer_t v=((sll_integer_t)time)/86400;
-	o->week_day=(v+4)%7;
+	out->week_day=(v+4)%7;
 	v+=719468-(time<0?1:0);
 	sll_integer_t e=(v-(v<0?146096:0))/146097;
 	sll_size_t d=v-e*146097;
 	sll_size_t y=(d-d/1460+d/36524-d/146096)/365;
 	e=y+e*400;
 	if (e>65534){
-		o->year=65535;
-		o->month=11;
-		o->day=30;
-		o->week_day=6;
-		o->hour=23;
-		o->minute=59;
-		o->second=59.999999;
+		out->year=65535;
+		out->month=11;
+		out->day=30;
+		out->week_day=6;
+		out->hour=23;
+		out->minute=59;
+		out->second=59.999999;
 		return;
 	}
-	o->year=(sll_year_t)e;
+	out->year=(sll_year_t)e;
 	d-=y*365+y/4-y/100;
 	sll_size_t m=(d*5+2)/153;
 	d=d-(m*153+2)/5;
 	SLL_ASSERT(d<31);
-	o->day=(sll_day_t)d;
+	out->day=(sll_day_t)d;
 	if (m<10){
 		m+=2;
 	}
@@ -101,16 +101,16 @@ __SLL_EXTERNAL void sll_date_from_time(sll_float_t time,const sll_time_zone_t* t
 		m-=10;
 	}
 	if (m<2){
-		o->year++;
+		out->year++;
 	}
 	SLL_ASSERT(m<12);
-	o->month=(sll_month_t)m;
+	out->month=(sll_month_t)m;
 }
 
 
 
-__SLL_EXTERNAL void sll_date_from_time_ns(sll_time_t time,const sll_time_zone_t* time_zone,sll_date_t* o){
-	sll_date_from_time(time*1e-9,time_zone,o);
+__SLL_EXTERNAL void sll_date_from_time_ns(sll_time_t time,const sll_time_zone_t* time_zone,sll_date_t* out){
+	sll_date_from_time(time*1e-9,time_zone,out);
 }
 
 

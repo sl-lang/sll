@@ -100,7 +100,7 @@ static void _parse_json_string(sll_json_parser_state_t* p,sll_string_t* out){
 
 
 
-static sll_bool_t _parse_number(sll_char_t c,sll_json_parser_state_t* p,json_number_t* o){
+static sll_bool_t _parse_number(sll_char_t c,sll_json_parser_state_t* p,json_number_t* out){
 	sll_bool_t neg=0;
 	if (c=='+'){
 		c=**p;
@@ -119,7 +119,7 @@ static sll_bool_t _parse_number(sll_char_t c,sll_json_parser_state_t* p,json_num
 	}
 	if (c!='.'&&c!='e'&&c!='E'){
 		(*p)--;
-		o->int_=(sll_integer_t)(neg?-v:v);
+		out->int_=(sll_integer_t)(neg?-v:v);
 		return JSON_NUMBER_INT;
 	}
 	if (c=='.'){
@@ -155,7 +155,7 @@ static sll_bool_t _parse_number(sll_char_t c,sll_json_parser_state_t* p,json_num
 		v*=pow(10,(sll_float_t)(neg_pw?-pw:pw));
 	}
 	(*p)--;
-	o->float_=(neg?-v:v);
+	out->float_=(neg?-v:v);
 	return JSON_NUMBER_FLOAT;
 }
 
@@ -172,17 +172,17 @@ static sll_object_t _parse_json_as_object(sll_json_parser_state_t* p){
 		return SLL_ACQUIRE_STATIC_INT(0);
 	}
 	if (c=='{'){
-		sll_object_t o=sll_map_to_object(NULL);
-		sll_map_t* m=&(o->data.map);
+		sll_object_t out=sll_map_to_object(NULL);
+		sll_map_t* m=&(out->data.map);
 		while (1){
 			c=**p;
 			(*p)++;
 			while (c!='\"'){
 				if (c=='}'){
-					return o;
+					return out;
 				}
 				if (c!=' '&&c!='\t'&&c!='\n'&&c!='\r'){
-					SLL_RELEASE(o);
+					SLL_RELEASE(out);
 					return NULL;
 				}
 				c=**p;
@@ -202,7 +202,7 @@ static sll_object_t _parse_json_as_object(sll_json_parser_state_t* p){
 			sll_object_t v=_parse_json_as_object(p);
 			if (!v){
 				m->data[m->length-1]=SLL_ACQUIRE_STATIC_INT(0);
-				SLL_RELEASE(o);
+				SLL_RELEASE(out);
 				return NULL;
 			}
 			m->data[((m->length-1)<<1)+1]=v;
@@ -210,10 +210,10 @@ static sll_object_t _parse_json_as_object(sll_json_parser_state_t* p){
 			(*p)++;
 			while (c!=','){
 				if (c=='}'){
-					return o;
+					return out;
 				}
 				if (c!=' '&&c!='\t'&&c!='\n'&&c!='\r'){
-					SLL_RELEASE(o);
+					SLL_RELEASE(out);
 					return NULL;
 				}
 				c=**p;
@@ -222,20 +222,20 @@ static sll_object_t _parse_json_as_object(sll_json_parser_state_t* p){
 		}
 	}
 	if (c=='['){
-		sll_object_t o=sll_array_to_object(NULL);
-		sll_array_t* a=&(o->data.array);
+		sll_object_t out=sll_array_to_object(NULL);
+		sll_array_t* a=&(out->data.array);
 		while (c==' '||c=='\t'||c=='\n'||c=='\r'){
 			c=**p;
 			(*p)++;
 		}
 		if (**p==']'){
 			(*p)++;
-			return o;
+			return out;
 		}
 		while (1){
 			sll_object_t k=_parse_json_as_object(p);
 			if (!k){
-				SLL_RELEASE(o);
+				SLL_RELEASE(out);
 				return NULL;
 			}
 			a->length++;
@@ -245,10 +245,10 @@ static sll_object_t _parse_json_as_object(sll_json_parser_state_t* p){
 			(*p)++;
 			while (c!=','){
 				if (c==']'){
-					return o;
+					return out;
 				}
 				if (c!=' '&&c!='\t'&&c!='\n'&&c!='\r'){
-					SLL_RELEASE(o);
+					SLL_RELEASE(out);
 					return NULL;
 				}
 				c=**p;
@@ -257,9 +257,9 @@ static sll_object_t _parse_json_as_object(sll_json_parser_state_t* p){
 		}
 	}
 	if (c=='\"'){
-		sll_object_t o=sll_create_object(SLL_OBJECT_TYPE_STRING);
-		_parse_json_string(p,&(o->data.string));
-		return o;
+		sll_object_t out=sll_create_object(SLL_OBJECT_TYPE_STRING);
+		_parse_json_string(p,&(out->data.string));
+		return out;
 	}
 	if (c=='t'&&**p=='r'&&*((*p)+1)=='u'&&*((*p)+2)=='e'){
 		(*p)+=3;
@@ -285,76 +285,76 @@ static sll_object_t _parse_json_as_object(sll_json_parser_state_t* p){
 
 
 
-static void _stringify_string(const sll_char_t* c,sll_string_length_t l,sll_string_t* o){
-	sll_string_increase(o,1);
-	o->data[o->length]='"';
-	o->length++;
+static void _stringify_string(const sll_char_t* c,sll_string_length_t l,sll_string_t* out){
+	sll_string_increase(out,1);
+	out->data[out->length]='"';
+	out->length++;
 	for (sll_string_length_t i=0;i<l;i++){
 		sll_char_t v=*(c+i);
 		if (v=='\"'||v=='\''||v=='\\'){
-			sll_string_increase(o,2);
-			o->data[o->length]='\\';
-			o->data[o->length+1]=v;
-			o->length+=2;
+			sll_string_increase(out,2);
+			out->data[out->length]='\\';
+			out->data[out->length+1]=v;
+			out->length+=2;
 		}
 		else if (v=='\t'){
-			sll_string_increase(o,2);
-			o->data[o->length]='\\';
-			o->data[o->length+1]='t';
-			o->length+=2;
+			sll_string_increase(out,2);
+			out->data[out->length]='\\';
+			out->data[out->length+1]='t';
+			out->length+=2;
 		}
 		else if (v=='\n'){
-			sll_string_increase(o,2);
-			o->data[o->length]='\\';
-			o->data[o->length+1]='n';
-			o->length+=2;
+			sll_string_increase(out,2);
+			out->data[out->length]='\\';
+			out->data[out->length+1]='n';
+			out->length+=2;
 		}
 		else if (v=='\v'){
-			sll_string_increase(o,2);
-			o->data[o->length]='\\';
-			o->data[o->length+1]='v';
-			o->length+=2;
+			sll_string_increase(out,2);
+			out->data[out->length]='\\';
+			out->data[out->length+1]='v';
+			out->length+=2;
 		}
 		else if (v=='\f'){
-			sll_string_increase(o,2);
-			o->data[o->length]='\\';
-			o->data[o->length+1]='f';
-			o->length+=2;
+			sll_string_increase(out,2);
+			out->data[out->length]='\\';
+			out->data[out->length+1]='f';
+			out->length+=2;
 		}
 		else if (v=='\r'){
-			sll_string_increase(o,2);
-			o->data[o->length]='\\';
-			o->data[o->length+1]='r';
-			o->length+=2;
+			sll_string_increase(out,2);
+			out->data[out->length]='\\';
+			out->data[out->length+1]='r';
+			out->length+=2;
 		}
 		else if (SLL_STRING_HEX_ESCAPE(v)){
-			sll_string_increase(o,6);
-			o->data[o->length]='\\';
-			o->data[o->length+1]='u';
-			o->data[o->length+2]='0';
-			o->data[o->length+3]='0';
-			o->data[o->length+4]=(v>>4)+((v>>4)>9?87:48);
-			o->data[o->length+5]=(v&15)+((v&15)>9?87:48);
-			o->length+=6;
+			sll_string_increase(out,6);
+			out->data[out->length]='\\';
+			out->data[out->length+1]='u';
+			out->data[out->length+2]='0';
+			out->data[out->length+3]='0';
+			out->data[out->length+4]=(v>>4)+((v>>4)>9?87:48);
+			out->data[out->length+5]=(v&15)+((v&15)>9?87:48);
+			out->length+=6;
 		}
 		else{
-			sll_string_increase(o,1);
-			o->data[o->length]=v;
-			o->length++;
+			sll_string_increase(out,1);
+			out->data[out->length]=v;
+			out->length++;
 		}
 	}
-	sll_string_increase(o,1);
-	o->data[o->length]='"';
-	o->length++;
+	sll_string_increase(out,1);
+	out->data[out->length]='"';
+	out->length++;
 }
 
 
 
-static void _stringify_object(sll_object_t o,sll_string_t* s){
-	switch (o->type){
+static void _stringify_object(sll_object_t out,sll_string_t* s){
+	switch (out->type){
 		case SLL_OBJECT_TYPE_INT:
 			{
-				sll_integer_t v=o->data.int_;
+				sll_integer_t v=out->data.int_;
 				if (v<0){
 					sll_string_increase(s,1);
 					s->data[s->length]='-';
@@ -379,31 +379,31 @@ static void _stringify_object(sll_object_t o,sll_string_t* s){
 		case SLL_OBJECT_TYPE_FLOAT:
 			{
 				sll_char_t buffer[256];
-				sll_string_length_t l=snprintf((char*)buffer,256,"%.16lf",o->data.float_);
+				sll_string_length_t l=snprintf((char*)buffer,256,"%.16lf",out->data.float_);
 				sll_string_increase(s,l);
 				sll_copy_data(buffer,l,s->data+s->length);
 				s->length+=l;
 				return;
 			}
 		case SLL_OBJECT_TYPE_CHAR:
-			_stringify_string(&(o->data.char_),1,s);
+			_stringify_string(&(out->data.char_),1,s);
 			return;
 		case SLL_OBJECT_TYPE_COMPLEX:
 			SLL_UNIMPLEMENTED();
 		case SLL_OBJECT_TYPE_STRING:
-			_stringify_string(o->data.string.data,o->data.string.length,s);
+			_stringify_string(out->data.string.data,out->data.string.length,s);
 			return;
 		case SLL_OBJECT_TYPE_ARRAY:
 			sll_string_increase(s,1);
 			s->data[s->length]='[';
 			s->length++;
-			for (sll_array_length_t i=0;i<o->data.array.length;i++){
+			for (sll_array_length_t i=0;i<out->data.array.length;i++){
 				if (i){
 					sll_string_increase(s,1);
 					s->data[s->length]=',';
 					s->length++;
 				}
-				_stringify_object(o->data.array.data[i],s);
+				_stringify_object(out->data.array.data[i],s);
 			}
 			sll_string_increase(s,1);
 			s->data[s->length]=']';
@@ -413,27 +413,27 @@ static void _stringify_object(sll_object_t o,sll_string_t* s){
 			sll_string_increase(s,1);
 			s->data[s->length]='{';
 			s->length++;
-			for (sll_map_length_t i=0;i<o->data.map.length;i++){
+			for (sll_map_length_t i=0;i<out->data.map.length;i++){
 				if (i){
 					sll_string_increase(s,1);
 					s->data[s->length]=',';
 					s->length++;
 				}
-				sll_object_t k=sll_operator_cast(o->data.map.data[i<<1],sll_static_int[SLL_OBJECT_TYPE_STRING]);
+				sll_object_t k=sll_operator_cast(out->data.map.data[i<<1],sll_static_int[SLL_OBJECT_TYPE_STRING]);
 				_stringify_string(k->data.string.data,k->data.string.length,s);
 				SLL_RELEASE(k);
 				sll_string_increase(s,1);
 				s->data[s->length]=':';
 				s->length++;
-				_stringify_object(o->data.map.data[(i<<1)+1],s);
+				_stringify_object(out->data.map.data[(i<<1)+1],s);
 			}
 			sll_string_increase(s,1);
 			s->data[s->length]='}';
 			s->length++;
 			return;
 	}
-	SLL_ASSERT(o->type!=SLL_OBJECT_TYPE_MAP_KEYS&&o->type!=SLL_OBJECT_TYPE_MAP_VALUES);
-	if (o->type==_json_null->type){
+	SLL_ASSERT(out->type!=SLL_OBJECT_TYPE_MAP_KEYS&&out->type!=SLL_OBJECT_TYPE_MAP_VALUES);
+	if (out->type==_json_null->type){
 		sll_string_increase(s,4);
 		s->data[s->length]='n';
 		s->data[s->length+1]='u';
@@ -442,7 +442,7 @@ static void _stringify_object(sll_object_t o,sll_string_t* s){
 		s->length+=4;
 		return;
 	}
-	if (o->type==_json_true->type){
+	if (out->type==_json_true->type){
 		sll_string_increase(s,4);
 		s->data[s->length]='t';
 		s->data[s->length+1]='r';
@@ -451,7 +451,7 @@ static void _stringify_object(sll_object_t o,sll_string_t* s){
 		s->length+=4;
 		return;
 	}
-	if (o->type==_json_false->type){
+	if (out->type==_json_false->type){
 		sll_string_increase(s,5);
 		s->data[s->length]='f';
 		s->data[s->length+1]='a';
@@ -489,9 +489,9 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_json__init(sll_object_t null_obj,sll_
 __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_object_t sll_api_json_parse(const sll_string_t* string){
 	if (string->length){
 		sll_json_parser_state_t p=string->data;
-		sll_object_t o=_parse_json_as_object(&p);
-		if (o){
-			return o;
+		sll_object_t out=_parse_json_as_object(&p);
+		if (out){
+			return out;
 		}
 	}
 	return SLL_ACQUIRE_STATIC_INT(0);

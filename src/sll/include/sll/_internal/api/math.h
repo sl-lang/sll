@@ -6,9 +6,9 @@
 #define PUSH_FACTOR(v,c) \
 	do{ \
 		i++; \
-		o=sll_reallocate(o,i*sizeof(sll_factor_t)); \
-		(o+i-1)->number=v; \
-		(o+i-1)->power=c; \
+		out=sll_reallocate(out,i*sizeof(sll_factor_t)); \
+		(out+i-1)->number=v; \
+		(out+i-1)->power=c; \
 	} while (0)
 
 #define WHEEL_STEP(x) \
@@ -30,7 +30,7 @@
 		do{ \
 			n/=f; \
 		} while (!(n%f)); \
-		o-=o/f; \
+		out-=out/f; \
 	} \
 	f+=x; \
 	if (f*f>n){ \

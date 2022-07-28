@@ -110,24 +110,24 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_size_t sll_api_math_combina
 	if (b==1){
 		return 1;
 	}
-	sll_size_t o=1;
+	sll_size_t out=1;
 	sll_size_t i=a-b;
 	sll_size_t j=2;
 	do{
 		i++;
-		o*=i;
-		if (j&&!(o%j)){
-			o/=j;
+		out*=i;
+		if (j&&!(out%j)){
+			out/=j;
 			j=(j==b?0:j+1);
 		}
 	} while (i<a);
 	if (j){
 		while (j<=b){
-			o/=j;
+			out/=j;
 			j++;
 		}
 	}
-	return o;
+	return out;
 }
 
 
@@ -216,23 +216,23 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_size_t sll_api_math_euler_p
 	if (n<2){
 		return 0;
 	}
-	sll_size_t o=n;
+	sll_size_t out=n;
 	sll_size_t c=FIND_FIRST_SET_BIT(n);
 	if (c){
 		n>>=c;
-		o>>=1;
+		out>>=1;
 	}
 	if (!(n%3)){
 		do{
 			n/=3;
 		} while (!(n%3));
-		o-=o/3;
+		out-=out/3;
 	}
 	if (!(n%5)){
 		do{
 			n/=5;
 		} while (!(n%5));
-		o-=o/5;
+		out-=out/5;
 	}
 	sll_size_t f=7;
 	if (n>48){
@@ -248,9 +248,9 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_size_t sll_api_math_euler_p
 		}
 	}
 	if (n!=1){
-		o-=o/n;
+		out-=out/n;
 	}
-	return o;
+	return out;
 }
 
 
@@ -268,12 +268,12 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_math_exp(const sll_number_t* a,sll_nu
 
 
 __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_size_t sll_api_math_factorial(sll_size_t a){
-	sll_size_t o=1;
+	sll_size_t out=1;
 	while (a>1){
-		o*=a;
+		out*=a;
 		a--;
 	}
-	return o;
+	return out;
 }
 
 
@@ -281,10 +281,10 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_size_t sll_api_math_factori
 __SLL_EXTERNAL __SLL_API_CALL void sll_api_math_factors(sll_size_t a,sll_array_t* out){
 	sll_array_length_t l;
 	sll_factor_t* dt=sll_math_factors(a,&l);
-	sll_object_t o=sll_new_object(SLL_CHAR("{ii}"),dt,l,sizeof(sll_factor_t),SLL_OFFSETOF(sll_factor_t,number),SLL_OFFSETOF(sll_factor_t,power));
-	*out=o->data.array;
-	SLL_CRITICAL(sll_destroy_object(o));
+	sll_object_t object=sll_new_object(SLL_CHAR("{ii}"),dt,l,sizeof(sll_factor_t),SLL_OFFSETOF(sll_factor_t,number),SLL_OFFSETOF(sll_factor_t,power));
 	sll_deallocate(dt);
+	*out=object->data.array;
+	SLL_CRITICAL(sll_destroy_object(object));
 }
 
 
@@ -327,17 +327,17 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_math_int_
 	if (c==1){
 		return 0;
 	}
-	sll_integer_t o=1;
+	sll_integer_t out=1;
 	if (a<0){
 		a=-a;
 		if (b&1){
-			o=-1;
+			out=-1;
 		}
 	}
 	if (!c){
 		while (1){
 			if (b&1){
-				o*=a;
+				out*=a;
 			}
 			b>>=1;
 			if (!b){
@@ -350,7 +350,7 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_math_int_
 		a%=c;
 		while (1){
 			if (b&1){
-				o=(o*a)%c;
+				out=(out*a)%c;
 			}
 			b>>=1;
 			if (!b){
@@ -359,7 +359,7 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_integer_t sll_api_math_int_
 			a=(a*a)%c;
 		}
 	}
-	return o;
+	return out;
 }
 
 
@@ -429,13 +429,13 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_size_t sll_api_math_permuta
 	if (b==1){
 		return a;
 	}
-	sll_size_t o=1;
+	sll_size_t out=1;
 	sll_size_t i=a-b;
 	do{
 		i++;
-		o*=i;
+		out*=i;
 	} while (i<a);
-	return o;
+	return out;
 }
 
 
@@ -593,7 +593,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_factor_t* sll_math_factors(sll_size_t v,sl
 		*ol=0;
 		return NULL;
 	}
-	sll_factor_t* o=sll_allocate_stack(1);
+	sll_factor_t* out=sll_allocate_stack(1);
 	sll_math_factor_count_t i=0;
 	sll_size_t n=v;
 	sll_size_t j=FIND_FIRST_SET_BIT(n);
@@ -634,7 +634,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_factor_t* sll_math_factors(sll_size_t v,sl
 		PUSH_FACTOR(n,1);
 	}
 	*ol=i;
-	return o;
+	return out;
 }
 
 

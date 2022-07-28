@@ -78,11 +78,11 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_bool_t sll_api_atexit_unreg
 		return 0;
 	}
 	SLL_CRITICAL_ERROR(sll_platform_lock_acquire(_atexit_lock));
-	sll_bool_t o=0;
+	sll_bool_t out=0;
 	SLL_CONTAINER_FILTER(&_atexit_data,atexit_function_t*,elem,elem->function!=function,{
-		o=1;
+		out=1;
 		_delete_atexit_function(elem);
 	});
 	SLL_CRITICAL(sll_platform_lock_release(_atexit_lock));
-	return o;
+	return out;
 }

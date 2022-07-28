@@ -39,14 +39,14 @@ static void _release_data(void){
 
 
 static sll_file_handle_t _alloc_file(void){
-	sll_size_t o;
-	SLL_HANDLE_CONTAINER_ALLOC(&_file_data,&o);
+	sll_size_t out;
+	SLL_HANDLE_CONTAINER_ALLOC(&_file_data,&out);
 	extended_file_t* data=sll_allocate(sizeof(extended_file_t));
 	data->reference_count=1;
 	data->is_pointer=0;
 	data->data_pointer=NULL;
-	*(_file_data.data+o)=data;
-	return (sll_file_handle_t)o;
+	*(_file_data.data+out)=data;
+	return (sll_file_handle_t)out;
 }
 
 
@@ -188,11 +188,11 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_file_peek(s
 	}
 	extended_file_t* data=*(_file_data.data+handle);
 	sll_error_t err;
-	sll_read_char_t o=sll_file_peek_char((data->is_pointer?data->data.pointer:&(data->data.struct_)),&err);
-	if (o==SLL_END_OF_DATA){
+	sll_read_char_t char_=sll_file_peek_char((data->is_pointer?data->data.pointer:&(data->data.struct_)),&err);
+	if (char_==SLL_END_OF_DATA){
 		return (err==SLL_NO_ERROR?SLL_ERROR_EOF:err);
 	}
-	*out=(sll_char_t)o;
+	*out=(sll_char_t)char_;
 	return SLL_NO_ERROR;
 }
 
