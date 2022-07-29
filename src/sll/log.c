@@ -143,8 +143,8 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_set_log_flags(const sll_char_t*
 		log_file_data_t* file=_get_file_data(file_path);
 		ptr=(function_name?&(_get_function_data(file,function_name)->flags):&(file->flags));
 	}
-	sll_logger_flags_t tmp=flags;
+	sll_logger_flags_t old=flags;
 	flags&=SLL_LOG_FLAG_SHOW|SLL_LOG_FLAG_NO_HEADER;
 	*ptr=(state?(*ptr)|flags:(*ptr)&(~flags));
-	return (tmp==flags);
+	return (old==flags);
 }
