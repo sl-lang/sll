@@ -27,10 +27,11 @@ __SLL_EXTERNAL void sll_set_sandbox_flag(sll_sandbox_flag_t flag){
 	if (flag>SLL_MAX_SANDBOX_FLAG){
 		return;
 	}
+	sll_sandbox_flags_t mask=1ull<<flag;
 	if (_scheduler_current_thread_index==SLL_UNKNOWN_THREAD_INDEX){
-		_sandbox_flags|=1ull<<flag;
+		_sandbox_flags|=mask;
 	}
 	else{
-		_scheduler_current_thread->sandbox|=1ull<<flag;
+		_scheduler_current_thread->sandbox|=mask;
 	}
 }
