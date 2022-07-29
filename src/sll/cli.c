@@ -174,7 +174,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_cli_lookup_result_t sll_cli_lookup_file(co
 			}
 		}
 	}
-	sll_audit(SLL_CHAR("console_code_list_length.cli.find"),SLL_CHAR("S"),path);
+	sll_audit(SLL_CHAR("sll.cli.find"),SLL_CHAR("S"),path);
 	sll_char_t buffer[SLL_API_MAX_FILE_PATH_LENGTH];
 	if (_cli_bundle_list_len){
 		sll_array_length_t i=_cli_bundle_list_len;
@@ -659,8 +659,8 @@ _read_file_argument:
 		}
 		i++;
 	} while (i<argc);
-	sll_audit(SLL_CHAR("console_code_list_length.cli.init.raw"),SLL_CHAR("S+"),argv,argc);
-	sll_audit(SLL_CHAR("console_code_list_length.cli.init"),SLL_CHAR("uS{ss}{Si}{Sp}Si"),_cli_flags,output_file_path,_cli_include_list,_cli_include_list_len,0ull,SLL_OFFSETOF(cli_include_dir_t,name),SLL_OFFSETOF(cli_include_dir_t,path),audit_library_list,audit_library_list_len,sizeof(cli_audit_library_t),SLL_OFFSETOF(cli_audit_library_t,name),SLL_OFFSETOF(cli_audit_library_t,handle),_cli_bundle_list,_cli_bundle_list_len,0ull,SLL_OFFSETOF(cli_bundle_source_t,name),SLL_OFFSETOF(cli_bundle_source_t,bundle),bundle_name,sll_get_sandbox_flags());
+	sll_audit(SLL_CHAR("sll.cli.init.raw"),SLL_CHAR("S+"),argv,argc);
+	sll_audit(SLL_CHAR("sll.cli.init"),SLL_CHAR("uS{ss}{Si}{Sp}Si"),_cli_flags,output_file_path,_cli_include_list,_cli_include_list_len,0ull,SLL_OFFSETOF(cli_include_dir_t,name),SLL_OFFSETOF(cli_include_dir_t,path),audit_library_list,audit_library_list_len,sizeof(cli_audit_library_t),SLL_OFFSETOF(cli_audit_library_t,name),SLL_OFFSETOF(cli_audit_library_t,handle),_cli_bundle_list,_cli_bundle_list_len,0ull,SLL_OFFSETOF(cli_bundle_source_t,name),SLL_OFFSETOF(cli_bundle_source_t,bundle),bundle_name,sll_get_sandbox_flags());
 	if (_cli_flags&SLL_CLI_FLAG_VERBOSE){
 		SLL_CRITICAL(sll_set_log_flags(NULL,NULL,SLL_LOG_FLAG_SHOW,1));
 		SLL_CRITICAL(sll_set_log_flags(SLL_CHAR(__FILE__),NULL,SLL_LOG_FLAG_NO_HEADER,1));
@@ -760,7 +760,7 @@ _read_file_argument:
 		sll_cli_lookup_result_t generated_type=SLL_LOOKUP_RESULT_COMPILED_OBJECT;
 		_cli_enable_file_lookup=1;
 		if (j<file_list_length){
-			sll_audit(SLL_CHAR("console_code_list_length.cli.load"),SLL_CHAR("S"),argv[*(file_list+j)]);
+			sll_audit(SLL_CHAR("sll.cli.load"),SLL_CHAR("S"),argv[*(file_list+j)]);
 			sll_string_t tmp;
 			sll_string_from_pointer(argv[*(file_list+j)],&tmp);
 			sll_cli_lookup_data_t res_data;
@@ -786,7 +786,7 @@ _read_file_argument:
 			sll_set_argument(0,buffer);
 		}
 		else{
-			sll_audit(SLL_CHAR("console_code_list_length.cli.load.source"),SLL_CHAR("S"),argv[*(console_code_list+j-file_list_length)]);
+			sll_audit(SLL_CHAR("sll.cli.load.source"),SLL_CHAR("S"),argv[*(console_code_list+j-file_list_length)]);
 			SLL_LOG("Compiling console input...");
 			sll_init_compilation_data(SLL_CHAR("@console"),&compilation_data);
 			sll_file_t f;
@@ -885,7 +885,7 @@ _read_file_argument:
 			buffer[offset+1]=0;
 			if (_cli_flags&SLL_CLI_FLAG_GENERATE_ASSEMBLY){
 				buffer[offset]='a';
-				sll_audit(SLL_CHAR("console_code_list_length.cli.save.assembly"),SLL_CHAR("S"),buffer);
+				sll_audit(SLL_CHAR("sll.cli.save.assembly"),SLL_CHAR("S"),buffer);
 				SLL_LOG("Writing assembly to file '%s'...",buffer);
 				sll_file_t out_file;
 				SLL_CRITICAL_ERROR(sll_file_open(buffer,SLL_FILE_FLAG_WRITE,&out_file));
@@ -895,7 +895,7 @@ _read_file_argument:
 			}
 			if (_cli_flags&SLL_CLI_FLAG_GENERATE_COMPILED_OBJECT){
 				buffer[offset]='c';
-				sll_audit(SLL_CHAR("console_code_list_length.cli.save.compiled"),SLL_CHAR("S"),buffer);
+				sll_audit(SLL_CHAR("sll.cli.save.compiled"),SLL_CHAR("S"),buffer);
 				SLL_LOG("Writing compiled program to file '%s'...",buffer);
 				sll_file_t out_file;
 				SLL_CRITICAL_ERROR(sll_file_open(buffer,SLL_FILE_FLAG_WRITE,&out_file));
@@ -966,7 +966,7 @@ _cleanup:
 		sll_deallocate(include_directory);
 	}
 	sll_deallocate(_cli_include_list);
-	sll_audit(SLL_CHAR("console_code_list_length.cli.deinit"),SLL_CHAR(""));
+	sll_audit(SLL_CHAR("sll.cli.deinit"),SLL_CHAR(""));
 	while (_cli_bundle_list_len){
 		_cli_bundle_list_len--;
 		cli_bundle_source_t* bundle_data=*(_cli_bundle_list+_cli_bundle_list_len);
