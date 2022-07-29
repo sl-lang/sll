@@ -103,16 +103,13 @@ static void _print_int(sll_integer_t value,sll_file_t* out){
 		sll_file_write_char(out,'-',NULL);
 	}
 	sll_char_t buffer[20];
-	sll_string_length_t i=0;
+	sll_string_length_t i=20;
 	while (value){
-		buffer[i]=value%10;
-		value/=10;
-		i++;
-	}
-	while (i){
 		i--;
-		sll_file_write_char(out,buffer[i]+48,NULL);
+		buffer[i]=(value%10)+48;
+		value/=10;
 	}
+	sll_file_write(out,buffer+i,20-i,NULL);
 }
 
 
