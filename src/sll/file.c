@@ -143,12 +143,12 @@ __SLL_EXTERNAL void sll_file_close(sll_file_t* file){
 	else{
 		SLL_ASSERT(file->flags&SLL_FILE_FLAG_NO_BUFFER);
 		if (file->flags&FILE_FLAG_DYNAMIC_BUFFERS){
-			dynamic_buffer_chunk_t* c=file->data.file._write_buffer.dynamic.start;
+			dynamic_buffer_chunk_t* chunk=file->data.file._write_buffer.dynamic.start;
 			do{
-				dynamic_buffer_chunk_t* n=c->next;
-				SLL_CRITICAL_ERROR(sll_platform_free_page(c,c->size));
-				c=n;
-			} while (c);
+				dynamic_buffer_chunk_t* next=chunk->next;
+				SLL_CRITICAL_ERROR(sll_platform_free_page(chunk,chunk->size));
+				chunk=next;
+			} while (chunk);
 		}
 	}
 	*((sll_file_flags_t*)(&(file->flags)))=FILE_FLAG_NO_RELEASE;
