@@ -55,8 +55,8 @@ static sll_thread_index_t _restart_thread(event_list_length_t idx){
 			out=STRING_TO_OBJECT_NOCOPY(&buffer);
 		}
 	}
-	sll_thread_index_t tid=evt->thread_index;
-	thread_data_t* thread=_thread_get(tid);
+	sll_thread_index_t thread_index=evt->thread_index;
+	thread_data_t* thread=_thread_get(thread_index);
 	*(thread->stack+thread->stack_index)=out;
 	thread->stack_index++;
 	for (event_list_length_t i=idx+1;i<_io_dispatcher_event_len;i++){
@@ -66,7 +66,7 @@ static sll_thread_index_t _restart_thread(event_list_length_t idx){
 	_io_dispatcher_event_len--;
 	_io_dispatcher_event=sll_reallocate(_io_dispatcher_event,_io_dispatcher_event_len*sizeof(event_data_t));
 	_io_dispatcher_raw_event=sll_reallocate(_io_dispatcher_raw_event,(_io_dispatcher_event_len+1)*sizeof(raw_event_data_t));
-	return tid;
+	return thread_index;
 }
 
 
