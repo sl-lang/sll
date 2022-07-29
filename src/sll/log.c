@@ -99,10 +99,10 @@ __SLL_EXTERNAL sll_bool_t sll_log(const sll_char_t* file_path,const sll_char_t* 
 	}
 	va_list va;
 	va_start(va,format);
-	sll_var_arg_list_t va_list;
-	SLL_VAR_ARG_INIT_C(&va_list,&va);
+	sll_var_arg_list_t va_list_;
+	SLL_VAR_ARG_INIT_C(&va_list_,&va);
 	sll_string_t str;
-	sll_string_format_list(format,sll_string_length(format),&va_list,&str);
+	sll_string_format_list(format,sll_string_length(format),&va_list_,&str);
 	va_end(va);
 	if (!(function->flags&SLL_LOG_FLAG_NO_HEADER)){
 		_log_location(&(file->name),&(function->name),line,sll_stdout);

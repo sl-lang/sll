@@ -380,9 +380,9 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_string_flip_case(const sll_string_t* 
 
 
 __SLL_EXTERNAL __SLL_API_CALL void sll_api_string_format(const sll_string_t* fmt,const sll_object_t* args,sll_arg_count_t len,sll_string_t* out){
-	sll_var_arg_list_t dt;
-	SLL_VAR_ARG_INIT_SLL(&dt,args,len);
-	sll_string_format_list(fmt->data,fmt->length,&dt,out);
+	sll_var_arg_list_t va_list_;
+	SLL_VAR_ARG_INIT_SLL(&va_list_,args,len);
+	sll_string_format_list(fmt->data,fmt->length,&va_list_,out);
 }
 
 

@@ -32,9 +32,9 @@ __SLL_EXTERNAL void sll_audit(const sll_char_t* name,const sll_char_t* format,..
 	}
 	va_list va;
 	va_start(va,format);
-	sll_var_arg_list_t va_list;
-	SLL_VAR_ARG_INIT_C(&va_list,&va);
-	sll_audit_list(name,format,&va_list);
+	sll_var_arg_list_t va_list_;
+	SLL_VAR_ARG_INIT_C(&va_list_,&va);
+	sll_audit_list(name,format,&va_list_);
 	va_end(va);
 }
 

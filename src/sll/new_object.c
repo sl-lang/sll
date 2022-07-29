@@ -412,9 +412,9 @@ static sll_object_t _build_single(const sll_char_t** format,sll_string_length_t*
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t sll_new_object(const sll_char_t* format,...){
 	va_list va;
 	va_start(va,format);
-	sll_var_arg_list_t dt;
-	SLL_VAR_ARG_INIT_C(&dt,&va);
-	sll_object_t out=sll_new_object_list(format,sll_string_length(format),&dt);
+	sll_var_arg_list_t va_list_;
+	SLL_VAR_ARG_INIT_C(&va_list_,&va);
+	sll_object_t out=sll_new_object_list(format,sll_string_length(format),&va_list_);
 	va_end(va);
 	return out;
 }
@@ -424,9 +424,9 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t sll_new_object(const sll_char_t* 
 __SLL_EXTERNAL void sll_new_object_array(const sll_char_t* format,sll_array_t* out,...){
 	va_list va;
 	va_start(va,out);
-	sll_var_arg_list_t dt;
-	SLL_VAR_ARG_INIT_C(&dt,&va);
-	sll_new_object_array_list(format,sll_string_length(format),&dt,out);
+	sll_var_arg_list_t va_list_;
+	SLL_VAR_ARG_INIT_C(&va_list_,&va);
+	sll_new_object_array_list(format,sll_string_length(format),&va_list_,out);
 	va_end(va);
 }
 
