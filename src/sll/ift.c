@@ -63,15 +63,15 @@ __SLL_EXTERNAL void sll_free_internal_function_table(sll_internal_function_table
 
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_function_index_t sll_lookup_internal_function(const sll_internal_function_table_t* internal_function_table,const sll_char_t* name){
-	sll_string_t tmp;
-	sll_string_from_pointer(name,&tmp);
+	sll_string_t name_str;
+	sll_string_from_pointer(name,&name_str);
 	for (sll_function_index_t i=0;i<internal_function_table->length;i++){
-		if (STRING_EQUAL(&((internal_function_table->data+i)->name),&tmp)){
-			sll_free_string(&tmp);
+		if (STRING_EQUAL(&((internal_function_table->data+i)->name),&name_str)){
+			sll_free_string(&name_str);
 			return i;
 		}
 	}
-	sll_free_string(&tmp);
+	sll_free_string(&name_str);
 	return SLL_UNKNOWN_INTERNAL_FUNCTION_INDEX;
 }
 
