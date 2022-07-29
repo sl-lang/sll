@@ -101,9 +101,9 @@ _read_offsets:
 		case '[':
 		case '<':
 			{
-				sll_char_t ec=(st=='('?')':(st=='['?']':'>'));
+				sll_char_t end_char=(st=='('?')':(st=='['?']':'>'));
 				SKIP_WHITESPACE;
-				while (*format_length&&**format!=ec){
+				while (*format_length&&**format!=end_char){
 					_build_struct_offsets(format,format_length,va,out);
 					SKIP_WHITESPACE;
 				}
