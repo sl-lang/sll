@@ -151,7 +151,7 @@ static sll_object_t _build_struct(const sll_char_t** format,sll_string_length_t*
 		ptr-=sz;
 		const sll_char_t* arg_t=base_t;
 		sll_string_length_t arg_tl=base_tl;
-		sll_var_arg_list_t arg_va={
+		sll_var_arg_list_t arg_va_list={
 			VAR_ARG_LIST_TYPE_STRUCT,
 			{
 				.struct_={
@@ -168,7 +168,7 @@ static sll_object_t _build_struct(const sll_char_t** format,sll_string_length_t*
 		while (arg_tl&&*arg_t!='}'){
 			arg->data.array.length++;
 			sll_allocator_resize((void**)(&(arg->data.array.data)),arg->data.array.length*sizeof(sll_object_t));
-			arg->data.array.data[arg->data.array.length-1]=_build_single(&arg_t,&arg_tl,&arg_va);
+			arg->data.array.data[arg->data.array.length-1]=_build_single(&arg_t,&arg_tl,&arg_va_list);
 			SKIP_WHITESPACE_VAR(arg_t,arg_tl);
 		}
 		sll_allocator_collapse((void**)(&(arg->data.array.data)),arg->data.array.length*sizeof(sll_object_t));

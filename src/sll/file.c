@@ -769,10 +769,10 @@ __SLL_EXTERNAL sll_size_t sll_file_write_format(sll_file_t* file,const sll_char_
 	}
 	va_list va;
 	va_start(va,err);
-	sll_var_arg_list_t data;
-	SLL_VAR_ARG_INIT_C(&data,&va);
+	sll_var_arg_list_t va_list;
+	SLL_VAR_ARG_INIT_C(&va_list,&va);
 	sll_string_t str;
-	sll_string_format_list(format,sll_string_length(format),&data,&str);
+	sll_string_format_list(format,sll_string_length(format),&va_list,&str);
 	va_end(va);
 	sll_size_t out=sll_file_write(file,str.data,str.length,err);
 	sll_free_string(&str);
