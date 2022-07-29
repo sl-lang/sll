@@ -108,7 +108,7 @@ void _thread_terminate(sll_object_t return_value){
 	SLL_ASSERT(_scheduler_current_thread->state==THREAD_STATE_RUNNING&&!(_scheduler_current_thread->flags&THREAD_FLAG_SUSPENDED));
 	SLL_ACQUIRE(return_value);
 	sll_thread_index_t thread_index=_scheduler_current_thread_index;
-	sll_bool_t del=!!(_scheduler_current_thread->flags&THREAD_FLAG_DELETE);
+	sll_bool_t delete=!!(_scheduler_current_thread->flags&THREAD_FLAG_DELETE);
 	_scheduler_current_thread->return_value=return_value;
 	_scheduler_current_thread->state=THREAD_STATE_TERMINATED;
 	_scheduler_current_thread_index=_scheduler_current_thread->wait;
@@ -137,7 +137,7 @@ void _thread_terminate(sll_object_t return_value){
 	}
 	_thread_active_count--;
 	SLL_CRITICAL(sll_platform_lock_release(_thread_lock));
-	if (del){
+	if (delete){
 		SLL_CRITICAL(sll_thread_delete(thread_index));
 	}
 }
