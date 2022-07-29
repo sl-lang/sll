@@ -218,15 +218,15 @@ __SLL_EXTERNAL void sll_file_get_buffer(sll_file_t* file,sll_string_t* out){
 		return;
 	}
 	sll_string_create((sll_string_length_t)(file->data.file._write_buffer.dynamic.size),out);
-	dynamic_buffer_chunk_t* c=file->data.file._write_buffer.dynamic.start;
+	dynamic_buffer_chunk_t* chunk=file->data.file._write_buffer.dynamic.start;
 	addr_t ptr=ADDR(out->data);
-	sll_string_length_t l=out->length;
+	sll_string_length_t length=out->length;
 	do{
-		sll_copy_data(c->data,(l>c->size?c->size:l),PTR(ptr));
-		l-=(sll_string_length_t)(c->size);
-		ptr+=c->size;
-		c=c->next;
-	} while (c);
+		sll_copy_data(chunk->data,(length>chunk->size?chunk->size:length),PTR(ptr));
+		length-=(sll_string_length_t)(chunk->size);
+		ptr+=chunk->size;
+		chunk=chunk->next;
+	} while (chunk);
 	sll_string_calculate_checksum(out);
 }
 
