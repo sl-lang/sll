@@ -808,12 +808,12 @@ _read_file_argument:
 		}
 		_cli_enable_file_lookup=0;
 		if (generated_type==SLL_LOOKUP_RESULT_COMPILED_OBJECT){
-			sll_source_file_t a_dt_sf;
 			if ((_cli_flags&(SLL_CLI_FLAG_GENERATE_ASSEMBLY|SLL_CLI_FLAG_PRINT_ASSEMBLY))||!(_cli_flags&SLL_CLI_FLAG_NO_RUN)){
 				SLL_LOG("Combining source files...");
-				sll_unify_compilation_data(&compilation_data,&a_dt_sf);
+				sll_source_file_t assembly_data_source_file;
+				sll_unify_compilation_data(&compilation_data,&assembly_data_source_file);
 				sll_free_compilation_data(&compilation_data);
-				sll_compilation_data_from_source_file(&a_dt_sf,&compilation_data);
+				sll_compilation_data_from_source_file(&assembly_data_source_file,&compilation_data);
 			}
 			if (_cli_flags&SLL_CLI_FLAG_OPTIMIZE){
 				SLL_LOG("Optimizing compilation data...");
@@ -859,7 +859,7 @@ _read_file_argument:
 				offset=sll_string_length(output_file_path);
 				sll_copy_data(output_file_path,offset,buffer);
 				if (_cli_flags&CLI_FLAG_SINGLE_OUTPUT){
-					offset-=1;
+					offset--;
 				}
 				else{
 					while (*(output_file_path+offset)!='\\'&&*(output_file_path+offset)!='/'){
