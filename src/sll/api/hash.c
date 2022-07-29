@@ -13,34 +13,34 @@
 
 
 __SLL_EXTERNAL __SLL_API_CALL void sll_api_hash_md5(__SLL_U32 a,__SLL_U32 b,__SLL_U32 c,__SLL_U32 d,const sll_string_t* str,sll_array_t* out){
-	sll_md5_data_t dt={
+	sll_md5_data_t hash={
 		a,
 		b,
 		c,
 		d
 	};
-	sll_hash_md5(&dt,str->data,str->length);
-	sll_new_object_array(SLL_CHAR("hhhh"),out,dt.a,dt.b,dt.c,dt.d);
+	sll_hash_md5(&hash,str->data,str->length);
+	sll_new_object_array(SLL_CHAR("hhhh"),out,hash.a,hash.b,hash.c,hash.d);
 }
 
 
 
 __SLL_EXTERNAL __SLL_API_CALL void sll_api_hash_sha1(__SLL_U32 a,__SLL_U32 b,__SLL_U32 c,__SLL_U32 d,__SLL_U32 e,const sll_string_t* str,sll_array_t* out){
-	sll_sha1_data_t dt={
+	sll_sha1_data_t hash={
 		a,
 		b,
 		c,
 		d,
 		e
 	};
-	sll_hash_sha1(&dt,str->data,str->length);
-	sll_new_object_array(SLL_CHAR("hhhhh"),out,dt.a,dt.b,dt.c,dt.d,dt.e);
+	sll_hash_sha1(&hash,str->data,str->length);
+	sll_new_object_array(SLL_CHAR("hhhhh"),out,hash.a,hash.b,hash.c,hash.d,hash.e);
 }
 
 
 
 __SLL_EXTERNAL __SLL_API_CALL void sll_api_hash_sha256(__SLL_U32 a,__SLL_U32 b,__SLL_U32 c,__SLL_U32 d,__SLL_U32 e,__SLL_U32 f,__SLL_U32 g,__SLL_U32 h,const sll_string_t* str,sll_array_t* out){
-	sll_sha256_data_t dt={
+	sll_sha256_data_t hash={
 		a,
 		b,
 		c,
@@ -50,14 +50,14 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_hash_sha256(__SLL_U32 a,__SLL_U32 b,_
 		g,
 		h
 	};
-	sll_hash_sha256(&dt,str->data,str->length);
-	sll_new_object_array(SLL_CHAR("hhhhhhhh"),out,dt.a,dt.b,dt.c,dt.d,dt.e,dt.f,dt.g,dt.h);
+	sll_hash_sha256(&hash,str->data,str->length);
+	sll_new_object_array(SLL_CHAR("hhhhhhhh"),out,hash.a,hash.b,hash.c,hash.d,hash.e,hash.f,hash.g,hash.h);
 }
 
 
 
 __SLL_EXTERNAL __SLL_API_CALL void sll_api_hash_sha512(__SLL_U64 a,__SLL_U64 b,__SLL_U64 c,__SLL_U64 d,__SLL_U64 e,__SLL_U64 f,__SLL_U64 g,__SLL_U64 h,const sll_string_t* str,sll_array_t* out){
-	sll_sha512_data_t dt={
+	sll_sha512_data_t hash={
 		a,
 		b,
 		c,
@@ -67,20 +67,20 @@ __SLL_EXTERNAL __SLL_API_CALL void sll_api_hash_sha512(__SLL_U64 a,__SLL_U64 b,_
 		g,
 		h
 	};
-	sll_hash_sha512(&dt,str->data,str->length);
-	sll_new_object_array(SLL_CHAR("iiiiiiii"),out,dt.a,dt.b,dt.c,dt.d,dt.e,dt.f,dt.g,dt.h);
+	sll_hash_sha512(&hash,str->data,str->length);
+	sll_new_object_array(SLL_CHAR("iiiiiiii"),out,hash.a,hash.b,hash.c,hash.d,hash.e,hash.f,hash.g,hash.h);
 }
 
 
 
-__SLL_EXTERNAL void sll_hash_md5(sll_md5_data_t* dt,void* buffer,sll_size_t bfl){
+__SLL_EXTERNAL void sll_hash_md5(sll_md5_data_t* hash,void* buffer,sll_size_t bfl){
 	SLL_ASSERT(!(bfl&63));
 	const __SLL_U32* ptr=(const __SLL_U32*)buffer;
 	for (sll_size_t i=0;i<(bfl>>6);i++){
-		__SLL_U32 a=dt->a;
-		__SLL_U32 b=dt->b;
-		__SLL_U32 c=dt->c;
-		__SLL_U32 d=dt->d;
+		__SLL_U32 a=hash->a;
+		__SLL_U32 b=hash->b;
+		__SLL_U32 c=hash->c;
+		__SLL_U32 d=hash->d;
 		MD5_STEP(a,b,c,d,0,7,(*ptr)+0xd76aa478);
 		MD5_STEP(d,a,b,c,0,12,(*(ptr+1))+0xe8c7b756);
 		MD5_STEP(c,d,a,b,0,17,(*(ptr+2))+0x242070db);
@@ -145,17 +145,17 @@ __SLL_EXTERNAL void sll_hash_md5(sll_md5_data_t* dt,void* buffer,sll_size_t bfl)
 		MD5_STEP(d,a,b,c,3,10,(*(ptr+11))+0xbd3af235);
 		MD5_STEP(c,d,a,b,3,15,(*(ptr+2))+0x2ad7d2bb);
 		MD5_STEP(b,c,d,a,3,21,(*(ptr+9))+0xeb86d391);
-		dt->a+=a;
-		dt->b+=b;
-		dt->c+=c;
-		dt->d+=d;
+		hash->a+=a;
+		hash->b+=b;
+		hash->c+=c;
+		hash->d+=d;
 		ptr+=16;
 	}
 }
 
 
 
-__SLL_EXTERNAL void sll_hash_sha1(sll_sha1_data_t* dt,void* buffer,sll_size_t bfl){
+__SLL_EXTERNAL void sll_hash_sha1(sll_sha1_data_t* hash,void* buffer,sll_size_t bfl){
 	SLL_ASSERT(!(bfl&63));
 	__SLL_U32 w[80];
 	const __SLL_U32* ptr=(const __SLL_U32*)buffer;
@@ -167,11 +167,11 @@ __SLL_EXTERNAL void sll_hash_sha1(sll_sha1_data_t* dt,void* buffer,sll_size_t bf
 		for (unsigned int j=16;j<80;j++){
 			w[j]=ROTATE_BITS(w[j-3]^w[j-8]^w[j-14]^w[j-16],1);
 		}
-		__SLL_U32 a=dt->a;
-		__SLL_U32 b=dt->b;
-		__SLL_U32 c=dt->c;
-		__SLL_U32 d=dt->d;
-		__SLL_U32 e=dt->e;
+		__SLL_U32 a=hash->a;
+		__SLL_U32 b=hash->b;
+		__SLL_U32 c=hash->c;
+		__SLL_U32 d=hash->d;
+		__SLL_U32 e=hash->e;
 		SHA1_STEP(a,b,c,d,e,0,w[0]);
 		SHA1_STEP(e,a,b,c,d,0,w[1]);
 		SHA1_STEP(d,e,a,b,c,0,w[2]);
@@ -252,17 +252,17 @@ __SLL_EXTERNAL void sll_hash_sha1(sll_sha1_data_t* dt,void* buffer,sll_size_t bf
 		SHA1_STEP(d,e,a,b,c,3,w[77]);
 		SHA1_STEP(c,d,e,a,b,3,w[78]);
 		SHA1_STEP(b,c,d,e,a,3,w[79]);
-		dt->a+=a;
-		dt->b+=b;
-		dt->c+=c;
-		dt->d+=d;
-		dt->e+=e;
+		hash->a+=a;
+		hash->b+=b;
+		hash->c+=c;
+		hash->d+=d;
+		hash->e+=e;
 	}
 }
 
 
 
-__SLL_EXTERNAL void sll_hash_sha256(sll_sha256_data_t* dt,void* buffer,sll_size_t bfl){
+__SLL_EXTERNAL void sll_hash_sha256(sll_sha256_data_t* hash,void* buffer,sll_size_t bfl){
 	SLL_ASSERT(!(bfl&63));
 	__SLL_U32 w[64];
 	const __SLL_U32* ptr=(const __SLL_U32*)buffer;
@@ -274,14 +274,14 @@ __SLL_EXTERNAL void sll_hash_sha256(sll_sha256_data_t* dt,void* buffer,sll_size_
 		for (unsigned int j=16;j<64;j++){
 			w[j]=(ROTATE_BITS_RIGHT(w[j-2],17)^ROTATE_BITS_RIGHT(w[j-2],19)^(w[j-2]>>10))+w[j-7]+(ROTATE_BITS_RIGHT(w[j-15],7)^ROTATE_BITS_RIGHT(w[j-15],18)^(w[j-15]>>3))+w[j-16];
 		}
-		__SLL_U32 a=dt->a;
-		__SLL_U32 b=dt->b;
-		__SLL_U32 c=dt->c;
-		__SLL_U32 d=dt->d;
-		__SLL_U32 e=dt->e;
-		__SLL_U32 f=dt->f;
-		__SLL_U32 g=dt->g;
-		__SLL_U32 h=dt->h;
+		__SLL_U32 a=hash->a;
+		__SLL_U32 b=hash->b;
+		__SLL_U32 c=hash->c;
+		__SLL_U32 d=hash->d;
+		__SLL_U32 e=hash->e;
+		__SLL_U32 f=hash->f;
+		__SLL_U32 g=hash->g;
+		__SLL_U32 h=hash->h;
 		__SLL_U32 t;
 		SHA256_STEP(a,b,c,d,e,f,g,h,w[0]+0x428a2f98);
 		SHA256_STEP(h,a,b,c,d,e,f,g,w[1]+0x71374491);
@@ -347,20 +347,20 @@ __SLL_EXTERNAL void sll_hash_sha256(sll_sha256_data_t* dt,void* buffer,sll_size_
 		SHA256_STEP(d,e,f,g,h,a,b,c,w[61]+0xa4506ceb);
 		SHA256_STEP(c,d,e,f,g,h,a,b,w[62]+0xbef9a3f7);
 		SHA256_STEP(b,c,d,e,f,g,h,a,w[63]+0xc67178f2);
-		dt->a+=a;
-		dt->b+=b;
-		dt->c+=c;
-		dt->d+=d;
-		dt->e+=e;
-		dt->f+=f;
-		dt->g+=g;
-		dt->h+=h;
+		hash->a+=a;
+		hash->b+=b;
+		hash->c+=c;
+		hash->d+=d;
+		hash->e+=e;
+		hash->f+=f;
+		hash->g+=g;
+		hash->h+=h;
 	}
 }
 
 
 
-__SLL_EXTERNAL void sll_hash_sha512(sll_sha512_data_t* dt,void* buffer,sll_size_t bfl){
+__SLL_EXTERNAL void sll_hash_sha512(sll_sha512_data_t* hash,void* buffer,sll_size_t bfl){
 	SLL_ASSERT(!(bfl&127));
 	__SLL_U64 w[80];
 	const __SLL_U64* ptr=(const __SLL_U64*)buffer;
@@ -372,14 +372,14 @@ __SLL_EXTERNAL void sll_hash_sha512(sll_sha512_data_t* dt,void* buffer,sll_size_
 		for (unsigned int j=16;j<80;j++){
 			w[j]=(ROTATE_BITS_RIGHT64(w[j-2],19)^ROTATE_BITS_RIGHT64(w[j-2],61)^(w[j-2]>>6))+w[j-7]+(ROTATE_BITS_RIGHT64(w[j-15],1)^ROTATE_BITS_RIGHT64(w[j-15],8)^(w[j-15]>>7))+w[j-16];
 		}
-		__SLL_U64 a=dt->a;
-		__SLL_U64 b=dt->b;
-		__SLL_U64 c=dt->c;
-		__SLL_U64 d=dt->d;
-		__SLL_U64 e=dt->e;
-		__SLL_U64 f=dt->f;
-		__SLL_U64 g=dt->g;
-		__SLL_U64 h=dt->h;
+		__SLL_U64 a=hash->a;
+		__SLL_U64 b=hash->b;
+		__SLL_U64 c=hash->c;
+		__SLL_U64 d=hash->d;
+		__SLL_U64 e=hash->e;
+		__SLL_U64 f=hash->f;
+		__SLL_U64 g=hash->g;
+		__SLL_U64 h=hash->h;
 		__SLL_U64 t;
 		SHA512_STEP(a,b,c,d,e,f,g,h,w[0]+0x428a2f98d728ae22ull);
 		SHA512_STEP(h,a,b,c,d,e,f,g,w[1]+0x7137449123ef65cdull);
@@ -461,13 +461,13 @@ __SLL_EXTERNAL void sll_hash_sha512(sll_sha512_data_t* dt,void* buffer,sll_size_
 		SHA512_STEP(d,e,f,g,h,a,b,c,w[77]+0x597f299cfc657e2aull);
 		SHA512_STEP(c,d,e,f,g,h,a,b,w[78]+0x5fcb6fab3ad6faecull);
 		SHA512_STEP(b,c,d,e,f,g,h,a,w[79]+0x6c44198c4a475817ull);
-		dt->a+=a;
-		dt->b+=b;
-		dt->c+=c;
-		dt->d+=d;
-		dt->e+=e;
-		dt->f+=f;
-		dt->g+=g;
-		dt->h+=h;
+		hash->a+=a;
+		hash->b+=b;
+		hash->c+=c;
+		hash->d+=d;
+		hash->e+=e;
+		hash->f+=f;
+		hash->g+=g;
+		hash->h+=h;
 	}
 }
