@@ -56,9 +56,9 @@ static sll_thread_index_t _restart_thread(event_list_length_t idx){
 		}
 	}
 	sll_thread_index_t tid=evt->thread_index;
-	thread_data_t* thr=_thread_get(tid);
-	*(thr->stack+thr->stack_index)=out;
-	thr->stack_index++;
+	thread_data_t* thread=_thread_get(tid);
+	*(thread->stack+thread->stack_index)=out;
+	thread->stack_index++;
 	for (event_list_length_t i=idx+1;i<_io_dispatcher_event_len;i++){
 		*(_io_dispatcher_event+i-1)=*(_io_dispatcher_event+i);
 		*(_io_dispatcher_raw_event+i)=*(_io_dispatcher_raw_event+i+1);
