@@ -281,7 +281,7 @@ __SLL_EXTERNAL void sll_acquire_object(sll_object_t object){
 
 
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t sll_create_object(sll_object_type_t type){
-	sll_object_t out;
+	sll_object_t out=NULL;
 	if (_gc_fast_object_pool.space!=GC_FAST_OBJECT_POOL_SIZE){
 		out=_gc_fast_object_pool.data[_gc_fast_object_pool.read];
 		_gc_fast_object_pool.read=(_gc_fast_object_pool.read+1)&(GC_FAST_OBJECT_POOL_SIZE-1);
@@ -318,16 +318,18 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t sll_create_object(sll_object_type
 			}
 			_gc_memory_page_data.length--;
 			gc_page_header_t* pg=_gc_memory_page_data.data[_gc_memory_page_data.length];
-			out=PTR(ADDR(pg)+sizeof(gc_page_header_t));
 			SLL_ASSERT(GC_PAGE_OBJECT_COUNT<GC_OBJECT_POOL_SIZE);
-			sll_object_t current=out+1;
-			while (_gc_object_pool.length<GC_PAGE_OBJECT_COUNT-1){
-				current->reference_count=0;
-				current->_flags=GC_FLAG_IN_FAST_POOL;
-				current->data._pool_index=_gc_object_pool.length;
-				_gc_object_pool.data[_gc_object_pool.length]=current;
-				_gc_object_pool.length++;
-				current++;
+			GC_ITER_PAGE_OBJECTS(pg){
+				if (!out){
+					out=current;
+				}
+				else{
+					current->reference_count=0;
+					current->_flags=GC_FLAG_IN_FAST_POOL;
+					current->data._pool_index=_gc_object_pool.length;
+					_gc_object_pool.data[_gc_object_pool.length]=current;
+					_gc_object_pool.length++;
+				}
 			}
 		}
 		GC_PAGE_HEADER_INCREASE(GC_MEMORY_PAGE_HEADER(out));
