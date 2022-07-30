@@ -123,11 +123,10 @@ static void _set_field(const sll_object_type_table_t* type_table,sll_object_fiel
 			return;
 		default:
 			{
-				sll_object_t n=sll_create_object(type);
-				const sll_object_type_data_t* dt=*(type_table->data+type-SLL_MAX_OBJECT_TYPE-1);
-				n->data.fields=sll_allocate(dt->field_count*sizeof(sll_object_field_t));
-				_init_struct(type_table,n,value->data.array.data,value->data.array.length);
-				field->any=n;
+				sll_object_t new=sll_create_object(type);
+				new->data.fields=sll_allocate((*(type_table->data+type-SLL_MAX_OBJECT_TYPE-1))->field_count*sizeof(sll_object_field_t));
+				_init_struct(type_table,new,value->data.array.data,value->data.array.length);
+				field->any=new;
 				break;
 			}
 	}
