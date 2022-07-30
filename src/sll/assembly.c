@@ -313,7 +313,7 @@ static const sll_node_t* _generate_jump(const sll_node_t* o,assembly_generator_d
 			}
 			return o+1;
 		case SLL_NODE_TYPE_COMPLEX:
-			if (((!!o->data.complex_.real)|(!!o->data.complex_.imag))^inv){
+			if (((!!o->data.complex_.real)||(!!o->data.complex_.imag))^inv){
 				GENERATE_OPCODE_WITH_LABEL(g_dt,SLL_ASSEMBLY_INSTRUCTION_TYPE_JMP,lbl);
 			}
 			return o+1;
