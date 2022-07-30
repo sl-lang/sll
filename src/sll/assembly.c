@@ -82,7 +82,7 @@ static const sll_node_t* _map_identifiers(const sll_node_t* o,const sll_source_f
 			return o+1;
 		case SLL_NODE_TYPE_IDENTIFIER:
 			{
-				sll_identifier_t* id=sf->identifier_table.data+o->data.identifier_index;
+				const sll_identifier_t* id=sf->identifier_table.data+o->data.identifier_index;
 				if ((g_dt->identifier_map.data+o->data.identifier_index)->variable==SLL_MAX_VARIABLE_INDEX){
 					if (SLL_IDENTIFIER_IS_TLS(id)){
 						(g_dt->identifier_map.data+o->data.identifier_index)->variable=(g_dt->identifier_map.tls_variable_count<<1)|1;
