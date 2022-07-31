@@ -98,7 +98,7 @@ static sll_identifier_index_t _get_var_index(sll_source_file_t* source_file,cons
 	SLL_IDENTIFIER_SET_STRING_INDEX(source_file->identifier_table.data+source_file->identifier_table.length-1,sll_add_string(&(source_file->string_table),name),flags&GET_VAR_INDEX_FLAG_TLS);
 	if ((flags&GET_VAR_INDEX_FLAG_ASSIGN)&&arg){
 		extra_compilation_data->new_variable_data->length++;
-		extra_compilation_data->new_variable_data->data=sll_reallocate(extra_compilation_data->new_variable_data->data,extra_compilation_data->new_variable_data->length*sizeof(sll_node_t*));
+		extra_compilation_data->new_variable_data->data=sll_reallocate(extra_compilation_data->new_variable_data->data,extra_compilation_data->new_variable_data->length*sizeof(sll_node_t));
 		*(extra_compilation_data->new_variable_data->data+extra_compilation_data->new_variable_data->length-1)=arg;
 	}
 	return o;
@@ -210,7 +210,7 @@ static void _read_object_internal(sll_file_t* file,sll_source_file_t* source_fil
 	scope_data_t new_scope_data={
 		NULL
 	};
-	sll_node_t* o=NULL;
+	sll_node_t o=NULL;
 	sll_arg_count_t ac=0;
 	sll_array_length_t al=0;
 	sll_map_length_t ml=0;
@@ -220,7 +220,7 @@ static void _read_object_internal(sll_file_t* file,sll_source_file_t* source_fil
 		if ((char_>8&&char_<14)||char_==' '){
 			do{
 				if (char_=='\n'){
-					sll_node_t* dbg=_acquire_next_node(source_file);
+					sll_node_t dbg=_acquire_next_node(source_file);
 					dbg->type=SLL_NODE_TYPE_DBG;
 					dbg->data.string_index=SLL_MAX_STRING_INDEX;
 					(*(extra_compilation_data->file_line))++;
@@ -282,7 +282,7 @@ static void _read_object_internal(sll_file_t* file,sll_source_file_t* source_fil
 			}
 			else{
 				if (o->type==SLL_NODE_TYPE_ASSIGN&&ac==1&&extra_compilation_data->new_variable_data->length){
-					sll_node_t* id=o+1;
+					sll_node_t id=o+1;
 					while (id->type==SLL_NODE_TYPE_NOP||id->type==SLL_NODE_TYPE_DBG||id->type==SLL_NODE_TYPE_CHANGE_STACK){
 						id=(id->type==SLL_NODE_TYPE_CHANGE_STACK?id->data._next_node:id+1);
 					}
@@ -307,7 +307,7 @@ static void _read_object_internal(sll_file_t* file,sll_source_file_t* source_fil
 				};
 				new_extra_compilation_data.non_function_scope=(new_extra_compilation_data.is_function?extra_compilation_data->non_function_scope:scope_data);
 				if (o->type==SLL_NODE_TYPE_ASSIGN&&ac==1){
-					sll_node_t* a=o+1;
+					sll_node_t a=o+1;
 					while (a->type==SLL_NODE_TYPE_NOP||a->type==SLL_NODE_TYPE_DBG||a->type==SLL_NODE_TYPE_CHANGE_STACK){
 						a=(a->type==SLL_NODE_TYPE_CHANGE_STACK?a->data._next_node:a+1);
 					}
@@ -333,7 +333,7 @@ static void _read_object_internal(sll_file_t* file,sll_source_file_t* source_fil
 		}
 		else{
 			UPDATE_IF_SCOPE;
-			sll_node_t* arg=_acquire_next_node(source_file);
+			sll_node_t arg=_acquire_next_node(source_file);
 			arg->type=SLL_NODE_TYPE_NOP;
 			sll_char_t rewind_bf[255];
 			sll_string_length_t rewind_bf_l=0;
@@ -733,7 +733,7 @@ _parse_identifier:
 					else{
 						arg->type=SLL_NODE_TYPE_VAR_ACCESS;
 						arg->data.arg_count=1;
-						sll_node_t* v=_acquire_next_node(source_file);
+						sll_node_t v=_acquire_next_node(source_file);
 						v->type=SLL_NODE_TYPE_IDENTIFIER;
 						v->data.identifier_index=ii;
 						while (char_!=SLL_END_OF_DATA){
@@ -789,7 +789,7 @@ _normal_identifier:;
 			}
 			else{
 				if (o->type==SLL_NODE_TYPE_ASSIGN&&ac==1&&extra_compilation_data->new_variable_data->length){
-					sll_node_t* id=o+1;
+					sll_node_t id=o+1;
 					while (id->type==SLL_NODE_TYPE_NOP||id->type==SLL_NODE_TYPE_DBG||id->type==SLL_NODE_TYPE_CHANGE_STACK){
 						id=(id->type==SLL_NODE_TYPE_CHANGE_STACK?id->data._next_node:id+1);
 					}
@@ -895,7 +895,7 @@ _return_node:;
 		return;
 	}
 	if (o->type==SLL_NODE_TYPE_ASSIGN&&ac==1&&extra_compilation_data->new_variable_data->length){
-		sll_node_t* id=o+1;
+		sll_node_t id=o+1;
 		while (id->type==SLL_NODE_TYPE_NOP||id->type==SLL_NODE_TYPE_DBG||id->type==SLL_NODE_TYPE_CHANGE_STACK){
 			id=(id->type==SLL_NODE_TYPE_CHANGE_STACK?id->data._next_node:id+1);
 		}
@@ -922,7 +922,7 @@ _return_node:;
 	else if (o->type==SLL_NODE_TYPE_FUNC){
 		sll_bool_t va=0;
 		sll_arg_count_t i=0;
-		sll_node_t* arg=o+1;
+		sll_node_t arg=o+1;
 		while (i<ac){
 			while (arg->type==SLL_NODE_TYPE_NOP||arg->type==SLL_NODE_TYPE_DBG||arg->type==SLL_NODE_TYPE_CHANGE_STACK){
 				arg=(arg->type==SLL_NODE_TYPE_CHANGE_STACK?arg->data._next_node:arg+1);
@@ -966,7 +966,7 @@ _return_node:;
 			o->data.arg_count=0;
 		}
 		else{
-			sll_node_t* n=o+1;
+			sll_node_t n=o+1;
 			while (n->type==SLL_NODE_TYPE_NOP||n->type==SLL_NODE_TYPE_DBG||n->type==SLL_NODE_TYPE_CHANGE_STACK){
 				n=(n->type==SLL_NODE_TYPE_CHANGE_STACK?n->data._next_node:n+1);
 			}

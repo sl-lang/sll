@@ -21,7 +21,7 @@
 
 
 
-static const sll_node_t* _write_node(const sll_node_t* node,sll_file_t* out){
+static sll_node_t _write_node(sll_node_t node,sll_file_t* out){
 	while (node->type==SLL_NODE_TYPE_NOP||node->type==SLL_NODE_TYPE_DBG||node->type==SLL_NODE_TYPE_CHANGE_STACK){
 		if (node->type==SLL_NODE_TYPE_CHANGE_STACK){
 			node=node->data._next_node;

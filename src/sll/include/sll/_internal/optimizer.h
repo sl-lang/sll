@@ -23,7 +23,7 @@ typedef __SLL_U32 child_count_t;
 
 
 typedef struct __OPTIMIZER_NODE_CHILDREN_DATA{
-	sll_node_t* node;
+	sll_node_t node;
 	struct __OPTIMIZER_NODE_CHILDREN_DATA* children;
 	child_count_t child_count;
 	__SLL_U32 child_type_bitmap[3];
@@ -31,11 +31,11 @@ typedef struct __OPTIMIZER_NODE_CHILDREN_DATA{
 
 
 
-void _delete_node(optimizer_node_children_data_t* data,sll_node_t* parent);
+void _delete_node(optimizer_node_children_data_t* data,sll_node_t parent);
 
 
 
-void _expand_node(optimizer_node_children_data_t* data,sll_node_t* parent);
+void _expand_node(optimizer_node_children_data_t* data,sll_node_t parent);
 
 
 

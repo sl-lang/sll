@@ -80,7 +80,7 @@
 
 
 
-static __SLL_FORCE_INLINE sll_read_char_t _operator_parser(sll_node_t* o,sll_read_char_t c,unsigned int* fl,sll_source_file_t* sf,sll_file_t* rf){
+static __SLL_FORCE_INLINE sll_read_char_t _operator_parser(sll_node_t o,sll_read_char_t c,unsigned int* fl,sll_source_file_t* sf,sll_file_t* rf){
 	sll_char_t str[` (+ max_operator_length 1) `];
 	sll_string_length_t sz=0;
 	do{

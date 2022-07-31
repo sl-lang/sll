@@ -33,7 +33,7 @@ typedef struct _SCOPE_DATA{
 
 
 typedef struct _NEW_VARIABLE_DATA{
-	sll_node_t** data;
+	sll_node_t* data;
 	sll_arg_count_t length;
 } new_variable_data_t;
 

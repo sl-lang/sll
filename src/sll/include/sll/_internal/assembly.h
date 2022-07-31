@@ -85,7 +85,7 @@ typedef struct _STRING_MAP_DATA{
 
 
 typedef struct _NODE_LABEL{
-	const sll_node_t* node;
+	sll_node_t node;
 	assembly_instruction_label_t label;
 } node_label_t;
 

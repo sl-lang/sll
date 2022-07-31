@@ -10,7 +10,7 @@
 
 
 
-static const sll_node_t* _mark(const sll_node_t* node,bitmap_t* bitmap){
+static sll_node_t _mark(sll_node_t node,bitmap_t* bitmap){
 	while (node->type==SLL_NODE_TYPE_NOP||node->type==SLL_NODE_TYPE_DBG||node->type==SLL_NODE_TYPE_CHANGE_STACK){
 		if (node->type==SLL_NODE_TYPE_CHANGE_STACK){
 			node=node->data._next_node;
@@ -49,7 +49,7 @@ static const sll_node_t* _mark(const sll_node_t* node,bitmap_t* bitmap){
 
 
 
-static sll_node_t* _update(sll_node_t* node,const sll_string_index_t* string_map){
+static sll_node_t _update(sll_node_t node,const sll_string_index_t* string_map){
 	while (node->type==SLL_NODE_TYPE_NOP||node->type==SLL_NODE_TYPE_DBG||node->type==SLL_NODE_TYPE_CHANGE_STACK){
 		if (node->type==SLL_NODE_TYPE_CHANGE_STACK){
 			node=node->data._next_node;

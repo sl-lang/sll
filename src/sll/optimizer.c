@@ -24,7 +24,7 @@ static void _delete_deep_children(optimizer_node_children_data_t* children,child
 
 
 
-static sll_node_t* _visit_node(sll_source_file_t* source_file,sll_node_t* node,optimizer_node_children_data_t* parent,child_level_count_t child_level_count_required){
+static sll_node_t _visit_node(sll_source_file_t* source_file,sll_node_t node,optimizer_node_children_data_t* parent,child_level_count_t child_level_count_required){
 	parent->node=node;
 	if (!SLL_NODE_HAS_CHILDREN(node)){
 		return node+1;
@@ -33,7 +33,7 @@ static sll_node_t* _visit_node(sll_source_file_t* source_file,sll_node_t* node,o
 	optimizer_node_children_data_t* children=sll_zero_allocate(child_count*sizeof(optimizer_node_children_data_t));
 	parent->children=children;
 	parent->child_count=child_count;
-	sll_node_t* child=node+1;
+	sll_node_t child=node+1;
 	child_level_count_required=(child_level_count_required?child_level_count_required-1:0);
 	for (child_count_t i=0;i<child_count;i++){
 		SKIP_NODE_NOP(child);
@@ -48,7 +48,7 @@ static sll_node_t* _visit_node(sll_source_file_t* source_file,sll_node_t* node,o
 
 
 
-static sll_node_t* _delete_node_raw(sll_node_t* node){
+static sll_node_t _delete_node_raw(sll_node_t node){
 	SKIP_NODE_NOP(node);
 	sll_bool_t has_children=SLL_NODE_HAS_CHILDREN(node);
 	node->type=SLL_NODE_TYPE_NOP;
@@ -90,7 +90,7 @@ static void _delete_recursive_children_optimizer_objects(optimizer_node_children
 
 
 
-void _delete_node(optimizer_node_children_data_t* data,sll_node_t* parent){
+void _delete_node(optimizer_node_children_data_t* data,sll_node_t parent){
 	parent->data.arg_count--;
 	_delete_recursive_children(data);
 	sll_zero_memory(data,sizeof(optimizer_node_children_data_t));
@@ -98,7 +98,7 @@ void _delete_node(optimizer_node_children_data_t* data,sll_node_t* parent){
 
 
 
-void _expand_node(optimizer_node_children_data_t* data,sll_node_t* parent){
+void _expand_node(optimizer_node_children_data_t* data,sll_node_t parent){
 	if (!SLL_NODE_HAS_CHILDREN(data->node)){
 		_delete_node(data,parent);
 		return;

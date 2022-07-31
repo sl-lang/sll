@@ -152,7 +152,7 @@ static void _print_assembly_identifier(sll_variable_index_t variable,sll_file_t*
 
 
 
-static const sll_node_t* _print_node_internal(const sll_source_file_t* source_file,const sll_internal_function_table_t* internal_function_table,const sll_node_t* node,sll_file_t* out,sll_file_offset_t* line){
+static sll_node_t _print_node_internal(const sll_source_file_t* source_file,const sll_internal_function_table_t* internal_function_table,sll_node_t node,sll_file_t* out,sll_file_offset_t* line){
 	while (node->type==SLL_NODE_TYPE_NOP||node->type==SLL_NODE_TYPE_DBG||node->type==SLL_NODE_TYPE_CHANGE_STACK){
 		if (node->type==SLL_NODE_TYPE_DBG){
 			_print_line(node->data.string_index,source_file,line,out);
@@ -1033,7 +1033,7 @@ _print_inplace:
 
 
 
-__SLL_EXTERNAL void sll_print_node(const sll_source_file_t* source_file,const sll_internal_function_table_t* internal_function_table,const sll_node_t* node,sll_file_t* out){
+__SLL_EXTERNAL void sll_print_node(const sll_source_file_t* source_file,const sll_internal_function_table_t* internal_function_table,sll_node_t node,sll_file_t* out){
 	sll_file_offset_t off=0;
 	_print_node_internal(source_file,internal_function_table,(node?node:source_file->first_node),out,&off);
 }

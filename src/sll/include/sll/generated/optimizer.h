@@ -556,7 +556,7 @@ static void __SLL_FORCE_INLINE _optimizer_execute(sll_source_file_t* source_file
 				}
 				if ((data1->node->type==2&&((data1+1)->node&&(data1+1)->node->type==SLL_NODE_TYPE_CHAR))){
 					
-	sll_node_t* second_node=(data1+1)->node;
+	sll_node_t second_node=(data1+1)->node;
 	sll_string_t tmp;
 	sll_string_concat_chars(data1->node->data.char_,second_node->data.char_,&tmp);
 	second_node->type=SLL_NODE_TYPE_STRING;
@@ -574,7 +574,7 @@ static void __SLL_FORCE_INLINE _optimizer_execute(sll_source_file_t* source_file
 				}
 				if ((data1->node->type==2&&((data1+1)->node&&(data1+1)->node->type==SLL_NODE_TYPE_STRING))){
 					
-	sll_node_t* second_node=(data1+1)->node;
+	sll_node_t second_node=(data1+1)->node;
 	sll_string_t tmp;
 	sll_string_prepend_char(source_file->string_table.data+second_node->data.string_index,data1->node->data.char_,&tmp);
 	second_node->data.string_index=sll_add_string(&(source_file->string_table),&tmp);
@@ -591,7 +591,7 @@ static void __SLL_FORCE_INLINE _optimizer_execute(sll_source_file_t* source_file
 				}
 				if ((data1->node->type==4&&((data1+1)->node&&(data1+1)->node->type==SLL_NODE_TYPE_CHAR))){
 					
-	sll_node_t* second_node=(data1+1)->node;
+	sll_node_t second_node=(data1+1)->node;
 	sll_string_t tmp;
 	sll_string_concat_char(source_file->string_table.data+data1->node->data.string_index,second_node->data.char_,&tmp);
 	second_node->type=SLL_NODE_TYPE_STRING;
@@ -609,7 +609,7 @@ static void __SLL_FORCE_INLINE _optimizer_execute(sll_source_file_t* source_file
 				}
 				if ((data1->node->type==4&&((data1+1)->node&&(data1+1)->node->type==SLL_NODE_TYPE_STRING))){
 					
-	sll_node_t* second_node=(data1+1)->node;
+	sll_node_t second_node=(data1+1)->node;
 	sll_string_t tmp;
 	sll_string_concat(source_file->string_table.data+data1->node->data.string_index,source_file->string_table.data+second_node->data.string_index,&tmp);
 	second_node->data.string_index=sll_add_string(&(source_file->string_table),&tmp);

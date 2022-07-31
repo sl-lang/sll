@@ -4,7 +4,7 @@
 
 
 
-static sll_node_t* _remove_padding_internal(sll_node_t* src,sll_source_file_t* source_file,sll_node_t** dst,sll_node_offset_t* removal_offset){
+static sll_node_t _remove_padding_internal(sll_node_t src,sll_source_file_t* source_file,sll_node_t* dst,sll_node_offset_t* removal_offset){
 	while (src->type==SLL_NODE_TYPE_NOP||src->type==SLL_NODE_TYPE_CHANGE_STACK){
 		if (src->type==SLL_NODE_TYPE_CHANGE_STACK){
 			src=src->data._next_node;
@@ -42,7 +42,7 @@ static sll_node_t* _remove_padding_internal(sll_node_t* src,sll_source_file_t* s
 __SLL_EXTERNAL void sll_remove_node_padding(sll_compilation_data_t* compilation_data){
 	for (sll_source_file_index_t i=0;i<compilation_data->length;i++){
 		sll_source_file_t* sf=*(compilation_data->data+i);
-		sll_node_t* d=sf->first_node;
+		sll_node_t d=sf->first_node;
 		if (!d){
 			continue;
 		}

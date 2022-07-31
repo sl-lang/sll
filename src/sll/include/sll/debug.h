@@ -30,10 +30,10 @@ __SLL_EXTERNAL void sll_debug_print_assembly(const sll_assembly_data_t* assembly
  * \name sll_debug_print_node
  * \group debug
  * \desc Docs!
- * \arg const sll_node_t* node
+ * \arg sll_node_t node
  * \arg const sll_source_file_t* source_file
  */
-__SLL_EXTERNAL void sll_debug_print_node(const sll_node_t* node,const sll_source_file_t* source_file);
+__SLL_EXTERNAL void sll_debug_print_node(sll_node_t node,const sll_source_file_t* source_file);
 
 
 

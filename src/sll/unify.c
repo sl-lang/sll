@@ -12,13 +12,13 @@
 
 
 
-static const sll_node_t* _clone_node(const sll_node_t* src,sll_source_file_t* out,source_file_mapping_data_t* source_file_mapping_data){
+static sll_node_t _clone_node(sll_node_t src,sll_source_file_t* out,source_file_mapping_data_t* source_file_mapping_data){
 	while (src->type==SLL_NODE_TYPE_NOP||src->type==SLL_NODE_TYPE_DBG||src->type==SLL_NODE_TYPE_CHANGE_STACK){
 		if (src->type==SLL_NODE_TYPE_CHANGE_STACK){
 			src=src->data._next_node;
 		}
 		else{
-			sll_node_t* dst=_acquire_next_node(out);
+			sll_node_t dst=_acquire_next_node(out);
 			*dst=*src;
 			if (source_file_mapping_data&&src->type==SLL_NODE_TYPE_DBG&&src->data.string_index!=SLL_MAX_STRING_INDEX){
 				dst->data.string_index=*(source_file_mapping_data->string_map+src->data.string_index);
@@ -26,7 +26,7 @@ static const sll_node_t* _clone_node(const sll_node_t* src,sll_source_file_t* ou
 			src++;
 		}
 	}
-	sll_node_t* dst=_acquire_next_node(out);
+	sll_node_t dst=_acquire_next_node(out);
 	*dst=*src;
 	switch (src->type){
 		case SLL_NODE_TYPE_INT:
@@ -158,7 +158,7 @@ __SLL_EXTERNAL void sll_unify_compilation_data(const sll_compilation_data_t* com
 				sll_copy_data(source_file->export_table.data,source_file->export_table.length*sizeof(sll_identifier_index_t),export_data);
 			}
 			out->file_path_string_index=source_file->file_path_string_index;
-			sll_node_t* dbg=_acquire_next_node(out);
+			sll_node_t dbg=_acquire_next_node(out);
 			dbg->type=SLL_NODE_TYPE_DBG;
 			dbg->data.string_index=source_file->file_path_string_index;
 			out->identifier_table.length=source_file->identifier_table.length;
@@ -191,7 +191,7 @@ __SLL_EXTERNAL void sll_unify_compilation_data(const sll_compilation_data_t* com
 				sll_string_clone(source_file->string_table.data+i,&tmp);
 				*(source_file_mapping_data.string_map+i)=sll_add_string(&(out->string_table),&tmp);
 			}
-			sll_node_t* dbg=_acquire_next_node(out);
+			sll_node_t dbg=_acquire_next_node(out);
 			dbg->type=SLL_NODE_TYPE_DBG;
 			dbg->data.string_index=*(source_file_mapping_data.string_map+source_file->file_path_string_index);
 			if (!compilation_data_index){

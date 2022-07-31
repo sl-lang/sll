@@ -17,7 +17,7 @@ __SLL_EXTERNAL void sll_debug_print_assembly(const sll_assembly_data_t* assembly
 
 
 
-__SLL_EXTERNAL void sll_debug_print_node(const sll_node_t* node,const sll_source_file_t* source_file){
+__SLL_EXTERNAL void sll_debug_print_node(sll_node_t node,const sll_source_file_t* source_file){
 	sll_print_node(source_file,NULL,node,sll_stdout);
 	sll_file_write_char(sll_stdout,'\n',NULL);
 }

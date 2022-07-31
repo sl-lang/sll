@@ -4,7 +4,7 @@
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_node_t* sll_skip_node(sll_node_t* node){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_node_t sll_skip_node(sll_node_t node){
 	while (node->type==SLL_NODE_TYPE_NOP||node->type==SLL_NODE_TYPE_DBG||node->type==SLL_NODE_TYPE_CHANGE_STACK){
 		node=(node->type==SLL_NODE_TYPE_CHANGE_STACK?node->data._next_node:node+1);
 	}
@@ -22,6 +22,6 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_node_t* sll_skip_node(sll_node_t* node){
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT const sll_node_t* sll_skip_node_const(const sll_node_t* node){
-	return sll_skip_node((sll_node_t*)node);
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_node_t sll_skip_node_const(sll_node_t node){
+	return sll_skip_node((sll_node_t)node);
 }

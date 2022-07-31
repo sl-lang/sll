@@ -48,7 +48,7 @@
 
 
 static sll_bool_t _read_node(sll_source_file_t* source_file,sll_file_t* file){
-	sll_node_t* o=_acquire_next_node(source_file);
+	sll_node_t o=_acquire_next_node(source_file);
 	READ_CHAR(o->type,file);
 	while (o->type==SLL_NODE_TYPE_NOP||o->type==SLL_NODE_TYPE_DBG){
 		if (o->type==SLL_NODE_TYPE_DBG){

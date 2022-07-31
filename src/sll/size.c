@@ -4,7 +4,7 @@
 
 
 
-static const sll_node_t* _get_node_size(const sll_node_t* node,sll_node_offset_t* size){
+static sll_node_t _get_node_size(sll_node_t node,sll_node_offset_t* size){
 	while (node->type==SLL_NODE_TYPE_NOP||node->type==SLL_NODE_TYPE_DBG||node->type==SLL_NODE_TYPE_CHANGE_STACK){
 		if (node->type==SLL_NODE_TYPE_CHANGE_STACK){
 			node=node->data._next_node;
@@ -29,7 +29,7 @@ static const sll_node_t* _get_node_size(const sll_node_t* node,sll_node_offset_t
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_node_offset_t sll_get_node_size(const sll_node_t* node){
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_node_offset_t sll_get_node_size(sll_node_t node){
 	sll_node_offset_t out=0;
 	_get_node_size(node,&out);
 	return out;

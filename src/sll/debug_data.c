@@ -5,7 +5,7 @@
 
 
 
-static sll_node_t* _remove_debug_data(sll_node_t* node){
+static sll_node_t _remove_debug_data(sll_node_t node){
 	while (node->type==SLL_NODE_TYPE_NOP||node->type==SLL_NODE_TYPE_DBG||node->type==SLL_NODE_TYPE_CHANGE_STACK){
 		if (node->type==SLL_NODE_TYPE_DBG){
 			node->type=SLL_NODE_TYPE_NOP;
@@ -26,7 +26,7 @@ static sll_node_t* _remove_debug_data(sll_node_t* node){
 
 
 
-static sll_node_t* _remove_type_names(sll_node_t* node){
+static sll_node_t _remove_type_names(sll_node_t node){
 	while (node->type==SLL_NODE_TYPE_NOP||node->type==SLL_NODE_TYPE_DBG||node->type==SLL_NODE_TYPE_CHANGE_STACK){
 		node=(node->type==SLL_NODE_TYPE_CHANGE_STACK?node->data._next_node:node+1);
 	}
@@ -46,7 +46,7 @@ static sll_node_t* _remove_type_names(sll_node_t* node){
 
 __SLL_EXTERNAL void sll_remove_debug_data(sll_compilation_data_t* compilation_data){
 	for (sll_source_file_index_t i=0;i<compilation_data->length;i++){
-		sll_node_t* node=(*(compilation_data->data+i))->first_node;
+		sll_node_t node=(*(compilation_data->data+i))->first_node;
 		if (node){
 			_remove_debug_data(node);
 		}
