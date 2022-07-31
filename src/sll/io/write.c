@@ -211,7 +211,7 @@ __SLL_EXTERNAL void sll_write_assembly(const sll_assembly_data_t* assembly_data,
 		SLL_CRITICAL_ERROR(sll_encode_integer(out,(assembly_data->debug_data.data+i)->delta_instruction_index));
 		SLL_CRITICAL_ERROR(sll_encode_integer(out,(assembly_data->debug_data.data+i)->line));
 	}
-	const sll_assembly_instruction_t* ai=assembly_data->first_instruction;
+	sll_assembly_instruction_t ai=assembly_data->first_instruction;
 	for (sll_instruction_index_t i=0;i<assembly_data->instruction_count;i++){
 		sll_file_write_char(out,ai->type,NULL);
 		switch (SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(ai)){

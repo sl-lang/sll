@@ -253,7 +253,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_load_assembly(sll_file_t* file,
 	out->instruction_count=0;
 	while (i){
 		i--;
-		sll_assembly_instruction_t* ai=_acquire_next_instruction(out);
+		sll_assembly_instruction_t ai=_acquire_next_instruction(out);
 		sll_read_char_t c=sll_file_read_char(file,NULL);
 		if (c==SLL_END_OF_DATA){
 			return 0;
@@ -383,7 +383,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_load_assembly(sll_file_t* file,
 				break;
 		}
 	}
-	sll_assembly_instruction_t* ai=out->first_instruction;
+	sll_assembly_instruction_t ai=out->first_instruction;
 	for (i=0;i<out->instruction_count;i++){
 		if (SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(ai)==SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_LABEL||(SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(ai)>=SLL_ASSEMBLY_INSTRUCTION_TYPE_JMP&&SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(ai)<=SLL_ASSEMBLY_INSTRUCTION_TYPE_JNI)){
 			ai->data.jump._instruction=_get_instruction_at_offset(out,(SLL_ASSEMBLY_INSTRUCTION_FLAG_IS_RELATIVE(ai)?i+ai->data.jump.target.rel:ai->data.jump.target.abs));

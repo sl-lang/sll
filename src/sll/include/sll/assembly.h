@@ -1783,7 +1783,7 @@ typedef union _SLL_ASSEMBLY_INSTRUCTION_DATA{
 
 
 /**
- * \flags type
+ * \flags pointer type
  * \name sll_assembly_instruction_t
  * \group assembly
  * \desc Docs!
@@ -1793,7 +1793,7 @@ typedef union _SLL_ASSEMBLY_INSTRUCTION_DATA{
 typedef struct _SLL_ASSEMBLY_INSTRUCTION{
 	sll_assembly_instruction_type_t type;
 	sll_assembly_instruction_data_t data;
-} sll_assembly_instruction_t;
+}* sll_assembly_instruction_t;
 
 
 
@@ -1864,13 +1864,13 @@ typedef struct _SLL_DEBUG_DATA{
  * \desc Docs!
  * \arg void* start
  * \arg void* end
- * \arg sll_assembly_instruction_t* next_instruction
+ * \arg sll_assembly_instruction_t next_instruction
  * \arg sll_size_t count
  */
 typedef struct _SLL_ASSEMBLY_STACK_DATA{
 	void* start;
 	void* end;
-	sll_assembly_instruction_t* next_instruction;
+	sll_assembly_instruction_t next_instruction;
 	sll_size_t count;
 } sll_assembly_stack_data_t;
 
@@ -1882,7 +1882,7 @@ typedef struct _SLL_ASSEMBLY_STACK_DATA{
  * \group assembly
  * \desc Docs!
  * \arg sll_time_t time
- * \arg sll_assembly_instruction_t* first_instruction
+ * \arg sll_assembly_instruction_t first_instruction
  * \arg sll_instruction_index_t instruction_count
  * \arg sll_variable_index_t variable_count
  * \arg sll_variable_index_t tls_variable_count
@@ -1893,7 +1893,7 @@ typedef struct _SLL_ASSEMBLY_STACK_DATA{
  */
 typedef struct _SLL_ASSEMBLY_DATA{
 	sll_time_t time;
-	sll_assembly_instruction_t* first_instruction;
+	sll_assembly_instruction_t first_instruction;
 	sll_instruction_index_t instruction_count;
 	sll_variable_index_t variable_count;
 	sll_variable_index_t tls_variable_count;

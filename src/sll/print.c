@@ -604,7 +604,7 @@ static sll_node_t _print_node_internal(const sll_source_file_t* source_file,cons
 
 
 __SLL_EXTERNAL void sll_print_assembly(const sll_assembly_data_t* assembly_data,sll_file_t* out){
-	sll_assembly_instruction_t* ai=assembly_data->first_instruction;
+	sll_assembly_instruction_t ai=assembly_data->first_instruction;
 	for (sll_instruction_index_t i=0;i<assembly_data->instruction_count;i++){
 		if (i){
 			sll_file_write_char(out,',',NULL);

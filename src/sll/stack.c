@@ -28,8 +28,8 @@ static void _request_new_node_page(sll_source_file_t* sf){
 
 
 
-sll_assembly_instruction_t* _acquire_next_instruction(sll_assembly_data_t* assembly_data){
-	sll_assembly_instruction_t* out=assembly_data->_instruction_stack.next_instruction;
+sll_assembly_instruction_t _acquire_next_instruction(sll_assembly_data_t* assembly_data){
+	sll_assembly_instruction_t out=assembly_data->_instruction_stack.next_instruction;
 	assembly_data->instruction_count++;
 	assembly_data->_instruction_stack.count--;
 	assembly_data->_instruction_stack.next_instruction++;
@@ -37,12 +37,12 @@ sll_assembly_instruction_t* _acquire_next_instruction(sll_assembly_data_t* assem
 		assembly_stack_page_t* n=sll_platform_allocate_page(SLL_ROUND_PAGE(ASSEMBLY_INSTRUCTION_STACK_ALLOC_SIZE),0,NULL);
 		((assembly_stack_page_t*)(assembly_data->_instruction_stack.end))->next=n;
 		n->next=NULL;
-		sll_assembly_instruction_t* s=PTR(ADDR(n)+sizeof(assembly_stack_page_t));
+		sll_assembly_instruction_t s=PTR(ADDR(n)+sizeof(assembly_stack_page_t));
 		s->type=SLL_ASSEMBLY_INSTRUCTION_TYPE_CHANGE_STACK;
 		s->data._next_instruction=assembly_data->_instruction_stack.next_instruction-1;
 		SLL_ASSERT(assembly_data->_instruction_stack.next_instruction->type==SLL_ASSEMBLY_INSTRUCTION_TYPE_CHANGE_STACK);
 		assembly_data->_instruction_stack.next_instruction->data._next_instruction=s+1;
-		assembly_data->_instruction_stack.count=((SLL_ROUND_PAGE(ASSEMBLY_INSTRUCTION_STACK_ALLOC_SIZE)-sizeof(assembly_stack_page_t)-sizeof(sll_assembly_instruction_t)*2)/sizeof(sll_assembly_instruction_t));
+		assembly_data->_instruction_stack.count=((SLL_ROUND_PAGE(ASSEMBLY_INSTRUCTION_STACK_ALLOC_SIZE)-sizeof(assembly_stack_page_t)-sizeof(struct _SLL_ASSEMBLY_INSTRUCTION)*2)/sizeof(struct _SLL_ASSEMBLY_INSTRUCTION));
 		assembly_data->_instruction_stack.next_instruction=s+1;
 		s+=assembly_data->_instruction_stack.count+1;
 		s->type=SLL_ASSEMBLY_INSTRUCTION_TYPE_CHANGE_STACK;
@@ -93,14 +93,14 @@ void _clone_node_stack(const sll_source_file_t* src_sf,sll_source_file_t* dst_sf
 
 
 
-sll_assembly_instruction_t* _get_instruction_at_offset(const sll_assembly_data_t* assembly_data,sll_instruction_index_t off){
-	sll_instruction_index_t count=(sll_instruction_index_t)(((SLL_ROUND_PAGE(ASSEMBLY_INSTRUCTION_STACK_ALLOC_SIZE)-sizeof(assembly_stack_page_t)-sizeof(sll_assembly_instruction_t)*2)/sizeof(sll_assembly_instruction_t)));
+sll_assembly_instruction_t _get_instruction_at_offset(const sll_assembly_data_t* assembly_data,sll_instruction_index_t off){
+	sll_instruction_index_t count=(sll_instruction_index_t)(((SLL_ROUND_PAGE(ASSEMBLY_INSTRUCTION_STACK_ALLOC_SIZE)-sizeof(assembly_stack_page_t)-sizeof(struct _SLL_ASSEMBLY_INSTRUCTION)*2)/sizeof(struct _SLL_ASSEMBLY_INSTRUCTION)));
 	assembly_stack_page_t* pg=assembly_data->_instruction_stack.start;
 	while (off>=count){
 		pg=pg->next;
 		off-=count;
 	}
-	return PTR(ADDR(pg)+sizeof(assembly_stack_page_t)+sizeof(sll_assembly_instruction_t)*(off+1));
+	return PTR(ADDR(pg)+sizeof(assembly_stack_page_t)+sizeof(struct _SLL_ASSEMBLY_INSTRUCTION)*(off+1));
 }
 
 
@@ -121,10 +121,10 @@ void _init_assembly_stack(sll_assembly_data_t* assembly_data){
 	assembly_data->_instruction_stack.start=sll_platform_allocate_page(SLL_ROUND_PAGE(ASSEMBLY_INSTRUCTION_STACK_ALLOC_SIZE),0,NULL);
 	assembly_data->_instruction_stack.end=assembly_data->_instruction_stack.start;
 	((assembly_stack_page_t*)(assembly_data->_instruction_stack.start))->next=NULL;
-	sll_assembly_instruction_t* s=PTR(ADDR(assembly_data->_instruction_stack.start)+sizeof(assembly_stack_page_t));
+	sll_assembly_instruction_t s=PTR(ADDR(assembly_data->_instruction_stack.start)+sizeof(assembly_stack_page_t));
 	s->type=SLL_ASSEMBLY_INSTRUCTION_TYPE_CHANGE_STACK;
 	s->data._next_instruction=NULL;
-	assembly_data->_instruction_stack.count=((SLL_ROUND_PAGE(ASSEMBLY_INSTRUCTION_STACK_ALLOC_SIZE)-sizeof(assembly_stack_page_t)-sizeof(sll_assembly_instruction_t)*2)/sizeof(sll_assembly_instruction_t));
+	assembly_data->_instruction_stack.count=((SLL_ROUND_PAGE(ASSEMBLY_INSTRUCTION_STACK_ALLOC_SIZE)-sizeof(assembly_stack_page_t)-sizeof(struct _SLL_ASSEMBLY_INSTRUCTION)*2)/sizeof(struct _SLL_ASSEMBLY_INSTRUCTION));
 	assembly_data->_instruction_stack.next_instruction=s+1;
 	s+=assembly_data->_instruction_stack.count+1;
 	s->type=SLL_ASSEMBLY_INSTRUCTION_TYPE_CHANGE_STACK;

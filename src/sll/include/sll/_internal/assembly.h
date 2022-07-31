@@ -98,7 +98,7 @@ typedef struct _FILE_LINE{
 
 
 
-static __SLL_FORCE_INLINE void _assembly_optimize_int(sll_assembly_instruction_t* ai){
+static __SLL_FORCE_INLINE void _assembly_optimize_int(sll_assembly_instruction_t ai){
 	SLL_ASSERT(SLL_ASSEMBLY_INSTRUCTION_GET_TYPE(ai)==SLL_ASSEMBLY_INSTRUCTION_TYPE_PUSH_INT);
 	sll_size_t enc=SLL_ENCODE_SIGNED_INTEGER(ai->data.int_);
 	sll_size_t ci=sll_compress_integer(enc);

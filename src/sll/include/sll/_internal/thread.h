@@ -59,7 +59,7 @@ typedef struct _THREAD_DATA{
 	sll_char_t time_quantum;
 	thread_state_t state;
 	thread_flags_t flags;
-	const sll_assembly_instruction_t* _last_instruction;
+	sll_assembly_instruction_t _last_instruction;
 } thread_data_t;
 
 

@@ -343,7 +343,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t sll_wait_thread(sll_thread_index_
 		goto _cleanup;
 	}
 	thread_data_t* thr=_scheduler_current_thread;
-	const sll_assembly_instruction_t* ai;
+	sll_assembly_instruction_t ai;
 	addr_t func_var_off;
 	addr_t tls_var_off;
 	RELOAD_THREAD_DATA;
