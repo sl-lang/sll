@@ -69,6 +69,6 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT void* sll_platform_allocate_page_aligned(sll_s
 
 
 
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_error_t sll_platform_free_page(void* pg,sll_size_t sz){
-	return (VirtualFree(pg,0,MEM_RELEASE)?SLL_NO_ERROR:sll_platform_get_error());
+__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_error_t sll_platform_free_page(void* page,sll_size_t sz){
+	return (VirtualFree(page,0,MEM_RELEASE)?SLL_NO_ERROR:sll_platform_get_error());
 }

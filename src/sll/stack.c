@@ -95,24 +95,24 @@ void _clone_node_stack(const sll_source_file_t* src_sf,sll_source_file_t* dst_sf
 
 sll_assembly_instruction_t _get_instruction_at_offset(const sll_assembly_data_t* assembly_data,sll_instruction_index_t off){
 	sll_instruction_index_t count=(sll_instruction_index_t)(((SLL_ROUND_PAGE(ASSEMBLY_INSTRUCTION_STACK_ALLOC_SIZE)-sizeof(assembly_stack_page_t)-sizeof(struct _SLL_ASSEMBLY_INSTRUCTION)*2)/sizeof(struct _SLL_ASSEMBLY_INSTRUCTION)));
-	assembly_stack_page_t* pg=assembly_data->_instruction_stack.start;
+	assembly_stack_page_t* page=assembly_data->_instruction_stack.start;
 	while (off>=count){
-		pg=pg->next;
+		page=page->next;
 		off-=count;
 	}
-	return PTR(ADDR(pg)+sizeof(assembly_stack_page_t)+sizeof(struct _SLL_ASSEMBLY_INSTRUCTION)*(off+1));
+	return PTR(ADDR(page)+sizeof(assembly_stack_page_t)+sizeof(struct _SLL_ASSEMBLY_INSTRUCTION)*(off+1));
 }
 
 
 
 sll_node_t _get_node_at_offset(const sll_source_file_t* sf,sll_node_offset_t off){
 	sll_node_offset_t count=(sll_node_offset_t)(((SLL_ROUND_PAGE(NODE_STACK_ALLOC_SIZE)-sizeof(node_stack_page_t)-sizeof(struct _SLL_NODE)*2)/sizeof(struct _SLL_NODE)));
-	node_stack_page_t* pg=sf->_stack.start;
+	node_stack_page_t* page=sf->_stack.start;
 	while (off>=count){
-		pg=pg->next;
+		page=page->next;
 		off-=count;
 	}
-	return PTR(ADDR(pg)+sizeof(node_stack_page_t)+sizeof(struct _SLL_NODE)*(off+1));
+	return PTR(ADDR(page)+sizeof(node_stack_page_t)+sizeof(struct _SLL_NODE)*(off+1));
 }
 
 

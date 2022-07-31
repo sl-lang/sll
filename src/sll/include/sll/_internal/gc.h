@@ -27,18 +27,18 @@
 
 #define GC_PAGE_HEADER_DEALLOCATION_THRESHOLD 256
 
-#define GC_PAGE_HEADER_CAN_DELETE(pg) ((pg)->count==1)
-#define GC_PAGE_HEADER_INCREASE(pg) \
+#define GC_PAGE_HEADER_CAN_DELETE(page) ((page)->count==1)
+#define GC_PAGE_HEADER_INCREASE(page) \
 	do{ \
-		gc_page_header_t* __pg=(pg); \
-		__pg->count+=2; \
-		if (__pg->count>=(GC_PAGE_HEADER_DEALLOCATION_THRESHOLD<<1)){ \
-			__pg->count|=1; \
+		gc_page_header_t* __page=(page); \
+		__page->count+=2; \
+		if (__page->count>=(GC_PAGE_HEADER_DEALLOCATION_THRESHOLD<<1)){ \
+			__page->count|=1; \
 		} \
 	} while (0)
-#define GC_PAGE_HEADER_DECREASE(pg) \
+#define GC_PAGE_HEADER_DECREASE(page) \
 	do{ \
-		(pg)->count-=2; \
+		(page)->count-=2; \
 	} while (0)
 
 #define GC_GET_PREV_OBJECT(o) ((sll_object_t)PTR(((o)->_data&0x1fffffffffffull)<<3))

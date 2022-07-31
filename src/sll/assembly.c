@@ -2062,11 +2062,11 @@ __SLL_EXTERNAL void sll_free_assembly_data(sll_assembly_data_t* assembly_data){
 	sll_deallocate(assembly_data->debug_data.data);
 	assembly_data->debug_data.data=NULL;
 	assembly_data->debug_data.length=0;
-	assembly_stack_page_t* pg=assembly_data->_instruction_stack.start;
-	while (pg){
-		assembly_stack_page_t* n=pg->next;
-		SLL_CRITICAL_ERROR(sll_platform_free_page(pg,SLL_ROUND_PAGE(ASSEMBLY_INSTRUCTION_STACK_ALLOC_SIZE)));
-		pg=n;
+	assembly_stack_page_t* page=assembly_data->_instruction_stack.start;
+	while (page){
+		assembly_stack_page_t* next=page->next;
+		SLL_CRITICAL_ERROR(sll_platform_free_page(page,SLL_ROUND_PAGE(ASSEMBLY_INSTRUCTION_STACK_ALLOC_SIZE)));
+		page=next;
 	}
 	assembly_data->_instruction_stack.start=NULL;
 	assembly_data->_instruction_stack.end=NULL;
