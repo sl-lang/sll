@@ -1569,19 +1569,6 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_node_t sll_skip_node(sll_node_t node);
 
 
 /**
- * \flags check_output func
- * \name sll_skip_node_const
- * \group node
- * \subgroup node-util
- * \desc Docs!
- * \arg sll_node_t node
- * \ret sll_node_t
- */
-__SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_node_t sll_skip_node_const(sll_node_t node);
-
-
-
-/**
  * \flags func
  * \name sll_unify_compilation_data
  * \group node
