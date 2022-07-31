@@ -190,9 +190,9 @@ __SLL_EXTERNAL void sll__release_object_internal(sll_object_t object){
 		_gc_data.enabled=gc_state;
 		return;
 	}
-	gc_page_header_t* pg=GC_MEMORY_PAGE_HEADER(object);
-	GC_PAGE_HEADER_DECREASE(pg);
-	if (!GC_PAGE_HEADER_CAN_DELETE(pg)){
+	gc_page_header_t* page=GC_MEMORY_PAGE_HEADER(object);
+	GC_PAGE_HEADER_DECREASE(page);
+	if (!GC_PAGE_HEADER_CAN_DELETE(page)){
 		if (_gc_object_pool.length<GC_OBJECT_POOL_SIZE){
 			object->_flags=GC_FLAG_IN_FAST_POOL;
 			object->data._pool_index=_gc_object_pool.length;
@@ -210,11 +210,11 @@ __SLL_EXTERNAL void sll__release_object_internal(sll_object_t object){
 	}
 	object->data._next_object.next=NULL;
 	object->data._next_object.prev=NULL;
-	while (GC_MEMORY_PAGE_HEADER(_gc_next_object)==pg){
+	while (GC_MEMORY_PAGE_HEADER(_gc_next_object)==page){
 		_gc_next_object=_gc_next_object->data._next_object.next;
 	}
 	sll_bool_t pool_shift=0;
-	GC_ITER_PAGE_OBJECTS(pg){
+	GC_ITER_PAGE_OBJECTS(page){
 		SLL_ASSERT(current!=_gc_next_object);
 		if (current->_flags&GC_FLAG_IN_FAST_POOL){
 			_gc_object_pool.data[current->data._pool_index]=NULL;
@@ -230,26 +230,26 @@ __SLL_EXTERNAL void sll__release_object_internal(sll_object_t object){
 		}
 	}
 	if (_gc_memory_page_data.length<GC_PAGE_POOL_SIZE){
-		_gc_memory_page_data.data[_gc_memory_page_data.length]=pg;
+		_gc_memory_page_data.data[_gc_memory_page_data.length]=page;
 		_gc_memory_page_data.length++;
 	}
 	else{
-		if (pg->prev){
-			pg->prev->next=pg->next;
-			if (_gc_memory_page_data.root==pg){
-				_gc_memory_page_data.root=pg->prev;
+		if (page->prev){
+			page->prev->next=page->next;
+			if (_gc_memory_page_data.root==page){
+				_gc_memory_page_data.root=page->prev;
 			}
 		}
-		if (pg->next){
-			pg->next->prev=pg->prev;
-			if (_gc_memory_page_data.root==pg){
-				_gc_memory_page_data.root=pg->next;
+		if (page->next){
+			page->next->prev=page->prev;
+			if (_gc_memory_page_data.root==page){
+				_gc_memory_page_data.root=page->next;
 			}
 		}
-		if (_gc_memory_page_data.root==pg){
-			_gc_memory_page_data.root=pg->next;
+		if (_gc_memory_page_data.root==page){
+			_gc_memory_page_data.root=page->next;
 		}
-		SLL_CRITICAL_ERROR(sll_platform_free_page(pg,GC_MEMORY_PAGE_SIZE));
+		SLL_CRITICAL_ERROR(sll_platform_free_page(page,GC_MEMORY_PAGE_SIZE));
 	}
 	if (pool_shift){
 		sll_object_pool_index_t i=0;
