@@ -323,15 +323,23 @@ static sll_node_t _generate_jump(sll_node_t o,assembly_generator_data_t* g_dt,as
 			}
 			return o+1;
 		case SLL_NODE_TYPE_ARRAY:
-			if ((!!o->data.array_length)^inv){
-				GENERATE_OPCODE_WITH_LABEL(g_dt,SLL_ASSEMBLY_INSTRUCTION_TYPE_JMP,lbl);
+			{
+				sll_bool_t cond=(!!o->data.array_length)^inv;
+				o=_generate(o,g_dt);
+				if (cond){
+					GENERATE_OPCODE_WITH_LABEL(g_dt,SLL_ASSEMBLY_INSTRUCTION_TYPE_JMP,lbl);
+				}
+				return o;
 			}
-			return o+1;
 		case SLL_NODE_TYPE_MAP:
-			if ((!!o->data.map_length)^inv){
-				GENERATE_OPCODE_WITH_LABEL(g_dt,SLL_ASSEMBLY_INSTRUCTION_TYPE_JMP,lbl);
+			{
+				sll_bool_t cond=(!!o->data.map_length)^inv;
+				o=_generate(o,g_dt);
+				if (cond){
+					GENERATE_OPCODE_WITH_LABEL(g_dt,SLL_ASSEMBLY_INSTRUCTION_TYPE_JMP,lbl);
+				}
+				return o;
 			}
-			return o+1;
 		case SLL_NODE_TYPE_IDENTIFIER:
 			_generate_identifier(o,g_dt);
 			GENERATE_OPCODE_WITH_LABEL(g_dt,(inv?SLL_ASSEMBLY_INSTRUCTION_TYPE_JZ:SLL_ASSEMBLY_INSTRUCTION_TYPE_JNZ),lbl);
