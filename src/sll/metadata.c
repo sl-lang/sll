@@ -49,45 +49,6 @@ static sll_node_t _mark(sll_node_t node,bitmap_t* bitmap){
 
 
 
-static sll_node_t _update(sll_node_t node,const sll_string_index_t* string_map){
-	while (node->type==SLL_NODE_TYPE_NOP||node->type==SLL_NODE_TYPE_DBG||node->type==SLL_NODE_TYPE_CHANGE_STACK){
-		if (node->type==SLL_NODE_TYPE_CHANGE_STACK){
-			node=node->data._next_node;
-		}
-		else{
-			if (node->type==SLL_NODE_TYPE_DBG&&node->data.string_index!=SLL_MAX_STRING_INDEX){
-				node->data.string_index=*(string_map+node->data.string_index);
-			}
-			node++;
-		}
-	}
-	switch (node->type){
-		case SLL_NODE_TYPE_STRING:
-		case SLL_NODE_TYPE_FIELD:
-			node->data.string_index=*(string_map+node->data.string_index);
-		case SLL_NODE_TYPE_INT:
-		case SLL_NODE_TYPE_FLOAT:
-		case SLL_NODE_TYPE_CHAR:
-		case SLL_NODE_TYPE_COMPLEX:
-		case SLL_NODE_TYPE_IDENTIFIER:
-		case SLL_NODE_TYPE_FUNCTION_ID:
-			return node+1;
-		case SLL_NODE_TYPE_DECL:
-			if (node->data.declaration.name_string_index!=SLL_MAX_STRING_INDEX){
-				node->data.declaration.name_string_index=*(string_map+node->data.declaration.name_string_index);
-			}
-	}
-	sll_arg_count_t l=node->data.arg_count;
-	node++;
-	while (l){
-		l--;
-		node=_update(node,string_map);
-	}
-	return node;
-}
-
-
-
 __SLL_EXTERNAL void sll_optimize_metadata(sll_compilation_data_t* compilation_data){
 	for (sll_source_file_index_t idx=0;idx<compilation_data->length;idx++){
 		sll_source_file_t* sf=*(compilation_data->data+idx);
@@ -154,7 +115,28 @@ __SLL_EXTERNAL void sll_optimize_metadata(sll_compilation_data_t* compilation_da
 			}
 			sf->file_path_string_index=*(string_map+sf->file_path_string_index);
 			if (sf->first_node){
-				_update(sf->first_node,string_map);
+				sll_node_t node=sf->first_node;
+				sll_node_offset_t stack=1;
+				while (stack){
+					if (node->type==SLL_NODE_TYPE_CHANGE_STACK){
+						node=node->data._next_node;
+					}
+					if (node->type==SLL_NODE_TYPE_DBG){
+						if (node->data.string_index!=SLL_MAX_STRING_INDEX){
+							node->data.string_index=*(string_map+node->data.string_index);
+						}
+					}
+					else{
+						stack--;
+					}
+					if (SLL_NODE_HAS_CHILDREN(node)&&node->type<SLL_NODE_TYPE_DBG){
+						stack+=node->data.arg_count;
+					}
+					else if (node->type==SLL_NODE_TYPE_STRING||node->type==SLL_NODE_TYPE_FIELD){
+						node->data.string_index=*(string_map+node->data.string_index);
+					}
+					node++;
+				}
 			}
 		}
 		sll_deallocate(string_map);
