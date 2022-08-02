@@ -131,6 +131,9 @@ __SLL_EXTERNAL void sll_optimize_metadata(sll_compilation_data_t* compilation_da
 					}
 					if (SLL_NODE_HAS_CHILDREN(node)&&node->type<SLL_NODE_TYPE_DBG){
 						stack+=node->data.arg_count;
+						if (node->type==SLL_NODE_TYPE_DECL&&node->data.declaration.name_string_index!=SLL_MAX_STRING_INDEX){
+							node->data.declaration.name_string_index=*(string_map+node->data.declaration.name_string_index);
+						}
 					}
 					else if (node->type==SLL_NODE_TYPE_STRING||node->type==SLL_NODE_TYPE_FIELD){
 						node->data.string_index=*(string_map+node->data.string_index);
