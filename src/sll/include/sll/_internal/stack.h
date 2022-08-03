@@ -27,11 +27,11 @@ sll_assembly_instruction_t _acquire_next_instruction(sll_assembly_data_t* assemb
 
 
 
-sll_node_t _acquire_next_node(sll_source_file_t* sf);
+sll_node_t _acquire_next_node(sll_source_file_t* source_file);
 
 
 
-void _clone_node_stack(const sll_source_file_t* src_sf,sll_source_file_t* dst_sf);
+void _clone_node_stack(const sll_source_file_t* source_file,sll_source_file_t* out);
 
 
 

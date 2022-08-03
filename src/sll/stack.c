@@ -54,38 +54,38 @@ sll_assembly_instruction_t _acquire_next_instruction(sll_assembly_data_t* assemb
 
 
 
-sll_node_t _acquire_next_node(sll_source_file_t* sf){
-	sll_node_t out=sf->_stack.next_node;
-	sf->_stack.offset++;
-	sf->_stack.count--;
-	sf->_stack.next_node++;
-	if (!sf->_stack.count){
-		_request_new_node_page(sf);
+sll_node_t _acquire_next_node(sll_source_file_t* source_file){
+	sll_node_t out=source_file->_stack.next_node;
+	source_file->_stack.offset++;
+	source_file->_stack.count--;
+	source_file->_stack.next_node++;
+	if (!source_file->_stack.count){
+		_request_new_node_page(source_file);
 	}
 	return out;
 }
 
 
 
-void _clone_node_stack(const sll_source_file_t* src_sf,sll_source_file_t* dst_sf){
-	_init_node_stack(dst_sf);
-	dst_sf->first_node=dst_sf->_stack.next_node;
+void _clone_node_stack(const sll_source_file_t* source_file,sll_source_file_t* out){
+	_init_node_stack(out);
+	out->first_node=out->_stack.next_node;
 	sll_node_offset_t count=((SLL_ROUND_PAGE(NODE_STACK_ALLOC_SIZE)-sizeof(node_stack_page_t)-sizeof(struct _SLL_NODE)*2)/sizeof(struct _SLL_NODE));
-	node_stack_page_t* src=src_sf->_stack.start;
-	node_stack_page_t* dst=dst_sf->_stack.start;
-	sll_node_offset_t src_cnt=src_sf->_stack.offset;
+	node_stack_page_t* src=source_file->_stack.start;
+	node_stack_page_t* dst=out->_stack.start;
+	sll_node_offset_t src_cnt=source_file->_stack.offset;
 	while (1){
 		if (!src->next){
 			count=src_cnt;
 		}
 		sll_copy_data(PTR(ADDR(src)+sizeof(node_stack_page_t)+sizeof(struct _SLL_NODE)),count*sizeof(struct _SLL_NODE),PTR(ADDR(dst)+sizeof(node_stack_page_t)+sizeof(struct _SLL_NODE)));
-		dst_sf->_stack.offset+=count;
-		dst_sf->_stack.next_node+=count;
+		out->_stack.offset+=count;
+		out->_stack.next_node+=count;
 		src_cnt-=count;
 		if (!src->next){
 			return;
 		}
-		_request_new_node_page(dst_sf);
+		_request_new_node_page(out);
 		src=src->next;
 		dst=dst->next;
 	}
