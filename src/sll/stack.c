@@ -9,21 +9,21 @@
 
 
 
-static void _request_new_node_page(sll_source_file_t* sf){
+static void _request_new_node_page(sll_source_file_t* source_file){
 	node_stack_page_t* n=sll_platform_allocate_page(SLL_ROUND_PAGE(NODE_STACK_ALLOC_SIZE),0,NULL);
-	((node_stack_page_t*)(sf->_stack.end))->next=n;
+	((node_stack_page_t*)(source_file->_stack.end))->next=n;
 	n->next=NULL;
 	sll_node_t s=PTR(ADDR(n)+sizeof(node_stack_page_t));
 	s->type=SLL_NODE_TYPE_CHANGE_STACK;
-	s->data._next_node=sf->_stack.next_node-1;
-	SLL_ASSERT(sf->_stack.next_node->type==SLL_NODE_TYPE_CHANGE_STACK);
-	sf->_stack.next_node->data._next_node=s+1;
-	sf->_stack.count=((SLL_ROUND_PAGE(NODE_STACK_ALLOC_SIZE)-sizeof(node_stack_page_t)-sizeof(struct _SLL_NODE)*2)/sizeof(struct _SLL_NODE));
-	sf->_stack.next_node=s+1;
-	s+=sf->_stack.count+1;
+	s->data._next_node=source_file->_stack.next_node-1;
+	SLL_ASSERT(source_file->_stack.next_node->type==SLL_NODE_TYPE_CHANGE_STACK);
+	source_file->_stack.next_node->data._next_node=s+1;
+	source_file->_stack.count=((SLL_ROUND_PAGE(NODE_STACK_ALLOC_SIZE)-sizeof(node_stack_page_t)-sizeof(struct _SLL_NODE)*2)/sizeof(struct _SLL_NODE));
+	source_file->_stack.next_node=s+1;
+	s+=source_file->_stack.count+1;
 	s->type=SLL_NODE_TYPE_CHANGE_STACK;
 	s->data._next_node=NULL;
-	sf->_stack.end=n;
+	source_file->_stack.end=n;
 }
 
 
@@ -105,9 +105,9 @@ sll_assembly_instruction_t _get_instruction_at_offset(const sll_assembly_data_t*
 
 
 
-sll_node_t _get_node_at_offset(const sll_source_file_t* sf,sll_node_offset_t off){
+sll_node_t _get_node_at_offset(const sll_source_file_t* source_file,sll_node_offset_t off){
 	sll_node_offset_t count=(sll_node_offset_t)(((SLL_ROUND_PAGE(NODE_STACK_ALLOC_SIZE)-sizeof(node_stack_page_t)-sizeof(struct _SLL_NODE)*2)/sizeof(struct _SLL_NODE)));
-	node_stack_page_t* page=sf->_stack.start;
+	node_stack_page_t* page=source_file->_stack.start;
 	while (off>=count){
 		page=page->next;
 		off-=count;
@@ -133,28 +133,28 @@ void _init_assembly_stack(sll_assembly_data_t* assembly_data){
 
 
 
-void _init_node_stack(sll_source_file_t* sf){
-	sf->_stack.start=sll_platform_allocate_page(SLL_ROUND_PAGE(NODE_STACK_ALLOC_SIZE),0,NULL);
-	sf->_stack.end=sf->_stack.start;
-	((node_stack_page_t*)(sf->_stack.start))->next=NULL;
-	sll_node_t s=PTR(ADDR(sf->_stack.start)+sizeof(node_stack_page_t));
+void _init_node_stack(sll_source_file_t* source_file){
+	source_file->_stack.start=sll_platform_allocate_page(SLL_ROUND_PAGE(NODE_STACK_ALLOC_SIZE),0,NULL);
+	source_file->_stack.end=source_file->_stack.start;
+	((node_stack_page_t*)(source_file->_stack.start))->next=NULL;
+	sll_node_t s=PTR(ADDR(source_file->_stack.start)+sizeof(node_stack_page_t));
 	s->type=SLL_NODE_TYPE_CHANGE_STACK;
 	s->data._next_node=NULL;
-	sf->_stack.count=((SLL_ROUND_PAGE(NODE_STACK_ALLOC_SIZE)-sizeof(node_stack_page_t)-sizeof(struct _SLL_NODE)*2)/sizeof(struct _SLL_NODE));
-	sf->_stack.next_node=s+1;
-	sf->_stack.offset=0;
-	s+=sf->_stack.count+1;
+	source_file->_stack.count=((SLL_ROUND_PAGE(NODE_STACK_ALLOC_SIZE)-sizeof(node_stack_page_t)-sizeof(struct _SLL_NODE)*2)/sizeof(struct _SLL_NODE));
+	source_file->_stack.next_node=s+1;
+	source_file->_stack.offset=0;
+	s+=source_file->_stack.count+1;
 	s->type=SLL_NODE_TYPE_CHANGE_STACK;
 	s->data._next_node=NULL;
 }
 
 
 
-void _require_node_stack_space(sll_source_file_t* sf,sll_node_t node,sll_node_offset_t size){
+void _require_node_stack_space(sll_source_file_t* source_file,sll_node_t node,sll_node_offset_t size){
 	if (!size){
 		return;
 	}
-	sll_node_t source=sf->_stack.next_node-1;
+	sll_node_t source=source_file->_stack.next_node-1;
 	if (node->type==SLL_NODE_TYPE_CHANGE_STACK){
 		node=node->data._next_node;
 	}
@@ -162,13 +162,13 @@ void _require_node_stack_space(sll_source_file_t* sf,sll_node_t node,sll_node_of
 		source=source->data._next_node;
 	}
 	for (sll_node_offset_t i=1;i<size;i++){
-		_acquire_next_node(sf);
+		_acquire_next_node(source_file);
 	}
-	sll_node_t dest=_acquire_next_node(sf);
+	sll_node_t dest=_acquire_next_node(source_file);
 	do{
 		*dest=*source;
 		if (dest->type==SLL_NODE_TYPE_FUNC){
-			(*(sf->function_table.data+dest->data.function.function_index))->offset+=size;
+			(*(source_file->function_table.data+dest->data.function.function_index))->offset+=size;
 		}
 		source--;
 		if (source->type==SLL_NODE_TYPE_CHANGE_STACK){

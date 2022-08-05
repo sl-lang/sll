@@ -39,7 +39,7 @@ sll_assembly_instruction_t _get_instruction_at_offset(const sll_assembly_data_t*
 
 
 
-sll_node_t _get_node_at_offset(const sll_source_file_t* sf,sll_node_offset_t off);
+sll_node_t _get_node_at_offset(const sll_source_file_t* source_file,sll_node_offset_t off);
 
 
 
@@ -47,11 +47,11 @@ void _init_assembly_stack(sll_assembly_data_t* assembly_data);
 
 
 
-void _init_node_stack(sll_source_file_t* sf);
+void _init_node_stack(sll_source_file_t* source_file);
 
 
 
-void _require_node_stack_space(sll_source_file_t* sf,sll_node_t start,sll_node_offset_t size);
+void _require_node_stack_space(sll_source_file_t* source_file,sll_node_t start,sll_node_offset_t size);
 
 
 
