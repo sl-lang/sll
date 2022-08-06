@@ -78,14 +78,14 @@ static void _zero_struct(const sll_object_type_table_t* type_table,const sll_obj
 				break;
 			default:
 				{
-					sll_object_t n=sll_create_object(type_descriptor->fields[field_count].type);
-					const sll_object_type_data_t* n_dt=*(type_table->data+n->type-SLL_MAX_OBJECT_TYPE-1);
-					n->data.fields=sll_allocate(n_dt->field_count*sizeof(sll_object_field_t));
-					_zero_struct(type_table,n_dt,n->data.fields,0);
-					if (n_dt->functions[SLL_OBJECT_FUNC_INIT]){
-						SLL_RELEASE(sll_execute_function(n_dt->functions[SLL_OBJECT_FUNC_INIT],&n,1,0));
+					sll_object_t new=sll_create_object(type_descriptor->fields[field_count].type);
+					const sll_object_type_data_t* new_data=*(type_table->data+new->type-SLL_MAX_OBJECT_TYPE-1);
+					new->data.fields=sll_allocate(new_data->field_count*sizeof(sll_object_field_t));
+					_zero_struct(type_table,new_data,new->data.fields,0);
+					if (new_data->functions[SLL_OBJECT_FUNC_INIT]){
+						SLL_RELEASE(sll_execute_function(new_data->functions[SLL_OBJECT_FUNC_INIT],&new,1,0));
 					}
-					field_pointer->any=n;
+					field_pointer->any=new;
 					break;
 				}
 		}
