@@ -1,4 +1,4 @@
-# Sll [0.7.29] - Ongoing
+# Sll [0.7.29] - 2022-08-06
 
 ## Changed
 
@@ -9,5 +9,5 @@
 
 - Deprecated function: `sll_skip_node_const`
 
-[0.7.29]: https://github.com/sl-lang/sll/compare/sll-v0.7.28...main
+[0.7.29]: https://github.com/sl-lang/sll/compare/sll-v0.7.28...sll-v0.7.29
 [#289]: https://github.com/sl-lang/sll/issues/289
