@@ -115,72 +115,72 @@ _check_new_var:;
 
 
 static unsigned int _read_single_char(sll_file_t* file,sll_char_t* out){
-	sll_read_char_t c=sll_file_read_char(file,NULL);
-	if (c==SLL_END_OF_DATA){
+	sll_read_char_t char_=sll_file_read_char(file,NULL);
+	if (char_==SLL_END_OF_DATA){
 		return 1;
 	}
-	if (c!='\\'){
-		*out=(sll_char_t)c;
+	if (char_!='\\'){
+		*out=(sll_char_t)char_;
 		return 0;
 	}
-	c=sll_file_peek_char(file,NULL);
-	if (c==SLL_END_OF_DATA){
+	char_=sll_file_peek_char(file,NULL);
+	if (char_==SLL_END_OF_DATA){
 		return 1;
 	}
-	if (c=='\''||c=='"'||c=='\\'){
+	if (char_=='\''||char_=='"'||char_=='\\'){
 		*out=(sll_char_t)sll_file_read_char(file,NULL);
 		return 2;
 	}
-	else if (c=='x'){
+	else if (char_=='x'){
 		sll_file_read_char(file,NULL);
-		c=sll_file_read_char(file,NULL);
-		if (c==SLL_END_OF_DATA){
+		char_=sll_file_read_char(file,NULL);
+		if (char_==SLL_END_OF_DATA){
 			return 1;
 		}
-		if (c>96){
-			c-=32;
+		if (char_>96){
+			char_-=32;
 		}
-		if (c<48||(c>57&&c<65)||c>70){
+		if (char_<48||(char_>57&&char_<65)||char_>70){
 			*out=0;
 			return 0;
 		}
-		sll_char_t v=(c>64?c-55:c-48);
-		c=sll_file_read_char(file,NULL);
-		if (c==SLL_END_OF_DATA){
+		sll_char_t v=(char_>64?char_-55:char_-48);
+		char_=sll_file_read_char(file,NULL);
+		if (char_==SLL_END_OF_DATA){
 			*out=v;
 			return 0;
 		}
-		if (c>96){
-			c-=32;
+		if (char_>96){
+			char_-=32;
 		}
-		if (c<48||(c>57&&c<65)||c>70){
+		if (char_<48||(char_>57&&char_<65)||char_>70){
 			*out=v;
 			return 0;
 		}
-		*out=(v<<4)|(c>64?c-55:c-48);
+		*out=(v<<4)|(char_>64?char_-55:char_-48);
 		return 0;
 	}
-	else if (c=='t'){
-		c='\t';
+	else if (char_=='t'){
+		char_='\t';
 	}
-	else if (c=='n'){
-		c='\n';
+	else if (char_=='n'){
+		char_='\n';
 	}
-	else if (c=='v'){
-		c='\v';
+	else if (char_=='v'){
+		char_='\v';
 	}
-	else if (c=='f'){
-		c='\f';
+	else if (char_=='f'){
+		char_='\f';
 	}
-	else if (c=='r'){
-		c='\r';
+	else if (char_=='r'){
+		char_='\r';
 	}
 	else{
 		*out='\\';
 		return 0;
 	}
 	sll_file_read_char(file,NULL);
-	*out=(sll_char_t)c;
+	*out=(sll_char_t)char_;
 	return 0;
 }
 
