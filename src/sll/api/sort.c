@@ -18,13 +18,13 @@ static void _quicksort(sll_object_t* elements,sll_array_length_t length,sll_comp
 		if (sll_operator_compare(*(elements+j),*(elements+length))==cmp){
 			sll_object_t tmp=*(elements+i);
 			*(elements+i)=*(elements+j);
-			*(elements+j)=t;
+			*(elements+j)=tmp;
 			i++;
 		}
 	}
 	sll_object_t tmp=*(elements+i);
 	*(elements+i)=*(elements+length);
-	*(elements+length)=t;
+	*(elements+length)=tmp;
 	if (i>1){
 		_quicksort(elements,i-1,cmp);
 	}
