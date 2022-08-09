@@ -38,10 +38,10 @@ static sll_node_t _mark(sll_node_t node,bitmap_t* bitmap){
 				*(bitmap+(node->data.declaration.name_string_index>>6))|=1ull<<(node->data.declaration.name_string_index&63);
 			}
 	}
-	sll_arg_count_t l=node->data.arg_count;
+	sll_arg_count_t arg_count=node->data.arg_count;
 	node++;
-	while (l){
-		l--;
+	while (arg_count){
+		arg_count--;
 		node=_mark(node,bitmap);
 	}
 	return node;
