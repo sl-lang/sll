@@ -25,15 +25,15 @@ __SLL_EXTERNAL void sll_clone_internal_function_table(sll_internal_function_tabl
 	for (sll_function_index_t i=0;i<internal_function_table->length;i++){
 		sll_string_clone(&((internal_function_table->data+i)->name),&(ptr->name));
 		ptr->function=(internal_function_table->data+i)->function;
-		sll_string_length_t sz=sll_string_length((internal_function_table->data+i)->format)+1;
-		ptr->format=sll_allocate(sz);
-		sll_copy_data((internal_function_table->data+i)->format,sz,ptr->format);
+		sll_string_length_t size=sll_string_length((internal_function_table->data+i)->format)+1;
+		ptr->format=sll_allocate(size);
+		sll_copy_data((internal_function_table->data+i)->format,size,ptr->format);
 		ptr->_return_value=(internal_function_table->data+i)->_return_value;
 		ptr->_arg_count=(internal_function_table->data+i)->_arg_count;
 		ptr->_arg_size=(internal_function_table->data+i)->_arg_size;
-		sz=(((ptr->_arg_count<<1)+65)>>6)*sizeof(bitmap_t);
-		ptr->_registers=sll_allocate(sz);
-		sll_copy_data((internal_function_table->data+i)->_registers,sz,ptr->_registers);
+		size=(((ptr->_arg_count<<1)+65)>>6)*sizeof(bitmap_t);
+		ptr->_registers=sll_allocate(size);
+		sll_copy_data((internal_function_table->data+i)->_registers,size,ptr->_registers);
 		ptr++;
 	}
 }
