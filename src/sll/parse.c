@@ -33,9 +33,9 @@
 	} while (0)
 #define PUSH_REWIND_CHAR(char_) \
 	do{ \
-		if (rewind_bf_l<255){ \
-			rewind_bf[rewind_bf_l]=(sll_char_t)(char_); \
-			rewind_bf_l++; \
+		if (rewind_buffer_length<255){ \
+			rewind_buffer[rewind_buffer_length]=(sll_char_t)(char_); \
+			rewind_buffer_length++; \
 		} \
 	} while (0)
 #define UPDATE_IF_SCOPE \
@@ -335,8 +335,8 @@ static void _read_object_internal(sll_file_t* file,sll_source_file_t* source_fil
 			UPDATE_IF_SCOPE;
 			sll_node_t arg=_acquire_next_node(source_file);
 			arg->type=SLL_NODE_TYPE_NOP;
-			sll_char_t rewind_bf[255];
-			sll_string_length_t rewind_bf_l=0;
+			sll_char_t rewind_buffer[255];
+			sll_string_length_t rewind_buffer_length=0;
 			if (char_=='\''){
 				arg->data.char_=0;
 				unsigned int err=_read_single_char(file,&(arg->data.char_));
@@ -429,7 +429,7 @@ static void _read_object_internal(sll_file_t* file,sll_source_file_t* source_fil
 								char_-=32;
 							}
 							if (char_<48||(char_>57&&char_<65)||(char_>70&&char_!='_')){
-								rewind_bf_l--;
+								rewind_buffer_length--;
 								goto _parse_identifier;
 							}
 							if (char_!='_'){
@@ -677,10 +677,10 @@ _parse_identifier:
 				}
 				sll_string_t str;
 				sll_string_create(255,&str);
-				if (rewind_bf_l){
-					sll_copy_data(rewind_bf,rewind_bf_l,str.data);
+				if (rewind_buffer_length){
+					sll_copy_data(rewind_buffer,rewind_buffer_length,str.data);
 				}
-				char_=_read_identifier(&str,rewind_bf_l,file,char_);
+				char_=_read_identifier(&str,rewind_buffer_length,file,char_);
 				if (o&&o->type==SLL_NODE_TYPE_DECL&&(ac&1)){
 					arg->type=SLL_NODE_TYPE_FIELD;
 					arg->data.string_index=sll_add_string(&(source_file->string_table),&str);
