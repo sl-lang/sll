@@ -34,7 +34,7 @@
 		{ \
 			.pointer=SLL_CHAR(dt) \
 		}, \
-		sizeof(dt)/sizeof(char)-1 \
+		sizeof(dt)/sizeof(sll_char_t)-1 \
 	}; \
 	static const __STATIC_STRING_DATA_SECTION init_string_t* _UNIQUE_NAME(__init_string_ptr)=&_UNIQUE_NAME(__init_string)
 #define __STATIC_STRING_CODE(nm,c) \
