@@ -73,10 +73,10 @@ static sll_node_t _clone_node(sll_node_t src,sll_source_file_t* out,source_file_
 			}
 		case SLL_NODE_TYPE_INTERNAL_FUNC:
 			{
-				sll_arg_count_t length=src->data.function.arg_count;
+				sll_arg_count_t arg_count=src->data.function.arg_count;
 				src++;
-				while (length){
-					length--;
+				while (arg_count){
+					arg_count--;
 					src=_clone_node(src,out,source_file_mapping_data);
 				}
 				return src;
@@ -92,10 +92,10 @@ static sll_node_t _clone_node(sll_node_t src,sll_source_file_t* out,source_file_
 				if (source_file_mapping_data){
 					dst->data.loop.scope+=source_file_mapping_data->scope_offset;
 				}
-				sll_arg_count_t length=src->data.loop.arg_count;
+				sll_arg_count_t arg_count=src->data.loop.arg_count;
 				src++;
-				while (length){
-					length--;
+				while (arg_count){
+					arg_count--;
 					src=_clone_node(src,out,source_file_mapping_data);
 				}
 				return src;
