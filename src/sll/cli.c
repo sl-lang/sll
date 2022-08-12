@@ -780,7 +780,7 @@ _read_file_argument:
 				sll_init_compilation_data(tmp.data,&compilation_data);
 			}
 			sll_free_string(&tmp);
-			sll_copy_data(res_data.path,SLL_API_FILE_PATH_SEPARATOR,file_path);
+			sll_copy_data(res_data.path,SLL_API_MAX_FILE_PATH_LENGTH,file_path);
 			sll_char_t buffer[SLL_API_MAX_FILE_PATH_LENGTH];
 			sll_cli_expand_path(argv[*(file_list+j)],buffer);
 			sll_set_argument(0,buffer);
