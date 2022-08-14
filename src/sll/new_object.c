@@ -27,9 +27,9 @@
 			SLL_UNIMPLEMENTED(); \
 		} \
 		sll_object_t obj=sll_var_arg_get_object(va); \
-		sll_object_t o=(obj->type==(type_)?sll_operator_copy(obj,0):sll_operator_cast(obj,sll_static_int[(type_)])); \
+		sll_object_t out=(obj->type==(type_)?sll_operator_copy(obj,0):sll_operator_cast(obj,sll_static_int[(type_)])); \
 		SLL_RELEASE(obj); \
-		return o; \
+		return out; \
 	} while (0)
 
 #define SKIP_MODIFIERS \
