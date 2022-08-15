@@ -26,17 +26,17 @@ __SLL_EXTERNAL void sll_search_path_create(const sll_string_t* string,sll_search
 	out->data=NULL;
 	sll_string_length_t i=0;
 	while (1){
-		sll_string_length_t e=sll_string_index_char(string,SLL_SEARCH_PATH_SPLIT_CHAR,0,i);
-		if (e==SLL_MAX_STRING_LENGTH){
-			e=string->length;
+		sll_string_length_t j=sll_string_index_char(string,SLL_SEARCH_PATH_SPLIT_CHAR,0,i);
+		if (j==SLL_MAX_STRING_LENGTH){
+			j=string->length;
 		}
 		out->length++;
 		out->data=sll_reallocate(out->data,out->length*sizeof(sll_string_t));
-		sll_string_from_pointer_length(string->data+i,e-i,out->data+out->length-1);
-		if (e==string->length){
+		sll_string_from_pointer_length(string->data+i,j-i,out->data+out->length-1);
+		if (j==string->length){
 			break;
 		}
-		i=e+1;
+		i=j+1;
 	}
 }
 
