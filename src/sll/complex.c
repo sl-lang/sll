@@ -80,14 +80,14 @@ __SLL_EXTERNAL void sll_complex_pow(const sll_complex_t* a,const sll_complex_t* 
 	else{
 		sll_float_t abs=sqrt(a->real*a->real+a->imag*a->imag);
 		sll_float_t len=pow(abs,b->real);
-		sll_float_t rot=atan2(a->imag,a->real);
-		sll_float_t n_rot=rot*b->real;
+		sll_float_t angle=atan2(a->imag,a->real);
+		sll_float_t new_angle=angle*b->real;
 		if (b->imag){
-			len/=exp(rot*b->imag);
-			n_rot+=log(abs)*b->imag;
+			len/=exp(angle*b->imag);
+			new_angle+=log(abs)*b->imag;
 		}
-		out->real=len*cos(n_rot);
-		out->imag=len*sin(n_rot);
+		out->real=len*cos(new_angle);
+		out->imag=len*sin(new_angle);
 	}
 }
 
