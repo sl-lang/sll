@@ -427,9 +427,9 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_bool_t sll_load_compiled_node(sll_file_t* 
 	CHECK_ERROR(file,out->length,sll_source_file_index_t);
 	out->data=sll_allocate(out->length*sizeof(sll_source_file_t*));
 	for (sll_source_file_index_t i=0;i<out->length;i++){
-		sll_source_file_t* sf=sll_allocate(sizeof(sll_source_file_t));
-		*(out->data+i)=sf;
-		if (!_read_source_file(file,sf)){
+		sll_source_file_t* source_file=sll_allocate(sizeof(sll_source_file_t));
+		*(out->data+i)=source_file;
+		if (!_read_source_file(file,source_file)){
 			return 0;
 		}
 	}

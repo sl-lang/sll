@@ -60,13 +60,13 @@ __SLL_EXTERNAL void sll_remove_debug_data(sll_compilation_data_t* compilation_da
 
 __SLL_EXTERNAL void sll_remove_debug_names(sll_compilation_data_t* compilation_data){
 	for (sll_source_file_index_t i=0;i<compilation_data->length;i++){
-		sll_source_file_t* sf=*(compilation_data->data+i);
-		for (sll_function_index_t j=0;j<sf->function_table.length;j++){
-			(*(sf->function_table.data+j))->name_string_index=SLL_MAX_STRING_INDEX;
-			(*(sf->function_table.data+j))->description_string_index=SLL_MAX_STRING_INDEX;
+		sll_source_file_t* source_file=*(compilation_data->data+i);
+		for (sll_function_index_t j=0;j<source_file->function_table.length;j++){
+			(*(source_file->function_table.data+j))->name_string_index=SLL_MAX_STRING_INDEX;
+			(*(source_file->function_table.data+j))->description_string_index=SLL_MAX_STRING_INDEX;
 		}
-		if (sf->first_node){
-			_remove_type_names(sf->first_node);
+		if (source_file->first_node){
+			_remove_type_names(source_file->first_node);
 		}
 	}
 }

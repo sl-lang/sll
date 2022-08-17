@@ -67,7 +67,7 @@ static sll_node_t _generate(sll_node_t o,assembly_generator_data_t* g_dt);
 
 
 
-static sll_node_t _map_identifiers(sll_node_t o,const sll_source_file_t* sf,assembly_generator_data_t* g_dt,sll_scope_t fn_sc){
+static sll_node_t _map_identifiers(sll_node_t o,const sll_source_file_t* source_file,assembly_generator_data_t* g_dt,sll_scope_t fn_sc){
 	while (o->type==SLL_NODE_TYPE_NOP||o->type==SLL_NODE_TYPE_DBG||o->type==SLL_NODE_TYPE_CHANGE_STACK){
 		o=(o->type==SLL_NODE_TYPE_CHANGE_STACK?o->data._next_node:o+1);
 	}
@@ -82,7 +82,7 @@ static sll_node_t _map_identifiers(sll_node_t o,const sll_source_file_t* sf,asse
 			return o+1;
 		case SLL_NODE_TYPE_IDENTIFIER:
 			{
-				const sll_identifier_t* id=sf->identifier_table.data+o->data.identifier_index;
+				const sll_identifier_t* id=source_file->identifier_table.data+o->data.identifier_index;
 				if ((g_dt->identifier_map.data+o->data.identifier_index)->variable==SLL_MAX_VARIABLE_INDEX){
 					if (SLL_IDENTIFIER_IS_TLS(id)){
 						(g_dt->identifier_map.data+o->data.identifier_index)->variable=(g_dt->identifier_map.tls_variable_count<<1)|1;
@@ -109,7 +109,7 @@ static sll_node_t _map_identifiers(sll_node_t o,const sll_source_file_t* sf,asse
 				o++;
 				while (l){
 					l--;
-					o=_map_identifiers(o,sf,g_dt,fn_sc);
+					o=_map_identifiers(o,source_file,g_dt,fn_sc);
 				}
 				return o;
 			}
@@ -119,7 +119,7 @@ static sll_node_t _map_identifiers(sll_node_t o,const sll_source_file_t* sf,asse
 				o++;
 				while (l){
 					l--;
-					o=_map_identifiers(o,sf,g_dt,fn_sc);
+					o=_map_identifiers(o,source_file,g_dt,fn_sc);
 				}
 				return o;
 			}
@@ -131,7 +131,7 @@ static sll_node_t _map_identifiers(sll_node_t o,const sll_source_file_t* sf,asse
 				o++;
 				while (l){
 					l--;
-					o=_map_identifiers(o,sf,g_dt,fn_sc);
+					o=_map_identifiers(o,source_file,g_dt,fn_sc);
 				}
 				return o;
 			}
@@ -147,7 +147,7 @@ static sll_node_t _map_identifiers(sll_node_t o,const sll_source_file_t* sf,asse
 				o++;
 				while (l){
 					l--;
-					o=_map_identifiers(o,sf,g_dt,fn_sc);
+					o=_map_identifiers(o,source_file,g_dt,fn_sc);
 				}
 				return o;
 			}
@@ -156,7 +156,7 @@ static sll_node_t _map_identifiers(sll_node_t o,const sll_source_file_t* sf,asse
 	o++;
 	while (l){
 		l--;
-		o=_map_identifiers(o,sf,g_dt,fn_sc);
+		o=_map_identifiers(o,source_file,g_dt,fn_sc);
 	}
 	return o;
 }

@@ -9,7 +9,7 @@
 
 
 
-static __SLL_FORCE_INLINE sll_read_char_t _operator_parser(sll_node_t o,sll_read_char_t c,unsigned int* fl,sll_source_file_t* sf,sll_file_t* rf){
+static __SLL_FORCE_INLINE sll_read_char_t _operator_parser(sll_node_t o,sll_read_char_t c,unsigned int* fl,sll_source_file_t* source_file,sll_file_t* rf){
 	sll_char_t str[4];
 	sll_string_length_t sz=0;
 	do{
@@ -114,7 +114,7 @@ static __SLL_FORCE_INLINE sll_read_char_t _operator_parser(sll_node_t o,sll_read
 		}
 		else if (str[0]=='-'&&str[1]=='>'){
 			o->type=SLL_NODE_TYPE_FOR;
-			o->data.loop.scope=sf->_next_scope;
+			o->data.loop.scope=source_file->_next_scope;
 		}
 		else if (str[0]=='.'&&str[1]=='?'){
 			o->type=SLL_NODE_TYPE_NAMEOF;
@@ -148,7 +148,7 @@ static __SLL_FORCE_INLINE sll_read_char_t _operator_parser(sll_node_t o,sll_read
 		}
 		else if (str[0]=='>'&&str[1]=='-'){
 			o->type=SLL_NODE_TYPE_WHILE;
-			o->data.loop.scope=sf->_next_scope;
+			o->data.loop.scope=source_file->_next_scope;
 		}
 		else if (str[0]=='>'&&str[1]=='<'){
 			o->type=SLL_NODE_TYPE_LOOP;
@@ -170,19 +170,19 @@ static __SLL_FORCE_INLINE sll_read_char_t _operator_parser(sll_node_t o,sll_read
 		}
 		else if (str[0]=='['&&str[1]=='<'){
 			o->type=SLL_NODE_TYPE_WHILE_ARRAY;
-			o->data.loop.scope=sf->_next_scope;
+			o->data.loop.scope=source_file->_next_scope;
 		}
 		else if (str[0]=='['&&str[1]=='>'){
 			o->type=SLL_NODE_TYPE_FOR_ARRAY;
-			o->data.loop.scope=sf->_next_scope;
+			o->data.loop.scope=source_file->_next_scope;
 		}
 		else if (str[0]=='{'&&str[1]=='<'){
 			o->type=SLL_NODE_TYPE_WHILE_MAP;
-			o->data.loop.scope=sf->_next_scope;
+			o->data.loop.scope=source_file->_next_scope;
 		}
 		else if (str[0]=='{'&&str[1]=='>'){
 			o->type=SLL_NODE_TYPE_FOR_MAP;
-			o->data.loop.scope=sf->_next_scope;
+			o->data.loop.scope=source_file->_next_scope;
 		}
 		else if (str[0]=='|'&&str[1]==':'){
 			o->type=SLL_NODE_TYPE_HAS;
@@ -224,11 +224,11 @@ static __SLL_FORCE_INLINE sll_read_char_t _operator_parser(sll_node_t o,sll_read
 		}
 		else if (str[0]=='*'&&str[1]=='*'&&str[2]=='*'){
 			o->type=SLL_NODE_TYPE_INLINE_FUNC;
-			o->data.function.scope=sf->_next_scope;
+			o->data.function.scope=source_file->_next_scope;
 		}
 		else if (str[0]==','&&str[1]==','&&str[2]==','){
 			o->type=SLL_NODE_TYPE_FUNC;
-			o->data.function.scope=sf->_next_scope;
+			o->data.function.scope=source_file->_next_scope;
 		}
 		else if (str[0]=='-'&&str[1]=='-'&&str[2]=='-'){
 			o->type=SLL_NODE_TYPE_OPERATION_LIST;

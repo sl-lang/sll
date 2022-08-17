@@ -41,12 +41,12 @@ static sll_node_t _remove_padding_internal(sll_node_t src,sll_source_file_t* sou
 
 __SLL_EXTERNAL void sll_remove_node_padding(sll_compilation_data_t* compilation_data){
 	for (sll_source_file_index_t i=0;i<compilation_data->length;i++){
-		sll_source_file_t* sf=*(compilation_data->data+i);
-		sll_node_t d=sf->first_node;
+		sll_source_file_t* source_file=*(compilation_data->data+i);
+		sll_node_t d=source_file->first_node;
 		if (!d){
 			continue;
 		}
 		sll_node_offset_t rm=0;
-		_remove_padding_internal(d,sf,&d,&rm);
+		_remove_padding_internal(d,source_file,&d,&rm);
 	}
 }

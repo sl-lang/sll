@@ -1005,11 +1005,11 @@ _return_node:;
 
 
 __SLL_EXTERNAL void sll_parse_nodes(sll_file_t* file,sll_compilation_data_t* compilation_data,sll_internal_function_table_t* internal_function_table,sll_import_resolver_t import_resolver){
-	sll_source_file_t* sf=*(compilation_data->data);
-	SLL_ASSERT(compilation_data->length==1&&!sf->first_node);
-	sf->first_node=_acquire_next_node(sf);
-	sf->first_node->type=SLL_NODE_TYPE_OPERATION_LIST;
-	sf->first_node->data.arg_count=0;
+	sll_source_file_t* source_file=*(compilation_data->data);
+	SLL_ASSERT(compilation_data->length==1&&!source_file->first_node);
+	source_file->first_node=_acquire_next_node(source_file);
+	source_file->first_node->type=SLL_NODE_TYPE_OPERATION_LIST;
+	source_file->first_node->data.arg_count=0;
 	new_variable_data_t nv_dt={
 		NULL,
 		0
@@ -1035,13 +1035,13 @@ __SLL_EXTERNAL void sll_parse_nodes(sll_file_t* file,sll_compilation_data_t* com
 	_file_start_hash(file);
 	sll_read_char_t c=sll_file_read_char(file,NULL);
 	while (c!=SLL_END_OF_DATA){
-		_read_object_internal(file,sf,c,&extra_compilation_data);
-		sf->first_node->data.arg_count++;
+		_read_object_internal(file,source_file,c,&extra_compilation_data);
+		source_file->first_node->data.arg_count++;
 		c=sll_file_read_char(file,NULL);
 	}
 	sll_deallocate(extra_compilation_data.scope.data);
 	sll_deallocate(nv_dt.data);
 	_file_end_hash(file);
-	sf->file_size=SLL_FILE_GET_OFFSET(file);
-	sf->file_hash=file->data.file._hash.hash;
+	source_file->file_size=SLL_FILE_GET_OFFSET(file);
+	source_file->file_hash=file->data.file._hash.hash;
 }

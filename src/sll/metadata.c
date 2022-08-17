@@ -51,42 +51,42 @@ static sll_node_t _mark(sll_node_t node,bitmap_t* bitmap){
 
 __SLL_EXTERNAL void sll_optimize_metadata(sll_compilation_data_t* compilation_data){
 	for (sll_source_file_index_t idx=0;idx<compilation_data->length;idx++){
-		sll_source_file_t* sf=*(compilation_data->data+idx);
-		if (!sf->string_table.length){
+		sll_source_file_t* source_file=*(compilation_data->data+idx);
+		if (!source_file->string_table.length){
 			continue;
 		}
-		sll_string_index_t ml=(sf->string_table.length>>6)+1;
+		sll_string_index_t ml=(source_file->string_table.length>>6)+1;
 		bitmap_t* m=sll_zero_allocate_stack(ml*sizeof(bitmap_t));
-		*(m+(sf->file_path_string_index>>6))|=1ull<<(sf->file_path_string_index&63);
-		for (sll_identifier_table_length_t i=0;i<sf->identifier_table.length;i++){
-			*(m+(SLL_IDENTIFIER_GET_STRING_INDEX(sf->identifier_table.data+i)>>6))|=1ull<<(SLL_IDENTIFIER_GET_STRING_INDEX(sf->identifier_table.data+i)&63);
+		*(m+(source_file->file_path_string_index>>6))|=1ull<<(source_file->file_path_string_index&63);
+		for (sll_identifier_table_length_t i=0;i<source_file->identifier_table.length;i++){
+			*(m+(SLL_IDENTIFIER_GET_STRING_INDEX(source_file->identifier_table.data+i)>>6))|=1ull<<(SLL_IDENTIFIER_GET_STRING_INDEX(source_file->identifier_table.data+i)&63);
 		}
-		for (sll_function_index_t i=0;i<sf->function_table.length;i++){
-			sll_string_index_t j=(*(sf->function_table.data+i))->name_string_index;
+		for (sll_function_index_t i=0;i<source_file->function_table.length;i++){
+			sll_string_index_t j=(*(source_file->function_table.data+i))->name_string_index;
 			if (j!=SLL_MAX_STRING_INDEX){
 				*(m+(j>>6))|=1ull<<(j&63);
 			}
-			j=(*(sf->function_table.data+i))->description_string_index;
+			j=(*(source_file->function_table.data+i))->description_string_index;
 			if (j!=SLL_MAX_STRING_INDEX){
 				*(m+(j>>6))|=1ull<<(j&63);
 			}
 		}
-		if (sf->first_node){
-			_mark(sf->first_node,m);
+		if (source_file->first_node){
+			_mark(source_file->first_node,m);
 		}
-		sll_string_index_t* string_map=sll_allocate_stack(sf->string_table.length*sizeof(sll_string_index_t));
+		sll_string_index_t* string_map=sll_allocate_stack(source_file->string_table.length*sizeof(sll_string_index_t));
 		sll_string_index_t k=0;
 		sll_string_index_t l=0;
 		for (sll_string_index_t i=0;i<ml;i++){
 			bitmap_t v=~(*(m+i));
 			while (v){
 				sll_string_index_t j=FIND_FIRST_SET_BIT(v)|(i<<6);
-				if (j==sf->string_table.length){
+				if (j==source_file->string_table.length){
 					break;
 				}
-				sll_free_string(sf->string_table.data+j);
+				sll_free_string(source_file->string_table.data+j);
 				for (sll_string_index_t n=k;n<j;n++){
-					*(sf->string_table.data+n-l)=*(sf->string_table.data+n);
+					*(source_file->string_table.data+n-l)=*(source_file->string_table.data+n);
 					*(string_map+n)=n-l;
 				}
 				k=j+1;
@@ -95,27 +95,27 @@ __SLL_EXTERNAL void sll_optimize_metadata(sll_compilation_data_t* compilation_da
 			}
 		}
 		sll_deallocate(m);
-		for (sll_string_index_t i=k;i<sf->string_table.length;i++){
-			*(sf->string_table.data+i-l)=*(sf->string_table.data+i);
+		for (sll_string_index_t i=k;i<source_file->string_table.length;i++){
+			*(source_file->string_table.data+i-l)=*(source_file->string_table.data+i);
 			*(string_map+i)=i-l;
 		}
 		if (l){
-			sf->string_table.length-=l;
-			sf->string_table.data=sll_reallocate(sf->string_table.data,sf->string_table.length*sizeof(sll_string_t));
-			for (sll_identifier_table_length_t i=0;i<sf->identifier_table.length;i++){
-				SLL_IDENTIFIER_UPDATE_STRING_INDEX(sf->identifier_table.data+i,*(string_map+SLL_IDENTIFIER_GET_STRING_INDEX(sf->identifier_table.data+i)));
+			source_file->string_table.length-=l;
+			source_file->string_table.data=sll_reallocate(source_file->string_table.data,source_file->string_table.length*sizeof(sll_string_t));
+			for (sll_identifier_table_length_t i=0;i<source_file->identifier_table.length;i++){
+				SLL_IDENTIFIER_UPDATE_STRING_INDEX(source_file->identifier_table.data+i,*(string_map+SLL_IDENTIFIER_GET_STRING_INDEX(source_file->identifier_table.data+i)));
 			}
-			for (sll_function_index_t i=0;i<sf->function_table.length;i++){
-				if ((*(sf->function_table.data+i))->name_string_index!=SLL_MAX_STRING_INDEX){
-					(*(sf->function_table.data+i))->name_string_index=*(string_map+(*(sf->function_table.data+i))->name_string_index);
+			for (sll_function_index_t i=0;i<source_file->function_table.length;i++){
+				if ((*(source_file->function_table.data+i))->name_string_index!=SLL_MAX_STRING_INDEX){
+					(*(source_file->function_table.data+i))->name_string_index=*(string_map+(*(source_file->function_table.data+i))->name_string_index);
 				}
-				if ((*(sf->function_table.data+i))->description_string_index!=SLL_MAX_STRING_INDEX){
-					(*(sf->function_table.data+i))->description_string_index=*(string_map+(*(sf->function_table.data+i))->description_string_index);
+				if ((*(source_file->function_table.data+i))->description_string_index!=SLL_MAX_STRING_INDEX){
+					(*(source_file->function_table.data+i))->description_string_index=*(string_map+(*(source_file->function_table.data+i))->description_string_index);
 				}
 			}
-			sf->file_path_string_index=*(string_map+sf->file_path_string_index);
-			if (sf->first_node){
-				sll_node_t node=sf->first_node;
+			source_file->file_path_string_index=*(string_map+source_file->file_path_string_index);
+			if (source_file->first_node){
+				sll_node_t node=source_file->first_node;
 				sll_node_offset_t stack=1;
 				while (stack){
 					if (node->type==SLL_NODE_TYPE_CHANGE_STACK){
