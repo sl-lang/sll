@@ -8,6 +8,7 @@
 	"json.sll"
 	"log.sll"
 	"path.sll"
+	"process.sll"
 	"sort.sll"
 	"string.sll"
 	"sys.sll"
