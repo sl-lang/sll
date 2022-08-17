@@ -10,10 +10,10 @@
 
 
 
-static void _create_function(sll_internal_function_pointer_t fn,const sll_char_t* nm,const sll_char_t* fmt,sll_internal_function_t* out){
-	sll_string_from_pointer(nm,&(out->name));
-	out->function=fn;
-	_parse_api_call_format(fmt,out);
+static void _create_function(sll_internal_function_pointer_t function,const sll_char_t* name,const sll_char_t* format,sll_internal_function_t* out){
+	sll_string_from_pointer(name,&(out->name));
+	out->function=function;
+	_parse_api_call_format(format,out);
 }
 
 
