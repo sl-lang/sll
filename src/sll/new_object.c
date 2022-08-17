@@ -185,7 +185,7 @@ static sll_object_t _build_single(const sll_char_t** format,sll_string_length_t*
 	if (!(*format_length)){
 		return SLL_ACQUIRE_STATIC_INT(0);
 	}
-	const sll_char_t* src_t=*format;
+	const sll_char_t* base_format_string=*format;
 	(*format_length)--;
 	sll_char_t st=**format;
 	(*format)++;
@@ -402,7 +402,7 @@ static sll_object_t _build_single(const sll_char_t** format,sll_string_length_t*
 			}
 	}
 	if (st!='0'){
-		SLL_WARN("Ignoring unknown format code '%c': %s",st,src_t);
+		SLL_WARN("Ignoring unknown format code '%c': %s",st,base_format_string);
 	}
 	return SLL_ACQUIRE_STATIC_INT(0);
 }
