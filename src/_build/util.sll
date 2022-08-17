@@ -73,10 +73,16 @@
 ))
 
 (= execute (,,, args
-	(@@ (!! (: (<- process$start (?: (=== (:? args) string_type)
+	(= args (?: (=== (:? args) string_type)
 		[args]
 		(:: args array_type)
-	)) "return_code"))
+	))
+	(? (=== sys$PLATFORM "windows") (= (: args 0) (<- string$replace
+		(: args 0)
+		'/'
+		'\\'
+	)))
+	(@@ (!! (: (<- process$start args) "return_code"))
 ))
 
 (= execute_debug_fuzzer (,,,
