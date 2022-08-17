@@ -117,7 +117,12 @@
 					)
 					(: data$installation_scripts sys$PLATFORM)
 				))
-				(? (<- util$execute [script]) (<- util$fail_and_exit))
+				(? (=== sys$PLATFORM "windows") (= script (<- string$replace
+					script
+					'/'
+					'\\'
+				)))
+				(? (<- util$execute [process$SHELL_PATH script]) (<- util$fail_and_exit))
 			})
 		})
 		(? (&&
