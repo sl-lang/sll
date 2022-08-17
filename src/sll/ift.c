@@ -89,10 +89,10 @@ __SLL_EXTERNAL sll_function_index_t sll_register_internal_function(sll_internal_
 __SLL_EXTERNAL void sll_register_internal_functions(sll_internal_function_table_t* internal_function_table,const sll_internal_function_descriptor_t* data,sll_function_index_t length){
 	internal_function_table->length+=length;
 	internal_function_table->data=sll_reallocate(PTR(internal_function_table->data),internal_function_table->length*sizeof(const sll_internal_function_t));
-	sll_internal_function_t* p=(sll_internal_function_t*)(internal_function_table->data+internal_function_table->length-length);
+	sll_internal_function_t* pointer=(sll_internal_function_t*)(internal_function_table->data+internal_function_table->length-length);
 	for (sll_function_index_t i=0;i<length;i++){
-		_create_function(data->function,data->name,data->format,p);
+		_create_function(data->function,data->name,data->format,pointer);
 		data++;
-		p++;
+		pointer++;
 	}
 }
