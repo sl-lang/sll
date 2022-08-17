@@ -82,6 +82,7 @@
 	(~ string_type) EXTENSION_DIRECTORY_FILE_PATH
 	(~ string_type) EXTENSION_EXTRA_DATA_FILE_PATH
 	(~ string_type) EXTENSION_INCLUDE_FILE_PATH
+	(~ string_type) EXTENSION_INSTALLATION_DIRECTORY
 	(~ string_type) EXTENSION_LIBRARY_ROOT_FILE_PATH
 	(~ array_type) EXTENSION_MODULE_BUNDLE_GENERATION_COMMAND
 	(~ array_type) EXTENSION_MODULE_COMPILATION_COMMAND
@@ -262,7 +263,7 @@
 	"src/sll/include/sll/generated/assembly_optimizer.h"
 	5
 	["build/lib/" "build/lib_debug/" "build/sys_lib/" "build/web/"]
-	["build/lib/" "build/lib_debug/" "build/sys_lib/" "build/objects/"]
+	["build/lib/" "build/lib_debug/" "build/sys_lib/" "build/objects/" "build/ext/"]
 	build_time
 	"src/sll/lib/"
 	["void" "va_list" "__SLL_S1" "__SLL_U1" "__SLL_S8" "__SLL_U8" "__SLL_S16" "__SLL_U16" "__SLL_S32" "__SLL_U32" "__SLL_S64" "__SLL_U64" "__SLL_F32" "__SLL_F64"]
@@ -458,6 +459,7 @@
 	"src/ext/"
 	"src/ext/<name>/.extra_module_data.json"
 	"src/ext/<name>/include/"
+	"build/ext/<name>/"
 	"src/ext/<name>/lib/"
 	(+ output_executable_args ["-b" "-B" COMMAND_MARKER_OUTPUT "-d" "-D" "-E" "-N" COMMAND_MARKER_NAME "-O" "-R" "-x" "5" COMMAND_MARKER_INPUT])
 	(+ output_executable_args ["-c" "-E" "-o" COMMAND_MARKER_OUTPUT "-R" COMMAND_MARKER_INCLUDE COMMAND_MARKER_INPUT])

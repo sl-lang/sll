@@ -8,7 +8,6 @@
 	"json.sll"
 	"log.sll"
 	"path.sll"
-	"process.sll"
 	"sort.sll"
 	"string.sll"
 	"sys.sll"
@@ -95,6 +94,28 @@
 				fh
 			)
 		))
+		(? (&&
+			data$installation_scripts
+			(=== (:? data$installation_scripts) map_type)
+		) {
+			(= install_dir (<- string$replace
+				config$EXTENSION_INSTALLATION_DIRECTORY
+				"<name>"
+				name
+			))
+			(? (! (<- path$exists install_dir)) {
+				(<- path$mkdir install_dir)
+				(= script (<- path$join
+					(<- string$replace
+						config$EXTENSION_ROOT_SOURCE_FILE_PATH
+						"<name>"
+						name
+					)
+					(: data$installation_scripts sys$PLATFORM)
+				))
+				(? (<- util$execute [script]) (<- util$fail_and_exit))
+			})
+		})
 		(? (&&
 			data$platform_directories
 			(=== (:? data$platform_directories) map_type)

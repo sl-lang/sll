@@ -73,7 +73,10 @@
 ))
 
 (= execute (,,, args
-	(@@ (!! (: (<- process$start (:: args array_type)) "return_code"))
+	(@@ (!! (: (<- process$start (?: (=== (:? args) string_type)
+		[args]
+		(:: args array_type)
+	)) "return_code"))
 ))
 
 (= execute_debug_fuzzer (,,,
