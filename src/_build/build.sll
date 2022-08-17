@@ -99,9 +99,13 @@
 			(=== (:? data$installation_scripts) map_type)
 		) {
 			(= install_dir (<- string$replace
-				config$EXTENSION_INSTALLATION_DIRECTORY
-				"<name>"
-				name
+				(<- string$replace
+					config$EXTENSION_INSTALLATION_DIRECTORY
+					"<name>"
+					name
+				)
+				"<platform>"
+				sys$PLATFORM
 			))
 			(? (! (<- path$exists install_dir)) {
 				(<- path$mkdir install_dir)

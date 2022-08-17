@@ -459,7 +459,7 @@
 	"src/ext/"
 	"src/ext/<name>/.extra_module_data.json"
 	"src/ext/<name>/include/"
-	"build/ext/<name>/"
+	"build/ext/<name>_<platform>/"
 	"src/ext/<name>/lib/"
 	(+ output_executable_args ["-b" "-B" COMMAND_MARKER_OUTPUT "-d" "-D" "-E" "-N" COMMAND_MARKER_NAME "-O" "-R" "-x" "5" COMMAND_MARKER_INPUT])
 	(+ output_executable_args ["-c" "-E" "-o" COMMAND_MARKER_OUTPUT "-R" COMMAND_MARKER_INCLUDE COMMAND_MARKER_INPUT])
