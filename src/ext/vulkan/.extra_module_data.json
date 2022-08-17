@@ -1,8 +1,7 @@
 {
 	"installation_scripts": {
 		"darwin": "install/darwin.sh",
-		"linux": "install/linux.sh",
-		"windows": "install\\windows"
+		"linux": "install/linux.sh"
 	},
 	"extra_options": {
 		"darwin": ["-D","VK_USE_PLATFORM_METAL_EXT","-I","build/ext/vulkan_darwin/headers/include/vulkan"],

@@ -110,20 +110,23 @@
 			))
 			(? (! (<- path$exists install_dir)) {
 				(<- path$mkdir install_dir)
-				(= script (<- path$join
-					(<- string$replace
-						config$EXTENSION_ROOT_SOURCE_FILE_PATH
-						"<name>"
-						name
-					)
-					(: data$installation_scripts sys$PLATFORM)
-				))
-				(? (=== sys$PLATFORM "windows") (= script (<- string$replace
-					script
-					'/'
-					'\\'
-				)))
-				(? (<- util$execute [process$SHELL_PATH script]) (<- util$fail_and_exit))
+				(= script (: data$installation_scripts sys$PLATFORM))
+				(? script {
+					(= script (<- path$join
+						(<- string$replace
+							config$EXTENSION_ROOT_SOURCE_FILE_PATH
+							"<name>"
+							name
+						)
+						script
+					))
+					(? (=== sys$PLATFORM "windows") (= script (<- string$replace
+						script
+						'/'
+						'\\'
+					)))
+					(? (<- util$execute [process$SHELL_PATH script]) (<- util$fail_and_exit))
+				})
 			})
 		})
 		(? (&&
