@@ -7,6 +7,19 @@
 
 
 
+sll_handle_container_t gfx_context_data;
+
+
+
+void _delete_context(gfx_context_data_t* ctx){
+	if (!ctx){
+		return;
+	}
+	sll_deallocate(ctx);
+}
+
+
+
 __GFX_API_CALL gfx_context_t gfx_api_context_create(void* handle,void* extra_data){
 	VkApplicationInfo app_info={
 		VK_STRUCTURE_TYPE_APPLICATION_INFO,
@@ -31,13 +44,20 @@ __GFX_API_CALL gfx_context_t gfx_api_context_create(void* handle,void* extra_dat
 		2,
 		enabled_extensions
 	};
-	gfx_context_data_t context;
-	VULKAN_CALL(vkCreateInstance(&creation_info,NULL,&(context.instance)));
-	return (gfx_context_t)-12345;
+	gfx_context_data_t* context=sll_allocate(sizeof(gfx_context_data_t));
+	VULKAN_CALL(vkCreateInstance(&creation_info,NULL,&(context->instance)));
+	gfx_context_t out;
+	SLL_HANDLE_CONTAINER_ALLOC(&gfx_context_data,&out);
+	*(gfx_context_data.data+out)=context;
+	return out;
 }
 
 
 
-__GFX_API_CALL void gfx_api_context_delete(gfx_context_t ctx){
-	//
+__GFX_API_CALL void gfx_api_context_delete(gfx_context_t ctx_id){
+	gfx_context_data_t* ctx=SLL_HANDLE_CONTAINER_GET(&gfx_context_data,ctx_id);
+	if (ctx){
+		SLL_HANDLE_CONTAINER_DEALLOC(&gfx_context_data,ctx_id);
+		_delete_context(ctx);
+	}
 }

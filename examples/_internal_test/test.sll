@@ -754,3 +754,11 @@ abc` '\n')
 
 (:> (<- gfx_vulkan$get_version) '\n')
 (:> (<- gfx_vulkan$get_extensions) '\n')
+
+(= window (<- window_window$create [0 0 900 600] nil "Example Window" true))
+(= ctx (<- gfx$create_context window))
+; (-> nil (! (& window$flags window_window$FLAG_CLOSED))
+; 	(<- window_event$poll true)
+; )
+(:> ctx '\n')
+(:> window '\n')

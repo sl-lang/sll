@@ -1,5 +1,6 @@
 (---
 	"gfx/_load_library.sll"
+	"window/util.sll"
 	"window/window.sll"
 	"types.sll"
 )
@@ -15,7 +16,10 @@
 (= create_context (,,, window
 	(? (! window) (@@ nil))
 	(= window (:: window window_window$window_window_type))
-	(@@ (<- (... "gfx:context_create") window$id))
+	(@@ (<- (... "gfx:context_create")
+		window$id
+		(<- window_util$get_context)
+	))
 ))
 
 
