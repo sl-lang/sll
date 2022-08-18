@@ -49,7 +49,7 @@ __GFX_API_CALL gfx_context_t gfx_api_context_create(void* handle,void* extra_dat
 	gfx_context_data_t* ctx=sll_allocate(sizeof(gfx_context_data_t));
 	VULKAN_CALL(vkCreateInstance(&instance_creation_info,NULL,&(ctx->instance)));
 	sll_error_raise_bool(!_load_vulkan_function_table(ctx->instance,&(ctx->function_table)));
-#ifdef __SLL_BUILD_WINDOWS
+#ifdef __SLL_BUILD_DARWIN
 	VkMacOSSurfaceCreateInfoMVK surface_creation_info={
 		VK_STRUCTURE_TYPE_MACOS_SURFACE_CREATE_INFO_MVK,
 		NULL,
