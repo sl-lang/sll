@@ -314,4 +314,15 @@ __SLL_EXTERNAL void sll_error_raise(sll_error_t error);
 
 
 
+/**
+ * \flags func
+ * \name sll_error_raise_bool
+ * \group error
+ * \desc Docs!
+ * \arg sll_bool_t error
+ */
+__SLL_EXTERNAL void sll_error_raise_bool(sll_bool_t error);
+
+
+
 #endif

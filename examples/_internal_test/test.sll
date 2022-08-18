@@ -11,6 +11,7 @@
 	"error.sll"
 	"file.sll"
 	"gfx/gfx.sll"
+	"gfx/vulkan.sll"
 	"hash.sll"
 	"hmac.sll"
 	"http/mime.sll"
@@ -751,4 +752,5 @@ abc` '\n')
 ; 	(<- file$write sock "GET / HTTP/1.0\r\nHost: www.example.com\r\n\r\n")
 ; })
 
-(:> (<- gfx$create_context nil) '\n')
+(:> (<- gfx_vulkan$get_version) '\n')
+(:> (<- gfx_vulkan$get_extensions) '\n')

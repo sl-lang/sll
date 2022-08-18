@@ -33,3 +33,11 @@ __SLL_EXTERNAL void sll_error_raise(sll_error_t error){
 		_critical_failure(SLL_CHAR("sll_error_raise: "),error);
 	}
 }
+
+
+
+__SLL_EXTERNAL void sll_error_raise_bool(sll_bool_t error){
+	if (error){
+		_critical_failure(SLL_CHAR("sll_error_raise_bool"),SLL_NO_ERROR);
+	}
+}

@@ -64,3 +64,22 @@ sll_bool_t _init_vulkan(void){
 	sll_deallocate(extension_properties);
 	return has_vk_khr_surface&&has_system_surface;
 }
+
+
+
+__GFX_API_CALL void gfx_api_vulkan_get_extensions(sll_array_t* out){
+	uint32_t count;
+	CHECK_VULKAN_ERROR(vkEnumerateInstanceExtensionProperties(NULL,&count,NULL));
+	VkExtensionProperties* extension_properties=sll_allocate_stack(count*sizeof(VkExtensionProperties));
+	CHECK_VULKAN_ERROR(vkEnumerateInstanceExtensionProperties(NULL,&count,extension_properties));
+	sll_object_t object=sll_new_object(SLL_CHAR("{S}"),extension_properties,(sll_size_t)count,sizeof(VkExtensionProperties),SLL_OFFSETOF(VkExtensionProperties,extensionName));
+	sll_deallocate(extension_properties);
+	*out=object->data.array;
+	sll_error_raise_bool(sll_destroy_object(object));
+}
+
+
+
+__GFX_API_CALL void gfx_api_vulkan_get_version(sll_array_t* out){
+	sll_new_object_array(SLL_CHAR("uuuu"),out,VK_API_VERSION_VARIANT(VK_HEADER_VERSION_COMPLETE),VK_API_VERSION_MAJOR(VK_HEADER_VERSION_COMPLETE),VK_API_VERSION_MINOR(VK_HEADER_VERSION_COMPLETE),VK_API_VERSION_PATCH(VK_HEADER_VERSION_COMPLETE));
+}

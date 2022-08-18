@@ -1,0 +1,34 @@
+(---
+	"gfx/_load_library.sll"
+	"types.sll"
+)
+
+
+
+(= gfx_vulkan_module_type (&:
+	(~ func_type) get_extensions
+	(~ func_type) get_version
+))
+
+
+
+(= get_extensions (,,,
+	(= extensions (<- (... "gfx:vulkan_get_extensions")))
+	(@@ ([> (= i 0) (< i ($ extensions))
+		(= extension (: extensions i))
+		(++ i)
+		(: extension 0)
+	))
+))
+
+(= get_version (,,,
+	(@@ (<- (... "gfx:vulkan_get_version")))
+))
+
+
+
+(= gfx_vulkan (. gfx_vulkan_module_type
+	get_extensions
+	get_version
+))
+(## gfx_vulkan)
