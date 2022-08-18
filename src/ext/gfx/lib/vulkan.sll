@@ -1,11 +1,23 @@
 (---
 	"gfx/_load_library.sll"
+	"string.sll"
 	"types.sll"
 )
 
 
 
+(= gfx_vulkan_version_type (&:
+	(,,, data
+		(@@ (<- string$format "%u.%u.%u.%u" data$revision data$major data$minor data$patch))
+	) @@string@@
+	(~ int_type) revision
+	(~ int_type) major
+	(~ int_type) minor
+	(~ int_type) patch
+))
+
 (= gfx_vulkan_module_type (&:
+	(~ type_type) gfx_vulkan_version_type
 	(~ func_type) get_extensions
 	(~ func_type) get_version
 ))
@@ -22,12 +34,13 @@
 ))
 
 (= get_version (,,,
-	(@@ (<- (... "gfx:vulkan_get_version")))
+	(@@ (:: (<- (... "gfx:vulkan_get_version")) gfx_vulkan_version_type))
 ))
 
 
 
 (= gfx_vulkan (. gfx_vulkan_module_type
+	gfx_vulkan_version_type
 	get_extensions
 	get_version
 ))
