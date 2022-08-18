@@ -125,7 +125,11 @@
 						'/'
 						'\\'
 					)))
-					(? (<- util$execute [process$SHELL_PATH script]) (<- util$fail_and_exit))
+					(= err (<- process$shell script))
+					(? err {
+						(:> err '\n')
+						(<- util$fail_and_exit)
+					})
 				})
 			})
 		})
