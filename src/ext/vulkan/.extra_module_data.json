@@ -5,8 +5,8 @@
 		"windows": "install\\windows.bat"
 	},
 	"extra_options": {
-		"darwin": ["-D","VK_USE_PLATFORM_METAL_EXT","-I","build/ext/vulkan_darwin/headers/include/vulkan"],
-		"linux": ["-D","VK_USE_PLATFORM_XCB_KHR","-I","build/ext/vulkan_linux/headers/include/vulkan"],
-		"windows": ["/D","VK_USE_PLATFORM_WIN32_KHR","/I","build/ext/vulkan_windows/headers/include/vulkan"]
+		"darwin": ["-D","VK_USE_PLATFORM_MACOS_MVK","-I","build/ext/vulkan_darwin/headers/include"],
+		"linux": ["-D","VK_USE_PLATFORM_XCB_KHR","-I","build/ext/vulkan_linux/headers/include"],
+		"windows": ["/D","VK_USE_PLATFORM_WIN32_KHR","/I","build/ext/vulkan_windows/headers/include"]
 	}
 }
