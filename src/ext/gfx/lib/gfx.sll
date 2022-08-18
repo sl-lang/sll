@@ -1,0 +1,25 @@
+(---
+	"gfx/_load_library.sll"
+	"window/window.sll"
+	"types.sll"
+)
+
+
+
+(= gfx_module_type (&:
+	(~ func_type) create_context
+))
+
+
+
+(= create_context (,,, window
+	(= window (:: window window_window$window_window_type))
+	(@@ (<- (... "gfx:context_create") window$id))
+))
+
+
+
+(= gfx (. gfx_module_type
+	create_context
+))
+(## gfx)

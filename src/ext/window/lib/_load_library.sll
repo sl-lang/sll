@@ -3,7 +3,6 @@
 	"path.sll"
 	"string.sll"
 	"sys.sll"
-	"thread.sll"
 )
 
 

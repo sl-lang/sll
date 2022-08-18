@@ -5,5 +5,5 @@
 
 
 __GFX_API_CALL gfx_context_t gfx_api_context_create(void* handle){
-	return (gfx_context_t)0;
+	return (gfx_context_t)-12345;
 }

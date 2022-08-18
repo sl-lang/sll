@@ -17,7 +17,8 @@
 
 
 
-(= module_data_type (&:
+(= extension_data_type (&:
+	array_type required_extensions
 	string_type platform_file_path
 	array_type extra_options
 	array_type extra_link_options
@@ -72,13 +73,15 @@
 	(@@ (<- util$execute args))
 ))
 
-(= _read_module_data (,,, name
-	(= out (. module_data_type
+(= _read_extension_data (,,, name
+	(= out (. extension_data_type
+		[]
 		(<- string$replace
 			(: config$EXTENSION_PLATFORM_SOURCE_FILE_PATH sys$PLATFORM)
 			"<name>"
 			name
 		)
+		[]
 		[]
 	))
 	(= fh (<- file$open
@@ -134,6 +137,16 @@
 			})
 		})
 		(? (&&
+			data$required_extensions
+			(=== (:? data$required_extensions) array_type)
+		) {
+			(= out$required_extensions ([> (= i 0) (< i ($ data$required_extensions))
+				(= ext (: data$required_extensions i))
+				(++ i)
+				(:: ext string_type)
+			))
+		})
+		(? (&&
 			data$platform_directories
 			(=== (:? data$platform_directories) map_type)
 		) {
@@ -175,6 +188,15 @@
 	(@@ out)
 ))
 
+(= _insert_extensions_with_requirements (,,, name extension_data_map out
+	(? (|: out name) (@@))
+	(= extension_data (: extension_data_map name))
+	(-> (= i 0) (< i ($ extension_data$required_extensions))
+		(<- _insert_extensions_with_requirements (: extension_data$required_extensions i) extension_data_map out)
+		(++ i)
+	)
+	(<- array$push out name)
+))
 
 (= build_extensions (,,,
 	(<- log$log "Compiling extensions...")
@@ -182,8 +204,20 @@
 	(= extensions (<- path$list_dir config$EXTENSION_DIRECTORY_FILE_PATH false))
 	(<- sort$sort extensions false true)
 	(<- log$log "    Found " ($ extensions) " extensions")
+	(= extension_data_map <>)
+	(-> (= i 0) (< i ($ extensions))
+		(= name (: extensions i))
+		(++ i)
+		(= extension_data (<- _read_extension_data name))
+		(= (: extension_data_map name) extension_data)
+	)
+	(= ordered_extensions [])
+	(-> (= i 0) (< i ($ extensions))
+		(<- _insert_extensions_with_requirements (: extensions i) extension_data_map ordered_extensions)
+		(++ i)
+	)
 	(-> (= extension_index 0) (< extension_index ($ extensions))
-		(= name (: extensions extension_index))
+		(= name (: ordered_extensions extension_index))
 		(++ extension_index)
 		(<- log$log "  Compiling extension '" name "'...")
 		(<- log$log "    Listing files...")
@@ -195,9 +229,9 @@
 			)
 			true
 		))
-		(= module_data (<- _read_module_data name))
+		(= extension_data (: extension_data_map name))
 		(= platform_files (<- path$list_dir
-			module_data$platform_file_path
+			extension_data$platform_file_path
 			true
 		))
 		(= files (+
@@ -221,7 +255,7 @@
 		(<- log$log "      Found " ($ files) " files")
 		(? files {
 			(<- log$log "    Aggregating preprocessor definitions...")
-			(= options module_data$extra_options)
+			(= options extension_data$extra_options)
 			(-> (= i 0) (< i ($ config$EXTENSION_PREPROCESSOR_DEFINITIONS))
 				(<- array$extend options [
 					(: config$PREPROCESSOR_DEFINITION_PREFIX sys$PLATFORM)
@@ -270,7 +304,7 @@
 				name
 			))
 			(<- log$log "    Linking files...")
-			(? (<- _execute_command command_list$LINK_COMMAND output_files (+ command_list$OUTPUT_LINK_PREFIX temporary_output_library) module_data$extra_link_options) (<- util$fail_and_exit))
+			(? (<- _execute_command command_list$LINK_COMMAND output_files (+ command_list$OUTPUT_LINK_PREFIX temporary_output_library) extension_data$extra_link_options) (<- util$fail_and_exit))
 			(<- log$log "    Executing post-link command...")
 			(? (<- _execute_command command_list$POST_LINK_COMMAND nil temporary_output_library) (<- util$fail_and_exit))
 			(<- log$log "    Copying library from '" temporary_output_library "' to '" output_library "'...")

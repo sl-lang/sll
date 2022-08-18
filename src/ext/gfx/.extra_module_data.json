@@ -1,4 +1,7 @@
 {
+	"required_extensions": [
+		"window"
+	],
 	"installation_scripts": {
 		"darwin": "install/darwin.sh",
 		"linux": "install/linux.sh",

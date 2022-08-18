@@ -10,6 +10,7 @@
 	"date.sll"
 	"error.sll"
 	"file.sll"
+	"gfx/gfx.sll"
 	"hash.sll"
 	"hmac.sll"
 	"http/mime.sll"
@@ -732,20 +733,22 @@ abc` '\n')
 )
 (:> arg '\n')
 
-(= address_info (<- socket$getaddrinfo "www.example.com" 80 nil socket$SOCK_STREAM))
-(:> address_info '\n')
-(= sock nil)
-(-> (= i 0) (< i ($ address_info))
-	(= data (: address_info i))
-	(++ i)
-	(= sock (<- socket$create data$address_family data$type data$protocol))
-	(?
-		(!== (:? sock) socket$socket_type) (<<<)
-		(! (<- socket$connect sock data$address)) (@)
-	)
-	(= sock nil)
-)
-(? sock {
-	(:> sock '\n')
-	(<- file$write sock "GET / HTTP/1.0\r\nHost: www.example.com\r\n\r\n")
-})
+; (= address_info (<- socket$getaddrinfo "www.example.com" 80 nil socket$SOCK_STREAM))
+; (:> address_info '\n')
+; (= sock nil)
+; (-> (= i 0) (< i ($ address_info))
+; 	(= data (: address_info i))
+; 	(++ i)
+; 	(= sock (<- socket$create data$address_family data$type data$protocol))
+; 	(?
+; 		(!== (:? sock) socket$socket_type) (<<<)
+; 		(! (<- socket$connect sock data$address)) (@)
+; 	)
+; 	(= sock nil)
+; )
+; (? sock {
+; 	(:> sock '\n')
+; 	(<- file$write sock "GET / HTTP/1.0\r\nHost: www.example.com\r\n\r\n")
+; })
+
+(:> (<- gfx$create_context nil) '\n')
