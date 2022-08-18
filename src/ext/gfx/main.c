@@ -5,10 +5,7 @@
 
 
 __GFX_EXTERNAL sll_bool_t SLL_ABI_INIT(sll_version_t version){
-	if (version!=SLL_VERSION){
-		return 0;
-	}
-	return _init_vulkan();
+	return (version==SLL_VERSION&&_init_vulkan());
 }
 
 
