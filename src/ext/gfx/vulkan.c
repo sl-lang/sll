@@ -4,8 +4,21 @@
 
 
 
+#define CHECK_VULKAN_ERROR(err) \
+	do{ \
+		VkResult __err=(err); \
+		if (__err){ \
+			SLL_WARN("%s: %u",_CHECK_VULKAN_ERROR_STR(err),err); \
+		} \
+	} while (0)
+#define _CHECK_VULKAN_ERROR_STR(err) _CHECK_VULKAN_ERROR_STR_(err)
+#define _CHECK_VULKAN_ERROR_STR_(err) #err
+
+
+
 static sll_library_handle_t _vulkan_library_handle;
 static PFN_vkGetInstanceProcAddr vkGetInstanceProcAddr;
+static PFN_vkEnumerateInstanceExtensionProperties vkEnumerateInstanceExtensionProperties;
 
 
 
@@ -30,9 +43,24 @@ sll_bool_t _init_vulkan(void){
 	if (!vkGetInstanceProcAddr){
 		return 0;
 	}
-	PFN_vkEnumerateInstanceExtensionProperties vkEnumerateInstanceExtensionProperties=(PFN_vkEnumerateInstanceExtensionProperties)vkGetInstanceProcAddr(NULL,"vkEnumerateInstanceExtensionProperties");
+	vkEnumerateInstanceExtensionProperties=(PFN_vkEnumerateInstanceExtensionProperties)vkGetInstanceProcAddr(NULL,"vkEnumerateInstanceExtensionProperties");
 	if (!vkEnumerateInstanceExtensionProperties){
 		return 0;
 	}
-	return 1;
+	uint32_t count;
+	CHECK_VULKAN_ERROR(vkEnumerateInstanceExtensionProperties(NULL,&count,NULL));
+	VkExtensionProperties* extension_properties=sll_allocate_stack(count*sizeof(VkExtensionProperties));
+	CHECK_VULKAN_ERROR(vkEnumerateInstanceExtensionProperties(NULL,&count,extension_properties));
+	sll_bool_t has_vk_khr_surface=0;
+	sll_bool_t has_system_surface=0;
+	for (uint32_t i=0;i<count;i++){
+		if (sll_string_compare_pointer(SLL_CHAR((extension_properties+i)->extensionName),SLL_CHAR("VK_KHR_surface"))==SLL_COMPARE_RESULT_EQUAL){
+			has_vk_khr_surface=1;
+		}
+		else if (sll_string_compare_pointer(SLL_CHAR((extension_properties+i)->extensionName),SLL_CHAR(GFX_VULKAN_REQUIRED_EXTENSION_NAME))==SLL_COMPARE_RESULT_EQUAL){
+			has_system_surface=1;
+		}
+	}
+	sll_deallocate(extension_properties);
+	return has_vk_khr_surface&&has_system_surface;
 }
