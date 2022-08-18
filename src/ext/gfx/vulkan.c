@@ -163,7 +163,7 @@ sll_bool_t _init_vulkan(void){
 	sll_bool_t has_vk_khr_surface=0;
 	sll_bool_t has_system_surface=0;
 	for (uint32_t i=0;i<count;i++){
-		if (sll_string_compare_pointer(SLL_CHAR((extension_properties+i)->extensionName),SLL_CHAR("VK_KHR_surface"))==SLL_COMPARE_RESULT_EQUAL){
+		if (sll_string_compare_pointer(SLL_CHAR((extension_properties+i)->extensionName),SLL_CHAR(VK_KHR_SURFACE_EXTENSION_NAME))==SLL_COMPARE_RESULT_EQUAL){
 			has_vk_khr_surface=1;
 		}
 		else if (sll_string_compare_pointer(SLL_CHAR((extension_properties+i)->extensionName),SLL_CHAR(GFX_VULKAN_REQUIRED_EXTENSION_NAME))==SLL_COMPARE_RESULT_EQUAL){

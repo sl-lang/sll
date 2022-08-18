@@ -19,6 +19,7 @@ void _delete_context(gfx_context_data_t* ctx){
 	if (!ctx){
 		return;
 	}
+	ctx->function_table.vkDestroyCommandPool(ctx->logical_device,ctx->command_pool,NULL);
 	ctx->function_table.vkDestroyDevice(ctx->logical_device,NULL);
 	ctx->function_table.vkDestroySurfaceKHR(ctx->instance,ctx->surface,NULL);
 	ctx->function_table.vkDestroyInstance(ctx->instance,NULL);
@@ -38,7 +39,7 @@ __GFX_API_CALL gfx_context_t gfx_api_context_create(void* handle,void* extra_dat
 		VK_API_VERSION_1_0
 	};
 	const char* enabled_extensions[2]={
-		"VK_KHR_surface",
+		VK_KHR_SURFACE_EXTENSION_NAME,
 		GFX_VULKAN_REQUIRED_EXTENSION_NAME
 	};
 	VkInstanceCreateInfo instance_creation_info={
@@ -145,6 +146,14 @@ __GFX_API_CALL gfx_context_t gfx_api_context_create(void* handle,void* extra_dat
 		&device_features
 	};
 	VULKAN_CALL(ctx->function_table.vkCreateDevice(ctx->physical_device,&device_creation_info,NULL,&(ctx->logical_device)));
+	VkCommandPoolCreateInfo command_pool_creation_info={
+		VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO,
+		NULL,
+		VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT,
+		ctx->device_queue_index
+	};
+	VULKAN_CALL(ctx->function_table.vkCreateCommandPool(ctx->logical_device,&command_pool_creation_info,NULL,&(ctx->command_pool)));
+	ctx->function_table.vkGetDeviceQueue(ctx->logical_device,ctx->device_queue_index,0,&(ctx->queue));
 	gfx_context_t out;
 	SLL_HANDLE_CONTAINER_ALLOC(&gfx_context_data,&out);
 	*(gfx_context_data.data+out)=ctx;

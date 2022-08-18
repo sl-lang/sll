@@ -6,6 +6,7 @@
 
 
 typedef struct _GFX_VULKAN_FUNCTION_TABLE{
+	PFN_vkCreateCommandPool vkCreateCommandPool;
 	PFN_vkCreateDevice vkCreateDevice;
 #ifdef __SLL_BUILD_DARWIN
 	PFN_vkCreateMacOSSurfaceMVK vkCreateMacOSSurfaceMVK;
@@ -14,10 +15,12 @@ typedef struct _GFX_VULKAN_FUNCTION_TABLE{
 #else
 	PFN_vkCreateWin32SurfaceKHR vkCreateWin32SurfaceKHR;
 #endif
+	PFN_vkDestroyCommandPool vkDestroyCommandPool;
 	PFN_vkDestroyDevice vkDestroyDevice;
 	PFN_vkDestroyInstance vkDestroyInstance;
 	PFN_vkDestroySurfaceKHR vkDestroySurfaceKHR;
 	PFN_vkEnumeratePhysicalDevices vkEnumeratePhysicalDevices;
+	PFN_vkGetDeviceQueue vkGetDeviceQueue;
 	PFN_vkGetPhysicalDeviceQueueFamilyProperties vkGetPhysicalDeviceQueueFamilyProperties;
 	PFN_vkGetPhysicalDeviceSurfaceFormatsKHR vkGetPhysicalDeviceSurfaceFormatsKHR;
 	PFN_vkGetPhysicalDeviceSurfaceSupportKHR vkGetPhysicalDeviceSurfaceSupportKHR;
