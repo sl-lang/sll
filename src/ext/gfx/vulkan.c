@@ -1,4 +1,5 @@
 #include <gfx/common.h>
+#include <gfx/vulkan_functions.h>
 #include <sll.h>
 #include <vulkan/vulkan.h>
 
@@ -8,7 +9,7 @@
 	do{ \
 		VkResult __err=(err); \
 		if (__err){ \
-			SLL_WARN("%s: %u",_CHECK_VULKAN_ERROR_STR(err),err); \
+			SLL_WARN("%s: %u",_CHECK_VULKAN_ERROR_STR(err),__err); \
 		} \
 	} while (0)
 #define _CHECK_VULKAN_ERROR_STR(err) _CHECK_VULKAN_ERROR_STR_(err)
@@ -17,8 +18,6 @@
 
 
 static sll_library_handle_t _vulkan_library_handle;
-static PFN_vkGetInstanceProcAddr vkGetInstanceProcAddr;
-static PFN_vkEnumerateInstanceExtensionProperties vkEnumerateInstanceExtensionProperties;
 
 
 
@@ -36,15 +35,7 @@ sll_bool_t _init_vulkan(void){
 #else
 	_vulkan_library_handle=sll_platform_load_library(SLL_CHAR("libvulkan.1.dylib"),NULL);
 #endif
-	if (!_vulkan_library_handle){
-		return 0;
-	}
-	vkGetInstanceProcAddr=sll_platform_lookup_symbol(_vulkan_library_handle,SLL_CHAR("vkGetInstanceProcAddr"));
-	if (!vkGetInstanceProcAddr){
-		return 0;
-	}
-	vkEnumerateInstanceExtensionProperties=(PFN_vkEnumerateInstanceExtensionProperties)vkGetInstanceProcAddr(NULL,"vkEnumerateInstanceExtensionProperties");
-	if (!vkEnumerateInstanceExtensionProperties){
+	if (!_vulkan_library_handle||!_load_vulkan_functions(sll_platform_lookup_symbol(_vulkan_library_handle,SLL_CHAR("vkGetInstanceProcAddr")))){
 		return 0;
 	}
 	uint32_t count;
@@ -72,10 +63,13 @@ __GFX_API_CALL void gfx_api_vulkan_get_extensions(sll_array_t* out){
 	CHECK_VULKAN_ERROR(vkEnumerateInstanceExtensionProperties(NULL,&count,NULL));
 	VkExtensionProperties* extension_properties=sll_allocate_stack(count*sizeof(VkExtensionProperties));
 	CHECK_VULKAN_ERROR(vkEnumerateInstanceExtensionProperties(NULL,&count,extension_properties));
-	sll_object_t object=sll_new_object(SLL_CHAR("{S}"),extension_properties,(sll_size_t)count,sizeof(VkExtensionProperties),SLL_OFFSETOF(VkExtensionProperties,extensionName));
+	sll_array_create(count,out);
+	for (uint32_t i=0;i<count;i++){
+		sll_object_t string=sll_create_object(SLL_OBJECT_TYPE_STRING);
+		sll_string_from_pointer(SLL_CHAR((extension_properties+i)->extensionName),&(string->data.string));
+		out->data[i]=string;
+	}
 	sll_deallocate(extension_properties);
-	*out=object->data.array;
-	sll_error_raise_bool(sll_destroy_object(object));
 }
 
 

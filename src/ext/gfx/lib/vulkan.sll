@@ -29,7 +29,7 @@
 	(@@ ([> (= i 0) (< i ($ extensions))
 		(= extension (: extensions i))
 		(++ i)
-		(: extension 0)
+		extension
 	))
 ))
 
