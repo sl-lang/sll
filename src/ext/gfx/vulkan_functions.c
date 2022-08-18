@@ -12,6 +12,7 @@
 
 
 
+PFN_vkCreateInstance vkCreateInstance;
 PFN_vkEnumerateInstanceExtensionProperties vkEnumerateInstanceExtensionProperties;
 PFN_vkGetInstanceProcAddr vkGetInstanceProcAddr;
 
@@ -23,6 +24,7 @@ sll_bool_t _load_vulkan_functions(PFN_vkGetInstanceProcAddr get_proc_addr){
 	}
 	vkGetInstanceProcAddr=get_proc_addr;
 	sll_bool_t out=1;
+	LOAD_FUNCTION(vkCreateInstance);
 	LOAD_FUNCTION(vkEnumerateInstanceExtensionProperties);
 	return out;
 }
