@@ -11,6 +11,11 @@ static const sll_internal_function_descriptor_t _internal_function_table[]={
 		SLL_CHAR("QQ|Q")
 	},
 	{
+		SLL_CHAR("gfx:context_delete"),
+		gfx_api_context_delete,
+		SLL_CHAR("Q|")
+	},
+	{
 		SLL_CHAR("gfx:vulkan_get_extensions"),
 		gfx_api_vulkan_get_extensions,
 		SLL_CHAR("|a")
@@ -26,7 +31,7 @@ static const sll_internal_function_descriptor_t _internal_function_table[]={
 
 static const sll_internal_function_table_descriptor_t _internal_function_table_descriptor_data={
 	(const sll_internal_function_descriptor_t*)(&_internal_function_table),
-	3
+	4
 };
 
 
