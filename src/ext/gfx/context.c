@@ -34,7 +34,7 @@ __GFX_API_CALL gfx_context_t gfx_api_context_create(void* handle,void* extra_dat
 		"VK_KHR_surface",
 		GFX_VULKAN_REQUIRED_EXTENSION_NAME
 	};
-	VkInstanceCreateInfo creation_info={
+	VkInstanceCreateInfo instance_creation_info={
 		VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO,
 		NULL,
 		0,
@@ -44,11 +44,39 @@ __GFX_API_CALL gfx_context_t gfx_api_context_create(void* handle,void* extra_dat
 		2,
 		enabled_extensions
 	};
-	gfx_context_data_t* context=sll_allocate(sizeof(gfx_context_data_t));
-	VULKAN_CALL(vkCreateInstance(&creation_info,NULL,&(context->instance)));
+	gfx_context_data_t* ctx=sll_allocate(sizeof(gfx_context_data_t));
+	VULKAN_CALL(vkCreateInstance(&instance_creation_info,NULL,&(ctx->instance)));
+	sll_error_raise_bool(!_load_vulkan_function_table(ctx->instance,&(ctx->function_table)));
+#ifdef __SLL_BUILD_WINDOWS
+	VkMacOSSurfaceCreateInfoMVK surface_creation_info={
+		VK_STRUCTURE_TYPE_MACOS_SURFACE_CREATE_INFO_MVK,
+		NULL,
+		0,
+		handle
+	};
+	VULKAN_CALL(ctx->function_table.vkCreateMacOSSurfaceMVK(ctx->instance,&surface_creation_info,NULL,&(ctx->surface)));
+#elif defined(__SLL_BUILD_LINUX)
+	VkXcbSurfaceCreateInfoKHR surface_creation_info={
+		VK_STRUCTURE_TYPE_XCB_SURFACE_CREATE_INFO_KHR,
+		NULL,
+		0,
+		extra_data,
+		(xcb_window_t)(sll_size_t)handle
+	};
+	VULKAN_CALL(ctx->function_table.vkCreateXcbSurfaceKHR(ctx->instance,&surface_creation_info,NULL,&(ctx->surface)));
+#else
+	VkWin32SurfaceCreateInfoKHR surface_creation_info={
+		VK_STRUCTURE_TYPE_WIN32_SURFACE_CREATE_INFO_KHR,
+		NULL,
+		0,
+		extra_data,
+		handle
+	};
+	VULKAN_CALL(ctx->function_table.vkCreateWin32SurfaceKHR(ctx->instance,&surface_creation_info,NULL,&(ctx->surface)));
+#endif
 	gfx_context_t out;
 	SLL_HANDLE_CONTAINER_ALLOC(&gfx_context_data,&out);
-	*(gfx_context_data.data+out)=context;
+	*(gfx_context_data.data+out)=ctx;
 	return out;
 }
 

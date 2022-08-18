@@ -1,12 +1,14 @@
 #ifndef __GFX_CONTEXT_H__
 #define __GFX_CONTEXT_H__ 1
 #include <gfx/common.h>
+#include <gfx/vulkan_functions.h>
 #include <sll.h>
 #include <vulkan/vulkan.h>
 
 
 
 typedef struct _GFX_CONTEXT_DATA{
+	gfx_vulkan_function_table_t function_table;
 	VkInstance instance;
 	VkSurfaceKHR surface;
 } gfx_context_data_t;
