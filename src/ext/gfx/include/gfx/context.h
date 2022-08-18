@@ -16,6 +16,9 @@ typedef struct _GFX_CONTEXT_DATA{
 	VkInstance instance;
 	VkSurfaceKHR surface;
 	VkPhysicalDevice device;
+	uint32_t device_queue_index;
+	VkFormat color_format;
+	VkColorSpaceKHR color_space;
 } gfx_context_data_t;
 
 

@@ -58,5 +58,8 @@ sll_bool_t _load_vulkan_function_table(VkInstance instance,gfx_vulkan_function_t
 	LOAD_FUNCTION_TABLE(vkDestroyInstance);
 	LOAD_FUNCTION_TABLE(vkDestroySurfaceKHR);
 	LOAD_FUNCTION_TABLE(vkEnumeratePhysicalDevices);
+	LOAD_FUNCTION_TABLE(vkGetPhysicalDeviceQueueFamilyProperties);
+	LOAD_FUNCTION_TABLE(vkGetPhysicalDeviceSurfaceFormatsKHR);
+	LOAD_FUNCTION_TABLE(vkGetPhysicalDeviceSurfaceSupportKHR);
 	return ret;
 }

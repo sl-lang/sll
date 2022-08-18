@@ -83,6 +83,38 @@ __GFX_API_CALL gfx_context_t gfx_api_context_create(void* handle,void* extra_dat
 	VULKAN_CALL(ctx->function_table.vkEnumeratePhysicalDevices(ctx->instance,&count,physical_device_data));
 	ctx->device=*(physical_device_data+GFX_DEFAULT_GPU_INDEX);
 	sll_deallocate(physical_device_data);
+	ctx->function_table.vkGetPhysicalDeviceQueueFamilyProperties(ctx->device,&count,NULL);
+	VkQueueFamilyProperties* queue_properties=sll_allocate_stack(count*sizeof(VkQueueFamilyProperties));
+	ctx->function_table.vkGetPhysicalDeviceQueueFamilyProperties(ctx->device,&count,queue_properties);
+	uint32_t queue_index=0;
+	for (;queue_index<count;queue_index++){
+		if ((queue_properties+queue_index)->queueFlags&VK_QUEUE_GRAPHICS_BIT){
+			VkBool32 present_support;
+			VULKAN_CALL(ctx->function_table.vkGetPhysicalDeviceSurfaceSupportKHR(ctx->device,queue_index,ctx->surface,&present_support));
+			if (present_support){
+				break;
+			}
+		}
+	}
+	sll_deallocate(queue_properties);
+	sll_error_raise_bool(queue_index==count);
+	ctx->device_queue_index=queue_index;
+	VULKAN_CALL(ctx->function_table.vkGetPhysicalDeviceSurfaceFormatsKHR(ctx->device,ctx->surface,&count,NULL));
+	VkSurfaceFormatKHR* surface_formats=sll_allocate_stack(count*sizeof(VkSurfaceFormatKHR));
+	VULKAN_CALL(ctx->function_table.vkGetPhysicalDeviceSurfaceFormatsKHR(ctx->device,ctx->surface,&count,surface_formats));
+	ctx->color_format=surface_formats->format;
+	ctx->color_space=surface_formats->colorSpace;
+	for (uint32_t i=0;i<count;i++){
+		if ((surface_formats+i)->format==VK_FORMAT_B8G8R8A8_UNORM){
+			ctx->color_format=VK_FORMAT_B8G8R8A8_UNORM;
+			ctx->color_space=(surface_formats+i)->colorSpace;
+			break;
+		}
+	}
+	sll_deallocate(surface_formats);
+	if (ctx->color_format==VK_FORMAT_UNDEFINED){
+		ctx->color_format=VK_FORMAT_B8G8R8A8_UNORM;
+	}
 	gfx_context_t out;
 	SLL_HANDLE_CONTAINER_ALLOC(&gfx_context_data,&out);
 	*(gfx_context_data.data+out)=ctx;
