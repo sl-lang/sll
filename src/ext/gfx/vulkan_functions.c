@@ -55,5 +55,6 @@ sll_bool_t _load_vulkan_function_table(VkInstance instance,gfx_vulkan_function_t
 	LOAD_FUNCTION_TABLE(vkCreateWin32SurfaceKHR);
 #endif
 	LOAD_FUNCTION_TABLE(vkDestroyInstance);
+	LOAD_FUNCTION_TABLE(vkDestroySurfaceKHR);
 	return ret;
 }

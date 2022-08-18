@@ -15,6 +15,8 @@ void _delete_context(gfx_context_data_t* ctx){
 	if (!ctx){
 		return;
 	}
+	ctx->function_table.vkDestroySurfaceKHR(ctx->instance,ctx->surface,NULL);
+	ctx->function_table.vkDestroyInstance(ctx->instance,NULL);
 	sll_deallocate(ctx);
 }
 

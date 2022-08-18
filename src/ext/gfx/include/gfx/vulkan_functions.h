@@ -14,6 +14,7 @@ typedef struct _GFX_VULKAN_FUNCTION_TABLE{
 	PFN_vkCreateWin32SurfaceKHR vkCreateWin32SurfaceKHR;
 #endif
 	PFN_vkDestroyInstance vkDestroyInstance;
+	PFN_vkDestroySurfaceKHR vkDestroySurfaceKHR;
 } gfx_vulkan_function_table_t;
 
 
