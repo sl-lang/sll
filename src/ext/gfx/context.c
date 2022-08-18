@@ -1,5 +1,6 @@
 #include <gfx/common.h>
 #include <gfx/context.h>
+#include <gfx/vulkan.h>
 #include <gfx/vulkan_functions.h>
 #include <sll.h>
 #include <vulkan/vulkan.h>
@@ -31,6 +32,6 @@ __GFX_API_CALL gfx_context_t gfx_api_context_create(void* handle,void* extra_dat
 		enabled_extensions
 	};
 	gfx_context_data_t context;
-	vkCreateInstance(&creation_info,NULL,&(context.instance));
+	VULKAN_CALL(vkCreateInstance(&creation_info,NULL,&(context.instance)));
 	return (gfx_context_t)-12345;
 }

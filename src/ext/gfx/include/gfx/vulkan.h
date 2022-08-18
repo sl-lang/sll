@@ -2,6 +2,23 @@
 #define __GFX_VULKAN_H__ 1
 #include <gfx/common.h>
 #include <sll.h>
+#include <vulkan/vulkan.h>
+
+
+
+#define VULKAN_CALL(err) \
+	do{ \
+		VkResult __err=(err); \
+		if (__err){ \
+			_check_error_code(_VULKAN_CALL_STR(err),__err); \
+		} \
+	} while (0)
+#define _VULKAN_CALL_STR(err) _VULKAN_CALL_STR_(err)
+#define _VULKAN_CALL_STR_(err) #err
+
+
+
+void _check_error_code(const char* str,VkResult err);
 
 
 
