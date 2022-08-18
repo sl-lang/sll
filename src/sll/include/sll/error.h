@@ -282,7 +282,7 @@ typedef __SLL_U64 sll_error_t;
 /**
  * \flags check_output func
  * \name sll_error_from_string_pointer
- * \group file
+ * \group error
  * \desc Docs!
  * \arg const sll_char_t* string
  * \ret sll_error_t
@@ -294,12 +294,23 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_error_t sll_error_from_string_pointer(cons
 /**
  * \flags check_output func
  * \name sll_error_get_string_pointer
- * \group file
+ * \group error
  * \desc Docs!
  * \arg sll_error_t error
  * \ret const sll_char_t*
  */
 __SLL_EXTERNAL __SLL_CHECK_OUTPUT const sll_char_t* sll_error_get_string_pointer(sll_error_t error);
+
+
+
+/**
+ * \flags func
+ * \name sll_error_raise
+ * \group error
+ * \desc Docs!
+ * \arg sll_error_t error
+ */
+__SLL_EXTERNAL void sll_error_raise(sll_error_t error);
 
 
 

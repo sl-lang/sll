@@ -11,4 +11,5 @@ __GFX_EXTERNAL sll_bool_t SLL_ABI_INIT(sll_version_t version){
 
 
 __GFX_EXTERNAL void SLL_ABI_DEINIT(void){
+	_deinit_vulkan();
 }

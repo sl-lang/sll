@@ -88,7 +88,7 @@ typedef __SLL_U64 wide_data_t;
 
 
 
-__SLL_NO_RETURN void _critical_failure(const sll_char_t* nm,sll_error_t err);
+__SLL_NO_RETURN void _critical_failure(const sll_char_t* name,sll_error_t err);
 
 
 

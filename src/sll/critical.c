@@ -8,10 +8,10 @@
 
 
 
-__SLL_NO_RETURN void _critical_failure(const sll_char_t* nm,sll_error_t err){
+__SLL_NO_RETURN void _critical_failure(const sll_char_t* name,sll_error_t err){
 	sll_file_descriptor_t fd=sll_platform_get_default_stream_descriptor(SLL_PLATFORM_STREAM_ERROR);
 	sll_platform_file_write(fd,CRITICAL_ERROR_START,CRITICAL_ERROR_START_SIZE,NULL);
-	sll_platform_file_write(fd,nm,sll_string_length(nm),NULL);
+	sll_platform_file_write(fd,name,sll_string_length(name),NULL);
 	if (err!=SLL_NO_ERROR){
 		sll_char_t buffer[16];
 		__SLL_U32 i=16;

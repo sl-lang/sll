@@ -4,6 +4,10 @@
 
 
 
+void _deinit_vulkan(void);
+
+
+
 sll_bool_t _init_vulkan(void);
 
 

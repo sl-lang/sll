@@ -25,3 +25,11 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT const sll_char_t* sll_error_get_string_pointer
 	SLL_ASSERT(SLL_ERROR_GET_TYPE(error)==SLL_ERROR_FLAG_SLL&&SLL_ERROR_GET_VALUE(error)==SLL_ERROR_STRING);
 	return _error_string_pointer_table[SLL_ERROR_GET_EXTRA(error)];
 }
+
+
+
+__SLL_EXTERNAL void sll_error_raise(sll_error_t error){
+	if (error!=SLL_NO_ERROR){
+		_critical_failure(SLL_CHAR("sll_error_raise: "),error);
+	}
+}
