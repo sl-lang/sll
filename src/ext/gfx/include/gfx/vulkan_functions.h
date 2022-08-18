@@ -5,8 +5,8 @@
 
 
 
-extern PFN_vkGetInstanceProcAddr vkGetInstanceProcAddr;
 extern PFN_vkEnumerateInstanceExtensionProperties vkEnumerateInstanceExtensionProperties;
+extern PFN_vkGetInstanceProcAddr vkGetInstanceProcAddr;
 
 
 

@@ -65,9 +65,7 @@ __GFX_API_CALL void gfx_api_vulkan_get_extensions(sll_array_t* out){
 	CHECK_VULKAN_ERROR(vkEnumerateInstanceExtensionProperties(NULL,&count,extension_properties));
 	sll_array_create(count,out);
 	for (uint32_t i=0;i<count;i++){
-		sll_object_t string=sll_create_object(SLL_OBJECT_TYPE_STRING);
-		sll_string_from_pointer(SLL_CHAR((extension_properties+i)->extensionName),&(string->data.string));
-		out->data[i]=string;
+		out->data[i]=sll_string_pointer_to_object(SLL_CHAR((extension_properties+i)->extensionName));
 	}
 	sll_deallocate(extension_properties);
 }

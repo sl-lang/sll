@@ -12,8 +12,8 @@
 
 
 
-PFN_vkGetInstanceProcAddr vkGetInstanceProcAddr;
 PFN_vkEnumerateInstanceExtensionProperties vkEnumerateInstanceExtensionProperties;
+PFN_vkGetInstanceProcAddr vkGetInstanceProcAddr;
 
 
 
