@@ -5,7 +5,7 @@
 
 
 static sll_library_handle_t _vulkan_library_handle;
-static PFN_vkGetInstanceProcAddr _vulkan_get_instance_proc_addr;
+static PFN_vkGetInstanceProcAddr vkGetInstanceProcAddr;
 
 
 
@@ -26,11 +26,11 @@ sll_bool_t _init_vulkan(void){
 	if (!_vulkan_library_handle){
 		return 0;
 	}
-	_vulkan_get_instance_proc_addr=sll_platform_lookup_symbol(_vulkan_library_handle,SLL_CHAR("vkGetInstanceProcAddr"));
-	if (!_vulkan_get_instance_proc_addr){
+	vkGetInstanceProcAddr=sll_platform_lookup_symbol(_vulkan_library_handle,SLL_CHAR("vkGetInstanceProcAddr"));
+	if (!vkGetInstanceProcAddr){
 		return 0;
 	}
-	PFN_vkEnumerateInstanceExtensionProperties vkEnumerateInstanceExtensionProperties=(PFN_vkEnumerateInstanceExtensionProperties)_vulkan_get_instance_proc_addr(NULL,"vkEnumerateInstanceExtensionProperties");
+	PFN_vkEnumerateInstanceExtensionProperties vkEnumerateInstanceExtensionProperties=(PFN_vkEnumerateInstanceExtensionProperties)vkGetInstanceProcAddr(NULL,"vkEnumerateInstanceExtensionProperties");
 	if (!vkEnumerateInstanceExtensionProperties){
 		return 0;
 	}
