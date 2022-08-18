@@ -13,6 +13,7 @@
 
 
 (= create_context (,,, window
+	(? (! window) (@@ nil))
 	(= window (:: window window_window$window_window_type))
 	(@@ (<- (... "gfx:context_create") window$id))
 ))
