@@ -1,0 +1,12 @@
+{
+	"installation_scripts": {
+		"darwin": "install/darwin.sh",
+		"linux": "install/linux.sh",
+		"windows": "install\\windows.bat"
+	},
+	"extra_options": {
+		"darwin": ["-D","VK_USE_PLATFORM_MACOS_MVK","-I","build/ext/gfx_darwin/vulkan_headers/include"],
+		"linux": ["-D","VK_USE_PLATFORM_XCB_KHR","-I","build/ext/gfx_linux/vulkan_headers/include"],
+		"windows": ["/D","VK_USE_PLATFORM_WIN32_KHR","/I","build/ext/gfx_windows/vulkan_headers/include"]
+	}
+}
