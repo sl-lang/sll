@@ -7,6 +7,10 @@
 
 
 
+static const float _default_queue_priority=0.0f;
+
+
+
 sll_handle_container_t gfx_context_data;
 
 
@@ -15,6 +19,7 @@ void _delete_context(gfx_context_data_t* ctx){
 	if (!ctx){
 		return;
 	}
+	ctx->function_table.vkDestroyDevice(ctx->logical_device,NULL);
 	ctx->function_table.vkDestroySurfaceKHR(ctx->instance,ctx->surface,NULL);
 	ctx->function_table.vkDestroyInstance(ctx->instance,NULL);
 	sll_deallocate(ctx);
@@ -81,27 +86,26 @@ __GFX_API_CALL gfx_context_t gfx_api_context_create(void* handle,void* extra_dat
 	sll_error_raise_bool(!count||!"No GPU found");
 	VkPhysicalDevice* physical_device_data=sll_allocate_stack(count*sizeof(VkPhysicalDevice));
 	VULKAN_CALL(ctx->function_table.vkEnumeratePhysicalDevices(ctx->instance,&count,physical_device_data));
-	ctx->device=*(physical_device_data+GFX_DEFAULT_GPU_INDEX);
+	ctx->physical_device=*(physical_device_data+GFX_DEFAULT_GPU_INDEX);
 	sll_deallocate(physical_device_data);
-	ctx->function_table.vkGetPhysicalDeviceQueueFamilyProperties(ctx->device,&count,NULL);
+	ctx->function_table.vkGetPhysicalDeviceQueueFamilyProperties(ctx->physical_device,&count,NULL);
 	VkQueueFamilyProperties* queue_properties=sll_allocate_stack(count*sizeof(VkQueueFamilyProperties));
-	ctx->function_table.vkGetPhysicalDeviceQueueFamilyProperties(ctx->device,&count,queue_properties);
-	uint32_t queue_index=0;
-	for (;queue_index<count;queue_index++){
-		if ((queue_properties+queue_index)->queueFlags&VK_QUEUE_GRAPHICS_BIT){
+	ctx->function_table.vkGetPhysicalDeviceQueueFamilyProperties(ctx->physical_device,&count,queue_properties);
+	ctx->device_queue_index=0;
+	for (uint32_t i=0;i<count;i++){
+		if ((queue_properties+i)->queueFlags&VK_QUEUE_GRAPHICS_BIT){
 			VkBool32 present_support;
-			VULKAN_CALL(ctx->function_table.vkGetPhysicalDeviceSurfaceSupportKHR(ctx->device,queue_index,ctx->surface,&present_support));
+			VULKAN_CALL(ctx->function_table.vkGetPhysicalDeviceSurfaceSupportKHR(ctx->physical_device,i,ctx->surface,&present_support));
 			if (present_support){
+				ctx->device_queue_index=i;
 				break;
 			}
 		}
 	}
 	sll_deallocate(queue_properties);
-	sll_error_raise_bool(queue_index==count);
-	ctx->device_queue_index=queue_index;
-	VULKAN_CALL(ctx->function_table.vkGetPhysicalDeviceSurfaceFormatsKHR(ctx->device,ctx->surface,&count,NULL));
+	VULKAN_CALL(ctx->function_table.vkGetPhysicalDeviceSurfaceFormatsKHR(ctx->physical_device,ctx->surface,&count,NULL));
 	VkSurfaceFormatKHR* surface_formats=sll_allocate_stack(count*sizeof(VkSurfaceFormatKHR));
-	VULKAN_CALL(ctx->function_table.vkGetPhysicalDeviceSurfaceFormatsKHR(ctx->device,ctx->surface,&count,surface_formats));
+	VULKAN_CALL(ctx->function_table.vkGetPhysicalDeviceSurfaceFormatsKHR(ctx->physical_device,ctx->surface,&count,surface_formats));
 	ctx->color_format=surface_formats->format;
 	ctx->color_space=surface_formats->colorSpace;
 	for (uint32_t i=0;i<count;i++){
@@ -115,6 +119,32 @@ __GFX_API_CALL gfx_context_t gfx_api_context_create(void* handle,void* extra_dat
 	if (ctx->color_format==VK_FORMAT_UNDEFINED){
 		ctx->color_format=VK_FORMAT_B8G8R8A8_UNORM;
 	}
+	VkDeviceQueueCreateInfo device_queue_info={
+		VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO,
+		NULL,
+		0,
+		ctx->device_queue_index,
+		1,
+		&_default_queue_priority
+	};
+	const char* device_extensions[1]={
+		VK_KHR_SWAPCHAIN_EXTENSION_NAME
+	};
+	VkPhysicalDeviceFeatures device_features;
+	sll_zero_memory(&device_features,sizeof(VkPhysicalDeviceFeatures));
+	VkDeviceCreateInfo device_creation_info={
+		VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO,
+		NULL,
+		0,
+		1,
+		&device_queue_info,
+		0,
+		NULL,
+		1,
+		device_extensions,
+		&device_features
+	};
+	VULKAN_CALL(ctx->function_table.vkCreateDevice(ctx->physical_device,&device_creation_info,NULL,&(ctx->logical_device)));
 	gfx_context_t out;
 	SLL_HANDLE_CONTAINER_ALLOC(&gfx_context_data,&out);
 	*(gfx_context_data.data+out)=ctx;

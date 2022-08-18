@@ -48,6 +48,7 @@ sll_bool_t _load_vulkan_functions(PFN_vkGetInstanceProcAddr get_proc_addr){
 
 sll_bool_t _load_vulkan_function_table(VkInstance instance,gfx_vulkan_function_table_t* out){
 	sll_bool_t ret=1;
+	LOAD_FUNCTION_TABLE(vkCreateDevice);
 #ifdef __SLL_BUILD_DARWIN
 	LOAD_FUNCTION_TABLE(vkCreateMacOSSurfaceMVK);
 #elif defined(__SLL_BUILD_LINUX)
@@ -55,6 +56,7 @@ sll_bool_t _load_vulkan_function_table(VkInstance instance,gfx_vulkan_function_t
 #else
 	LOAD_FUNCTION_TABLE(vkCreateWin32SurfaceKHR);
 #endif
+	LOAD_FUNCTION_TABLE(vkDestroyDevice);
 	LOAD_FUNCTION_TABLE(vkDestroyInstance);
 	LOAD_FUNCTION_TABLE(vkDestroySurfaceKHR);
 	LOAD_FUNCTION_TABLE(vkEnumeratePhysicalDevices);

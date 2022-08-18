@@ -6,6 +6,7 @@
 
 
 typedef struct _GFX_VULKAN_FUNCTION_TABLE{
+	PFN_vkCreateDevice vkCreateDevice;
 #ifdef __SLL_BUILD_DARWIN
 	PFN_vkCreateMacOSSurfaceMVK vkCreateMacOSSurfaceMVK;
 #elif defined(__SLL_BUILD_LINUX)
@@ -13,6 +14,7 @@ typedef struct _GFX_VULKAN_FUNCTION_TABLE{
 #else
 	PFN_vkCreateWin32SurfaceKHR vkCreateWin32SurfaceKHR;
 #endif
+	PFN_vkDestroyDevice vkDestroyDevice;
 	PFN_vkDestroyInstance vkDestroyInstance;
 	PFN_vkDestroySurfaceKHR vkDestroySurfaceKHR;
 	PFN_vkEnumeratePhysicalDevices vkEnumeratePhysicalDevices;
