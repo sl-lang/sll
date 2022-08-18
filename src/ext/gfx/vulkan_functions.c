@@ -34,6 +34,7 @@ PFN_vkGetInstanceProcAddr vkGetInstanceProcAddr;
 
 sll_bool_t _load_vulkan_functions(PFN_vkGetInstanceProcAddr get_proc_addr){
 	if (!get_proc_addr){
+		SLL_WARN("Failed to load Vulkan function 'vkGetInstanceProcAddr'!");
 		return 0;
 	}
 	vkGetInstanceProcAddr=get_proc_addr;
