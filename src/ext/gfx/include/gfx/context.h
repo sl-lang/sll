@@ -7,10 +7,15 @@
 
 
 
+#define GFX_DEFAULT_GPU_INDEX 0
+
+
+
 typedef struct _GFX_CONTEXT_DATA{
 	gfx_vulkan_function_table_t function_table;
 	VkInstance instance;
 	VkSurfaceKHR surface;
+	VkPhysicalDevice device;
 } gfx_context_data_t;
 
 

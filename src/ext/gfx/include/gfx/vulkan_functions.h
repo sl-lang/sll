@@ -15,6 +15,7 @@ typedef struct _GFX_VULKAN_FUNCTION_TABLE{
 #endif
 	PFN_vkDestroyInstance vkDestroyInstance;
 	PFN_vkDestroySurfaceKHR vkDestroySurfaceKHR;
+	PFN_vkEnumeratePhysicalDevices vkEnumeratePhysicalDevices;
 } gfx_vulkan_function_table_t;
 
 
