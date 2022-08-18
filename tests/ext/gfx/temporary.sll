@@ -1,0 +1,16 @@
+(---
+	"@test/_common.sll"
+	"gfx/gfx.sll"
+)
+
+
+
+(= empty_test (,,,
+	(<- expect true true)
+))
+
+
+
+(<- run "GFX extension" (,,,
+	(<- empty_test)
+))
