@@ -133,6 +133,22 @@ static void _create_swapchain(gfx_context_data_t* ctx){
 	};
 	VULKAN_CALL(ctx->function_table.vkAllocateMemory(ctx->logical_device,&mem_alloc_info,NULL,&(ctx->depth_stensil_memory)));
 	VULKAN_CALL(ctx->function_table.vkBindImageMemory(ctx->logical_device,ctx->depth_stensil_image,ctx->depth_stensil_memory,0));
+	VkImageViewCreateInfo deptch_stensil_image_view_creation_info={
+		VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO,
+		NULL,
+		0,
+		ctx->depth_stensil_image,
+		VK_IMAGE_VIEW_TYPE_2D,
+		VK_FORMAT_D32_SFLOAT,
+		.subresourceRange={
+			VK_IMAGE_ASPECT_DEPTH_BIT,
+			0,
+			1,
+			0,
+			1
+		}
+	};
+	VULKAN_CALL(ctx->function_table.vkCreateImageView(ctx->logical_device,&deptch_stensil_image_view_creation_info,NULL,&(ctx->depth_stensil_image_view)));
 }
 
 
