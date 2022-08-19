@@ -23,6 +23,7 @@
 
 (= gfx_module_type (&:
 	(~ func_type) create_context
+	(~ func_type) delete_context
 ))
 
 
@@ -40,9 +41,14 @@
 	))
 ))
 
+(= delete_context (,,, ctx
+	(<- (... "gfx:context_delete") ctx$_handle)
+))
+
 
 
 (= gfx (. gfx_module_type
 	create_context
+	delete_context
 ))
 (## gfx)
