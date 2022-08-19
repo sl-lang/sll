@@ -1,11 +1,25 @@
 (---
 	"gfx/_load_library.sll"
+	"string.sll"
+	"types.sll"
 	"window/util.sll"
 	"window/window.sll"
-	"types.sll"
 )
 
 
+
+(= gfx_context_type (&:
+	(,,, data
+		(<- (... "gfx:context_delete") data$_handle)
+	) @@delete@@
+	(,,, data
+		(@@ (<- string$format "<gfx window=%s>"
+			(:: data$window string_type)
+		))
+	) @@string@@
+	(~ int_type) _handle
+	(~ window_window$window_window_type) window
+))
 
 (= gfx_module_type (&:
 	(~ func_type) create_context
@@ -16,9 +30,13 @@
 (= create_context (,,, window
 	(? (! window) (@@ nil))
 	(= window (:: window window_window$window_window_type))
-	(@@ (<- (... "gfx:context_create")
+	(= handle (<- (... "gfx:context_create")
 		window$id
 		(<- window_util$get_context)
+	))
+	(@@ (. gfx_context_type
+		handle
+		window
 	))
 ))
 
