@@ -19,9 +19,14 @@ typedef struct _GFX_CONTEXT_DATA{
 	VkDevice logical_device;
 	VkCommandPool command_pool;
 	VkQueue queue;
+	VkSwapchainKHR swapchain;
 	uint32_t device_queue_index;
 	VkFormat color_format;
 	VkColorSpaceKHR color_space;
+	uint32_t swapchain_image_count;
+	VkImage* swapchain_images;
+	VkImageView* swapchain_image_views;
+	VkCommandBuffer* command_buffers;
 } gfx_context_data_t;
 
 

@@ -15,10 +15,81 @@ sll_handle_container_t gfx_context_data;
 
 
 
+static void _create_swapchain(gfx_context_data_t* ctx){
+	VkSurfaceCapabilitiesKHR surface_caps;
+	VULKAN_CALL(ctx->function_table.vkGetPhysicalDeviceSurfaceCapabilitiesKHR(ctx->physical_device,ctx->surface,&surface_caps));
+	VkSwapchainCreateInfoKHR swapchain_creation_info={
+		VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR,
+		NULL,
+		0,
+		ctx->surface,
+		surface_caps.minImageCount+1,
+		ctx->color_format,
+		ctx->color_space,
+		surface_caps.currentExtent,
+		1,
+		VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT|(surface_caps.supportedUsageFlags&(VK_IMAGE_USAGE_TRANSFER_SRC_BIT|VK_IMAGE_USAGE_TRANSFER_DST_BIT)),
+		VK_SHARING_MODE_EXCLUSIVE,
+		0,
+		NULL,
+		((surface_caps.supportedTransforms&VK_SURFACE_TRANSFORM_IDENTITY_BIT_KHR)?VK_SURFACE_TRANSFORM_IDENTITY_BIT_KHR:surface_caps.supportedTransforms),
+		VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR,
+		VK_PRESENT_MODE_FIFO_KHR,
+		VK_TRUE,
+		ctx->swapchain
+	};
+	VkSwapchainKHR old_swapchain=ctx->swapchain;
+	VULKAN_CALL(ctx->function_table.vkCreateSwapchainKHR(ctx->logical_device,&swapchain_creation_info,NULL,&(ctx->swapchain)));
+	if (old_swapchain!=VK_NULL_HANDLE){
+		SLL_WARN("Unimplemented!");
+	}
+	VULKAN_CALL(ctx->function_table.vkGetSwapchainImagesKHR(ctx->logical_device,ctx->swapchain,&(ctx->swapchain_image_count),NULL));
+	ctx->swapchain_images=sll_reallocate(ctx->swapchain_images,ctx->swapchain_image_count*sizeof(VkImage));
+	VULKAN_CALL(ctx->function_table.vkGetSwapchainImagesKHR(ctx->logical_device,ctx->swapchain,&(ctx->swapchain_image_count),ctx->swapchain_images));
+	ctx->swapchain_image_views=sll_reallocate(ctx->swapchain_image_views,ctx->swapchain_image_count*sizeof(VkImageView));
+	VkImageViewCreateInfo image_view_creation_info={
+		VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO,
+		NULL,
+		0,
+		VK_NULL_HANDLE,
+		VK_IMAGE_VIEW_TYPE_2D,
+		ctx->color_format,
+		{
+			VK_COMPONENT_SWIZZLE_R,
+			VK_COMPONENT_SWIZZLE_G,
+			VK_COMPONENT_SWIZZLE_B,
+			VK_COMPONENT_SWIZZLE_A
+		},
+		{
+			VK_IMAGE_ASPECT_COLOR_BIT,
+			0,
+			0,
+			0,
+			1
+		}
+	};
+	for (uint32_t i=0;i<ctx->swapchain_image_count;i++){
+		image_view_creation_info.image=ctx->swapchain_images[i];
+		VULKAN_CALL(ctx->function_table.vkCreateImageView(ctx->logical_device,&image_view_creation_info,NULL,ctx->swapchain_image_views+i));
+	}
+	ctx->command_buffers=sll_reallocate(ctx->command_buffers,ctx->swapchain_image_count*sizeof(VkCommandBuffer));
+	VkCommandBufferAllocateInfo command_buffer_allocation_info={
+		VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO,
+		NULL,
+		ctx->command_pool,
+		VK_COMMAND_BUFFER_LEVEL_PRIMARY,
+		ctx->swapchain_image_count
+	};
+	VULKAN_CALL(ctx->function_table.vkAllocateCommandBuffers(ctx->logical_device,&command_buffer_allocation_info,ctx->command_buffers));
+}
+
+
+
 void _delete_context(gfx_context_data_t* ctx){
 	if (!ctx){
 		return;
 	}
+	ctx->function_table.vkDestroySwapchainKHR(ctx->logical_device,ctx->swapchain,NULL);
 	ctx->function_table.vkDestroyCommandPool(ctx->logical_device,ctx->command_pool,NULL);
 	ctx->function_table.vkDestroyDevice(ctx->logical_device,NULL);
 	ctx->function_table.vkDestroySurfaceKHR(ctx->instance,ctx->surface,NULL);
@@ -52,7 +123,7 @@ __GFX_API_CALL gfx_context_t gfx_api_context_create(void* handle,void* extra_dat
 		2,
 		enabled_extensions
 	};
-	gfx_context_data_t* ctx=sll_allocate(sizeof(gfx_context_data_t));
+	gfx_context_data_t* ctx=sll_zero_allocate(sizeof(gfx_context_data_t));
 	VULKAN_CALL(vkCreateInstance(&instance_creation_info,NULL,&(ctx->instance)));
 	sll_error_raise_bool(!_load_vulkan_function_table(ctx->instance,&(ctx->function_table)));
 #ifdef __SLL_BUILD_DARWIN
@@ -154,6 +225,7 @@ __GFX_API_CALL gfx_context_t gfx_api_context_create(void* handle,void* extra_dat
 	};
 	VULKAN_CALL(ctx->function_table.vkCreateCommandPool(ctx->logical_device,&command_pool_creation_info,NULL,&(ctx->command_pool)));
 	ctx->function_table.vkGetDeviceQueue(ctx->logical_device,ctx->device_queue_index,0,&(ctx->queue));
+	_create_swapchain(ctx);
 	gfx_context_t out;
 	SLL_HANDLE_CONTAINER_ALLOC(&gfx_context_data,&out);
 	*(gfx_context_data.data+out)=ctx;

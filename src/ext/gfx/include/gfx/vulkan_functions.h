@@ -6,8 +6,24 @@
 
 
 typedef struct _GFX_VULKAN_FUNCTION_TABLE{
+	PFN_vkAllocateCommandBuffers vkAllocateCommandBuffers;
 	PFN_vkCreateCommandPool vkCreateCommandPool;
 	PFN_vkCreateDevice vkCreateDevice;
+	PFN_vkCreateImageView vkCreateImageView;
+	PFN_vkCreateSwapchainKHR vkCreateSwapchainKHR;
+	PFN_vkDestroyCommandPool vkDestroyCommandPool;
+	PFN_vkDestroyDevice vkDestroyDevice;
+	PFN_vkDestroyImageView vkDestroyImageView;
+	PFN_vkDestroyInstance vkDestroyInstance;
+	PFN_vkDestroySurfaceKHR vkDestroySurfaceKHR;
+	PFN_vkDestroySwapchainKHR vkDestroySwapchainKHR;
+	PFN_vkEnumeratePhysicalDevices vkEnumeratePhysicalDevices;
+	PFN_vkGetDeviceQueue vkGetDeviceQueue;
+	PFN_vkGetPhysicalDeviceQueueFamilyProperties vkGetPhysicalDeviceQueueFamilyProperties;
+	PFN_vkGetPhysicalDeviceSurfaceCapabilitiesKHR vkGetPhysicalDeviceSurfaceCapabilitiesKHR;
+	PFN_vkGetPhysicalDeviceSurfaceFormatsKHR vkGetPhysicalDeviceSurfaceFormatsKHR;
+	PFN_vkGetPhysicalDeviceSurfaceSupportKHR vkGetPhysicalDeviceSurfaceSupportKHR;
+	PFN_vkGetSwapchainImagesKHR vkGetSwapchainImagesKHR;
 #ifdef __SLL_BUILD_DARWIN
 	PFN_vkCreateMacOSSurfaceMVK vkCreateMacOSSurfaceMVK;
 #elif defined(__SLL_BUILD_LINUX)
@@ -15,15 +31,6 @@ typedef struct _GFX_VULKAN_FUNCTION_TABLE{
 #else
 	PFN_vkCreateWin32SurfaceKHR vkCreateWin32SurfaceKHR;
 #endif
-	PFN_vkDestroyCommandPool vkDestroyCommandPool;
-	PFN_vkDestroyDevice vkDestroyDevice;
-	PFN_vkDestroyInstance vkDestroyInstance;
-	PFN_vkDestroySurfaceKHR vkDestroySurfaceKHR;
-	PFN_vkEnumeratePhysicalDevices vkEnumeratePhysicalDevices;
-	PFN_vkGetDeviceQueue vkGetDeviceQueue;
-	PFN_vkGetPhysicalDeviceQueueFamilyProperties vkGetPhysicalDeviceQueueFamilyProperties;
-	PFN_vkGetPhysicalDeviceSurfaceFormatsKHR vkGetPhysicalDeviceSurfaceFormatsKHR;
-	PFN_vkGetPhysicalDeviceSurfaceSupportKHR vkGetPhysicalDeviceSurfaceSupportKHR;
 } gfx_vulkan_function_table_t;
 
 
