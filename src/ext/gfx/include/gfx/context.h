@@ -20,6 +20,7 @@ typedef struct _GFX_CONTEXT_DATA{
 	VkCommandPool command_pool;
 	VkQueue queue;
 	VkSwapchainKHR swapchain;
+	VkPhysicalDeviceMemoryProperties memory_properties;
 	uint32_t device_queue_index;
 	VkFormat color_format;
 	VkColorSpaceKHR color_space;

@@ -7,19 +7,25 @@
 
 typedef struct _GFX_VULKAN_FUNCTION_TABLE{
 	PFN_vkAllocateCommandBuffers vkAllocateCommandBuffers;
+	PFN_vkAllocateMemory vkAllocateMemory;
+	PFN_vkBindImageMemory vkBindImageMemory;
 	PFN_vkCreateCommandPool vkCreateCommandPool;
 	PFN_vkCreateDevice vkCreateDevice;
 	PFN_vkCreateFence vkCreateFence;
+	PFN_vkCreateImage vkCreateImage;
 	PFN_vkCreateImageView vkCreateImageView;
 	PFN_vkCreateSwapchainKHR vkCreateSwapchainKHR;
 	PFN_vkDestroyCommandPool vkDestroyCommandPool;
 	PFN_vkDestroyDevice vkDestroyDevice;
+	PFN_vkDestroyImage vkDestroyImage;
 	PFN_vkDestroyImageView vkDestroyImageView;
 	PFN_vkDestroyInstance vkDestroyInstance;
 	PFN_vkDestroySurfaceKHR vkDestroySurfaceKHR;
 	PFN_vkDestroySwapchainKHR vkDestroySwapchainKHR;
 	PFN_vkEnumeratePhysicalDevices vkEnumeratePhysicalDevices;
 	PFN_vkGetDeviceQueue vkGetDeviceQueue;
+	PFN_vkGetImageMemoryRequirements vkGetImageMemoryRequirements;
+	PFN_vkGetPhysicalDeviceMemoryProperties vkGetPhysicalDeviceMemoryProperties;
 	PFN_vkGetPhysicalDeviceQueueFamilyProperties vkGetPhysicalDeviceQueueFamilyProperties;
 	PFN_vkGetPhysicalDeviceSurfaceCapabilitiesKHR vkGetPhysicalDeviceSurfaceCapabilitiesKHR;
 	PFN_vkGetPhysicalDeviceSurfaceFormatsKHR vkGetPhysicalDeviceSurfaceFormatsKHR;

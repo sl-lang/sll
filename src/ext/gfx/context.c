@@ -15,6 +15,19 @@ sll_handle_container_t gfx_context_data;
 
 
 
+static uint32_t _get_mem_type(const gfx_context_data_t* ctx,uint32_t mask,VkMemoryPropertyFlagBits properties){
+	for (uint32_t i=0;i<ctx->memory_properties.memoryTypeCount;i++){
+		if ((mask&1)&&((ctx->memory_properties.memoryTypes+i)->propertyFlags&properties)==properties){
+			return i;
+		}
+		mask>>=1;
+	}
+	SLL_WARN("No memory type found!");
+	return 0;
+}
+
+
+
 static void _create_swapchain(gfx_context_data_t* ctx){
 	VkSurfaceCapabilitiesKHR surface_caps;
 	VULKAN_CALL(ctx->function_table.vkGetPhysicalDeviceSurfaceCapabilitiesKHR(ctx->physical_device,ctx->surface,&surface_caps));
@@ -88,6 +101,38 @@ static void _create_swapchain(gfx_context_data_t* ctx){
 		VULKAN_CALL(ctx->function_table.vkCreateImageView(ctx->logical_device,&image_view_creation_info,NULL,ctx->swapchain_image_views+i));
 		VULKAN_CALL(ctx->function_table.vkCreateFence(ctx->logical_device,&fence_creation_info,NULL,ctx->fences+i));
 	}
+	VkImageCreateInfo depth_stensil_image_creation_info={
+		VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO,
+		NULL,
+		0,
+		VK_IMAGE_TYPE_2D,
+		VK_FORMAT_D32_SFLOAT,
+		{
+			surface_caps.currentExtent.width,
+			surface_caps.currentExtent.height,
+			1
+		},
+		1,
+		1,
+		VK_SAMPLE_COUNT_1_BIT,
+		VK_IMAGE_TILING_OPTIMAL,
+		VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT,
+		0,
+		1,
+		NULL,
+		0
+	};
+	VULKAN_CALL(ctx->function_table.vkCreateImage(ctx->logical_device,&depth_stensil_image_creation_info,NULL,&(ctx->depth_stensil_image)));
+	VkMemoryRequirements mem_requirements;
+	ctx->function_table.vkGetImageMemoryRequirements(ctx->logical_device,ctx->depth_stensil_image,&mem_requirements);
+	VkMemoryAllocateInfo mem_alloc_info={
+		VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO,
+		NULL,
+		mem_requirements.size,
+		_get_mem_type(ctx,mem_requirements.memoryTypeBits,VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT)
+	};
+	VULKAN_CALL(ctx->function_table.vkAllocateMemory(ctx->logical_device,&mem_alloc_info,NULL,&(ctx->depth_stensil_memory)));
+	VULKAN_CALL(ctx->function_table.vkBindImageMemory(ctx->logical_device,ctx->depth_stensil_image,ctx->depth_stensil_memory,0));
 }
 
 
@@ -167,6 +212,7 @@ __GFX_API_CALL gfx_context_t gfx_api_context_create(void* handle,void* extra_dat
 	VULKAN_CALL(ctx->function_table.vkEnumeratePhysicalDevices(ctx->instance,&count,physical_device_data));
 	ctx->physical_device=*(physical_device_data+GFX_DEFAULT_GPU_INDEX);
 	sll_deallocate(physical_device_data);
+	ctx->function_table.vkGetPhysicalDeviceMemoryProperties(ctx->physical_device,&(ctx->memory_properties));
 	ctx->function_table.vkGetPhysicalDeviceQueueFamilyProperties(ctx->physical_device,&count,NULL);
 	VkQueueFamilyProperties* queue_properties=sll_allocate_stack(count*sizeof(VkQueueFamilyProperties));
 	ctx->function_table.vkGetPhysicalDeviceQueueFamilyProperties(ctx->physical_device,&count,queue_properties);
