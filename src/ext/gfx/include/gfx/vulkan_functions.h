@@ -9,6 +9,7 @@ typedef struct _GFX_VULKAN_FUNCTION_TABLE{
 	PFN_vkAllocateCommandBuffers vkAllocateCommandBuffers;
 	PFN_vkCreateCommandPool vkCreateCommandPool;
 	PFN_vkCreateDevice vkCreateDevice;
+	PFN_vkCreateFence vkCreateFence;
 	PFN_vkCreateImageView vkCreateImageView;
 	PFN_vkCreateSwapchainKHR vkCreateSwapchainKHR;
 	PFN_vkDestroyCommandPool vkDestroyCommandPool;

@@ -27,6 +27,7 @@ typedef struct _GFX_CONTEXT_DATA{
 	VkImage* swapchain_images;
 	VkImageView* swapchain_image_views;
 	VkCommandBuffer* command_buffers;
+	VkFence* fences;
 } gfx_context_data_t;
 
 

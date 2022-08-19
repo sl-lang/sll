@@ -46,6 +46,15 @@ static void _create_swapchain(gfx_context_data_t* ctx){
 	VULKAN_CALL(ctx->function_table.vkGetSwapchainImagesKHR(ctx->logical_device,ctx->swapchain,&(ctx->swapchain_image_count),NULL));
 	ctx->swapchain_images=sll_reallocate(ctx->swapchain_images,ctx->swapchain_image_count*sizeof(VkImage));
 	VULKAN_CALL(ctx->function_table.vkGetSwapchainImagesKHR(ctx->logical_device,ctx->swapchain,&(ctx->swapchain_image_count),ctx->swapchain_images));
+	ctx->command_buffers=sll_reallocate(ctx->command_buffers,ctx->swapchain_image_count*sizeof(VkCommandBuffer));
+	VkCommandBufferAllocateInfo command_buffer_allocation_info={
+		VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO,
+		NULL,
+		ctx->command_pool,
+		VK_COMMAND_BUFFER_LEVEL_PRIMARY,
+		ctx->swapchain_image_count
+	};
+	VULKAN_CALL(ctx->function_table.vkAllocateCommandBuffers(ctx->logical_device,&command_buffer_allocation_info,ctx->command_buffers));
 	ctx->swapchain_image_views=sll_reallocate(ctx->swapchain_image_views,ctx->swapchain_image_count*sizeof(VkImageView));
 	VkImageViewCreateInfo image_view_creation_info={
 		VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO,
@@ -68,19 +77,17 @@ static void _create_swapchain(gfx_context_data_t* ctx){
 			1
 		}
 	};
+	ctx->fences=sll_reallocate(ctx->fences,ctx->swapchain_image_count*sizeof(VkFence));
+	VkFenceCreateInfo fence_creation_info={
+		VK_STRUCTURE_TYPE_FENCE_CREATE_INFO,
+		NULL,
+		VK_FENCE_CREATE_SIGNALED_BIT
+	};
 	for (uint32_t i=0;i<ctx->swapchain_image_count;i++){
 		image_view_creation_info.image=ctx->swapchain_images[i];
 		VULKAN_CALL(ctx->function_table.vkCreateImageView(ctx->logical_device,&image_view_creation_info,NULL,ctx->swapchain_image_views+i));
+		VULKAN_CALL(ctx->function_table.vkCreateFence(ctx->logical_device,&fence_creation_info,NULL,ctx->fences+i));
 	}
-	ctx->command_buffers=sll_reallocate(ctx->command_buffers,ctx->swapchain_image_count*sizeof(VkCommandBuffer));
-	VkCommandBufferAllocateInfo command_buffer_allocation_info={
-		VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO,
-		NULL,
-		ctx->command_pool,
-		VK_COMMAND_BUFFER_LEVEL_PRIMARY,
-		ctx->swapchain_image_count
-	};
-	VULKAN_CALL(ctx->function_table.vkAllocateCommandBuffers(ctx->logical_device,&command_buffer_allocation_info,ctx->command_buffers));
 }
 
 
