@@ -68,7 +68,7 @@
 		(@@ (+ '<' data$layout$title " @ " (:: data$layout$geometry string_type) '>'))
 	) @@string@@
 	(,,, data
-		(<- destroy data)
+		(<- (... "window:window_destroy") data$id)
 	) @@delete@@
 	(~ int_type) id
 	int_type flags

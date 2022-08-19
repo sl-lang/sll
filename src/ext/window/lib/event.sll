@@ -121,7 +121,6 @@
 					window$callbacks$scroll_y
 					window$callbacks$scroll_x
 				) (: event 1))
-				(:> event '\n')
 			}
 			8 {
 				(<- window$callbacks$redraw window (: event 0) (: event 1) (: event 2) (: event 3))
