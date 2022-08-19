@@ -54,6 +54,7 @@ sll_bool_t _load_vulkan_function_table(VkInstance instance,gfx_vulkan_function_t
 	LOAD_FUNCTION_TABLE(vkCreateCommandPool);
 	LOAD_FUNCTION_TABLE(vkCreateDevice);
 	LOAD_FUNCTION_TABLE(vkCreateFence);
+	LOAD_FUNCTION_TABLE(vkCreateFramebuffer);
 	LOAD_FUNCTION_TABLE(vkCreateImage);
 	LOAD_FUNCTION_TABLE(vkCreateImageView);
 	LOAD_FUNCTION_TABLE(vkCreatePipelineCache);

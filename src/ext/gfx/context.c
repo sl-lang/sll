@@ -96,10 +96,28 @@ static void _create_swapchain(gfx_context_data_t* ctx){
 		NULL,
 		VK_FENCE_CREATE_SIGNALED_BIT
 	};
+	ctx->frame_buffers=sll_reallocate(ctx->frame_buffers,ctx->swapchain_image_count*sizeof(VkFramebuffer));
+	VkImageView frame_buffer_attachments[2]={
+		VK_NULL_HANDLE,
+		ctx->depth_stensil_image_view
+	};
+	VkFramebufferCreateInfo frame_buffer_creation_info={
+		VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO,
+		NULL,
+		0,
+		ctx->render_pass,
+		2,
+		frame_buffer_attachments,
+		surface_caps.currentExtent.width,
+		surface_caps.currentExtent.height,
+		1
+	};
 	for (uint32_t i=0;i<ctx->swapchain_image_count;i++){
 		image_view_creation_info.image=ctx->swapchain_images[i];
 		VULKAN_CALL(ctx->function_table.vkCreateImageView(ctx->logical_device,&image_view_creation_info,NULL,ctx->swapchain_image_views+i));
 		VULKAN_CALL(ctx->function_table.vkCreateFence(ctx->logical_device,&fence_creation_info,NULL,ctx->fences+i));
+		frame_buffer_attachments[0]=ctx->swapchain_image_views[i];
+		VULKAN_CALL(ctx->function_table.vkCreateFramebuffer(ctx->logical_device,&frame_buffer_creation_info,NULL,ctx->frame_buffers+i));
 	}
 	VkImageCreateInfo depth_stensil_image_creation_info={
 		VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO,
@@ -294,7 +312,6 @@ __GFX_API_CALL gfx_context_t gfx_api_context_create(void* handle,void* extra_dat
 	};
 	VULKAN_CALL(ctx->function_table.vkCreateCommandPool(ctx->logical_device,&command_pool_creation_info,NULL,&(ctx->command_pool)));
 	ctx->function_table.vkGetDeviceQueue(ctx->logical_device,ctx->device_queue_index,0,&(ctx->queue));
-	_create_swapchain(ctx);
 	VkAttachmentDescription render_pass_attachments[2]={
 		{
 			0,
@@ -379,6 +396,7 @@ __GFX_API_CALL gfx_context_t gfx_api_context_create(void* handle,void* extra_dat
 		NULL
 	};
 	VULKAN_CALL(ctx->function_table.vkCreatePipelineCache(ctx->logical_device,&pipeline_cache_creation_info,NULL,&(ctx->pipeline_cache)));
+	_create_swapchain(ctx);
 	gfx_context_t out;
 	SLL_HANDLE_CONTAINER_ALLOC(&gfx_context_data,&out);
 	*(gfx_context_data.data+out)=ctx;

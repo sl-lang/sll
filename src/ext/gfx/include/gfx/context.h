@@ -34,6 +34,7 @@ typedef struct _GFX_CONTEXT_DATA{
 	VkDeviceMemory depth_stensil_memory;
 	VkRenderPass render_pass;
 	VkPipelineCache pipeline_cache;
+	VkFramebuffer* frame_buffers;
 } gfx_context_data_t;
 
 
