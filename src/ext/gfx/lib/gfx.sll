@@ -8,9 +8,13 @@
 
 
 
+(# delete_context)
+
+
+
 (= gfx_context_type (&:
 	(,,, data
-		(<- (... "gfx:context_delete") data$_handle)
+		(<- delete_context data)
 	) @@delete@@
 	(,,, data
 		(@@ (<- string$format "<gfx window=%s>"
@@ -31,17 +35,21 @@
 (= create_context (,,, window
 	(? (! window) (@@ nil))
 	(= window (:: window window_window$window_window_type))
+	(? window$_gfx_context (@@ window$_gfx_context))
 	(= handle (<- (... "gfx:context_create")
 		window$id
 		(<- window_util$get_context)
 	))
-	(@@ (. gfx_context_type
+	(= out (. gfx_context_type
 		handle
 		window
 	))
+	(= window$_gfx_context out)
+	(@@ out)
 ))
 
 (= delete_context (,,, ctx
+	(= ctx$window$_gfx_context nil)
 	(<- (... "gfx:context_delete") ctx$_handle)
 ))
 
