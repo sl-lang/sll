@@ -32,6 +32,7 @@ typedef struct _GFX_CONTEXT_DATA{
 	VkImage depth_stensil_image;
 	VkImageView depth_stensil_image_view;
 	VkDeviceMemory depth_stensil_memory;
+	VkRenderPass render_pass;
 } gfx_context_data_t;
 
 

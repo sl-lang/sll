@@ -295,6 +295,82 @@ __GFX_API_CALL gfx_context_t gfx_api_context_create(void* handle,void* extra_dat
 	VULKAN_CALL(ctx->function_table.vkCreateCommandPool(ctx->logical_device,&command_pool_creation_info,NULL,&(ctx->command_pool)));
 	ctx->function_table.vkGetDeviceQueue(ctx->logical_device,ctx->device_queue_index,0,&(ctx->queue));
 	_create_swapchain(ctx);
+	VkAttachmentDescription render_pass_attachments[2]={
+		{
+			0,
+			ctx->color_format,
+			VK_SAMPLE_COUNT_1_BIT,
+			VK_ATTACHMENT_LOAD_OP_CLEAR,
+			VK_ATTACHMENT_STORE_OP_STORE,
+			VK_ATTACHMENT_LOAD_OP_DONT_CARE,
+			VK_ATTACHMENT_STORE_OP_DONT_CARE,
+			VK_IMAGE_LAYOUT_UNDEFINED,
+			VK_IMAGE_LAYOUT_PRESENT_SRC_KHR
+		},
+		{
+			0,
+			VK_FORMAT_D32_SFLOAT,
+			VK_SAMPLE_COUNT_1_BIT,
+			VK_ATTACHMENT_LOAD_OP_CLEAR,
+			VK_ATTACHMENT_STORE_OP_STORE,
+			VK_ATTACHMENT_LOAD_OP_CLEAR,
+			VK_ATTACHMENT_STORE_OP_DONT_CARE,
+			VK_IMAGE_LAYOUT_UNDEFINED,
+			VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL
+		}
+	};
+	VkAttachmentReference render_pass_subpass_color_ref={
+		0,
+		VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL
+	};
+	VkAttachmentReference render_pass_subpass_depth_ref={
+		1,
+		VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL
+	};
+	VkSubpassDescription render_pass_subpass={
+		0,
+		VK_PIPELINE_BIND_POINT_GRAPHICS,
+		0,
+		NULL,
+		1,
+		&render_pass_subpass_color_ref,
+		NULL,
+		&render_pass_subpass_depth_ref,
+		0,
+		NULL
+	};
+	VkSubpassDependency render_pass_dependencies[2]={
+		{
+			VK_SUBPASS_EXTERNAL,
+			0,
+			VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT,
+			VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT,
+			VK_ACCESS_MEMORY_READ_BIT,
+			VK_ACCESS_COLOR_ATTACHMENT_READ_BIT|VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT,
+			VK_DEPENDENCY_BY_REGION_BIT
+		},
+		{
+			0,
+			VK_SUBPASS_EXTERNAL,
+			VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT,
+			VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT,
+			VK_ACCESS_COLOR_ATTACHMENT_READ_BIT|VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT,
+			VK_ACCESS_MEMORY_READ_BIT,
+			VK_DEPENDENCY_BY_REGION_BIT
+		}
+	};
+	VkRenderPassCreateInfo render_pass_creation_info={
+		VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO,
+		NULL,
+		0,
+		2,
+		render_pass_attachments,
+		1,
+		&render_pass_subpass,
+		2,
+		render_pass_dependencies
+	};
+	VULKAN_CALL(ctx->function_table.vkCreateRenderPass(ctx->logical_device,&render_pass_creation_info,NULL,&(ctx->render_pass)));
 	gfx_context_t out;
 	SLL_HANDLE_CONTAINER_ALLOC(&gfx_context_data,&out);
 	*(gfx_context_data.data+out)=ctx;
