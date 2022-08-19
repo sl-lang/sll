@@ -33,6 +33,7 @@ typedef struct _GFX_CONTEXT_DATA{
 	VkImageView depth_stensil_image_view;
 	VkDeviceMemory depth_stensil_memory;
 	VkRenderPass render_pass;
+	VkPipelineCache pipeline_cache;
 } gfx_context_data_t;
 
 

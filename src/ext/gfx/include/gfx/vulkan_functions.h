@@ -14,6 +14,7 @@ typedef struct _GFX_VULKAN_FUNCTION_TABLE{
 	PFN_vkCreateFence vkCreateFence;
 	PFN_vkCreateImage vkCreateImage;
 	PFN_vkCreateImageView vkCreateImageView;
+	PFN_vkCreatePipelineCache vkCreatePipelineCache;
 	PFN_vkCreateRenderPass vkCreateRenderPass;
 	PFN_vkCreateSwapchainKHR vkCreateSwapchainKHR;
 	PFN_vkDestroyCommandPool vkDestroyCommandPool;

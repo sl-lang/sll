@@ -371,6 +371,14 @@ __GFX_API_CALL gfx_context_t gfx_api_context_create(void* handle,void* extra_dat
 		render_pass_dependencies
 	};
 	VULKAN_CALL(ctx->function_table.vkCreateRenderPass(ctx->logical_device,&render_pass_creation_info,NULL,&(ctx->render_pass)));
+	VkPipelineCacheCreateInfo pipeline_cache_creation_info={
+		VK_STRUCTURE_TYPE_PIPELINE_CACHE_CREATE_INFO,
+		NULL,
+		0,
+		0,
+		NULL
+	};
+	VULKAN_CALL(ctx->function_table.vkCreatePipelineCache(ctx->logical_device,&pipeline_cache_creation_info,NULL,&(ctx->pipeline_cache)));
 	gfx_context_t out;
 	SLL_HANDLE_CONTAINER_ALLOC(&gfx_context_data,&out);
 	*(gfx_context_data.data+out)=ctx;
