@@ -28,6 +28,7 @@
 (= gfx_module_type (&:
 	(~ func_type) create_context
 	(~ func_type) delete_context
+	(~ func_type) get_context
 ))
 
 
@@ -53,10 +54,17 @@
 	(<- (... "gfx:context_delete") ctx$_handle)
 ))
 
+(= get_context (,,, window
+	(? (! window) (@@ nil))
+	(= window (:: window window_window$window_window_type))
+	(@@ window$_gfx_context)
+))
+
 
 
 (= gfx (. gfx_module_type
 	create_context
 	delete_context
+	get_context
 ))
 (## gfx)
