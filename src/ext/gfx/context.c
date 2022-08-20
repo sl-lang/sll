@@ -186,10 +186,29 @@ void _delete_context(gfx_context_data_t* ctx){
 	if (!ctx){
 		return;
 	}
+	for (uint32_t i=0;i<ctx->swapchain_image_count;i++){
+		ctx->function_table.vkDestroyImageView(ctx->logical_device,ctx->swapchain_image_views[i],NULL);
+		ctx->function_table.vkDestroyFence(ctx->logical_device,ctx->fences[i],NULL);
+		ctx->function_table.vkDestroyFramebuffer(ctx->logical_device,ctx->frame_buffers[i],NULL);
+	}
+	sll_deallocate(ctx->swapchain_image_views);
+	sll_deallocate(ctx->fences);
+	sll_deallocate(ctx->frame_buffers);
+	ctx->function_table.vkDestroyPipelineCache(ctx->logical_device,ctx->pipeline_cache,NULL);
+	ctx->function_table.vkFreeMemory(ctx->logical_device,ctx->depth_stensil_memory,NULL);
+	ctx->function_table.vkDestroyImage(ctx->logical_device,ctx->depth_stensil_image,NULL);
+	ctx->function_table.vkDestroyRenderPass(ctx->logical_device,ctx->render_pass,NULL);
+	ctx->function_table.vkDestroyImageView(ctx->logical_device,ctx->depth_stensil_image_view,NULL);
 	ctx->function_table.vkDestroySwapchainKHR(ctx->logical_device,ctx->swapchain,NULL);
 	ctx->function_table.vkDestroyCommandPool(ctx->logical_device,ctx->command_pool,NULL);
 	ctx->function_table.vkDestroyDevice(ctx->logical_device,NULL);
 	ctx->function_table.vkDestroySurfaceKHR(ctx->instance,ctx->surface,NULL);
+#ifdef DEBUG_BUILD
+	PFN_vkDestroyDebugUtilsMessengerEXT vkDestroyDebugUtilsMessengerEXT=(PFN_vkDestroyDebugUtilsMessengerEXT)vkGetInstanceProcAddr(ctx->instance,"vkDestroyDebugUtilsMessengerEXT");
+	if (vkDestroyDebugUtilsMessengerEXT){
+		vkDestroyDebugUtilsMessengerEXT(ctx->instance,ctx->debug_messenger,NULL);
+	}
+#endif
 	ctx->function_table.vkDestroyInstance(ctx->instance,NULL);
 	sll_deallocate(ctx);
 }
@@ -216,9 +235,9 @@ __GFX_API_CALL gfx_context_t gfx_api_context_create(void* handle,void* extra_dat
 		NULL,
 		0,
 		&app_info,
-		!!validation_layer_name,
-		&validation_layer_name,
-		2+!!validation_layer_name,
+		!!vulkan_validation_layer_name,
+		&vulkan_validation_layer_name,
+		2+!!vulkan_validation_layer_name,
 		enabled_extensions
 	};
 	gfx_context_data_t* ctx=sll_zero_allocate(sizeof(gfx_context_data_t));

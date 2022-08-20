@@ -20,12 +20,17 @@ typedef struct _GFX_VULKAN_FUNCTION_TABLE{
 	PFN_vkCreateSwapchainKHR vkCreateSwapchainKHR;
 	PFN_vkDestroyCommandPool vkDestroyCommandPool;
 	PFN_vkDestroyDevice vkDestroyDevice;
+	PFN_vkDestroyFence vkDestroyFence;
+	PFN_vkDestroyFramebuffer vkDestroyFramebuffer;
 	PFN_vkDestroyImage vkDestroyImage;
 	PFN_vkDestroyImageView vkDestroyImageView;
 	PFN_vkDestroyInstance vkDestroyInstance;
+	PFN_vkDestroyPipelineCache vkDestroyPipelineCache;
+	PFN_vkDestroyRenderPass vkDestroyRenderPass;
 	PFN_vkDestroySurfaceKHR vkDestroySurfaceKHR;
 	PFN_vkDestroySwapchainKHR vkDestroySwapchainKHR;
 	PFN_vkEnumeratePhysicalDevices vkEnumeratePhysicalDevices;
+	PFN_vkFreeMemory vkFreeMemory;
 	PFN_vkGetDeviceQueue vkGetDeviceQueue;
 	PFN_vkGetImageMemoryRequirements vkGetImageMemoryRequirements;
 	PFN_vkGetPhysicalDeviceMemoryProperties vkGetPhysicalDeviceMemoryProperties;

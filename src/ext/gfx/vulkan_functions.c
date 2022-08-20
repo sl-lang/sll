@@ -56,12 +56,17 @@ sll_bool_t _load_vulkan_function_table(VkInstance instance,gfx_vulkan_function_t
 	LOAD_FUNCTION_TABLE(vkCreateSwapchainKHR);
 	LOAD_FUNCTION_TABLE(vkDestroyCommandPool);
 	LOAD_FUNCTION_TABLE(vkDestroyDevice);
+	LOAD_FUNCTION_TABLE(vkDestroyFence)
+	LOAD_FUNCTION_TABLE(vkDestroyFramebuffer);
 	LOAD_FUNCTION_TABLE(vkDestroyImage);
 	LOAD_FUNCTION_TABLE(vkDestroyImageView);
 	LOAD_FUNCTION_TABLE(vkDestroyInstance);
+	LOAD_FUNCTION_TABLE(vkDestroyPipelineCache);
+	LOAD_FUNCTION_TABLE(vkDestroyRenderPass);
 	LOAD_FUNCTION_TABLE(vkDestroySurfaceKHR);
 	LOAD_FUNCTION_TABLE(vkDestroySwapchainKHR);
 	LOAD_FUNCTION_TABLE(vkEnumeratePhysicalDevices);
+	LOAD_FUNCTION_TABLE(vkFreeMemory);
 	LOAD_FUNCTION_TABLE(vkGetDeviceQueue);
 	LOAD_FUNCTION_TABLE(vkGetImageMemoryRequirements);
 	LOAD_FUNCTION_TABLE(vkGetPhysicalDeviceMemoryProperties);

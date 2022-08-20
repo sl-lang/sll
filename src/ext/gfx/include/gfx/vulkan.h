@@ -18,7 +18,7 @@
 
 
 
-extern const char* validation_layer_name;
+extern const char* vulkan_validation_layer_name;
 
 
 
