@@ -9,13 +9,13 @@
 
 
 
-(# delete_context)
+(# delete)
 
 
 
 (= gfx_context_type (&:
 	(,,, data
-		(<- delete_context data)
+		(<- delete data)
 	) @@delete@@
 	(,,, data
 		(@@ (<- string$format "<gfx window=%s>"
@@ -26,15 +26,15 @@
 	(~ window_window$window_window_type) window
 ))
 
-(= gfx_module_type (&:
-	(~ func_type) create_context
-	(~ func_type) delete_context
-	(~ func_type) get_context
+(= gfx_context_module_type (&:
+	(~ func_type) create
+	(~ func_type) delete
+	(~ func_type) get
 ))
 
 
 
-(= create_context (,,, window
+(= create (,,, window
 	(? (! window) (@@ nil))
 	(= window (:: window window_window$window_window_type))
 	(= ctx (<- weakref$get window$_gfx_context))
@@ -51,12 +51,12 @@
 	(@@ out)
 ))
 
-(= delete_context (,,, ctx
+(= delete (,,, ctx
 	(= ctx$window$_gfx_context weakref$NIL_REF)
 	(<- (... "gfx:context_delete") ctx$_handle)
 ))
 
-(= get_context (,,, window
+(= get (,,, window
 	(? (! window) (@@ nil))
 	(= window (:: window window_window$window_window_type))
 	(= out (<- weakref$get window$_gfx_context))
@@ -68,9 +68,9 @@
 
 
 
-(= gfx (. gfx_module_type
-	create_context
-	delete_context
-	get_context
+(= gfx_context (. gfx_context_module_type
+	create
+	delete
+	get
 ))
-(## gfx)
+(## gfx_context)

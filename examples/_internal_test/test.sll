@@ -10,7 +10,7 @@
 	"date.sll"
 	"error.sll"
 	"file.sll"
-	"gfx/gfx.sll"
+	"gfx/context.sll"
 	"gfx/vulkan.sll"
 	"hash.sll"
 	"hmac.sll"
@@ -756,16 +756,14 @@ abc` '\n')
 (:> (<- gfx_vulkan$get_extensions) '\n')
 
 (= window (<- window_window$create [0 0 900 600] nil "Example GFX Window" true))
-(= ctx (<- gfx$create_context window))
+(= ctx (<- gfx_context$create window))
 (= window$callbacks$key_down (,,, window key
 	(?? key
 		window_keyboard$KEY_ESCAPE (<- window_window$destroy window)
 	)
 ))
-(:> ctx '\n')
 (-> nil (! (& window$flags window_window$FLAG_CLOSED))
 	(<- window_event$poll true)
-	(<- gfx$render ctx)
 )
 (:> ctx '\n')
 (:> window '\n')

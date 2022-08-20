@@ -17,7 +17,9 @@ sll_handle_container_t gfx_context_data;
 
 #ifdef DEBUG_BUILD
 static VKAPI_ATTR VkBool32 _debug_messenger_callback(VkDebugUtilsMessageSeverityFlagBitsEXT severity,VkDebugUtilsMessageTypeFlagsEXT type,const VkDebugUtilsMessengerCallbackDataEXT* data,gfx_context_data_t* ctx){
-	SLL_WARN("%s",data->pMessage);
+	if (severity>VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT){
+		SLL_WARN("%s",data->pMessage);
+	}
 	return VK_FALSE;
 }
 #endif
