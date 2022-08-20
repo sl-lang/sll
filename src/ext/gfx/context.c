@@ -7,14 +7,6 @@
 
 
 
-#ifdef DEBUG_BUILD
-#define EANBLED_EXTENSION_COUNT 3
-#else
-#define EANBLED_EXTENSION_COUNT 2
-#endif
-
-
-
 static const float _default_queue_priority=0.0f;
 
 
@@ -212,12 +204,10 @@ __GFX_API_CALL gfx_context_t gfx_api_context_create(void* handle,void* extra_dat
 		SLL_VERSION,
 		VK_API_VERSION_1_0
 	};
-	const char* enabled_extensions[EANBLED_EXTENSION_COUNT]={
+	const char* enabled_extensions[3]={
 		VK_KHR_SURFACE_EXTENSION_NAME,
 		GFX_VULKAN_REQUIRED_EXTENSION_NAME,
-#ifdef DEBUG_BUILD
 		VK_EXT_DEBUG_UTILS_EXTENSION_NAME
-#endif
 	};
 	VkInstanceCreateInfo instance_creation_info={
 		VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO,
