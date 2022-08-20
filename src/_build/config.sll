@@ -457,7 +457,7 @@
 		)
 	>
 	"src/ext/"
-	"src/ext/<name>/.extra_module_data.json"
+	"src/ext/<name>/.extension_data.json"
 	"src/ext/<name>/include/"
 	"build/ext/<name>_<platform>/"
 	"src/ext/<name>/lib/"
