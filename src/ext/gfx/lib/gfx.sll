@@ -1,0 +1,19 @@
+(---
+	"gfx/context.sll"
+	"gfx/vulkan.sll"
+)
+
+
+
+(= gfx_module_type (&:
+	(~ (:? gfx_context)) context
+	(~ (:? gfx_vulkan)) vulkan
+))
+
+
+
+(= gfx (. gfx_module_type
+	gfx_context
+	gfx_vulkan
+))
+(## gfx)
