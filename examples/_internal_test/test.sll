@@ -36,12 +36,12 @@
 	"uuid.sll"
 	"vm.sll"
 	"weakref.sll"
-	"window/cursor.sll"
-	"window/display.sll"
-	"window/event.sll"
-	"window/keyboard.sll"
-	"window/image.sll"
-	"window/window.sll"
+	"window_manager/cursor.sll"
+	"window_manager/display.sll"
+	"window_manager/event.sll"
+	"window_manager/keyboard.sll"
+	"window_manager/image.sll"
+	"window_manager/window.sll"
 )
 (= JSON_STRING "{\"key\":[\"value\",10,0.555,-842.9e-5,{\"a\":[\"c\",30,\"d\",\"\\t€\"],\"other\":\"else\"},true,false,null,[],{}]}")
 (-> (= i 1) (< i 11) {

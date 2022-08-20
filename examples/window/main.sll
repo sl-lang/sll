@@ -4,9 +4,9 @@
 
 
 (---
-	"window/event.sll"
-	"window/keyboard.sll"
-	"window/window.sll"
+	"window_manager/event.sll"
+	"window_manager/keyboard.sll"
+	"window_manager/window.sll"
 )
 
 

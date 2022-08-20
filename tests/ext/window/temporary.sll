@@ -1,6 +1,6 @@
 (---
 	"@test/_common.sll"
-	"window/window.sll"
+	"window_manager/window.sll"
 )
 
 

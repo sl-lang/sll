@@ -1,7 +1,7 @@
 (---
 	"gfx/_load_library.sll"
 	"weakref.sll"
-	"window/util.sll"
+	"window_manager/util.sll"
 )
 
 

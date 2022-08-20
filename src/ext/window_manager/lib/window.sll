@@ -1,0 +1,385 @@
+(---
+	"array.sll"
+	"audit.sll"
+	"map.sll"
+	"string.sll"
+	"types.sll"
+	"weakref.sll"
+	"window_manager/_load_library.sll"
+	"window_manager/cursor.sll"
+	"window_manager/geometry.sll"
+	"window_manager/image.sll"
+	"window_manager/range.sll"
+	"window_manager/util.sll"
+)
+
+
+
+(# destroy set_title set_visibility)
+
+
+
+(= window_callbacks_type (&:
+	func_type button
+	func_type button_down
+	func_type button_up
+	func_type cleanup
+	func_type destroy
+	func_type error
+	func_type focus
+	func_type focus_acquire
+	func_type focus_lose
+	func_type geometry
+	func_type ignore_close_request?
+	func_type key
+	func_type key_down
+	func_type key_up
+	func_type mouse
+	func_type mouse_enter
+	func_type mouse_leave
+	func_type mouse_state
+	func_type mouse_x
+	func_type mouse_y
+	func_type position
+	func_type redraw
+	func_type scroll
+	func_type scroll_x
+	func_type scroll_y
+	func_type size
+	func_type state
+))
+
+(= window_inputs_type (&:
+	int_type mouse_x
+	int_type mouse_y
+	array_type _keys
+))
+
+(= window_layout_type (&:
+	window_geometry$window_geometry_type geometry
+	window_range$window_range_type width_constraints
+	window_range$window_range_type height_constraints
+	string_type title
+	int_type state
+	int_type _deferred_state_change
+))
+
+(= window_window_type (&:
+	(,,, data
+		(@@ (+ '<' data$layout$title " @ " (:: data$layout$geometry string_type) '>'))
+	) @@string@@
+	(,,, data
+		(<- destroy data)
+	) @@delete@@
+	(~ int_type) id
+	int_type flags
+	window_layout_type layout
+	window_inputs_type inputs
+	window_callbacks_type callbacks
+	weakref$weakref_type _gfx_context
+))
+
+(= window_window_module_type (&:
+	(~ type_type) window_window_type
+	(~ int_type) FLAG_BUTTON_1
+	(~ int_type) FLAG_BUTTON_2
+	(~ int_type) FLAG_BUTTON_3
+	(~ int_type) FLAG_BUTTON_4
+	(~ int_type) FLAG_BUTTON_5
+	(~ int_type) FLAG_BUTTON_6
+	(~ int_type) FLAG_BUTTON_LEFT
+	(~ int_type) FLAG_BUTTON_MIDDLE
+	(~ int_type) FLAG_BUTTON_RIGHT
+	(~ int_type) FLAG_CLOSED
+	(~ int_type) FLAG_HAS_MOUSE
+	(~ int_type) FLAG_IN_FOCUS
+	(~ int_type) FLAG_SHOWN
+	(~ int_type) SCROLL_DOWN
+	(~ int_type) SCROLL_LEFT
+	(~ int_type) SCROLL_RIGHT
+	(~ int_type) SCROLL_UP
+	(~ int_type) STATE_FULLSCREEN
+	(~ int_type) STATE_MAXIMIZED
+	(~ int_type) STATE_MINIMIZED
+	(~ int_type) STATE_NORMAL
+	(~ func_type) create
+	(~ func_type) destroy
+	(~ func_type) get
+	(~ func_type) hide
+	(~ func_type) is_button_pressed?
+	(~ func_type) is_key_pressed?
+	(~ func_type) set_cursor
+	(~ func_type) set_geometry
+	(~ func_type) set_icon
+	(~ func_type) set_size_constraints
+	(~ func_type) set_state
+	(~ func_type) set_title
+	(~ func_type) set_visibility
+	(~ func_type) show
+))
+
+
+
+(= KEY_COUNT 256)
+
+(= FLAG_IN_FOCUS 1)
+(= FLAG_HAS_MOUSE 2)
+(= FLAG_CLOSED 4)
+(= FLAG_SHOWN 8)
+(= FLAG_BUTTON_1 16)
+(= FLAG_BUTTON_2 (<< FLAG_BUTTON_1 1))
+(= FLAG_BUTTON_3 (<< FLAG_BUTTON_1 2))
+(= FLAG_BUTTON_4 (<< FLAG_BUTTON_1 3))
+(= FLAG_BUTTON_5 (<< FLAG_BUTTON_1 4))
+(= FLAG_BUTTON_6 (<< FLAG_BUTTON_1 5))
+(= FLAG_BUTTON_LEFT FLAG_BUTTON_1)
+(= FLAG_BUTTON_MIDDLE FLAG_BUTTON_2)
+(= FLAG_BUTTON_RIGHT FLAG_BUTTON_3)
+
+(= SCROLL_DOWN 0)
+(= SCROLL_UP 1)
+(= SCROLL_RIGHT 2)
+(= SCROLL_LEFT 3)
+
+(= STATE_FULLSCREEN 3)
+(= STATE_MAXIMIZED 2)
+(= STATE_MINIMIZED 1)
+(= STATE_NORMAL 0)
+
+
+
+(= _window_map <>)
+
+
+
+(= create (,,, geometry parent title visible?
+	(= geometry (:: geometry window_geometry$window_geometry_type))
+	(= parent_id (?: parent
+		(: (:: parent window_window_type) "id")
+		0xffffffffffffffff
+	))
+	(= id (<- (... "window:window_create")
+		geometry$x
+		geometry$y
+		geometry$width
+		geometry$height
+		parent_id
+	))
+	(<- audit$audit "window.create" "i" id)
+	(= out (. window_window_type
+		id
+	))
+	(= out$layout$geometry geometry)
+	(= out$layout$state STATE_NORMAL)
+	(= out$layout$_deferred_state_change -1)
+	(= out$inputs$_keys (<- array$create (>> (+ KEY_COUNT 63) 6)))
+	(= out$_gfx_context weakref$NIL_REF)
+	(= (: _window_map id) (<- weakref$ref out))
+	(? title (<- set_title out title))
+	(? visible? (<- set_visibility out true))
+	(@@ out)
+))
+
+(= destroy (,,, window
+	(? (! window) (@@))
+	(= window (:: window window_window_type))
+	(? (& window$flags FLAG_CLOSED) (@@))
+	(<- window_util$__gfx_callbacks$resize window)
+	(<- window$callbacks$destroy window)
+	(= window$flags (| window$flags FLAG_CLOSED))
+	(<- audit$audit "window.destroy" "i" window$id)
+	(<- (... "window:window_destroy") window$id)
+	(<- window$callbacks$cleanup window)
+))
+
+(= get (,,, id
+	(= window (: _window_map id))
+	(@@ (?: window
+		(<- weakref$get window)
+		nil
+	))
+))
+
+(= hide (,,, window
+	(<- set_visibility window false)
+))
+
+(= is_button_pressed? (,,, window button
+	(? (! window) (@@ false))
+	(= window (:: window window_window_type))
+	(= button (:: button int_type))
+	(? (< button 1) (@@ false))
+	(@@ (!! (&
+		window$flags
+		(<< FLAG_BUTTON_1 (- button 1))
+	)))
+))
+
+(= is_key_pressed? (,,, window key
+	(? (! window) (@@ false))
+	(= window (:: window window_window_type))
+	(= key (:: key int_type))
+	(@@ (!! (&
+		(: window$inputs$_keys (>> key 6))
+		(<< 1 (& key 63))
+	)))
+))
+
+(= set_cursor (,,, window cursor
+	(? (! window) (@@))
+	(= window (:: window window_window_type))
+	(= cursor (?: cursor (:: cursor window_cursor$window_cursor_type) window_cursor$CURSOR_DEFAULT))
+	(<- (... "window:cursor_apply_to_window")
+		window$id
+		cursor$id
+	)
+))
+
+(= set_geometry (,,, window geometry
+	(? (! window) (@@))
+	(= window (:: window window_window_type))
+	(= geometry (:: geometry window_geometry$window_geometry_type))
+	(= window$layout$geometry geometry)
+	(<- (... "window:window_set_geometry")
+		window$id
+		geometry$x
+		geometry$y
+		geometry$width
+		geometry$height
+	)
+))
+
+(= set_icon (,,, window image
+	(? (! window) (@@))
+	(= window (:: window window_window_type))
+	(? (! image) {
+		(<- (... "window:window_set_icon") window$id 0 "")
+	} {
+		(= image (:: image window_image$window_image_type))
+		(<- (... "window:window_set_icon") window$id image$width image$data)
+	})
+))
+
+(= set_size_constraints (,,, window width height
+	(? (! window) (@@))
+	(= window (:: window window_window_type))
+	(= width (:: width window_range$window_range_type))
+	(= height (:: height window_range$window_range_type))
+	(? (&&
+		(=== window$layout$width_constraints width)
+		(=== window$layout$height_constraints height)
+	) (@@))
+	(= window$layout$width_constraints width)
+	(= window$layout$height_constraints height)
+	(= new_size [window$layout$geometry$width window$layout$geometry$height])
+	(? (< (: new_size 0) width$min) (= (: new_size 0) width$min))
+	(? (> (: new_size 0) width$max) (= (: new_size 0) width$max))
+	(? (< (: new_size 1) height$min) (= (: new_size 1) height$min))
+	(? (> (: new_size 1) height$max) (= (: new_size 1) height$max))
+	(<- (... "window:window_set_geometry")
+		window$id
+		window$layout$geometry$x
+		window$layout$geometry$y
+		(: new_size 0)
+		(: new_size 1)
+	)
+	(<- (... "window:window_set_size_constraints")
+		window$id
+		width$min
+		height$min
+		width$max
+		height$max
+	)
+))
+
+(= set_state (,,, window state
+	(? (! window) (@@))
+	(= window (:: window window_window_type))
+	(= state (:: state int_type))
+	(? (&&
+		(!== state STATE_FULLSCREEN)
+		(!== state STATE_MAXIMIZED)
+		(!== state STATE_MINIMIZED)
+	) (= state STATE_NORMAL))
+	(? (! (& window$flags FLAG_SHOWN)) {
+		(= window$layout$_deferred_state_change state)
+		(@@)
+	})
+	(? (=== state window$layout$state) (@@))
+	(<- (... "window:window_set_state")
+		window$id
+		state
+	)
+	(= window$layout$state state)
+))
+
+(= set_title (,,, window title
+	(? (! window) (@@))
+	(= window (:: window window_window_type))
+	(= title (?: title (:: title string_type) ""))
+	(= title (: (<- string$split title '\x00') 0))
+	(= window$layout$title title)
+	(<- (... "window:window_set_title")
+		window$id
+		title
+	)
+))
+
+(= set_visibility (,,, window show?
+	(? (! window) (@@))
+	(= window (:: window window_window_type))
+	(= window$flags (?: show?
+		(| window$flags FLAG_SHOWN)
+		(& window$flags (~ FLAG_SHOWN))
+	)
+	(<- (... "window:window_set_visibility") window$id show?)
+	(? (=== window$layout$_deferred_state_change -1) (@@))
+	(<- set_state window window$layout$_deferred_state_change)
+	(= window$layout$_deferred_state_change -1)
+))
+
+(= show (,,, window
+	(<- set_visibility window true)
+))
+
+
+
+(= window_window (. window_window_module_type
+	window_window_type
+	FLAG_BUTTON_1
+	FLAG_BUTTON_2
+	FLAG_BUTTON_3
+	FLAG_BUTTON_4
+	FLAG_BUTTON_5
+	FLAG_BUTTON_6
+	FLAG_BUTTON_LEFT
+	FLAG_BUTTON_MIDDLE
+	FLAG_BUTTON_RIGHT
+	FLAG_CLOSED
+	FLAG_HAS_MOUSE
+	FLAG_IN_FOCUS
+	FLAG_SHOWN
+	SCROLL_DOWN
+	SCROLL_LEFT
+	SCROLL_RIGHT
+	SCROLL_UP
+	STATE_FULLSCREEN
+	STATE_MAXIMIZED
+	STATE_MINIMIZED
+	STATE_NORMAL
+	create
+	destroy
+	get
+	hide
+	is_button_pressed?
+	is_key_pressed?
+	set_cursor
+	set_geometry
+	set_icon
+	set_size_constraints
+	set_state
+	set_title
+	set_visibility
+	show
+))
+(## window_window)

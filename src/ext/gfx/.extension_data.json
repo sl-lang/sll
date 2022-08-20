@@ -1,6 +1,6 @@
 {
 	"required_extensions": [
-		"window"
+		"window_manager"
 	],
 	"installation_scripts": {
 		"darwin": "install/darwin.sh",

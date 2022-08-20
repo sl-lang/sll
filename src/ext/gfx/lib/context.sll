@@ -4,8 +4,8 @@
 	"string.sll"
 	"types.sll"
 	"weakref.sll"
-	"window/util.sll"
-	"window/window.sll"
+	"window_manager/util.sll"
+	"window_manager/window.sll"
 )
 
 

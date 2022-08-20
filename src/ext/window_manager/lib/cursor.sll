@@ -1,0 +1,119 @@
+(---
+	"string.sll"
+	"types.sll"
+	"window_manager/display.sll"
+)
+
+
+
+(= window_cursor_type (&:
+	(~ int_type) id
+))
+
+(= window_cursor_position_type (&:
+	(,,, data
+		(@@ (<- string$format "<%lld %lld>" data$x data$y))
+	) @@string@@
+	int_type x
+	int_type y
+))
+
+(= window_cursor_module_type (&:
+	(~ type_type) window_cursor_position_type
+	(~ type_type) window_cursor_type
+	(~ window_cursor_type) CURSOR_HIDDEN
+	(~ window_cursor_type) CURSOR_DEFAULT
+	(~ window_cursor_type) CURSOR_CROSS
+	(~ window_cursor_type) CURSOR_I_BEAM
+	(~ window_cursor_type) CURSOR_WAIT
+	(~ window_cursor_type) CURSOR_BUSY
+	(~ window_cursor_type) CURSOR_FORBIDDEN
+	(~ window_cursor_type) CURSOR_POINTER
+	(~ window_cursor_type) CURSOR_RESIZE_VERTICAL
+	(~ window_cursor_type) CURSOR_RESIZE_HORIZONTAL
+	(~ window_cursor_type) CURSOR_RESIZE_DIAGONAL_BT
+	(~ window_cursor_type) CURSOR_RESIZE_DIAGONAL_TB
+	(~ window_cursor_type) CURSOR_RESIZE_ALL
+	(~ window_cursor_type) CURSOR_HELP
+	(~ func_type) center
+	(~ func_type) get
+	(~ func_type) set
+))
+
+
+
+(= CURSOR_HIDDEN (. window_cursor_type 0))
+(= CURSOR_DEFAULT (. window_cursor_type 1))
+(= CURSOR_CROSS (. window_cursor_type 2))
+(= CURSOR_I_BEAM (. window_cursor_type 3))
+(= CURSOR_WAIT (. window_cursor_type 4))
+(= CURSOR_BUSY (. window_cursor_type 5))
+(= CURSOR_FORBIDDEN (. window_cursor_type 6))
+(= CURSOR_POINTER (. window_cursor_type 7))
+(= CURSOR_RESIZE_VERTICAL (. window_cursor_type 8))
+(= CURSOR_RESIZE_HORIZONTAL (. window_cursor_type 9))
+(= CURSOR_RESIZE_DIAGONAL_BT (. window_cursor_type 10))
+(= CURSOR_RESIZE_DIAGONAL_TB (. window_cursor_type 11))
+(= CURSOR_RESIZE_ALL (. window_cursor_type 12))
+(= CURSOR_HELP (. window_cursor_type 13))
+
+
+
+(= _root_screen (: (<- window_display$enumerate) 0))
+(= _center_location (. window_cursor_position_type
+	(+ _root_screen$geometry$x (>> _root_screen$geometry$width 1))
+	(+ _root_screen$geometry$y (>> _root_screen$geometry$height 1))
+))
+
+
+
+(= center (,,, window
+	(= position _center_location)
+	(? window {
+		(= position (. window_cursor_position_type
+			(+ window$layout$geometry$x (>> window$layout$geometry$width 1))
+			(+ window$layout$geometry$y (>> window$layout$geometry$height 1))
+		))
+	})
+	(<- (... "window:cursor_set_position")
+		position$x
+		position$y
+	)
+))
+
+(= get (,,,
+	(@@ (:: (<- (... "window:cursor_get_position")) window_cursor_position_type))
+))
+
+(= set (,,, position
+	(= position (:: position window_cursor_position_type))
+	(<- (... "window:cursor_set_position")
+		position$x
+		position$y
+	)
+))
+
+
+
+(= window_cursor (. window_cursor_module_type
+	window_cursor_position_type
+	window_cursor_type
+	CURSOR_HIDDEN
+	CURSOR_DEFAULT
+	CURSOR_CROSS
+	CURSOR_I_BEAM
+	CURSOR_WAIT
+	CURSOR_BUSY
+	CURSOR_FORBIDDEN
+	CURSOR_POINTER
+	CURSOR_RESIZE_VERTICAL
+	CURSOR_RESIZE_HORIZONTAL
+	CURSOR_RESIZE_DIAGONAL_BT
+	CURSOR_RESIZE_DIAGONAL_TB
+	CURSOR_RESIZE_ALL
+	CURSOR_HELP
+	center
+	get
+	set
+))
+(## window_cursor)
