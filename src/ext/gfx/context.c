@@ -39,6 +39,20 @@ static uint32_t _get_mem_type(const gfx_context_data_t* ctx,uint32_t mask,VkMemo
 
 
 
+static void _release_swapchain(gfx_context_data_t* ctx){
+	for (uint32_t i=0;i<ctx->swapchain_image_count;i++){
+		ctx->function_table.vkDestroyImageView(ctx->logical_device,ctx->swapchain_image_views[i],NULL);
+		ctx->function_table.vkDestroyFence(ctx->logical_device,ctx->fences[i],NULL);
+		ctx->function_table.vkDestroyFramebuffer(ctx->logical_device,ctx->frame_buffers[i],NULL);
+	}
+	ctx->function_table.vkDestroyImage(ctx->logical_device,ctx->depth_stensil_image,NULL);
+	ctx->function_table.vkDestroyImageView(ctx->logical_device,ctx->depth_stensil_image_view,NULL);
+	ctx->function_table.vkFreeMemory(ctx->logical_device,ctx->depth_stensil_memory,NULL);
+	ctx->function_table.vkDestroySwapchainKHR(ctx->logical_device,ctx->swapchain,NULL);
+}
+
+
+
 static void _create_swapchain(gfx_context_data_t* ctx){
 	VkSurfaceCapabilitiesKHR surface_caps;
 	VULKAN_CALL(ctx->function_table.vkGetPhysicalDeviceSurfaceCapabilitiesKHR(ctx->physical_device,ctx->surface,&surface_caps));
@@ -62,11 +76,12 @@ static void _create_swapchain(gfx_context_data_t* ctx){
 		VK_TRUE,
 		ctx->swapchain
 	};
-	VkSwapchainKHR old_swapchain=ctx->swapchain;
-	VULKAN_CALL(ctx->function_table.vkCreateSwapchainKHR(ctx->logical_device,&swapchain_creation_info,NULL,&(ctx->swapchain)));
-	if (old_swapchain!=VK_NULL_HANDLE){
-		SLL_WARN("Unimplemented!");
+	VkSwapchainKHR swapchain;
+	VULKAN_CALL(ctx->function_table.vkCreateSwapchainKHR(ctx->logical_device,&swapchain_creation_info,NULL,&swapchain));
+	if (ctx->swapchain!=VK_NULL_HANDLE){
+		_release_swapchain(ctx);
 	}
+	ctx->swapchain=swapchain;
 	VULKAN_CALL(ctx->function_table.vkGetSwapchainImagesKHR(ctx->logical_device,ctx->swapchain,&(ctx->swapchain_image_count),NULL));
 	ctx->swapchain_images=sll_reallocate(ctx->swapchain_images,ctx->swapchain_image_count*sizeof(VkImage));
 	VULKAN_CALL(ctx->function_table.vkGetSwapchainImagesKHR(ctx->logical_device,ctx->swapchain,&(ctx->swapchain_image_count),ctx->swapchain_images));
@@ -186,20 +201,12 @@ void _delete_context(gfx_context_data_t* ctx){
 	if (!ctx){
 		return;
 	}
-	for (uint32_t i=0;i<ctx->swapchain_image_count;i++){
-		ctx->function_table.vkDestroyImageView(ctx->logical_device,ctx->swapchain_image_views[i],NULL);
-		ctx->function_table.vkDestroyFence(ctx->logical_device,ctx->fences[i],NULL);
-		ctx->function_table.vkDestroyFramebuffer(ctx->logical_device,ctx->frame_buffers[i],NULL);
-	}
+	_release_swapchain(ctx);
 	sll_deallocate(ctx->swapchain_image_views);
 	sll_deallocate(ctx->fences);
 	sll_deallocate(ctx->frame_buffers);
 	ctx->function_table.vkDestroyPipelineCache(ctx->logical_device,ctx->pipeline_cache,NULL);
-	ctx->function_table.vkFreeMemory(ctx->logical_device,ctx->depth_stensil_memory,NULL);
-	ctx->function_table.vkDestroyImage(ctx->logical_device,ctx->depth_stensil_image,NULL);
 	ctx->function_table.vkDestroyRenderPass(ctx->logical_device,ctx->render_pass,NULL);
-	ctx->function_table.vkDestroyImageView(ctx->logical_device,ctx->depth_stensil_image_view,NULL);
-	ctx->function_table.vkDestroySwapchainKHR(ctx->logical_device,ctx->swapchain,NULL);
 	ctx->function_table.vkDestroyCommandPool(ctx->logical_device,ctx->command_pool,NULL);
 	ctx->function_table.vkDestroyDevice(ctx->logical_device,NULL);
 	ctx->function_table.vkDestroySurfaceKHR(ctx->instance,ctx->surface,NULL);
@@ -457,4 +464,14 @@ __GFX_API_CALL void gfx_api_context_delete(gfx_context_t ctx_id){
 		SLL_HANDLE_CONTAINER_DEALLOC(&gfx_context_data,ctx_id);
 		_delete_context(ctx);
 	}
+}
+
+
+
+__GFX_API_CALL void gfx_api_context_resize(gfx_context_t ctx_id){
+	gfx_context_data_t* ctx=SLL_HANDLE_CONTAINER_GET(&gfx_context_data,ctx_id);
+	if (!ctx){
+		return;
+	}
+	_create_swapchain(ctx);
 }

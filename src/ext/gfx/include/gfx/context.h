@@ -62,4 +62,8 @@ __GFX_API_CALL void gfx_api_context_delete(gfx_context_t ctx_id);
 
 
 
+__GFX_API_CALL void gfx_api_context_resize(gfx_context_t ctx_id);
+
+
+
 #endif

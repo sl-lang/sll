@@ -111,11 +111,16 @@
 			}
 			6 {
 				(= geometry (:: event window_geometry$window_geometry_type))
+				(? (||
+					(!== window$layout$geometry$width (: event 2))
+					(!== window$layout$geometry$height (: event 3))
+				) {
+					(<- window_util$__gfx_callbacks$resize window)
+				})
 				(= window$layout$geometry geometry)
 				(<- window$callbacks$geometry window geometry)
 				(<- window$callbacks$position window (: event 0) (: event 1))
 				(<- window$callbacks$size window (: event 2) (: event 3))
-				(<- window_util$__gfx_callbacks$resize window)
 			}
 			7 {
 				(= vertical? (: event 0))
