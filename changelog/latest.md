@@ -1,4 +1,4 @@
-# Sll [0.7.31] - Ongoing
+# Sll [0.7.31] - 2022-08-20
 
 ## Added
 
@@ -15,4 +15,4 @@
 
 - Empty file: `clib/structure.sll`
 
-[0.7.31]: https://github.com/sl-lang/sll/compare/sll-v0.7.30...main
+[0.7.31]: https://github.com/sl-lang/sll/compare/sll-v0.7.30...sll-v0.7.31
