@@ -10,6 +10,7 @@
 	"window/geometry.sll"
 	"window/image.sll"
 	"window/range.sll"
+	"window/util.sll"
 )
 
 
@@ -183,6 +184,7 @@
 	(? (! window) (@@))
 	(= window (:: window window_window_type))
 	(? (& window$flags FLAG_CLOSED) (@@))
+	(<- window_util$__gfx_callbacks$resize window)
 	(<- window$callbacks$destroy window)
 	(= window$flags (| window$flags FLAG_CLOSED))
 	(<- audit$audit "window.destroy" "i" window$id)

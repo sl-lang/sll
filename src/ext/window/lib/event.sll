@@ -4,6 +4,7 @@
 	"types.sll"
 	"window/_load_library.sll"
 	"window/geometry.sll"
+	"window/util.sll"
 	"window/window.sll"
 )
 
@@ -114,6 +115,7 @@
 				(<- window$callbacks$geometry window geometry)
 				(<- window$callbacks$position window (: event 0) (: event 1))
 				(<- window$callbacks$size window (: event 2) (: event 3))
+				(<- window_util$__gfx_callbacks$resize window)
 			}
 			7 {
 				(= vertical? (: event 0))
@@ -143,6 +145,7 @@
 				(= window$layout$geometry$height (: event 1))
 				(<- window$callbacks$geometry window window$layout$geometry)
 				(<- window$callbacks$size window (: event 0) (: event 1))
+				(<- window_util$__gfx_callbacks$resize window)
 			}
 		)
 	)

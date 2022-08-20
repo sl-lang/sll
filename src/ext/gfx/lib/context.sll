@@ -1,5 +1,6 @@
 (---
 	"gfx/_load_library.sll"
+	"gfx/_setup_window_integration.sll"
 	"string.sll"
 	"types.sll"
 	"weakref.sll"
@@ -39,6 +40,7 @@
 	(= window (:: window window_window$window_window_type))
 	(= ctx (<- weakref$get window$_gfx_context))
 	(? (!== ctx window$WEAKREF_NO_OBJECT) (@@ ctx))
+	(:> window_util '\n')
 	(= handle (<- (... "gfx:context_create")
 		window$id
 		(<- window_util$get_context)

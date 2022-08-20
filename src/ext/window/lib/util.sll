@@ -1,22 +1,30 @@
-(--- "types.sll")
+(---
+	"window/_load_library.sll"
+	"types.sll"
+)
 
 
+
+(= window_gfx_callbacks_type (&:
+	func_type delete
+	func_type resize
+))
 
 (= window_util_module_type (&:
-	object_type __gfx_module
+	window_gfx_callbacks_type __gfx_callbacks
 	(~ func_type) get_context
 ))
 
 
 
-(= __gfx_module nil)
+(= __gfx_callbacks (. window_gfx_callbacks_type))
 
 (= get_context (... "window:get_context"))
 
 
 
 (= window_util (. window_util_module_type
-	__gfx_module
+	__gfx_callbacks
 	get_context
 ))
 (## window_util)
