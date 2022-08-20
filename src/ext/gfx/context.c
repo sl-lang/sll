@@ -77,57 +77,6 @@ static void _create_swapchain(gfx_context_data_t* ctx){
 		ctx->swapchain_image_count
 	};
 	VULKAN_CALL(ctx->function_table.vkAllocateCommandBuffers(ctx->logical_device,&command_buffer_allocation_info,ctx->command_buffers));
-	ctx->swapchain_image_views=sll_reallocate(ctx->swapchain_image_views,ctx->swapchain_image_count*sizeof(VkImageView));
-	VkImageViewCreateInfo image_view_creation_info={
-		VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO,
-		NULL,
-		0,
-		VK_NULL_HANDLE,
-		VK_IMAGE_VIEW_TYPE_2D,
-		ctx->color_format,
-		{
-			VK_COMPONENT_SWIZZLE_R,
-			VK_COMPONENT_SWIZZLE_G,
-			VK_COMPONENT_SWIZZLE_B,
-			VK_COMPONENT_SWIZZLE_A
-		},
-		{
-			VK_IMAGE_ASPECT_COLOR_BIT,
-			0,
-			0,
-			0,
-			1
-		}
-	};
-	ctx->fences=sll_reallocate(ctx->fences,ctx->swapchain_image_count*sizeof(VkFence));
-	VkFenceCreateInfo fence_creation_info={
-		VK_STRUCTURE_TYPE_FENCE_CREATE_INFO,
-		NULL,
-		VK_FENCE_CREATE_SIGNALED_BIT
-	};
-	ctx->frame_buffers=sll_reallocate(ctx->frame_buffers,ctx->swapchain_image_count*sizeof(VkFramebuffer));
-	VkImageView frame_buffer_attachments[2]={
-		VK_NULL_HANDLE,
-		ctx->depth_stensil_image_view
-	};
-	VkFramebufferCreateInfo frame_buffer_creation_info={
-		VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO,
-		NULL,
-		0,
-		ctx->render_pass,
-		2,
-		frame_buffer_attachments,
-		surface_caps.currentExtent.width,
-		surface_caps.currentExtent.height,
-		1
-	};
-	for (uint32_t i=0;i<ctx->swapchain_image_count;i++){
-		image_view_creation_info.image=ctx->swapchain_images[i];
-		VULKAN_CALL(ctx->function_table.vkCreateImageView(ctx->logical_device,&image_view_creation_info,NULL,ctx->swapchain_image_views+i));
-		VULKAN_CALL(ctx->function_table.vkCreateFence(ctx->logical_device,&fence_creation_info,NULL,ctx->fences+i));
-		frame_buffer_attachments[0]=ctx->swapchain_image_views[i];
-		VULKAN_CALL(ctx->function_table.vkCreateFramebuffer(ctx->logical_device,&frame_buffer_creation_info,NULL,ctx->frame_buffers+i));
-	}
 	VkImageCreateInfo depth_stensil_image_creation_info={
 		VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO,
 		NULL,
@@ -176,6 +125,57 @@ static void _create_swapchain(gfx_context_data_t* ctx){
 		}
 	};
 	VULKAN_CALL(ctx->function_table.vkCreateImageView(ctx->logical_device,&deptch_stensil_image_view_creation_info,NULL,&(ctx->depth_stensil_image_view)));
+	ctx->swapchain_image_views=sll_reallocate(ctx->swapchain_image_views,ctx->swapchain_image_count*sizeof(VkImageView));
+	VkImageViewCreateInfo image_view_creation_info={
+		VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO,
+		NULL,
+		0,
+		VK_NULL_HANDLE,
+		VK_IMAGE_VIEW_TYPE_2D,
+		ctx->color_format,
+		{
+			VK_COMPONENT_SWIZZLE_R,
+			VK_COMPONENT_SWIZZLE_G,
+			VK_COMPONENT_SWIZZLE_B,
+			VK_COMPONENT_SWIZZLE_A
+		},
+		{
+			VK_IMAGE_ASPECT_COLOR_BIT,
+			0,
+			1,
+			0,
+			1
+		}
+	};
+	ctx->fences=sll_reallocate(ctx->fences,ctx->swapchain_image_count*sizeof(VkFence));
+	VkFenceCreateInfo fence_creation_info={
+		VK_STRUCTURE_TYPE_FENCE_CREATE_INFO,
+		NULL,
+		VK_FENCE_CREATE_SIGNALED_BIT
+	};
+	ctx->frame_buffers=sll_reallocate(ctx->frame_buffers,ctx->swapchain_image_count*sizeof(VkFramebuffer));
+	VkImageView frame_buffer_attachments[2]={
+		VK_NULL_HANDLE,
+		ctx->depth_stensil_image_view
+	};
+	VkFramebufferCreateInfo frame_buffer_creation_info={
+		VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO,
+		NULL,
+		0,
+		ctx->render_pass,
+		2,
+		frame_buffer_attachments,
+		surface_caps.currentExtent.width,
+		surface_caps.currentExtent.height,
+		1
+	};
+	for (uint32_t i=0;i<ctx->swapchain_image_count;i++){
+		image_view_creation_info.image=ctx->swapchain_images[i];
+		VULKAN_CALL(ctx->function_table.vkCreateImageView(ctx->logical_device,&image_view_creation_info,NULL,ctx->swapchain_image_views+i));
+		VULKAN_CALL(ctx->function_table.vkCreateFence(ctx->logical_device,&fence_creation_info,NULL,ctx->fences+i));
+		frame_buffer_attachments[0]=ctx->swapchain_image_views[i];
+		VULKAN_CALL(ctx->function_table.vkCreateFramebuffer(ctx->logical_device,&frame_buffer_creation_info,NULL,ctx->frame_buffers+i));
+	}
 }
 
 
