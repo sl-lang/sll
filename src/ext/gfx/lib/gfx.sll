@@ -37,10 +37,10 @@
 	(? (! window) (@@ nil))
 	(= window (:: window window_window$window_window_type))
 	(? window$_gfx_context (@@ window$_gfx_context))
-	; (= handle (<- (... "gfx:context_create")
-	; 	window$id
-	; 	(<- window_util$get_context)
-	; ))
+	(= handle (<- (... "gfx:context_create")
+		window$id
+		(<- window_util$get_context)
+	))
 	(= out (. gfx_context_type
 		handle
 		window

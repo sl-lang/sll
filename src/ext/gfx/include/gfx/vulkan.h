@@ -18,6 +18,10 @@
 
 
 
+extern const char* validation_layer_name;
+
+
+
 void _check_error_code(const char* str,VkResult err);
 
 

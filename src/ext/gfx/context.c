@@ -7,11 +7,28 @@
 
 
 
+#ifdef DEBUG_BUILD
+#define EANBLED_EXTENSION_COUNT 3
+#else
+#define EANBLED_EXTENSION_COUNT 2
+#endif
+
+
+
 static const float _default_queue_priority=0.0f;
 
 
 
 sll_handle_container_t gfx_context_data;
+
+
+
+#ifdef DEBUG_BUILD
+static VKAPI_ATTR VkBool32 _debug_messenger_callback(VkDebugUtilsMessageSeverityFlagBitsEXT severity,VkDebugUtilsMessageTypeFlagsEXT type,const VkDebugUtilsMessengerCallbackDataEXT* data,gfx_context_data_t* ctx){
+	SLL_WARN("%s",data->pMessage);
+	return VK_FALSE;
+}
+#endif
 
 
 
@@ -195,22 +212,40 @@ __GFX_API_CALL gfx_context_t gfx_api_context_create(void* handle,void* extra_dat
 		SLL_VERSION,
 		VK_API_VERSION_1_0
 	};
-	const char* enabled_extensions[2]={
+	const char* enabled_extensions[EANBLED_EXTENSION_COUNT]={
 		VK_KHR_SURFACE_EXTENSION_NAME,
-		GFX_VULKAN_REQUIRED_EXTENSION_NAME
+		GFX_VULKAN_REQUIRED_EXTENSION_NAME,
+#ifdef DEBUG_BUILD
+		VK_EXT_DEBUG_UTILS_EXTENSION_NAME
+#endif
 	};
 	VkInstanceCreateInfo instance_creation_info={
 		VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO,
 		NULL,
 		0,
 		&app_info,
-		0,
-		NULL,
-		2,
+		!!validation_layer_name,
+		&validation_layer_name,
+		2+!!validation_layer_name,
 		enabled_extensions
 	};
 	gfx_context_data_t* ctx=sll_zero_allocate(sizeof(gfx_context_data_t));
 	VULKAN_CALL(vkCreateInstance(&instance_creation_info,NULL,&(ctx->instance)));
+#ifdef DEBUG_BUILD
+	VkDebugUtilsMessengerCreateInfoEXT debug_messenger_cretion_info={
+		VK_STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT,
+		NULL,
+		0,
+		VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT|VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT|VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT,
+		VK_DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT|VK_DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT|VK_DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT,
+		(PFN_vkDebugUtilsMessengerCallbackEXT)_debug_messenger_callback,
+		ctx
+	};
+	PFN_vkCreateDebugUtilsMessengerEXT vkCreateDebugUtilsMessengerEXT=(PFN_vkCreateDebugUtilsMessengerEXT)vkGetInstanceProcAddr(ctx->instance,"vkCreateDebugUtilsMessengerEXT");
+	if (vkCreateDebugUtilsMessengerEXT){
+		VULKAN_CALL(vkCreateDebugUtilsMessengerEXT(ctx->instance,&debug_messenger_cretion_info,NULL,&(ctx->debug_messenger)));
+	}
+#endif
 	sll_error_raise_bool(!_load_vulkan_function_table(ctx->instance,&(ctx->function_table)));
 #ifdef __SLL_BUILD_DARWIN
 	VkMacOSSurfaceCreateInfoMVK surface_creation_info={
