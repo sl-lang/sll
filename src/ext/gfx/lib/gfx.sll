@@ -2,6 +2,7 @@
 	"gfx/_load_library.sll"
 	"string.sll"
 	"types.sll"
+	"weakref.sll"
 	"window/util.sll"
 	"window/window.sll"
 )
@@ -36,7 +37,8 @@
 (= create_context (,,, window
 	(? (! window) (@@ nil))
 	(= window (:: window window_window$window_window_type))
-	(? window$_gfx_context (@@ window$_gfx_context))
+	(= ctx (<- weakref$get window$_gfx_context))
+	(? (!== ctx window$WEAKREF_NO_OBJECT) (@@ ctx))
 	(= handle (<- (... "gfx:context_create")
 		window$id
 		(<- window_util$get_context)
@@ -45,19 +47,23 @@
 		handle
 		window
 	))
-	(= window$_gfx_context out)
+	(= window$_gfx_context (<- weakref$ref out))
 	(@@ out)
 ))
 
 (= delete_context (,,, ctx
-	(= ctx$window$_gfx_context nil)
+	(= ctx$window$_gfx_context weakref$NIL_REF)
 	(<- (... "gfx:context_delete") ctx$_handle)
 ))
 
 (= get_context (,,, window
 	(? (! window) (@@ nil))
 	(= window (:: window window_window$window_window_type))
-	(@@ window$_gfx_context)
+	(= out (<- weakref$get window$_gfx_context))
+	(@@ (?: (=== out weakref$WEAKREF_NO_OBJECT)
+		nil
+		out
+	))
 ))
 
 

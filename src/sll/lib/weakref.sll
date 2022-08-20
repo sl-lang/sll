@@ -26,6 +26,7 @@
 
 (= weakref_module_type (&:
 	(~ type_type) weakref_type
+	(~ weakref_type) NIL_REF
 	(~ weakref_no_object) WEAKREF_NO_OBJECT
 	(~ func_type) get
 	(~ func_type) ref
@@ -68,10 +69,13 @@
 
 (<- (... "sll:weakref__init") WEAKREF_NO_OBJECT _execute_callbacks)
 
+(= NIL_REF (<- ref nil))
+
 
 
 (= weakref (. weakref_module_type
 	weakref_type
+	NIL_REF
 	WEAKREF_NO_OBJECT
 	get
 	ref

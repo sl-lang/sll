@@ -75,7 +75,7 @@
 	window_layout_type layout
 	window_inputs_type inputs
 	window_callbacks_type callbacks
-	object_type _gfx_context
+	weakref$weakref_type _gfx_context
 ))
 
 (= window_window_module_type (&:
@@ -172,7 +172,7 @@
 	(= out$layout$state STATE_NORMAL)
 	(= out$layout$_deferred_state_change -1)
 	(= out$inputs$_keys (<- array$create (>> (+ KEY_COUNT 63) 6)))
-	(= out$_gfx_context nil)
+	(= out$_gfx_context weakref$NIL_REF)
 	(= (: _window_map id) (<- weakref$ref out))
 	(? title (<- set_title out title))
 	(? visible? (<- set_visibility out true))

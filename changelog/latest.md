@@ -4,5 +4,6 @@
 
 - GFX extension
 - Implemented `sll_error_raise` and `sll_error_raise_bool`
+- Implemneted `weakref$NIL_REF`
 
 [0.7.31]: https://github.com/sl-lang/sll/compare/sll-v0.7.30...main
