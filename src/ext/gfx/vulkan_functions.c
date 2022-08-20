@@ -19,15 +19,8 @@
 
 
 PFN_vkCreateInstance vkCreateInstance;
-#ifdef __SLL_BUILD_DARWIN
-PFN_vkCreateMacOSSurfaceMVK vkCreateMacOSSurfaceMVK;
-#elif defined(__SLL_BUILD_LINUX)
-PFN_vkCreateXcbSurfaceKHR vkCreateXcbSurfaceKHR;
-#else
-PFN_vkCreateWin32SurfaceKHR vkCreateWin32SurfaceKHR;
-#endif
-PFN_vkDestroyInstance vkDestroyInstance;
 PFN_vkEnumerateInstanceExtensionProperties vkEnumerateInstanceExtensionProperties;
+PFN_vkEnumerateInstanceLayerProperties vkEnumerateInstanceLayerProperties;
 PFN_vkGetInstanceProcAddr vkGetInstanceProcAddr;
 
 
@@ -41,6 +34,7 @@ sll_bool_t _load_vulkan_functions(PFN_vkGetInstanceProcAddr get_proc_addr){
 	sll_bool_t ret=1;
 	LOAD_FUNCTION(vkCreateInstance);
 	LOAD_FUNCTION(vkEnumerateInstanceExtensionProperties);
+	LOAD_FUNCTION(vkEnumerateInstanceLayerProperties);
 	return ret;
 }
 

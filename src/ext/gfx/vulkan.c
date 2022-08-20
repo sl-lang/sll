@@ -10,6 +10,10 @@ static sll_library_handle_t _vulkan_library_handle;
 
 
 
+const char* validation_layer_name=NULL;
+
+
+
 void _check_error_code(const char* str,VkResult err){
 	const char* err_str;
 	switch (err){
@@ -171,6 +175,18 @@ sll_bool_t _init_vulkan(void){
 		}
 	}
 	sll_deallocate(extension_properties);
+#ifdef DEBUG_BUILD
+	VULKAN_CALL(vkEnumerateInstanceLayerProperties(&count,NULL));
+	VkLayerProperties* layer_properties=sll_allocate_stack(count*sizeof(VkLayerProperties));
+	VULKAN_CALL(vkEnumerateInstanceLayerProperties(&count,layer_properties));
+	for (uint32_t i=0;i<count;i++){
+		if (sll_string_compare_pointer(SLL_CHAR((layer_properties+i)->layerName),SLL_CHAR("VK_LAYER_KHRONOS_validation"))==SLL_COMPARE_RESULT_EQUAL){
+			validation_layer_name="VK_LAYER_KHRONOS_validation";
+			break;
+		}
+	}
+	sll_deallocate(layer_properties);
+#endif
 	return has_vk_khr_surface&&has_system_surface;
 }
 

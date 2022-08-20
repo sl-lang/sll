@@ -47,6 +47,7 @@ typedef struct _GFX_VULKAN_FUNCTION_TABLE{
 
 extern PFN_vkCreateInstance vkCreateInstance;
 extern PFN_vkEnumerateInstanceExtensionProperties vkEnumerateInstanceExtensionProperties;
+extern PFN_vkEnumerateInstanceLayerProperties vkEnumerateInstanceLayerProperties;
 extern PFN_vkGetInstanceProcAddr vkGetInstanceProcAddr;
 
 
