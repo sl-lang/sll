@@ -25,12 +25,7 @@
 
 
 (= get_extensions (,,,
-	(= extensions (<- (... "gfx:vulkan_get_extensions")))
-	(@@ ([> (= i 0) (< i ($ extensions))
-		(= extension (: extensions i))
-		(++ i)
-		extension
-	))
+	(@@ (<- (... "gfx:vulkan_get_extensions")))
 ))
 
 (= get_version (,,,
