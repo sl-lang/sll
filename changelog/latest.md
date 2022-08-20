@@ -4,6 +4,7 @@
 
 - GFX extension
 - Implemented `sll_error_raise` and `sll_error_raise_bool`
+- Implemented `window_manager/window_manager.sll`
 - Implemneted `weakref$NIL_REF`
 
 ## Changed

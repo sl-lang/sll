@@ -12,29 +12,29 @@
 
 
 
-(= window_manger_module_type (&:
-	(~ (:? window_cursor)) cursor
-	(~ (:? window_display)) display
-	(~ (:? window_event)) event
-	(~ (:? window_geometry)) geometry
-	(~ (:? window_image)) image
-	(~ (:? window_keyboard)) keyboard
-	(~ (:? window_range)) range
-	(~ (:? window_util)) util
-	(~ (:? window_window)) window
+(= window_manager_manger_module_type (&:
+	(~ (:? window_manager_cursor)) cursor
+	(~ (:? window_manager_display)) display
+	(~ (:? window_manager_event)) event
+	(~ (:? window_manager_geometry)) geometry
+	(~ (:? window_manager_image)) image
+	(~ (:? window_manager_keyboard)) keyboard
+	(~ (:? window_manager_range)) range
+	(~ (:? window_manager_util)) util
+	(~ (:? window_manager_window)) window
 ))
 
 
 
-(= window_manger (. window_manger_module_type
-	window_cursor
-	window_display
-	window_event
-	window_geometry
-	window_image
-	window_keyboard
-	window_range
-	window_util
-	window_window
+(= window_manger (. window_manager_manger_module_type
+	window_manager_cursor
+	window_manager_display
+	window_manager_event
+	window_manager_geometry
+	window_manager_image
+	window_manager_keyboard
+	window_manager_range
+	window_manager_util
+	window_manager_window
 ))
 (## window_manger)

@@ -2,7 +2,7 @@
 
 
 
-(= window_keyboard_module_type (&:
+(= window_manager_keyboard_module_type (&:
 	(~ int_type) KEY_BACKSPACE
 	(~ int_type) KEY_TAB
 	(~ int_type) KEY_ENTER
@@ -266,7 +266,7 @@
 
 
 
-(= window_keyboard (. window_keyboard_module_type
+(= window_manager_keyboard (. window_manager_keyboard_module_type
 	KEY_BACKSPACE
 	KEY_TAB
 	KEY_ENTER
@@ -396,4 +396,4 @@
 	KEY_RIGHT_SUPER
 	KEY_MENU
 ))
-(## window_keyboard)
+(## window_manager_keyboard)

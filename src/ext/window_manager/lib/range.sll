@@ -5,7 +5,7 @@
 
 
 
-(= window_range_type (&:
+(= window_manager_range_type (&:
 	(,,, data
 		(? (> data$max data$min) (@@))
 		(= tmp data$max)
@@ -22,13 +22,13 @@
 	int_type max
 ))
 
-(= window_range_module_type (&:
-	(~ type_type) window_range_type
+(= window_manager_range_module_type (&:
+	(~ type_type) window_manager_range_type
 ))
 
 
 
-(= window_range (. window_range_module_type
-	window_range_type
+(= window_manager_range (. window_manager_range_module_type
+	window_manager_range_type
 ))
-(## window_range)
+(## window_manager_range)

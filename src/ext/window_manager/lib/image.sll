@@ -5,7 +5,7 @@
 
 
 
-(= window_image_type (&:
+(= window_manager_image_type (&:
 	(,,, data
 		(@@ (<- string$format "<%llux%llu, RGBA>"
 			data$width
@@ -17,7 +17,7 @@
 	string_type data
 ))
 
-(= window_pixel_type (&:
+(= window_manager_pixel_type (&:
 	(,,, data
 		(@@ (<- string$format "#%.2hhx%.2hhx%.2hhx%.2hhx"
 			data$red
@@ -32,9 +32,9 @@
 	char_type alpha
 ))
 
-(= window_image_module_type (&:
-	(~ type_type) window_image_type
-	(~ type_type) window_pixel_type
+(= window_manager_image_module_type (&:
+	(~ type_type) window_manager_image_type
+	(~ type_type) window_manager_pixel_type
 	(~ func_type) create
 	(~ func_type) get_pixel
 	(~ func_type) set_pixel
@@ -48,13 +48,13 @@
  	(? (||
  		(! width)
  		(! height)
- 	) (@@ (. window_image_type
+ 	) (@@ (. window_manager_image_type
  		0
  		0
  		""
  	)))
- 	(= pixel (?: pixel (:: pixel window_pixel_type) (. window_pixel_type 255 255 255 255)))
- 	(@@ (. window_image_type
+ 	(= pixel (?: pixel (:: pixel window_manager_pixel_type) (. window_manager_pixel_type 255 255 255 255)))
+ 	(@@ (. window_manager_image_type
  		width
  		height
  		(*
@@ -71,7 +71,7 @@
 
 (= get_pixel (,,, image x y
 	(? (! image) (@@ nil))
-	(= image (:: image window_image_type))
+	(= image (:: image window_manager_image_type))
 	(= x (:: x int_type))
 	(= y (:: y int_type))
 	(? (||
@@ -85,7 +85,7 @@
 		(* y image$width)
 	) 4))
 	(= data (: image$data offset (+ offset 4)))
-	(@@ (. window_pixel_type
+	(@@ (. window_manager_pixel_type
 		(: data 0)
 		(: data 1)
 		(: data 2)
@@ -95,7 +95,7 @@
 
 (= set_pixel (,,, image x y pixel
 	(? (! image) (@@ nil))
-	(= image (:: image window_image_type))
+	(= image (:: image window_manager_image_type))
 	(= x (:: x int_type))
 	(= y (:: y int_type))
 	(? (||
@@ -104,7 +104,7 @@
 		(>= x image$width)
 		(>= y image$height)
 	) (@@ nil))
-	(= pixel (:: pixel window_pixel_type))
+	(= pixel (:: pixel window_manager_pixel_type))
 	(= offset (* (+
 		x
 		(* y image$width)
@@ -117,11 +117,11 @@
 
 
 
-(= window_image (. window_image_module_type
-	window_image_type
-	window_pixel_type
+(= window_manager_image (. window_manager_image_module_type
+	window_manager_image_type
+	window_manager_pixel_type
 	create
 	get_pixel
 	set_pixel
 ))
-(## window_image)
+(## window_manager_image)

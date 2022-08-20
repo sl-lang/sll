@@ -682,44 +682,44 @@ abc` '\n')
 
 (:> (<- path$relative "src/sll/gc.c" "src/_build") '\n')
 
-; (:> (<- window_display$enumerate) '\n')
+; (:> (<- window_manager_display$enumerate) '\n')
 
-; (= window (<- window_window$create [0 0 900 600] nil "Example Window" true))
-; (<- window_window$set_geometry window [300 300 1024 1024])
-; (<- window_window$set_size_constraints window [300 900] [300 600])
-; (= cursor_list [window_cursor$CURSOR_HIDDEN window_cursor$CURSOR_DEFAULT window_cursor$CURSOR_CROSS window_cursor$CURSOR_I_BEAM window_cursor$CURSOR_WAIT window_cursor$CURSOR_BUSY window_cursor$CURSOR_FORBIDDEN window_cursor$CURSOR_POINTER window_cursor$CURSOR_RESIZE_VERTICAL window_cursor$CURSOR_RESIZE_HORIZONTAL window_cursor$CURSOR_RESIZE_DIAGONAL_BT window_cursor$CURSOR_RESIZE_DIAGONAL_TB window_cursor$CURSOR_RESIZE_ALL window_cursor$CURSOR_HELP])
+; (= window (<- window_manager_window$create [0 0 900 600] nil "Example Window" true))
+; (<- window_manager_window$set_geometry window [300 300 1024 1024])
+; (<- window_manager_window$set_size_constraints window [300 900] [300 600])
+; (= cursor_list [window_manager_cursor$CURSOR_HIDDEN window_manager_cursor$CURSOR_DEFAULT window_manager_cursor$CURSOR_CROSS window_manager_cursor$CURSOR_I_BEAM window_manager_cursor$CURSOR_WAIT window_manager_cursor$CURSOR_BUSY window_manager_cursor$CURSOR_FORBIDDEN window_manager_cursor$CURSOR_POINTER window_manager_cursor$CURSOR_RESIZE_VERTICAL window_manager_cursor$CURSOR_RESIZE_HORIZONTAL window_manager_cursor$CURSOR_RESIZE_DIAGONAL_BT window_manager_cursor$CURSOR_RESIZE_DIAGONAL_TB window_manager_cursor$CURSOR_RESIZE_ALL window_manager_cursor$CURSOR_HELP])
 ; (= cursor_list_index 1)
-; (= example_icon (. window_image$window_image_type
+; (= example_icon (. window_manager_image$window_manager_image_type
 ; 	2
 ; 	2
 ; 	"\xff\x00\x00\xff\x00\xff\x00\xff\x00\x00\xff\xff\xff\xff\x00\xff"
 ; ))
 ; (= window$callbacks$key_down (,,, window key
 ; 	(?? key
-; 		window_keyboard$KEY_ESCAPE (<- window_window$destroy window)
-; 		'1' (<- window_window$set_state window window_window$STATE_MINIMIZED)
-; 		'2' (<- window_window$set_state window window_window$STATE_NORMAL)
-; 		'3' (<- window_window$set_state window window_window$STATE_MAXIMIZED)
-; 		'4' (<- window_window$set_state window window_window$STATE_FULLSCREEN)
-; 		'C' (:> (<- window_cursor$get) '\n')
-; 		'D' (<- window_cursor$center window)
-; 		'K' (<- window_window$set_icon window example_icon)
-; 		'L' (<- window_window$set_icon window nil)
-; 		'S' (<- window_cursor$center)
-; 		window_keyboard$KEY_LEFT {
+; 		window_manager_keyboard$KEY_ESCAPE (<- window_manager_window$destroy window)
+; 		'1' (<- window_manager_window$set_state window window_manager_window$STATE_MINIMIZED)
+; 		'2' (<- window_manager_window$set_state window window_manager_window$STATE_NORMAL)
+; 		'3' (<- window_manager_window$set_state window window_manager_window$STATE_MAXIMIZED)
+; 		'4' (<- window_manager_window$set_state window window_manager_window$STATE_FULLSCREEN)
+; 		'C' (:> (<- window_manager_cursor$get) '\n')
+; 		'D' (<- window_manager_cursor$center window)
+; 		'K' (<- window_manager_window$set_icon window example_icon)
+; 		'L' (<- window_manager_window$set_icon window nil)
+; 		'S' (<- window_manager_cursor$center)
+; 		window_manager_keyboard$KEY_LEFT {
 ; 			(? (! cursor_list_index) (= cursor_list_index ($ cursor_list)))
 ; 			(-- cursor_list_index)
-; 			(<- window_window$set_cursor window (: cursor_list cursor_list_index))
+; 			(<- window_manager_window$set_cursor window (: cursor_list cursor_list_index))
 ; 		}
-; 		window_keyboard$KEY_RIGHT {
+; 		window_manager_keyboard$KEY_RIGHT {
 ; 			(++ cursor_list_index)
 ; 			(? (=== cursor_list_index ($ cursor_list)) (= cursor_list_index 0))
-; 			(<- window_window$set_cursor window (: cursor_list cursor_list_index))
+; 			(<- window_manager_window$set_cursor window (: cursor_list cursor_list_index))
 ; 		}
 ; 	)
 ; ))
-; (-> nil (! (& window$flags window_window$FLAG_CLOSED))
-; 	(<- window_event$poll true)
+; (-> nil (! (& window$flags window_manager_window$FLAG_CLOSED))
+; 	(<- window_manager_event$poll true)
 ; )
 ; (:> window '\n')
 (:> [. . . . . . . .] '\n')
@@ -755,16 +755,17 @@ abc` '\n')
 (:> (<- gfx_vulkan$get_version) '\n')
 (:> (<- gfx_vulkan$get_extensions) '\n')
 
-(= window (<- window_window$create [0 0 900 600] nil "Example GFX Window" true))
+(= window (<- window_manager_window$create [0 0 900 600] nil "Example GFX Window" true))
 (= ctx (<- gfx_context$create window))
 (= window$callbacks$key_down (,,, window key
 	(?? key
-		window_keyboard$KEY_ESCAPE (<- window_window$destroy window)
+		window_manager_keyboard$KEY_ESCAPE (<- window_manager_window$destroy window)
 	)
 ))
-(-> nil (! (& window$flags window_window$FLAG_CLOSED))
-	(<- window_event$poll true)
+(-> nil (! (& window$flags window_manager_window$FLAG_CLOSED))
+	(<- window_manager_event$poll true)
 	(<- gfx_context$render ctx)
 )
 (:> ctx '\n')
 (:> window '\n')
+(--- "window_manager/window_manager.sll")

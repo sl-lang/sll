@@ -19,7 +19,7 @@
 
 
 
-(= window_callbacks_type (&:
+(= window_manager_callbacks_type (&:
 	func_type button
 	func_type button_down
 	func_type button_up
@@ -49,22 +49,22 @@
 	func_type state
 ))
 
-(= window_inputs_type (&:
+(= window_manager_inputs_type (&:
 	int_type mouse_x
 	int_type mouse_y
 	array_type _keys
 ))
 
-(= window_layout_type (&:
-	window_geometry$window_geometry_type geometry
-	window_range$window_range_type width_constraints
-	window_range$window_range_type height_constraints
+(= window_manager_layout_type (&:
+	window_manager_geometry$window_manager_geometry_type geometry
+	window_manager_range$window_manager_range_type width_constraints
+	window_manager_range$window_manager_range_type height_constraints
 	string_type title
 	int_type state
 	int_type _deferred_state_change
 ))
 
-(= window_window_type (&:
+(= window_manager_window_type (&:
 	(,,, data
 		(@@ (+ '<' data$layout$title " @ " (:: data$layout$geometry string_type) '>'))
 	) @@string@@
@@ -73,14 +73,14 @@
 	) @@delete@@
 	(~ int_type) id
 	int_type flags
-	window_layout_type layout
-	window_inputs_type inputs
-	window_callbacks_type callbacks
+	window_manager_layout_type layout
+	window_manager_inputs_type inputs
+	window_manager_callbacks_type callbacks
 	weakref$weakref_type _gfx_context
 ))
 
-(= window_window_module_type (&:
-	(~ type_type) window_window_type
+(= window_manager_window_module_type (&:
+	(~ type_type) window_manager_window_type
 	(~ int_type) FLAG_BUTTON_1
 	(~ int_type) FLAG_BUTTON_2
 	(~ int_type) FLAG_BUTTON_3
@@ -153,9 +153,9 @@
 
 
 (= create (,,, geometry parent title visible?
-	(= geometry (:: geometry window_geometry$window_geometry_type))
+	(= geometry (:: geometry window_manager_geometry$window_manager_geometry_type))
 	(= parent_id (?: parent
-		(: (:: parent window_window_type) "id")
+		(: (:: parent window_manager_window_type) "id")
 		0xffffffffffffffff
 	))
 	(= id (<- (... "window:window_create")
@@ -166,7 +166,7 @@
 		parent_id
 	))
 	(<- audit$audit "window.create" "i" id)
-	(= out (. window_window_type
+	(= out (. window_manager_window_type
 		id
 	))
 	(= out$layout$geometry geometry)
@@ -182,9 +182,9 @@
 
 (= destroy (,,, window
 	(? (! window) (@@))
-	(= window (:: window window_window_type))
+	(= window (:: window window_manager_window_type))
 	(? (& window$flags FLAG_CLOSED) (@@))
-	(<- window_util$__gfx_callbacks$resize window)
+	(<- window_manager_util$__gfx_callbacks$resize window)
 	(<- window$callbacks$destroy window)
 	(= window$flags (| window$flags FLAG_CLOSED))
 	(<- audit$audit "window.destroy" "i" window$id)
@@ -206,7 +206,7 @@
 
 (= is_button_pressed? (,,, window button
 	(? (! window) (@@ false))
-	(= window (:: window window_window_type))
+	(= window (:: window window_manager_window_type))
 	(= button (:: button int_type))
 	(? (< button 1) (@@ false))
 	(@@ (!! (&
@@ -217,7 +217,7 @@
 
 (= is_key_pressed? (,,, window key
 	(? (! window) (@@ false))
-	(= window (:: window window_window_type))
+	(= window (:: window window_manager_window_type))
 	(= key (:: key int_type))
 	(@@ (!! (&
 		(: window$inputs$_keys (>> key 6))
@@ -227,8 +227,8 @@
 
 (= set_cursor (,,, window cursor
 	(? (! window) (@@))
-	(= window (:: window window_window_type))
-	(= cursor (?: cursor (:: cursor window_cursor$window_cursor_type) window_cursor$CURSOR_DEFAULT))
+	(= window (:: window window_manager_window_type))
+	(= cursor (?: cursor (:: cursor window_manager_cursor$window_manager_cursor_type) window_manager_cursor$CURSOR_DEFAULT))
 	(<- (... "window:cursor_apply_to_window")
 		window$id
 		cursor$id
@@ -237,8 +237,8 @@
 
 (= set_geometry (,,, window geometry
 	(? (! window) (@@))
-	(= window (:: window window_window_type))
-	(= geometry (:: geometry window_geometry$window_geometry_type))
+	(= window (:: window window_manager_window_type))
+	(= geometry (:: geometry window_manager_geometry$window_manager_geometry_type))
 	(= window$layout$geometry geometry)
 	(<- (... "window:window_set_geometry")
 		window$id
@@ -251,20 +251,20 @@
 
 (= set_icon (,,, window image
 	(? (! window) (@@))
-	(= window (:: window window_window_type))
+	(= window (:: window window_manager_window_type))
 	(? (! image) {
 		(<- (... "window:window_set_icon") window$id 0 "")
 	} {
-		(= image (:: image window_image$window_image_type))
+		(= image (:: image window_manager_image$window_manager_image_type))
 		(<- (... "window:window_set_icon") window$id image$width image$data)
 	})
 ))
 
 (= set_size_constraints (,,, window width height
 	(? (! window) (@@))
-	(= window (:: window window_window_type))
-	(= width (:: width window_range$window_range_type))
-	(= height (:: height window_range$window_range_type))
+	(= window (:: window window_manager_window_type))
+	(= width (:: width window_manager_range$window_manager_range_type))
+	(= height (:: height window_manager_range$window_manager_range_type))
 	(? (&&
 		(=== window$layout$width_constraints width)
 		(=== window$layout$height_constraints height)
@@ -294,7 +294,7 @@
 
 (= set_state (,,, window state
 	(? (! window) (@@))
-	(= window (:: window window_window_type))
+	(= window (:: window window_manager_window_type))
 	(= state (:: state int_type))
 	(? (&&
 		(!== state STATE_FULLSCREEN)
@@ -315,7 +315,7 @@
 
 (= set_title (,,, window title
 	(? (! window) (@@))
-	(= window (:: window window_window_type))
+	(= window (:: window window_manager_window_type))
 	(= title (?: title (:: title string_type) ""))
 	(= title (: (<- string$split title '\x00') 0))
 	(= window$layout$title title)
@@ -327,7 +327,7 @@
 
 (= set_visibility (,,, window show?
 	(? (! window) (@@))
-	(= window (:: window window_window_type))
+	(= window (:: window window_manager_window_type))
 	(= window$flags (?: show?
 		(| window$flags FLAG_SHOWN)
 		(& window$flags (~ FLAG_SHOWN))
@@ -344,8 +344,8 @@
 
 
 
-(= window_window (. window_window_module_type
-	window_window_type
+(= window_manager_window (. window_manager_window_module_type
+	window_manager_window_type
 	FLAG_BUTTON_1
 	FLAG_BUTTON_2
 	FLAG_BUTTON_3
@@ -382,4 +382,4 @@
 	set_visibility
 	show
 ))
-(## window_window)
+(## window_manager_window)

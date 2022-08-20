@@ -6,11 +6,11 @@
 
 
 
-(= window_util$__gfx_callbacks$delete (,,, window
+(= window_manager_util$__gfx_callbacks$delete (,,, window
 	(= window$_gfx_context weakref$NIL_REF)
 ))
 
-(= window_util$__gfx_callbacks$resize (,,, window
+(= window_manager_util$__gfx_callbacks$resize (,,, window
 	(= ctx (<- weakref$get window$_gfx_context))
 	(? ctx {
 		(<- (... "gfx:context_resize") ctx$_handle)
