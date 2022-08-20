@@ -13,6 +13,6 @@
 
 ## Removed
 
-- Empty file `clib/structure.sll`
+- Empty file: `clib/structure.sll`
 
 [0.7.31]: https://github.com/sl-lang/sll/compare/sll-v0.7.30...main
