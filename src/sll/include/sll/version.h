@@ -44,7 +44,7 @@
  * \desc Docs!
  * \type sll_version_t
  */
-#define SLL_VERSION_PATCH 31
+#define SLL_VERSION_PATCH 32
 
 
 
