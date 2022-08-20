@@ -38,6 +38,8 @@ typedef struct _GFX_CONTEXT_DATA{
 	VkRenderPass render_pass;
 	VkPipelineCache pipeline_cache;
 	VkFramebuffer* frame_buffers;
+	VkSemaphore swapchain_present_semaphore;
+	VkSemaphore swapchain_render_semaphore;
 } gfx_context_data_t;
 
 
@@ -59,6 +61,10 @@ __GFX_API_CALL gfx_context_t gfx_api_context_create(void* handle,void* extra_dat
 
 
 __GFX_API_CALL void gfx_api_context_delete(gfx_context_t ctx_id);
+
+
+
+__GFX_API_CALL void gfx_api_context_render(gfx_context_t ctx_id);
 
 
 

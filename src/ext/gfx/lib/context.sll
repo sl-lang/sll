@@ -31,6 +31,7 @@
 	(~ func_type) create
 	(~ func_type) delete
 	(~ func_type) get
+	(~ func_type) render
 ))
 
 
@@ -53,6 +54,8 @@
 ))
 
 (= delete (,,, ctx
+	(? (! ctx) (@@))
+	(= ctx (:: ctx gfx_context_type))
 	(= ctx$window$_gfx_context weakref$NIL_REF)
 	(<- (... "gfx:context_delete") ctx$_handle)
 ))
@@ -67,11 +70,18 @@
 	))
 ))
 
+(= render (,,, ctx
+	(? (! ctx) (@@))
+	(= ctx (:: ctx gfx_context_type))
+	(<- (... "gfx:context_render") ctx$_handle)
+))
+
 
 
 (= gfx_context (. gfx_context_module_type
 	create
 	delete
 	get
+	render
 ))
 (## gfx_context)

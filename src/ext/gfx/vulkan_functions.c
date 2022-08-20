@@ -42,6 +42,7 @@ sll_bool_t _load_vulkan_functions(PFN_vkGetInstanceProcAddr get_proc_addr){
 
 sll_bool_t _load_vulkan_function_table(VkInstance instance,gfx_vulkan_function_table_t* out){
 	sll_bool_t ret=1;
+	LOAD_FUNCTION_TABLE(vkAcquireNextImageKHR);
 	LOAD_FUNCTION_TABLE(vkAllocateCommandBuffers);
 	LOAD_FUNCTION_TABLE(vkAllocateMemory);
 	LOAD_FUNCTION_TABLE(vkBindImageMemory);
@@ -53,7 +54,9 @@ sll_bool_t _load_vulkan_function_table(VkInstance instance,gfx_vulkan_function_t
 	LOAD_FUNCTION_TABLE(vkCreateImageView);
 	LOAD_FUNCTION_TABLE(vkCreatePipelineCache);
 	LOAD_FUNCTION_TABLE(vkCreateRenderPass);
+	LOAD_FUNCTION_TABLE(vkCreateSemaphore);
 	LOAD_FUNCTION_TABLE(vkCreateSwapchainKHR);
+	LOAD_FUNCTION_TABLE(vkDestroySemaphore);
 	LOAD_FUNCTION_TABLE(vkDestroyCommandPool);
 	LOAD_FUNCTION_TABLE(vkDestroyDevice);
 	LOAD_FUNCTION_TABLE(vkDestroyFence)
@@ -75,6 +78,8 @@ sll_bool_t _load_vulkan_function_table(VkInstance instance,gfx_vulkan_function_t
 	LOAD_FUNCTION_TABLE(vkGetPhysicalDeviceSurfaceFormatsKHR);
 	LOAD_FUNCTION_TABLE(vkGetPhysicalDeviceSurfaceSupportKHR);
 	LOAD_FUNCTION_TABLE(vkGetSwapchainImagesKHR);
+	LOAD_FUNCTION_TABLE(vkQueuePresentKHR);
+	LOAD_FUNCTION_TABLE(vkQueueWaitIdle);
 #ifdef __SLL_BUILD_DARWIN
 	LOAD_FUNCTION_TABLE(vkCreateMacOSSurfaceMVK);
 #elif defined(__SLL_BUILD_LINUX)

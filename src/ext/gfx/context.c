@@ -205,6 +205,8 @@ void _delete_context(gfx_context_data_t* ctx){
 	sll_deallocate(ctx->swapchain_image_views);
 	sll_deallocate(ctx->fences);
 	sll_deallocate(ctx->frame_buffers);
+	ctx->function_table.vkDestroySemaphore(ctx->logical_device,ctx->swapchain_present_semaphore,NULL);
+	ctx->function_table.vkDestroySemaphore(ctx->logical_device,ctx->swapchain_render_semaphore,NULL);
 	ctx->function_table.vkDestroyPipelineCache(ctx->logical_device,ctx->pipeline_cache,NULL);
 	ctx->function_table.vkDestroyRenderPass(ctx->logical_device,ctx->render_pass,NULL);
 	ctx->function_table.vkDestroyCommandPool(ctx->logical_device,ctx->command_pool,NULL);
@@ -449,6 +451,13 @@ __GFX_API_CALL gfx_context_t gfx_api_context_create(void* handle,void* extra_dat
 		NULL
 	};
 	VULKAN_CALL(ctx->function_table.vkCreatePipelineCache(ctx->logical_device,&pipeline_cache_creation_info,NULL,&(ctx->pipeline_cache)));
+	VkSemaphoreCreateInfo semaphore_creation_info={
+		VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO,
+		NULL,
+		0
+	};
+	VULKAN_CALL(ctx->function_table.vkCreateSemaphore(ctx->logical_device,&semaphore_creation_info,NULL,&(ctx->swapchain_present_semaphore)));
+	VULKAN_CALL(ctx->function_table.vkCreateSemaphore(ctx->logical_device,&semaphore_creation_info,NULL,&(ctx->swapchain_render_semaphore)));
 	_create_swapchain(ctx);
 	gfx_context_t out;
 	SLL_HANDLE_CONTAINER_ALLOC(&gfx_context_data,&out);
@@ -465,6 +474,30 @@ __GFX_API_CALL void gfx_api_context_delete(gfx_context_t ctx_id){
 		_delete_context(ctx);
 	}
 }
+
+
+
+__GFX_API_CALL void gfx_api_context_render(gfx_context_t ctx_id){
+	gfx_context_data_t* ctx=SLL_HANDLE_CONTAINER_GET(&gfx_context_data,ctx_id);
+	if (!ctx){
+		return;
+	}
+	uint32_t swapchain_image_index;
+	VULKAN_CALL(ctx->function_table.vkAcquireNextImageKHR(ctx->logical_device,ctx->swapchain,UINT64_MAX,ctx->swapchain_present_semaphore,NULL,&swapchain_image_index));
+	VkPresentInfoKHR present_info={
+		VK_STRUCTURE_TYPE_PRESENT_INFO_KHR,
+		NULL,
+		1,
+		&(ctx->swapchain_render_semaphore),
+		1,
+		&(ctx->swapchain),
+		&swapchain_image_index,
+		NULL
+	};
+	VULKAN_CALL(ctx->function_table.vkQueuePresentKHR(ctx->queue,&present_info));
+	VULKAN_CALL(ctx->function_table.vkQueueWaitIdle(ctx->queue));
+}
+
 
 
 

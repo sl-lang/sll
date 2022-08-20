@@ -16,6 +16,11 @@ static const sll_internal_function_descriptor_t _internal_function_table[]={
 		SLL_CHAR("Q|")
 	},
 	{
+		SLL_CHAR("gfx:context_render"),
+		gfx_api_context_render,
+		SLL_CHAR("Q|")
+	},
+	{
 		SLL_CHAR("gfx:context_resize"),
 		gfx_api_context_resize,
 		SLL_CHAR("Q|")
@@ -36,7 +41,7 @@ static const sll_internal_function_descriptor_t _internal_function_table[]={
 
 static const sll_internal_function_table_descriptor_t _internal_function_table_descriptor_data={
 	(const sll_internal_function_descriptor_t*)(&_internal_function_table),
-	4
+	6
 };
 
 
