@@ -1,0 +1,22 @@
+(---
+	"clib/function.sll"
+	"clib/library.sll"
+	"clib/types.sll"
+)
+
+
+
+(= clib_module_type (&:
+	(~ (:? clib_function)) function
+	(~ (:? clib_library)) library
+	(~ (:? clib_types)) types
+))
+
+
+
+(= clib (. clib_module_type
+	clib_function
+	clib_library
+	clib_types
+))
+(## clib)
