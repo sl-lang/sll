@@ -1,0 +1,40 @@
+(---
+	"window_manager/cursor.sll"
+	"window_manager/display.sll"
+	"window_manager/event.sll"
+	"window_manager/geometry.sll"
+	"window_manager/image.sll"
+	"window_manager/keyboard.sll"
+	"window_manager/range.sll"
+	"window_manager/util.sll"
+	"window_manager/window.sll"
+)
+
+
+
+(= window_manger_module_type (&:
+	(~ (:? window_cursor)) cursor
+	(~ (:? window_display)) display
+	(~ (:? window_event)) event
+	(~ (:? window_geometry)) geometry
+	(~ (:? window_image)) image
+	(~ (:? window_keyboard)) keyboard
+	(~ (:? window_range)) range
+	(~ (:? window_util)) util
+	(~ (:? window_window)) window
+))
+
+
+
+(= window_manger (. window_manger_module_type
+	window_cursor
+	window_display
+	window_event
+	window_geometry
+	window_image
+	window_keyboard
+	window_range
+	window_util
+	window_window
+))
+(## window_manger)
