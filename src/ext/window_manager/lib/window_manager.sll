@@ -12,7 +12,7 @@
 
 
 
-(= window_manager_manger_module_type (&:
+(= window_manger_module_type (&:
 	(~ (:? window_manager_cursor)) cursor
 	(~ (:? window_manager_display)) display
 	(~ (:? window_manager_event)) event
@@ -26,7 +26,7 @@
 
 
 
-(= window_manger (. window_manager_manger_module_type
+(= window_manger (. window_manger_module_type
 	window_manager_cursor
 	window_manager_display
 	window_manager_event
