@@ -94,7 +94,7 @@ static void _dump_object_data(sll_object_t object){
 			sll_file_write_format(sll_stderr,SLL_CHAR("%c (%u)"),NULL,object->data.char_,object->data.char_);
 			break;
 		case SLL_OBJECT_TYPE_COMPLEX:
-			sll_file_write_format(sll_stderr,SLL_CHAR("%lld%+lldi"),NULL,object->data.complex_.real,object->data.complex_.imag);
+			sll_file_write_format(sll_stderr,SLL_CHAR("%lf%+lfi"),NULL,object->data.complex_.real,object->data.complex_.imag);
 			break;
 		case SLL_OBJECT_TYPE_STRING:
 			sll_file_write_format(sll_stderr,SLL_CHAR("(%u) %s"),NULL,object->data.string.length,object->data.string.data);
