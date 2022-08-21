@@ -301,7 +301,7 @@ __GFX_API_CALL gfx_context_t gfx_api_context_create(void* handle,void* extra_dat
 	sll_error_raise_bool(!count||!"No GPU found");
 	VkPhysicalDevice* physical_device_data=sll_allocate_stack(count*sizeof(VkPhysicalDevice));
 	VULKAN_CALL(ctx->function_table.vkEnumeratePhysicalDevices(ctx->instance,&count,physical_device_data));
-	ctx->physical_device=*(physical_device_data+GFX_DEFAULT_GPU_INDEX);
+	ctx->physical_device=physical_device_data[GFX_DEFAULT_GPU_INDEX];
 	sll_deallocate(physical_device_data);
 	ctx->function_table.vkGetPhysicalDeviceMemoryProperties(ctx->physical_device,&(ctx->memory_properties));
 	ctx->function_table.vkGetPhysicalDeviceQueueFamilyProperties(ctx->physical_device,&count,NULL);
