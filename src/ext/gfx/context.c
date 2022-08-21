@@ -49,6 +49,8 @@ static void _release_swapchain(gfx_context_data_t* ctx){
 	ctx->function_table.vkDestroyImage(ctx->logical_device,ctx->depth_stensil_image,NULL);
 	ctx->function_table.vkDestroyImageView(ctx->logical_device,ctx->depth_stensil_image_view,NULL);
 	ctx->function_table.vkFreeMemory(ctx->logical_device,ctx->depth_stensil_memory,NULL);
+	ctx->function_table.vkDeviceWaitIdle(ctx->logical_device);
+	VULKAN_CALL(ctx->function_table.vkQueueWaitIdle(ctx->queue));
 	ctx->function_table.vkDestroySwapchainKHR(ctx->logical_device,ctx->swapchain,NULL);
 }
 
