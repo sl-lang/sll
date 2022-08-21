@@ -23,7 +23,7 @@
 		))
 	) @@string@@
 	(~ int_type) id
-	(~ window_manager_geometry$window_manager_geometry_type) geometry
+	(~ window_manager:geometry$window_manager_geometry_type) geometry
 	(~ float_type) rotation
 	(~ int_type) flags
 ))
@@ -54,10 +54,10 @@
 
 
 
-(= window_manager_display (. window_manager_display_module_type
+(= window_manager:display (. window_manager_display_module_type
 	window_manager_display_type
 	FLAG_ACTIVE
 	FLAG_MAIN_DISPLAY
 	enumerate
 ))
-(## window_manager_display)
+(## window_manager:display)

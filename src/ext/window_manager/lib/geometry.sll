@@ -58,8 +58,8 @@
 
 
 
-(= window_manager_geometry (. window_manager_geometry_module_type
+(= window_manager:geometry (. window_manager_geometry_module_type
 	window_manager_geometry_type
 	from_corners
 ))
-(## window_manager_geometry)
+(## window_manager:geometry)

@@ -6,14 +6,14 @@
 
 
 (= gfx_module_type (&:
-	(~ (:? gfx_context)) context
-	(~ (:? gfx_vulkan)) vulkan
+	(~ (:? gfx:context)) context
+	(~ (:? gfx:vulkan)) vulkan
 ))
 
 
 
 (= gfx (. gfx_module_type
-	gfx_context
-	gfx_vulkan
+	gfx:context
+	gfx:vulkan
 ))
 (## gfx)

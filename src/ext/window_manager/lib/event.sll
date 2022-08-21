@@ -44,7 +44,7 @@
 			(<- window$callbacks$error (:: (: event 1) window_manager_native_error_type))
 			(<<<)
 		})
-		(= window (<- window_manager_window$get (: event 1)))
+		(= window (<- window_manager:window$get (: event 1)))
 		(? (! window) (<<<))
 		(= event (>> event 2))
 		(?? type
@@ -67,7 +67,7 @@
 			2 {
 				(= button (: event 0))
 				(= state (: event 1))
-				(= mask (<< window_manager_window$FLAG_BUTTON_1 button))
+				(= mask (<< window_manager:window$FLAG_BUTTON_1 button))
 				(= value (: window$inputs$_buttons idx))
 				(= (: window$inputs$_buttons idx) (?: state
 					(| value mask)
@@ -82,8 +82,8 @@
 			3 {
 				(= window$inputs$mouse_x (: event 0))
 				(= window$inputs$mouse_y (: event 1))
-				(? (! (& window$flags window_manager_window$FLAG_HAS_MOUSE)) {
-					(= window$flags (| window$flags window_manager_window$FLAG_HAS_MOUSE))
+				(? (! (& window$flags window_manager:window$FLAG_HAS_MOUSE)) {
+					(= window$flags (| window$flags window_manager:window$FLAG_HAS_MOUSE))
 					(<- window$callbacks$mouse_state window true)
 					(<- window$callbacks$mouse_enter window)
 				})
@@ -93,15 +93,15 @@
 			}
 			4 {
 				(= state (: event 0))
-				(= window$flags (& window$flags (~ window_manager_window$FLAG_HAS_MOUSE)))
+				(= window$flags (& window$flags (~ window_manager:window$FLAG_HAS_MOUSE)))
 				(<- window$callbacks$mouse_state window false)
 				(<- window$callbacks$mouse_leave window)
 			}
 			5 {
 				(= state (: event 0))
 				(= window$flags (?: state
-					(| window$flags window_manager_window$FLAG_IN_FOCUS)
-					(& window$flags (~ window_manager_window$FLAG_IN_FOCUS))
+					(| window$flags window_manager:window$FLAG_IN_FOCUS)
+					(& window$flags (~ window_manager:window$FLAG_IN_FOCUS))
 				))
 				(<- window$callbacks$focus window state)
 				(<- (?: state
@@ -110,12 +110,12 @@
 				) window)
 			}
 			6 {
-				(= geometry (:: event window_manager_geometry$window_manager_geometry_type))
+				(= geometry (:: event window_manager:geometry$window_manager_geometry_type))
 				(? (||
 					(!== window$layout$geometry$width (: event 2))
 					(!== window$layout$geometry$height (: event 3))
 				) {
-					(<- window_manager_util$__gfx_callbacks$resize window)
+					(<- window_manager:util$__gfx_callbacks$resize window)
 				})
 				(= window$layout$geometry geometry)
 				(<- window$callbacks$geometry window geometry)
@@ -133,7 +133,7 @@
 				(<- window$callbacks$redraw window (: event 0) (: event 1) (: event 2) (: event 3))
 			}
 			9 {
-				(? (! (<- window$callbacks$ignore_close_request? window)) (<- window_manager_window$destroy window))
+				(? (! (<- window$callbacks$ignore_close_request? window)) (<- window_manager:window$destroy window))
 			}
 			10 {
 				(= window$layout$state (: event 0))
@@ -150,7 +150,7 @@
 				(= window$layout$geometry$height (: event 1))
 				(<- window$callbacks$geometry window window$layout$geometry)
 				(<- window$callbacks$size window (: event 0) (: event 1))
-				(<- window_manager_util$__gfx_callbacks$resize window)
+				(<- window_manager:util$__gfx_callbacks$resize window)
 			}
 		)
 	)
@@ -158,8 +158,8 @@
 
 
 
-(= window_manager_event (. window_manager_event_module_type
+(= window_manager:event (. window_manager_event_module_type
 	window_manager_native_error_type
 	poll
 ))
-(## window_manager_event)
+(## window_manager:event)

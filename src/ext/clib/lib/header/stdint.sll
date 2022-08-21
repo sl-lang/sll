@@ -3,34 +3,34 @@
 
 
 (= stdint.h_module_type (&:
-	(~ clib_types$clib_type) int16_t
-	(~ clib_types$clib_type) int32_t
-	(~ clib_types$clib_type) int64_t
-	(~ clib_types$clib_type) int8_t
-	(~ clib_types$clib_type) int_fast16_t
-	(~ clib_types$clib_type) int_fast32_t
-	(~ clib_types$clib_type) int_fast64_t
-	(~ clib_types$clib_type) int_fast8_t
-	(~ clib_types$clib_type) int_least16_t
-	(~ clib_types$clib_type) int_least32_t
-	(~ clib_types$clib_type) int_least64_t
-	(~ clib_types$clib_type) int_least8_t
-	(~ clib_types$clib_type) intmax_t
-	(~ clib_types$clib_type) intptr_t
-	(~ clib_types$clib_type) uint16_t
-	(~ clib_types$clib_type) uint32_t
-	(~ clib_types$clib_type) uint64_t
-	(~ clib_types$clib_type) uint8_t
-	(~ clib_types$clib_type) uint_fast16_t
-	(~ clib_types$clib_type) uint_fast32_t
-	(~ clib_types$clib_type) uint_fast64_t
-	(~ clib_types$clib_type) uint_fast8_t
-	(~ clib_types$clib_type) uint_least16_t
-	(~ clib_types$clib_type) uint_least32_t
-	(~ clib_types$clib_type) uint_least64_t
-	(~ clib_types$clib_type) uint_least8_t
-	(~ clib_types$clib_type) uintmax_t
-	(~ clib_types$clib_type) uintptr_t
+	(~ clib:types$clib_type) int16_t
+	(~ clib:types$clib_type) int32_t
+	(~ clib:types$clib_type) int64_t
+	(~ clib:types$clib_type) int8_t
+	(~ clib:types$clib_type) int_fast16_t
+	(~ clib:types$clib_type) int_fast32_t
+	(~ clib:types$clib_type) int_fast64_t
+	(~ clib:types$clib_type) int_fast8_t
+	(~ clib:types$clib_type) int_least16_t
+	(~ clib:types$clib_type) int_least32_t
+	(~ clib:types$clib_type) int_least64_t
+	(~ clib:types$clib_type) int_least8_t
+	(~ clib:types$clib_type) intmax_t
+	(~ clib:types$clib_type) intptr_t
+	(~ clib:types$clib_type) uint16_t
+	(~ clib:types$clib_type) uint32_t
+	(~ clib:types$clib_type) uint64_t
+	(~ clib:types$clib_type) uint8_t
+	(~ clib:types$clib_type) uint_fast16_t
+	(~ clib:types$clib_type) uint_fast32_t
+	(~ clib:types$clib_type) uint_fast64_t
+	(~ clib:types$clib_type) uint_fast8_t
+	(~ clib:types$clib_type) uint_least16_t
+	(~ clib:types$clib_type) uint_least32_t
+	(~ clib:types$clib_type) uint_least64_t
+	(~ clib:types$clib_type) uint_least8_t
+	(~ clib:types$clib_type) uintmax_t
+	(~ clib:types$clib_type) uintptr_t
 	(~ int_type) INT16_MAX
 	(~ int_type) INT16_MIN
 	(~ int_type) INT32_MAX
@@ -85,34 +85,34 @@
 
 
 (= stdint.h (. stdint.h_module_type
-	clib_types$short_int
-	clib_types$int
-	clib_types$long_long_int
-	clib_types$char
-	clib_types$short_int
-	clib_types$int
-	clib_types$long_long_int
-	clib_types$char
-	clib_types$short_int
-	clib_types$int
-	clib_types$long_long_int
-	clib_types$char
-	clib_types$long_long_int
-	clib_types$long_long_int
-	clib_types$unsigned_short_int
-	clib_types$unsigned_int
-	clib_types$unsigned_long_long_int
-	clib_types$unsigned_char
-	clib_types$unsigned_short_int
-	clib_types$unsigned_int
-	clib_types$unsigned_long_long_int
-	clib_types$unsigned_char
-	clib_types$unsigned_short_int
-	clib_types$unsigned_int
-	clib_types$unsigned_long_long_int
-	clib_types$unsigned_char
-	clib_types$unsigned_long_long_int
-	clib_types$unsigned_long_long_int
+	clib:types$short_int
+	clib:types$int
+	clib:types$long_long_int
+	clib:types$char
+	clib:types$short_int
+	clib:types$int
+	clib:types$long_long_int
+	clib:types$char
+	clib:types$short_int
+	clib:types$int
+	clib:types$long_long_int
+	clib:types$char
+	clib:types$long_long_int
+	clib:types$long_long_int
+	clib:types$unsigned_short_int
+	clib:types$unsigned_int
+	clib:types$unsigned_long_long_int
+	clib:types$unsigned_char
+	clib:types$unsigned_short_int
+	clib:types$unsigned_int
+	clib:types$unsigned_long_long_int
+	clib:types$unsigned_char
+	clib:types$unsigned_short_int
+	clib:types$unsigned_int
+	clib:types$unsigned_long_long_int
+	clib:types$unsigned_char
+	clib:types$unsigned_long_long_int
+	clib:types$unsigned_long_long_int
 	32767
 	-32768
 	2147483647

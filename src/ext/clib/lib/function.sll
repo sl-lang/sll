@@ -18,7 +18,7 @@
 	(~ int_type) address
 	(~ clib_library_type) library
 	array_type arguments
-	clib_types$clib_type return
+	clib:types$clib_type return
 	int_type calling_convenction
 ))
 
@@ -39,8 +39,8 @@
 
 (= _prepare_data (,,, func
 	(-> (= i 0) (< i ($ func$arguments))
-		(= arg (:: (: func$arguments i) clib_types$clib_type))
-		(? (=== arg clib_types$void){
+		(= arg (:: (: func$arguments i) clib:types$clib_type))
+		(? (=== arg clib:types$void){
 			(:> "Invalid argument type: void\n")
 			(<- thread$exit 1)
 		})
@@ -72,7 +72,7 @@
 	(@@ (<- func$return$_decode (<- (... "clib:function_call")
 		func$address
 		(|
-			(!! (& func$return$flags (| clib_types$FLAG_INTEGER clib_types$FLAG_POINTER)))
+			(!! (& func$return$flags (| clib:types$FLAG_INTEGER clib:types$FLAG_POINTER)))
 			(<< func$calling_convenction 1)
 		)
 		args
@@ -102,11 +102,11 @@
 
 
 
-(= clib_function (. clib_function_module_type
+(= clib:function (. clib_function_module_type
 	clib_function_type
 	CALLING_CONVENCTION_MICROSOFT_X64
 	CALLING_CONVENCTION_SYSTEM_V_AMD64_ABI
 	call
 	declaration
 ))
-(## clib_function)
+(## clib:function)

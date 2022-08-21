@@ -7,16 +7,16 @@
 
 
 (= clib_module_type (&:
-	(~ (:? clib_function)) function
-	(~ (:? clib_library)) library
-	(~ (:? clib_types)) types
+	(~ (:? clib:function)) function
+	(~ (:? clib:library)) library
+	(~ (:? clib:types)) types
 ))
 
 
 
 (= clib (. clib_module_type
-	clib_function
-	clib_library
-	clib_types
+	clib:function
+	clib:library
+	clib:types
 ))
 (## clib)

@@ -34,9 +34,9 @@
 
 
 
-(= gfx_vulkan (. gfx_vulkan_module_type
+(= gfx:vulkan (. gfx_vulkan_module_type
 	gfx_vulkan_version_type
 	get_extensions
 	get_version
 ))
-(## gfx_vulkan)
+(## gfx:vulkan)

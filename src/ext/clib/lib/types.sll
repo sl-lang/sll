@@ -370,7 +370,7 @@
 
 
 
-(= clib_types (. clib_types_module_type
+(= clib:types (. clib_types_module_type
 	clib_type
 	bool
 	char
@@ -411,4 +411,4 @@
 	FLAG_SIGNED
 	pointer
 ))
-(## clib_types)
+(## clib:types)

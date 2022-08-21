@@ -138,7 +138,7 @@
 
 
 
-(= http_mime (. http_mime_module_type
+(= http:mime (. http_mime_module_type
 	DEFAULT_EXTENSION
 	DEFAULT_MIME_TYPE
 	EXTENSION_TO_MIME_TYPE
@@ -146,4 +146,4 @@
 	get_extension
 	get_mime_type
 ))
-(## http_mime)
+(## http:mime)

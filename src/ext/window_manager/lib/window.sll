@@ -56,9 +56,9 @@
 ))
 
 (= window_manager_layout_type (&:
-	window_manager_geometry$window_manager_geometry_type geometry
-	window_manager_range$window_manager_range_type width_constraints
-	window_manager_range$window_manager_range_type height_constraints
+	window_manager:geometry$window_manager_geometry_type geometry
+	window_manager:range$window_manager_range_type width_constraints
+	window_manager:range$window_manager_range_type height_constraints
 	string_type title
 	int_type state
 	int_type _deferred_state_change
@@ -153,7 +153,7 @@
 
 
 (= create (,,, geometry parent title visible?
-	(= geometry (:: geometry window_manager_geometry$window_manager_geometry_type))
+	(= geometry (:: geometry window_manager:geometry$window_manager_geometry_type))
 	(= parent_id (?: parent
 		(: (:: parent window_manager_window_type) "id")
 		0xffffffffffffffff
@@ -184,7 +184,7 @@
 	(? (! window) (@@))
 	(= window (:: window window_manager_window_type))
 	(? (& window$flags FLAG_CLOSED) (@@))
-	(<- window_manager_util$__gfx_callbacks$resize window)
+	(<- window_manager:util$__gfx_callbacks$resize window)
 	(<- window$callbacks$destroy window)
 	(= window$flags (| window$flags FLAG_CLOSED))
 	(<- audit$audit "window.destroy" "i" window$id)
@@ -228,7 +228,7 @@
 (= set_cursor (,,, window cursor
 	(? (! window) (@@))
 	(= window (:: window window_manager_window_type))
-	(= cursor (?: cursor (:: cursor window_manager_cursor$window_manager_cursor_type) window_manager_cursor$CURSOR_DEFAULT))
+	(= cursor (?: cursor (:: cursor window_manager:cursor$window_manager_cursor_type) window_manager:cursor$CURSOR_DEFAULT))
 	(<- (... "window:cursor_apply_to_window")
 		window$id
 		cursor$id
@@ -238,7 +238,7 @@
 (= set_geometry (,,, window geometry
 	(? (! window) (@@))
 	(= window (:: window window_manager_window_type))
-	(= geometry (:: geometry window_manager_geometry$window_manager_geometry_type))
+	(= geometry (:: geometry window_manager:geometry$window_manager_geometry_type))
 	(= window$layout$geometry geometry)
 	(<- (... "window:window_set_geometry")
 		window$id
@@ -255,7 +255,7 @@
 	(? (! image) {
 		(<- (... "window:window_set_icon") window$id 0 "")
 	} {
-		(= image (:: image window_manager_image$window_manager_image_type))
+		(= image (:: image window_manager:image$window_manager_image_type))
 		(<- (... "window:window_set_icon") window$id image$width image$data)
 	})
 ))
@@ -263,8 +263,8 @@
 (= set_size_constraints (,,, window width height
 	(? (! window) (@@))
 	(= window (:: window window_manager_window_type))
-	(= width (:: width window_manager_range$window_manager_range_type))
-	(= height (:: height window_manager_range$window_manager_range_type))
+	(= width (:: width window_manager:range$window_manager_range_type))
+	(= height (:: height window_manager:range$window_manager_range_type))
 	(? (&&
 		(=== window$layout$width_constraints width)
 		(=== window$layout$height_constraints height)
@@ -344,7 +344,7 @@
 
 
 
-(= window_manager_window (. window_manager_window_module_type
+(= window_manager:window (. window_manager_window_module_type
 	window_manager_window_type
 	FLAG_BUTTON_1
 	FLAG_BUTTON_2
@@ -382,4 +382,4 @@
 	set_visibility
 	show
 ))
-(## window_manager_window)
+(## window_manager:window)

@@ -117,11 +117,11 @@
 
 
 
-(= window_manager_image (. window_manager_image_module_type
+(= window_manager:image (. window_manager_image_module_type
 	window_manager_image_type
 	window_manager_pixel_type
 	create
 	get_pixel
 	set_pixel
 ))
-(## window_manager_image)
+(## window_manager:image)

@@ -11,10 +11,10 @@
 
 
 
-(= window (<- window_manager_window$create [0 0 900 600] nil "Example Window" true))
+(= window (<- window_manager:window$create [0 0 900 600] nil "Example Window" true))
 (= window$callbacks$key_down (,,, window key
-	(? (=== key window_manager_keyboard$KEY_ESCAPE) (<- window_manager_window$destroy window))
+	(? (=== key window_manager:keyboard$KEY_ESCAPE) (<- window_manager:window$destroy window))
 ))
 (><
-	(<- window_manager_event$poll true)
+	(<- window_manager:event$poll true)
 )

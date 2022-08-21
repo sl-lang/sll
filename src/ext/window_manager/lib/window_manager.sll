@@ -13,28 +13,28 @@
 
 
 (= window_manger_module_type (&:
-	(~ (:? window_manager_cursor)) cursor
-	(~ (:? window_manager_display)) display
-	(~ (:? window_manager_event)) event
-	(~ (:? window_manager_geometry)) geometry
-	(~ (:? window_manager_image)) image
-	(~ (:? window_manager_keyboard)) keyboard
-	(~ (:? window_manager_range)) range
-	(~ (:? window_manager_util)) util
-	(~ (:? window_manager_window)) window
+	(~ (:? window_manager:cursor)) cursor
+	(~ (:? window_manager:display)) display
+	(~ (:? window_manager:event)) event
+	(~ (:? window_manager:geometry)) geometry
+	(~ (:? window_manager:image)) image
+	(~ (:? window_manager:keyboard)) keyboard
+	(~ (:? window_manager:range)) range
+	(~ (:? window_manager:util)) util
+	(~ (:? window_manager:window)) window
 ))
 
 
 
 (= window_manger (. window_manger_module_type
-	window_manager_cursor
-	window_manager_display
-	window_manager_event
-	window_manager_geometry
-	window_manager_image
-	window_manager_keyboard
-	window_manager_range
-	window_manager_util
-	window_manager_window
+	window_manager:cursor
+	window_manager:display
+	window_manager:event
+	window_manager:geometry
+	window_manager:image
+	window_manager:keyboard
+	window_manager:range
+	window_manager:util
+	window_manager:window
 ))
 (## window_manger)

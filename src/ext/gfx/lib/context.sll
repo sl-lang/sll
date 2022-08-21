@@ -24,7 +24,7 @@
 		))
 	) @@string@@
 	(~ int_type) _handle
-	(~ window_manager_window$window_manager_window_type) window
+	(~ window_manager:window$window_manager_window_type) window
 ))
 
 (= gfx_context_module_type (&:
@@ -38,12 +38,12 @@
 
 (= create (,,, window
 	(? (! window) (@@ nil))
-	(= window (:: window window_manager_window$window_manager_window_type))
+	(= window (:: window window_manager:window$window_manager_window_type))
 	(= ctx (<- weakref$get window$_gfx_context))
 	(? (!== ctx window$WEAKREF_NO_OBJECT) (@@ ctx))
 	(= handle (<- (... "gfx:context_create")
 		window$id
-		(<- window_manager_util$get_context)
+		(<- window_manager:util$get_context)
 	))
 	(= out (. gfx_context_type
 		handle
@@ -62,7 +62,7 @@
 
 (= get (,,, window
 	(? (! window) (@@ nil))
-	(= window (:: window window_manager_window$window_manager_window_type))
+	(= window (:: window window_manager:window$window_manager_window_type))
 	(= out (<- weakref$get window$_gfx_context))
 	(@@ (?: (=== out weakref$WEAKREF_NO_OBJECT)
 		nil
@@ -78,10 +78,10 @@
 
 
 
-(= gfx_context (. gfx_context_module_type
+(= gfx:context (. gfx_context_module_type
 	create
 	delete
 	get
 	render
 ))
-(## gfx_context)
+(## gfx:context)

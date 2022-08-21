@@ -59,7 +59,7 @@
 
 
 
-(= _root_screen (: (<- window_manager_display$enumerate) 0))
+(= _root_screen (: (<- window_manager:display$enumerate) 0))
 (= _center_location (. window_manager_cursor_position_type
 	(+ _root_screen$geometry$x (>> _root_screen$geometry$width 1))
 	(+ _root_screen$geometry$y (>> _root_screen$geometry$height 1))
@@ -95,7 +95,7 @@
 
 
 
-(= window_manager_cursor (. window_manager_cursor_module_type
+(= window_manager:cursor (. window_manager_cursor_module_type
 	window_manager_cursor_position_type
 	window_manager_cursor_type
 	CURSOR_HIDDEN
@@ -116,4 +116,4 @@
 	get
 	set
 ))
-(## window_manager_cursor)
+(## window_manager:cursor)
