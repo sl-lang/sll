@@ -13,7 +13,6 @@ permissions: read-all
 env:
   BUILD_COMMAND_LINUX: ./build.sh --verbose
   BUILD_COMMAND_WINDOWS: .\build.bat --verbose
-  SETUP_LINUX: sudo apt install nasm libxcb-randr0 libxcb-randr0-dev libxcb-xkb-dev libxcb-icccm4 libxcb-icccm4-dev libxcb-cursor0 libxcb-cursor-dev
 jobs:
   codeql:
     name: Analyze code
@@ -31,8 +30,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-      - name: Setup environment
-        run: ${{env.SETUP_LINUX}}
+      - name: Setup NASM
+        run: sudo apt install nasm
       - name: Initialize codeql@1
         uses: github/codeql-action/init@v2
         with:
@@ -104,8 +103,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-      - name: Setup environment
-        run: ${{env.SETUP_LINUX}}
+      - name: Setup NASM
+        run: sudo apt install nasm
       - name: Build
         run: ${{env.BUILD_COMMAND_LINUX}}
   linux-release:
@@ -114,8 +113,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-      - name: Setup environment
-        run: ${{env.SETUP_LINUX}}
+      - name: Setup NASM
+        run: sudo apt install nasm
       - name: Build
         run: ${{env.BUILD_COMMAND_LINUX}} --release
       - name: Create bundle
@@ -137,7 +136,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
       - name: Setup environment
-        run: ${{env.SETUP_LINUX}} lcov
+        run: sudo apt install nasm lcov
       - name: Build
         run: ${{env.BUILD_COMMAND_LINUX}} --coverage
       - name: Delete previous coverage

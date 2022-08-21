@@ -3,7 +3,7 @@
 		"window_manager"
 	],
 	"installation_scripts": {
-		"darwin": "install/darwin.sh",
+		"darwin": "install/linux.sh",
 		"linux": "install/linux.sh",
 		"windows": "install\\windows.bat"
 	},

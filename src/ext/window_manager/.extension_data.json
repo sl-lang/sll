@@ -1,4 +1,7 @@
 {
+	"installation_scripts": {
+		"linux": "install/linux.sh",
+	},
 	"platform_directories": {
 		"darwin": "platform/darwin",
 		"linux": "platform/linux",
