@@ -49,8 +49,6 @@ static void _release_swapchain(gfx_context_data_t* ctx){
 	ctx->function_table.vkDestroyImage(ctx->logical_device,ctx->depth_stensil_image,NULL);
 	ctx->function_table.vkDestroyImageView(ctx->logical_device,ctx->depth_stensil_image_view,NULL);
 	ctx->function_table.vkFreeMemory(ctx->logical_device,ctx->depth_stensil_memory,NULL);
-	ctx->function_table.vkDeviceWaitIdle(ctx->logical_device);
-	ctx->function_table.vkDestroySwapchainKHR(ctx->logical_device,ctx->swapchain,NULL);
 }
 
 
@@ -87,6 +85,7 @@ static void _create_swapchain(gfx_context_data_t* ctx){
 	VULKAN_CALL(ctx->function_table.vkCreateSwapchainKHR(ctx->logical_device,&swapchain_creation_info,NULL,&swapchain));
 	if (ctx->swapchain!=VK_NULL_HANDLE){
 		_release_swapchain(ctx);
+		ctx->function_table.vkDestroySwapchainKHR(ctx->logical_device,ctx->swapchain,NULL);
 	}
 	ctx->swapchain=swapchain;
 	VULKAN_CALL(ctx->function_table.vkGetSwapchainImagesKHR(ctx->logical_device,ctx->swapchain,&(ctx->swapchain_image_count),NULL));
