@@ -9,7 +9,9 @@ typedef struct _GFX_VULKAN_FUNCTION_TABLE{
 	PFN_vkAcquireNextImageKHR vkAcquireNextImageKHR;
 	PFN_vkAllocateCommandBuffers vkAllocateCommandBuffers;
 	PFN_vkAllocateMemory vkAllocateMemory;
+	PFN_vkBeginCommandBuffer vkBeginCommandBuffer;
 	PFN_vkBindImageMemory vkBindImageMemory;
+	PFN_vkCmdClearColorImage vkCmdClearColorImage;
 	PFN_vkCreateCommandPool vkCreateCommandPool;
 	PFN_vkCreateDevice vkCreateDevice;
 	PFN_vkCreateFence vkCreateFence;
@@ -32,6 +34,8 @@ typedef struct _GFX_VULKAN_FUNCTION_TABLE{
 	PFN_vkDestroySemaphore vkDestroySemaphore;
 	PFN_vkDestroySurfaceKHR vkDestroySurfaceKHR;
 	PFN_vkDestroySwapchainKHR vkDestroySwapchainKHR;
+	PFN_vkDeviceWaitIdle vkDeviceWaitIdle;
+	PFN_vkEndCommandBuffer vkEndCommandBuffer;
 	PFN_vkEnumeratePhysicalDevices vkEnumeratePhysicalDevices;
 	PFN_vkFreeMemory vkFreeMemory;
 	PFN_vkGetDeviceQueue vkGetDeviceQueue;
@@ -43,6 +47,7 @@ typedef struct _GFX_VULKAN_FUNCTION_TABLE{
 	PFN_vkGetPhysicalDeviceSurfaceSupportKHR vkGetPhysicalDeviceSurfaceSupportKHR;
 	PFN_vkGetSwapchainImagesKHR vkGetSwapchainImagesKHR;
 	PFN_vkQueuePresentKHR vkQueuePresentKHR;
+	PFN_vkQueueSubmit vkQueueSubmit;
 	PFN_vkQueueWaitIdle vkQueueWaitIdle;
 #ifdef __SLL_BUILD_DARWIN
 	PFN_vkCreateMacOSSurfaceMVK vkCreateMacOSSurfaceMVK;

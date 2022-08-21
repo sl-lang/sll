@@ -45,7 +45,9 @@ sll_bool_t _load_vulkan_function_table(VkInstance instance,gfx_vulkan_function_t
 	LOAD_FUNCTION_TABLE(vkAcquireNextImageKHR);
 	LOAD_FUNCTION_TABLE(vkAllocateCommandBuffers);
 	LOAD_FUNCTION_TABLE(vkAllocateMemory);
+	LOAD_FUNCTION_TABLE(vkBeginCommandBuffer);
 	LOAD_FUNCTION_TABLE(vkBindImageMemory);
+	LOAD_FUNCTION_TABLE(vkCmdClearColorImage);
 	LOAD_FUNCTION_TABLE(vkCreateCommandPool);
 	LOAD_FUNCTION_TABLE(vkCreateDevice);
 	LOAD_FUNCTION_TABLE(vkCreateFence);
@@ -56,7 +58,6 @@ sll_bool_t _load_vulkan_function_table(VkInstance instance,gfx_vulkan_function_t
 	LOAD_FUNCTION_TABLE(vkCreateRenderPass);
 	LOAD_FUNCTION_TABLE(vkCreateSemaphore);
 	LOAD_FUNCTION_TABLE(vkCreateSwapchainKHR);
-	LOAD_FUNCTION_TABLE(vkDestroySemaphore);
 	LOAD_FUNCTION_TABLE(vkDestroyCommandPool);
 	LOAD_FUNCTION_TABLE(vkDestroyDevice);
 	LOAD_FUNCTION_TABLE(vkDestroyFence)
@@ -66,8 +67,11 @@ sll_bool_t _load_vulkan_function_table(VkInstance instance,gfx_vulkan_function_t
 	LOAD_FUNCTION_TABLE(vkDestroyInstance);
 	LOAD_FUNCTION_TABLE(vkDestroyPipelineCache);
 	LOAD_FUNCTION_TABLE(vkDestroyRenderPass);
+	LOAD_FUNCTION_TABLE(vkDestroySemaphore);
 	LOAD_FUNCTION_TABLE(vkDestroySurfaceKHR);
 	LOAD_FUNCTION_TABLE(vkDestroySwapchainKHR);
+	LOAD_FUNCTION_TABLE(vkDeviceWaitIdle);
+	LOAD_FUNCTION_TABLE(vkEndCommandBuffer);
 	LOAD_FUNCTION_TABLE(vkEnumeratePhysicalDevices);
 	LOAD_FUNCTION_TABLE(vkFreeMemory);
 	LOAD_FUNCTION_TABLE(vkGetDeviceQueue);
@@ -79,6 +83,7 @@ sll_bool_t _load_vulkan_function_table(VkInstance instance,gfx_vulkan_function_t
 	LOAD_FUNCTION_TABLE(vkGetPhysicalDeviceSurfaceSupportKHR);
 	LOAD_FUNCTION_TABLE(vkGetSwapchainImagesKHR);
 	LOAD_FUNCTION_TABLE(vkQueuePresentKHR);
+	LOAD_FUNCTION_TABLE(vkQueueSubmit);
 	LOAD_FUNCTION_TABLE(vkQueueWaitIdle);
 #ifdef __SLL_BUILD_DARWIN
 	LOAD_FUNCTION_TABLE(vkCreateMacOSSurfaceMVK);

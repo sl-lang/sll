@@ -40,6 +40,7 @@ static uint32_t _get_mem_type(const gfx_context_data_t* ctx,uint32_t mask,VkMemo
 
 
 static void _release_swapchain(gfx_context_data_t* ctx){
+	ctx->function_table.vkDeviceWaitIdle(ctx->logical_device);
 	for (uint32_t i=0;i<ctx->swapchain_image_count;i++){
 		ctx->function_table.vkDestroyImageView(ctx->logical_device,ctx->swapchain_image_views[i],NULL);
 		ctx->function_table.vkDestroyFence(ctx->logical_device,ctx->fences[i],NULL);
@@ -151,10 +152,10 @@ static void _create_swapchain(gfx_context_data_t* ctx){
 		VK_IMAGE_VIEW_TYPE_2D,
 		ctx->color_format,
 		{
-			VK_COMPONENT_SWIZZLE_R,
-			VK_COMPONENT_SWIZZLE_G,
-			VK_COMPONENT_SWIZZLE_B,
-			VK_COMPONENT_SWIZZLE_A
+			VK_COMPONENT_SWIZZLE_IDENTITY,
+			VK_COMPONENT_SWIZZLE_IDENTITY,
+			VK_COMPONENT_SWIZZLE_IDENTITY,
+			VK_COMPONENT_SWIZZLE_IDENTITY
 		},
 		{
 			VK_IMAGE_ASPECT_COLOR_BIT,
@@ -484,6 +485,43 @@ __GFX_API_CALL void gfx_api_context_render(gfx_context_t ctx_id){
 	}
 	uint32_t swapchain_image_index;
 	VULKAN_CALL(ctx->function_table.vkAcquireNextImageKHR(ctx->logical_device,ctx->swapchain,UINT64_MAX,ctx->swapchain_present_semaphore,NULL,&swapchain_image_index));
+	VkCommandBufferBeginInfo begin_info={
+		VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO,
+		NULL,
+		VK_COMMAND_BUFFER_USAGE_SIMULTANEOUS_USE_BIT,
+		NULL
+	};
+	VULKAN_CALL(ctx->function_table.vkBeginCommandBuffer(ctx->command_buffers[swapchain_image_index],&begin_info));
+	VkClearColorValue clear_color={
+		{
+			0.1f,
+			0.5f,
+			0.4f,
+			0.0f
+		}
+	};
+	VkImageSubresourceRange image_subresource_range={
+		VK_IMAGE_ASPECT_COLOR_BIT,
+		0,
+		1,
+		0,
+		1
+	};
+	ctx->function_table.vkCmdClearColorImage(ctx->command_buffers[swapchain_image_index],ctx->swapchain_images[swapchain_image_index],VK_IMAGE_LAYOUT_GENERAL,&clear_color,1,&image_subresource_range);
+	VULKAN_CALL(ctx->function_table.vkEndCommandBuffer(ctx->command_buffers[swapchain_image_index]));
+    VkPipelineStageFlags wait_flags=VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
+	VkSubmitInfo submit_info={
+		VK_STRUCTURE_TYPE_SUBMIT_INFO,
+		NULL,
+		1,
+		&(ctx->swapchain_present_semaphore),
+		&wait_flags,
+		1,
+		ctx->command_buffers+swapchain_image_index,
+		1,
+		&(ctx->swapchain_render_semaphore)
+	};
+	VULKAN_CALL(ctx->function_table.vkQueueSubmit(ctx->queue,1,&submit_info,NULL));
 	VkPresentInfoKHR present_info={
 		VK_STRUCTURE_TYPE_PRESENT_INFO_KHR,
 		NULL,
