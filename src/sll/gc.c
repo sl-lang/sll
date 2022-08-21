@@ -81,6 +81,43 @@ static void _mark_objects(sll_object_t object){
 
 
 
+static void _dump_object_data(sll_object_t object){
+	sll_file_write_format(sll_stderr,SLL_CHAR("[%p]{type=%u, rc=%llx, data="),NULL,object,object->type,object->reference_count);
+	switch (object->type){
+		case SLL_OBJECT_TYPE_INT:
+			sll_file_write_format(sll_stderr,SLL_CHAR("%lld"),NULL,object->data.int_);
+			break;
+		case SLL_OBJECT_TYPE_FLOAT:
+			sll_file_write_format(sll_stderr,SLL_CHAR("%lf"),NULL,object->data.float_);
+			break;
+		case SLL_OBJECT_TYPE_CHAR:
+			sll_file_write_format(sll_stderr,SLL_CHAR("%c (%u)"),NULL,object->data.char_,object->data.char_);
+			break;
+		case SLL_OBJECT_TYPE_COMPLEX:
+			sll_file_write_format(sll_stderr,SLL_CHAR("%lld%+lldi"),NULL,object->data.complex_.real,object->data.complex_.imag);
+			break;
+		case SLL_OBJECT_TYPE_STRING:
+			sll_file_write_format(sll_stderr,SLL_CHAR("(%u) %s"),NULL,object->data.string.length,object->data.string.data);
+			break;
+		case SLL_OBJECT_TYPE_ARRAY:
+		case SLL_OBJECT_TYPE_MAP:
+			sll_file_write_format(sll_stderr,SLL_CHAR("(%u) %c"),NULL,object->data.array.length,(object->type==SLL_OBJECT_TYPE_ARRAY?'[':'<'));
+			for (sll_array_length_t i=0;i<object->data.array.length;i++){
+				if (i){
+					sll_file_write_char(sll_stderr,' ',NULL);
+				}
+				_dump_object_data(object->data.array.data[i]);
+			}
+			sll_file_write_char(sll_stderr,(object->type==SLL_OBJECT_TYPE_ARRAY?']':'>'),NULL);
+			break;
+		default:
+			sll_file_write_format(sll_stderr,SLL_CHAR("@%p"),NULL,object->data.fields);
+	}
+	sll_file_write_char(sll_stderr,'}',NULL);
+}
+
+
+
 void _gc_release_data(void){
 	SLL_ASSERT(_gc_data.enabled);
 	sll_gc_collect();
@@ -100,10 +137,7 @@ void _gc_release_data(void){
 				if (SLL_GET_OBJECT_REFERENCE_COUNTER(current)){
 					err=1;
 					sll_file_write_format(sll_stderr,SLL_CHAR("[%p]: "),NULL,current);
-					sll_string_t str;
-					sll_api_string_convert(&current,1,&str);
-					sll_file_write(sll_stderr,str.data,str.length*sizeof(sll_char_t),NULL);
-					sll_free_string(&str);
+					_dump_object_data(current);
 					sll_file_write_char(sll_stderr,'\n',NULL);
 				}
 			}
