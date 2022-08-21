@@ -205,10 +205,9 @@
 ))
 
 (= get (,,, id
-	(? (! id) (@@ _main_thread))
-	(= thr (: _thread_map id))
-	(@@ (?: thr
-		(<- weakref$get thr)
+	(? (=== id 0) (@@ _main_thread))
+	(@@ (<- weakref$get_default
+		(: _thread_map id)
 		nil
 	))
 ))

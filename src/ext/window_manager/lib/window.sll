@@ -193,9 +193,8 @@
 ))
 
 (= get (,,, id
-	(= window (: _window_map id))
-	(@@ (?: window
-		(<- weakref$get window)
+	(@@ (<- weakref$get_default
+		(: _window_map id)
 		nil
 	))
 ))
