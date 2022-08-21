@@ -5,8 +5,8 @@
 
 
 
-#define _LOAD_FUNCTION_STR(name) _LOAD_FUNCTION_STR2(name)
-#define _LOAD_FUNCTION_STR2(name) #name
+#define _LOAD_FUNCTION_STR(name) _LOAD_FUNCTION_STR_(name)
+#define _LOAD_FUNCTION_STR_(name) #name
 #define LOAD_FUNCTION(name) \
 	if (!(name=(_GFX_FUNCTION_PROTOTYPE(name))vkGetInstanceProcAddr(NULL,_LOAD_FUNCTION_STR(name)))){ \
 		SLL_WARN("Failed to load Vulkan function '%s'!",_LOAD_FUNCTION_STR(name)); \
