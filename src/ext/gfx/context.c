@@ -278,7 +278,6 @@ __GFX_API_CALL gfx_context_t gfx_api_context_create(void* handle,void* extra_dat
 		0,
 		handle
 	};
-	VULKAN_CALL(ctx->function_table.vkCreateMacOSSurfaceMVK(ctx->instance,&surface_creation_info,NULL,&(ctx->surface)));
 #elif defined(__SLL_BUILD_LINUX)
 	VkXcbSurfaceCreateInfoKHR surface_creation_info={
 		VK_STRUCTURE_TYPE_XCB_SURFACE_CREATE_INFO_KHR,
@@ -287,7 +286,6 @@ __GFX_API_CALL gfx_context_t gfx_api_context_create(void* handle,void* extra_dat
 		extra_data,
 		(xcb_window_t)(sll_size_t)handle
 	};
-	VULKAN_CALL(ctx->function_table.vkCreateXcbSurfaceKHR(ctx->instance,&surface_creation_info,NULL,&(ctx->surface)));
 #else
 	VkWin32SurfaceCreateInfoKHR surface_creation_info={
 		VK_STRUCTURE_TYPE_WIN32_SURFACE_CREATE_INFO_KHR,
@@ -296,8 +294,8 @@ __GFX_API_CALL gfx_context_t gfx_api_context_create(void* handle,void* extra_dat
 		extra_data,
 		handle
 	};
-	VULKAN_CALL(ctx->function_table.vkCreateWin32SurfaceKHR(ctx->instance,&surface_creation_info,NULL,&(ctx->surface)));
 #endif
+	VULKAN_CALL(ctx->function_table.create_system_surface(ctx->instance,&surface_creation_info,NULL,&(ctx->surface)));
 	uint32_t count;
 	VULKAN_CALL(ctx->function_table.vkEnumeratePhysicalDevices(ctx->instance,&count,NULL));
 	sll_error_raise_bool(!count||!"No GPU found");

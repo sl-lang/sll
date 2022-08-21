@@ -5,14 +5,17 @@
 
 
 
+#define _LOAD_FUNCTION_STR(name) _LOAD_FUNCTION_STR2(name)
+#define _LOAD_FUNCTION_STR2(name) #name
 #define LOAD_FUNCTION(name) \
-	if (!(name=(PFN_##name)vkGetInstanceProcAddr(NULL,#name))){ \
-		SLL_WARN("Failed to load Vulkan function '%s'!",#name); \
+	if (!(name=(_GFX_FUNCTION_PROTOTYPE(name))vkGetInstanceProcAddr(NULL,_LOAD_FUNCTION_STR(name)))){ \
+		SLL_WARN("Failed to load Vulkan function '%s'!",_LOAD_FUNCTION_STR(name)); \
 		ret=0; \
 	}
-#define LOAD_FUNCTION_TABLE(name) \
-	if (!(out->name=(PFN_##name)vkGetInstanceProcAddr(instance,#name))){ \
-		SLL_WARN("Failed to load Vulkan function '%s'!",#name); \
+#define LOAD_FUNCTION_TABLE(name) LOAD_FUNCTION_TABLE_VAR(name,name)
+#define LOAD_FUNCTION_TABLE_VAR(var,name) \
+	if (!(out->var=(_GFX_FUNCTION_PROTOTYPE(name))vkGetInstanceProcAddr(instance,_LOAD_FUNCTION_STR(name)))){ \
+		SLL_WARN("Failed to load Vulkan function '%s'!",_LOAD_FUNCTION_STR(name)); \
 		ret=0; \
 	}
 
@@ -42,6 +45,7 @@ sll_bool_t _load_vulkan_functions(PFN_vkGetInstanceProcAddr get_proc_addr){
 
 sll_bool_t _load_vulkan_function_table(VkInstance instance,gfx_vulkan_function_table_t* out){
 	sll_bool_t ret=1;
+	LOAD_FUNCTION_TABLE_VAR(create_system_surface,GFX_VULKAN_SYSTEM_SURFACE_CREATION_FUNCTION);
 	LOAD_FUNCTION_TABLE(vkAcquireNextImageKHR);
 	LOAD_FUNCTION_TABLE(vkAllocateCommandBuffers);
 	LOAD_FUNCTION_TABLE(vkAllocateMemory);
@@ -88,12 +92,5 @@ sll_bool_t _load_vulkan_function_table(VkInstance instance,gfx_vulkan_function_t
 	LOAD_FUNCTION_TABLE(vkQueuePresentKHR);
 	LOAD_FUNCTION_TABLE(vkQueueSubmit);
 	LOAD_FUNCTION_TABLE(vkQueueWaitIdle);
-#ifdef __SLL_BUILD_DARWIN
-	LOAD_FUNCTION_TABLE(vkCreateMacOSSurfaceMVK);
-#elif defined(__SLL_BUILD_LINUX)
-	LOAD_FUNCTION_TABLE(vkCreateXcbSurfaceKHR);
-#else
-	LOAD_FUNCTION_TABLE(vkCreateWin32SurfaceKHR);
-#endif
 	return ret;
 }

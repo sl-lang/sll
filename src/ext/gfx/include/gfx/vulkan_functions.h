@@ -5,7 +5,14 @@
 
 
 
+#define _GFX_FUNCTION_PROTOTYPE(name) _GFX_FUNCTION_PROTOTYPE_(name)
+#define _GFX_FUNCTION_PROTOTYPE_(name) PFN_##name
+#define GFX_VULKAN_SYSTEM_SURFACE_CREATION_FUNCTION_PROTOTYPE _GFX_FUNCTION_PROTOTYPE(GFX_VULKAN_SYSTEM_SURFACE_CREATION_FUNCTION)
+
+
+
 typedef struct _GFX_VULKAN_FUNCTION_TABLE{
+	GFX_VULKAN_SYSTEM_SURFACE_CREATION_FUNCTION_PROTOTYPE create_system_surface;
 	PFN_vkAcquireNextImageKHR vkAcquireNextImageKHR;
 	PFN_vkAllocateCommandBuffers vkAllocateCommandBuffers;
 	PFN_vkAllocateMemory vkAllocateMemory;
@@ -52,13 +59,6 @@ typedef struct _GFX_VULKAN_FUNCTION_TABLE{
 	PFN_vkQueuePresentKHR vkQueuePresentKHR;
 	PFN_vkQueueSubmit vkQueueSubmit;
 	PFN_vkQueueWaitIdle vkQueueWaitIdle;
-#ifdef __SLL_BUILD_DARWIN
-	PFN_vkCreateMacOSSurfaceMVK vkCreateMacOSSurfaceMVK;
-#elif defined(__SLL_BUILD_LINUX)
-	PFN_vkCreateXcbSurfaceKHR vkCreateXcbSurfaceKHR;
-#else
-	PFN_vkCreateWin32SurfaceKHR vkCreateWin32SurfaceKHR;
-#endif
 } gfx_vulkan_function_table_t;
 
 
