@@ -15,14 +15,12 @@ sll_handle_container_t gfx_context_data;
 
 
 
-#ifdef DEBUG_BUILD
 static VKAPI_ATTR VkBool32 _debug_messenger_callback(VkDebugUtilsMessageSeverityFlagBitsEXT severity,VkDebugUtilsMessageTypeFlagsEXT type,const VkDebugUtilsMessengerCallbackDataEXT* data,gfx_context_data_t* ctx){
 	if (severity>VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT){
 		SLL_WARN("%s",data->pMessage);
 	}
 	return VK_FALSE;
 }
-#endif
 
 
 
@@ -218,19 +216,22 @@ void _delete_context(gfx_context_data_t* ctx){
 	ctx->function_table.vkDestroyCommandPool(ctx->logical_device,ctx->command_pool,NULL);
 	ctx->function_table.vkDestroyDevice(ctx->logical_device,NULL);
 	ctx->function_table.vkDestroySurfaceKHR(ctx->instance,ctx->surface,NULL);
-#ifdef DEBUG_BUILD
-	PFN_vkDestroyDebugUtilsMessengerEXT vkDestroyDebugUtilsMessengerEXT=(PFN_vkDestroyDebugUtilsMessengerEXT)vkGetInstanceProcAddr(ctx->instance,"vkDestroyDebugUtilsMessengerEXT");
-	if (vkDestroyDebugUtilsMessengerEXT){
-		vkDestroyDebugUtilsMessengerEXT(ctx->instance,ctx->debug_messenger,NULL);
+	if (ctx->debug_messenger!=VK_NULL_HANDLE){
+		PFN_vkDestroyDebugUtilsMessengerEXT vkDestroyDebugUtilsMessengerEXT=(PFN_vkDestroyDebugUtilsMessengerEXT)vkGetInstanceProcAddr(ctx->instance,"vkDestroyDebugUtilsMessengerEXT");
+		if (vkDestroyDebugUtilsMessengerEXT){
+			vkDestroyDebugUtilsMessengerEXT(ctx->instance,ctx->debug_messenger,NULL);
+		}
 	}
-#endif
 	ctx->function_table.vkDestroyInstance(ctx->instance,NULL);
 	sll_deallocate(ctx);
 }
 
 
 
-__GFX_API_CALL gfx_context_t gfx_api_context_create(void* handle,void* extra_data){
+__GFX_API_CALL gfx_context_t gfx_api_context_create(void* handle,void* extra_data,sll_bool_t debug){
+	if (!vulkan_validation_layer_name){
+		debug=0;
+	}
 	VkApplicationInfo app_info={
 		VK_STRUCTURE_TYPE_APPLICATION_INFO,
 		NULL,
@@ -250,29 +251,26 @@ __GFX_API_CALL gfx_context_t gfx_api_context_create(void* handle,void* extra_dat
 		NULL,
 		0,
 		&app_info,
-		!!vulkan_validation_layer_name,
+		debug,
 		&vulkan_validation_layer_name,
-		2+!!vulkan_validation_layer_name,
+		2+debug,
 		enabled_extensions
 	};
 	gfx_context_data_t* ctx=sll_zero_allocate(sizeof(gfx_context_data_t));
 	VULKAN_CALL(vkCreateInstance(&instance_creation_info,NULL,&(ctx->instance)));
-#ifdef DEBUG_BUILD
-	VkDebugUtilsMessengerCreateInfoEXT debug_messenger_cretion_info={
-		VK_STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT,
-		NULL,
-		0,
-		VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT|VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT|VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT,
-		VK_DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT|VK_DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT|VK_DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT,
-		(PFN_vkDebugUtilsMessengerCallbackEXT)_debug_messenger_callback,
-		ctx
-	};
-	PFN_vkCreateDebugUtilsMessengerEXT vkCreateDebugUtilsMessengerEXT=(PFN_vkCreateDebugUtilsMessengerEXT)vkGetInstanceProcAddr(ctx->instance,"vkCreateDebugUtilsMessengerEXT");
-	if (vkCreateDebugUtilsMessengerEXT){
-		VULKAN_CALL(vkCreateDebugUtilsMessengerEXT(ctx->instance,&debug_messenger_cretion_info,NULL,&(ctx->debug_messenger)));
-	}
-#endif
 	sll_error_raise_bool(!_load_vulkan_function_table(ctx->instance,&(ctx->function_table)));
+	if (debug){
+		VkDebugUtilsMessengerCreateInfoEXT debug_messenger_cretion_info={
+			VK_STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT,
+			NULL,
+			0,
+			VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT|VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT|VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT,
+			VK_DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT|VK_DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT|VK_DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT,
+			(PFN_vkDebugUtilsMessengerCallbackEXT)_debug_messenger_callback,
+			ctx
+		};
+		VULKAN_CALL(ctx->function_table.vkCreateDebugUtilsMessengerEXT(ctx->instance,&debug_messenger_cretion_info,NULL,&(ctx->debug_messenger)));
+	}
 #ifdef __SLL_BUILD_DARWIN
 	VkMacOSSurfaceCreateInfoMVK surface_creation_info={
 		VK_STRUCTURE_TYPE_MACOS_SURFACE_CREATE_INFO_MVK,

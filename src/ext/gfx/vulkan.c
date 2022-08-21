@@ -176,7 +176,6 @@ sll_bool_t _init_vulkan(void){
 	}
 	sll_deallocate(extension_properties);
 	vulkan_validation_layer_name=NULL;
-#ifdef DEBUG_BUILD
 	VULKAN_CALL(vkEnumerateInstanceLayerProperties(&count,NULL));
 	VkLayerProperties* layer_properties=sll_allocate_stack(count*sizeof(VkLayerProperties));
 	VULKAN_CALL(vkEnumerateInstanceLayerProperties(&count,layer_properties));
@@ -187,7 +186,6 @@ sll_bool_t _init_vulkan(void){
 		}
 	}
 	sll_deallocate(layer_properties);
-#endif
 	return has_vk_khr_surface&&has_system_surface;
 }
 

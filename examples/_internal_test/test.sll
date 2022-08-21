@@ -756,7 +756,7 @@ abc` '\n')
 (:> (<- gfx:vulkan$get_extensions) '\n')
 
 (= window (<- window_manager:window$create [0 0 900 600] nil "Example GFX Window" true))
-(= ctx (<- gfx:context$create window))
+(= ctx (<- gfx:context$create window true))
 (= window$callbacks$key_down (,,, window key
 	(?? key
 		window_manager:keyboard$KEY_ESCAPE (<- window_manager:window$destroy window)

@@ -50,6 +50,7 @@ sll_bool_t _load_vulkan_function_table(VkInstance instance,gfx_vulkan_function_t
 	LOAD_FUNCTION_TABLE(vkCmdBeginRenderPass);
 	LOAD_FUNCTION_TABLE(vkCmdEndRenderPass);
 	LOAD_FUNCTION_TABLE(vkCreateCommandPool);
+	LOAD_FUNCTION_TABLE(vkCreateDebugUtilsMessengerEXT);
 	LOAD_FUNCTION_TABLE(vkCreateDevice);
 	LOAD_FUNCTION_TABLE(vkCreateFence);
 	LOAD_FUNCTION_TABLE(vkCreateFramebuffer);
@@ -60,6 +61,7 @@ sll_bool_t _load_vulkan_function_table(VkInstance instance,gfx_vulkan_function_t
 	LOAD_FUNCTION_TABLE(vkCreateSemaphore);
 	LOAD_FUNCTION_TABLE(vkCreateSwapchainKHR);
 	LOAD_FUNCTION_TABLE(vkDestroyCommandPool);
+	LOAD_FUNCTION_TABLE(vkDestroyDebugUtilsMessengerEXT);
 	LOAD_FUNCTION_TABLE(vkDestroyDevice);
 	LOAD_FUNCTION_TABLE(vkDestroyFence)
 	LOAD_FUNCTION_TABLE(vkDestroyFramebuffer);

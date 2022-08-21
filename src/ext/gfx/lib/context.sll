@@ -36,7 +36,7 @@
 
 
 
-(= create (,,, window
+(= create (,,, window enable_debug
 	(? (! window) (@@ nil))
 	(= window (:: window window_manager:window$window_manager_window_type))
 	(= ctx (<- weakref$get window$_gfx_context))
@@ -44,6 +44,7 @@
 	(= handle (<- (... "gfx:context_create")
 		window$id
 		(<- window_manager:util$get_context)
+		(!! enable_debug)
 	))
 	(= out (. gfx_context_type
 		handle

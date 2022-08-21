@@ -14,9 +14,7 @@
 typedef struct _GFX_CONTEXT_DATA{
 	gfx_vulkan_function_table_t function_table;
 	VkInstance instance;
-#ifdef DEBUG_BUILD
 	VkDebugUtilsMessengerEXT debug_messenger;
-#endif
 	VkSurfaceKHR surface;
 	VkPhysicalDevice physical_device;
 	VkDevice logical_device;
@@ -58,7 +56,7 @@ void _delete_context(gfx_context_data_t* ctx);
 
 
 
-__GFX_API_CALL gfx_context_t gfx_api_context_create(void* handle,void* extra_data);
+__GFX_API_CALL gfx_context_t gfx_api_context_create(void* handle,void* extra_data,sll_bool_t debug);
 
 
 
