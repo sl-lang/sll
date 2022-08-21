@@ -29,6 +29,7 @@
 	(~ weakref_type) NIL_REF
 	(~ weakref_no_object) WEAKREF_NO_OBJECT
 	(~ func_type) get
+	(~ func_type) get_default
 	(~ func_type) ref
 ))
 
@@ -38,9 +39,9 @@
 
 
 
-(= _execute_callbacks (,,, weak_reference obj
+(= _execute_callbacks (,,, weak_reference object
 	(-> (= i 0) (< i ($ weak_reference$callbacks))
-		(<- (: weak_reference$callbacks i) obj weak_reference)
+		(<- (: weak_reference$callbacks i) object weak_reference)
 		(++ i)
 	)
 ))
@@ -56,9 +57,17 @@
 	(@@ out)
 ))
 
-(= ref (,,, obj
+(= get_default (,,, weak_reference default
+	(= out (<- get weak_reference))
+	(@@ (?: (=== out WEAKREF_NO_OBJECT)
+		default
+		out
+	))
+))
+
+(= ref (,,, object
 	(= out (. weakref_type
-		(<- (... "sll:weakref_create") obj)
+		(<- (... "sll:weakref_create") object)
 		[]
 	))
 	(<- (... "sll:weakref_set_callback_data") out$_id out)
@@ -78,6 +87,7 @@
 	NIL_REF
 	WEAKREF_NO_OBJECT
 	get
+	get_default
 	ref
 ))
 (## weakref)

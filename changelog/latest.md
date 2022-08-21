@@ -1,5 +1,9 @@
 # Sll [0.7.32] - Ongoing
 
+## Added
+
+- Implemented `weakref$get_default`
+
 ## Changed
 
 - Fixed bug with the following string formatting expression: `%+f`

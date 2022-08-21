@@ -64,10 +64,9 @@
 (= get (,,, window
 	(? (! window) (@@ nil))
 	(= window (:: window window_manager:window$window_manager_window_type))
-	(= out (<- weakref$get window$_gfx_context))
-	(@@ (?: (=== out weakref$WEAKREF_NO_OBJECT)
+	(@@ (<- weakref$get_default
+		window$_gfx_context
 		nil
-		out
 	))
 ))
 
