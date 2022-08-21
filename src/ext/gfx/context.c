@@ -57,6 +57,8 @@ static void _release_swapchain(gfx_context_data_t* ctx){
 static void _create_swapchain(gfx_context_data_t* ctx){
 	VkSurfaceCapabilitiesKHR surface_caps;
 	VULKAN_CALL(ctx->function_table.vkGetPhysicalDeviceSurfaceCapabilitiesKHR(ctx->physical_device,ctx->surface,&surface_caps));
+	ctx->width=surface_caps.currentExtent.width;
+	ctx->height=surface_caps.currentExtent.height;
 	VkSwapchainCreateInfoKHR swapchain_creation_info={
 		VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR,
 		NULL,
@@ -65,7 +67,10 @@ static void _create_swapchain(gfx_context_data_t* ctx){
 		surface_caps.minImageCount+1,
 		ctx->color_format,
 		ctx->color_space,
-		surface_caps.currentExtent,
+		{
+			ctx->width,
+			ctx->height
+		},
 		1,
 		VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT|(surface_caps.supportedUsageFlags&(VK_IMAGE_USAGE_TRANSFER_SRC_BIT|VK_IMAGE_USAGE_TRANSFER_DST_BIT)),
 		VK_SHARING_MODE_EXCLUSIVE,
@@ -102,8 +107,8 @@ static void _create_swapchain(gfx_context_data_t* ctx){
 		VK_IMAGE_TYPE_2D,
 		VK_FORMAT_D32_SFLOAT,
 		{
-			surface_caps.currentExtent.width,
-			surface_caps.currentExtent.height,
+			ctx->width,
+			ctx->height,
 			1
 		},
 		1,
@@ -183,8 +188,8 @@ static void _create_swapchain(gfx_context_data_t* ctx){
 		ctx->render_pass,
 		2,
 		frame_buffer_attachments,
-		surface_caps.currentExtent.width,
-		surface_caps.currentExtent.height,
+		ctx->width,
+		ctx->height,
 		1
 	};
 	for (uint32_t i=0;i<ctx->swapchain_image_count;i++){
@@ -484,7 +489,10 @@ __GFX_API_CALL void gfx_api_context_render(gfx_context_t ctx_id){
 		return;
 	}
 	uint32_t swapchain_image_index;
-	VULKAN_CALL(ctx->function_table.vkAcquireNextImageKHR(ctx->logical_device,ctx->swapchain,UINT64_MAX,ctx->swapchain_present_semaphore,NULL,&swapchain_image_index));
+	VkResult err=ctx->function_table.vkAcquireNextImageKHR(ctx->logical_device,ctx->swapchain,UINT64_MAX,ctx->swapchain_present_semaphore,NULL,&swapchain_image_index);
+	if (err!=VK_SUBOPTIMAL_KHR){
+		VULKAN_CALL(err);
+	}
 	VkCommandBufferBeginInfo begin_info={
 		VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO,
 		NULL,
@@ -492,24 +500,46 @@ __GFX_API_CALL void gfx_api_context_render(gfx_context_t ctx_id){
 		NULL
 	};
 	VULKAN_CALL(ctx->function_table.vkBeginCommandBuffer(ctx->command_buffers[swapchain_image_index],&begin_info));
-	VkClearColorValue clear_color={
+	VkClearValue clear_values[2]={
 		{
-			0.1f,
-			0.5f,
-			0.4f,
-			0.0f
+			.color={
+				.float32={
+					0.1f,
+					0.5f,
+					0.4f,
+					0.0f
+				}
+			}
+		},
+		{
+			.depthStencil={
+				0,
+				0
+			}
 		}
 	};
-	VkImageSubresourceRange image_subresource_range={
-		VK_IMAGE_ASPECT_COLOR_BIT,
-		0,
-		1,
-		0,
-		1
+	VkRenderPassBeginInfo render_pass_info={
+		VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO,
+		NULL,
+		ctx->render_pass,
+		ctx->frame_buffers[swapchain_image_index],
+		{
+			{
+				0,
+				0
+			},
+			{
+				ctx->width,
+				ctx->height
+			}
+		},
+		2,
+		clear_values
 	};
-	ctx->function_table.vkCmdClearColorImage(ctx->command_buffers[swapchain_image_index],ctx->swapchain_images[swapchain_image_index],VK_IMAGE_LAYOUT_GENERAL,&clear_color,1,&image_subresource_range);
+	ctx->function_table.vkCmdBeginRenderPass(ctx->command_buffers[swapchain_image_index],&render_pass_info,VK_SUBPASS_CONTENTS_INLINE);
+	ctx->function_table.vkCmdEndRenderPass(ctx->command_buffers[swapchain_image_index]);
 	VULKAN_CALL(ctx->function_table.vkEndCommandBuffer(ctx->command_buffers[swapchain_image_index]));
-    VkPipelineStageFlags wait_flags=VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
+	VkPipelineStageFlags wait_flags=VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
 	VkSubmitInfo submit_info={
 		VK_STRUCTURE_TYPE_SUBMIT_INFO,
 		NULL,
@@ -532,7 +562,13 @@ __GFX_API_CALL void gfx_api_context_render(gfx_context_t ctx_id){
 		&swapchain_image_index,
 		NULL
 	};
-	VULKAN_CALL(ctx->function_table.vkQueuePresentKHR(ctx->queue,&present_info));
+	err=ctx->function_table.vkQueuePresentKHR(ctx->queue,&present_info);
+	if (err==VK_SUBOPTIMAL_KHR){
+		_create_swapchain(ctx);
+	}
+	else{
+		VULKAN_CALL(err);
+	}
 	VULKAN_CALL(ctx->function_table.vkQueueWaitIdle(ctx->queue));
 }
 

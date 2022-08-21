@@ -11,7 +11,8 @@ typedef struct _GFX_VULKAN_FUNCTION_TABLE{
 	PFN_vkAllocateMemory vkAllocateMemory;
 	PFN_vkBeginCommandBuffer vkBeginCommandBuffer;
 	PFN_vkBindImageMemory vkBindImageMemory;
-	PFN_vkCmdClearColorImage vkCmdClearColorImage;
+	PFN_vkCmdBeginRenderPass vkCmdBeginRenderPass;
+	PFN_vkCmdEndRenderPass vkCmdEndRenderPass;
 	PFN_vkCreateCommandPool vkCreateCommandPool;
 	PFN_vkCreateDevice vkCreateDevice;
 	PFN_vkCreateFence vkCreateFence;

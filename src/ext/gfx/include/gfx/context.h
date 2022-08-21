@@ -40,6 +40,8 @@ typedef struct _GFX_CONTEXT_DATA{
 	VkFramebuffer* frame_buffers;
 	VkSemaphore swapchain_present_semaphore;
 	VkSemaphore swapchain_render_semaphore;
+	uint32_t width;
+	uint32_t height;
 } gfx_context_data_t;
 
 

@@ -47,7 +47,8 @@ sll_bool_t _load_vulkan_function_table(VkInstance instance,gfx_vulkan_function_t
 	LOAD_FUNCTION_TABLE(vkAllocateMemory);
 	LOAD_FUNCTION_TABLE(vkBeginCommandBuffer);
 	LOAD_FUNCTION_TABLE(vkBindImageMemory);
-	LOAD_FUNCTION_TABLE(vkCmdClearColorImage);
+	LOAD_FUNCTION_TABLE(vkCmdBeginRenderPass);
+	LOAD_FUNCTION_TABLE(vkCmdEndRenderPass);
 	LOAD_FUNCTION_TABLE(vkCreateCommandPool);
 	LOAD_FUNCTION_TABLE(vkCreateDevice);
 	LOAD_FUNCTION_TABLE(vkCreateFence);
