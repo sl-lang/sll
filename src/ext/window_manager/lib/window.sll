@@ -91,15 +91,12 @@
 (= window_manager_window_type (&:
 	(,,, data
 		(= flags [])
-		(? (& data$flags FLAG_BUTTON_1) (<- array$push flags "Button #1"))
-		(? (& data$flags FLAG_BUTTON_2) (<- array$push flags "Button #2"))
-		(? (& data$flags FLAG_BUTTON_3) (<- array$push flags "Button #3"))
-		(? (& data$flags FLAG_BUTTON_4) (<- array$push flags "Button #4"))
-		(? (& data$flags FLAG_BUTTON_5) (<- array$push flags "Button #5"))
-		(? (& data$flags FLAG_BUTTON_6) (<- array$push flags "Button #6"))
 		(? (& data$flags FLAG_BUTTON_LEFT) (<- array$push flags "Left button"))
 		(? (& data$flags FLAG_BUTTON_MIDDLE) (<- array$push flags "Middle button"))
 		(? (& data$flags FLAG_BUTTON_RIGHT) (<- array$push flags "Right button"))
+		(? (& data$flags FLAG_BUTTON_4) (<- array$push flags "Button #4"))
+		(? (& data$flags FLAG_BUTTON_5) (<- array$push flags "Button #5"))
+		(? (& data$flags FLAG_BUTTON_6) (<- array$push flags "Button #6"))
 		(? (& data$flags FLAG_CLOSED) (<- array$push flags "Closed"))
 		(? (& data$flags FLAG_HAS_MOUSE) (<- array$push flags "Has mouse"))
 		(? (& data$flags FLAG_IN_FOCUS) (<- array$push flags "In focus"))
