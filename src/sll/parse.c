@@ -866,9 +866,8 @@ _normal_identifier:;
 					if_->source_file_index=i;
 					if_->length=im_sf->export_table.length;
 					for (sll_export_table_length_t j=0;j<im_sf->export_table.length;j++){
-						sll_identifier_index_t ii=*(im_sf->export_table.data+j);
 						sll_string_t tmp;
-						sll_string_clone(im_sf->string_table.data+SLL_IDENTIFIER_GET_STRING_INDEX(im_sf->identifier_table.data+ii),&tmp);
+						sll_string_clone(im_sf->string_table.data+SLL_IDENTIFIER_GET_STRING_INDEX(im_sf->identifier_table.data+(*(im_sf->export_table.data+j))),&tmp);
 						if_->data[j]=_get_var_index(source_file,extra_compilation_data,scope_data,&tmp,NULL,GET_VAR_INDEX_FLAG_ASSIGN);
 					}
 					sll_deallocate(im.data);
