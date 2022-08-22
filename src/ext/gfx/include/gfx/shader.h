@@ -1,24 +1,25 @@
 #ifndef __GFX_SHADER_H__
 #define __GFX_SHADER_H__ 1
+#include <gfx/_shader_type.h>
 #include <gfx/common.h>
+#include <gfx/context.h>
 #include <sll.h>
-#include <stdint.h>
 
 
 
-#define GFX_SHADER_STAGE_VERTEX 0
-#define GFX_SHADER_STAGE_TESSCONTROL 1
-#define GFX_SHADER_STAGE_TESSEVALUATION 2
-#define GFX_SHADER_STAGE_GEOMETRY 3
-#define GFX_SHADER_STAGE_FRAGMENT 4
+typedef sll_size_t gfx_shader_t;
 
 
 
-typedef uint8_t gfx_shader_stage_t;
+void _delete_shader(const gfx_context_data_t* ctx,gfx_shader_data_t* shader_data);
 
 
 
-__GFX_API_CALL void gfx_api_shader_compile(const sll_string_t* code,gfx_shader_stage_t stage,sll_string_t* out);
+__GFX_API_CALL gfx_shader_t gfx_api_shader_create(gfx_context_t ctx_id,const sll_string_t* bytecode);
+
+
+
+__GFX_API_CALL void gfx_api_shader_delete(gfx_context_t ctx_id,gfx_shader_t shader_id);
 
 
 
