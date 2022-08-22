@@ -297,10 +297,10 @@ static void _end_frame(gfx_context_data_t* ctx){
 
 
 void _delete_context(gfx_context_data_t* ctx){
+	_end_frame(ctx);
 	SLL_HANDLE_CONTAINER_ITER_CLEAR(&(ctx->shaders),gfx_shader_data_t,shader,{
 		_delete_shader(ctx,shader);
 	});
-	_end_frame(ctx);
 	_release_swapchain(ctx);
 	sll_deallocate(ctx->swapchain.image_views);
 	sll_deallocate(ctx->sync.fences);
