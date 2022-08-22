@@ -37,6 +37,9 @@ static sll_node_t _mark(sll_node_t node,bitmap_t* bitmap){
 			if (node->data.declaration.name_string_index!=SLL_MAX_STRING_INDEX){
 				*(bitmap+(node->data.declaration.name_string_index>>6))|=1ull<<(node->data.declaration.name_string_index&63);
 			}
+			if (node->data.declaration.description_string_index!=SLL_MAX_STRING_INDEX){
+				*(bitmap+(node->data.declaration.description_string_index>>6))|=1ull<<(node->data.declaration.description_string_index&63);
+			}
 	}
 	sll_arg_count_t arg_count=node->data.arg_count;
 	node++;
@@ -131,8 +134,13 @@ __SLL_EXTERNAL void sll_optimize_metadata(sll_compilation_data_t* compilation_da
 					}
 					if (SLL_NODE_HAS_CHILDREN(node)&&node->type<SLL_NODE_TYPE_DBG){
 						stack+=node->data.arg_count;
-						if (node->type==SLL_NODE_TYPE_DECL&&node->data.declaration.name_string_index!=SLL_MAX_STRING_INDEX){
-							node->data.declaration.name_string_index=*(string_map+node->data.declaration.name_string_index);
+						if (node->type==SLL_NODE_TYPE_DECL){
+							if (node->data.declaration.name_string_index!=SLL_MAX_STRING_INDEX){
+								node->data.declaration.name_string_index=*(string_map+node->data.declaration.name_string_index);
+							}
+							if (node->data.declaration.description_string_index!=SLL_MAX_STRING_INDEX){
+								node->data.declaration.description_string_index=*(string_map+node->data.declaration.description_string_index);
+							}
 						}
 					}
 					else if (node->type==SLL_NODE_TYPE_STRING||node->type==SLL_NODE_TYPE_FIELD){

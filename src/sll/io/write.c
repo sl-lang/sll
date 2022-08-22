@@ -117,6 +117,7 @@ static sll_node_t _write_node(sll_node_t node,sll_file_t* out){
 			{
 				SLL_CRITICAL_ERROR(sll_encode_integer(out,node->data.declaration.arg_count));
 				SLL_CRITICAL_ERROR(sll_encode_integer(out,node->data.declaration.name_string_index+1));
+				SLL_CRITICAL_ERROR(sll_encode_integer(out,node->data.declaration.description_string_index+1));
 				sll_arg_count_t l=node->data.declaration.arg_count;
 				node++;
 				while (l){

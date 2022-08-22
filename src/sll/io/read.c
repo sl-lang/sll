@@ -135,6 +135,8 @@ static sll_bool_t _read_node(sll_source_file_t* source_file,sll_file_t* file){
 			CHECK_ERROR(file,o->data.declaration.arg_count,sll_arg_count_t);
 			CHECK_ERROR(file,o->data.declaration.name_string_index,sll_string_index_t);
 			o->data.declaration.name_string_index--;
+			CHECK_ERROR(file,o->data.declaration.description_string_index,sll_string_index_t);
+			o->data.declaration.description_string_index--;
 			for (sll_arg_count_t i=0;i<o->data.declaration.arg_count;i++){
 				if (!_read_node(source_file,file)){
 					return 0;

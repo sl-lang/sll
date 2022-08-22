@@ -13,6 +13,7 @@
 	string_type symbol
 	string_type name
 	string_type scope_variable
+	string_type description_variable
 	string_type extra_flag
 ))
 
@@ -50,11 +51,13 @@
 			(= (: generator_data operator_length) operator_array)
 		})
 		(= scope_variable "")
+		(= description_variable "")
 		(= extra_flag "")
 		(-> (= j 2) (< j ($ line))
 			(= modifier (: line j))
 			(?
 				(=== (: modifier 0) '$') (= scope_variable (>> modifier 1))
+				(=== (: modifier 0) '#') (= description_variable (>> modifier 1))
 				modifier (= extra_flag modifier)
 			)
 			(++ j)
@@ -63,6 +66,7 @@
 			(: line 0)
 			(: line 1)
 			scope_variable
+			description_variable
 			extra_flag
 		))
 	)
@@ -112,6 +116,9 @@ static __SLL_FORCE_INLINE sll_read_char_t _operator_parser(sll_node_t o,sll_read
 `)
 			(? operator$scope_variable (<- file$write fh
 `			o->data.` operator$scope_variable `.scope=source_file->_next_scope;
+`))
+			(? operator$description_variable (<- file$write fh
+`			o->data.` operator$description_variable `.description_string_index=SLL_MAX_STRING_INDEX;
 `))
 			(? operator$extra_flag (<- file$write fh
 `			(*fl)|=EXTRA_COMPILATION_DATA_` (<- string$upper_case operator$extra_flag) `;

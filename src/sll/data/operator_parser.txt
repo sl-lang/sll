@@ -18,7 +18,7 @@ $ length
 %% ref
 & bit_and
 && and
-&: decl
+&: decl #declaration
 &:? nameof_type
 * mult
 *** inline_func $function

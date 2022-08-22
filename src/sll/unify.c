@@ -105,6 +105,9 @@ static sll_node_t _clone_node(sll_node_t src,sll_source_file_t* out,source_file_
 				if (source_file_mapping_data&&dst->data.declaration.name_string_index!=SLL_MAX_STRING_INDEX){
 					dst->data.declaration.name_string_index=*(source_file_mapping_data->string_map+dst->data.declaration.name_string_index);
 				}
+				if (source_file_mapping_data&&dst->data.declaration.description_string_index!=SLL_MAX_STRING_INDEX){
+					dst->data.declaration.description_string_index=*(source_file_mapping_data->string_map+dst->data.declaration.description_string_index);
+				}
 				sll_arg_count_t length=src->data.declaration.arg_count;
 				src++;
 				while (length){

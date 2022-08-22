@@ -1194,10 +1194,12 @@ typedef struct _SLL_LOOP_NODE_DATA{
  * \desc Docs!
  * \arg sll_arg_count_t arg_count
  * \arg sll_string_index_t name_string_index
+ * \arg sll_string_index_t description_string_index
  */
 typedef struct _SLL_DECL_NODE_DATA{
 	sll_arg_count_t arg_count;
 	sll_string_index_t name_string_index;
+	sll_string_index_t description_string_index;
 } sll_decl_node_data_t;
 
 

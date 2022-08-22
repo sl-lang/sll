@@ -35,6 +35,7 @@ static sll_node_t _remove_type_names(sll_node_t node){
 	}
 	if (node->type==SLL_NODE_TYPE_DECL){
 		node->data.declaration.name_string_index=SLL_MAX_STRING_INDEX;
+		node->data.declaration.description_string_index=SLL_MAX_STRING_INDEX;
 	}
 	sll_arg_count_t arg_count=node->data.arg_count;
 	node++;

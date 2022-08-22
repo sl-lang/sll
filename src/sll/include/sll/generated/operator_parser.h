@@ -105,6 +105,7 @@ static __SLL_FORCE_INLINE sll_read_char_t _operator_parser(sll_node_t o,sll_read
 		}
 		else if (str[0]=='&'&&str[1]==':'){
 			o->type=SLL_NODE_TYPE_DECL;
+			o->data.declaration.description_string_index=SLL_MAX_STRING_INDEX;
 		}
 		else if (str[0]=='+'&&str[1]=='+'){
 			o->type=SLL_NODE_TYPE_INC;
