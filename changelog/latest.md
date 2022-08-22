@@ -2,6 +2,7 @@
 
 ## Added
 
+- Ability to add documentation comments to type declarations
 - Implemented `weakref$get_default`
 
 ## Changed

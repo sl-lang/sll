@@ -778,3 +778,12 @@ abc` '\n')
 )
 (:> ctx '\n')
 (:> window '\n')
+
+
+(= example_type (&:
+	"comment"
+	(~ int_type) x
+	int_type y
+))
+(= point (. example_type -1 22))
+(:> point '\n')

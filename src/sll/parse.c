@@ -884,6 +884,10 @@ _normal_identifier:;
 					*(source_file->export_table.data+source_file->export_table.length-1)=arg->data.identifier_index;
 _skip_export:;
 				}
+				else if (o->type==SLL_NODE_TYPE_DECL&&arg->type==SLL_NODE_TYPE_STRING&&ac==1){
+					arg->type=SLL_NODE_TYPE_NOP;
+					ac=0;
+				}
 			}
 		}
 	}
