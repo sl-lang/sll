@@ -1,23 +1,44 @@
 (---
-	"gfx/_clear_color.sll"
+	"gfx/_color.sll"
 	"gfx/_load_library.sll"
 	"gfx/context.sll"
+	"math.sll"
 	"types.sll"
 )
 
 
 
 (= gfx_color_module_type (&:
-	(~ type_type) gfx_clear_color_type
+	(~ type_type) gfx_color_type
+	(~ func_type) hsv_to_rgb
 	(~ func_type) set_clear_color
 ))
 
 
 
+(= hsv_to_rgb (,,, hue saturation value alpha
+	(= hue (% (:: hue float_type) 1))
+	(= saturation (:: saturation float_type))
+	(= value (:: value float_type))
+	(= alpha (:: alpha float_type))
+	(= chroma (* saturation value))
+	(= hue_sector (* hue 6))
+	(= bias (- value chroma))
+	(= x (+ (* chroma (- 1 (<- math$abs (- (% hue_sector 2) 1)))) bias))
+	(@@ (:: (?:
+		(< hue_sector 1) [value x bias alpha]
+		(< hue_sector 2) [x value bias alpha]
+		(< hue_sector 3) [bias value x alpha]
+		(< hue_sector 4) [bias x value alpha]
+		(< hue_sector 5) [x bias value alpha]
+		[value bias x alpha]
+	) gfx_color_type))
+))
+
 (= set_clear_color (,,, ctx color
 	(? (! ctx) (@@))
 	(= ctx (:: ctx gfx:context$gfx_context_type))
-	(= color (:: color gfx_clear_color_type))
+	(= color (:: color gfx_color_type))
 	(= ctx$clear_color color)
 	(? (< color$red 0) (= color$red 0))
 	(? (> color$red 1) (= color$red 1))
@@ -39,7 +60,8 @@
 
 
 (= gfx:color (. gfx_color_module_type
-	gfx_clear_color_type
+	gfx_color_type
+	hsv_to_rgb
 	set_clear_color
 ))
 (## gfx:color)

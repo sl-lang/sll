@@ -2,7 +2,7 @@
 
 
 
-(= gfx_clear_color_type (&:
+(= gfx_color_type (&:
 	float_type red
 	float_type green
 	float_type blue
@@ -11,4 +11,4 @@
 
 
 
-(## gfx_clear_color_type)
+(## gfx_color_type)
