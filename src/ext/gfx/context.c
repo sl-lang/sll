@@ -489,6 +489,8 @@ __GFX_API_CALL void gfx_api_context_render(gfx_context_t ctx_id){
 	if (err!=VK_SUBOPTIMAL_KHR){
 		VULKAN_CALL(err);
 	}
+	VULKAN_CALL(ctx->function_table.vkWaitForFences(ctx->logical_device,1,ctx->fences+swapchain_image_index,VK_TRUE,UINT64_MAX));
+	VULKAN_CALL(ctx->function_table.vkResetFences(ctx->logical_device,1,ctx->fences+swapchain_image_index));
 	VkCommandBufferBeginInfo begin_info={
 		VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO,
 		NULL,
@@ -548,7 +550,7 @@ __GFX_API_CALL void gfx_api_context_render(gfx_context_t ctx_id){
 		1,
 		&(ctx->swapchain_render_semaphore)
 	};
-	VULKAN_CALL(ctx->function_table.vkQueueSubmit(ctx->queue,1,&submit_info,NULL));
+	VULKAN_CALL(ctx->function_table.vkQueueSubmit(ctx->queue,1,&submit_info,ctx->fences[swapchain_image_index]));
 	VkPresentInfoKHR present_info={
 		VK_STRUCTURE_TYPE_PRESENT_INFO_KHR,
 		NULL,

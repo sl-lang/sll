@@ -66,10 +66,7 @@
 (= get (,,, window
 	(? (! window) (@@ nil))
 	(= window (:: window window_manager:window$window_manager_window_type))
-	(@@ (<- weakref$get_default
-		window$_gfx_context
-		nil
-	))
+	(@@ (<- weakref$get_default	window$_gfx_context))
 ))
 
 (= render (,,, ctx

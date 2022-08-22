@@ -92,5 +92,7 @@ sll_bool_t _load_vulkan_function_table(VkInstance instance,gfx_vulkan_function_t
 	LOAD_FUNCTION_TABLE(vkQueuePresentKHR);
 	LOAD_FUNCTION_TABLE(vkQueueSubmit);
 	LOAD_FUNCTION_TABLE(vkQueueWaitIdle);
+	LOAD_FUNCTION_TABLE(vkResetFences);
+	LOAD_FUNCTION_TABLE(vkWaitForFences);
 	return ret;
 }

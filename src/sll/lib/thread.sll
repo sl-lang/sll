@@ -206,10 +206,7 @@
 
 (= get (,,, id
 	(? (=== id 0) (@@ _main_thread))
-	(@@ (<- weakref$get_default
-		(: _thread_map id)
-		nil
-	))
+	(@@ (<- weakref$get_default (: _thread_map id)))
 ))
 
 (= get_internal_data (,,, thr

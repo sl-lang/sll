@@ -193,10 +193,7 @@
 ))
 
 (= get (,,, id
-	(@@ (<- weakref$get_default
-		(: _window_map id)
-		nil
-	))
+	(@@ (<- weakref$get_default (: _window_map id)))
 ))
 
 (= hide (,,, window

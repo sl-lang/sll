@@ -59,6 +59,8 @@ typedef struct _GFX_VULKAN_FUNCTION_TABLE{
 	PFN_vkQueuePresentKHR vkQueuePresentKHR;
 	PFN_vkQueueSubmit vkQueueSubmit;
 	PFN_vkQueueWaitIdle vkQueueWaitIdle;
+	PFN_vkResetFences vkResetFences;
+	PFN_vkWaitForFences vkWaitForFences;
 } gfx_vulkan_function_table_t;
 
 
