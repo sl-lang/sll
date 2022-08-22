@@ -509,7 +509,7 @@ __GFX_API_CALL void gfx_api_context_render(gfx_context_t ctx_id){
 		},
 		{
 			.depthStencil={
-				0,
+				1.0f,
 				0
 			}
 		}
