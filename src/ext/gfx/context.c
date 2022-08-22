@@ -201,6 +201,100 @@ static void _create_swapchain(gfx_context_data_t* ctx){
 
 
 
+static void _begin_frame(gfx_context_data_t* ctx){
+	VkResult err=ctx->function_table.vkAcquireNextImageKHR(ctx->device.logical,ctx->swapchain.handle,UINT64_MAX,ctx->sync.present_semaphore,NULL,&(ctx->frame.image_index));
+	if (err!=VK_SUBOPTIMAL_KHR){
+		VULKAN_CALL(err);
+	}
+	ctx->frame.command_buffer=ctx->command.buffers[ctx->frame.image_index];
+	VULKAN_CALL(ctx->function_table.vkWaitForFences(ctx->device.logical,1,ctx->sync.fences+ctx->frame.image_index,VK_TRUE,UINT64_MAX));
+	VULKAN_CALL(ctx->function_table.vkResetFences(ctx->device.logical,1,ctx->sync.fences+ctx->frame.image_index));
+	VkCommandBufferBeginInfo begin_info={
+		VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO,
+		NULL,
+		VK_COMMAND_BUFFER_USAGE_SIMULTANEOUS_USE_BIT,
+		NULL
+	};
+	VULKAN_CALL(ctx->function_table.vkBeginCommandBuffer(ctx->frame.command_buffer,&begin_info));
+	VkClearValue clear_values[2]={
+		{
+			.color={
+				.float32={
+					ctx->surface.clear_color[0],
+					ctx->surface.clear_color[1],
+					ctx->surface.clear_color[2],
+					ctx->surface.clear_color[3]
+				}
+			}
+		},
+		{
+			.depthStencil={
+				1.0f,
+				0
+			}
+		}
+	};
+	VkRenderPassBeginInfo render_pass_info={
+		VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO,
+		NULL,
+		ctx->pipeline.render_pass,
+		ctx->swapchain.frame_buffers[ctx->frame.image_index],
+		{
+			{
+				0,
+				0
+			},
+			{
+				ctx->surface.width,
+				ctx->surface.height
+			}
+		},
+		2,
+		clear_values
+	};
+	ctx->function_table.vkCmdBeginRenderPass(ctx->frame.command_buffer,&render_pass_info,VK_SUBPASS_CONTENTS_INLINE);
+}
+
+
+
+static void _end_frame(gfx_context_data_t* ctx){
+	ctx->function_table.vkCmdEndRenderPass(ctx->frame.command_buffer);
+	VULKAN_CALL(ctx->function_table.vkEndCommandBuffer(ctx->frame.command_buffer));
+	VkPipelineStageFlags wait_flags=VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
+	VkSubmitInfo submit_info={
+		VK_STRUCTURE_TYPE_SUBMIT_INFO,
+		NULL,
+		1,
+		&(ctx->sync.present_semaphore),
+		&wait_flags,
+		1,
+		&(ctx->frame.command_buffer),
+		1,
+		&(ctx->sync.render_semaphore)
+	};
+	VULKAN_CALL(ctx->function_table.vkQueueSubmit(ctx->command.queue,1,&submit_info,ctx->sync.fences[ctx->frame.image_index]));
+	VkPresentInfoKHR present_info={
+		VK_STRUCTURE_TYPE_PRESENT_INFO_KHR,
+		NULL,
+		1,
+		&(ctx->sync.render_semaphore),
+		1,
+		&(ctx->swapchain.handle),
+		&(ctx->frame.image_index),
+		NULL
+	};
+	VkResult err=ctx->function_table.vkQueuePresentKHR(ctx->command.queue,&present_info);
+	if (err==VK_SUBOPTIMAL_KHR){
+		_create_swapchain(ctx);
+	}
+	else{
+		VULKAN_CALL(err);
+	}
+	VULKAN_CALL(ctx->function_table.vkQueueWaitIdle(ctx->command.queue));
+}
+
+
+
 void _delete_context(gfx_context_data_t* ctx){
 	if (!ctx){
 		return;
@@ -481,91 +575,8 @@ __GFX_API_CALL void gfx_api_context_render(gfx_context_t ctx_id){
 	if (!ctx){
 		return;
 	}
-	uint32_t swapchain_image_index;
-	VkResult err=ctx->function_table.vkAcquireNextImageKHR(ctx->device.logical,ctx->swapchain.handle,UINT64_MAX,ctx->sync.present_semaphore,NULL,&swapchain_image_index);
-	if (err!=VK_SUBOPTIMAL_KHR){
-		VULKAN_CALL(err);
-	}
-	VULKAN_CALL(ctx->function_table.vkWaitForFences(ctx->device.logical,1,ctx->sync.fences+swapchain_image_index,VK_TRUE,UINT64_MAX));
-	VULKAN_CALL(ctx->function_table.vkResetFences(ctx->device.logical,1,ctx->sync.fences+swapchain_image_index));
-	VkCommandBufferBeginInfo begin_info={
-		VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO,
-		NULL,
-		VK_COMMAND_BUFFER_USAGE_SIMULTANEOUS_USE_BIT,
-		NULL
-	};
-	VULKAN_CALL(ctx->function_table.vkBeginCommandBuffer(ctx->command.buffers[swapchain_image_index],&begin_info));
-	VkClearValue clear_values[2]={
-		{
-			.color={
-				.float32={
-					ctx->surface.clear_color[0],
-					ctx->surface.clear_color[1],
-					ctx->surface.clear_color[2],
-					ctx->surface.clear_color[3]
-				}
-			}
-		},
-		{
-			.depthStencil={
-				1.0f,
-				0
-			}
-		}
-	};
-	VkRenderPassBeginInfo render_pass_info={
-		VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO,
-		NULL,
-		ctx->pipeline.render_pass,
-		ctx->swapchain.frame_buffers[swapchain_image_index],
-		{
-			{
-				0,
-				0
-			},
-			{
-				ctx->surface.width,
-				ctx->surface.height
-			}
-		},
-		2,
-		clear_values
-	};
-	ctx->function_table.vkCmdBeginRenderPass(ctx->command.buffers[swapchain_image_index],&render_pass_info,VK_SUBPASS_CONTENTS_INLINE);
-	// user commands
-	ctx->function_table.vkCmdEndRenderPass(ctx->command.buffers[swapchain_image_index]);
-	VULKAN_CALL(ctx->function_table.vkEndCommandBuffer(ctx->command.buffers[swapchain_image_index]));
-	VkPipelineStageFlags wait_flags=VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
-	VkSubmitInfo submit_info={
-		VK_STRUCTURE_TYPE_SUBMIT_INFO,
-		NULL,
-		1,
-		&(ctx->sync.present_semaphore),
-		&wait_flags,
-		1,
-		ctx->command.buffers+swapchain_image_index,
-		1,
-		&(ctx->sync.render_semaphore)
-	};
-	VULKAN_CALL(ctx->function_table.vkQueueSubmit(ctx->command.queue,1,&submit_info,ctx->sync.fences[swapchain_image_index]));
-	VkPresentInfoKHR present_info={
-		VK_STRUCTURE_TYPE_PRESENT_INFO_KHR,
-		NULL,
-		1,
-		&(ctx->sync.render_semaphore),
-		1,
-		&(ctx->swapchain.handle),
-		&swapchain_image_index,
-		NULL
-	};
-	err=ctx->function_table.vkQueuePresentKHR(ctx->command.queue,&present_info);
-	if (err==VK_SUBOPTIMAL_KHR){
-		_create_swapchain(ctx);
-	}
-	else{
-		VULKAN_CALL(err);
-	}
-	VULKAN_CALL(ctx->function_table.vkQueueWaitIdle(ctx->command.queue));
+	_begin_frame(ctx);
+	_end_frame(ctx);
 }
 
 

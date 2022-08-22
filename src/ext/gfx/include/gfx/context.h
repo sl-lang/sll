@@ -35,6 +35,13 @@ typedef struct _GFX_CONTEXT_DEVICE_DATA{
 
 
 
+typedef struct _GFX_CONTEXT_FRAME_DATA{
+	uint32_t image_index;
+	VkCommandBuffer command_buffer;
+} gfx_context_frame_data_t;
+
+
+
 typedef struct _GFX_CONTEXT_INSTANCE_DATA{
 	VkInstance handle;
 	VkDebugUtilsMessengerEXT debug_messenger;
@@ -82,6 +89,7 @@ typedef struct _GFX_CONTEXT_DATA{
 	gfx_context_command_data_t command;
 	gfx_context_depth_stensil_data_t depth_stensil;
 	gfx_context_device_data_t device;
+	gfx_context_frame_data_t frame;
 	gfx_context_instance_data_t instance;
 	gfx_context_pipeline_data_t pipeline;
 	gfx_context_surface_data_t surface;
