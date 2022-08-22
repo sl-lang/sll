@@ -1,4 +1,5 @@
 (---
+	"gfx/color.sll"
 	"gfx/context.sll"
 	"gfx/vulkan.sll"
 )
@@ -6,6 +7,7 @@
 
 
 (= gfx_module_type (&:
+	(~ (:? gfx:color)) color
 	(~ (:? gfx:context)) context
 	(~ (:? gfx:vulkan)) vulkan
 ))
@@ -13,6 +15,7 @@
 
 
 (= gfx (. gfx_module_type
+	gfx:color
 	gfx:context
 	gfx:vulkan
 ))

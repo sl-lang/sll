@@ -40,6 +40,7 @@ typedef struct _GFX_CONTEXT_DATA{
 	VkSemaphore swapchain_render_semaphore;
 	uint32_t width;
 	uint32_t height;
+	float clear_color[4];
 } gfx_context_data_t;
 
 

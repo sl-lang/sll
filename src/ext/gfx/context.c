@@ -500,10 +500,10 @@ __GFX_API_CALL void gfx_api_context_render(gfx_context_t ctx_id){
 		{
 			.color={
 				.float32={
-					0.1f,
-					0.5f,
-					0.4f,
-					0.0f
+					ctx->clear_color[0],
+					ctx->clear_color[1],
+					ctx->clear_color[2],
+					ctx->clear_color[3]
 				}
 			}
 		},
@@ -533,6 +533,7 @@ __GFX_API_CALL void gfx_api_context_render(gfx_context_t ctx_id){
 		clear_values
 	};
 	ctx->function_table.vkCmdBeginRenderPass(ctx->command_buffers[swapchain_image_index],&render_pass_info,VK_SUBPASS_CONTENTS_INLINE);
+	// user commands
 	ctx->function_table.vkCmdEndRenderPass(ctx->command_buffers[swapchain_image_index]);
 	VULKAN_CALL(ctx->function_table.vkEndCommandBuffer(ctx->command_buffers[swapchain_image_index]));
 	VkPipelineStageFlags wait_flags=VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;

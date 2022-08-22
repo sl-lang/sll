@@ -1,3 +1,4 @@
+#include <gfx/color.h>
 #include <gfx/context.h>
 #include <gfx/vulkan.h>
 #include <sll.h>
@@ -5,6 +6,11 @@
 
 
 static const sll_internal_function_descriptor_t _internal_function_table[]={
+	{
+		SLL_CHAR("gfx:color_set_clear_color"),
+		gfx_api_color_set_clear_color,
+		SLL_CHAR("Qffff|")
+	},
 	{
 		SLL_CHAR("gfx:context_create"),
 		gfx_api_context_create,
@@ -41,7 +47,7 @@ static const sll_internal_function_descriptor_t _internal_function_table[]={
 
 static const sll_internal_function_table_descriptor_t _internal_function_table_descriptor_data={
 	(const sll_internal_function_descriptor_t*)(&_internal_function_table),
-	6
+	7
 };
 
 

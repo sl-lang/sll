@@ -1,4 +1,5 @@
 (---
+	"gfx/_clear_color.sll"
 	"gfx/_load_library.sll"
 	"gfx/_setup_window_integration.sll"
 	"string.sll"
@@ -25,6 +26,7 @@
 	) @@string@@
 	(~ int_type) _handle
 	(~ window_manager:window$window_manager_window_type) window
+	gfx_clear_color_type clear_color
 ))
 
 (= gfx_context_module_type (&:

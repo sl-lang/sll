@@ -10,6 +10,7 @@
 	"date.sll"
 	"error.sll"
 	"file.sll"
+	"gfx/color.sll"
 	"gfx/context.sll"
 	"gfx/vulkan.sll"
 	"hash.sll"
@@ -762,8 +763,12 @@ abc` '\n')
 		window_manager:keyboard$KEY_ESCAPE (<- window_manager:window$destroy window)
 	)
 ))
+(= red 0)
 (-> nil (! (& window$flags window_manager:window$FLAG_CLOSED))
-	(<- window_manager:event$poll true)
+	(<- gfx:color$set_clear_color ctx [red 0.5 0.4 0.0])
+	(= red (+ red 0.01))
+	(? (>= red 1) (= red 0))
+	(<- window_manager:event$poll false)
 	(<- gfx:context$render ctx)
 )
 (:> ctx '\n')
