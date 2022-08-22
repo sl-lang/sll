@@ -15,7 +15,7 @@
 
 
 
-(# destroy set_title set_visibility STATE_FULLSCREEN STATE_MAXIMIZED STATE_MINIMIZED)
+(# destroy set_title set_visibility FLAG_BUTTON_1 FLAG_BUTTON_2 FLAG_BUTTON_3 FLAG_BUTTON_4 FLAG_BUTTON_5 FLAG_BUTTON_6 FLAG_BUTTON_LEFT FLAG_BUTTON_MIDDLE FLAG_BUTTON_RIGHT FLAG_CLOSED FLAG_HAS_MOUSE FLAG_IN_FOCUS FLAG_SHOWN STATE_FULLSCREEN STATE_MAXIMIZED STATE_MINIMIZED)
 
 
 
@@ -90,7 +90,22 @@
 
 (= window_manager_window_type (&:
 	(,,, data
-		(@@ (<- string$format "<window_manager:window layout=%s inputs=%s>"
+		(= flags [])
+		(? (& data$flags FLAG_BUTTON_1) (<- array$push flags "Button #1"))
+		(? (& data$flags FLAG_BUTTON_2) (<- array$push flags "Button #2"))
+		(? (& data$flags FLAG_BUTTON_3) (<- array$push flags "Button #3"))
+		(? (& data$flags FLAG_BUTTON_4) (<- array$push flags "Button #4"))
+		(? (& data$flags FLAG_BUTTON_5) (<- array$push flags "Button #5"))
+		(? (& data$flags FLAG_BUTTON_6) (<- array$push flags "Button #6"))
+		(? (& data$flags FLAG_BUTTON_LEFT) (<- array$push flags "Left button"))
+		(? (& data$flags FLAG_BUTTON_MIDDLE) (<- array$push flags "Middle button"))
+		(? (& data$flags FLAG_BUTTON_RIGHT) (<- array$push flags "Right button"))
+		(? (& data$flags FLAG_CLOSED) (<- array$push flags "Closed"))
+		(? (& data$flags FLAG_HAS_MOUSE) (<- array$push flags "Has mouse"))
+		(? (& data$flags FLAG_IN_FOCUS) (<- array$push flags "In focus"))
+		(? (& data$flags FLAG_SHOWN) (<- array$push flags "Shown"))
+		(@@ (<- string$format "<window_manager:window flags=%s layout=%s inputs=%s>"
+			(<- string$join ", " flags)
 			(:: data$layout string_type)
 			(:: data$inputs string_type)
 		))
