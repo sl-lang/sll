@@ -1,10 +1,7 @@
 #!/bin/bash
-if [ "$(uname -s)" == "Darwin" ]; then
-	platform="darwin"
-else
-	platform="linux"
-fi
-if [ ! -d "build/ext/gfx_$platform/vulkan_headers" ]; then
-	mkdir "build/ext/gfx_$platform/vulkan_headers"
-	git clone https://github.com/KhronosGroup/Vulkan-Headers.git "build/ext/gfx_$platform/vulkan_headers"
+curl -L -o "build/ext/gfx_linux/glslang.zip" "https://github.com/KhronosGroup/glslang/releases/download/master-tot/glslang-master-linux-Release.zip"
+unzip build/ext/gfx_linux/glslang.zip -d build/ext/gfx_linux/glslang
+if [ ! -d "build/ext/gfx_linux/vulkan_headers" ]; then
+	mkdir "build/ext/gfx_linux/vulkan_headers"
+	git clone https://github.com/KhronosGroup/Vulkan-Headers.git "build/ext/gfx_linux/vulkan_headers"
 fi
