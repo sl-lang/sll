@@ -20,7 +20,7 @@
 		(<- delete data)
 	) @@delete@@
 	(,,, data
-		(@@ (<- string$format "<gfx window=%s>"
+		(@@ (<- string$format "<gfx:context window=%s>"
 			(:: data$window string_type)
 		))
 	) @@string@@

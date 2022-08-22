@@ -1,8 +1,19 @@
-(--- "types.sll")
+(---
+	"string.sll"
+	"types.sll"
+)
 
 
 
 (= gfx_color_type (&:
+	(,,, data
+		(@@ (<- string$format "<gfx:color red=%.4f green=%.4f blue=%.4f alpha=%.4f>"
+			data$red
+			data$green
+			data$blue
+			data$alpha
+		))
+	) @@string@@
 	float_type red
 	float_type green
 	float_type blue
