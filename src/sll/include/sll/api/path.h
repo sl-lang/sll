@@ -155,7 +155,7 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_path_set_cw
  * \name sll_api_path_size
  * \group path-api
  * \desc Docs!
- * \api #s|Q
+ * \api #s|~Q
  * \arg const sll_string_t* path
  * \arg sll_size_t* out
  * \ret sll_error_t

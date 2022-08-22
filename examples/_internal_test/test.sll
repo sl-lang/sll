@@ -201,7 +201,7 @@
 		(<- path$size k)
 	)
 ))
-(<- sort$sort arr false true (,,, k (@@ k$sz)))
+(<- sort$sort arr true true (,,, k (@@ k$sz)))
 (-> (= i 0) (< i ($ arr))
 	(= e (: arr i))
 	(:> e$fp " -> " (<- format_bytes e$sz) "\n")

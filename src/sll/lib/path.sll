@@ -99,7 +99,16 @@
 	)))
 ))
 
-(= size (... "sll:path_size"))
+(= size (,,, path
+	(? (! path) (@@ nil))
+	(= out (<- (... "sll:path_size")
+		(:: path string_type)
+	))
+	(@@ (?: (< out 0)
+		(<- error$from_internal (~ out))
+		out
+	))
+)
 
 (= split (... "sll:path_split"))
 
