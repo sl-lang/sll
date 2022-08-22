@@ -9,8 +9,8 @@ __GFX_API_CALL void gfx_api_color_set_clear_color(gfx_context_t ctx_id,sll_float
 	if (!ctx){
 		return;
 	}
-	ctx->clear_color[0]=red;
-	ctx->clear_color[1]=green;
-	ctx->clear_color[2]=blue;
-	ctx->clear_color[3]=alpha;
+	ctx->clear_color[0]=(float)red;
+	ctx->clear_color[1]=(float)green;
+	ctx->clear_color[2]=(float)blue;
+	ctx->clear_color[3]=(float)alpha;
 }
