@@ -1,5 +1,6 @@
 #include <gfx/color.h>
 #include <gfx/context.h>
+#include <gfx/shader.h>
 #include <gfx/vulkan.h>
 #include <sll.h>
 
@@ -32,6 +33,11 @@ static const sll_internal_function_descriptor_t _internal_function_table[]={
 		SLL_CHAR("Q|")
 	},
 	{
+		SLL_CHAR("gfx:shader_compile"),
+		gfx_api_shader_compile,
+		SLL_CHAR("#sB|s")
+	},
+	{
 		SLL_CHAR("gfx:vulkan_get_extensions"),
 		gfx_api_vulkan_get_extensions,
 		SLL_CHAR("|a")
@@ -47,7 +53,7 @@ static const sll_internal_function_descriptor_t _internal_function_table[]={
 
 static const sll_internal_function_table_descriptor_t _internal_function_table_descriptor_data={
 	(const sll_internal_function_descriptor_t*)(&_internal_function_table),
-	7
+	8
 };
 
 
