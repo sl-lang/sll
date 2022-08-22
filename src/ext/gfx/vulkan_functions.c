@@ -76,6 +76,7 @@ sll_bool_t _load_vulkan_function_table(VkInstance instance,gfx_vulkan_function_t
 	LOAD_FUNCTION_TABLE(vkDestroyPipelineCache);
 	LOAD_FUNCTION_TABLE(vkDestroyRenderPass);
 	LOAD_FUNCTION_TABLE(vkDestroySemaphore);
+	LOAD_FUNCTION_TABLE(vkDestroyShaderModule);
 	LOAD_FUNCTION_TABLE(vkDestroySurfaceKHR);
 	LOAD_FUNCTION_TABLE(vkDestroySwapchainKHR);
 	LOAD_FUNCTION_TABLE(vkDeviceWaitIdle);
