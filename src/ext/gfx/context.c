@@ -299,6 +299,7 @@ void _delete_context(gfx_context_data_t* ctx){
 	if (!ctx){
 		return;
 	}
+	_end_frame(ctx);
 	_release_swapchain(ctx);
 	sll_deallocate(ctx->swapchain.image_views);
 	sll_deallocate(ctx->sync.fences);
@@ -552,6 +553,7 @@ __GFX_API_CALL gfx_context_t gfx_api_context_create(void* handle,void* extra_dat
 	VULKAN_CALL(ctx->function_table.vkCreateSemaphore(ctx->device.logical,&semaphore_creation_info,NULL,&(ctx->sync.present_semaphore)));
 	VULKAN_CALL(ctx->function_table.vkCreateSemaphore(ctx->device.logical,&semaphore_creation_info,NULL,&(ctx->sync.render_semaphore)));
 	_create_swapchain(ctx);
+	_begin_frame(ctx);
 	gfx_context_t out;
 	SLL_HANDLE_CONTAINER_ALLOC(&gfx_context_data,&out);
 	*(gfx_context_data.data+out)=ctx;
@@ -575,8 +577,8 @@ __GFX_API_CALL void gfx_api_context_render(gfx_context_t ctx_id){
 	if (!ctx){
 		return;
 	}
-	_begin_frame(ctx);
 	_end_frame(ctx);
+	_begin_frame(ctx);
 }
 
 
@@ -587,5 +589,7 @@ __GFX_API_CALL void gfx_api_context_resize(gfx_context_t ctx_id){
 	if (!ctx){
 		return;
 	}
+	_end_frame(ctx);
 	_create_swapchain(ctx);
+	_begin_frame(ctx);
 }
