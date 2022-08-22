@@ -11,5 +11,10 @@
 		"darwin": ["-D","VK_NO_PROTOTYPES","-D","VK_USE_PLATFORM_MACOS_MVK","-D","GFX_VULKAN_SYSTEM_SURFACE_CREATION_FUNCTION=vkCreateMacOSSurfaceMVK","-D","GFX_VULKAN_REQUIRED_EXTENSION_NAME=\"VK_MVK_macos_surface\"","-I","build/ext/gfx_darwin/vulkan_headers/include"],
 		"linux": ["-D","VK_NO_PROTOTYPES","-D","VK_USE_PLATFORM_XCB_KHR","-D","GFX_VULKAN_SYSTEM_SURFACE_CREATION_FUNCTION=vkCreateXcbSurfaceKHR","-D","GFX_VULKAN_REQUIRED_EXTENSION_NAME=\"VK_KHR_xcb_surface\"","-I","build/ext/gfx_linux/vulkan_headers/include"],
 		"windows": ["/D","VK_NO_PROTOTYPES","/D","VK_USE_PLATFORM_WIN32_KHR","/D","GFX_VULKAN_SYSTEM_SURFACE_CREATION_FUNCTION=vkCreateWin32SurfaceKHR","/D","GFX_VULKAN_REQUIRED_EXTENSION_NAME=\"VK_KHR_win32_surface\"","/I","build/ext/gfx_windows/vulkan_headers/include"]
+	},
+	"extra_link_options": {
+		"darwin": ["build/ext/gfx_darwin/glslang/lib/libglslang.a"],
+		"linux": ["build/ext/gfx_linux/glslang/lib/libglslang.a"],
+		"windows": ["build/ext/gfx_windows/glslang/lib/glslang.lib"]
 	}
 }
