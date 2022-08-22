@@ -53,7 +53,7 @@
 				(= key (: event 0))
 				(= state (: event 1))
 				(= idx (>> key 6))
-				(= mask (& key 63))
+				(= mask (<< 1 (& key 63)))
 				(= value (: window$inputs$_keys idx))
 				(= (: window$inputs$_keys idx) (?: state
 					(| value mask)
@@ -68,11 +68,10 @@
 			2 {
 				(= button (: event 0))
 				(= state (: event 1))
-				(= mask (<< window_manager:window$FLAG_BUTTON_1 button))
-				(= value (: window$inputs$_buttons idx))
-				(= (: window$inputs$_buttons idx) (?: state
-					(| value mask)
-					(& value (~ mask))
+				(= mask (<< window_manager:window$FLAG_BUTTON_1 (- button 1)))
+				(= window$flags (?: state
+					(| window$flags mask)
+					(& window$flags (~ mask))
 				))
 				(<- window$callbacks$button window button state)
 				(<- (?: state
