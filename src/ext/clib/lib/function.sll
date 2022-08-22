@@ -12,7 +12,11 @@
 
 (= clib_function_type (&:
 	(,,, data
-		(@@ (<- string$format "<%s:%s @%#.16llx>" data$library$file_path data$name data$address))
+		(@@ (<- string$format "<clib:function address=%#.16llx name=%s library=%s>"
+			data$address
+			data$name
+			(:: data$library string_type)
+		))
 	) @@string@@
 	(~ string_type) name
 	(~ int_type) address

@@ -1,4 +1,5 @@
 (---
+	"array.sll"
 	"audit.sll"
 	"string.sll"
 	"types.sll"
@@ -14,12 +15,12 @@
 
 (= window_manager_display_type (&:
 	(,,, data
-		(@@ (+
-			'<'
+		(= flags [])
+		(? (& data$flags FLAG_ACTIVE) (<- array$push flags "Active"))
+		(? (& data$flags FLAG_MAIN_DISPLAY) (<- array$push flags "Main"))
+		(@@ (<- string$format "<window_manager:display geometry=%s flags=%s>"
 			(:: data$geometry string_type)
-			(* ", Active" (!! (& data$flags FLAG_ACTIVE)))
-			(* ", Main" (!! (& data$flags FLAG_MAIN_DISPLAY)))
-			'>'
+			(<- string$join ", " flags)
 		))
 	) @@string@@
 	(~ int_type) id

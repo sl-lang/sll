@@ -3,6 +3,7 @@
 	"thread.sll"
 	"types.sll"
 	"window_manager/_load_library.sll"
+	"window_manager/cursor.sll"
 	"window_manager/geometry.sll"
 	"window_manager/util.sll"
 	"window_manager/window.sll"
@@ -80,8 +81,8 @@
 				) window button)
 			}
 			3 {
-				(= window$inputs$mouse_x (: event 0))
-				(= window$inputs$mouse_y (: event 1))
+				(= mouse (:: event window_manager:cursor$window_manager_cursor_position_type))
+				(= window$inputs$mouse mouse)
 				(? (! (& window$flags window_manager:window$FLAG_HAS_MOUSE)) {
 					(= window$flags (| window$flags window_manager:window$FLAG_HAS_MOUSE))
 					(<- window$callbacks$mouse_state window true)

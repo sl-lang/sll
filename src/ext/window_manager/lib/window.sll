@@ -50,12 +50,17 @@
 ))
 
 (= window_manager_inputs_type (&:
-	int_type mouse_x
-	int_type mouse_y
+	window_manager_cursor_position_type mouse
 	array_type _keys
 ))
 
 (= window_manager_layout_type (&:
+	(,,, data
+		(@@ (<- string$format "<window_manager:window_layout geometry=%s title=%s>"
+			(:: data$geometry string_type)
+			data$title
+		))
+	) @@string@@
 	window_manager:geometry$window_manager_geometry_type geometry
 	window_manager:range$window_manager_range_type width_constraints
 	window_manager:range$window_manager_range_type height_constraints
@@ -66,7 +71,9 @@
 
 (= window_manager_window_type (&:
 	(,,, data
-		(@@ (+ '<' data$layout$title " @ " (:: data$layout$geometry string_type) '>'))
+		(@@ (<- string$format "<window_manager:window layout=%s>"
+			(:: data$layout string_type)
+		))
 	) @@string@@
 	(,,, data
 		(<- destroy data)

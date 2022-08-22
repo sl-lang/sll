@@ -7,7 +7,7 @@
 
 (= window_manager_image_type (&:
 	(,,, data
-		(@@ (<- string$format "<%llux%llu, RGBA>"
+		(@@ (<- string$format "<window_manager:image size=%llux%llu, format=RGBA>"
 			data$width
 			data$height
 		))

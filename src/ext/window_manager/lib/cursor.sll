@@ -6,16 +6,19 @@
 
 
 
-(= window_manager_cursor_type (&:
-	(~ int_type) id
-))
-
 (= window_manager_cursor_position_type (&:
 	(,,, data
-		(@@ (<- string$format "<%lld %lld>" data$x data$y))
+		(@@ (<- string$format "(%lld %lld)" data$x data$y))
 	) @@string@@
 	int_type x
 	int_type y
+))
+
+(= window_manager_cursor_type (&:
+	(,,, data
+		(@@ (<- string$format "<window_manager:cursor id=%u>" data$id))
+	) @@string@@
+	(~ int_type) id
 ))
 
 (= window_manager_cursor_module_type (&:

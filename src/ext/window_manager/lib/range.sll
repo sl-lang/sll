@@ -13,7 +13,7 @@
 		(= data$min tmp)
 	) @@init@@
 	(,,, data
-		(@@ (<- string$format "%lld-%lld"
+		(@@ (<- string$format "[%lld;%lld]"
 			data$min
 			data$max
 		))

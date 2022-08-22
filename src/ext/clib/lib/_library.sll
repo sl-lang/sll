@@ -12,10 +12,10 @@
 
 (= clib_library_type (&:
 	(,,, data
-		(@@ (<- string$format (?: data$_handle
-			"<%s @%#.16llx>"
-			"<%s @(unloaded)>"
-		) data$file_path data$_handle))
+		(@@ (?: data$_handle
+			(<- string$format "<clib:library address=%#.16llx file_path=%s>" data$_handle data$file_path)
+			(<- string$format "<clib:library address=(unloaded) file_path=%s>" data$file)
+		))
 	) @@string@@
 	(,,, data
 		(? (! data$_handle) (@@ false))
