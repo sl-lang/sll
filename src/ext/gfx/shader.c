@@ -1,6 +1,7 @@
 #include <gfx/common.h>
 #include <gfx/context.h>
 #include <gfx/shader.h>
+#include <gfx/vulkan.h>
 #include <sll.h>
 #include <vulkan/vulkan.h>
 
@@ -17,9 +18,18 @@ __GFX_API_CALL gfx_shader_t gfx_api_shader_create(gfx_context_t ctx_id,const sll
 	if (!ctx){
 		return 0;
 	}
+	VkShaderModuleCreateInfo moduleCreateInfo={
+		VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO,
+		NULL,
+		0,
+		bytecode->length>>2,
+		(const uint32_t*)(bytecode->data)
+	};
+	gfx_shader_data_t* shader=sll_allocate(sizeof(gfx_shader_data_t));
+	VULKAN_CALL(ctx->function_table.vkCreateShaderModule(ctx->device.logical,&moduleCreateInfo,NULL,&(shader->handle)));
 	gfx_shader_t out;
 	SLL_HANDLE_CONTAINER_ALLOC(&(ctx->shaders),&out);
-	*(ctx->shaders.data+out)=ctx;
+	*(ctx->shaders.data+out)=shader;
 	return out;
 }
 

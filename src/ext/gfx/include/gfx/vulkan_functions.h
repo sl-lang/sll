@@ -30,6 +30,7 @@ typedef struct _GFX_VULKAN_FUNCTION_TABLE{
 	PFN_vkCreatePipelineCache vkCreatePipelineCache;
 	PFN_vkCreateRenderPass vkCreateRenderPass;
 	PFN_vkCreateSemaphore vkCreateSemaphore;
+	PFN_vkCreateShaderModule vkCreateShaderModule;
 	PFN_vkCreateSwapchainKHR vkCreateSwapchainKHR;
 	PFN_vkDestroyCommandPool vkDestroyCommandPool;
 	PFN_vkDestroyDebugUtilsMessengerEXT vkDestroyDebugUtilsMessengerEXT;
