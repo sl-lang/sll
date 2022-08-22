@@ -25,8 +25,8 @@ static VKAPI_ATTR VkBool32 _debug_messenger_callback(VkDebugUtilsMessageSeverity
 
 
 static uint32_t _get_mem_type(const gfx_context_data_t* ctx,uint32_t mask,VkMemoryPropertyFlagBits properties){
-	for (uint32_t i=0;i<ctx->memory_properties.memoryTypeCount;i++){
-		if ((mask&1)&&((ctx->memory_properties.memoryTypes+i)->propertyFlags&properties)==properties){
+	for (uint32_t i=0;i<ctx->device.memory_properties.memoryTypeCount;i++){
+		if ((mask&1)&&((ctx->device.memory_properties.memoryTypes+i)->propertyFlags&properties)==properties){
 			return i;
 		}
 		mask>>=1;
@@ -38,35 +38,35 @@ static uint32_t _get_mem_type(const gfx_context_data_t* ctx,uint32_t mask,VkMemo
 
 
 static void _release_swapchain(gfx_context_data_t* ctx){
-	ctx->function_table.vkDeviceWaitIdle(ctx->logical_device);
-	for (uint32_t i=0;i<ctx->swapchain_image_count;i++){
-		ctx->function_table.vkDestroyImageView(ctx->logical_device,ctx->swapchain_image_views[i],NULL);
-		ctx->function_table.vkDestroyFence(ctx->logical_device,ctx->fences[i],NULL);
-		ctx->function_table.vkDestroyFramebuffer(ctx->logical_device,ctx->frame_buffers[i],NULL);
+	ctx->function_table.vkDeviceWaitIdle(ctx->device.logical);
+	for (uint32_t i=0;i<ctx->swapchain.image_count;i++){
+		ctx->function_table.vkDestroyImageView(ctx->device.logical,ctx->swapchain.image_views[i],NULL);
+		ctx->function_table.vkDestroyFence(ctx->device.logical,ctx->sync.fences[i],NULL);
+		ctx->function_table.vkDestroyFramebuffer(ctx->device.logical,ctx->swapchain.frame_buffers[i],NULL);
 	}
-	ctx->function_table.vkDestroyImage(ctx->logical_device,ctx->depth_stensil_image,NULL);
-	ctx->function_table.vkDestroyImageView(ctx->logical_device,ctx->depth_stensil_image_view,NULL);
-	ctx->function_table.vkFreeMemory(ctx->logical_device,ctx->depth_stensil_memory,NULL);
+	ctx->function_table.vkDestroyImage(ctx->device.logical,ctx->depth_stensil.image,NULL);
+	ctx->function_table.vkDestroyImageView(ctx->device.logical,ctx->depth_stensil.image_view,NULL);
+	ctx->function_table.vkFreeMemory(ctx->device.logical,ctx->depth_stensil.memory,NULL);
 }
 
 
 
 static void _create_swapchain(gfx_context_data_t* ctx){
 	VkSurfaceCapabilitiesKHR surface_caps;
-	VULKAN_CALL(ctx->function_table.vkGetPhysicalDeviceSurfaceCapabilitiesKHR(ctx->physical_device,ctx->surface,&surface_caps));
-	ctx->width=surface_caps.currentExtent.width;
-	ctx->height=surface_caps.currentExtent.height;
+	VULKAN_CALL(ctx->function_table.vkGetPhysicalDeviceSurfaceCapabilitiesKHR(ctx->device.physical,ctx->surface.handle,&surface_caps));
+	ctx->surface.width=surface_caps.currentExtent.width;
+	ctx->surface.height=surface_caps.currentExtent.height;
 	VkSwapchainCreateInfoKHR swapchain_creation_info={
 		VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR,
 		NULL,
 		0,
-		ctx->surface,
+		ctx->surface.handle,
 		surface_caps.minImageCount+1,
-		ctx->color_format,
-		ctx->color_space,
+		ctx->surface.color_format,
+		ctx->surface.color_space,
 		{
-			ctx->width,
-			ctx->height
+			ctx->surface.width,
+			ctx->surface.height
 		},
 		1,
 		VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT|(surface_caps.supportedUsageFlags&(VK_IMAGE_USAGE_TRANSFER_SRC_BIT|VK_IMAGE_USAGE_TRANSFER_DST_BIT)),
@@ -77,27 +77,27 @@ static void _create_swapchain(gfx_context_data_t* ctx){
 		VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR,
 		VK_PRESENT_MODE_FIFO_KHR,
 		VK_TRUE,
-		ctx->swapchain
+		ctx->swapchain.handle
 	};
 	VkSwapchainKHR swapchain;
-	VULKAN_CALL(ctx->function_table.vkCreateSwapchainKHR(ctx->logical_device,&swapchain_creation_info,NULL,&swapchain));
-	if (ctx->swapchain!=VK_NULL_HANDLE){
+	VULKAN_CALL(ctx->function_table.vkCreateSwapchainKHR(ctx->device.logical,&swapchain_creation_info,NULL,&swapchain));
+	if (ctx->swapchain.handle!=VK_NULL_HANDLE){
 		_release_swapchain(ctx);
-		ctx->function_table.vkDestroySwapchainKHR(ctx->logical_device,ctx->swapchain,NULL);
+		ctx->function_table.vkDestroySwapchainKHR(ctx->device.logical,ctx->swapchain.handle,NULL);
 	}
-	ctx->swapchain=swapchain;
-	VULKAN_CALL(ctx->function_table.vkGetSwapchainImagesKHR(ctx->logical_device,ctx->swapchain,&(ctx->swapchain_image_count),NULL));
-	ctx->swapchain_images=sll_reallocate(ctx->swapchain_images,ctx->swapchain_image_count*sizeof(VkImage));
-	VULKAN_CALL(ctx->function_table.vkGetSwapchainImagesKHR(ctx->logical_device,ctx->swapchain,&(ctx->swapchain_image_count),ctx->swapchain_images));
-	ctx->command_buffers=sll_reallocate(ctx->command_buffers,ctx->swapchain_image_count*sizeof(VkCommandBuffer));
+	ctx->swapchain.handle=swapchain;
+	VULKAN_CALL(ctx->function_table.vkGetSwapchainImagesKHR(ctx->device.logical,ctx->swapchain.handle,&(ctx->swapchain.image_count),NULL));
+	ctx->swapchain.images=sll_reallocate(ctx->swapchain.images,ctx->swapchain.image_count*sizeof(VkImage));
+	VULKAN_CALL(ctx->function_table.vkGetSwapchainImagesKHR(ctx->device.logical,ctx->swapchain.handle,&(ctx->swapchain.image_count),ctx->swapchain.images));
+	ctx->command.buffers=sll_reallocate(ctx->command.buffers,ctx->swapchain.image_count*sizeof(VkCommandBuffer));
 	VkCommandBufferAllocateInfo command_buffer_allocation_info={
 		VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO,
 		NULL,
-		ctx->command_pool,
+		ctx->command.pool,
 		VK_COMMAND_BUFFER_LEVEL_PRIMARY,
-		ctx->swapchain_image_count
+		ctx->swapchain.image_count
 	};
-	VULKAN_CALL(ctx->function_table.vkAllocateCommandBuffers(ctx->logical_device,&command_buffer_allocation_info,ctx->command_buffers));
+	VULKAN_CALL(ctx->function_table.vkAllocateCommandBuffers(ctx->device.logical,&command_buffer_allocation_info,ctx->command.buffers));
 	VkImageCreateInfo depth_stensil_image_creation_info={
 		VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO,
 		NULL,
@@ -105,8 +105,8 @@ static void _create_swapchain(gfx_context_data_t* ctx){
 		VK_IMAGE_TYPE_2D,
 		VK_FORMAT_D32_SFLOAT,
 		{
-			ctx->width,
-			ctx->height,
+			ctx->surface.width,
+			ctx->surface.height,
 			1
 		},
 		1,
@@ -119,22 +119,22 @@ static void _create_swapchain(gfx_context_data_t* ctx){
 		NULL,
 		0
 	};
-	VULKAN_CALL(ctx->function_table.vkCreateImage(ctx->logical_device,&depth_stensil_image_creation_info,NULL,&(ctx->depth_stensil_image)));
+	VULKAN_CALL(ctx->function_table.vkCreateImage(ctx->device.logical,&depth_stensil_image_creation_info,NULL,&(ctx->depth_stensil.image)));
 	VkMemoryRequirements mem_requirements;
-	ctx->function_table.vkGetImageMemoryRequirements(ctx->logical_device,ctx->depth_stensil_image,&mem_requirements);
+	ctx->function_table.vkGetImageMemoryRequirements(ctx->device.logical,ctx->depth_stensil.image,&mem_requirements);
 	VkMemoryAllocateInfo mem_alloc_info={
 		VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO,
 		NULL,
 		mem_requirements.size,
 		_get_mem_type(ctx,mem_requirements.memoryTypeBits,VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT)
 	};
-	VULKAN_CALL(ctx->function_table.vkAllocateMemory(ctx->logical_device,&mem_alloc_info,NULL,&(ctx->depth_stensil_memory)));
-	VULKAN_CALL(ctx->function_table.vkBindImageMemory(ctx->logical_device,ctx->depth_stensil_image,ctx->depth_stensil_memory,0));
+	VULKAN_CALL(ctx->function_table.vkAllocateMemory(ctx->device.logical,&mem_alloc_info,NULL,&(ctx->depth_stensil.memory)));
+	VULKAN_CALL(ctx->function_table.vkBindImageMemory(ctx->device.logical,ctx->depth_stensil.image,ctx->depth_stensil.memory,0));
 	VkImageViewCreateInfo deptch_stensil_image_view_creation_info={
 		VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO,
 		NULL,
 		0,
-		ctx->depth_stensil_image,
+		ctx->depth_stensil.image,
 		VK_IMAGE_VIEW_TYPE_2D,
 		VK_FORMAT_D32_SFLOAT,
 		.subresourceRange={
@@ -145,15 +145,15 @@ static void _create_swapchain(gfx_context_data_t* ctx){
 			1
 		}
 	};
-	VULKAN_CALL(ctx->function_table.vkCreateImageView(ctx->logical_device,&deptch_stensil_image_view_creation_info,NULL,&(ctx->depth_stensil_image_view)));
-	ctx->swapchain_image_views=sll_reallocate(ctx->swapchain_image_views,ctx->swapchain_image_count*sizeof(VkImageView));
+	VULKAN_CALL(ctx->function_table.vkCreateImageView(ctx->device.logical,&deptch_stensil_image_view_creation_info,NULL,&(ctx->depth_stensil.image_view)));
+	ctx->swapchain.image_views=sll_reallocate(ctx->swapchain.image_views,ctx->swapchain.image_count*sizeof(VkImageView));
 	VkImageViewCreateInfo image_view_creation_info={
 		VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO,
 		NULL,
 		0,
 		VK_NULL_HANDLE,
 		VK_IMAGE_VIEW_TYPE_2D,
-		ctx->color_format,
+		ctx->surface.color_format,
 		{
 			VK_COMPONENT_SWIZZLE_IDENTITY,
 			VK_COMPONENT_SWIZZLE_IDENTITY,
@@ -168,34 +168,34 @@ static void _create_swapchain(gfx_context_data_t* ctx){
 			1
 		}
 	};
-	ctx->fences=sll_reallocate(ctx->fences,ctx->swapchain_image_count*sizeof(VkFence));
+	ctx->sync.fences=sll_reallocate(ctx->sync.fences,ctx->swapchain.image_count*sizeof(VkFence));
 	VkFenceCreateInfo fence_creation_info={
 		VK_STRUCTURE_TYPE_FENCE_CREATE_INFO,
 		NULL,
 		VK_FENCE_CREATE_SIGNALED_BIT
 	};
-	ctx->frame_buffers=sll_reallocate(ctx->frame_buffers,ctx->swapchain_image_count*sizeof(VkFramebuffer));
+	ctx->swapchain.frame_buffers=sll_reallocate(ctx->swapchain.frame_buffers,ctx->swapchain.image_count*sizeof(VkFramebuffer));
 	VkImageView frame_buffer_attachments[2]={
 		VK_NULL_HANDLE,
-		ctx->depth_stensil_image_view
+		ctx->depth_stensil.image_view
 	};
 	VkFramebufferCreateInfo frame_buffer_creation_info={
 		VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO,
 		NULL,
 		0,
-		ctx->render_pass,
+		ctx->pipeline.render_pass,
 		2,
 		frame_buffer_attachments,
-		ctx->width,
-		ctx->height,
+		ctx->surface.width,
+		ctx->surface.height,
 		1
 	};
-	for (uint32_t i=0;i<ctx->swapchain_image_count;i++){
-		image_view_creation_info.image=ctx->swapchain_images[i];
-		VULKAN_CALL(ctx->function_table.vkCreateImageView(ctx->logical_device,&image_view_creation_info,NULL,ctx->swapchain_image_views+i));
-		VULKAN_CALL(ctx->function_table.vkCreateFence(ctx->logical_device,&fence_creation_info,NULL,ctx->fences+i));
-		frame_buffer_attachments[0]=ctx->swapchain_image_views[i];
-		VULKAN_CALL(ctx->function_table.vkCreateFramebuffer(ctx->logical_device,&frame_buffer_creation_info,NULL,ctx->frame_buffers+i));
+	for (uint32_t i=0;i<ctx->swapchain.image_count;i++){
+		image_view_creation_info.image=ctx->swapchain.images[i];
+		VULKAN_CALL(ctx->function_table.vkCreateImageView(ctx->device.logical,&image_view_creation_info,NULL,ctx->swapchain.image_views+i));
+		VULKAN_CALL(ctx->function_table.vkCreateFence(ctx->device.logical,&fence_creation_info,NULL,ctx->sync.fences+i));
+		frame_buffer_attachments[0]=ctx->swapchain.image_views[i];
+		VULKAN_CALL(ctx->function_table.vkCreateFramebuffer(ctx->device.logical,&frame_buffer_creation_info,NULL,ctx->swapchain.frame_buffers+i));
 	}
 }
 
@@ -206,23 +206,20 @@ void _delete_context(gfx_context_data_t* ctx){
 		return;
 	}
 	_release_swapchain(ctx);
-	sll_deallocate(ctx->swapchain_image_views);
-	sll_deallocate(ctx->fences);
-	sll_deallocate(ctx->frame_buffers);
-	ctx->function_table.vkDestroySemaphore(ctx->logical_device,ctx->swapchain_present_semaphore,NULL);
-	ctx->function_table.vkDestroySemaphore(ctx->logical_device,ctx->swapchain_render_semaphore,NULL);
-	ctx->function_table.vkDestroyPipelineCache(ctx->logical_device,ctx->pipeline_cache,NULL);
-	ctx->function_table.vkDestroyRenderPass(ctx->logical_device,ctx->render_pass,NULL);
-	ctx->function_table.vkDestroyCommandPool(ctx->logical_device,ctx->command_pool,NULL);
-	ctx->function_table.vkDestroyDevice(ctx->logical_device,NULL);
-	ctx->function_table.vkDestroySurfaceKHR(ctx->instance,ctx->surface,NULL);
-	if (ctx->debug_messenger!=VK_NULL_HANDLE){
-		PFN_vkDestroyDebugUtilsMessengerEXT vkDestroyDebugUtilsMessengerEXT=(PFN_vkDestroyDebugUtilsMessengerEXT)vkGetInstanceProcAddr(ctx->instance,"vkDestroyDebugUtilsMessengerEXT");
-		if (vkDestroyDebugUtilsMessengerEXT){
-			vkDestroyDebugUtilsMessengerEXT(ctx->instance,ctx->debug_messenger,NULL);
-		}
+	sll_deallocate(ctx->swapchain.image_views);
+	sll_deallocate(ctx->sync.fences);
+	sll_deallocate(ctx->swapchain.frame_buffers);
+	ctx->function_table.vkDestroySemaphore(ctx->device.logical,ctx->sync.present_semaphore,NULL);
+	ctx->function_table.vkDestroySemaphore(ctx->device.logical,ctx->sync.render_semaphore,NULL);
+	ctx->function_table.vkDestroyPipelineCache(ctx->device.logical,ctx->pipeline.cache,NULL);
+	ctx->function_table.vkDestroyRenderPass(ctx->device.logical,ctx->pipeline.render_pass,NULL);
+	ctx->function_table.vkDestroyCommandPool(ctx->device.logical,ctx->command.pool,NULL);
+	ctx->function_table.vkDestroyDevice(ctx->device.logical,NULL);
+	ctx->function_table.vkDestroySurfaceKHR(ctx->instance.handle,ctx->surface.handle,NULL);
+	if (ctx->instance.debug_messenger!=VK_NULL_HANDLE){
+		ctx->function_table.vkDestroyDebugUtilsMessengerEXT(ctx->instance.handle,ctx->instance.debug_messenger,NULL);
 	}
-	ctx->function_table.vkDestroyInstance(ctx->instance,NULL);
+	ctx->function_table.vkDestroyInstance(ctx->instance.handle,NULL);
 	sll_deallocate(ctx);
 }
 
@@ -257,8 +254,8 @@ __GFX_API_CALL gfx_context_t gfx_api_context_create(void* handle,void* extra_dat
 		enabled_extensions
 	};
 	gfx_context_data_t* ctx=sll_zero_allocate(sizeof(gfx_context_data_t));
-	VULKAN_CALL(vkCreateInstance(&instance_creation_info,NULL,&(ctx->instance)));
-	sll_error_raise_bool(!_load_vulkan_function_table(ctx->instance,&(ctx->function_table)));
+	VULKAN_CALL(vkCreateInstance(&instance_creation_info,NULL,&(ctx->instance.handle)));
+	sll_error_raise_bool(!_load_vulkan_function_table(ctx->instance.handle,&(ctx->function_table)));
 	if (debug){
 		VkDebugUtilsMessengerCreateInfoEXT debug_messenger_cretion_info={
 			VK_STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT,
@@ -269,7 +266,7 @@ __GFX_API_CALL gfx_context_t gfx_api_context_create(void* handle,void* extra_dat
 			(PFN_vkDebugUtilsMessengerCallbackEXT)_debug_messenger_callback,
 			ctx
 		};
-		VULKAN_CALL(ctx->function_table.vkCreateDebugUtilsMessengerEXT(ctx->instance,&debug_messenger_cretion_info,NULL,&(ctx->debug_messenger)));
+		VULKAN_CALL(ctx->function_table.vkCreateDebugUtilsMessengerEXT(ctx->instance.handle,&debug_messenger_cretion_info,NULL,&(ctx->instance.debug_messenger)));
 	}
 #ifdef __SLL_BUILD_DARWIN
 	VkMacOSSurfaceCreateInfoMVK surface_creation_info={
@@ -295,51 +292,51 @@ __GFX_API_CALL gfx_context_t gfx_api_context_create(void* handle,void* extra_dat
 		handle
 	};
 #endif
-	VULKAN_CALL(ctx->function_table.create_system_surface(ctx->instance,&surface_creation_info,NULL,&(ctx->surface)));
+	VULKAN_CALL(ctx->function_table.create_system_surface(ctx->instance.handle,&surface_creation_info,NULL,&(ctx->surface.handle)));
 	uint32_t count;
-	VULKAN_CALL(ctx->function_table.vkEnumeratePhysicalDevices(ctx->instance,&count,NULL));
+	VULKAN_CALL(ctx->function_table.vkEnumeratePhysicalDevices(ctx->instance.handle,&count,NULL));
 	sll_error_raise_bool(!count||!"No GPU found");
 	VkPhysicalDevice* physical_device_data=sll_allocate_stack(count*sizeof(VkPhysicalDevice));
-	VULKAN_CALL(ctx->function_table.vkEnumeratePhysicalDevices(ctx->instance,&count,physical_device_data));
-	ctx->physical_device=physical_device_data[GFX_DEFAULT_GPU_INDEX];
+	VULKAN_CALL(ctx->function_table.vkEnumeratePhysicalDevices(ctx->instance.handle,&count,physical_device_data));
+	ctx->device.physical=physical_device_data[GFX_DEFAULT_GPU_INDEX];
 	sll_deallocate(physical_device_data);
-	ctx->function_table.vkGetPhysicalDeviceMemoryProperties(ctx->physical_device,&(ctx->memory_properties));
-	ctx->function_table.vkGetPhysicalDeviceQueueFamilyProperties(ctx->physical_device,&count,NULL);
+	ctx->function_table.vkGetPhysicalDeviceMemoryProperties(ctx->device.physical,&(ctx->device.memory_properties));
+	ctx->function_table.vkGetPhysicalDeviceQueueFamilyProperties(ctx->device.physical,&count,NULL);
 	VkQueueFamilyProperties* queue_properties=sll_allocate_stack(count*sizeof(VkQueueFamilyProperties));
-	ctx->function_table.vkGetPhysicalDeviceQueueFamilyProperties(ctx->physical_device,&count,queue_properties);
-	ctx->device_queue_index=0;
+	ctx->function_table.vkGetPhysicalDeviceQueueFamilyProperties(ctx->device.physical,&count,queue_properties);
+	uint32_t device_queue_index=0;
 	for (uint32_t i=0;i<count;i++){
 		if ((queue_properties+i)->queueFlags&VK_QUEUE_GRAPHICS_BIT){
 			VkBool32 present_support;
-			VULKAN_CALL(ctx->function_table.vkGetPhysicalDeviceSurfaceSupportKHR(ctx->physical_device,i,ctx->surface,&present_support));
+			VULKAN_CALL(ctx->function_table.vkGetPhysicalDeviceSurfaceSupportKHR(ctx->device.physical,i,ctx->surface.handle,&present_support));
 			if (present_support){
-				ctx->device_queue_index=i;
+				device_queue_index=i;
 				break;
 			}
 		}
 	}
 	sll_deallocate(queue_properties);
-	VULKAN_CALL(ctx->function_table.vkGetPhysicalDeviceSurfaceFormatsKHR(ctx->physical_device,ctx->surface,&count,NULL));
+	VULKAN_CALL(ctx->function_table.vkGetPhysicalDeviceSurfaceFormatsKHR(ctx->device.physical,ctx->surface.handle,&count,NULL));
 	VkSurfaceFormatKHR* surface_formats=sll_allocate_stack(count*sizeof(VkSurfaceFormatKHR));
-	VULKAN_CALL(ctx->function_table.vkGetPhysicalDeviceSurfaceFormatsKHR(ctx->physical_device,ctx->surface,&count,surface_formats));
-	ctx->color_format=surface_formats->format;
-	ctx->color_space=surface_formats->colorSpace;
+	VULKAN_CALL(ctx->function_table.vkGetPhysicalDeviceSurfaceFormatsKHR(ctx->device.physical,ctx->surface.handle,&count,surface_formats));
+	ctx->surface.color_format=surface_formats->format;
+	ctx->surface.color_space=surface_formats->colorSpace;
 	for (uint32_t i=0;i<count;i++){
 		if ((surface_formats+i)->format==VK_FORMAT_B8G8R8A8_UNORM){
-			ctx->color_format=VK_FORMAT_B8G8R8A8_UNORM;
-			ctx->color_space=(surface_formats+i)->colorSpace;
+			ctx->surface.color_format=VK_FORMAT_B8G8R8A8_UNORM;
+			ctx->surface.color_space=(surface_formats+i)->colorSpace;
 			break;
 		}
 	}
 	sll_deallocate(surface_formats);
-	if (ctx->color_format==VK_FORMAT_UNDEFINED){
-		ctx->color_format=VK_FORMAT_B8G8R8A8_UNORM;
+	if (ctx->surface.color_format==VK_FORMAT_UNDEFINED){
+		ctx->surface.color_format=VK_FORMAT_B8G8R8A8_UNORM;
 	}
 	VkDeviceQueueCreateInfo device_queue_info={
 		VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO,
 		NULL,
 		0,
-		ctx->device_queue_index,
+		device_queue_index,
 		1,
 		&_default_queue_priority
 	};
@@ -360,19 +357,19 @@ __GFX_API_CALL gfx_context_t gfx_api_context_create(void* handle,void* extra_dat
 		device_extensions,
 		&device_features
 	};
-	VULKAN_CALL(ctx->function_table.vkCreateDevice(ctx->physical_device,&device_creation_info,NULL,&(ctx->logical_device)));
+	VULKAN_CALL(ctx->function_table.vkCreateDevice(ctx->device.physical,&device_creation_info,NULL,&(ctx->device.logical)));
 	VkCommandPoolCreateInfo command_pool_creation_info={
 		VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO,
 		NULL,
 		VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT,
-		ctx->device_queue_index
+		device_queue_index
 	};
-	VULKAN_CALL(ctx->function_table.vkCreateCommandPool(ctx->logical_device,&command_pool_creation_info,NULL,&(ctx->command_pool)));
-	ctx->function_table.vkGetDeviceQueue(ctx->logical_device,ctx->device_queue_index,0,&(ctx->queue));
+	VULKAN_CALL(ctx->function_table.vkCreateCommandPool(ctx->device.logical,&command_pool_creation_info,NULL,&(ctx->command.pool)));
+	ctx->function_table.vkGetDeviceQueue(ctx->device.logical,device_queue_index,0,&(ctx->command.queue));
 	VkAttachmentDescription render_pass_attachments[2]={
 		{
 			0,
-			ctx->color_format,
+			ctx->surface.color_format,
 			VK_SAMPLE_COUNT_1_BIT,
 			VK_ATTACHMENT_LOAD_OP_CLEAR,
 			VK_ATTACHMENT_STORE_OP_STORE,
@@ -444,7 +441,7 @@ __GFX_API_CALL gfx_context_t gfx_api_context_create(void* handle,void* extra_dat
 		2,
 		render_pass_dependencies
 	};
-	VULKAN_CALL(ctx->function_table.vkCreateRenderPass(ctx->logical_device,&render_pass_creation_info,NULL,&(ctx->render_pass)));
+	VULKAN_CALL(ctx->function_table.vkCreateRenderPass(ctx->device.logical,&render_pass_creation_info,NULL,&(ctx->pipeline.render_pass)));
 	VkPipelineCacheCreateInfo pipeline_cache_creation_info={
 		VK_STRUCTURE_TYPE_PIPELINE_CACHE_CREATE_INFO,
 		NULL,
@@ -452,14 +449,14 @@ __GFX_API_CALL gfx_context_t gfx_api_context_create(void* handle,void* extra_dat
 		0,
 		NULL
 	};
-	VULKAN_CALL(ctx->function_table.vkCreatePipelineCache(ctx->logical_device,&pipeline_cache_creation_info,NULL,&(ctx->pipeline_cache)));
+	VULKAN_CALL(ctx->function_table.vkCreatePipelineCache(ctx->device.logical,&pipeline_cache_creation_info,NULL,&(ctx->pipeline.cache)));
 	VkSemaphoreCreateInfo semaphore_creation_info={
 		VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO,
 		NULL,
 		0
 	};
-	VULKAN_CALL(ctx->function_table.vkCreateSemaphore(ctx->logical_device,&semaphore_creation_info,NULL,&(ctx->swapchain_present_semaphore)));
-	VULKAN_CALL(ctx->function_table.vkCreateSemaphore(ctx->logical_device,&semaphore_creation_info,NULL,&(ctx->swapchain_render_semaphore)));
+	VULKAN_CALL(ctx->function_table.vkCreateSemaphore(ctx->device.logical,&semaphore_creation_info,NULL,&(ctx->sync.present_semaphore)));
+	VULKAN_CALL(ctx->function_table.vkCreateSemaphore(ctx->device.logical,&semaphore_creation_info,NULL,&(ctx->sync.render_semaphore)));
 	_create_swapchain(ctx);
 	gfx_context_t out;
 	SLL_HANDLE_CONTAINER_ALLOC(&gfx_context_data,&out);
@@ -485,27 +482,27 @@ __GFX_API_CALL void gfx_api_context_render(gfx_context_t ctx_id){
 		return;
 	}
 	uint32_t swapchain_image_index;
-	VkResult err=ctx->function_table.vkAcquireNextImageKHR(ctx->logical_device,ctx->swapchain,UINT64_MAX,ctx->swapchain_present_semaphore,NULL,&swapchain_image_index);
+	VkResult err=ctx->function_table.vkAcquireNextImageKHR(ctx->device.logical,ctx->swapchain.handle,UINT64_MAX,ctx->sync.present_semaphore,NULL,&swapchain_image_index);
 	if (err!=VK_SUBOPTIMAL_KHR){
 		VULKAN_CALL(err);
 	}
-	VULKAN_CALL(ctx->function_table.vkWaitForFences(ctx->logical_device,1,ctx->fences+swapchain_image_index,VK_TRUE,UINT64_MAX));
-	VULKAN_CALL(ctx->function_table.vkResetFences(ctx->logical_device,1,ctx->fences+swapchain_image_index));
+	VULKAN_CALL(ctx->function_table.vkWaitForFences(ctx->device.logical,1,ctx->sync.fences+swapchain_image_index,VK_TRUE,UINT64_MAX));
+	VULKAN_CALL(ctx->function_table.vkResetFences(ctx->device.logical,1,ctx->sync.fences+swapchain_image_index));
 	VkCommandBufferBeginInfo begin_info={
 		VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO,
 		NULL,
 		VK_COMMAND_BUFFER_USAGE_SIMULTANEOUS_USE_BIT,
 		NULL
 	};
-	VULKAN_CALL(ctx->function_table.vkBeginCommandBuffer(ctx->command_buffers[swapchain_image_index],&begin_info));
+	VULKAN_CALL(ctx->function_table.vkBeginCommandBuffer(ctx->command.buffers[swapchain_image_index],&begin_info));
 	VkClearValue clear_values[2]={
 		{
 			.color={
 				.float32={
-					ctx->clear_color[0],
-					ctx->clear_color[1],
-					ctx->clear_color[2],
-					ctx->clear_color[3]
+					ctx->surface.clear_color[0],
+					ctx->surface.clear_color[1],
+					ctx->surface.clear_color[2],
+					ctx->surface.clear_color[3]
 				}
 			}
 		},
@@ -519,56 +516,56 @@ __GFX_API_CALL void gfx_api_context_render(gfx_context_t ctx_id){
 	VkRenderPassBeginInfo render_pass_info={
 		VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO,
 		NULL,
-		ctx->render_pass,
-		ctx->frame_buffers[swapchain_image_index],
+		ctx->pipeline.render_pass,
+		ctx->swapchain.frame_buffers[swapchain_image_index],
 		{
 			{
 				0,
 				0
 			},
 			{
-				ctx->width,
-				ctx->height
+				ctx->surface.width,
+				ctx->surface.height
 			}
 		},
 		2,
 		clear_values
 	};
-	ctx->function_table.vkCmdBeginRenderPass(ctx->command_buffers[swapchain_image_index],&render_pass_info,VK_SUBPASS_CONTENTS_INLINE);
+	ctx->function_table.vkCmdBeginRenderPass(ctx->command.buffers[swapchain_image_index],&render_pass_info,VK_SUBPASS_CONTENTS_INLINE);
 	// user commands
-	ctx->function_table.vkCmdEndRenderPass(ctx->command_buffers[swapchain_image_index]);
-	VULKAN_CALL(ctx->function_table.vkEndCommandBuffer(ctx->command_buffers[swapchain_image_index]));
+	ctx->function_table.vkCmdEndRenderPass(ctx->command.buffers[swapchain_image_index]);
+	VULKAN_CALL(ctx->function_table.vkEndCommandBuffer(ctx->command.buffers[swapchain_image_index]));
 	VkPipelineStageFlags wait_flags=VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
 	VkSubmitInfo submit_info={
 		VK_STRUCTURE_TYPE_SUBMIT_INFO,
 		NULL,
 		1,
-		&(ctx->swapchain_present_semaphore),
+		&(ctx->sync.present_semaphore),
 		&wait_flags,
 		1,
-		ctx->command_buffers+swapchain_image_index,
+		ctx->command.buffers+swapchain_image_index,
 		1,
-		&(ctx->swapchain_render_semaphore)
+		&(ctx->sync.render_semaphore)
 	};
-	VULKAN_CALL(ctx->function_table.vkQueueSubmit(ctx->queue,1,&submit_info,ctx->fences[swapchain_image_index]));
+	VULKAN_CALL(ctx->function_table.vkQueueSubmit(ctx->command.queue,1,&submit_info,ctx->sync.fences[swapchain_image_index]));
 	VkPresentInfoKHR present_info={
 		VK_STRUCTURE_TYPE_PRESENT_INFO_KHR,
 		NULL,
 		1,
-		&(ctx->swapchain_render_semaphore),
+		&(ctx->sync.render_semaphore),
 		1,
-		&(ctx->swapchain),
+		&(ctx->swapchain.handle),
 		&swapchain_image_index,
 		NULL
 	};
-	err=ctx->function_table.vkQueuePresentKHR(ctx->queue,&present_info);
+	err=ctx->function_table.vkQueuePresentKHR(ctx->command.queue,&present_info);
 	if (err==VK_SUBOPTIMAL_KHR){
 		_create_swapchain(ctx);
 	}
 	else{
 		VULKAN_CALL(err);
 	}
-	VULKAN_CALL(ctx->function_table.vkQueueWaitIdle(ctx->queue));
+	VULKAN_CALL(ctx->function_table.vkQueueWaitIdle(ctx->command.queue));
 }
 
 

@@ -11,36 +11,83 @@
 
 
 
-typedef struct _GFX_CONTEXT_DATA{
-	gfx_vulkan_function_table_t function_table;
-	VkInstance instance;
-	VkDebugUtilsMessengerEXT debug_messenger;
-	VkSurfaceKHR surface;
-	VkPhysicalDevice physical_device;
-	VkDevice logical_device;
-	VkCommandPool command_pool;
+typedef struct _GFX_CONTEXT_COMMAND_DATA{
+	VkCommandPool pool;
+	VkCommandBuffer* buffers;
 	VkQueue queue;
-	VkSwapchainKHR swapchain;
+} gfx_context_command_data_t;
+
+
+
+typedef struct _GFX_CONTEXT_DEPTH_STENSIL_DATA{
+	VkImage image;
+	VkImageView image_view;
+	VkDeviceMemory memory;
+} gfx_context_depth_stensil_data_t;
+
+
+
+typedef struct _GFX_CONTEXT_DEVICE_DATA{
+	VkPhysicalDevice physical;
+	VkDevice logical;
 	VkPhysicalDeviceMemoryProperties memory_properties;
-	uint32_t device_queue_index;
-	VkFormat color_format;
-	VkColorSpaceKHR color_space;
-	uint32_t swapchain_image_count;
-	VkImage* swapchain_images;
-	VkImageView* swapchain_image_views;
-	VkCommandBuffer* command_buffers;
-	VkFence* fences;
-	VkImage depth_stensil_image;
-	VkImageView depth_stensil_image_view;
-	VkDeviceMemory depth_stensil_memory;
+} gfx_context_device_data_t;
+
+
+
+typedef struct _GFX_CONTEXT_INSTANCE_DATA{
+	VkInstance handle;
+	VkDebugUtilsMessengerEXT debug_messenger;
+} gfx_context_instance_data_t;
+
+
+
+typedef struct _GFX_CONTEXT_PIPELINE_DATA{
 	VkRenderPass render_pass;
-	VkPipelineCache pipeline_cache;
-	VkFramebuffer* frame_buffers;
-	VkSemaphore swapchain_present_semaphore;
-	VkSemaphore swapchain_render_semaphore;
+	VkPipelineCache cache;
+} gfx_context_pipeline_data_t;
+
+
+
+typedef struct _GFX_CONTEXT_SURFACE_DATA{
 	uint32_t width;
 	uint32_t height;
+	VkSurfaceKHR handle;
+	VkFormat color_format;
+	VkColorSpaceKHR color_space;
 	float clear_color[4];
+} gfx_context_surface_data_t;
+
+
+
+typedef struct _GFX_CONTEXT_SWAPCHAIN_DATA{
+	VkSwapchainKHR handle;
+	uint32_t image_count;
+	VkImage* images;
+	VkImageView* image_views;
+	VkFramebuffer* frame_buffers;
+} gfx_context_swapchain_data_t;
+
+
+
+typedef struct _GFX_CONTEXT_SYNC_DATA{
+	VkFence* fences;
+	VkSemaphore present_semaphore;
+	VkSemaphore render_semaphore;
+} gfx_context_sync_data_t;
+
+
+
+typedef struct _GFX_CONTEXT_DATA{
+	gfx_context_command_data_t command;
+	gfx_context_depth_stensil_data_t depth_stensil;
+	gfx_context_device_data_t device;
+	gfx_context_instance_data_t instance;
+	gfx_context_pipeline_data_t pipeline;
+	gfx_context_surface_data_t surface;
+	gfx_context_swapchain_data_t swapchain;
+	gfx_context_sync_data_t sync;
+	gfx_vulkan_function_table_t function_table;
 } gfx_context_data_t;
 
 
