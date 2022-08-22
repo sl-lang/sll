@@ -1,0 +1,58 @@
+(---
+	"gfx/_load_library.sll"
+	"string.sll"
+	"types.sll"
+)
+
+
+
+(# delete)
+
+
+
+(= gfx_shader_type (&:
+	(,,, data
+		(<- delete data)
+	) @@delete@@
+	(,,, data
+		(@@ (<- string$format "<gfx:shader context=%s>"
+			(:: data$ctx string_type)
+		))
+	) @@string@@
+	(~ int_type) _handle
+	(~ gfx:context$gfx_context_type) ctx
+))
+
+(= gfx_shader_module_type (&:
+	(~ func_type) create
+	(~ func_type) delete
+))
+
+
+
+(= create (,,, ctx bytecode
+	(? (! ctx) (@@ nil))
+	(= ctx (:: ctx gfx:context$gfx_context_type))
+	(= handle (<- (... "gfx:shader_create")
+		ctx$_handle
+		(:: bytecode string_type)
+	))
+	(@@ (. gfx_shader_type
+		handle
+		ctx
+	))
+))
+
+(= delete (,,, shader
+	(? (! shader) (@@))
+	(= shader (:: shader gfx_shader_type))
+	(<- (... "gfx:shader_delete") shader$ctx$_handle shader$_handle)
+))
+
+
+
+(= gfx:shader (. gfx_shader_module_type
+	create
+	delete
+))
+(## gfx:shader)

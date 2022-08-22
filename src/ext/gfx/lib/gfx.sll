@@ -1,6 +1,7 @@
 (---
 	"gfx/color.sll"
 	"gfx/context.sll"
+	"gfx/shader.sll"
 	"gfx/vulkan.sll"
 )
 
@@ -9,6 +10,7 @@
 (= gfx_module_type (&:
 	(~ (:? gfx:color)) color
 	(~ (:? gfx:context)) context
+	(~ (:? gfx:shader)) shader
 	(~ (:? gfx:vulkan)) vulkan
 ))
 
@@ -17,6 +19,7 @@
 (= gfx (. gfx_module_type
 	gfx:color
 	gfx:context
+	gfx:shader
 	gfx:vulkan
 ))
 (## gfx)
