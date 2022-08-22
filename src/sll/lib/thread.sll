@@ -15,19 +15,16 @@
 
 (= barrier_type (&:
 	(,,, data
-		(<- (... "sll:thread_delete_barrier") data$id)
-	) @@delete@@
-	(,,, data
 		(@@ (<- string$format "<barrier-%u counter=%u>" data$id data$counter))
 	) @@string@@
+	(,,, data
+		(<- (... "sll:thread_delete_barrier") data$id)
+	) @@delete@@
 	(~ int_type) id
 	int_type counter
 ))
 
 (= lock_type (&:
-	(,,, data
-		(<- (... "sll:thread_delete_lock") data$id)
-	) @@delete@@
 	(,,, data
 		(= state (?: (=== data$blocking_thread -1)
 			"unlocked"
@@ -35,27 +32,26 @@
 		))
 		(@@ (<- string$format "<lock-%u state=%s>" data$id state))
 	) @@string@@
+	(,,, data
+		(<- (... "sll:thread_delete_lock") data$id)
+	) @@delete@@
 	(~ int_type) id
 	int_type blocking_thread
 ))
 
 (= semaphore_type (&:
 	(,,, data
-		(<- (... "sll:thread_delete_semaphore") data$id)
-	) @@delete@@
-	(,,, data
 		(@@ (<- string$format "<semaphore-%u counter=%u/%u>" data$id data$counter data$max))
 	) @@string@@
+	(,,, data
+		(<- (... "sll:thread_delete_semaphore") data$id)
+	) @@delete@@
 	(~ int_type) id
 	(~ int_type) max
 	int_type counter
 ))
 
 (= thread_type (&:
-	(,,, data
-		(<- map$remove _thread_map data$id)
-		(<- (... "sll:thread_delete") data$id)
-	) @@delete@@
 	(,,, data
 		(= state nil)
 		(?? data$state
@@ -73,6 +69,10 @@
 		)))
 		(@@ (<- string$format "<thread-%u state=%s>" data$id state))
 	) @@string@@
+	(,,, data
+		(<- map$remove _thread_map data$id)
+		(<- (... "sll:thread_delete") data$id)
+	) @@delete@@
 	(~ int_type) id
 	int_type state
 	object_type suspended

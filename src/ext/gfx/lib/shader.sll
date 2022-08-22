@@ -12,13 +12,13 @@
 
 (= gfx_shader_type (&:
 	(,,, data
-		(<- delete data)
-	) @@delete@@
-	(,,, data
 		(@@ (<- string$format "<gfx:shader context=%s>"
 			(:: data$ctx string_type)
 		))
 	) @@string@@
+	(,,, data
+		(<- delete data)
+	) @@delete@@
 	(~ int_type) _handle
 	(~ gfx:context$gfx_context_type) ctx
 ))

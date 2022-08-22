@@ -18,10 +18,6 @@
 		(<- (... "sll:file_inc_handle") data$_handle)
 	) @@copy@@
 	(,,, data
-		(? (=== data$_handle -1) (@@))
-		(<- (... "sll:file_close") data$_handle)
-	) @@delete@@
-	(,,, data
 		(= m "")
 		(? (& data$flags FLAG_APPEND) (= m (+ m 'A')))
 		(?
@@ -32,6 +28,10 @@
 		(? (& data$flags FLAG_WRITE) (= m (+ m 'W')))
 		(@@ (<- string$format "<path=%s, mode=%s>" data$name m))
 	) @@string@@
+	(,,, data
+		(? (=== data$_handle -1) (@@))
+		(<- (... "sll:file_close") data$_handle)
+	) @@delete@@
 	(~ string_type) name
 	(~ int_type) flags
 	int_type _handle

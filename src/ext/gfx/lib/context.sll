@@ -17,14 +17,14 @@
 
 (= gfx_context_type (&:
 	(,,, data
-		(<- delete data)
-	) @@delete@@
-	(,,, data
 		(@@ (<- string$format "<gfx:context window=%s clear_color=%s>"
 			(:: data$window string_type)
 			(:: data$clear_color string_type)
 		))
 	) @@string@@
+	(,,, data
+		(<- delete data)
+	) @@delete@@
 	(~ int_type) _handle
 	(~ window_manager:window$window_manager_window_type) window
 	gfx_color_type clear_color
