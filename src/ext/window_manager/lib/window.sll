@@ -15,7 +15,7 @@
 
 
 
-(# destroy set_title set_visibility)
+(# destroy set_title set_visibility STATE_FULLSCREEN STATE_MAXIMIZED STATE_MINIMIZED)
 
 
 
@@ -50,15 +50,34 @@
 ))
 
 (= window_manager_inputs_type (&:
-	window_manager_cursor_position_type mouse
+	(,,, data
+		(@@ (<- string$format "<window_manager:window_inputs mouse=%s>"
+			(:: data$mouse string_type)
+		))
+	) @@string@@
+	window_manager:cursor$window_manager_cursor_position_type mouse
 	array_type _keys
 ))
 
 (= window_manager_layout_type (&:
 	(,,, data
-		(@@ (<- string$format "<window_manager:window_layout geometry=%s title=%s>"
+		(@@ (<- string$format "<window_manager:window_layout geometry=%s title=%s width_constraints=%s height_constraints=%s state=%s>"
 			(:: data$geometry string_type)
 			data$title
+			(?: (=== data$width_constraints$min data$width_constraints$max)
+				"(unspecified)"
+				(:: data$width_constraints string_type)
+			)
+			(?: (=== data$height_constraints$min data$height_constraints$max)
+				"(unspecified)"
+				(:: data$height_constraints string_type)
+			)
+			(?:
+				(=== data$state STATE_FULLSCREEN) "Fullscreen"
+				(=== data$state STATE_MAXIMIZED) "Maximized"
+				(=== data$state STATE_MINIMIZED) "Minimized"
+				"Normal"
+			)
 		))
 	) @@string@@
 	window_manager:geometry$window_manager_geometry_type geometry
@@ -71,8 +90,9 @@
 
 (= window_manager_window_type (&:
 	(,,, data
-		(@@ (<- string$format "<window_manager:window layout=%s>"
+		(@@ (<- string$format "<window_manager:window layout=%s inputs=%s>"
 			(:: data$layout string_type)
+			(:: data$inputs string_type)
 		))
 	) @@string@@
 	(,,, data
