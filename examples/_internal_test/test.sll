@@ -664,16 +664,16 @@ abc` '\n')
 	"windows" "msvcrt.dll"
 > sys$PLATFORM)))
 (:> c_stdlib '\n')
-(= time (<- clib:library$lookup_symbol c_stdlib "time"))
-(:> time '\n')
+(= time_fn (<- clib:library$lookup_symbol c_stdlib "time"))
+(:> time_fn '\n')
 
 (:> (<- clib:library$get_loaded_libraries) '\n')
 
-(= time$arguments [clib:types$void*])
-(= time$return clib:types$unsigned_long_long_int)
-(:> (<- clib:function$declaration time) ";\n")
+(= time_fn$arguments [clib:types$void*])
+(= time_fn$return clib:types$unsigned_long_long_int)
+(:> (<- clib:function$declaration time_fn) ";\n")
 
-(:> (<- clib:function$call time nil) '\n')
+(:> (<- clib:function$call time_fn nil) '\n')
 
 (<- (,,,
 	(<- (,,,
@@ -765,14 +765,18 @@ abc` '\n')
 ))
 (= hue 0)
 (= xy (. window_manager:cursor$window_manager_cursor_position_type 0 0))
+(= last (<- time$time))
 (-> nil (! (& window$flags window_manager:window$FLAG_CLOSED))
+	(= current (<- time$time))
+	(= delta (- current last))
+	(= last current)
 	(? (& window$flags window_manager:window$FLAG_BUTTON_LEFT) (= xy (: window$inputs$mouse)))
 	(<- gfx:color$set_clear_color ctx (<- gfx:color$hsv_to_rgb
 		hue
 		(/ xy$x window$layout$geometry$width)
 		(/ xy$y window$layout$geometry$height)
 	))
-	(= hue (+ hue 0.002))
+	(= hue (+ hue delta))
 	(<- window_manager:event$poll false)
 	(<- gfx:context$render ctx)
 )
