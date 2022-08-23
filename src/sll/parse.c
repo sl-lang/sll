@@ -888,7 +888,7 @@ _skip_export:;
 					}
 					else{
 						sll_string_t tmp;
-						sll_string_concat_char(source_file->string_table.data+o->data.declaration.description_string_index,' ',&tmp);
+						sll_string_concat_char(source_file->string_table.data+o->data.declaration.description_string_index,'\n',&tmp);
 						sll_string_t tmp2;
 						sll_string_concat(&tmp,source_file->string_table.data+arg->data.string_index,&tmp2);
 						sll_free_string(&tmp);
@@ -903,7 +903,7 @@ _skip_export:;
 					}
 					else{
 						sll_string_t tmp;
-						sll_string_concat_char(source_file->string_table.data+desc,' ',&tmp);
+						sll_string_concat_char(source_file->string_table.data+desc,'\n',&tmp);
 						sll_string_t tmp2;
 						sll_string_concat(&tmp,source_file->string_table.data+arg->data.string_index,&tmp2);
 						sll_free_string(&tmp);
