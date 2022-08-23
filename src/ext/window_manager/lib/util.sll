@@ -6,7 +6,7 @@
 
 
 (= window_manager_gfx_callbacks_type (&:
-	func_type delete
+	func_type destroy
 	func_type resize
 ))
 

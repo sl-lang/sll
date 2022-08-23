@@ -17,9 +17,10 @@
 
 (= gfx_context_type (&:
 	(,,, data
-		(@@ (<- string$format "<gfx:context window=%s clear_color=%s>"
+		(@@ (<- string$format "<gfx:context window=%s clear_color=%s shaders=%s>"
 			(:: data$window string_type)
 			(:: data$clear_color string_type)
+			(<- string$str data$shaders)
 		))
 	) @@string@@
 	(,,, data
@@ -28,6 +29,7 @@
 	(~ int_type) _handle
 	(~ window_manager:window$window_manager_window_type) window
 	gfx_color_type clear_color
+	array_type shaders
 ))
 
 (= gfx_context_module_type (&:
@@ -52,6 +54,8 @@
 	(= out (. gfx_context_type
 		handle
 		window
+		[0 0 0 0]
+		[]
 	))
 	(= window$_gfx_context (<- weakref$ref out))
 	(@@ out)

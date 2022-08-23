@@ -1,7 +1,10 @@
 (---
 	"gfx/_load_library.sll"
+	"gfx/context.sll"
+	"array.sll"
 	"string.sll"
 	"types.sll"
+	"weakref.sll"
 )
 
 
@@ -21,6 +24,7 @@
 	) @@delete@@
 	(~ int_type) _handle
 	(~ gfx:context$gfx_context_type) ctx
+	weakref$weakref_type _ref_object
 ))
 
 (= gfx_shader_module_type (&:
@@ -37,15 +41,19 @@
 		ctx$_handle
 		(:: bytecode string_type)
 	))
-	(@@ (. gfx_shader_type
+	(= out (. gfx_shader_type
 		handle
 		ctx
 	))
+	(= out$_ref_object (<- weakref$ref out))
+	(<- array$push ctx$shaders out$_ref_object)
+	(@@ out)
 ))
 
 (= delete (,,, shader
 	(? (! shader) (@@))
 	(= shader (:: shader gfx_shader_type))
+	(<- array$remove shader$ctx$shaders shader$_ref_object)
 	(<- (... "gfx:shader_delete") shader$ctx$_handle shader$_handle)
 ))
 

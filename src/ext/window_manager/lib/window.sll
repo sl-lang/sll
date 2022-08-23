@@ -223,7 +223,7 @@
 	(? (! window) (@@))
 	(= window (:: window window_manager_window_type))
 	(? (& window$flags FLAG_CLOSED) (@@))
-	(<- window_manager:util$__gfx_callbacks$resize window)
+	(<- window_manager:util$__gfx_callbacks$destroy window)
 	(<- window$callbacks$destroy window)
 	(= window$flags (| window$flags FLAG_CLOSED))
 	(<- audit$audit "window.destroy" "i" window$id)

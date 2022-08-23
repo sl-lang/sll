@@ -36,6 +36,7 @@ static void _call_user_array(sll_weak_reference_t weak_reference,sll_object_t ob
 		obj
 	};
 	sll_object_t ret=sll_execute_function(_weakref_cb_func,al,2,0);
+	SLL_RELEASE(dt);
 	if (ret){
 		SLL_RELEASE(ret);
 	}
@@ -80,5 +81,6 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_object_t sll_api_weakref_ge
 
 
 __SLL_EXTERNAL __SLL_API_CALL void sll_api_weakref_set_callback_data(sll_weak_reference_t weak_reference,sll_object_t callback){
+	SLL_ACQUIRE(callback);
 	sll_weakref_set_callback(weak_reference,_call_user_array,callback);
 }

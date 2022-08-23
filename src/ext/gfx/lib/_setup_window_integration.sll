@@ -6,7 +6,7 @@
 
 
 
-(= window_manager:util$__gfx_callbacks$delete (,,, window
+(= window_manager:util$__gfx_callbacks$destroy (,,, window
 	(= ctx (<- weakref$get_default window$_gfx_context))
 	(? ctx (<- (... "gfx:context_delete") ctx$_handle))
 	(= window$_gfx_context weakref$NIL_REF)

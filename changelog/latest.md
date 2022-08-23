@@ -9,6 +9,7 @@
 
 - Fixed `path$size`
 - Fixed bug with the following string formatting expression: `%+f`
+- Fixed weak reference object reference counting bugs
 - Fixed window manager mouse button flags
 - Sequential documentation comments are now concatenated instead of being ignored
 
