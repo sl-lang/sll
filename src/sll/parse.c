@@ -371,9 +371,6 @@ static void _read_object_internal(sll_file_t* file,sll_source_file_t* source_fil
 				sll_allocator_move((void**)(&(s.data)),SLL_MEMORY_MOVE_DIRECTION_FROM_STACK);
 				sll_string_calculate_checksum(&s);
 				arg->data.string_index=sll_add_string(&(source_file->string_table),&s);
-				if (extra_compilation_data->is_function){
-					desc=arg->data.string_index;
-				}
 				char_=sll_file_read_char(file,NULL);
 			}
 			else if (char_=='`'){
@@ -896,6 +893,19 @@ _skip_export:;
 						sll_string_concat(&tmp,source_file->string_table.data+arg->data.string_index,&tmp2);
 						sll_free_string(&tmp);
 						o->data.declaration.description_string_index=sll_add_string(&(source_file->string_table),&tmp2);
+					}
+				}
+				else if (extra_compilation_data->is_function&&arg->type==SLL_NODE_TYPE_STRING){
+					if (desc==SLL_MAX_STRING_INDEX){
+						desc=arg->data.string_index;
+					}
+					else{
+						sll_string_t tmp;
+						sll_string_concat_char(source_file->string_table.data+desc,' ',&tmp);
+						sll_string_t tmp2;
+						sll_string_concat(&tmp,source_file->string_table.data+arg->data.string_index,&tmp2);
+						sll_free_string(&tmp);
+						desc=sll_add_string(&(source_file->string_table),&tmp2);
 					}
 				}
 			}
