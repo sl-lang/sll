@@ -16,7 +16,17 @@ static const sll_internal_function_descriptor_t _internal_function_table[]={
 	{
 		SLL_CHAR("gfx:buffer_delete"),
 		gfx_api_buffer_delete,
-		SLL_CHAR("Q|")
+		SLL_CHAR("QQ|")
+	},
+	{
+		SLL_CHAR("gfx:buffer_hint_update_frequency"),
+		gfx_api_buffer_hint_update_frequency,
+		SLL_CHAR("QQB|")
+	},
+	{
+		SLL_CHAR("gfx:buffer_sync"),
+		gfx_api_buffer_sync,
+		SLL_CHAR("QQ|")
 	},
 	{
 		SLL_CHAR("gfx:color_set_clear_color"),
@@ -51,7 +61,7 @@ static const sll_internal_function_descriptor_t _internal_function_table[]={
 	{
 		SLL_CHAR("gfx:shader_delete"),
 		gfx_api_shader_delete,
-		SLL_CHAR("Q|")
+		SLL_CHAR("QQ|")
 	},
 	{
 		SLL_CHAR("gfx:vulkan_get_extensions"),
@@ -69,7 +79,7 @@ static const sll_internal_function_descriptor_t _internal_function_table[]={
 
 static const sll_internal_function_table_descriptor_t _internal_function_table_descriptor_data={
 	(const sll_internal_function_descriptor_t*)(&_internal_function_table),
-	11
+	13
 };
 
 
