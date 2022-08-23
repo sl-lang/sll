@@ -7,12 +7,12 @@
 
 
 (= window_manager:util$__gfx_callbacks$delete (,,, window
-	(= ctx (<- weakref$get window$_gfx_context))
-	(? (!== ctx weakref$WEAKREF_NO_OBJECT) (<- (... "gfx:context_delete") ctx$_handle))
+	(= ctx (<- weakref$get_default window$_gfx_context))
+	(? ctx (<- (... "gfx:context_delete") ctx$_handle))
 	(= window$_gfx_context weakref$NIL_REF)
 ))
 
 (= window_manager:util$__gfx_callbacks$resize (,,, window
-	(= ctx (<- weakref$get window$_gfx_context))
-	(? (!== ctx weakref$WEAKREF_NO_OBJECT) (<- (... "gfx:context_resize") ctx$_handle))
+	(= ctx (<- weakref$get_default window$_gfx_context))
+	(? ctx weakref$WEAKREF_NO_OBJECT (<- (... "gfx:context_resize") ctx$_handle))
 ))
