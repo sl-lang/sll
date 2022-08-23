@@ -895,7 +895,7 @@ _skip_export:;
 						o->data.declaration.description_string_index=sll_add_string(&(source_file->string_table),&tmp2);
 					}
 				}
-				else if (extra_compilation_data->is_function&&arg->type==SLL_NODE_TYPE_STRING){
+				else if (o->type==SLL_NODE_TYPE_FUNC&&arg->type==SLL_NODE_TYPE_STRING){
 					arg->type=SLL_NODE_TYPE_NOP;
 					ac--;
 					if (desc==SLL_MAX_STRING_INDEX){
