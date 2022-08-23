@@ -310,7 +310,7 @@
 			(<- log$log "    Copying library from '" temporary_output_library "' to '" output_library "'...")
 			(<- file$rename temporary_output_library output_library)
 		})
-		(<- log$log "  Compiling extension module '" name "'...")
+		(<- log$log "  Compiling modules for extension '" name "'...")
 		(<- log$log "    Listing module files...")
 		(= module_file_root (<- string$replace
 			config$EXTENSION_LIBRARY_ROOT_FILE_PATH
