@@ -1,9 +1,15 @@
 #ifndef __GFX_SHADER_H__
 #define __GFX_SHADER_H__ 1
-#include <gfx/_shader_type.h>
 #include <gfx/common.h>
 #include <gfx/context.h>
 #include <sll.h>
+#include <vulkan/vulkan.h>
+
+
+
+typedef struct _GFX_SHADER_DATA{
+	VkShaderModule handle;
+} gfx_shader_data_t;
 
 
 

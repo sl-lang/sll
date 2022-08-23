@@ -1,3 +1,4 @@
+#include <gfx/buffer.h>
 #include <gfx/color.h>
 #include <gfx/context.h>
 #include <gfx/shader.h>
@@ -7,6 +8,16 @@
 
 
 static const sll_internal_function_descriptor_t _internal_function_table[]={
+	{
+		SLL_CHAR("gfx:buffer_create"),
+		gfx_api_buffer_create,
+		SLL_CHAR("QB|Q")
+	},
+	{
+		SLL_CHAR("gfx:buffer_delete"),
+		gfx_api_buffer_delete,
+		SLL_CHAR("Q|")
+	},
 	{
 		SLL_CHAR("gfx:color_set_clear_color"),
 		gfx_api_color_set_clear_color,
@@ -58,7 +69,7 @@ static const sll_internal_function_descriptor_t _internal_function_table[]={
 
 static const sll_internal_function_table_descriptor_t _internal_function_table_descriptor_data={
 	(const sll_internal_function_descriptor_t*)(&_internal_function_table),
-	9
+	11
 };
 
 

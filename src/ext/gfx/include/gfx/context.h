@@ -1,6 +1,5 @@
 #ifndef __GFX_CONTEXT_H__
 #define __GFX_CONTEXT_H__ 1
-#include <gfx/_shader_type.h>
 #include <gfx/common.h>
 #include <gfx/vulkan_functions.h>
 #include <sll.h>
@@ -98,6 +97,7 @@ typedef struct _GFX_CONTEXT_DATA{
 	gfx_context_swapchain_data_t swapchain;
 	gfx_context_sync_data_t sync;
 	gfx_vulkan_function_table_t function_table;
+	sll_handle_container_t buffers;
 	sll_handle_container_t shaders;
 } gfx_context_data_t;
 
