@@ -20,6 +20,8 @@ __GFX_API_CALL gfx_buffer_t gfx_api_buffer_create(gfx_context_t ctx_id,gfx_buffe
 	}
 	gfx_buffer_data_t* buffer=sll_allocate(sizeof(gfx_buffer_data_t));
 	buffer->type=type;
+	buffer->update_frequency_hint=GFX_BUFFER_UPDATE_FREQUENCY_HINT_LOW;
+	buffer->flags=0;
 	gfx_buffer_t out;
 	SLL_HANDLE_CONTAINER_ALLOC(&(ctx->buffers),&out);
 	*(ctx->buffers.data+out)=buffer;
@@ -48,14 +50,15 @@ __GFX_API_CALL void gfx_api_buffer_hint_update_frequency(gfx_context_t ctx_id,gf
 		return;
 	}
 	gfx_buffer_data_t* buffer=SLL_HANDLE_CONTAINER_GET(&(ctx->buffers),buffer_id);
-	if (!buffer){
+	if (!buffer||buffer->update_frequency_hint==hint){
 		return;
 	}
+	buffer->update_frequency_hint=hint;
 }
 
 
 
-__GFX_API_CALL void gfx_api_buffer_sync(gfx_context_t ctx_id,gfx_buffer_t buffer_id){
+__GFX_API_CALL void gfx_api_buffer_sync(gfx_context_t ctx_id,gfx_buffer_t buffer_id,const sll_array_t* data){
 	gfx_context_data_t* ctx=SLL_HANDLE_CONTAINER_GET(&gfx_context_data,ctx_id);
 	if (!ctx){
 		return;

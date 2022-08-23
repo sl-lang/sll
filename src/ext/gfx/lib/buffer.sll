@@ -9,7 +9,7 @@
 
 
 
-(# delete FREQUENCY_NEVER FREQUENCY_LOW FREQUENCY_HIGH TYPE_VERTEX TYPE_INDEX TYPE_UNIFORM TYPE_ANY)
+(# delete FREQUENCY_NEVER FREQUENCY_MEDIUM FREQUENCY_HIGH TYPE_VERTEX TYPE_INDEX TYPE_UNIFORM TYPE_ANY)
 
 
 
@@ -28,9 +28,9 @@
 			(<- string$join ", " types)
 			(?:
 				(=== data$update_frequency FREQUENCY_NEVER) "Never"
-				(=== data$update_frequency FREQUENCY_LOW) "Low"
+				(=== data$update_frequency FREQUENCY_MEDIUM) "Medium"
 				(=== data$update_frequency FREQUENCY_HIGH) "High"
-				"Medium"
+				"Low"
 			)
 			(:: data$ctx string_type)
 		))
@@ -88,7 +88,7 @@
 		type
 		ctx
 		[]
-		FREQUENCY_MEDIUM
+		FREQUENCY_LOW
 	))
 	(= out$_ref_object (<- weakref$ref out))
 	(<- array$push ctx$buffers out$_ref_object)
@@ -109,7 +109,7 @@
 	(? (||
 		(< frequency FREQUENCY_NEVER)
 		(> frequency FREQUENCY_HIGH)
-	) (= frequency FREQUENCY_MEDIUM))
+	) (= frequency FREQUENCY_LOW))
 	(= buffer$update_frequency frequency)
 	(<- (... "gfx:buffer_hint_update_frequency") buffer$ctx$_handle buffer$_handle frequency)
 ))

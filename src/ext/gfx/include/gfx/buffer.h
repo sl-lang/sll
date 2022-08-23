@@ -17,24 +17,36 @@
 #define GFX_BUFFER_UPDATE_FREQUENCY_HINT_MEDIUM 2
 #define GFX_BUFFER_UPDATE_FREQUENCY_HINT_HIGH 3
 
+#define GFX_BUFFER_FLAG_HAS_BUFFER 1
+#define GFX_BUFFER_FLAG_HAS_HOST_BUFFER 2
+
 
 
 typedef uint8_t gfx_buffer_type_t;
 
 
 
+typedef uint8_t gfx_buffer_update_frequency_hint_t;
+
+
+
+typedef uint8_t gfx_buffer_flags_t;
+
+
+
 typedef struct _GFX_BUFFER_DATA{
-	VkBuffer handle;
 	gfx_buffer_type_t type;
+	gfx_buffer_update_frequency_hint_t update_frequency_hint;
+	gfx_buffer_flags_t flags;
+	VkBuffer handle;
+	VkDeviceMemory memory;
+	VkBuffer host_buffer;
+	VkDeviceMemory host_memory;
 } gfx_buffer_data_t;
 
 
 
 typedef sll_size_t gfx_buffer_t;
-
-
-
-typedef uint8_t gfx_buffer_update_frequency_hint_t;
 
 
 
@@ -54,7 +66,7 @@ __GFX_API_CALL void gfx_api_buffer_hint_update_frequency(gfx_context_t ctx_id,gf
 
 
 
-__GFX_API_CALL void gfx_api_buffer_sync(gfx_context_t ctx_id,gfx_buffer_t buffer_id);
+__GFX_API_CALL void gfx_api_buffer_sync(gfx_context_t ctx_id,gfx_buffer_t buffer_id,const sll_array_t* data);
 
 
 

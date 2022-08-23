@@ -26,7 +26,7 @@ static const sll_internal_function_descriptor_t _internal_function_table[]={
 	{
 		SLL_CHAR("gfx:buffer_sync"),
 		gfx_api_buffer_sync,
-		SLL_CHAR("QQ|")
+		SLL_CHAR("QQ#a|")
 	},
 	{
 		SLL_CHAR("gfx:color_set_clear_color"),
