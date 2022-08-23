@@ -315,7 +315,7 @@ void _delete_context(gfx_context_data_t* ctx){
 	if (ctx->instance.debug_messenger!=VK_NULL_HANDLE){
 		ctx->function_table.vkDestroyDebugUtilsMessengerEXT(ctx->instance.handle,ctx->instance.debug_messenger,NULL);
 	}
-	// ctx->function_table.vkDestroyInstance(ctx->instance.handle,NULL);
+	// ctx->function_table.vkDestroyInstansce(ctx->instance.handle,NULL);
 	sll_deallocate(ctx);
 }
 

@@ -65,6 +65,11 @@
 	(? (! ctx) (@@))
 	(= ctx (:: ctx gfx_context_type))
 	(= ctx$window$_gfx_context weakref$NIL_REF)
+	(-> (= i 0) (< i ($ ctx$shaders))
+		(= shader (<- weakref$get (: ctx$shaders i)))
+		(<- (... "gfx:shader_delete") ctx$_handle shader$_handle)
+		(++ i)
+	)
 	(<- (... "gfx:context_delete") ctx$_handle)
 ))
 

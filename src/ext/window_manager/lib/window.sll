@@ -65,11 +65,11 @@
 			(:: data$geometry string_type)
 			data$title
 			(?: (=== data$width_constraints$min data$width_constraints$max)
-				"(unspecified)"
+				"unspecified"
 				(:: data$width_constraints string_type)
 			)
 			(?: (=== data$height_constraints$min data$height_constraints$max)
-				"(unspecified)"
+				"unspecified"
 				(:: data$height_constraints string_type)
 			)
 			(?:
