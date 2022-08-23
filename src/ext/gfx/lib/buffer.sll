@@ -1,0 +1,85 @@
+(---
+	"gfx/_load_library.sll"
+	"gfx/context.sll"
+	"array.sll"
+	"string.sll"
+	"types.sll"
+	"weakref.sll"
+)
+
+
+
+(# delete)
+
+
+
+(= gfx_buffer_type (&:
+	(,,, data
+		(@@ (<- string$format "<gfx:buffer context=%s>"
+			(:: data$ctx string_type)
+		))
+	) @@string@@
+	(,,, data
+		(<- delete data)
+	) @@delete@@
+	(~ int_type) _handle
+	(~ int_type) type
+	(~ gfx:context$gfx_context_type) ctx
+	array_type data
+	weakref$weakref_type _ref_object
+))
+
+(= gfx_buffer_module_type (&:
+	(~ func_type) create
+	(~ func_type) delete
+	(~ func_type) hint_update_frequency
+	(~ func_type) sync
+))
+
+
+
+(= create (,,, ctx type
+	(? (! ctx) (@@ nil))
+	(= ctx (:: ctx gfx:context$gfx_context_type))
+	(= type (:: type int_type))
+	(= handle (<- (... "gfx:buffer_create")
+		ctx$_handle
+		type
+	))
+	(= out (. gfx_buffer_type
+		handle
+		type
+		ctx
+		[]
+	))
+	(= out$_ref_object (<- weakref$ref out))
+	(<- array$push ctx$buffers out$_ref_object)
+	(@@ out)
+))
+
+(= delete (,,, buffer
+	(? (! buffer) (@@))
+	(= buffer (:: buffer gfx_buffer_type))
+	(<- array$remove buffer$ctx$buffers buffer$_ref_object)
+	(<- (... "gfx:buffer_delete") buffer$ctx$_handle buffer$_handle)
+))
+
+(= hint_update_frequency (,,, buffer frequency
+	(? (! buffer) (@@))
+	(= buffer (:: buffer gfx_buffer_type))
+))
+
+(= sync (,,, buffer
+	(? (! buffer) (@@))
+	(= buffer (:: buffer gfx_buffer_type))
+))
+
+
+
+(= gfx:buffer (. gfx_buffer_module_type
+	create
+	delete
+	hint_update_frequency
+	sync
+))
+(## gfx:buffer)

@@ -1,4 +1,5 @@
 (---
+	"gfx/buffer.sll"
 	"gfx/color.sll"
 	"gfx/context.sll"
 	"gfx/shader.sll"
@@ -8,6 +9,7 @@
 
 
 (= gfx_module_type (&:
+	(~ (:? gfx:buffer)) buffer
 	(~ (:? gfx:color)) color
 	(~ (:? gfx:context)) context
 	(~ (:? gfx:shader)) shader
@@ -17,6 +19,7 @@
 
 
 (= gfx (. gfx_module_type
+	gfx:buffer
 	gfx:color
 	gfx:context
 	gfx:shader
