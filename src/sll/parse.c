@@ -896,6 +896,8 @@ _skip_export:;
 					}
 				}
 				else if (extra_compilation_data->is_function&&arg->type==SLL_NODE_TYPE_STRING){
+					arg->type=SLL_NODE_TYPE_NOP;
+					ac--;
 					if (desc==SLL_MAX_STRING_INDEX){
 						desc=arg->data.string_index;
 					}
