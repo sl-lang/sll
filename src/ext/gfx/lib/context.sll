@@ -17,11 +17,9 @@
 
 (= gfx_context_type (&:
 	(,,, data
-		(@@ (<- string$format "<gfx:context window=%s clear_color=%s buffers=%s shaders=%s>"
+		(@@ (<- string$format "<gfx:context window=%s clear_color=%s>"
 			(:: data$window string_type)
 			(:: data$clear_color string_type)
-			(<- string$str data$buffers)
-			(<- string$str data$shaders)
 		))
 	) @@string@@
 	(,,, data

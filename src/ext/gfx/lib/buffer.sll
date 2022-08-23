@@ -9,13 +9,29 @@
 
 
 
-(# delete)
+(# delete FREQUENCY_NEVER FREQUENCY_LOW FREQUENCY_HIGH TYPE_VERTEX TYPE_INDEX TYPE_UNIFORM TYPE_ANY)
 
 
 
 (= gfx_buffer_type (&:
 	(,,, data
-		(@@ (<- string$format "<gfx:buffer context=%s>"
+		(= types [])
+		(?
+			(=== data$type TYPE_ANY) (= types ["Any"])
+			{
+				(? (& data$type TYPE_VERTEX) (<- array$push types "Vertex"))
+				(? (& data$type TYPE_INDEX) (<- array$push types "Index"))
+				(? (& data$type TYPE_UNIFORM) (<- array$push types "Uniform"))
+			}
+		)
+		(@@ (<- string$format "<gfx:buffer type=%s update_frequency=%s context=%s>"
+			(<- string$join ", " types)
+			(?:
+				(=== data$update_frequency FREQUENCY_NEVER) "Never"
+				(=== data$update_frequency FREQUENCY_LOW) "Low"
+				(=== data$update_frequency FREQUENCY_HIGH) "High"
+				"Medium"
+			)
 			(:: data$ctx string_type)
 		))
 	) @@string@@
@@ -26,10 +42,19 @@
 	(~ int_type) type
 	(~ gfx:context$gfx_context_type) ctx
 	array_type data
+	int_type update_frequency
 	weakref$weakref_type _ref_object
 ))
 
 (= gfx_buffer_module_type (&:
+	(~ int_type) FREQUENCY_HIGH
+	(~ int_type) FREQUENCY_LOW
+	(~ int_type) FREQUENCY_MEDIUM
+	(~ int_type) FREQUENCY_NEVER
+	(~ int_type) TYPE_ANY
+	(~ int_type) TYPE_INDEX
+	(~ int_type) TYPE_UNIFORM
+	(~ int_type) TYPE_VERTEX
 	(~ func_type) create
 	(~ func_type) delete
 	(~ func_type) hint_update_frequency
@@ -38,10 +63,22 @@
 
 
 
+(= TYPE_VERTEX 1)
+(= TYPE_INDEX 2)
+(= TYPE_UNIFORM 4)
+(= TYPE_ANY (| TYPE_VERTEX TYPE_INDEX TYPE_UNIFORM))
+
+(= FREQUENCY_NEVER 0)
+(= FREQUENCY_LOW 1)
+(= FREQUENCY_MEDIUM 2)
+(= FREQUENCY_HIGH 3)
+
+
+
 (= create (,,, ctx type
 	(? (! ctx) (@@ nil))
 	(= ctx (:: ctx gfx:context$gfx_context_type))
-	(= type (:: type int_type))
+	(= type (& (:: type int_type) TYPE_ANY))
 	(= handle (<- (... "gfx:buffer_create")
 		ctx$_handle
 		type
@@ -51,6 +88,7 @@
 		type
 		ctx
 		[]
+		FREQUENCY_MEDIUM
 	))
 	(= out$_ref_object (<- weakref$ref out))
 	(<- array$push ctx$buffers out$_ref_object)
@@ -67,16 +105,32 @@
 (= hint_update_frequency (,,, buffer frequency
 	(? (! buffer) (@@))
 	(= buffer (:: buffer gfx_buffer_type))
+	(= frequency (:: frequency int_type))
+	(? (||
+		(< frequency FREQUENCY_NEVER)
+		(> frequency FREQUENCY_HIGH)
+	) (= frequency FREQUENCY_MEDIUM))
+	(= buffer$update_frequency frequency)
+	(<- (... "gfx:buffer_hint_update_frequency") buffer$ctx$_handle buffer$_handle frequency)
 ))
 
 (= sync (,,, buffer
 	(? (! buffer) (@@))
 	(= buffer (:: buffer gfx_buffer_type))
+	(<- (... "gfx:buffer_sync") buffer$ctx$_handle buffer$_handle buffer$data)
 ))
 
 
 
 (= gfx:buffer (. gfx_buffer_module_type
+	FREQUENCY_HIGH
+	FREQUENCY_LOW
+	FREQUENCY_MEDIUM
+	FREQUENCY_NEVER
+	TYPE_ANY
+	TYPE_INDEX
+	TYPE_UNIFORM
+	TYPE_VERTEX
 	create
 	delete
 	hint_update_frequency
