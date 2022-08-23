@@ -782,6 +782,7 @@ abc` '\n')
 
 (= example_type (&:
 	"comment"
+	"b"
 	(~ int_type) x
 	int_type y
 ))

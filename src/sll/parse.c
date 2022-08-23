@@ -886,6 +886,17 @@ _skip_export:;
 				else if (o->type==SLL_NODE_TYPE_DECL&&arg->type==SLL_NODE_TYPE_STRING){
 					arg->type=SLL_NODE_TYPE_NOP;
 					ac--;
+					if (o->data.declaration.description_string_index==SLL_MAX_STRING_INDEX){
+						o->data.declaration.description_string_index=arg->data.string_index;
+					}
+					else{
+						sll_string_t tmp;
+						sll_string_concat_char(source_file->string_table.data+o->data.declaration.description_string_index,' ',&tmp);
+						sll_string_t tmp2;
+						sll_string_concat(&tmp,source_file->string_table.data+arg->data.string_index,&tmp2);
+						sll_free_string(&tmp);
+						o->data.declaration.description_string_index=sll_add_string(&(source_file->string_table),&tmp2);
+					}
 				}
 			}
 		}
