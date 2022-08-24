@@ -24,7 +24,7 @@
 				(? (& data$type TYPE_UNIFORM) (<- array$push types "Uniform"))
 			}
 		)
-		(@@ (<- string$format "<gfx:buffer type=%s update_frequency=%s context=%s>"
+		(@@ (<- string$format "<gfx:buffer type=%s update_frequency=%s data_length=%u context=%s>"
 			(<- string$join ", " types)
 			(?:
 				(=== data$update_frequency FREQUENCY_NEVER) "Never"
@@ -32,6 +32,7 @@
 				(=== data$update_frequency FREQUENCY_HIGH) "High"
 				"Low"
 			)
+			($ data$data)
 			(:: data$ctx string_type)
 		))
 	) @@string@@
@@ -76,19 +77,25 @@
 
 
 
-(= create (,,, ctx type
+(= create (,,, ctx type data
 	(? (! ctx) (@@ nil))
 	(= ctx (:: ctx gfx:context$gfx_context_type))
 	(= type (& (:: type int_type) TYPE_ANY))
+	(= data (?: data (:: data array_type) []))
 	(= handle (<- (... "gfx:buffer_create")
 		ctx$_handle
 		type
+	))
+	(? data (<- (... "gfx:buffer_sync")
+		ctx$_handle
+		handle
+		data
 	))
 	(= out (. gfx_buffer_type
 		handle
 		type
 		ctx
-		[]
+		data
 		FREQUENCY_LOW
 	))
 	(= out$_ref_object (<- weakref$ref out))

@@ -764,13 +764,11 @@ abc` '\n')
 		window_manager:keyboard$KEY_ESCAPE (<- window_manager:window$destroy window)
 	)
 ))
-(= verticies (<- gfx:buffer$create ctx gfx:buffer$TYPE_VERTEX))
-(= verticies$data [
+(= verticies (<- gfx:buffer$create ctx gfx:buffer$TYPE_VERTEX [
 	1 1 0 1 0 0
 	-1 1 0 0 1 0
 	0 -1 0 0 0 1
-])
-(<- gfx:buffer$sync verticies)
+]))
 (= hue 0)
 (= xy (. window_manager:cursor$window_manager_cursor_position_type 0 0))
 (= last (<- time$time))
