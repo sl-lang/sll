@@ -12,6 +12,13 @@
 
 
 
+typedef struct _GFX_CONTEXT_BUFFER_TRANSFER_DATA{
+	VkCommandBuffer command_buffer;
+	VkFence fence;
+} gfx_context_buffer_transfer_data_t;
+
+
+
 typedef struct _GFX_CONTEXT_COMMAND_DATA{
 	VkCommandPool pool;
 	VkCommandBuffer* buffers;
@@ -87,6 +94,7 @@ typedef struct _GFX_CONTEXT_SYNC_DATA{
 
 
 typedef struct _GFX_CONTEXT_DATA{
+	gfx_context_buffer_transfer_data_t buffer_transfer;
 	gfx_context_command_data_t command;
 	gfx_context_depth_stensil_data_t depth_stensil;
 	gfx_context_device_data_t device;

@@ -293,6 +293,8 @@ void _delete_context(gfx_context_data_t* ctx){
 	SLL_HANDLE_CONTAINER_ITER_CLEAR(&(ctx->shaders),gfx_shader_data_t,shader,{
 		_delete_shader(ctx,shader);
 	});
+	ctx->function_table.vkDestroyFence(ctx->device.logical,ctx->buffer_transfer.fence,NULL);
+	ctx->function_table.vkFreeCommandBuffers(ctx->device.logical,ctx->command.pool,1,&(ctx->buffer_transfer.command_buffer));
 	_release_swapchain(ctx);
 	sll_deallocate(ctx->swapchain.image_views);
 	sll_deallocate(ctx->sync.fences);
@@ -546,6 +548,20 @@ __GFX_API_CALL gfx_context_t gfx_api_context_create(void* handle,void* extra_dat
 	VULKAN_CALL(ctx->function_table.vkCreateSemaphore(ctx->device.logical,&semaphore_creation_info,NULL,&(ctx->sync.present_semaphore)));
 	VULKAN_CALL(ctx->function_table.vkCreateSemaphore(ctx->device.logical,&semaphore_creation_info,NULL,&(ctx->sync.render_semaphore)));
 	_create_swapchain(ctx);
+	VkCommandBufferAllocateInfo command_buffer_allocation_info={
+		VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO,
+		NULL,
+		ctx->command.pool,
+		VK_COMMAND_BUFFER_LEVEL_PRIMARY,
+		1
+	};
+	VULKAN_CALL(ctx->function_table.vkAllocateCommandBuffers(ctx->device.logical,&command_buffer_allocation_info,&(ctx->buffer_transfer.command_buffer)));
+	VkFenceCreateInfo fence_creation_info={
+		VK_STRUCTURE_TYPE_FENCE_CREATE_INFO,
+		0,
+		0
+	};
+	VULKAN_CALL(ctx->function_table.vkCreateFence(ctx->device.logical,&fence_creation_info,NULL,&(ctx->buffer_transfer.fence)));
 	_begin_frame(ctx);
 	SLL_HANDLE_CONTAINER_INIT(&(ctx->buffers));
 	SLL_HANDLE_CONTAINER_INIT(&(ctx->shaders));

@@ -154,36 +154,20 @@ __GFX_API_CALL void gfx_api_buffer_sync(gfx_context_t ctx_id,gfx_buffer_t buffer
 		host_buffer_data++;
 	}
 	ctx->function_table.vkUnmapMemory(ctx->device.logical,buffer->host.memory);
-	VkCommandBuffer command_buffer;
-	VkCommandBufferAllocateInfo command_buffer_allocation_info={
-		VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO,
-		NULL,
-		ctx->command.pool,
-		VK_COMMAND_BUFFER_LEVEL_PRIMARY,
-		1
-	};
-	VULKAN_CALL(ctx->function_table.vkAllocateCommandBuffers(ctx->device.logical,&command_buffer_allocation_info,&command_buffer));
 	VkCommandBufferBeginInfo command_buffer_begin_info={
 		VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO,
 		NULL,
 		0,
 		NULL
 	};
-	VULKAN_CALL(ctx->function_table.vkBeginCommandBuffer(command_buffer,&command_buffer_begin_info));
+	VULKAN_CALL(ctx->function_table.vkBeginCommandBuffer(ctx->buffer_transfer.command_buffer,&command_buffer_begin_info));
 	VkBufferCopy buffer_copy={
 		0,
 		0,
 		data->length*sizeof(float)
 	};
-	ctx->function_table.vkCmdCopyBuffer(command_buffer,buffer->host.buffer,buffer->device.buffer,1,&buffer_copy);
-	VULKAN_CALL(ctx->function_table.vkEndCommandBuffer(command_buffer));
-	VkFence fence;
-	VkFenceCreateInfo fence_creation_info={
-		VK_STRUCTURE_TYPE_FENCE_CREATE_INFO,
-		0,
-		0
-	};
-	VULKAN_CALL(ctx->function_table.vkCreateFence(ctx->device.logical,&fence_creation_info,NULL,&fence));
+	ctx->function_table.vkCmdCopyBuffer(ctx->buffer_transfer.command_buffer,buffer->host.buffer,buffer->device.buffer,1,&buffer_copy);
+	VULKAN_CALL(ctx->function_table.vkEndCommandBuffer(ctx->buffer_transfer.command_buffer));
 	VkSubmitInfo submit_info={
 		VK_STRUCTURE_TYPE_SUBMIT_INFO,
 		NULL,
@@ -191,12 +175,11 @@ __GFX_API_CALL void gfx_api_buffer_sync(gfx_context_t ctx_id,gfx_buffer_t buffer
 		NULL,
 		NULL,
 		1,
-		&command_buffer,
+		&(ctx->buffer_transfer.command_buffer),
 		0,
 		NULL
 	};
-	VULKAN_CALL(ctx->function_table.vkQueueSubmit(ctx->command.queue,1,&submit_info,fence));
-	VULKAN_CALL(ctx->function_table.vkWaitForFences(ctx->device.logical,1,&fence,VK_TRUE,UINT64_MAX));
-	ctx->function_table.vkDestroyFence(ctx->device.logical,fence,NULL);
-	ctx->function_table.vkFreeCommandBuffers(ctx->device.logical,ctx->command.pool,1,&command_buffer);
+	VULKAN_CALL(ctx->function_table.vkQueueSubmit(ctx->command.queue,1,&submit_info,ctx->buffer_transfer.fence));
+	VULKAN_CALL(ctx->function_table.vkWaitForFences(ctx->device.logical,1,&(ctx->buffer_transfer.fence),VK_TRUE,UINT64_MAX));
+	VULKAN_CALL(ctx->function_table.vkResetFences(ctx->device.logical,1,&(ctx->buffer_transfer.fence)));
 }
