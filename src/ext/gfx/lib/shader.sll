@@ -28,6 +28,7 @@
 ))
 
 (= gfx_shader_module_type (&:
+	(~ type_type) gfx_shader_type
 	(~ func_type) create
 	(~ func_type) delete
 ))
@@ -60,6 +61,7 @@
 
 
 (= gfx:shader (. gfx_shader_module_type
+	gfx_shader_type
 	create
 	delete
 ))

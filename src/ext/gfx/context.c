@@ -2,6 +2,7 @@
 #include <gfx/common.h>
 #include <gfx/context.h>
 #include <gfx/shader.h>
+#include <gfx/util.h>
 #include <gfx/vulkan.h>
 #include <gfx/vulkan_functions.h>
 #include <sll.h>
@@ -22,19 +23,6 @@ static VKAPI_ATTR VkBool32 _debug_messenger_callback(VkDebugUtilsMessageSeverity
 		SLL_WARN("%s",data->pMessage);
 	}
 	return VK_FALSE;
-}
-
-
-
-static uint32_t _get_mem_type(const gfx_context_data_t* ctx,uint32_t mask,VkMemoryPropertyFlagBits properties){
-	for (uint32_t i=0;i<ctx->device.memory_properties.memoryTypeCount;i++){
-		if ((mask&1)&&((ctx->device.memory_properties.memoryTypes+i)->propertyFlags&properties)==properties){
-			return i;
-		}
-		mask>>=1;
-	}
-	SLL_WARN("No memory type found!");
-	return 0;
 }
 
 
@@ -128,7 +116,7 @@ static void _create_swapchain(gfx_context_data_t* ctx){
 		VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO,
 		NULL,
 		mem_requirements.size,
-		_get_mem_type(ctx,mem_requirements.memoryTypeBits,VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT)
+		_get_memory_type(ctx,mem_requirements.memoryTypeBits,VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT)
 	};
 	VULKAN_CALL(ctx->function_table.vkAllocateMemory(ctx->device.logical,&mem_alloc_info,NULL,&(ctx->depth_stensil.memory)));
 	VULKAN_CALL(ctx->function_table.vkBindImageMemory(ctx->device.logical,ctx->depth_stensil.image,ctx->depth_stensil.memory,0));

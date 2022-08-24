@@ -1,6 +1,7 @@
 #include <gfx/buffer.h>
 #include <gfx/common.h>
 #include <gfx/context.h>
+#include <gfx/util.h>
 #include <gfx/vulkan.h>
 #include <sll.h>
 #include <vulkan/vulkan.h>
@@ -16,6 +17,7 @@ static void _delete_vulkan_buffers(const gfx_context_data_t* ctx,gfx_buffer_data
 		ctx->function_table.vkDestroyBuffer(ctx->device.logical,buffer_data->host.buffer,NULL);
 		ctx->function_table.vkFreeMemory(ctx->device.logical,buffer_data->host.memory,NULL);
 	}
+	buffer_data->flags=0;
 }
 
 
@@ -94,5 +96,107 @@ __GFX_API_CALL void gfx_api_buffer_sync(gfx_context_t ctx_id,gfx_buffer_t buffer
 	}
 	if (buffer->last_size!=data->length){
 		_delete_vulkan_buffers(ctx,buffer);
+		buffer->last_size=data->length;
 	}
+	if (!(buffer->flags&GFX_BUFFER_FLAG_HAS_DEVICE_BUFFER)){
+		VkBufferCreateInfo buffer_creation_info={
+			VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO,
+			NULL,
+			0,
+			data->length*sizeof(float),
+			buffer->usage,
+			0,
+			0,
+			NULL
+		};
+		VULKAN_CALL(ctx->function_table.vkCreateBuffer(ctx->device.logical,&buffer_creation_info,NULL,&(buffer->device.buffer)));
+		VkMemoryRequirements memory_requirements;
+		ctx->function_table.vkGetBufferMemoryRequirements(ctx->device.logical,buffer->device.buffer,&memory_requirements);
+		VkMemoryAllocateInfo memory_allocation_info={
+			VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO,
+			NULL,
+			memory_requirements.size,
+			_get_memory_type(ctx,memory_requirements.memoryTypeBits,VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT)
+		};
+		VULKAN_CALL(ctx->function_table.vkAllocateMemory(ctx->device.logical,&memory_allocation_info,NULL,&(buffer->device.memory)));
+		VULKAN_CALL(ctx->function_table.vkBindBufferMemory(ctx->device.logical,buffer->device.buffer,buffer->device.memory,0));
+	}
+	if (!(buffer->flags&GFX_BUFFER_FLAG_HAS_HOST_BUFFER)){
+		VkBufferCreateInfo buffer_creation_info={
+			VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO,
+			NULL,
+			0,
+			data->length*sizeof(float),
+			VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
+			0,
+			0,
+			NULL
+		};
+		VULKAN_CALL(ctx->function_table.vkCreateBuffer(ctx->device.logical,&buffer_creation_info,NULL,&(buffer->host.buffer)));
+		VkMemoryRequirements memory_requirements;
+		ctx->function_table.vkGetBufferMemoryRequirements(ctx->device.logical,buffer->host.buffer,&memory_requirements);
+		VkMemoryAllocateInfo memory_allocation_info={
+			VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO,
+			NULL,
+			memory_requirements.size,
+			_get_memory_type(ctx,memory_requirements.memoryTypeBits,VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT|VK_MEMORY_PROPERTY_HOST_COHERENT_BIT)
+		};
+		VULKAN_CALL(ctx->function_table.vkAllocateMemory(ctx->device.logical,&memory_allocation_info,NULL,&(buffer->host.memory)));
+		VULKAN_CALL(ctx->function_table.vkBindBufferMemory(ctx->device.logical,buffer->host.buffer,buffer->host.memory,0));
+	}
+	buffer->flags=GFX_BUFFER_FLAG_HAS_DEVICE_BUFFER|GFX_BUFFER_FLAG_HAS_HOST_BUFFER;
+	float* host_buffer_data;
+	VULKAN_CALL(ctx->function_table.vkMapMemory(ctx->device.logical,buffer->host.memory,0,data->length*sizeof(float),0,(void**)(&host_buffer_data)));
+	for (sll_array_length_t i=0;i<data->length;i++){
+		sll_object_t elem=sll_operator_cast(data->data[i],sll_static_int[SLL_OBJECT_TYPE_FLOAT]);
+		*host_buffer_data=elem->data.float_;
+		SLL_RELEASE(elem);
+		host_buffer_data++;
+	}
+	ctx->function_table.vkUnmapMemory(ctx->device.logical,buffer->host.memory);
+	VkCommandBuffer command_buffer;
+	VkCommandBufferAllocateInfo command_buffer_allocation_info={
+		VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO,
+		NULL,
+		ctx->command.pool,
+		VK_COMMAND_BUFFER_LEVEL_PRIMARY,
+		1
+	};
+	VULKAN_CALL(ctx->function_table.vkAllocateCommandBuffers(ctx->device.logical,&command_buffer_allocation_info,&command_buffer));
+	VkCommandBufferBeginInfo command_buffer_begin_info={
+		VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO,
+		NULL,
+		0,
+		NULL
+	};
+	VULKAN_CALL(ctx->function_table.vkBeginCommandBuffer(command_buffer,&command_buffer_begin_info));
+	VkBufferCopy buffer_copy={
+		0,
+		0,
+		data->length*sizeof(float)
+	};
+	ctx->function_table.vkCmdCopyBuffer(command_buffer,buffer->host.buffer,buffer->device.buffer,1,&buffer_copy);
+	VULKAN_CALL(ctx->function_table.vkEndCommandBuffer(command_buffer));
+	VkFence fence;
+	VkFenceCreateInfo fence_creation_info={
+		VK_STRUCTURE_TYPE_FENCE_CREATE_INFO,
+		0,
+		0
+	};
+	VULKAN_CALL(ctx->function_table.vkCreateFence(ctx->device.logical,&fence_creation_info,NULL,&fence));
+	VkSubmitInfo submit_info={
+		VK_STRUCTURE_TYPE_SUBMIT_INFO,
+		NULL,
+		0,
+		NULL,
+		NULL,
+		1,
+		&command_buffer,
+		0,
+		NULL
+	};
+	VULKAN_CALL(ctx->function_table.vkQueueSubmit(ctx->command.queue,1,&submit_info,fence));
+	VULKAN_CALL(ctx->function_table.vkWaitForFences(ctx->device.logical,1,&fence,VK_TRUE,UINT64_MAX));
+	ctx->function_table.vkDestroyFence(ctx->device.logical,fence,NULL);
+	ctx->function_table.vkFreeCommandBuffers(ctx->device.logical,ctx->command.pool,1,&command_buffer);
 }

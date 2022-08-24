@@ -55,6 +55,7 @@
 	(~ int_type) TYPE_INDEX
 	(~ int_type) TYPE_UNIFORM
 	(~ int_type) TYPE_VERTEX
+	(~ type_type) gfx_buffer_type
 	(~ func_type) create
 	(~ func_type) delete
 	(~ func_type) hint_update_frequency
@@ -131,6 +132,7 @@
 	TYPE_INDEX
 	TYPE_UNIFORM
 	TYPE_VERTEX
+	gfx_buffer_type
 	create
 	delete
 	hint_update_frequency

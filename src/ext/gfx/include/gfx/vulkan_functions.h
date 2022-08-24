@@ -17,8 +17,10 @@ typedef struct _GFX_VULKAN_FUNCTION_TABLE{
 	PFN_vkAllocateCommandBuffers vkAllocateCommandBuffers;
 	PFN_vkAllocateMemory vkAllocateMemory;
 	PFN_vkBeginCommandBuffer vkBeginCommandBuffer;
+	PFN_vkBindBufferMemory vkBindBufferMemory;
 	PFN_vkBindImageMemory vkBindImageMemory;
 	PFN_vkCmdBeginRenderPass vkCmdBeginRenderPass;
+	PFN_vkCmdCopyBuffer vkCmdCopyBuffer;
 	PFN_vkCmdEndRenderPass vkCmdEndRenderPass;
 	PFN_vkCreateBuffer vkCreateBuffer;
 	PFN_vkCreateCommandPool vkCreateCommandPool;
@@ -51,8 +53,10 @@ typedef struct _GFX_VULKAN_FUNCTION_TABLE{
 	PFN_vkDeviceWaitIdle vkDeviceWaitIdle;
 	PFN_vkEndCommandBuffer vkEndCommandBuffer;
 	PFN_vkEnumeratePhysicalDevices vkEnumeratePhysicalDevices;
+	PFN_vkFreeCommandBuffers vkFreeCommandBuffers;
 	PFN_vkFreeMemory vkFreeMemory;
 	PFN_vkGetDeviceQueue vkGetDeviceQueue;
+	PFN_vkGetBufferMemoryRequirements vkGetBufferMemoryRequirements;
 	PFN_vkGetImageMemoryRequirements vkGetImageMemoryRequirements;
 	PFN_vkGetPhysicalDeviceMemoryProperties vkGetPhysicalDeviceMemoryProperties;
 	PFN_vkGetPhysicalDeviceQueueFamilyProperties vkGetPhysicalDeviceQueueFamilyProperties;
@@ -60,10 +64,12 @@ typedef struct _GFX_VULKAN_FUNCTION_TABLE{
 	PFN_vkGetPhysicalDeviceSurfaceFormatsKHR vkGetPhysicalDeviceSurfaceFormatsKHR;
 	PFN_vkGetPhysicalDeviceSurfaceSupportKHR vkGetPhysicalDeviceSurfaceSupportKHR;
 	PFN_vkGetSwapchainImagesKHR vkGetSwapchainImagesKHR;
+	PFN_vkMapMemory vkMapMemory;
 	PFN_vkQueuePresentKHR vkQueuePresentKHR;
 	PFN_vkQueueSubmit vkQueueSubmit;
 	PFN_vkQueueWaitIdle vkQueueWaitIdle;
 	PFN_vkResetFences vkResetFences;
+	PFN_vkUnmapMemory vkUnmapMemory;
 	PFN_vkWaitForFences vkWaitForFences;
 } gfx_vulkan_function_table_t;
 

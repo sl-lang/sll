@@ -50,8 +50,10 @@ sll_bool_t _load_vulkan_function_table(VkInstance instance,gfx_vulkan_function_t
 	LOAD_FUNCTION_TABLE(vkAllocateCommandBuffers);
 	LOAD_FUNCTION_TABLE(vkAllocateMemory);
 	LOAD_FUNCTION_TABLE(vkBeginCommandBuffer);
+	LOAD_FUNCTION_TABLE(vkBindBufferMemory);
 	LOAD_FUNCTION_TABLE(vkBindImageMemory);
 	LOAD_FUNCTION_TABLE(vkCmdBeginRenderPass);
+	LOAD_FUNCTION_TABLE(vkCmdCopyBuffer);
 	LOAD_FUNCTION_TABLE(vkCmdEndRenderPass);
 	LOAD_FUNCTION_TABLE(vkCreateBuffer);
 	LOAD_FUNCTION_TABLE(vkCreateCommandPool);
@@ -84,8 +86,10 @@ sll_bool_t _load_vulkan_function_table(VkInstance instance,gfx_vulkan_function_t
 	LOAD_FUNCTION_TABLE(vkDeviceWaitIdle);
 	LOAD_FUNCTION_TABLE(vkEndCommandBuffer);
 	LOAD_FUNCTION_TABLE(vkEnumeratePhysicalDevices);
+	LOAD_FUNCTION_TABLE(vkFreeCommandBuffers);
 	LOAD_FUNCTION_TABLE(vkFreeMemory);
 	LOAD_FUNCTION_TABLE(vkGetDeviceQueue);
+	LOAD_FUNCTION_TABLE(vkGetBufferMemoryRequirements);
 	LOAD_FUNCTION_TABLE(vkGetImageMemoryRequirements);
 	LOAD_FUNCTION_TABLE(vkGetPhysicalDeviceMemoryProperties);
 	LOAD_FUNCTION_TABLE(vkGetPhysicalDeviceQueueFamilyProperties);
@@ -93,10 +97,12 @@ sll_bool_t _load_vulkan_function_table(VkInstance instance,gfx_vulkan_function_t
 	LOAD_FUNCTION_TABLE(vkGetPhysicalDeviceSurfaceFormatsKHR);
 	LOAD_FUNCTION_TABLE(vkGetPhysicalDeviceSurfaceSupportKHR);
 	LOAD_FUNCTION_TABLE(vkGetSwapchainImagesKHR);
+	LOAD_FUNCTION_TABLE(vkMapMemory);
 	LOAD_FUNCTION_TABLE(vkQueuePresentKHR);
 	LOAD_FUNCTION_TABLE(vkQueueSubmit);
 	LOAD_FUNCTION_TABLE(vkQueueWaitIdle);
 	LOAD_FUNCTION_TABLE(vkResetFences);
+	LOAD_FUNCTION_TABLE(vkUnmapMemory);
 	LOAD_FUNCTION_TABLE(vkWaitForFences);
 	return ret;
 }

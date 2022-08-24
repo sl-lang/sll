@@ -33,6 +33,7 @@
 ))
 
 (= gfx_context_module_type (&:
+	(~ type_type) gfx_context_type
 	(~ func_type) create
 	(~ func_type) delete
 	(~ func_type) get
@@ -94,6 +95,7 @@
 
 
 (= gfx:context (. gfx_context_module_type
+	gfx_context_type
 	create
 	delete
 	get

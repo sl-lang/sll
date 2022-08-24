@@ -10,6 +10,7 @@
 	"date.sll"
 	"error.sll"
 	"file.sll"
+	"gfx/buffer.sll"
 	"gfx/color.sll"
 	"gfx/context.sll"
 	"gfx/vulkan.sll"
@@ -763,10 +764,18 @@ abc` '\n')
 		window_manager:keyboard$KEY_ESCAPE (<- window_manager:window$destroy window)
 	)
 ))
+(= verticies (<- gfx:buffer$create ctx gfx:buffer$TYPE_VERTEX))
+(= verticies$data [
+	1 1 0 1 0 0
+	-1 1 0 0 1 0
+	0 -1 0 0 0 1
+])
+(<- gfx:buffer$sync verticies)
 (= hue 0)
 (= xy (. window_manager:cursor$window_manager_cursor_position_type 0 0))
 (= last (<- time$time))
 (= LOOP_TIME 4)
+(:> verticies '\n')
 (-> nil (! (& window$flags window_manager:window$FLAG_CLOSED))
 	(= current (<- time$time))
 	(= delta (- current last))
