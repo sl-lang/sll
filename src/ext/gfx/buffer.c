@@ -149,7 +149,7 @@ __GFX_API_CALL void gfx_api_buffer_sync(gfx_context_t ctx_id,gfx_buffer_t buffer
 	VULKAN_CALL(ctx->function_table.vkMapMemory(ctx->device.logical,buffer->host.memory,0,data->length*sizeof(float),0,(void**)(&host_buffer_data)));
 	for (sll_array_length_t i=0;i<data->length;i++){
 		sll_object_t elem=sll_operator_cast(data->data[i],sll_static_int[SLL_OBJECT_TYPE_FLOAT]);
-		*host_buffer_data=elem->data.float_;
+		*host_buffer_data=(float)(elem->data.float_);
 		SLL_RELEASE(elem);
 		host_buffer_data++;
 	}
