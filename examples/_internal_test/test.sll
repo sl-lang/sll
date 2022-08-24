@@ -772,8 +772,6 @@ abc` '\n')
 (= indicies (<- gfx:buffer$create ctx gfx:buffer$TYPE_INDEX [
 	0 1 2
 ]))
-(:> verticies '\n')
-(:> indicies '\n')
 (= hue 0)
 (= xy (. window_manager:cursor$window_manager_cursor_position_type 0 0))
 (= last (<- time$time))
@@ -793,6 +791,8 @@ abc` '\n')
 	(<- gfx:context$render ctx)
 )
 (:> ctx '\n')
+(:> verticies '\n')
+(:> indicies '\n')
 (:> window '\n')
 
 

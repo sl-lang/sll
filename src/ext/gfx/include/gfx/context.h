@@ -15,6 +15,7 @@
 typedef struct _GFX_CONTEXT_BUFFER_TRANSFER_DATA{
 	VkCommandBuffer command_buffer;
 	VkFence fence;
+	sll_bool_t has_data;
 } gfx_context_buffer_transfer_data_t;
 
 

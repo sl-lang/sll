@@ -192,6 +192,16 @@ static void _create_swapchain(gfx_context_data_t* ctx){
 
 
 static void _begin_frame(gfx_context_data_t* ctx){
+	if (ctx->buffer_transfer.has_data){
+		VkCommandBufferBeginInfo command_buffer_begin_info={
+			VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO,
+			NULL,
+			0,
+			NULL
+		};
+		VULKAN_CALL(ctx->function_table.vkBeginCommandBuffer(ctx->buffer_transfer.command_buffer,&command_buffer_begin_info));
+		ctx->buffer_transfer.has_data=0;
+	}
 	VkResult err=ctx->function_table.vkAcquireNextImageKHR(ctx->device.logical,ctx->swapchain.handle,UINT64_MAX,ctx->sync.present_semaphore,NULL,&(ctx->frame.image_index));
 	if (err!=VK_SUBOPTIMAL_KHR){
 		VULKAN_CALL(err);
@@ -248,6 +258,23 @@ static void _begin_frame(gfx_context_data_t* ctx){
 
 
 static void _end_frame(gfx_context_data_t* ctx){
+	if (ctx->buffer_transfer.has_data){
+		VULKAN_CALL(ctx->function_table.vkEndCommandBuffer(ctx->buffer_transfer.command_buffer));
+		VkSubmitInfo submit_info={
+			VK_STRUCTURE_TYPE_SUBMIT_INFO,
+			NULL,
+			0,
+			NULL,
+			NULL,
+			1,
+			&(ctx->buffer_transfer.command_buffer),
+			0,
+			NULL
+		};
+		VULKAN_CALL(ctx->function_table.vkQueueSubmit(ctx->command.queue,1,&submit_info,ctx->buffer_transfer.fence));
+		VULKAN_CALL(ctx->function_table.vkWaitForFences(ctx->device.logical,1,&(ctx->buffer_transfer.fence),VK_TRUE,UINT64_MAX));
+		VULKAN_CALL(ctx->function_table.vkResetFences(ctx->device.logical,1,&(ctx->buffer_transfer.fence)));
+	}
 	ctx->function_table.vkCmdEndRenderPass(ctx->frame.command_buffer);
 	VULKAN_CALL(ctx->function_table.vkEndCommandBuffer(ctx->frame.command_buffer));
 	VkPipelineStageFlags wait_flags=VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
@@ -562,6 +589,7 @@ __GFX_API_CALL gfx_context_t gfx_api_context_create(void* handle,void* extra_dat
 		0
 	};
 	VULKAN_CALL(ctx->function_table.vkCreateFence(ctx->device.logical,&fence_creation_info,NULL,&(ctx->buffer_transfer.fence)));
+	ctx->buffer_transfer.has_data=1;
 	_begin_frame(ctx);
 	SLL_HANDLE_CONTAINER_INIT(&(ctx->buffers));
 	SLL_HANDLE_CONTAINER_INIT(&(ctx->shaders));
