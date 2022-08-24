@@ -20,6 +20,7 @@ typedef struct _GFX_VULKAN_FUNCTION_TABLE{
 	PFN_vkBindImageMemory vkBindImageMemory;
 	PFN_vkCmdBeginRenderPass vkCmdBeginRenderPass;
 	PFN_vkCmdEndRenderPass vkCmdEndRenderPass;
+	PFN_vkCreateBuffer vkCreateBuffer;
 	PFN_vkCreateCommandPool vkCreateCommandPool;
 	PFN_vkCreateDebugUtilsMessengerEXT vkCreateDebugUtilsMessengerEXT;
 	PFN_vkCreateDevice vkCreateDevice;
@@ -32,6 +33,7 @@ typedef struct _GFX_VULKAN_FUNCTION_TABLE{
 	PFN_vkCreateSemaphore vkCreateSemaphore;
 	PFN_vkCreateShaderModule vkCreateShaderModule;
 	PFN_vkCreateSwapchainKHR vkCreateSwapchainKHR;
+	PFN_vkDestroyBuffer vkDestroyBuffer;
 	PFN_vkDestroyCommandPool vkDestroyCommandPool;
 	PFN_vkDestroyDebugUtilsMessengerEXT vkDestroyDebugUtilsMessengerEXT;
 	PFN_vkDestroyDevice vkDestroyDevice;

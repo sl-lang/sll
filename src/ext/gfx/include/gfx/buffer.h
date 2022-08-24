@@ -17,7 +17,7 @@
 #define GFX_BUFFER_UPDATE_FREQUENCY_HINT_MEDIUM 2
 #define GFX_BUFFER_UPDATE_FREQUENCY_HINT_HIGH 3
 
-#define GFX_BUFFER_FLAG_HAS_BUFFER 1
+#define GFX_BUFFER_FLAG_HAS_DEVICE_BUFFER 1
 #define GFX_BUFFER_FLAG_HAS_HOST_BUFFER 2
 
 
@@ -34,14 +34,21 @@ typedef uint8_t gfx_buffer_flags_t;
 
 
 
+typedef struct _GFX_VULKAN_BUFFER_DATA{
+	VkBuffer buffer;
+	VkDeviceMemory memory;
+} gfx_vulkan_buffer_data_t;
+
+
+
 typedef struct _GFX_BUFFER_DATA{
 	gfx_buffer_type_t type;
 	gfx_buffer_update_frequency_hint_t update_frequency_hint;
 	gfx_buffer_flags_t flags;
-	VkBuffer handle;
-	VkDeviceMemory memory;
-	VkBuffer host_buffer;
-	VkDeviceMemory host_memory;
+	VkBufferUsageFlagBits usage;
+	gfx_vulkan_buffer_data_t device;
+	gfx_vulkan_buffer_data_t host;
+	sll_array_length_t last_size;
 } gfx_buffer_data_t;
 
 
