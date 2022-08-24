@@ -769,11 +769,15 @@ abc` '\n')
 	-1 1 0 0 1 0
 	0 -1 0 0 0 1
 ]))
+(= indicies (<- gfx:buffer$create ctx gfx:buffer$TYPE_INDEX [
+	0 1 2
+]))
 (= hue 0)
 (= xy (. window_manager:cursor$window_manager_cursor_position_type 0 0))
 (= last (<- time$time))
 (= LOOP_TIME 4)
 (:> verticies '\n')
+(:> indicies '\n')
 (-> nil (! (& window$flags window_manager:window$FLAG_CLOSED))
 	(= current (<- time$time))
 	(= delta (- current last))
