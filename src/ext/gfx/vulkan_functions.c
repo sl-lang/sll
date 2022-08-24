@@ -86,6 +86,7 @@ sll_bool_t _load_vulkan_function_table(VkInstance instance,gfx_vulkan_function_t
 	LOAD_FUNCTION_TABLE(vkDeviceWaitIdle);
 	LOAD_FUNCTION_TABLE(vkEndCommandBuffer);
 	LOAD_FUNCTION_TABLE(vkEnumeratePhysicalDevices);
+	LOAD_FUNCTION_TABLE(vkFlushMappedMemoryRanges);
 	LOAD_FUNCTION_TABLE(vkFreeCommandBuffers);
 	LOAD_FUNCTION_TABLE(vkFreeMemory);
 	LOAD_FUNCTION_TABLE(vkGetDeviceQueue);

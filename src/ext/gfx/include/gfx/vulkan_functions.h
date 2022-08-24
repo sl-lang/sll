@@ -53,6 +53,7 @@ typedef struct _GFX_VULKAN_FUNCTION_TABLE{
 	PFN_vkDeviceWaitIdle vkDeviceWaitIdle;
 	PFN_vkEndCommandBuffer vkEndCommandBuffer;
 	PFN_vkEnumeratePhysicalDevices vkEnumeratePhysicalDevices;
+	PFN_vkFlushMappedMemoryRanges vkFlushMappedMemoryRanges;
 	PFN_vkFreeCommandBuffers vkFreeCommandBuffers;
 	PFN_vkFreeMemory vkFreeMemory;
 	PFN_vkGetDeviceQueue vkGetDeviceQueue;

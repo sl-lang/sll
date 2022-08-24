@@ -139,7 +139,7 @@ __GFX_API_CALL void gfx_api_buffer_sync(gfx_context_t ctx_id,gfx_buffer_t buffer
 			VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO,
 			NULL,
 			memory_requirements.size,
-			_get_memory_type(ctx,memory_requirements.memoryTypeBits,VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT|VK_MEMORY_PROPERTY_HOST_COHERENT_BIT)
+			_get_memory_type(ctx,memory_requirements.memoryTypeBits,VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT)
 		};
 		VULKAN_CALL(ctx->function_table.vkAllocateMemory(ctx->device.logical,&memory_allocation_info,NULL,&(buffer->host.memory)));
 		VULKAN_CALL(ctx->function_table.vkBindBufferMemory(ctx->device.logical,buffer->host.buffer,buffer->host.memory,0));
@@ -153,6 +153,14 @@ __GFX_API_CALL void gfx_api_buffer_sync(gfx_context_t ctx_id,gfx_buffer_t buffer
 		SLL_RELEASE(elem);
 		host_buffer_data++;
 	}
+	VkMappedMemoryRange mapped_memory_range={
+		VK_STRUCTURE_TYPE_MAPPED_MEMORY_RANGE,
+		NULL,
+		buffer->host.memory,
+		0,
+		data->length*sizeof(float)
+	};
+	VULKAN_CALL(ctx->function_table.vkFlushMappedMemoryRanges(ctx->device.logical,1,&mapped_memory_range));
 	ctx->function_table.vkUnmapMemory(ctx->device.logical,buffer->host.memory);
 	VkBufferCopy buffer_copy={
 		0,
