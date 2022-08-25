@@ -4,6 +4,7 @@
 #include <gfx/shader.h>
 #include <gfx/vulkan.h>
 #include <sll.h>
+#include <stdint.h>
 #include <vulkan/vulkan.h>
 
 
@@ -46,9 +47,9 @@ __GFX_API_CALL gfx_pipeline_t gfx_api_pipeline_create(gfx_context_t ctx_id,gfx_p
 			SLL_WARN("Should never happen!");
 			continue;
 		}
-		(vertex_input_attributes+i)->binding=input_attribute->data.array.data[0]->data.int_;
-		(vertex_input_attributes+i)->location=input_attribute->data.array.data[1]->data.int_;
-		(vertex_input_attributes+i)->offset=input_attribute->data.array.data[2]->data.int_;
+		(vertex_input_attributes+i)->binding=(uint32_t)(input_attribute->data.array.data[0]->data.int_);
+		(vertex_input_attributes+i)->location=(uint32_t)(input_attribute->data.array.data[1]->data.int_);
+		(vertex_input_attributes+i)->offset=(uint32_t)(input_attribute->data.array.data[2]->data.int_);
 		if (input_attribute->data.array.data[3]->data.int_==GFX_INPUT_TYPE_R){
 			(vertex_input_attributes+i)->format=VK_FORMAT_R32_SFLOAT;
 		}
