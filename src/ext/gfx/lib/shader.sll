@@ -64,6 +64,7 @@
 	(? (! ctx) (@@ nil))
 	(= ctx (:: ctx gfx:context$gfx_context_type))
 	(= type (:: type int_type))
+	(:> [] '\n')
 	(? (||
 		(< type TYPE_VERTEX)
 		(> type TYPE_FRAGMENT)

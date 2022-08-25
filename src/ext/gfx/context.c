@@ -257,8 +257,8 @@ static void _begin_frame(gfx_context_data_t* ctx){
 	VkViewport viewport={
 		0,
 		0,
-		ctx->surface.width,
-		ctx->surface.height,
+		(float)(ctx->surface.width),
+		(float)(ctx->surface.height),
 		0,
 		1
 	};

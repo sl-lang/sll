@@ -799,6 +799,20 @@ abc` '\n')
 		gfx:pipeline$FRONT_FACE_COUNTER_CLOCKWISE
 		0
 	]
+	[
+		(<- gfx:shader$create
+			ctx
+			"bytecode"
+			gfx:shader$TYPE_VERTEX
+			"main"
+		)
+		(<- gfx:shader$create
+			ctx
+			"bytecode"
+			gfx:shader$TYPE_FRAGMENT
+			"main"
+		)
+	]
 )))
 (= verticies (<- gfx:buffer$create ctx gfx:buffer$TYPE_VERTEX gfx:buffer$DATA_TYPE_FLOAT [
 	1 1 0 1 0 0

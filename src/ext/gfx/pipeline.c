@@ -1,6 +1,7 @@
 #include <gfx/common.h>
 #include <gfx/context.h>
 #include <gfx/pipeline.h>
+#include <gfx/shader.h>
 #include <gfx/vulkan.h>
 #include <sll.h>
 #include <vulkan/vulkan.h>
@@ -20,6 +21,233 @@ __GFX_API_CALL gfx_pipeline_t gfx_api_pipeline_create(gfx_context_t ctx_id,gfx_p
 		return 0;
 	}
 	gfx_pipeline_data_t* pipeline=sll_allocate(sizeof(gfx_pipeline_data_t));
+	VkPipelineShaderStageCreateInfo* shader_stages=sll_allocate_stack(shaders->length*sizeof(VkPipelineShaderStageCreateInfo));
+	for (sll_array_length_t i=0;i<shaders->length;i++){
+		sll_object_t elem=shaders->data[i];
+		if (elem->type!=SLL_OBJECT_TYPE_INT){
+			continue;
+		}
+		gfx_shader_data_t* shader=SLL_HANDLE_CONTAINER_GET(&(ctx->shaders),elem->data.int_);
+		if (!shader){
+			SLL_WARN("Should never happen!");
+			continue;
+		}
+		*(shader_stages+i)=shader->pipeline_shader_creation_info;
+	}
+	// VkVertexInputBindingDescription vertexInputBinding = {};
+	// vertexInputBinding.binding = 0;
+	// vertexInputBinding.stride = sizeof(Vertex);
+	// vertexInputBinding.inputRate = VK_VERTEX_INPUT_RATE_VERTEX;
+	// // Input attribute bindings describe shader attribute locations and memory layouts
+	// std::array<VkVertexInputAttributeDescription, 2> vertexInputAttributs;
+	// // These match the following shader layout (see triangle.vert):
+	// //	layout (location = 0) in vec3 inPos;
+	// //	layout (location = 1) in vec3 inColor;
+	// // Attribute location 0: Position
+	// vertexInputAttributs[0].binding = 0;
+	// vertexInputAttributs[0].location = 0;
+	// // Position attribute is three 32 bit signed (SFLOAT) floats (R32 G32 B32)
+	// vertexInputAttributs[0].format = VK_FORMAT_R32G32B32_SFLOAT;
+	// vertexInputAttributs[0].offset = offsetof(Vertex, position);
+	// // Attribute location 1: Color
+	// vertexInputAttributs[1].binding = 0;
+	// vertexInputAttributs[1].location = 1;
+	// // Color attribute is three 32 bit signed (SFLOAT) floats (R32 G32 B32)
+	// vertexInputAttributs[1].format = VK_FORMAT_R32G32B32_SFLOAT;
+	// vertexInputAttributs[1].offset = offsetof(Vertex, color);
+
+	// // Vertex input state used for pipeline creation
+	// VkPipelineVertexInputStateCreateInfo vertexInputState = {};
+	// vertexInputState.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
+	// vertexInputState.vertexBindingDescriptionCount = 1;
+	// vertexInputState.pVertexBindingDescriptions = &vertexInputBinding;
+	// vertexInputState.vertexAttributeDescriptionCount = 2;
+	// vertexInputState.pVertexAttributeDescriptions = vertexInputAttributs.data();
+	VkPipelineVertexInputStateCreateInfo vertex_input_state={
+		VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO,
+		NULL,
+		0
+	};
+	VkPrimitiveTopology input_assembler_topology=VK_PRIMITIVE_TOPOLOGY_POINT_LIST;
+	if (topology==GFX_TOPOLOGY_LINE_LIST){
+		input_assembler_topology=VK_PRIMITIVE_TOPOLOGY_LINE_LIST;
+	}
+	else if (topology==GFX_TOPOLOGY_LINE_STRIP){
+		input_assembler_topology=VK_PRIMITIVE_TOPOLOGY_LINE_STRIP;
+	}
+	else if (topology==GFX_TOPOLOGY_TRIANGLE_LIST){
+		input_assembler_topology=VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
+	}
+	else if (topology==GFX_TOPOLOGY_TRIANGLE_STRIP){
+		input_assembler_topology=VK_PRIMITIVE_TOPOLOGY_TRIANGLE_STRIP;
+	}
+	else if (topology==GFX_TOPOLOGY_TRIANGLE_FAN){
+		input_assembler_topology=VK_PRIMITIVE_TOPOLOGY_TRIANGLE_FAN;
+	}
+	else if (topology==GFX_TOPOLOGY_LINE_LIST_WITH_ADJACENCY){
+		input_assembler_topology=VK_PRIMITIVE_TOPOLOGY_LINE_LIST_WITH_ADJACENCY;
+	}
+	else if (topology==GFX_TOPOLOGY_LINE_STRIP_WITH_ADJACENCY){
+		input_assembler_topology=VK_PRIMITIVE_TOPOLOGY_LINE_STRIP_WITH_ADJACENCY;
+	}
+	else if (topology==GFX_TOPOLOGY_TRIANGLE_LIST_WITH_ADJACENCY){
+		input_assembler_topology=VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST_WITH_ADJACENCY;
+	}
+	else if (topology==GFX_TOPOLOGY_TRIANGLE_STRIP_WITH_ADJACENCY){
+		input_assembler_topology=VK_PRIMITIVE_TOPOLOGY_TRIANGLE_STRIP_WITH_ADJACENCY;
+	}
+	else if (topology==GFX_TOPOLOGY_PATCH_LIST){
+		input_assembler_topology=VK_PRIMITIVE_TOPOLOGY_PATCH_LIST;
+	}
+	VkPipelineInputAssemblyStateCreateInfo input_assembly_state={
+		VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO,
+		NULL,
+		0,
+		input_assembler_topology,
+		VK_FALSE
+	};
+	VkPipelineViewportStateCreateInfo viewport_state={
+		VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_STATE_CREATE_INFO,
+		NULL,
+		0,
+		1,
+		NULL,
+		1,
+		NULL
+	};
+	VkPolygonMode rasterization_polygon_mode=VK_POLYGON_MODE_POINT;
+	if (polygon_mode==GFX_POLYGON_MODE_LINE){
+		rasterization_polygon_mode=VK_POLYGON_MODE_LINE;
+	}
+	else if (polygon_mode==GFX_POLYGON_MODE_FILL){
+		rasterization_polygon_mode=VK_POLYGON_MODE_FILL;
+	}
+	VkPipelineRasterizationStateCreateInfo rasterization_state={
+		VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_CREATE_INFO,
+		NULL,
+		0,
+		VK_FALSE,
+		VK_FALSE,
+		rasterization_polygon_mode,
+		((cull_mode&GFX_CULL_MODE_FRONT)?VK_CULL_MODE_FRONT_BIT:0)|((cull_mode&GFX_CULL_MODE_BACK)?VK_CULL_MODE_BACK_BIT:0),
+		(front_face==GFX_FRONT_FACE_CLOCKWISE?VK_FRONT_FACE_CLOCKWISE:VK_FRONT_FACE_COUNTER_CLOCKWISE),
+		VK_FALSE,
+		0,
+		0,
+		0,
+		1.0f
+	};
+	VkPipelineMultisampleStateCreateInfo multisample_state={
+		VK_STRUCTURE_TYPE_PIPELINE_MULTISAMPLE_STATE_CREATE_INFO,
+		NULL,
+		0,
+		VK_SAMPLE_COUNT_1_BIT,
+		VK_FALSE,
+		0,
+		NULL,
+		VK_FALSE,
+		VK_FALSE
+	};
+	VkPipelineDepthStencilStateCreateInfo depth_stencil_state={
+		VK_STRUCTURE_TYPE_PIPELINE_DEPTH_STENCIL_STATE_CREATE_INFO,
+		NULL,
+		0,
+		VK_TRUE,
+		VK_TRUE,
+		VK_COMPARE_OP_LESS_OR_EQUAL,
+		VK_FALSE,
+		VK_FALSE,
+		{
+			VK_STENCIL_OP_KEEP,
+			VK_STENCIL_OP_KEEP,
+			VK_STENCIL_OP_KEEP,
+			VK_COMPARE_OP_ALWAYS,
+			0,
+			0,
+			0
+		},
+		{
+			VK_STENCIL_OP_KEEP,
+			VK_STENCIL_OP_KEEP,
+			VK_STENCIL_OP_KEEP,
+			VK_COMPARE_OP_ALWAYS,
+			0,
+			0,
+			0
+		},
+		0,
+		0
+	};
+	VkPipelineColorBlendAttachmentState color_blend_attachment_state={
+		VK_FALSE,
+		VK_BLEND_FACTOR_ZERO,
+		VK_BLEND_FACTOR_ZERO,
+		VK_BLEND_OP_ADD,
+		VK_BLEND_FACTOR_ZERO,
+		VK_BLEND_FACTOR_ZERO,
+		VK_BLEND_OP_ADD,
+		0x0f
+	};
+	VkPipelineColorBlendStateCreateInfo color_blend_state={
+		VK_STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_STATE_CREATE_INFO,
+		NULL,
+		0,
+		VK_FALSE,
+		VK_LOGIC_OP_OR,
+		1,
+		&color_blend_attachment_state,
+		{
+			0,
+			0,
+			0,
+			0
+		}
+	};
+	VkDynamicState dynamic_states[2]={
+		VK_DYNAMIC_STATE_VIEWPORT,
+		VK_DYNAMIC_STATE_SCISSOR
+	};
+	VkPipelineDynamicStateCreateInfo dynamic_state={
+		VK_STRUCTURE_TYPE_PIPELINE_DYNAMIC_STATE_CREATE_INFO,
+		NULL,
+		0,
+		2,
+		dynamic_states
+	};
+	VkPipelineLayout pipeline_layout;
+	VkPipelineLayoutCreateInfo pipeline_layout_creation_info={
+		VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO,
+		NULL,
+		0,
+		0,
+		NULL,
+		0,
+		NULL
+	};
+	VULKAN_CALL(ctx->function_table.vkCreatePipelineLayout(ctx->device.logical,&pipeline_layout_creation_info,NULL,&pipeline_layout));
+	VkGraphicsPipelineCreateInfo pipeline_create_info={
+		VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO,
+		NULL,
+		0,
+		shaders->length,
+		shader_stages,
+		&vertex_input_state,
+		&input_assembly_state,
+		NULL,
+		&viewport_state,
+		&rasterization_state,
+		&multisample_state,
+		&depth_stencil_state,
+		&color_blend_state,
+		&dynamic_state,
+		pipeline_layout,
+		ctx->pipeline.render_pass,
+		0,
+		NULL,
+		0
+	};
+	VULKAN_CALL(ctx->function_table.vkCreateGraphicsPipelines(ctx->device.logical,ctx->pipeline.cache,1,&pipeline_create_info,NULL,&(pipeline->handle)));
+	sll_deallocate(shader_stages);
 	gfx_pipeline_t out;
 	SLL_HANDLE_CONTAINER_ALLOC(&(ctx->pipelines),&out);
 	*(ctx->pipelines.data+out)=pipeline;

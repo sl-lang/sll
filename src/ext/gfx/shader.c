@@ -23,7 +23,7 @@ __GFX_API_CALL gfx_shader_t gfx_api_shader_create(gfx_context_t ctx_id,const sll
 		VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO,
 		NULL,
 		0,
-		bytecode->length>>2,
+		bytecode->length,
 		(const uint32_t*)(bytecode->data)
 	};
 	gfx_shader_data_t* shader=sll_allocate(sizeof(gfx_shader_data_t));
