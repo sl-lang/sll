@@ -61,41 +61,140 @@ __GFX_API_CALL gfx_pipeline_t gfx_api_pipeline_create(gfx_context_t ctx_id,gfx_p
 		(vertex_input_attributes+i)->binding=(uint32_t)(input_attribute->data.array.data[0]->data.int_);
 		(vertex_input_attributes+i)->location=(uint32_t)(input_attribute->data.array.data[1]->data.int_);
 		(vertex_input_attributes+i)->offset=(uint32_t)(input_attribute->data.array.data[2]->data.int_);
-		if (input_attribute->data.array.data[3]->data.int_==GFX_INPUT_TYPE_FLOAT_1){
-			(vertex_input_attributes+i)->format=VK_FORMAT_R32_SFLOAT;
+		if ((input_attribute->data.array.data[3]->data.int_&(GFX_INPUT_SIZE_MASK|GFX_INPUT_TYPE_MASK))==(GFX_INPUT_SIZE_8BIT|GFX_INPUT_TYPE_FLOAT)){
+			SLL_WARN("Invalid combination of data type and size: float8");
 		}
-		else if (input_attribute->data.array.data[3]->data.int_==GFX_INPUT_TYPE_FLOAT_2){
-			(vertex_input_attributes+i)->format=VK_FORMAT_R32G32_SFLOAT;
+		else if (input_attribute->data.array.data[3]->data.int_==(GFX_INPUT_SIZE_8BIT|GFX_INPUT_COUNT_1|GFX_INPUT_TYPE_UINT)){
+			(vertex_input_attributes+i)->format=VK_FORMAT_R8_UINT;
 		}
-		else if (input_attribute->data.array.data[3]->data.int_==GFX_INPUT_TYPE_FLOAT_3){
-			(vertex_input_attributes+i)->format=VK_FORMAT_R32G32B32_SFLOAT;
+		else if (input_attribute->data.array.data[3]->data.int_==(GFX_INPUT_SIZE_8BIT|GFX_INPUT_COUNT_1|GFX_INPUT_TYPE_SINT)){
+			(vertex_input_attributes+i)->format=VK_FORMAT_R8_SINT;
 		}
-		else if (input_attribute->data.array.data[3]->data.int_==GFX_INPUT_TYPE_FLOAT_4){
-			(vertex_input_attributes+i)->format=VK_FORMAT_R32G32B32A32_SFLOAT;
+		else if (input_attribute->data.array.data[3]->data.int_==(GFX_INPUT_SIZE_8BIT|GFX_INPUT_COUNT_2|GFX_INPUT_TYPE_UINT)){
+			(vertex_input_attributes+i)->format=VK_FORMAT_R8G8_UINT;
 		}
-		else if (input_attribute->data.array.data[3]->data.int_==GFX_INPUT_TYPE_UINT_1){
+		else if (input_attribute->data.array.data[3]->data.int_==(GFX_INPUT_SIZE_8BIT|GFX_INPUT_COUNT_2|GFX_INPUT_TYPE_SINT)){
+			(vertex_input_attributes+i)->format=VK_FORMAT_R8G8_SINT;
+		}
+		else if (input_attribute->data.array.data[3]->data.int_==(GFX_INPUT_SIZE_8BIT|GFX_INPUT_COUNT_3|GFX_INPUT_TYPE_UINT)){
+			(vertex_input_attributes+i)->format=VK_FORMAT_R8G8B8_UINT;
+		}
+		else if (input_attribute->data.array.data[3]->data.int_==(GFX_INPUT_SIZE_8BIT|GFX_INPUT_COUNT_3|GFX_INPUT_TYPE_SINT)){
+			(vertex_input_attributes+i)->format=VK_FORMAT_R8G8B8_SINT;
+		}
+		else if (input_attribute->data.array.data[3]->data.int_==(GFX_INPUT_SIZE_8BIT|GFX_INPUT_COUNT_4|GFX_INPUT_TYPE_UINT)){
+			(vertex_input_attributes+i)->format=VK_FORMAT_R8G8B8A8_UINT;
+		}
+		else if (input_attribute->data.array.data[3]->data.int_==(GFX_INPUT_SIZE_8BIT|GFX_INPUT_COUNT_4|GFX_INPUT_TYPE_SINT)){
+			(vertex_input_attributes+i)->format=VK_FORMAT_R8G8B8A8_SINT;
+		}
+		else if (input_attribute->data.array.data[3]->data.int_==(GFX_INPUT_SIZE_16BIT|GFX_INPUT_COUNT_1|GFX_INPUT_TYPE_UINT)){
+			(vertex_input_attributes+i)->format=VK_FORMAT_R16_UINT;
+		}
+		else if (input_attribute->data.array.data[3]->data.int_==(GFX_INPUT_SIZE_16BIT|GFX_INPUT_COUNT_1|GFX_INPUT_TYPE_SINT)){
+			(vertex_input_attributes+i)->format=VK_FORMAT_R16_SINT;
+		}
+		else if (input_attribute->data.array.data[3]->data.int_==(GFX_INPUT_SIZE_16BIT|GFX_INPUT_COUNT_1|GFX_INPUT_TYPE_FLOAT)){
+			(vertex_input_attributes+i)->format=VK_FORMAT_R16_SFLOAT;
+		}
+		else if (input_attribute->data.array.data[3]->data.int_==(GFX_INPUT_SIZE_16BIT|GFX_INPUT_COUNT_2|GFX_INPUT_TYPE_UINT)){
+			(vertex_input_attributes+i)->format=VK_FORMAT_R16G16_UINT;
+		}
+		else if (input_attribute->data.array.data[3]->data.int_==(GFX_INPUT_SIZE_16BIT|GFX_INPUT_COUNT_2|GFX_INPUT_TYPE_SINT)){
+			(vertex_input_attributes+i)->format=VK_FORMAT_R16G16_SINT;
+		}
+		else if (input_attribute->data.array.data[3]->data.int_==(GFX_INPUT_SIZE_16BIT|GFX_INPUT_COUNT_2|GFX_INPUT_TYPE_FLOAT)){
+			(vertex_input_attributes+i)->format=VK_FORMAT_R16G16_SFLOAT;
+		}
+		else if (input_attribute->data.array.data[3]->data.int_==(GFX_INPUT_SIZE_16BIT|GFX_INPUT_COUNT_3|GFX_INPUT_TYPE_UINT)){
+			(vertex_input_attributes+i)->format=VK_FORMAT_R16G16B16_UINT;
+		}
+		else if (input_attribute->data.array.data[3]->data.int_==(GFX_INPUT_SIZE_16BIT|GFX_INPUT_COUNT_3|GFX_INPUT_TYPE_SINT)){
+			(vertex_input_attributes+i)->format=VK_FORMAT_R16G16B16_SINT;
+		}
+		else if (input_attribute->data.array.data[3]->data.int_==(GFX_INPUT_SIZE_16BIT|GFX_INPUT_COUNT_3|GFX_INPUT_TYPE_FLOAT)){
+			(vertex_input_attributes+i)->format=VK_FORMAT_R16G16B16_SFLOAT;
+		}
+		else if (input_attribute->data.array.data[3]->data.int_==(GFX_INPUT_SIZE_16BIT|GFX_INPUT_COUNT_4|GFX_INPUT_TYPE_UINT)){
+			(vertex_input_attributes+i)->format=VK_FORMAT_R16G16B16A16_UINT;
+		}
+		else if (input_attribute->data.array.data[3]->data.int_==(GFX_INPUT_SIZE_16BIT|GFX_INPUT_COUNT_4|GFX_INPUT_TYPE_SINT)){
+			(vertex_input_attributes+i)->format=VK_FORMAT_R16G16B16A16_SINT;
+		}
+		else if (input_attribute->data.array.data[3]->data.int_==(GFX_INPUT_SIZE_16BIT|GFX_INPUT_COUNT_4|GFX_INPUT_TYPE_FLOAT)){
+			(vertex_input_attributes+i)->format=VK_FORMAT_R16G16B16A16_SFLOAT;
+		}
+		else if (input_attribute->data.array.data[3]->data.int_==(GFX_INPUT_SIZE_32BIT|GFX_INPUT_COUNT_1|GFX_INPUT_TYPE_UINT)){
 			(vertex_input_attributes+i)->format=VK_FORMAT_R32_UINT;
 		}
-		else if (input_attribute->data.array.data[3]->data.int_==GFX_INPUT_TYPE_UINT_2){
-			(vertex_input_attributes+i)->format=VK_FORMAT_R32G32_UINT;
-		}
-		else if (input_attribute->data.array.data[3]->data.int_==GFX_INPUT_TYPE_UINT_3){
-			(vertex_input_attributes+i)->format=VK_FORMAT_R32G32B32_UINT;
-		}
-		else if (input_attribute->data.array.data[3]->data.int_==GFX_INPUT_TYPE_UINT_4){
-			(vertex_input_attributes+i)->format=VK_FORMAT_R32G32B32A32_UINT;
-		}
-		else if (input_attribute->data.array.data[3]->data.int_==GFX_INPUT_TYPE_SINT_1){
+		else if (input_attribute->data.array.data[3]->data.int_==(GFX_INPUT_SIZE_32BIT|GFX_INPUT_COUNT_1|GFX_INPUT_TYPE_SINT)){
 			(vertex_input_attributes+i)->format=VK_FORMAT_R32_SINT;
 		}
-		else if (input_attribute->data.array.data[3]->data.int_==GFX_INPUT_TYPE_SINT_2){
+		else if (input_attribute->data.array.data[3]->data.int_==(GFX_INPUT_SIZE_32BIT|GFX_INPUT_COUNT_1|GFX_INPUT_TYPE_FLOAT)){
+			(vertex_input_attributes+i)->format=VK_FORMAT_R32_SFLOAT;
+		}
+		else if (input_attribute->data.array.data[3]->data.int_==(GFX_INPUT_SIZE_32BIT|GFX_INPUT_COUNT_2|GFX_INPUT_TYPE_UINT)){
+			(vertex_input_attributes+i)->format=VK_FORMAT_R32G32_UINT;
+		}
+		else if (input_attribute->data.array.data[3]->data.int_==(GFX_INPUT_SIZE_32BIT|GFX_INPUT_COUNT_2|GFX_INPUT_TYPE_SINT)){
 			(vertex_input_attributes+i)->format=VK_FORMAT_R32G32_SINT;
 		}
-		else if (input_attribute->data.array.data[3]->data.int_==GFX_INPUT_TYPE_SINT_3){
+		else if (input_attribute->data.array.data[3]->data.int_==(GFX_INPUT_SIZE_32BIT|GFX_INPUT_COUNT_2|GFX_INPUT_TYPE_FLOAT)){
+			(vertex_input_attributes+i)->format=VK_FORMAT_R32G32_SFLOAT;
+		}
+		else if (input_attribute->data.array.data[3]->data.int_==(GFX_INPUT_SIZE_32BIT|GFX_INPUT_COUNT_3|GFX_INPUT_TYPE_UINT)){
+			(vertex_input_attributes+i)->format=VK_FORMAT_R32G32B32_UINT;
+		}
+		else if (input_attribute->data.array.data[3]->data.int_==(GFX_INPUT_SIZE_32BIT|GFX_INPUT_COUNT_3|GFX_INPUT_TYPE_SINT)){
 			(vertex_input_attributes+i)->format=VK_FORMAT_R32G32B32_SINT;
 		}
-		else{
+		else if (input_attribute->data.array.data[3]->data.int_==(GFX_INPUT_SIZE_32BIT|GFX_INPUT_COUNT_3|GFX_INPUT_TYPE_FLOAT)){
+			(vertex_input_attributes+i)->format=VK_FORMAT_R32G32B32_SFLOAT;
+		}
+		else if (input_attribute->data.array.data[3]->data.int_==(GFX_INPUT_SIZE_32BIT|GFX_INPUT_COUNT_4|GFX_INPUT_TYPE_UINT)){
+			(vertex_input_attributes+i)->format=VK_FORMAT_R32G32B32A32_UINT;
+		}
+		else if (input_attribute->data.array.data[3]->data.int_==(GFX_INPUT_SIZE_32BIT|GFX_INPUT_COUNT_4|GFX_INPUT_TYPE_SINT)){
 			(vertex_input_attributes+i)->format=VK_FORMAT_R32G32B32A32_SINT;
+		}
+		else if (input_attribute->data.array.data[3]->data.int_==(GFX_INPUT_SIZE_32BIT|GFX_INPUT_COUNT_4|GFX_INPUT_TYPE_FLOAT)){
+			(vertex_input_attributes+i)->format=VK_FORMAT_R32G32B32A32_SFLOAT;
+		}
+		else if (input_attribute->data.array.data[3]->data.int_==(GFX_INPUT_SIZE_64BIT|GFX_INPUT_COUNT_1|GFX_INPUT_TYPE_UINT)){
+			(vertex_input_attributes+i)->format=VK_FORMAT_R64_UINT;
+		}
+		else if (input_attribute->data.array.data[3]->data.int_==(GFX_INPUT_SIZE_64BIT|GFX_INPUT_COUNT_1|GFX_INPUT_TYPE_SINT)){
+			(vertex_input_attributes+i)->format=VK_FORMAT_R64_SINT;
+		}
+		else if (input_attribute->data.array.data[3]->data.int_==(GFX_INPUT_SIZE_64BIT|GFX_INPUT_COUNT_1|GFX_INPUT_TYPE_FLOAT)){
+			(vertex_input_attributes+i)->format=VK_FORMAT_R64_SFLOAT;
+		}
+		else if (input_attribute->data.array.data[3]->data.int_==(GFX_INPUT_SIZE_64BIT|GFX_INPUT_COUNT_2|GFX_INPUT_TYPE_UINT)){
+			(vertex_input_attributes+i)->format=VK_FORMAT_R64G64_UINT;
+		}
+		else if (input_attribute->data.array.data[3]->data.int_==(GFX_INPUT_SIZE_64BIT|GFX_INPUT_COUNT_2|GFX_INPUT_TYPE_SINT)){
+			(vertex_input_attributes+i)->format=VK_FORMAT_R64G64_SINT;
+		}
+		else if (input_attribute->data.array.data[3]->data.int_==(GFX_INPUT_SIZE_64BIT|GFX_INPUT_COUNT_2|GFX_INPUT_TYPE_FLOAT)){
+			(vertex_input_attributes+i)->format=VK_FORMAT_R64G64_SFLOAT;
+		}
+		else if (input_attribute->data.array.data[3]->data.int_==(GFX_INPUT_SIZE_64BIT|GFX_INPUT_COUNT_3|GFX_INPUT_TYPE_UINT)){
+			(vertex_input_attributes+i)->format=VK_FORMAT_R64G64B64_UINT;
+		}
+		else if (input_attribute->data.array.data[3]->data.int_==(GFX_INPUT_SIZE_64BIT|GFX_INPUT_COUNT_3|GFX_INPUT_TYPE_SINT)){
+			(vertex_input_attributes+i)->format=VK_FORMAT_R64G64B64_SINT;
+		}
+		else if (input_attribute->data.array.data[3]->data.int_==(GFX_INPUT_SIZE_64BIT|GFX_INPUT_COUNT_3|GFX_INPUT_TYPE_FLOAT)){
+			(vertex_input_attributes+i)->format=VK_FORMAT_R64G64B64_SFLOAT;
+		}
+		else if (input_attribute->data.array.data[3]->data.int_==(GFX_INPUT_SIZE_64BIT|GFX_INPUT_COUNT_4|GFX_INPUT_TYPE_UINT)){
+			(vertex_input_attributes+i)->format=VK_FORMAT_R64G64B64A64_UINT;
+		}
+		else if (input_attribute->data.array.data[3]->data.int_==(GFX_INPUT_SIZE_64BIT|GFX_INPUT_COUNT_4|GFX_INPUT_TYPE_SINT)){
+			(vertex_input_attributes+i)->format=VK_FORMAT_R64G64B64A64_SINT;
+		}
+		else{
+			(vertex_input_attributes+i)->format=VK_FORMAT_R64G64B64A64_SFLOAT;
 		}
 	}
 	VkPipelineVertexInputStateCreateInfo vertex_input_state={

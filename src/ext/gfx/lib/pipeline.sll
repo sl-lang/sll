@@ -10,17 +10,19 @@
 
 
 
-(# delete _topology_map _input_type_map _polygon_mode_map _front_face_map CULL_MODE_FRONT CULL_MODE_BACK)
+(# delete _topology_map _input_type_map _polygon_mode_map _front_face_map CULL_MODE_FRONT CULL_MODE_BACK INPUT_SIZE_MASK INPUT_COUNT_MASK INPUT_TYPE_MASK)
 
 
 
 (= gfx_pipeline_config_vertex_input_attribute_type (&:
 	(,,, data
-		(@@ (<- string$format "<gfx:pipeline_config_vertex_input_attribute binding=%u layout=%u offset=%u type=%s>"
+		(@@ (<- string$format "<gfx:pipeline_config_vertex_input_attribute binding=%u layout=%u offset=%u type=%u x %s%u>"
 			data$binding
 			data$layout
 			data$offset
-			(: _input_type_map data$type)
+			(>> (& data$type INPUT_COUNT_MASK) 2)
+			(: _input_type_map (& data$type INPUT_TYPE_MASK))
+			(<< (<< 1 (& data$type INPUT_SIZE_MASK)) 8)
 		))
 	) @@string@@
 	int_type binding
@@ -95,18 +97,20 @@
 	(~ int_type) CULL_MODE_FRONT
 	(~ int_type) FRONT_FACE_CLOCKWISE
 	(~ int_type) FRONT_FACE_COUNTER_CLOCKWISE
-	(~ int_type) INPUT_TYPE_FLOAT_1
-	(~ int_type) INPUT_TYPE_FLOAT_2
-	(~ int_type) INPUT_TYPE_FLOAT_3
-	(~ int_type) INPUT_TYPE_FLOAT_4
-	(~ int_type) INPUT_TYPE_SINT_1
-	(~ int_type) INPUT_TYPE_SINT_2
-	(~ int_type) INPUT_TYPE_SINT_3
-	(~ int_type) INPUT_TYPE_SINT_4
-	(~ int_type) INPUT_TYPE_UINT_1
-	(~ int_type) INPUT_TYPE_UINT_2
-	(~ int_type) INPUT_TYPE_UINT_3
-	(~ int_type) INPUT_TYPE_UINT_4
+	(~ int_type) INPUT_COUNT_1
+	(~ int_type) INPUT_COUNT_2
+	(~ int_type) INPUT_COUNT_3
+	(~ int_type) INPUT_COUNT_4
+	(~ int_type) INPUT_COUNT_MASK
+	(~ int_type) INPUT_SIZE_16BIT
+	(~ int_type) INPUT_SIZE_32BIT
+	(~ int_type) INPUT_SIZE_64BIT
+	(~ int_type) INPUT_SIZE_8BIT
+	(~ int_type) INPUT_SIZE_MASK
+	(~ int_type) INPUT_TYPE_FLOAT
+	(~ int_type) INPUT_TYPE_MASK
+	(~ int_type) INPUT_TYPE_SINT
+	(~ int_type) INPUT_TYPE_UINT
 	(~ int_type) POLYGON_MODE_FILL
 	(~ int_type) POLYGON_MODE_LINE
 	(~ int_type) POLYGON_MODE_POINT
@@ -143,18 +147,22 @@
 (= TOPOLOGY_TRIANGLE_STRIP_WITH_ADJACENCY 9)
 (= TOPOLOGY_PATCH_LIST 10)
 
-(= INPUT_TYPE_FLOAT_1 0)
-(= INPUT_TYPE_FLOAT_2 1)
-(= INPUT_TYPE_FLOAT_3 2)
-(= INPUT_TYPE_FLOAT_4 3)
-(= INPUT_TYPE_UINT_1 4)
-(= INPUT_TYPE_UINT_2 5)
-(= INPUT_TYPE_UINT_3 6)
-(= INPUT_TYPE_UINT_4 7)
-(= INPUT_TYPE_SINT_1 8)
-(= INPUT_TYPE_SINT_2 9)
-(= INPUT_TYPE_SINT_3 10)
-(= INPUT_TYPE_SINT_4 11)
+(= INPUT_SIZE_8BIT 0)
+(= INPUT_SIZE_16BIT 1)
+(= INPUT_SIZE_32BIT 2)
+(= INPUT_SIZE_64BIT 3)
+(= INPUT_SIZE_MASK 3)
+
+(= INPUT_COUNT_1 0)
+(= INPUT_COUNT_2 4)
+(= INPUT_COUNT_3 8)
+(= INPUT_COUNT_4 12)
+(= INPUT_COUNT_MASK 12)
+
+(= INPUT_TYPE_UINT 0)
+(= INPUT_TYPE_SINT 16)
+(= INPUT_TYPE_FLOAT 32)
+(= INPUT_TYPE_MASK 48)
 
 (= POLYGON_MODE_POINT 0)
 (= POLYGON_MODE_LINE 1)
@@ -181,18 +189,9 @@
 >)
 
 (= _input_type_map <
-	INPUT_TYPE_FLOAT_1 "1 x FLOAT"
-	INPUT_TYPE_FLOAT_2 "2 x FLOAT"
-	INPUT_TYPE_FLOAT_3 "3 x FLOAT"
-	INPUT_TYPE_FLOAT_4 "4 x FLOAT"
-	INPUT_TYPE_UINT_1 "1 x UINT"
-	INPUT_TYPE_UINT_2 "2 x UINT"
-	INPUT_TYPE_UINT_3 "3 x UINT"
-	INPUT_TYPE_UINT_4 "4 x UINT"
-	INPUT_TYPE_SINT_1 "1 x SINT"
-	INPUT_TYPE_SINT_2 "2 x SINT"
-	INPUT_TYPE_SINT_3 "3 x SINT"
-	INPUT_TYPE_SINT_4 "4 x SINT"
+	INPUT_TYPE_FLOAT "float"
+	INPUT_TYPE_UINT "uint"
+	INPUT_TYPE_SINT "sint"
 >)
 
 (= _polygon_mode_map <
@@ -268,18 +267,20 @@
 	CULL_MODE_FRONT
 	FRONT_FACE_CLOCKWISE
 	FRONT_FACE_COUNTER_CLOCKWISE
-	INPUT_TYPE_FLOAT_1
-	INPUT_TYPE_FLOAT_2
-	INPUT_TYPE_FLOAT_3
-	INPUT_TYPE_FLOAT_4
-	INPUT_TYPE_SINT_1
-	INPUT_TYPE_SINT_2
-	INPUT_TYPE_SINT_3
-	INPUT_TYPE_SINT_4
-	INPUT_TYPE_UINT_1
-	INPUT_TYPE_UINT_2
-	INPUT_TYPE_UINT_3
-	INPUT_TYPE_UINT_4
+	INPUT_COUNT_1
+	INPUT_COUNT_2
+	INPUT_COUNT_3
+	INPUT_COUNT_4
+	INPUT_COUNT_MASK
+	INPUT_SIZE_16BIT
+	INPUT_SIZE_32BIT
+	INPUT_SIZE_64BIT
+	INPUT_SIZE_8BIT
+	INPUT_SIZE_MASK
+	INPUT_TYPE_FLOAT
+	INPUT_TYPE_MASK
+	INPUT_TYPE_SINT
+	INPUT_TYPE_UINT
 	POLYGON_MODE_FILL
 	POLYGON_MODE_LINE
 	POLYGON_MODE_POINT
