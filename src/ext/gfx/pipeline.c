@@ -283,5 +283,5 @@ __GFX_API_CALL void gfx_api_pipeline_use(gfx_context_t ctx_id,gfx_pipeline_t pip
 	if (!pipeline){
 		return;
 	}
-	SLL_WARN("Unimplemented!");
+	ctx->function_table.vkCmdBindPipeline(ctx->frame.command_buffer,VK_PIPELINE_BIND_POINT_GRAPHICS,pipeline->handle);
 }

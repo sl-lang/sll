@@ -64,7 +64,6 @@
 	(? (! ctx) (@@ nil))
 	(= ctx (:: ctx gfx:context$gfx_context_type))
 	(= type (:: type int_type))
-	(:> [] '\n')
 	(? (||
 		(< type TYPE_VERTEX)
 		(> type TYPE_FRAGMENT)
@@ -73,6 +72,8 @@
 	(= handle (<- (... "gfx:shader_create")
 		ctx$_handle
 		(:: bytecode string_type)
+		type
+		entry_point
 	))
 	(= out (. gfx_shader_type
 		handle
