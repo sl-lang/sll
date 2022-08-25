@@ -814,7 +814,7 @@ abc` '\n')
 		)
 	]
 )))
-(= verticies (<- gfx:buffer$create ctx gfx:buffer$TYPE_VERTEX gfx:buffer$DATA_TYPE_FLOAT [
+(= verticies (<- gfx:buffer$create ctx gfx:buffer$TYPE_VERTEX gfx:buffer$DATA_TYPE_FLOAT32 [
 	1.0 1.0 0.0 1.0 0.0 0.0
 	-1.0 1.0 0.0 0.0 1.0 0.0
 	0.0 -1.0 0.0 0.0 0.0 1.0

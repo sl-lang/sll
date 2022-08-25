@@ -49,7 +49,15 @@ __GFX_API_CALL gfx_buffer_t gfx_api_buffer_create(gfx_context_t ctx_id,gfx_buffe
 	if (type&GFX_BUFFER_TYPE_UNIFORM){
 		buffer->usage|=VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT;
 	}
-	buffer->elem_size=(data_type==GFX_BUFFER_DATA_TYPE_UINT16?2:4);
+	if (data_type==GFX_BUFFER_DATA_TYPE_UINT16){
+		buffer->elem_size=2;
+	}
+	else if (data_type==GFX_BUFFER_DATA_TYPE_UINT32||data_type==GFX_BUFFER_DATA_TYPE_FLOAT32){
+		buffer->elem_size=4;
+	}
+	else{
+		buffer->elem_size=8;
+	}
 	buffer->length=0;
 	buffer->size=0;
 	gfx_buffer_t out;
@@ -177,10 +185,16 @@ __GFX_API_CALL void gfx_api_buffer_sync(gfx_context_t ctx_id,gfx_buffer_t buffer
 			*(ptr+i)=data->data[i]->data.int_&0xffffffff;
 		}
 	}
-	else{
+	else if (buffer->data_type==GFX_BUFFER_DATA_TYPE_FLOAT32){
 		float* ptr=host_buffer_data;
 		for (sll_array_length_t i=0;i<data->length;i++){
 			*(ptr+i)=(float)(data->data[i]->data.float_);
+		}
+	}
+	else{
+		uint64_t* ptr=host_buffer_data;
+		for (sll_array_length_t i=0;i<data->length;i++){
+			*(ptr+i)=data->data[i]->data.int_;
 		}
 	}
 	VkMappedMemoryRange mapped_memory_range={

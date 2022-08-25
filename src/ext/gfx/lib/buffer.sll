@@ -50,9 +50,11 @@
 ))
 
 (= gfx_buffer_module_type (&:
-	(~ int_type) DATA_TYPE_FLOAT
+	(~ int_type) DATA_TYPE_FLOAT32
+	(~ int_type) DATA_TYPE_FLOAT64
 	(~ int_type) DATA_TYPE_UINT16
 	(~ int_type) DATA_TYPE_UINT32
+	(~ int_type) DATA_TYPE_UINT64
 	(~ int_type) FREQUENCY_HIGH
 	(~ int_type) FREQUENCY_LOW
 	(~ int_type) FREQUENCY_MEDIUM
@@ -84,12 +86,16 @@
 
 (= DATA_TYPE_UINT16 0)
 (= DATA_TYPE_UINT32 1)
-(= DATA_TYPE_FLOAT 2)
+(= DATA_TYPE_FLOAT32 2)
+(= DATA_TYPE_UINT64 3)
+(= DATA_TYPE_FLOAT64 4)
 
 (= _data_type_map <
 	DATA_TYPE_UINT16 "uint16"
 	DATA_TYPE_UINT32 "uint32"
-	DATA_TYPE_FLOAT "float"
+	DATA_TYPE_FLOAT32 "float32"
+	DATA_TYPE_UINT64 "uint64"
+	DATA_TYPE_FLOAT64 "float64"
 >)
 
 
@@ -166,9 +172,11 @@
 
 
 (= gfx:buffer (. gfx_buffer_module_type
-	DATA_TYPE_FLOAT
+	DATA_TYPE_FLOAT32
+	DATA_TYPE_FLOAT64
 	DATA_TYPE_UINT16
 	DATA_TYPE_UINT32
+	DATA_TYPE_UINT64
 	FREQUENCY_HIGH
 	FREQUENCY_LOW
 	FREQUENCY_MEDIUM
