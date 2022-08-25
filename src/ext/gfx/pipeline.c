@@ -27,46 +27,49 @@ __GFX_API_CALL gfx_pipeline_t gfx_api_pipeline_create(gfx_context_t ctx_id,gfx_p
 		if (elem->type!=SLL_OBJECT_TYPE_INT){
 			continue;
 		}
-		gfx_shader_data_t* shader=SLL_HANDLE_CONTAINER_GET(&(ctx->shaders),elem->data.int_);
+		gfx_shader_data_t* shader=SLL_HANDLE_CONTAINER_GET(&(ctx->shaders),(gfx_shader_t)(elem->data.int_));
 		if (!shader){
 			SLL_WARN("Should never happen!");
 			continue;
 		}
 		*(shader_stages+i)=shader->pipeline_shader_creation_info;
 	}
-	// VkVertexInputBindingDescription vertexInputBinding = {};
-	// vertexInputBinding.binding = 0;
-	// vertexInputBinding.stride = sizeof(Vertex);
-	// vertexInputBinding.inputRate = VK_VERTEX_INPUT_RATE_VERTEX;
-	// // Input attribute bindings describe shader attribute locations and memory layouts
-	// std::array<VkVertexInputAttributeDescription, 2> vertexInputAttributs;
-	// // These match the following shader layout (see triangle.vert):
-	// //	layout (location = 0) in vec3 inPos;
-	// //	layout (location = 1) in vec3 inColor;
-	// // Attribute location 0: Position
-	// vertexInputAttributs[0].binding = 0;
-	// vertexInputAttributs[0].location = 0;
-	// // Position attribute is three 32 bit signed (SFLOAT) floats (R32 G32 B32)
-	// vertexInputAttributs[0].format = VK_FORMAT_R32G32B32_SFLOAT;
-	// vertexInputAttributs[0].offset = offsetof(Vertex, position);
-	// // Attribute location 1: Color
-	// vertexInputAttributs[1].binding = 0;
-	// vertexInputAttributs[1].location = 1;
-	// // Color attribute is three 32 bit signed (SFLOAT) floats (R32 G32 B32)
-	// vertexInputAttributs[1].format = VK_FORMAT_R32G32B32_SFLOAT;
-	// vertexInputAttributs[1].offset = offsetof(Vertex, color);
-
-	// // Vertex input state used for pipeline creation
-	// VkPipelineVertexInputStateCreateInfo vertexInputState = {};
-	// vertexInputState.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
-	// vertexInputState.vertexBindingDescriptionCount = 1;
-	// vertexInputState.pVertexBindingDescriptions = &vertexInputBinding;
-	// vertexInputState.vertexAttributeDescriptionCount = 2;
-	// vertexInputState.pVertexAttributeDescriptions = vertexInputAttributs.data();
+	VkVertexInputBindingDescription vertex_input_binding_descriptor={
+		0,
+		stride,
+		VK_VERTEX_INPUT_RATE_VERTEX
+	};
+	VkVertexInputAttributeDescription* vertex_input_attributes=sll_allocate_stack(input_attributes->length*sizeof(VkVertexInputAttributeDescription));
+	for (sll_array_length_t i=0;i<input_attributes->length;i++){
+		sll_object_t input_attribute=input_attributes->data[i];
+		if (input_attribute->type!=SLL_OBJECT_TYPE_ARRAY||input_attribute->data.array.length!=4){
+			SLL_WARN("Should never happen!");
+			continue;
+		}
+		(vertex_input_attributes+i)->binding=input_attribute->data.array.data[0]->data.int_;
+		(vertex_input_attributes+i)->location=input_attribute->data.array.data[1]->data.int_;
+		(vertex_input_attributes+i)->offset=input_attribute->data.array.data[2]->data.int_;
+		if (input_attribute->data.array.data[3]->data.int_==GFX_INPUT_TYPE_R){
+			(vertex_input_attributes+i)->format=VK_FORMAT_R32_SFLOAT;
+		}
+		else if (input_attribute->data.array.data[3]->data.int_==GFX_INPUT_TYPE_RG){
+			(vertex_input_attributes+i)->format=VK_FORMAT_R32G32_SFLOAT;
+		}
+		else if (input_attribute->data.array.data[3]->data.int_==GFX_INPUT_TYPE_RGB){
+			(vertex_input_attributes+i)->format=VK_FORMAT_R32G32B32_SFLOAT;
+		}
+		else{
+			(vertex_input_attributes+i)->format=VK_FORMAT_R32G32B32A32_SFLOAT;
+		}
+	}
 	VkPipelineVertexInputStateCreateInfo vertex_input_state={
 		VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO,
 		NULL,
-		0
+		0,
+		1,
+		&vertex_input_binding_descriptor,
+		2,
+		vertex_input_attributes
 	};
 	VkPrimitiveTopology input_assembler_topology=VK_PRIMITIVE_TOPOLOGY_POINT_LIST;
 	if (topology==GFX_TOPOLOGY_LINE_LIST){
@@ -247,6 +250,7 @@ __GFX_API_CALL gfx_pipeline_t gfx_api_pipeline_create(gfx_context_t ctx_id,gfx_p
 		0
 	};
 	VULKAN_CALL(ctx->function_table.vkCreateGraphicsPipelines(ctx->device.logical,ctx->pipeline.cache,1,&pipeline_create_info,NULL,&(pipeline->handle)));
+	sll_deallocate(vertex_input_attributes);
 	sll_deallocate(shader_stages);
 	gfx_pipeline_t out;
 	SLL_HANDLE_CONTAINER_ALLOC(&(ctx->pipelines),&out);
