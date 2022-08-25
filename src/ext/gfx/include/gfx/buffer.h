@@ -12,8 +12,9 @@
 #define GFX_BUFFER_TYPE_INDEX 2
 #define GFX_BUFFER_TYPE_UNIFORM 4
 
-#define GFX_BUFFER_DATA_TYPE_UINT32 0
-#define GFX_BUFFER_DATA_TYPE_FLOAT 1
+#define GFX_BUFFER_DATA_TYPE_UINT16 0
+#define GFX_BUFFER_DATA_TYPE_UINT32 1
+#define GFX_BUFFER_DATA_TYPE_FLOAT 2
 
 #define GFX_BUFFER_UPDATE_FREQUENCY_HINT_NEVER 0
 #define GFX_BUFFER_UPDATE_FREQUENCY_HINT_LOW 1
@@ -37,14 +38,7 @@ typedef uint8_t gfx_buffer_flags_t;
 
 
 
-typedef sll_bool_t gfx_buffer_data_type_t;
-
-
-
-typedef union _GFX_RAW_BUFFER_VALUE{
-	float float_;
-	uint32_t uint32;
-} gfx_raw_buffer_value_t;
+typedef uint8_t gfx_buffer_data_type_t;
 
 
 
@@ -61,7 +55,9 @@ typedef struct _GFX_BUFFER_DATA{
 	gfx_buffer_update_frequency_hint_t update_frequency_hint;
 	gfx_buffer_flags_t flags;
 	VkBufferUsageFlagBits usage;
-	sll_array_length_t size;
+	sll_size_t elem_size;
+	sll_size_t length;
+	sll_size_t size;
 	gfx_vulkan_buffer_data_t device;
 	gfx_vulkan_buffer_data_t host;
 } gfx_buffer_data_t;

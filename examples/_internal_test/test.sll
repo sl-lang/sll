@@ -797,7 +797,7 @@ abc` '\n')
 	[
 		gfx:pipeline$POLYGON_MODE_FILL
 		gfx:pipeline$FRONT_FACE_COUNTER_CLOCKWISE
-		0
+		gfx:pipeline$CULL_MODE_FRONT
 	]
 	[
 		(<- gfx:shader$create
@@ -815,11 +815,11 @@ abc` '\n')
 	]
 )))
 (= verticies (<- gfx:buffer$create ctx gfx:buffer$TYPE_VERTEX gfx:buffer$DATA_TYPE_FLOAT [
-	1 1 0 1 0 0
-	-1 1 0 0 1 0
-	0 -1 0 0 0 1
+	1.0 1.0 0.0 1.0 0.0 0.0
+	-1.0 1.0 0.0 0.0 1.0 0.0
+	0.0 -1.0 0.0 0.0 0.0 1.0
 ]))
-(= indicies (<- gfx:buffer$create ctx gfx:buffer$TYPE_INDEX gfx:buffer$DATA_TYPE_UINT32 [
+(= indicies (<- gfx:buffer$create ctx gfx:buffer$TYPE_INDEX gfx:buffer$DATA_TYPE_UINT16 [
 	0 1 2
 ]))
 (= hue 0)

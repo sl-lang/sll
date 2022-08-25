@@ -49,6 +49,8 @@ __GFX_API_CALL gfx_buffer_t gfx_api_buffer_create(gfx_context_t ctx_id,gfx_buffe
 	if (type&GFX_BUFFER_TYPE_UNIFORM){
 		buffer->usage|=VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT;
 	}
+	buffer->elem_size=(data_type==GFX_BUFFER_DATA_TYPE_UINT16?2:4);
+	buffer->length=0;
 	buffer->size=0;
 	gfx_buffer_t out;
 	SLL_HANDLE_CONTAINER_ALLOC(&(ctx->buffers),&out);
@@ -81,7 +83,7 @@ __GFX_API_CALL void gfx_api_buffer_draw(gfx_context_t ctx_id,gfx_buffer_t buffer
 	if (!buffer||!(buffer->type&GFX_BUFFER_TYPE_INDEX)){
 		return;
 	}
-	ctx->function_table.vkCmdDrawIndexed(ctx->frame.command_buffer,buffer->size,1,0,0,1);
+	ctx->function_table.vkCmdDrawIndexed(ctx->frame.command_buffer,buffer->length,1,0,0,1);
 }
 
 
@@ -109,16 +111,17 @@ __GFX_API_CALL void gfx_api_buffer_sync(gfx_context_t ctx_id,gfx_buffer_t buffer
 	if (!buffer){
 		return;
 	}
-	if (buffer->size!=data->length){
+	if (buffer->length!=data->length){
 		_delete_vulkan_buffers(ctx,buffer);
-		buffer->size=data->length;
+		buffer->length=data->length;
+		buffer->size=data->length*buffer->elem_size;
 	}
 	if (!(buffer->flags&GFX_BUFFER_FLAG_HAS_DEVICE_BUFFER)){
 		VkBufferCreateInfo buffer_creation_info={
 			VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO,
 			NULL,
 			0,
-			data->length*sizeof(float),
+			buffer->size,
 			buffer->usage,
 			0,
 			0,
@@ -141,7 +144,7 @@ __GFX_API_CALL void gfx_api_buffer_sync(gfx_context_t ctx_id,gfx_buffer_t buffer
 			VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO,
 			NULL,
 			0,
-			data->length*sizeof(float),
+			buffer->size,
 			VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
 			0,
 			0,
@@ -160,34 +163,39 @@ __GFX_API_CALL void gfx_api_buffer_sync(gfx_context_t ctx_id,gfx_buffer_t buffer
 		VULKAN_CALL(ctx->function_table.vkBindBufferMemory(ctx->device.logical,buffer->host.buffer,buffer->host.memory,0));
 	}
 	buffer->flags=GFX_BUFFER_FLAG_HAS_DEVICE_BUFFER|GFX_BUFFER_FLAG_HAS_HOST_BUFFER;
-	gfx_raw_buffer_value_t* host_buffer_data;
-	VULKAN_CALL(ctx->function_table.vkMapMemory(ctx->device.logical,buffer->host.memory,0,data->length*sizeof(gfx_raw_buffer_value_t),0,(void**)(&host_buffer_data)));
-	for (sll_array_length_t i=0;i<data->length;i++){
-		sll_object_t elem=data->data[i];
-		if (buffer->data_type==GFX_BUFFER_DATA_TYPE_FLOAT){
-			elem=sll_operator_cast(elem,sll_static_int[SLL_OBJECT_TYPE_FLOAT]);
-			host_buffer_data->float_=(float)(elem->data.float_);
+	void* host_buffer_data;
+	VULKAN_CALL(ctx->function_table.vkMapMemory(ctx->device.logical,buffer->host.memory,0,buffer->size,0,&host_buffer_data));
+	if (buffer->data_type==GFX_BUFFER_DATA_TYPE_UINT16){
+		uint16_t* ptr=host_buffer_data;
+		for (sll_array_length_t i=0;i<data->length;i++){
+			*(ptr+i)=data->data[i]->data.int_&0xffff;
 		}
-		else{
-			elem=sll_operator_cast(elem,sll_static_int[SLL_OBJECT_TYPE_INT]);
-			host_buffer_data->uint32=elem->data.int_&0xffffffff;
+	}
+	else if (buffer->data_type==GFX_BUFFER_DATA_TYPE_UINT32){
+		uint32_t* ptr=host_buffer_data;
+		for (sll_array_length_t i=0;i<data->length;i++){
+			*(ptr+i)=data->data[i]->data.int_&0xffffffff;
 		}
-		SLL_RELEASE(elem);
-		host_buffer_data++;
+	}
+	else{
+		float* ptr=host_buffer_data;
+		for (sll_array_length_t i=0;i<data->length;i++){
+			*(ptr+i)=(float)(data->data[i]->data.float_);
+		}
 	}
 	VkMappedMemoryRange mapped_memory_range={
 		VK_STRUCTURE_TYPE_MAPPED_MEMORY_RANGE,
 		NULL,
 		buffer->host.memory,
 		0,
-		data->length*sizeof(gfx_raw_buffer_value_t)
+		buffer->size
 	};
 	VULKAN_CALL(ctx->function_table.vkFlushMappedMemoryRanges(ctx->device.logical,1,&mapped_memory_range));
 	ctx->function_table.vkUnmapMemory(ctx->device.logical,buffer->host.memory);
 	VkBufferCopy buffer_copy={
 		0,
 		0,
-		data->length*sizeof(gfx_raw_buffer_value_t)
+		buffer->size
 	};
 	ctx->function_table.vkCmdCopyBuffer(ctx->buffer_transfer.command_buffer,buffer->host.buffer,buffer->device.buffer,1,&buffer_copy);
 	ctx->buffer_transfer.has_data=1;
@@ -209,6 +217,6 @@ __GFX_API_CALL void gfx_api_buffer_use(gfx_context_t ctx_id,gfx_buffer_t buffer_
 		ctx->function_table.vkCmdBindVertexBuffers(ctx->frame.command_buffer,0,1,&(buffer->device.buffer),&offset);
 	}
 	else if (buffer->type&GFX_BUFFER_TYPE_INDEX){
-		ctx->function_table.vkCmdBindIndexBuffer(ctx->frame.command_buffer,buffer->device.buffer,0,VK_INDEX_TYPE_UINT32);
+		ctx->function_table.vkCmdBindIndexBuffer(ctx->frame.command_buffer,buffer->device.buffer,0,(buffer->data_type==GFX_BUFFER_DATA_TYPE_UINT16?VK_INDEX_TYPE_UINT16:VK_INDEX_TYPE_UINT32));
 	}
 }
