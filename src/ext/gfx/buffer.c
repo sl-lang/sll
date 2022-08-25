@@ -83,7 +83,7 @@ __GFX_API_CALL void gfx_api_buffer_draw(gfx_context_t ctx_id,gfx_buffer_t buffer
 	if (!buffer||!(buffer->type&GFX_BUFFER_TYPE_INDEX)){
 		return;
 	}
-	ctx->function_table.vkCmdDrawIndexed(ctx->frame.command_buffer,buffer->length,1,0,0,1);
+	ctx->function_table.vkCmdDrawIndexed(ctx->frame.command_buffer,(uint32_t)(buffer->length),1,0,0,1);
 }
 
 
