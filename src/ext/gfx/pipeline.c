@@ -38,3 +38,17 @@ __GFX_API_CALL void gfx_api_pipeline_delete(gfx_context_t ctx_id,gfx_pipeline_t 
 		_delete_pipeline(ctx,pipeline);
 	}
 }
+
+
+
+__GFX_API_CALL void gfx_api_pipeline_use(gfx_context_t ctx_id,gfx_pipeline_t pipeline_id){
+	gfx_context_data_t* ctx=SLL_HANDLE_CONTAINER_GET(&gfx_context_data,ctx_id);
+	if (!ctx){
+		return;
+	}
+	gfx_pipeline_data_t* pipeline=SLL_HANDLE_CONTAINER_GET(&(ctx->pipelines),pipeline_id);
+	if (!pipeline){
+		return;
+	}
+	SLL_WARN("Unimplemented!");
+}
