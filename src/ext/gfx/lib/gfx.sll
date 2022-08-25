@@ -2,6 +2,7 @@
 	"gfx/buffer.sll"
 	"gfx/color.sll"
 	"gfx/context.sll"
+	"gfx/pipeline.sll"
 	"gfx/shader.sll"
 	"gfx/vulkan.sll"
 )
@@ -12,6 +13,7 @@
 	(~ (:? gfx:buffer)) buffer
 	(~ (:? gfx:color)) color
 	(~ (:? gfx:context)) context
+	(~ (:? gfx:pipeline)) pipeline
 	(~ (:? gfx:shader)) shader
 	(~ (:? gfx:vulkan)) vulkan
 ))
@@ -22,6 +24,7 @@
 	gfx:buffer
 	gfx:color
 	gfx:context
+	gfx:pipeline
 	gfx:shader
 	gfx:vulkan
 ))

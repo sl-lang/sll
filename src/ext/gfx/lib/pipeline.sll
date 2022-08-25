@@ -1,0 +1,264 @@
+(---
+	"gfx/_load_library.sll"
+	"gfx/context.sll"
+	"gfx/shader.sll"
+	"array.sll"
+	"string.sll"
+	"types.sll"
+	"weakref.sll"
+)
+
+
+
+(# delete _topology_map _input_type_map _polygon_mode_map _front_face_map CULL_MODE_FRONT CULL_MODE_BACK)
+
+
+
+(= gfx_pipeline_config_vertex_input_attribute_type (&:
+	(,,, data
+		(@@ (<- string$format "<gfx:pipeline_config_vertex_input_attribute binding=%u layout=%u offset=%u type=%s>"
+			data$binding
+			data$layout
+			data$offset
+			(: _input_type_map data$type)
+		))
+	) @@string@@
+	int_type binding
+	int_type layout
+	int_type offset
+	int_type type
+))
+
+(= gfx_pipeline_config_vertex_input_type (&:
+	(,,, data
+		(@@ (<- string$format "<gfx:pipeline_config_vertex_input input_attributes=%s stride=%u>"
+			(<- string$str data$input_attributes)
+			data$stride
+		))
+	) @@string@@
+	array_type input_attributes
+	int_type stride
+))
+
+(= gfx_pipeline_config_rasterizer_type (&:
+	(,,, data
+		(= cull_mode [])
+		(? (& data$CULL_MODE_FRONT) (<- array$push cull_mode "Front"))
+		(? (& data$CULL_MODE_BACK) (<- array$push cull_mode "Back"))
+		(@@ (<- string$format "<gfx:pipeline_config_rasterize polygon_mode=%s front_face=%s cull_mode=%s>"
+			(: _polygon_mode_map data$polygon_mode)
+			(: _front_face_map data$front_face)
+			(?: cull_mode
+				(<- string$join '+' cull_mode)
+				"None"
+			)
+		))
+	) @@string@@
+	int_type polygon_mode
+	int_type front_face
+	int_type cull_mode
+))
+
+(= gfx_pipeline_config_type (&:
+	(,,, data
+		(@@ (<- string$format "<gfx:pipeline_config topology=%s vertex_input=%s rasterizer=%s shaders=%s>"
+			(: _topology_map data$topology)
+			(:: data$vertex_input string_type)
+			(:: data$rasterizer string_type)
+			(<- string$str data$shaders)
+		))
+	) @@string@@
+	int_type topology
+	gfx_pipeline_config_vertex_input_type vertex_input
+	gfx_pipeline_config_rasterizer_type rasterizer
+	array_type shaders
+))
+
+(= gfx_pipeline_type (&:
+	(,,, data
+		(@@ (<- string$format "<gfx:pipeline config=%s context=%s>"
+			(:: data$config string_type)
+			(:: data$ctx string_type)
+		))
+	) @@string@@
+	(,,, data
+		(<- delete data)
+	) @@delete@@
+	(~ int_type) _handle
+	(~ gfx_pipeline_config_type) config
+	(~ gfx:context$gfx_context_type) ctx
+	weakref$weakref_type _ref_object
+))
+
+(= gfx_pipeline_module_type (&:
+	(~ int_type) CULL_MODE_BACK
+	(~ int_type) CULL_MODE_FRONT
+	(~ int_type) FRONT_FACE_CLOCKWISE
+	(~ int_type) FRONT_FACE_COUNTER_CLOCKWISE
+	(~ int_type) INPUT_TYPE_R
+	(~ int_type) INPUT_TYPE_RG
+	(~ int_type) INPUT_TYPE_RGB
+	(~ int_type) INPUT_TYPE_RGBA
+	(~ int_type) POLYGON_MODE_FILL
+	(~ int_type) POLYGON_MODE_LINE
+	(~ int_type) POLYGON_MODE_POINT
+	(~ int_type) TOPOLOGY_LINE_LIST
+	(~ int_type) TOPOLOGY_LINE_LIST_WITH_ADJACENCY
+	(~ int_type) TOPOLOGY_LINE_STRIP
+	(~ int_type) TOPOLOGY_LINE_STRIP_WITH_ADJACENCY
+	(~ int_type) TOPOLOGY_PATCH_LIST
+	(~ int_type) TOPOLOGY_POINT_LIST
+	(~ int_type) TOPOLOGY_TRIANGLE_FAN
+	(~ int_type) TOPOLOGY_TRIANGLE_LIST
+	(~ int_type) TOPOLOGY_TRIANGLE_LIST_WITH_ADJACENCY
+	(~ int_type) TOPOLOGY_TRIANGLE_STRIP
+	(~ int_type) TOPOLOGY_TRIANGLE_STRIP_WITH_ADJACENCY
+	(~ type_type) gfx_pipeline_config_type
+	(~ type_type) gfx_pipeline_config_vertex_input_attribute_type
+	(~ type_type) gfx_pipeline_type
+	(~ func_type) create
+	(~ func_type) delete
+))
+
+
+
+(= TOPOLOGY_POINT_LIST 0)
+(= TOPOLOGY_LINE_LIST 1)
+(= TOPOLOGY_LINE_STRIP 2)
+(= TOPOLOGY_TRIANGLE_LIST 3)
+(= TOPOLOGY_TRIANGLE_STRIP 4)
+(= TOPOLOGY_TRIANGLE_FAN 5)
+(= TOPOLOGY_LINE_LIST_WITH_ADJACENCY 6)
+(= TOPOLOGY_LINE_STRIP_WITH_ADJACENCY 7)
+(= TOPOLOGY_TRIANGLE_LIST_WITH_ADJACENCY 8)
+(= TOPOLOGY_TRIANGLE_STRIP_WITH_ADJACENCY 9)
+(= TOPOLOGY_PATCH_LIST 10)
+
+(= INPUT_TYPE_R 0)
+(= INPUT_TYPE_RG 1)
+(= INPUT_TYPE_RGB 2)
+(= INPUT_TYPE_RGBA 3)
+
+(= POLYGON_MODE_POINT 0)
+(= POLYGON_MODE_LINE 1)
+(= POLYGON_MODE_FILL 2)
+
+(= FRONT_FACE_CLOCKWISE 0)
+(= FRONT_FACE_COUNTER_CLOCKWISE 1)
+
+(= CULL_MODE_FRONT 1)
+(= CULL_MODE_BACK 2)
+
+(= _topology_map <
+	TOPOLOGY_POINT_LIST "Point list"
+	TOPOLOGY_LINE_LIST "Line list"
+	TOPOLOGY_LINE_STRIP "Line strip"
+	TOPOLOGY_TRIANGLE_LIST "Triangle list"
+	TOPOLOGY_TRIANGLE_STRIP "Triangle strip"
+	TOPOLOGY_TRIANGLE_FAN "Triangle fan"
+	TOPOLOGY_LINE_LIST_WITH_ADJACENCY "Line list with adjacency"
+	TOPOLOGY_LINE_STRIP_WITH_ADJACENCY "Line strip with adjacency"
+	TOPOLOGY_TRIANGLE_LIST_WITH_ADJACENCY "Triangle list with adjacency"
+	TOPOLOGY_TRIANGLE_STRIP_WITH_ADJACENCY "Triangle strip with adjacency"
+	TOPOLOGY_PATCH_LIST "Patch list"
+>)
+
+(= _input_type_map <
+	INPUT_TYPE_R "R"
+	INPUT_TYPE_RG "RG"
+	INPUT_TYPE_RGB "RGB"
+	INPUT_TYPE_RGBA "RGBA"
+>)
+
+(= _polygon_mode_map <
+	POLYGON_MODE_POINT "Point"
+	POLYGON_MODE_LINE "Line"
+	POLYGON_MODE_FILL "Fill"
+>)
+
+(= _front_face_map <
+	FRONT_FACE_CLOCKWISE "Clockwise"
+	FRONT_FACE_COUNTER_CLOCKWISE "Counter clockwise"
+>)
+
+
+
+(= create (,,, ctx config
+	(? (! ctx) (@@ nil))
+	(= ctx (:: ctx gfx:context$gfx_context_type))
+	(= config (:: config gfx_pipeline_config_type))
+	(-> (= i 0) (< i ($ config$vertex_input$input_attributes))
+		(= (: config$vertex_input$input_attributes i) (:: (: config$vertex_input$input_attributes i) gfx_pipeline_config_vertex_input_attribute_type))
+		(++ i)
+	)
+	(-> (= i 0) (< i ($ config$shaders))
+		(= (: config$shaders i) (:: (: config$shaders i) gfx:shader$gfx_shader_type))
+		(++ i)
+	)
+	(= handle (<- (... "gfx:pipeline_create")
+		ctx$_handle
+		config$topology
+		([> (= i 0) (< i ($ config$vertex_input$input_attributes))
+			(= attr (: config$vertex_input$input_attributes i))
+			(++ i)
+			(:: attr array_type)
+		)
+		config$vertex_input$stride
+		config$rasterizer$polygon_mode
+		config$rasterizer$front_face
+		config$rasterizer$cull_mode
+		([> (= i 0) (< i ($ config$shaders))
+			(= shader (: config$shaders i))
+			(++ i)
+			shader$_handle
+		)
+	))
+	(= out (. gfx_pipeline_type
+		handle
+		config
+		ctx
+	))
+	(= out$_ref_object (<- weakref$ref out))
+	(<- array$push ctx$pipelines out$_ref_object)
+	(@@ out)
+))
+
+(= delete (,,, pipeline
+	(? (! pipeline) (@@))
+	(= pipeline (:: pipeline gfx_pipeline_type))
+	(<- array$remove pipeline$ctx$pipelines pipeline$_ref_object)
+	(<- (... "gfx:pipeline_delete") pipeline$ctx$_handle pipeline$_handle)
+))
+
+
+
+(= gfx:pipeline (. gfx_pipeline_module_type
+	CULL_MODE_BACK
+	CULL_MODE_FRONT
+	FRONT_FACE_CLOCKWISE
+	FRONT_FACE_COUNTER_CLOCKWISE
+	INPUT_TYPE_R
+	INPUT_TYPE_RG
+	INPUT_TYPE_RGB
+	INPUT_TYPE_RGBA
+	POLYGON_MODE_FILL
+	POLYGON_MODE_LINE
+	POLYGON_MODE_POINT
+	TOPOLOGY_LINE_LIST
+	TOPOLOGY_LINE_LIST_WITH_ADJACENCY
+	TOPOLOGY_LINE_STRIP
+	TOPOLOGY_LINE_STRIP_WITH_ADJACENCY
+	TOPOLOGY_PATCH_LIST
+	TOPOLOGY_POINT_LIST
+	TOPOLOGY_TRIANGLE_FAN
+	TOPOLOGY_TRIANGLE_LIST
+	TOPOLOGY_TRIANGLE_LIST_WITH_ADJACENCY
+	TOPOLOGY_TRIANGLE_STRIP
+	TOPOLOGY_TRIANGLE_STRIP_WITH_ADJACENCY
+	gfx_pipeline_config_type
+	gfx_pipeline_config_vertex_input_attribute_type
+	gfx_pipeline_type
+	create
+	delete
+))
+(## gfx:pipeline)

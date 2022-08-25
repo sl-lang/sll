@@ -13,6 +13,8 @@
 	"gfx/buffer.sll"
 	"gfx/color.sll"
 	"gfx/context.sll"
+	"gfx/pipeline.sll"
+	"gfx/shader.sll"
 	"gfx/vulkan.sll"
 	"hash.sll"
 	"hmac.sll"
@@ -754,6 +756,15 @@ abc` '\n')
 ; 	(<- file$write sock "GET / HTTP/1.0\r\nHost: www.example.com\r\n\r\n")
 ; })
 
+(= example_type (&:
+	"comment"
+	`next line`
+	(~ int_type) x
+	int_type y
+))
+(= point (. example_type -1 22))
+(:> point '\n')
+
 (:> (<- gfx:vulkan$get_version) '\n')
 (:> (<- gfx:vulkan$get_extensions) '\n')
 
@@ -764,6 +775,31 @@ abc` '\n')
 		window_manager:keyboard$KEY_ESCAPE (<- window_manager:window$destroy window)
 	)
 ))
+(= pipeline (<- gfx:pipeline$create ctx (. gfx:pipeline$gfx_pipeline_config_type
+	gfx:pipeline$TOPOLOGY_TRIANGLE_LIST
+	[
+		[
+			[
+				0
+				0
+				0
+				gfx:pipeline$INPUT_TYPE_RGB
+			]
+			[
+				0
+				0
+				3
+				gfx:pipeline$INPUT_TYPE_RGB
+			]
+		]
+		6
+	]
+	[
+		gfx:pipeline$POLYGON_MODE_FILL
+		gfx:pipeline$FRONT_FACE_COUNTER_CLOCKWISE
+		0
+	]
+)))
 (= verticies (<- gfx:buffer$create ctx gfx:buffer$TYPE_VERTEX [
 	1 1 0 1 0 0
 	-1 1 0 0 1 0
@@ -793,14 +829,5 @@ abc` '\n')
 (:> ctx '\n')
 (:> verticies '\n')
 (:> indicies '\n')
+(:> pipeline '\n')
 (:> window '\n')
-
-
-(= example_type (&:
-	"comment"
-	`next line`
-	(~ int_type) x
-	int_type y
-))
-(= point (. example_type -1 22))
-(:> point '\n')
