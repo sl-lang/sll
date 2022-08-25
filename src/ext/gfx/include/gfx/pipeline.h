@@ -54,6 +54,7 @@ typedef uint8_t gfx_pipeline_cull_mode_t;
 
 typedef struct _GFX_PIPELINE_DATA{
 	VkPipeline handle;
+	VkPipelineLayout layout;
 } gfx_pipeline_data_t;
 
 

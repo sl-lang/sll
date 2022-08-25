@@ -11,6 +11,7 @@
 
 void _delete_pipeline(const gfx_context_data_t* ctx,gfx_pipeline_data_t* pipeline_data){
 	ctx->function_table.vkDestroyPipeline(ctx->device.logical,pipeline_data->handle,NULL);
+	ctx->function_table.vkDestroyPipelineLayout(ctx->device.logical,pipeline_data->layout,NULL);
 	sll_deallocate(pipeline_data);
 }
 
@@ -22,6 +23,16 @@ __GFX_API_CALL gfx_pipeline_t gfx_api_pipeline_create(gfx_context_t ctx_id,gfx_p
 		return 0;
 	}
 	gfx_pipeline_data_t* pipeline=sll_allocate(sizeof(gfx_pipeline_data_t));
+	VkPipelineLayoutCreateInfo pipeline_layout_creation_info={
+		VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO,
+		NULL,
+		0,
+		0,
+		NULL,
+		0,
+		NULL
+	};
+	VULKAN_CALL(ctx->function_table.vkCreatePipelineLayout(ctx->device.logical,&pipeline_layout_creation_info,NULL,&(pipeline->layout)));
 	VkPipelineShaderStageCreateInfo* shader_stages=sll_allocate_stack(shaders->length*sizeof(VkPipelineShaderStageCreateInfo));
 	for (sll_array_length_t i=0;i<shaders->length;i++){
 		sll_object_t elem=shaders->data[i];
@@ -218,17 +229,6 @@ __GFX_API_CALL gfx_pipeline_t gfx_api_pipeline_create(gfx_context_t ctx_id,gfx_p
 		2,
 		dynamic_states
 	};
-	VkPipelineLayout pipeline_layout;
-	VkPipelineLayoutCreateInfo pipeline_layout_creation_info={
-		VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO,
-		NULL,
-		0,
-		0,
-		NULL,
-		0,
-		NULL
-	};
-	VULKAN_CALL(ctx->function_table.vkCreatePipelineLayout(ctx->device.logical,&pipeline_layout_creation_info,NULL,&pipeline_layout));
 	VkGraphicsPipelineCreateInfo pipeline_create_info={
 		VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO,
 		NULL,
@@ -244,7 +244,7 @@ __GFX_API_CALL gfx_pipeline_t gfx_api_pipeline_create(gfx_context_t ctx_id,gfx_p
 		&depth_stencil_state,
 		&color_blend_state,
 		&dynamic_state,
-		pipeline_layout,
+		pipeline->layout,
 		ctx->pipeline.render_pass,
 		0,
 		NULL,
