@@ -1,6 +1,7 @@
 #include <gfx/buffer.h>
 #include <gfx/common.h>
 #include <gfx/context.h>
+#include <gfx/pipeline.h>
 #include <gfx/shader.h>
 #include <gfx/util.h>
 #include <gfx/vulkan.h>
@@ -317,6 +318,9 @@ void _delete_context(gfx_context_data_t* ctx){
 	SLL_HANDLE_CONTAINER_ITER_CLEAR(&(ctx->buffers),gfx_buffer_data_t,buffer,{
 		_delete_buffer(ctx,buffer);
 	});
+	SLL_HANDLE_CONTAINER_ITER_CLEAR(&(ctx->pipelines),gfx_pipeline_data_t,pipeline,{
+		_delete_pipeline(ctx,pipeline);
+	});
 	SLL_HANDLE_CONTAINER_ITER_CLEAR(&(ctx->shaders),gfx_shader_data_t,shader,{
 		_delete_shader(ctx,shader);
 	});
@@ -609,6 +613,7 @@ __GFX_API_CALL gfx_context_t gfx_api_context_create(void* handle,void* extra_dat
 	ctx->buffer_transfer.has_data=1;
 	_begin_frame(ctx);
 	SLL_HANDLE_CONTAINER_INIT(&(ctx->buffers));
+	SLL_HANDLE_CONTAINER_INIT(&(ctx->pipelines));
 	SLL_HANDLE_CONTAINER_INIT(&(ctx->shaders));
 	gfx_context_t out;
 	SLL_HANDLE_CONTAINER_ALLOC(&gfx_context_data,&out);

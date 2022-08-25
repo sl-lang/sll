@@ -109,6 +109,7 @@ typedef struct _GFX_CONTEXT_DATA{
 	gfx_context_sync_data_t sync;
 	gfx_vulkan_function_table_t function_table;
 	sll_handle_container_t buffers;
+	sll_handle_container_t pipelines;
 	sll_handle_container_t shaders;
 } gfx_context_data_t;
 
