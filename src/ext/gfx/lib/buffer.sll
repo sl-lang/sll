@@ -9,7 +9,7 @@
 
 
 
-(# delete FREQUENCY_NEVER FREQUENCY_MEDIUM FREQUENCY_HIGH TYPE_VERTEX TYPE_INDEX TYPE_UNIFORM TYPE_ANY)
+(# delete _data_type_map FREQUENCY_NEVER FREQUENCY_MEDIUM FREQUENCY_HIGH TYPE_VERTEX TYPE_INDEX TYPE_UNIFORM TYPE_ANY)
 
 
 
@@ -24,8 +24,9 @@
 				(? (& data$type TYPE_UNIFORM) (<- array$push types "Uniform"))
 			}
 		)
-		(@@ (<- string$format "<gfx:buffer type=%s update_frequency=%s data_length=%u context=%s>"
+		(@@ (<- string$format "<gfx:buffer type=%s data_type=%s update_frequency=%s data_length=%u context=%s>"
 			(<- string$join ", " types)
+			(: _data_type_map data$data_type)
 			(?:
 				(=== data$update_frequency FREQUENCY_NEVER) "Never"
 				(=== data$update_frequency FREQUENCY_MEDIUM) "Medium"
@@ -41,6 +42,7 @@
 	) @@delete@@
 	(~ int_type) _handle
 	(~ int_type) type
+	(~ int_type) data_type
 	(~ gfx:context$gfx_context_type) ctx
 	array_type data
 	int_type update_frequency
@@ -48,6 +50,8 @@
 ))
 
 (= gfx_buffer_module_type (&:
+	(~ int_type) DATA_TYPE_FLOAT
+	(~ int_type) DATA_TYPE_UINT32
 	(~ int_type) FREQUENCY_HIGH
 	(~ int_type) FREQUENCY_LOW
 	(~ int_type) FREQUENCY_MEDIUM
@@ -77,16 +81,26 @@
 (= FREQUENCY_MEDIUM 2)
 (= FREQUENCY_HIGH 3)
 
+(= DATA_TYPE_UINT32 0)
+(= DATA_TYPE_FLOAT 1)
+
+(= _data_type_map <
+	DATA_TYPE_UINT32 "uint32"
+	DATA_TYPE_FLOAT "float"
+>)
 
 
-(= create (,,, ctx type data
+
+(= create (,,, ctx type data_type data
 	(? (! ctx) (@@ nil))
 	(= ctx (:: ctx gfx:context$gfx_context_type))
 	(= type (& (:: type int_type) TYPE_ANY))
+	(= data_type (:: data_type int_type))
 	(= data (?: data (:: data array_type) []))
 	(= handle (<- (... "gfx:buffer_create")
 		ctx$_handle
 		type
+		data_type
 	))
 	(? data (<- (... "gfx:buffer_sync")
 		ctx$_handle
@@ -96,6 +110,7 @@
 	(= out (. gfx_buffer_type
 		handle
 		type
+		data_type
 		ctx
 		data
 		FREQUENCY_LOW
@@ -148,6 +163,8 @@
 
 
 (= gfx:buffer (. gfx_buffer_module_type
+	DATA_TYPE_FLOAT
+	DATA_TYPE_UINT32
 	FREQUENCY_HIGH
 	FREQUENCY_LOW
 	FREQUENCY_MEDIUM

@@ -12,7 +12,7 @@ static const sll_internal_function_descriptor_t _internal_function_table[]={
 	{
 		SLL_CHAR("gfx:buffer_create"),
 		gfx_api_buffer_create,
-		SLL_CHAR("QB|Q")
+		SLL_CHAR("QBb|Q")
 	},
 	{
 		SLL_CHAR("gfx:buffer_delete"),

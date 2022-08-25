@@ -800,12 +800,12 @@ abc` '\n')
 		0
 	]
 )))
-(= verticies (<- gfx:buffer$create ctx gfx:buffer$TYPE_VERTEX [
+(= verticies (<- gfx:buffer$create ctx gfx:buffer$TYPE_VERTEX gfx:buffer$DATA_TYPE_FLOAT [
 	1 1 0 1 0 0
 	-1 1 0 0 1 0
 	0 -1 0 0 0 1
 ]))
-(= indicies (<- gfx:buffer$create ctx gfx:buffer$TYPE_INDEX [
+(= indicies (<- gfx:buffer$create ctx gfx:buffer$TYPE_INDEX gfx:buffer$DATA_TYPE_UINT32 [
 	0 1 2
 ]))
 (= hue 0)

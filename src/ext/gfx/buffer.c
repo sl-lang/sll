@@ -29,13 +29,14 @@ void _delete_buffer(const gfx_context_data_t* ctx,gfx_buffer_data_t* buffer_data
 
 
 
-__GFX_API_CALL gfx_buffer_t gfx_api_buffer_create(gfx_context_t ctx_id,gfx_buffer_type_t type){
+__GFX_API_CALL gfx_buffer_t gfx_api_buffer_create(gfx_context_t ctx_id,gfx_buffer_type_t type,gfx_buffer_data_type_t data_type){
 	gfx_context_data_t* ctx=SLL_HANDLE_CONTAINER_GET(&gfx_context_data,ctx_id);
 	if (!ctx){
 		return 0;
 	}
 	gfx_buffer_data_t* buffer=sll_allocate(sizeof(gfx_buffer_data_t));
 	buffer->type=type;
+	buffer->data_type=data_type;
 	buffer->update_frequency_hint=GFX_BUFFER_UPDATE_FREQUENCY_HINT_LOW;
 	buffer->flags=0;
 	buffer->usage=VK_BUFFER_USAGE_TRANSFER_DST_BIT;
@@ -48,7 +49,7 @@ __GFX_API_CALL gfx_buffer_t gfx_api_buffer_create(gfx_context_t ctx_id,gfx_buffe
 	if (type&GFX_BUFFER_TYPE_UNIFORM){
 		buffer->usage|=VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT;
 	}
-	buffer->last_size=0;
+	buffer->size=0;
 	gfx_buffer_t out;
 	SLL_HANDLE_CONTAINER_ALLOC(&(ctx->buffers),&out);
 	*(ctx->buffers.data+out)=buffer;
@@ -77,10 +78,10 @@ __GFX_API_CALL void gfx_api_buffer_draw(gfx_context_t ctx_id,gfx_buffer_t buffer
 		return;
 	}
 	gfx_buffer_data_t* buffer=SLL_HANDLE_CONTAINER_GET(&(ctx->buffers),buffer_id);
-	if (!buffer){
+	if (!buffer||!(buffer->type&GFX_BUFFER_TYPE_INDEX)){
 		return;
 	}
-	SLL_WARN("Unimplemented!");
+	ctx->function_table.vkCmdDrawIndexed(ctx->frame.command_buffer,buffer->size,1,0,0,1);
 }
 
 
@@ -108,9 +109,9 @@ __GFX_API_CALL void gfx_api_buffer_sync(gfx_context_t ctx_id,gfx_buffer_t buffer
 	if (!buffer){
 		return;
 	}
-	if (buffer->last_size!=data->length){
+	if (buffer->size!=data->length){
 		_delete_vulkan_buffers(ctx,buffer);
-		buffer->last_size=data->length;
+		buffer->size=data->length;
 	}
 	if (!(buffer->flags&GFX_BUFFER_FLAG_HAS_DEVICE_BUFFER)){
 		VkBufferCreateInfo buffer_creation_info={
@@ -159,11 +160,18 @@ __GFX_API_CALL void gfx_api_buffer_sync(gfx_context_t ctx_id,gfx_buffer_t buffer
 		VULKAN_CALL(ctx->function_table.vkBindBufferMemory(ctx->device.logical,buffer->host.buffer,buffer->host.memory,0));
 	}
 	buffer->flags=GFX_BUFFER_FLAG_HAS_DEVICE_BUFFER|GFX_BUFFER_FLAG_HAS_HOST_BUFFER;
-	float* host_buffer_data;
-	VULKAN_CALL(ctx->function_table.vkMapMemory(ctx->device.logical,buffer->host.memory,0,data->length*sizeof(float),0,(void**)(&host_buffer_data)));
+	gfx_raw_buffer_value_t* host_buffer_data;
+	VULKAN_CALL(ctx->function_table.vkMapMemory(ctx->device.logical,buffer->host.memory,0,data->length*sizeof(gfx_raw_buffer_value_t),0,(void**)(&host_buffer_data)));
 	for (sll_array_length_t i=0;i<data->length;i++){
-		sll_object_t elem=sll_operator_cast(data->data[i],sll_static_int[SLL_OBJECT_TYPE_FLOAT]);
-		*host_buffer_data=(float)(elem->data.float_);
+		sll_object_t elem=data->data[i];
+		if (buffer->data_type==GFX_BUFFER_DATA_TYPE_FLOAT){
+			elem=sll_operator_cast(elem,sll_static_int[SLL_OBJECT_TYPE_FLOAT]);
+			host_buffer_data->float_=(float)(elem->data.float_);
+		}
+		else{
+			elem=sll_operator_cast(elem,sll_static_int[SLL_OBJECT_TYPE_INT]);
+			host_buffer_data->uint32=elem->data.int_&0xffffffff;
+		}
 		SLL_RELEASE(elem);
 		host_buffer_data++;
 	}
@@ -172,14 +180,14 @@ __GFX_API_CALL void gfx_api_buffer_sync(gfx_context_t ctx_id,gfx_buffer_t buffer
 		NULL,
 		buffer->host.memory,
 		0,
-		data->length*sizeof(float)
+		data->length*sizeof(gfx_raw_buffer_value_t)
 	};
 	VULKAN_CALL(ctx->function_table.vkFlushMappedMemoryRanges(ctx->device.logical,1,&mapped_memory_range));
 	ctx->function_table.vkUnmapMemory(ctx->device.logical,buffer->host.memory);
 	VkBufferCopy buffer_copy={
 		0,
 		0,
-		data->length*sizeof(float)
+		data->length*sizeof(gfx_raw_buffer_value_t)
 	};
 	ctx->function_table.vkCmdCopyBuffer(ctx->buffer_transfer.command_buffer,buffer->host.buffer,buffer->device.buffer,1,&buffer_copy);
 	ctx->buffer_transfer.has_data=1;
@@ -196,5 +204,11 @@ __GFX_API_CALL void gfx_api_buffer_use(gfx_context_t ctx_id,gfx_buffer_t buffer_
 	if (!buffer){
 		return;
 	}
-	SLL_WARN("Unimplemented!");
+	if (buffer->type&GFX_BUFFER_TYPE_VERTEX){
+		VkDeviceSize offset=0;
+		ctx->function_table.vkCmdBindVertexBuffers(ctx->frame.command_buffer,0,1,&(buffer->device.buffer),&offset);
+	}
+	else if (buffer->type&GFX_BUFFER_TYPE_INDEX){
+		ctx->function_table.vkCmdBindIndexBuffer(ctx->frame.command_buffer,buffer->device.buffer,0,VK_INDEX_TYPE_UINT32);
+	}
 }

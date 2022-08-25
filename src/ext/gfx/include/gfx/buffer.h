@@ -12,6 +12,9 @@
 #define GFX_BUFFER_TYPE_INDEX 2
 #define GFX_BUFFER_TYPE_UNIFORM 4
 
+#define GFX_BUFFER_DATA_TYPE_UINT32 0
+#define GFX_BUFFER_DATA_TYPE_FLOAT 1
+
 #define GFX_BUFFER_UPDATE_FREQUENCY_HINT_NEVER 0
 #define GFX_BUFFER_UPDATE_FREQUENCY_HINT_LOW 1
 #define GFX_BUFFER_UPDATE_FREQUENCY_HINT_MEDIUM 2
@@ -34,6 +37,17 @@ typedef uint8_t gfx_buffer_flags_t;
 
 
 
+typedef sll_bool_t gfx_buffer_data_type_t;
+
+
+
+typedef union _GFX_RAW_BUFFER_VALUE{
+	float float_;
+	uint32_t uint32;
+} gfx_raw_buffer_value_t;
+
+
+
 typedef struct _GFX_VULKAN_BUFFER_DATA{
 	VkBuffer buffer;
 	VkDeviceMemory memory;
@@ -43,12 +57,13 @@ typedef struct _GFX_VULKAN_BUFFER_DATA{
 
 typedef struct _GFX_BUFFER_DATA{
 	gfx_buffer_type_t type;
+	gfx_buffer_data_type_t data_type;
 	gfx_buffer_update_frequency_hint_t update_frequency_hint;
 	gfx_buffer_flags_t flags;
 	VkBufferUsageFlagBits usage;
+	sll_array_length_t size;
 	gfx_vulkan_buffer_data_t device;
 	gfx_vulkan_buffer_data_t host;
-	sll_array_length_t last_size;
 } gfx_buffer_data_t;
 
 
@@ -61,7 +76,7 @@ void _delete_buffer(const gfx_context_data_t* ctx,gfx_buffer_data_t* buffer_data
 
 
 
-__GFX_API_CALL gfx_buffer_t gfx_api_buffer_create(gfx_context_t ctx_id,gfx_buffer_type_t type);
+__GFX_API_CALL gfx_buffer_t gfx_api_buffer_create(gfx_context_t ctx_id,gfx_buffer_type_t type,gfx_buffer_data_type_t data_type);
 
 
 
