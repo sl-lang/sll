@@ -9,13 +9,15 @@
 
 
 
-(# delete)
+(# delete _type_to_string)
 
 
 
 (= gfx_shader_type (&:
 	(,,, data
-		(@@ (<- string$format "<gfx:shader context=%s>"
+		(@@ (<- string$format "<gfx:shader type=%s entry_point=%s context=%s>"
+			(: _type_to_string data$type)
+			data$entry_point
 			(:: data$ctx string_type)
 		))
 	) @@string@@
@@ -23,11 +25,18 @@
 		(<- delete data)
 	) @@delete@@
 	(~ int_type) _handle
+	(~ int_type) type
+	(~ string_type) entry_point
 	(~ gfx:context$gfx_context_type) ctx
 	weakref$weakref_type _ref_object
 ))
 
 (= gfx_shader_module_type (&:
+	(~ int_type) TYPE_FRAGMENT
+	(~ int_type) TYPE_GEOMETRY
+	(~ int_type) TYPE_TESSALATION_CONTROL
+	(~ int_type) TYPE_TESSALATION_EVALUATION
+	(~ int_type) TYPE_VERTEX
 	(~ type_type) gfx_shader_type
 	(~ func_type) create
 	(~ func_type) delete
@@ -35,15 +44,39 @@
 
 
 
-(= create (,,, ctx bytecode
+(= TYPE_VERTEX 0)
+(= TYPE_TESSALATION_CONTROL 1)
+(= TYPE_TESSALATION_EVALUATION 2)
+(= TYPE_GEOMETRY 3)
+(= TYPE_FRAGMENT 4)
+
+(= _type_to_string <
+	TYPE_VERTEX "Vertex"
+	TYPE_TESSALATION_CONTROL "Tessalation Control"
+	TYPE_TESSALATION_EVALUATION "Tessalation Evaluation"
+	TYPE_GEOMETRY "Geometry"
+	TYPE_FRAGMENT "Fragment"
+>)
+
+
+
+(= create (,,, ctx bytecode type entry_point
 	(? (! ctx) (@@ nil))
 	(= ctx (:: ctx gfx:context$gfx_context_type))
+	(= type (:: type int_type))
+	(? (||
+		(< type TYPE_VERTEX)
+		(> type TYPE_FRAGMENT)
+	) (= type TYPE_VERTEX))
+	(= entry_point (:: entry_point string_type))
 	(= handle (<- (... "gfx:shader_create")
 		ctx$_handle
 		(:: bytecode string_type)
 	))
 	(= out (. gfx_shader_type
 		handle
+		type
+		entry_point
 		ctx
 	))
 	(= out$_ref_object (<- weakref$ref out))
@@ -61,6 +94,11 @@
 
 
 (= gfx:shader (. gfx_shader_module_type
+	TYPE_FRAGMENT
+	TYPE_GEOMETRY
+	TYPE_TESSALATION_CONTROL
+	TYPE_TESSALATION_EVALUATION
+	TYPE_VERTEX
 	gfx_shader_type
 	create
 	delete
