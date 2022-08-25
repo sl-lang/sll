@@ -61,17 +61,41 @@ __GFX_API_CALL gfx_pipeline_t gfx_api_pipeline_create(gfx_context_t ctx_id,gfx_p
 		(vertex_input_attributes+i)->binding=(uint32_t)(input_attribute->data.array.data[0]->data.int_);
 		(vertex_input_attributes+i)->location=(uint32_t)(input_attribute->data.array.data[1]->data.int_);
 		(vertex_input_attributes+i)->offset=(uint32_t)(input_attribute->data.array.data[2]->data.int_);
-		if (input_attribute->data.array.data[3]->data.int_==GFX_INPUT_TYPE_R){
+		if (input_attribute->data.array.data[3]->data.int_==GFX_INPUT_TYPE_FLOAT_1){
 			(vertex_input_attributes+i)->format=VK_FORMAT_R32_SFLOAT;
 		}
-		else if (input_attribute->data.array.data[3]->data.int_==GFX_INPUT_TYPE_RG){
+		else if (input_attribute->data.array.data[3]->data.int_==GFX_INPUT_TYPE_FLOAT_2){
 			(vertex_input_attributes+i)->format=VK_FORMAT_R32G32_SFLOAT;
 		}
-		else if (input_attribute->data.array.data[3]->data.int_==GFX_INPUT_TYPE_RGB){
+		else if (input_attribute->data.array.data[3]->data.int_==GFX_INPUT_TYPE_FLOAT_3){
 			(vertex_input_attributes+i)->format=VK_FORMAT_R32G32B32_SFLOAT;
 		}
-		else{
+		else if (input_attribute->data.array.data[3]->data.int_==GFX_INPUT_TYPE_FLOAT_4){
 			(vertex_input_attributes+i)->format=VK_FORMAT_R32G32B32A32_SFLOAT;
+		}
+		else if (input_attribute->data.array.data[3]->data.int_==GFX_INPUT_TYPE_UINT_1){
+			(vertex_input_attributes+i)->format=VK_FORMAT_R32_UINT;
+		}
+		else if (input_attribute->data.array.data[3]->data.int_==GFX_INPUT_TYPE_UINT_2){
+			(vertex_input_attributes+i)->format=VK_FORMAT_R32G32_UINT;
+		}
+		else if (input_attribute->data.array.data[3]->data.int_==GFX_INPUT_TYPE_UINT_3){
+			(vertex_input_attributes+i)->format=VK_FORMAT_R32G32B32_UINT;
+		}
+		else if (input_attribute->data.array.data[3]->data.int_==GFX_INPUT_TYPE_UINT_4){
+			(vertex_input_attributes+i)->format=VK_FORMAT_R32G32B32A32_UINT;
+		}
+		else if (input_attribute->data.array.data[3]->data.int_==GFX_INPUT_TYPE_SINT_1){
+			(vertex_input_attributes+i)->format=VK_FORMAT_R32_SINT;
+		}
+		else if (input_attribute->data.array.data[3]->data.int_==GFX_INPUT_TYPE_SINT_2){
+			(vertex_input_attributes+i)->format=VK_FORMAT_R32G32_SINT;
+		}
+		else if (input_attribute->data.array.data[3]->data.int_==GFX_INPUT_TYPE_SINT_3){
+			(vertex_input_attributes+i)->format=VK_FORMAT_R32G32B32_SINT;
+		}
+		else{
+			(vertex_input_attributes+i)->format=VK_FORMAT_R32G32B32A32_SINT;
 		}
 	}
 	VkPipelineVertexInputStateCreateInfo vertex_input_state={

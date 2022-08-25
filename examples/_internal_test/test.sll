@@ -783,13 +783,13 @@ abc` '\n')
 				0
 				0
 				0
-				gfx:pipeline$INPUT_TYPE_RGB
+				gfx:pipeline$INPUT_TYPE_FLOAT_3
 			]
 			[
 				0
 				1
 				12
-				gfx:pipeline$INPUT_TYPE_RGB
+				gfx:pipeline$INPUT_TYPE_FLOAT_3
 			]
 		]
 		24
