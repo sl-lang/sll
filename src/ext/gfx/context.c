@@ -271,7 +271,7 @@ static void _end_frame(gfx_context_data_t* ctx){
 			0,
 			NULL
 		};
-		VULKAN_CALL(ctx->function_table.vkQueueSubmit(ctx->command.queue,1,&submit_info,ctx->buffer_transfer.fence));
+		VULKAN_CALL(ctx->function_table.vkQueueSubmit(ctx->buffer_transfer.queue,1,&submit_info,ctx->buffer_transfer.fence));
 		VULKAN_CALL(ctx->function_table.vkWaitForFences(ctx->device.logical,1,&(ctx->buffer_transfer.fence),VK_TRUE,UINT64_MAX));
 		VULKAN_CALL(ctx->function_table.vkResetFences(ctx->device.logical,1,&(ctx->buffer_transfer.fence)));
 	}
@@ -321,7 +321,8 @@ void _delete_context(gfx_context_data_t* ctx){
 		_delete_shader(ctx,shader);
 	});
 	ctx->function_table.vkDestroyFence(ctx->device.logical,ctx->buffer_transfer.fence,NULL);
-	ctx->function_table.vkFreeCommandBuffers(ctx->device.logical,ctx->command.pool,1,&(ctx->buffer_transfer.command_buffer));
+	ctx->function_table.vkFreeCommandBuffers(ctx->device.logical,ctx->buffer_transfer.command_pool,1,&(ctx->buffer_transfer.command_buffer));
+	ctx->function_table.vkDestroyCommandPool(ctx->device.logical,ctx->buffer_transfer.command_pool,NULL);
 	_release_swapchain(ctx);
 	sll_deallocate(ctx->swapchain.image_views);
 	sll_deallocate(ctx->sync.fences);
@@ -421,15 +422,18 @@ __GFX_API_CALL gfx_context_t gfx_api_context_create(void* handle,void* extra_dat
 	ctx->function_table.vkGetPhysicalDeviceQueueFamilyProperties(ctx->device.physical,&count,NULL);
 	VkQueueFamilyProperties* queue_properties=sll_allocate_stack(count*sizeof(VkQueueFamilyProperties));
 	ctx->function_table.vkGetPhysicalDeviceQueueFamilyProperties(ctx->device.physical,&count,queue_properties);
-	uint32_t device_queue_index=0;
+	uint32_t graphic_queue_index=0;
+	uint32_t transfer_queue_index=0;
 	for (uint32_t i=0;i<count;i++){
 		if ((queue_properties+i)->queueFlags&VK_QUEUE_GRAPHICS_BIT){
 			VkBool32 present_support;
 			VULKAN_CALL(ctx->function_table.vkGetPhysicalDeviceSurfaceSupportKHR(ctx->device.physical,i,ctx->surface.handle,&present_support));
 			if (present_support){
-				device_queue_index=i;
-				break;
+				graphic_queue_index=i;
 			}
+		}
+		if ((queue_properties+i)->queueFlags&VK_QUEUE_TRANSFER_BIT){
+			transfer_queue_index=i;
 		}
 	}
 	sll_deallocate(queue_properties);
@@ -449,13 +453,23 @@ __GFX_API_CALL gfx_context_t gfx_api_context_create(void* handle,void* extra_dat
 	if (ctx->surface.color_format==VK_FORMAT_UNDEFINED){
 		ctx->surface.color_format=VK_FORMAT_B8G8R8A8_UNORM;
 	}
-	VkDeviceQueueCreateInfo device_queue_info={
-		VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO,
-		NULL,
-		0,
-		device_queue_index,
-		1,
-		&_default_queue_priority
+	VkDeviceQueueCreateInfo device_queue_info[2]={
+		{
+			VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO,
+			NULL,
+			0,
+			graphic_queue_index,
+			1,
+			&_default_queue_priority
+		},
+		{
+			VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO,
+			NULL,
+			0,
+			transfer_queue_index,
+			1,
+			&_default_queue_priority
+		}
 	};
 	const char* device_extensions[1]={
 		VK_KHR_SWAPCHAIN_EXTENSION_NAME
@@ -466,8 +480,8 @@ __GFX_API_CALL gfx_context_t gfx_api_context_create(void* handle,void* extra_dat
 		VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO,
 		NULL,
 		0,
-		1,
-		&device_queue_info,
+		1+(graphic_queue_index!=transfer_queue_index),
+		device_queue_info,
 		0,
 		NULL,
 		1,
@@ -479,10 +493,10 @@ __GFX_API_CALL gfx_context_t gfx_api_context_create(void* handle,void* extra_dat
 		VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO,
 		NULL,
 		VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT,
-		device_queue_index
+		graphic_queue_index
 	};
 	VULKAN_CALL(ctx->function_table.vkCreateCommandPool(ctx->device.logical,&command_pool_creation_info,NULL,&(ctx->command.pool)));
-	ctx->function_table.vkGetDeviceQueue(ctx->device.logical,device_queue_index,0,&(ctx->command.queue));
+	ctx->function_table.vkGetDeviceQueue(ctx->device.logical,graphic_queue_index,0,&(ctx->command.queue));
 	VkAttachmentDescription render_pass_attachments[2]={
 		{
 			0,
@@ -575,10 +589,13 @@ __GFX_API_CALL gfx_context_t gfx_api_context_create(void* handle,void* extra_dat
 	VULKAN_CALL(ctx->function_table.vkCreateSemaphore(ctx->device.logical,&semaphore_creation_info,NULL,&(ctx->sync.present_semaphore)));
 	VULKAN_CALL(ctx->function_table.vkCreateSemaphore(ctx->device.logical,&semaphore_creation_info,NULL,&(ctx->sync.render_semaphore)));
 	_create_swapchain(ctx);
+	command_pool_creation_info.queueFamilyIndex=transfer_queue_index;
+	VULKAN_CALL(ctx->function_table.vkCreateCommandPool(ctx->device.logical,&command_pool_creation_info,NULL,&(ctx->buffer_transfer.command_pool)));
+	ctx->function_table.vkGetDeviceQueue(ctx->device.logical,transfer_queue_index,0,&(ctx->buffer_transfer.queue));
 	VkCommandBufferAllocateInfo command_buffer_allocation_info={
 		VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO,
 		NULL,
-		ctx->command.pool,
+		ctx->buffer_transfer.command_pool,
 		VK_COMMAND_BUFFER_LEVEL_PRIMARY,
 		1
 	};

@@ -13,6 +13,8 @@
 
 
 typedef struct _GFX_CONTEXT_BUFFER_TRANSFER_DATA{
+	VkQueue queue;
+	VkCommandPool command_pool;
 	VkCommandBuffer command_buffer;
 	VkFence fence;
 	sll_bool_t has_data;
