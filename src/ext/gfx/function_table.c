@@ -1,6 +1,7 @@
 #include <gfx/buffer.h>
 #include <gfx/color.h>
 #include <gfx/context.h>
+#include <gfx/pipeline.h>
 #include <gfx/shader.h>
 #include <gfx/vulkan.h>
 #include <sll.h>
@@ -19,6 +20,11 @@ static const sll_internal_function_descriptor_t _internal_function_table[]={
 		SLL_CHAR("QQ|")
 	},
 	{
+		SLL_CHAR("gfx:buffer_draw"),
+		gfx_api_buffer_draw,
+		SLL_CHAR("QQ|")
+	},
+	{
 		SLL_CHAR("gfx:buffer_hint_update_frequency"),
 		gfx_api_buffer_hint_update_frequency,
 		SLL_CHAR("QQB|")
@@ -27,6 +33,11 @@ static const sll_internal_function_descriptor_t _internal_function_table[]={
 		SLL_CHAR("gfx:buffer_sync"),
 		gfx_api_buffer_sync,
 		SLL_CHAR("QQ#a|")
+	},
+	{
+		SLL_CHAR("gfx:buffer_use"),
+		gfx_api_buffer_use,
+		SLL_CHAR("QQ|")
 	},
 	{
 		SLL_CHAR("gfx:color_set_clear_color"),
@@ -54,6 +65,21 @@ static const sll_internal_function_descriptor_t _internal_function_table[]={
 		SLL_CHAR("Q|")
 	},
 	{
+		SLL_CHAR("gfx:pipeline_create"),
+		gfx_api_pipeline_create,
+		SLL_CHAR("Q|Q")
+	},
+	{
+		SLL_CHAR("gfx:pipeline_delete"),
+		gfx_api_pipeline_delete,
+		SLL_CHAR("QQ|")
+	},
+	{
+		SLL_CHAR("gfx:pipeline_use"),
+		gfx_api_pipeline_use,
+		SLL_CHAR("QQ|")
+	},
+	{
 		SLL_CHAR("gfx:shader_create"),
 		gfx_api_shader_create,
 		SLL_CHAR("Q#sB#s|Q")
@@ -79,7 +105,7 @@ static const sll_internal_function_descriptor_t _internal_function_table[]={
 
 static const sll_internal_function_table_descriptor_t _internal_function_table_descriptor_data={
 	(const sll_internal_function_descriptor_t*)(&_internal_function_table),
-	13
+	18
 };
 
 

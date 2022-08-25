@@ -115,7 +115,10 @@
 (= draw (,,, buffer
 	(? (! buffer) (@@))
 	(= buffer (:: buffer gfx_buffer_type))
-	(<- (... "gfx:buffer_draw") buffer$ctx$_handle buffer$_handle buffer$data)
+	(<- (?: (& buffer$type TYPE_INDEX)
+		(... "gfx:buffer_draw")
+		(... "gfx:buffer_use")
+	) buffer$ctx$_handle buffer$_handle)
 ))
 
 (= hint_update_frequency (,,, buffer frequency
@@ -139,7 +142,7 @@
 (= use (,,, buffer
 	(? (! buffer) (@@))
 	(= buffer (:: buffer gfx_buffer_type))
-	(<- (... "gfx:buffer_use") buffer$ctx$_handle buffer$_handle buffer$data)
+	(<- (... "gfx:buffer_use") buffer$ctx$_handle buffer$_handle)
 ))
 
 
