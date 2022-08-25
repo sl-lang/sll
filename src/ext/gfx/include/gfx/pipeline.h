@@ -7,6 +7,51 @@
 
 
 
+#define GFX_TOPOLOGY_POINT_LIST 0
+#define GFX_TOPOLOGY_LINE_LIST 1
+#define GFX_TOPOLOGY_LINE_STRIP 2
+#define GFX_TOPOLOGY_TRIANGLE_LIST 3
+#define GFX_TOPOLOGY_TRIANGLE_STRIP 4
+#define GFX_TOPOLOGY_TRIANGLE_FAN 5
+#define GFX_TOPOLOGY_LINE_LIST_WITH_ADJACENCY 6
+#define GFX_TOPOLOGY_LINE_STRIP_WITH_ADJACENCY 7
+#define GFX_TOPOLOGY_TRIANGLE_LIST_WITH_ADJACENCY 8
+#define GFX_TOPOLOGY_TRIANGLE_STRIP_WITH_ADJACENCY 9
+#define GFX_TOPOLOGY_PATCH_LIST 10
+
+#define GFX_INPUT_TYPE_R 0
+#define GFX_INPUT_TYPE_RG 1
+#define GFX_INPUT_TYPE_RGB 2
+#define GFX_INPUT_TYPE_RGBA 3
+
+#define GFX_POLYGON_MODE_POINT 0
+#define GFX_POLYGON_MODE_LINE 1
+#define GFX_POLYGON_MODE_FILL 2
+
+#define GFX_FRONT_FACE_CLOCKWISE 0
+#define GFX_FRONT_FACE_COUNTER_CLOCKWISE 1
+
+#define GFX_CULL_MODE_FRONT 1
+#define GFX_CULL_MODE_BACK 2
+
+
+
+typedef uint8_t gfx_pipeline_topology_t;
+
+
+
+typedef uint8_t gfx_pipeline_polygone_mode_t;
+
+
+
+typedef sll_bool_t gfx_pipeline_front_face_t;
+
+
+
+typedef uint8_t gfx_pipeline_cull_mode_t;
+
+
+
 typedef struct _GFX_PIPELINE_DATA{
 	VkPipeline handle;
 } gfx_pipeline_data_t;
@@ -21,7 +66,7 @@ void _delete_pipeline(const gfx_context_data_t* ctx,gfx_pipeline_data_t* pipelin
 
 
 
-__GFX_API_CALL gfx_pipeline_t gfx_api_pipeline_create(gfx_context_t ctx_id);
+__GFX_API_CALL gfx_pipeline_t gfx_api_pipeline_create(gfx_context_t ctx_id,gfx_pipeline_topology_t topology,const sll_array_t* input_attributes,uint32_t stride,gfx_pipeline_polygone_mode_t polygon_mode,gfx_pipeline_front_face_t front_face,gfx_pipeline_cull_mode_t cull_mode,const sll_array_t* shaders);
 
 
 

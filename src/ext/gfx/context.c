@@ -254,6 +254,26 @@ static void _begin_frame(gfx_context_data_t* ctx){
 		clear_values
 	};
 	ctx->function_table.vkCmdBeginRenderPass(ctx->frame.command_buffer,&render_pass_info,VK_SUBPASS_CONTENTS_INLINE);
+	VkViewport viewport={
+		0,
+		0,
+		ctx->surface.width,
+		ctx->surface.height,
+		0,
+		1
+	};
+	ctx->function_table.vkCmdSetViewport(ctx->frame.command_buffer,0,1,&viewport);
+	VkRect2D scissor={
+		{
+			0,
+			0
+		},
+		{
+			ctx->surface.width,
+			ctx->surface.height
+		}
+	};
+	ctx->function_table.vkCmdSetScissor(ctx->frame.command_buffer,0,1,&scissor);
 }
 
 
