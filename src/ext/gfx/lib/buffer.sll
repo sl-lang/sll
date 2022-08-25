@@ -59,8 +59,10 @@
 	(~ type_type) gfx_buffer_type
 	(~ func_type) create
 	(~ func_type) delete
+	(~ func_type) draw
 	(~ func_type) hint_update_frequency
 	(~ func_type) sync
+	(~ func_type) use
 ))
 
 
@@ -110,6 +112,12 @@
 	(<- (... "gfx:buffer_delete") buffer$ctx$_handle buffer$_handle)
 ))
 
+(= draw (,,, buffer
+	(? (! buffer) (@@))
+	(= buffer (:: buffer gfx_buffer_type))
+	(<- (... "gfx:buffer_draw") buffer$ctx$_handle buffer$_handle buffer$data)
+))
+
 (= hint_update_frequency (,,, buffer frequency
 	(? (! buffer) (@@))
 	(= buffer (:: buffer gfx_buffer_type))
@@ -128,6 +136,12 @@
 	(<- (... "gfx:buffer_sync") buffer$ctx$_handle buffer$_handle buffer$data)
 ))
 
+(= use (,,, buffer
+	(? (! buffer) (@@))
+	(= buffer (:: buffer gfx_buffer_type))
+	(<- (... "gfx:buffer_use") buffer$ctx$_handle buffer$_handle buffer$data)
+))
+
 
 
 (= gfx:buffer (. gfx_buffer_module_type
@@ -142,7 +156,9 @@
 	gfx_buffer_type
 	create
 	delete
+	draw
 	hint_update_frequency
 	sync
+	use
 ))
 (## gfx:buffer)

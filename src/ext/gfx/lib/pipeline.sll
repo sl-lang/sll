@@ -118,6 +118,7 @@
 	(~ type_type) gfx_pipeline_type
 	(~ func_type) create
 	(~ func_type) delete
+	(~ func_type) use
 ))
 
 
@@ -230,6 +231,13 @@
 	(<- (... "gfx:pipeline_delete") pipeline$ctx$_handle pipeline$_handle)
 ))
 
+(= use (,,, pipeline
+	(? (! pipeline) (@@))
+	(= pipeline (:: pipeline gfx_pipeline_type))
+	(<- array$remove pipeline$ctx$pipelines pipeline$_ref_object)
+	(<- (... "gfx:pipeline_use") pipeline$ctx$_handle pipeline$_handle)
+))
+
 
 
 (= gfx:pipeline (. gfx_pipeline_module_type
@@ -260,5 +268,6 @@
 	gfx_pipeline_type
 	create
 	delete
+	use
 ))
 (## gfx:pipeline)
