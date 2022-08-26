@@ -813,11 +813,11 @@ abc` '\n')
 			"main"
 		)
 	]
-)))
+))
 (= verticies (<- gfx:buffer$create ctx gfx:buffer$TYPE_VERTEX gfx:buffer$DATA_TYPE_FLOAT32 [
-	1.0 1.0 0.0 1.0 0.0 0.0
-	-1.0 1.0 0.0 0.0 1.0 0.0
-	0.0 -1.0 0.0 0.0 0.0 1.0
+	+1.0 +1.0 +0.0 1.0 0.0 0.0
+	-1.0 +1.0 +0.0 0.0 1.0 0.0
+	+0.0 -1.0 +0.0 0.0 0.0 1.0
 ]))
 (= indicies (<- gfx:buffer$create ctx gfx:buffer$TYPE_INDEX gfx:buffer$DATA_TYPE_UINT16 [
 	0 1 2
