@@ -3,6 +3,8 @@
 ## Added
 
 - Ability to add documentation comments to type declarations
+- GFX buffers, pipelines and shaders
+- GFX code examples
 - Implemented `weakref$get_default`
 
 ## Changed
