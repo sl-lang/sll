@@ -3,6 +3,7 @@
 	"gfx/_load_library.sll"
 	"gfx/_setup_window_integration.sll"
 	"string.sll"
+	"time.sll"
 	"types.sll"
 	"weakref.sll"
 	"window_manager/util.sll"
@@ -31,6 +32,8 @@
 	array_type buffers
 	array_type pipelines
 	array_type shaders
+	float_type delta_time
+	float_type _last_time
 ))
 
 (= gfx_context_module_type (&:
@@ -59,6 +62,9 @@
 		[0 0 0 0]
 		[]
 		[]
+		[]
+		0
+		(<- time$time)
 	))
 	(= window$_gfx_context (<- weakref$ref out))
 	(@@ out)
@@ -96,6 +102,9 @@
 	(? (! ctx) (@@))
 	(= ctx (:: ctx gfx_context_type))
 	(<- (... "gfx:context_render") ctx$_handle)
+	(= current (<- time$time))
+	(= ctx$delta_time (- current ctx$_last_time))
+	(= ctx$_last_time current)
 ))
 
 
