@@ -1,6 +1,7 @@
 #include <gfx/buffer.h>
 #include <gfx/common.h>
 #include <gfx/context.h>
+#include <gfx/memory.h>
 #include <gfx/util.h>
 #include <gfx/vulkan.h>
 #include <sll.h>
@@ -15,11 +16,11 @@ static void _delete_vulkan_buffers(const gfx_context_data_t* ctx,gfx_buffer_data
 	}
 	if (buffer_data->flags&GFX_BUFFER_FLAG_HAS_DEVICE_BUFFER){
 		ctx->function_table.vkDestroyBuffer(ctx->device.logical,buffer_data->device.buffer,NULL);
-		ctx->function_table.vkFreeMemory(ctx->device.logical,buffer_data->device.memory,NULL);
+		_deallocate_device_memory(ctx,buffer_data->device.memory);
 	}
 	if (buffer_data->flags&GFX_BUFFER_FLAG_HAS_HOST_BUFFER){
 		ctx->function_table.vkDestroyBuffer(ctx->device.logical,buffer_data->host.buffer,NULL);
-		ctx->function_table.vkFreeMemory(ctx->device.logical,buffer_data->host.memory,NULL);
+		_deallocate_device_memory(ctx,buffer_data->host.memory);
 	}
 	buffer_data->flags=0;
 }
@@ -118,7 +119,7 @@ __GFX_API_CALL void gfx_api_buffer_hint_update_frequency(gfx_context_t ctx_id,gf
 				buffer->host_buffer_data=NULL;
 			}
 			ctx->function_table.vkDestroyBuffer(ctx->device.logical,buffer->host.buffer,NULL);
-			ctx->function_table.vkFreeMemory(ctx->device.logical,buffer->host.memory,NULL);
+			_deallocate_device_memory(ctx,buffer->host.memory);
 		}
 		buffer->flags&=~GFX_BUFFER_FLAG_HAS_HOST_BUFFER;
 	}
@@ -154,13 +155,7 @@ __GFX_API_CALL void gfx_api_buffer_sync(gfx_context_t ctx_id,gfx_buffer_t buffer
 		VULKAN_CALL(ctx->function_table.vkCreateBuffer(ctx->device.logical,&buffer_creation_info,NULL,&(buffer->device.buffer)));
 		VkMemoryRequirements memory_requirements;
 		ctx->function_table.vkGetBufferMemoryRequirements(ctx->device.logical,buffer->device.buffer,&memory_requirements);
-		VkMemoryAllocateInfo memory_allocation_info={
-			VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO,
-			NULL,
-			memory_requirements.size,
-			_get_memory_type(ctx,memory_requirements.memoryTypeBits,VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT)
-		};
-		VULKAN_CALL(ctx->function_table.vkAllocateMemory(ctx->device.logical,&memory_allocation_info,NULL,&(buffer->device.memory)));
+		buffer->device.memory=_allocate_device_memory(ctx,memory_requirements.size,_get_memory_type(ctx,memory_requirements.memoryTypeBits,VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT));
 		VULKAN_CALL(ctx->function_table.vkBindBufferMemory(ctx->device.logical,buffer->device.buffer,buffer->device.memory,0));
 	}
 	if (!(buffer->flags&GFX_BUFFER_FLAG_HAS_HOST_BUFFER)){
@@ -177,13 +172,7 @@ __GFX_API_CALL void gfx_api_buffer_sync(gfx_context_t ctx_id,gfx_buffer_t buffer
 		VULKAN_CALL(ctx->function_table.vkCreateBuffer(ctx->device.logical,&buffer_creation_info,NULL,&(buffer->host.buffer)));
 		VkMemoryRequirements memory_requirements;
 		ctx->function_table.vkGetBufferMemoryRequirements(ctx->device.logical,buffer->host.buffer,&memory_requirements);
-		VkMemoryAllocateInfo memory_allocation_info={
-			VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO,
-			NULL,
-			memory_requirements.size,
-			_get_memory_type(ctx,memory_requirements.memoryTypeBits,VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT)
-		};
-		VULKAN_CALL(ctx->function_table.vkAllocateMemory(ctx->device.logical,&memory_allocation_info,NULL,&(buffer->host.memory)));
+		buffer->host.memory=_allocate_device_memory(ctx,memory_requirements.size,_get_memory_type(ctx,memory_requirements.memoryTypeBits,VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT));
 		VULKAN_CALL(ctx->function_table.vkBindBufferMemory(ctx->device.logical,buffer->host.buffer,buffer->host.memory,0));
 	}
 	buffer->flags=GFX_BUFFER_FLAG_HAS_DEVICE_BUFFER|GFX_BUFFER_FLAG_HAS_HOST_BUFFER;

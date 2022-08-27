@@ -62,7 +62,7 @@ __GFX_API_CALL gfx_pipeline_t gfx_api_pipeline_create(gfx_context_t ctx_id,gfx_p
 		(vertex_input_attributes+i)->binding=(uint32_t)(input_attribute->data.array.data[0]->data.int_);
 		(vertex_input_attributes+i)->location=(uint32_t)(input_attribute->data.array.data[1]->data.int_);
 		(vertex_input_attributes+i)->offset=(uint32_t)(input_attribute->data.array.data[2]->data.int_);
-		(vertex_input_attributes+i)->format=_encode_data_format(input_attribute->data.array.data[3]->data.int_);
+		(vertex_input_attributes+i)->format=(gfx_data_format_t)_encode_data_format(input_attribute->data.array.data[3]->data.int_);
 	}
 	VkPipelineVertexInputStateCreateInfo vertex_input_state={
 		VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO,
