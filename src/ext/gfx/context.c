@@ -1,6 +1,7 @@
 #include <gfx/buffer.h>
 #include <gfx/common.h>
 #include <gfx/context.h>
+#include <gfx/memory.h>
 #include <gfx/pipeline.h>
 #include <gfx/shader.h>
 #include <gfx/util.h>
@@ -37,7 +38,7 @@ static void _release_swapchain(gfx_context_data_t* ctx){
 	}
 	ctx->function_table.vkDestroyImage(ctx->device.logical,ctx->depth_stensil.image,NULL);
 	ctx->function_table.vkDestroyImageView(ctx->device.logical,ctx->depth_stensil.image_view,NULL);
-	ctx->function_table.vkFreeMemory(ctx->device.logical,ctx->depth_stensil.memory,NULL);
+	_deallocate_device_memory(ctx,ctx->depth_stensil.memory);
 }
 
 
@@ -111,15 +112,9 @@ static void _create_swapchain(gfx_context_data_t* ctx){
 		0
 	};
 	VULKAN_CALL(ctx->function_table.vkCreateImage(ctx->device.logical,&depth_stensil_image_creation_info,NULL,&(ctx->depth_stensil.image)));
-	VkMemoryRequirements mem_requirements;
-	ctx->function_table.vkGetImageMemoryRequirements(ctx->device.logical,ctx->depth_stensil.image,&mem_requirements);
-	VkMemoryAllocateInfo mem_alloc_info={
-		VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO,
-		NULL,
-		mem_requirements.size,
-		_get_memory_type(ctx,mem_requirements.memoryTypeBits,VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT)
-	};
-	VULKAN_CALL(ctx->function_table.vkAllocateMemory(ctx->device.logical,&mem_alloc_info,NULL,&(ctx->depth_stensil.memory)));
+	VkMemoryRequirements memory_requirements;
+	ctx->function_table.vkGetImageMemoryRequirements(ctx->device.logical,ctx->depth_stensil.image,&memory_requirements);
+	ctx->depth_stensil.memory=_allocate_device_memory(ctx,memory_requirements.size,_get_memory_type(ctx,memory_requirements.memoryTypeBits,VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT));
 	VULKAN_CALL(ctx->function_table.vkBindImageMemory(ctx->device.logical,ctx->depth_stensil.image,ctx->depth_stensil.memory,0));
 	VkImageViewCreateInfo deptch_stensil_image_view_creation_info={
 		VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO,
