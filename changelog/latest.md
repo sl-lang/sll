@@ -1,18 +1,5 @@
-# Sll [0.7.32] - 2022-08-27
+# Sll [0.8.0] - Ongoing
 
-## Added
+*Nothing*
 
-- Ability to add documentation comments to type declarations
-- GFX buffers, pipelines and shaders
-- GFX code examples
-- Implemented `weakref$get_default`
-
-## Changed
-
-- Fixed `path$size`
-- Fixed bug with the following string formatting expression: `%+f`
-- Fixed weak reference object reference counting bugs
-- Fixed window manager mouse button flags
-- Sequential documentation comments are now concatenated instead of being ignored
-
-[0.7.32]: https://github.com/sl-lang/sll/compare/sll-v0.7.31...sll-v0.7.32
+[0.8.0]: https://github.com/sl-lang/sll/compare/sll-v0.7.32...main

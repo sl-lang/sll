@@ -33,7 +33,7 @@
  * \desc Docs!
  * \type sll_version_t
  */
-#define SLL_VERSION_MINOR 7
+#define SLL_VERSION_MINOR 8
 
 
 
@@ -44,7 +44,7 @@
  * \desc Docs!
  * \type sll_version_t
  */
-#define SLL_VERSION_PATCH 32
+#define SLL_VERSION_PATCH 0
 
 
 
