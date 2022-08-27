@@ -817,20 +817,14 @@ abc` '\n')
 (= verticies (<- gfx:buffer$create ctx gfx:buffer$TYPE_VERTEX gfx:buffer$DATA_TYPE_FLOAT32 [
 	+1.0 +1.0 +0.0 1.0 0.0 0.0
 	-1.0 +1.0 +0.0 0.0 1.0 0.0
-	+0.0 -1.0 +0.0 0.0 0.0 1.0
+	-1.0 -1.0 +0.0 0.0 0.0 1.0
+	+1.0 -1.0 +0.0 1.0 0.0 1.0
 ]))
 (= indicies (<- gfx:buffer$create ctx gfx:buffer$TYPE_INDEX gfx:buffer$DATA_TYPE_UINT16 [
 	0 1 2
+	0 2 3
 ]))
-(= hue 0)
-(= last (<- time$time))
-(= LOOP_TIME 4)
 (-> nil (! (& window$flags window_manager:window$FLAG_CLOSED))
-	(= current (<- time$time))
-	(= delta (- current last))
-	(= last current)
-	(<- gfx:color$set_clear_color ctx (<- gfx:color$hsv_to_rgb hue 0.4 0.8)
-	(= hue (+ hue (/ delta LOOP_TIME)))
 	(<- gfx:pipeline$use pipeline)
 	(<- gfx:buffer$use verticies)
 	(<- gfx:buffer$use indicies)
