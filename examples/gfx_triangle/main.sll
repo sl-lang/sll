@@ -9,7 +9,6 @@
 	"gfx/context.sll"
 	"gfx/pipeline.sll"
 	"gfx/shader.sll"
-	"time.sll"
 	"window_manager/event.sll"
 	"window_manager/keyboard.sll"
 	"window_manager/window.sll"
@@ -76,13 +75,9 @@
 	0 1 2
 ]))
 (= hue 0)
-(= last (<- time$time))
 (-> nil (! (& window$flags window_manager:window$FLAG_CLOSED))
-	(= current (<- time$time))
-	(= delta (- current last))
-	(= last current)
 	(<- gfx:color$set_clear_color ctx (<- gfx:color$hsv_to_rgb hue 0.4 0.8)
-	(= hue (+ hue (/ delta COLOR_ANIMATION_LOOP_TIME)))
+	(= hue (+ hue (/ ctx$delta_time COLOR_ANIMATION_LOOP_TIME)))
 	(<- gfx:pipeline$use pipeline)
 	(<- gfx:buffer$use verticies)
 	(<- gfx:buffer$use indicies)

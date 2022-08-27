@@ -9,6 +9,10 @@
 
 
 static void _delete_vulkan_buffers(const gfx_context_data_t* ctx,gfx_buffer_data_t* buffer_data){
+	if (buffer_data->host_buffer_data){
+		ctx->function_table.vkUnmapMemory(ctx->device.logical,buffer_data->host.memory);
+		buffer_data->host_buffer_data=NULL;
+	}
 	if (buffer_data->flags&GFX_BUFFER_FLAG_HAS_DEVICE_BUFFER){
 		ctx->function_table.vkDestroyBuffer(ctx->device.logical,buffer_data->device.buffer,NULL);
 		ctx->function_table.vkFreeMemory(ctx->device.logical,buffer_data->device.memory,NULL);
@@ -60,6 +64,7 @@ __GFX_API_CALL gfx_buffer_t gfx_api_buffer_create(gfx_context_t ctx_id,gfx_buffe
 	}
 	buffer->length=0;
 	buffer->size=0;
+	buffer->host_buffer_data=NULL;
 	gfx_buffer_t out;
 	SLL_HANDLE_CONTAINER_ALLOC(&(ctx->buffers),&out);
 	*(ctx->buffers.data+out)=buffer;
@@ -106,6 +111,17 @@ __GFX_API_CALL void gfx_api_buffer_hint_update_frequency(gfx_context_t ctx_id,gf
 		return;
 	}
 	buffer->update_frequency_hint=hint;
+	if (hint==GFX_BUFFER_UPDATE_FREQUENCY_HINT_NEVER){
+		if (buffer->flags&GFX_BUFFER_FLAG_HAS_HOST_BUFFER){
+			if (buffer->host_buffer_data){
+				ctx->function_table.vkUnmapMemory(ctx->device.logical,buffer->host.memory);
+				buffer->host_buffer_data=NULL;
+			}
+			ctx->function_table.vkDestroyBuffer(ctx->device.logical,buffer->host.buffer,NULL);
+			ctx->function_table.vkFreeMemory(ctx->device.logical,buffer->host.memory,NULL);
+		}
+		buffer->flags&=~GFX_BUFFER_FLAG_HAS_HOST_BUFFER;
+	}
 }
 
 
@@ -171,28 +187,29 @@ __GFX_API_CALL void gfx_api_buffer_sync(gfx_context_t ctx_id,gfx_buffer_t buffer
 		VULKAN_CALL(ctx->function_table.vkBindBufferMemory(ctx->device.logical,buffer->host.buffer,buffer->host.memory,0));
 	}
 	buffer->flags=GFX_BUFFER_FLAG_HAS_DEVICE_BUFFER|GFX_BUFFER_FLAG_HAS_HOST_BUFFER;
-	void* host_buffer_data;
-	VULKAN_CALL(ctx->function_table.vkMapMemory(ctx->device.logical,buffer->host.memory,0,buffer->size,0,&host_buffer_data));
+	if (!buffer->host_buffer_data){
+		VULKAN_CALL(ctx->function_table.vkMapMemory(ctx->device.logical,buffer->host.memory,0,buffer->size,0,&(buffer->host_buffer_data)));
+	}
 	if (buffer->data_type==GFX_BUFFER_DATA_TYPE_UINT16){
-		uint16_t* ptr=host_buffer_data;
+		uint16_t* ptr=buffer->host_buffer_data;
 		for (sll_array_length_t i=0;i<data->length;i++){
 			*(ptr+i)=data->data[i]->data.int_&0xffff;
 		}
 	}
 	else if (buffer->data_type==GFX_BUFFER_DATA_TYPE_UINT32){
-		uint32_t* ptr=host_buffer_data;
+		uint32_t* ptr=buffer->host_buffer_data;
 		for (sll_array_length_t i=0;i<data->length;i++){
 			*(ptr+i)=data->data[i]->data.int_&0xffffffff;
 		}
 	}
 	else if (buffer->data_type==GFX_BUFFER_DATA_TYPE_FLOAT32){
-		float* ptr=host_buffer_data;
+		float* ptr=buffer->host_buffer_data;
 		for (sll_array_length_t i=0;i<data->length;i++){
 			*(ptr+i)=(float)(data->data[i]->data.float_);
 		}
 	}
 	else{
-		uint64_t* ptr=host_buffer_data;
+		uint64_t* ptr=buffer->host_buffer_data;
 		for (sll_array_length_t i=0;i<data->length;i++){
 			*(ptr+i)=data->data[i]->data.int_;
 		}
@@ -205,7 +222,10 @@ __GFX_API_CALL void gfx_api_buffer_sync(gfx_context_t ctx_id,gfx_buffer_t buffer
 		buffer->size
 	};
 	VULKAN_CALL(ctx->function_table.vkFlushMappedMemoryRanges(ctx->device.logical,1,&mapped_memory_range));
-	ctx->function_table.vkUnmapMemory(ctx->device.logical,buffer->host.memory);
+	if (buffer->update_frequency_hint!=GFX_BUFFER_UPDATE_FREQUENCY_HINT_HIGH){
+		ctx->function_table.vkUnmapMemory(ctx->device.logical,buffer->host.memory);
+		buffer->host_buffer_data=NULL;
+	}
 	VkBufferCopy buffer_copy={
 		0,
 		0,

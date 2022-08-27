@@ -62,6 +62,7 @@ typedef struct _GFX_BUFFER_DATA{
 	sll_size_t size;
 	gfx_vulkan_buffer_data_t device;
 	gfx_vulkan_buffer_data_t host;
+	void* host_buffer_data;
 } gfx_buffer_data_t;
 
 

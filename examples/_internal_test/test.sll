@@ -824,6 +824,7 @@ abc` '\n')
 	-1.0 -1.0 +1.0 0.0 0.0 1.0
 	+1.0 -1.0 +1.0 1.0 0.0 1.0
 ]))
+(<- gfx:buffer$hint_update_frequency verticies gfx:buffer$FREQUENCY_HIGH)
 (= indicies (<- gfx:buffer$create ctx gfx:buffer$TYPE_INDEX gfx:buffer$DATA_TYPE_UINT16 [
 	0 1 2
 	0 2 3
