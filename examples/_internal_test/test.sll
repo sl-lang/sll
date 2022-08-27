@@ -815,14 +815,14 @@ abc` '\n')
 	]
 ))
 (= verticies (<- gfx:buffer$create ctx gfx:buffer$TYPE_VERTEX gfx:buffer$DATA_TYPE_FLOAT32 [
-	+0.5 +0.5 +0.5 0.5 0.0 0.0
-	-0.5 +0.5 +0.5 0.0 0.5 0.0
-	-0.5 -0.5 +0.5 0.0 0.0 0.5
-	+0.5 -0.5 +0.5 0.5 0.0 0.5
-	+1.0 +1.0 +1.0 1.0 0.0 0.0
-	-1.0 +1.0 +1.0 0.0 1.0 0.0
-	-1.0 -1.0 +1.0 0.0 0.0 1.0
-	+1.0 -1.0 +1.0 1.0 0.0 1.0
+	+0.5 +0.5 +0.85 1.0 1.0 1.0
+	-0.5 +0.5 +0.25 1.0 1.0 1.0
+	-0.5 -0.5 +0.65 1.0 1.0 1.0
+	+0.5 -0.5 +0.5 1.0 1.0 1.0
+	+1.0 +1.0 +0.5 1.0 0.0 0.0
+	-1.0 +1.0 +0.5 0.0 1.0 0.0
+	-1.0 -1.0 +0.5 0.0 0.0 1.0
+	+1.0 -1.0 +0.5 1.0 0.0 1.0
 ]))
 (<- gfx:buffer$hint_update_frequency verticies gfx:buffer$FREQUENCY_HIGH)
 (= indicies (<- gfx:buffer$create ctx gfx:buffer$TYPE_INDEX gfx:buffer$DATA_TYPE_UINT16 [
@@ -832,7 +832,7 @@ abc` '\n')
 	4 6 7
 ]))
 (-> nil (! (& window$flags window_manager:window$FLAG_CLOSED))
-	(-> (= i 26) (< i 50)
+	(-> (= i 2) (< i 26)
 		(= value (- (: verticies$data i) ctx$delta_time))
 		(? (< value 0) (= value 1))
 		(= (: verticies$data i) value)
