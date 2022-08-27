@@ -1,4 +1,4 @@
-# Sll [0.7.32] - Ongoing
+# Sll [0.7.32] - 2022-08-27
 
 ## Added
 
@@ -15,4 +15,4 @@
 - Fixed window manager mouse button flags
 - Sequential documentation comments are now concatenated instead of being ignored
 
-[0.7.32]: https://github.com/sl-lang/sll/compare/sll-v0.7.31...main
+[0.7.32]: https://github.com/sl-lang/sll/compare/sll-v0.7.31...sll-v0.7.32
