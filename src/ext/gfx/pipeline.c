@@ -31,10 +31,10 @@ __GFX_API_CALL gfx_pipeline_t gfx_api_pipeline_create(gfx_context_t ctx_id,gfx_p
 	VkDescriptorSetLayoutBinding* layout_bindings=sll_allocate_stack(uniform_buffers->length*sizeof(VkDescriptorSetLayoutBinding));
 	for (sll_array_length_t i=0;i<uniform_buffers->length;i++){
 		sll_object_t elem=uniform_buffers->data[i];
-		(layout_bindings+i)->binding=elem->data.array.data[0]->data.int_;
+		(layout_bindings+i)->binding=(uint32_t)(elem->data.array.data[0]->data.int_);
 		(layout_bindings+i)->descriptorType=VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
 		(layout_bindings+i)->descriptorCount=1;
-		(layout_bindings+i)->stageFlags=_encode_shader_stages(elem->data.array.data[1]->data.int_);
+		(layout_bindings+i)->stageFlags=_encode_shader_stages((gfx_shader_stage_t)(elem->data.array.data[1]->data.int_));
 		(layout_bindings+i)->pImmutableSamplers=NULL;
 	}
 	VkDescriptorSetLayoutCreateInfo descriptorLayout={
@@ -292,7 +292,7 @@ __GFX_API_CALL gfx_pipeline_t gfx_api_pipeline_create(gfx_context_t ctx_id,gfx_p
 	VkWriteDescriptorSet* write_descriptor_sets=sll_allocate_stack(uniform_buffers->length*sizeof(VkWriteDescriptorSet));
 	for (sll_array_length_t i=0;i<uniform_buffers->length;i++){
 		sll_object_t elem=uniform_buffers->data[i];
-		const gfx_buffer_data_t* buffer=SLL_HANDLE_CONTAINER_GET(&(ctx->buffers),elem->data.array.data[2]->data.int_);
+		const gfx_buffer_data_t* buffer=SLL_HANDLE_CONTAINER_GET(&(ctx->buffers),(gfx_shader_t)(elem->data.array.data[2]->data.int_));
 		if (!buffer){
 			SLL_WARN("Should never happen!");
 			continue;
@@ -303,7 +303,7 @@ __GFX_API_CALL gfx_pipeline_t gfx_api_pipeline_create(gfx_context_t ctx_id,gfx_p
 		(write_descriptor_sets+i)->sType=VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
 		(write_descriptor_sets+i)->pNext=NULL;
 		(write_descriptor_sets+i)->dstSet=pipeline->descriptor_set;
-		(write_descriptor_sets+i)->dstBinding=elem->data.array.data[0]->data.int_;
+		(write_descriptor_sets+i)->dstBinding=(uint32_t)(elem->data.array.data[0]->data.int_);
 		(write_descriptor_sets+i)->dstArrayElement=0;
 		(write_descriptor_sets+i)->descriptorCount=1;
 		(write_descriptor_sets+i)->descriptorType=VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
