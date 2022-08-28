@@ -61,4 +61,3 @@
 		))
 	) (<- util$fail_and_exit))
 })
-(:> "End!\n")
