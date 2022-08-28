@@ -28,21 +28,24 @@ __GFX_API_CALL gfx_pipeline_t gfx_api_pipeline_create(gfx_context_t ctx_id,gfx_p
 		return 0;
 	}
 	gfx_pipeline_data_t* pipeline=sll_allocate(sizeof(gfx_pipeline_data_t));
-	VkDescriptorSetLayoutBinding layout_binding={
-		0,
-		VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER,
-		1,
-		VK_SHADER_STAGE_FRAGMENT_BIT,
-		NULL
-	};
+	VkDescriptorSetLayoutBinding* layout_bindings=sll_allocate_stack(uniform_buffers->length*sizeof(VkDescriptorSetLayoutBinding));
+	for (sll_array_length_t i=0;i<uniform_buffers->length;i++){
+		sll_object_t elem=uniform_buffers->data[i];
+		(layout_bindings+i)->binding=elem->data.array.data[0]->data.int_;
+		(layout_bindings+i)->descriptorType=VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+		(layout_bindings+i)->descriptorCount=1;
+		(layout_bindings+i)->stageFlags=_encode_shader_stages(elem->data.array.data[1]->data.int_);
+		(layout_bindings+i)->pImmutableSamplers=NULL;
+	}
 	VkDescriptorSetLayoutCreateInfo descriptorLayout={
 		VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO,
 		NULL,
 		0,
-		1,
-		&layout_binding
+		uniform_buffers->length,
+		layout_bindings
 	};
 	VULKAN_CALL(ctx->function_table.vkCreateDescriptorSetLayout(ctx->device.logical,&descriptorLayout,NULL,&(pipeline->descriptor_set_layout)));
+	sll_deallocate(layout_bindings);
 	VkPipelineLayoutCreateInfo pipeline_layout_creation_info={
 		VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO,
 		NULL,
@@ -285,23 +288,30 @@ __GFX_API_CALL gfx_pipeline_t gfx_api_pipeline_create(gfx_context_t ctx_id,gfx_p
 		&(pipeline->descriptor_set_layout)
 	};
 	VULKAN_CALL(ctx->function_table.vkAllocateDescriptorSets(ctx->device.logical,&allocInfo,&(pipeline->descriptor_set)));
-	gfx_buffer_data_t* buffer=SLL_HANDLE_CONTAINER_GET(&(ctx->buffers),2);
-	VkDescriptorBufferInfo buffer_descriptor={
-		buffer->device.buffer,
-		0,
-		buffer->size
-	};
-	VkWriteDescriptorSet writeDescriptorSet={
-		VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET,
-		NULL,
-		pipeline->descriptor_set,
-		0,
-		0,
-		1,
-		VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER,
-		.pBufferInfo=&buffer_descriptor
-	};
-	ctx->function_table.vkUpdateDescriptorSets(ctx->device.logical,1,&writeDescriptorSet,0,NULL);
+	VkDescriptorBufferInfo* buffer_descriptors=sll_allocate_stack(uniform_buffers->length*sizeof(VkDescriptorBufferInfo));
+	VkWriteDescriptorSet* write_descriptor_sets=sll_allocate_stack(uniform_buffers->length*sizeof(VkWriteDescriptorSet));
+	for (sll_array_length_t i=0;i<uniform_buffers->length;i++){
+		sll_object_t elem=uniform_buffers->data[i];
+		const gfx_buffer_data_t* buffer=SLL_HANDLE_CONTAINER_GET(&(ctx->buffers),elem->data.array.data[2]->data.int_);
+		if (!buffer){
+			SLL_WARN("Should never happen!");
+			continue;
+		}
+		(buffer_descriptors+i)->buffer=buffer->device.buffer;
+		(buffer_descriptors+i)->offset=0;
+		(buffer_descriptors+i)->range=buffer->size;
+		(write_descriptor_sets+i)->sType=VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+		(write_descriptor_sets+i)->pNext=NULL;
+		(write_descriptor_sets+i)->dstSet=pipeline->descriptor_set;
+		(write_descriptor_sets+i)->dstBinding=elem->data.array.data[0]->data.int_;
+		(write_descriptor_sets+i)->dstArrayElement=0;
+		(write_descriptor_sets+i)->descriptorCount=1;
+		(write_descriptor_sets+i)->descriptorType=VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+		(write_descriptor_sets+i)->pBufferInfo=buffer_descriptors+i;
+	}
+	ctx->function_table.vkUpdateDescriptorSets(ctx->device.logical,uniform_buffers->length,write_descriptor_sets,0,NULL);
+	sll_deallocate(write_descriptor_sets);
+	sll_deallocate(buffer_descriptors);
 	gfx_pipeline_t out;
 	SLL_HANDLE_CONTAINER_ALLOC(&(ctx->pipelines),&out);
 	*(ctx->pipelines.data+out)=pipeline;

@@ -23,9 +23,19 @@
 #define GFX_DATA_FORMAT_TYPE_FLOAT 32
 #define GFX_DATA_FORMAT_TYPE_MASK 48
 
+#define GFX_SHADER_STAGE_VERTEX 1
+#define GFX_SHADER_STAGE_TESSELLATION_CONTROL 2
+#define GFX_SHADER_STAGE_TESSELLATION_EVALUATION 4
+#define GFX_SHADER_STAGE_GEOMETRY 8
+#define GFX_SHADER_STAGE_FRAGMENT 16
+
 
 
 typedef uint8_t gfx_data_format_t;
+
+
+
+typedef uint8_t gfx_shader_stage_t;
 
 
 
@@ -34,6 +44,10 @@ uint32_t _get_memory_type(const gfx_context_data_t* ctx,uint32_t mask,VkMemoryPr
 
 
 VkFormat _encode_data_format(gfx_data_format_t data_format);
+
+
+
+VkShaderStageFlags _encode_shader_stages(gfx_shader_stage_t stage);
 
 
 

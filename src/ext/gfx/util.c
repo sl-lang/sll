@@ -113,3 +113,25 @@ VkFormat _encode_data_format(gfx_data_format_t data_format){
 	}
 	return VK_FORMAT_R64G64B64A64_SFLOAT;
 }
+
+
+
+VkShaderStageFlags _encode_shader_stages(gfx_shader_stage_t stage){
+	VkShaderStageFlags out=0;
+	if (stage&GFX_SHADER_STAGE_VERTEX){
+		out|=VK_SHADER_STAGE_VERTEX_BIT;
+	}
+	if (stage&GFX_SHADER_STAGE_TESSELLATION_CONTROL){
+		out|=VK_SHADER_STAGE_TESSELLATION_CONTROL_BIT;
+	}
+	if (stage&GFX_SHADER_STAGE_TESSELLATION_EVALUATION){
+		out|=VK_SHADER_STAGE_TESSELLATION_EVALUATION_BIT;
+	}
+	if (stage&GFX_SHADER_STAGE_GEOMETRY){
+		out|=VK_SHADER_STAGE_GEOMETRY_BIT;
+	}
+	if (stage&GFX_SHADER_STAGE_FRAGMENT){
+		out|=VK_SHADER_STAGE_FRAGMENT_BIT;
+	}
+	return out;
+}

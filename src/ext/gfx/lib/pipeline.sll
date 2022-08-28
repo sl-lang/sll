@@ -252,7 +252,7 @@
 		(?? descriptor$type
 			DESCRIPTOR_TYPE_UNIFORM_BUFFER (<- array$push uniform_buffers [
 				descriptor$binding
-				descriptor$stages
+				descriptor$stage
 				descriptor$data$_handle
 			])
 		)

@@ -818,7 +818,7 @@ abc` '\n')
 		[
 			gfx:pipeline$DESCRIPTOR_TYPE_UNIFORM_BUFFER
 			0
-			gfx:buffer$TYPE_FRAGMENT
+			gfx:shader$TYPE_FRAGMENT
 			uniform_buffer
 		]
 	]

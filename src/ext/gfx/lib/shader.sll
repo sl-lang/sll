@@ -35,8 +35,8 @@
 (= gfx_shader_module_type (&:
 	(~ int_type) TYPE_FRAGMENT
 	(~ int_type) TYPE_GEOMETRY
-	(~ int_type) TYPE_TESSELLETION_CONTROL
-	(~ int_type) TYPE_TESSELLETION_EVALUATION
+	(~ int_type) TYPE_TESSELLATION_CONTROL
+	(~ int_type) TYPE_TESSELLATION_EVALUATION
 	(~ int_type) TYPE_VERTEX
 	(~ type_type) gfx_shader_type
 	(~ func_type) create
@@ -83,8 +83,8 @@
 (= gfx:shader (. gfx_shader_module_type
 	TYPE_FRAGMENT
 	TYPE_GEOMETRY
-	TYPE_TESSELLETION_CONTROL
-	TYPE_TESSELLETION_EVALUATION
+	TYPE_TESSELLATION_CONTROL
+	TYPE_TESSELLATION_EVALUATION
 	TYPE_VERTEX
 	gfx_shader_type
 	create
