@@ -46,6 +46,7 @@ typedef struct _GFX_VULKAN_FUNCTION_TABLE{
 	PFN_vkCreatePipelineCache vkCreatePipelineCache;
 	PFN_vkCreatePipelineLayout vkCreatePipelineLayout;
 	PFN_vkCreateRenderPass vkCreateRenderPass;
+	PFN_vkCreateSampler vkCreateSampler;
 	PFN_vkCreateSemaphore vkCreateSemaphore;
 	PFN_vkCreateShaderModule vkCreateShaderModule;
 	PFN_vkCreateSwapchainKHR vkCreateSwapchainKHR;
@@ -64,6 +65,7 @@ typedef struct _GFX_VULKAN_FUNCTION_TABLE{
 	PFN_vkDestroyPipelineCache vkDestroyPipelineCache;
 	PFN_vkDestroyPipelineLayout vkDestroyPipelineLayout;
 	PFN_vkDestroyRenderPass vkDestroyRenderPass;
+	PFN_vkDestroySampler vkDestroySampler;
 	PFN_vkDestroySemaphore vkDestroySemaphore;
 	PFN_vkDestroyShaderModule vkDestroyShaderModule;
 	PFN_vkDestroySurfaceKHR vkDestroySurfaceKHR;

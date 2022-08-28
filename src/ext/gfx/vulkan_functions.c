@@ -79,6 +79,7 @@ sll_bool_t _load_vulkan_function_table(VkInstance instance,gfx_vulkan_function_t
 	LOAD_FUNCTION_TABLE(vkCreatePipelineCache);
 	LOAD_FUNCTION_TABLE(vkCreatePipelineLayout);
 	LOAD_FUNCTION_TABLE(vkCreateRenderPass);
+	LOAD_FUNCTION_TABLE(vkCreateSampler);
 	LOAD_FUNCTION_TABLE(vkCreateSemaphore);
 	LOAD_FUNCTION_TABLE(vkCreateShaderModule);
 	LOAD_FUNCTION_TABLE(vkCreateSwapchainKHR);
@@ -97,6 +98,7 @@ sll_bool_t _load_vulkan_function_table(VkInstance instance,gfx_vulkan_function_t
 	LOAD_FUNCTION_TABLE(vkDestroyPipelineCache);
 	LOAD_FUNCTION_TABLE(vkDestroyPipelineLayout);
 	LOAD_FUNCTION_TABLE(vkDestroyRenderPass);
+	LOAD_FUNCTION_TABLE(vkDestroySampler);
 	LOAD_FUNCTION_TABLE(vkDestroySemaphore);
 	LOAD_FUNCTION_TABLE(vkDestroyShaderModule);
 	LOAD_FUNCTION_TABLE(vkDestroySurfaceKHR);
