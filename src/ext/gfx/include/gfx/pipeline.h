@@ -52,6 +52,7 @@ typedef struct _GFX_PIPELINE_DATA{
 	VkPipelineLayout layout;
 	VkDescriptorSet descriptor_set;
 	VkDescriptorSetLayout descriptor_set_layout;
+	VkDescriptorPool descriptor_pool;
 } gfx_pipeline_data_t;
 
 

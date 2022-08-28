@@ -1,3 +1,4 @@
+#include <gfx/buffer.h>
 #include <gfx/common.h>
 #include <gfx/context.h>
 #include <gfx/pipeline.h>
@@ -13,6 +14,9 @@
 void _delete_pipeline(const gfx_context_data_t* ctx,gfx_pipeline_data_t* pipeline_data){
 	ctx->function_table.vkDestroyPipeline(ctx->device.logical,pipeline_data->handle,NULL);
 	ctx->function_table.vkDestroyPipelineLayout(ctx->device.logical,pipeline_data->layout,NULL);
+	ctx->function_table.vkFreeDescriptorSets(ctx->device.logical,pipeline_data->descriptor_pool,1,&(pipeline_data->descriptor_set));
+	ctx->function_table.vkDestroyDescriptorSetLayout(ctx->device.logical,pipeline_data->descriptor_set_layout,NULL);
+	ctx->function_table.vkDestroyDescriptorPool(ctx->device.logical,pipeline_data->descriptor_pool,NULL);
 	sll_deallocate(pipeline_data);
 }
 
@@ -24,12 +28,27 @@ __GFX_API_CALL gfx_pipeline_t gfx_api_pipeline_create(gfx_context_t ctx_id,gfx_p
 		return 0;
 	}
 	gfx_pipeline_data_t* pipeline=sll_allocate(sizeof(gfx_pipeline_data_t));
+	VkDescriptorSetLayoutBinding layout_binding={
+		0,
+		VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER,
+		1,
+		VK_SHADER_STAGE_FRAGMENT_BIT,
+		NULL
+	};
+	VkDescriptorSetLayoutCreateInfo descriptorLayout={
+		VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO,
+		NULL,
+		0,
+		1,
+		&layout_binding
+	};
+	VULKAN_CALL(ctx->function_table.vkCreateDescriptorSetLayout(ctx->device.logical,&descriptorLayout,NULL,&(pipeline->descriptor_set_layout)));
 	VkPipelineLayoutCreateInfo pipeline_layout_creation_info={
 		VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO,
 		NULL,
 		0,
-		0,
-		NULL,
+		1,
+		&(pipeline->descriptor_set_layout),
 		0,
 		NULL
 	};
@@ -243,6 +262,46 @@ __GFX_API_CALL gfx_pipeline_t gfx_api_pipeline_create(gfx_context_t ctx_id,gfx_p
 	VULKAN_CALL(ctx->function_table.vkCreateGraphicsPipelines(ctx->device.logical,ctx->pipeline.cache,1,&pipeline_create_info,NULL,&(pipeline->handle)));
 	sll_deallocate(vertex_input_attributes);
 	sll_deallocate(shader_stages);
+	VkDescriptorPoolSize descriptor_pool_sizes[1]={
+		{
+			VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER,
+			uniform_buffers->length
+		}
+	};
+	VkDescriptorPoolCreateInfo descriptor_pool_creation_info={
+		VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO,
+		NULL,
+		VK_DESCRIPTOR_POOL_CREATE_FREE_DESCRIPTOR_SET_BIT,
+		1,
+		1,
+		descriptor_pool_sizes
+	};
+	VULKAN_CALL(ctx->function_table.vkCreateDescriptorPool(ctx->device.logical,&descriptor_pool_creation_info,NULL,&(pipeline->descriptor_pool)));
+	VkDescriptorSetAllocateInfo allocInfo={
+		VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO,
+		NULL,
+		pipeline->descriptor_pool,
+		1,
+		&(pipeline->descriptor_set_layout)
+	};
+	VULKAN_CALL(ctx->function_table.vkAllocateDescriptorSets(ctx->device.logical,&allocInfo,&(pipeline->descriptor_set)));
+	gfx_buffer_data_t* buffer=SLL_HANDLE_CONTAINER_GET(&(ctx->buffers),2);
+	VkDescriptorBufferInfo buffer_descriptor={
+		buffer->device.buffer,
+		0,
+		buffer->size
+	};
+	VkWriteDescriptorSet writeDescriptorSet={
+		VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET,
+		NULL,
+		pipeline->descriptor_set,
+		0,
+		0,
+		1,
+		VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER,
+		.pBufferInfo=&buffer_descriptor
+	};
+	ctx->function_table.vkUpdateDescriptorSets(ctx->device.logical,1,&writeDescriptorSet,0,NULL);
 	gfx_pipeline_t out;
 	SLL_HANDLE_CONTAINER_ALLOC(&(ctx->pipelines),&out);
 	*(ctx->pipelines.data+out)=pipeline;
