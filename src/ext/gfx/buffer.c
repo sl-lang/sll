@@ -61,6 +61,9 @@ __GFX_API_CALL gfx_buffer_t gfx_api_buffer_create(gfx_context_t ctx_id,gfx_buffe
 	if (type&GFX_BUFFER_TYPE_UNIFORM){
 		buffer->usage|=VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT;
 	}
+	if (type&GFX_BUFFER_TYPE_TEXTURE){
+		buffer->usage|=VK_BUFFER_USAGE_TRANSFER_SRC_BIT;
+	}
 	if (data_type==GFX_BUFFER_DATA_TYPE_UINT16){
 		buffer->elem_size=2;
 	}
