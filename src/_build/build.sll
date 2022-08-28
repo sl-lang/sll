@@ -360,6 +360,7 @@
 			(++ i)
 		)
 		(<- log$log "    Removing compilation directories...")
+		(:> keys '\n')
 		(-> (= i 0) (< i ($ keys))
 			(= file_path (>> (: keys i) ($ module_file_root)))
 			(? file_path {
