@@ -46,7 +46,8 @@
 	(~ gfx:context$gfx_context_type) ctx
 	array_type data
 	int_type update_frequency
-	int_type _is_default_frequency
+	int_type _is_default_frequency?
+	(~ int_type) _original_size
 	weakref$weakref_type _ref_object
 ))
 
@@ -69,6 +70,7 @@
 	(~ func_type) delete
 	(~ func_type) draw
 	(~ func_type) hint_update_frequency
+	(~ func_type) is_constant_size?
 	(~ func_type) sync
 	(~ func_type) use
 ))
@@ -101,7 +103,7 @@
 
 
 
-(= create (,,, ctx type data_type data
+(= create (,,, ctx type data_type data is_constant_size?
 	(? (! ctx) (@@ nil))
 	(= ctx (:: ctx gfx:context$gfx_context_type))
 	(= type (& (:: type int_type) TYPE_ANY))
@@ -125,6 +127,7 @@
 		data
 		FREQUENCY_NEVER
 		true
+		(?: is_constant_size? ($ data) -1)
 	))
 	(= out$_ref_object (<- weakref$ref out))
 	(<- array$push ctx$buffers out$_ref_object)
@@ -154,14 +157,29 @@
 		(> frequency FREQUENCY_HIGH)
 	) (= frequency FREQUENCY_LOW))
 	(= buffer$update_frequency frequency)
-	(= buffer$_is_default_frequency false)
+	(= buffer$_is_default_frequency? false)
 	(<- (... "gfx:buffer_hint_update_frequency") buffer$ctx$_handle buffer$_handle frequency)
+))
+
+(= is_constant_size? (,,, buffer
+	(? (! buffer) (@@ false))
+	(= buffer (:: buffer gfx_buffer_type))
+	(@@ (!== buffer$_original_size -1))
 ))
 
 (= sync (,,, buffer
 	(? (! buffer) (@@))
 	(= buffer (:: buffer gfx_buffer_type))
-	(? buffer$_is_default_frequency (<- hint_update_frequency buffer FREQUENCY_LOW))
+	(? (&&
+		(!== buffer$_original_size -1)
+		(!== buffer$_original_size ($ buffer$data))
+	) {
+		(= buffer$data (: buffer$data 0 buffer$_original_size))
+		(? (< ($ buffer$data) buffer$_original_size) {
+			(= buffer$data (+ buffer$data (<- array$create (- buffer$_original_size ($ buffer$data)))))
+		})
+	})
+	(? buffer$_is_default_frequency? (<- hint_update_frequency buffer FREQUENCY_LOW))
 	(<- (... "gfx:buffer_sync") buffer$ctx$_handle buffer$_handle buffer$data)
 ))
 
@@ -192,6 +210,7 @@
 	delete
 	draw
 	hint_update_frequency
+	is_constant_size?
 	sync
 	use
 ))

@@ -249,6 +249,10 @@
 	(-> (= i 0) (< i ($ config$descriptors))
 		(= descriptor (:: (: config$descriptors i) gfx_pipeline_config_descriptor_type))
 		(= descriptor$data (:: descriptor$data (: _descriptor_data_type_map descriptor$type)))
+		(? (&&
+			(=== descriptor$type DESCRIPTOR_TYPE_UNIFORM_BUFFER)
+			(! (<- gfx:buffer$is_constant_size? descriptor$data))
+		) (:> "Uniform buffers must have a constant size!\n"))
 		(?? descriptor$type
 			DESCRIPTOR_TYPE_UNIFORM_BUFFER (<- array$push uniform_buffers [
 				descriptor$binding
