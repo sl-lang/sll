@@ -67,7 +67,7 @@ static const sll_internal_function_descriptor_t _internal_function_table[]={
 	{
 		SLL_CHAR("gfx:pipeline_create"),
 		gfx_api_pipeline_create,
-		SLL_CHAR("QB#aDBbB#a|Q")
+		SLL_CHAR("QB#aD#aBbB#a|Q")
 	},
 	{
 		SLL_CHAR("gfx:pipeline_delete"),

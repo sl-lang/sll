@@ -1,5 +1,7 @@
 (---
 	"gfx/_load_library.sll"
+	"gfx/_shader_stages.sll"
+	"gfx/buffer.sll"
 	"gfx/context.sll"
 	"gfx/shader.sll"
 	"array.sll"
@@ -10,7 +12,7 @@
 
 
 
-(# delete _topology_map _input_type_map _polygon_mode_map _front_face_map CULL_MODE_FRONT CULL_MODE_BACK INPUT_SIZE_MASK INPUT_COUNT_MASK INPUT_TYPE_MASK)
+(# delete _topology_map _input_type_map _polygon_mode_map _front_face_map _descriptor_type_map CULL_MODE_FRONT CULL_MODE_BACK INPUT_SIZE_MASK INPUT_COUNT_MASK INPUT_TYPE_MASK)
 
 
 
@@ -20,9 +22,9 @@
 			data$binding
 			data$layout
 			data$offset
-			(>> (& data$type INPUT_COUNT_MASK) 2)
+			(+ (>> (& data$type INPUT_COUNT_MASK) 2) 1)
 			(: _input_type_map (& data$type INPUT_TYPE_MASK))
-			(<< (<< 1 (& data$type INPUT_SIZE_MASK)) 8)
+			(<< (<< 1 (& data$type INPUT_SIZE_MASK)) 3)
 		))
 	) @@string@@
 	int_type binding
@@ -40,6 +42,21 @@
 	) @@string@@
 	array_type input_attributes
 	int_type stride
+))
+
+(= gfx_pipeline_config_descriptor_type (&:
+	(,,, data
+		(@@ (<- string$format "<gfx:pipeline_config_descriptor type=%s binding=%u stage=%s data=%s>"
+			(: _descriptor_type_map data$type)
+			data$binding
+			(: _shader_stage_to_string data$stage)
+			(<- string$str data$data)
+		))
+	) @@string@@
+	int_type type
+	int_type binding
+	int_type stage
+	object_type data
 ))
 
 (= gfx_pipeline_config_rasterizer_type (&:
@@ -63,15 +80,17 @@
 
 (= gfx_pipeline_config_type (&:
 	(,,, data
-		(@@ (<- string$format "<gfx:pipeline_config topology=%s vertex_input=%s rasterizer=%s shaders=%s>"
+		(@@ (<- string$format "<gfx:pipeline_config topology=%s vertex_input=%s descriptors=%s rasterizer=%s shaders=%s>"
 			(: _topology_map data$topology)
 			(:: data$vertex_input string_type)
+			(<- string$str data$descriptors)
 			(:: data$rasterizer string_type)
 			(<- string$str data$shaders)
 		))
 	) @@string@@
 	int_type topology
 	gfx_pipeline_config_vertex_input_type vertex_input
+	array_type descriptors
 	gfx_pipeline_config_rasterizer_type rasterizer
 	array_type shaders
 ))
@@ -95,6 +114,7 @@
 (= gfx_pipeline_module_type (&:
 	(~ int_type) CULL_MODE_BACK
 	(~ int_type) CULL_MODE_FRONT
+	(~ int_type) DESCRIPTOR_TYPE_UNIFORM_BUFFER
 	(~ int_type) FRONT_FACE_CLOCKWISE
 	(~ int_type) FRONT_FACE_COUNTER_CLOCKWISE
 	(~ int_type) INPUT_COUNT_1
@@ -174,6 +194,8 @@
 (= CULL_MODE_FRONT 1)
 (= CULL_MODE_BACK 2)
 
+(= DESCRIPTOR_TYPE_UNIFORM_BUFFER 0)
+
 (= _topology_map <
 	TOPOLOGY_POINT_LIST "Point list"
 	TOPOLOGY_LINE_LIST "Line list"
@@ -205,6 +227,14 @@
 	FRONT_FACE_COUNTER_CLOCKWISE "Counter clockwise"
 >)
 
+(= _descriptor_type_map <
+	DESCRIPTOR_TYPE_UNIFORM_BUFFER "Uniform buffer"
+>)
+
+(= _descriptor_data_type_map <
+	DESCRIPTOR_TYPE_UNIFORM_BUFFER gfx:buffer$gfx_buffer_type
+>)
+
 
 
 (= create (,,, ctx config
@@ -213,6 +243,20 @@
 	(= config (:: config gfx_pipeline_config_type))
 	(-> (= i 0) (< i ($ config$vertex_input$input_attributes))
 		(= (: config$vertex_input$input_attributes i) (:: (: config$vertex_input$input_attributes i) gfx_pipeline_config_vertex_input_attribute_type))
+		(++ i)
+	)
+	(= uniform_buffers [])
+	(-> (= i 0) (< i ($ config$descriptors))
+		(= descriptor (:: (: config$descriptors i) gfx_pipeline_config_descriptor_type))
+		(= descriptor$data (:: descriptor$data (: _descriptor_data_type_map descriptor$type)))
+		(?? descriptor$type
+			DESCRIPTOR_TYPE_UNIFORM_BUFFER (<- array$push uniform_buffers [
+				descriptor$binding
+				descriptor$stages
+				descriptor$data$_handle
+			])
+		)
+		(= (: config$descriptors i) descriptor)
 		(++ i)
 	)
 	(-> (= i 0) (< i ($ config$shaders))
@@ -228,6 +272,7 @@
 			(:: attr array_type)
 		)
 		config$vertex_input$stride
+		uniform_buffers
 		config$rasterizer$polygon_mode
 		config$rasterizer$front_face
 		config$rasterizer$cull_mode
@@ -265,6 +310,7 @@
 (= gfx:pipeline (. gfx_pipeline_module_type
 	CULL_MODE_BACK
 	CULL_MODE_FRONT
+	DESCRIPTOR_TYPE_UNIFORM_BUFFER
 	FRONT_FACE_CLOCKWISE
 	FRONT_FACE_COUNTER_CLOCKWISE
 	INPUT_COUNT_1

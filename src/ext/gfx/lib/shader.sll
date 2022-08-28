@@ -1,5 +1,6 @@
 (---
 	"gfx/_load_library.sll"
+	"gfx/_shader_stages.sll"
 	"gfx/context.sll"
 	"array.sll"
 	"string.sll"
@@ -9,14 +10,14 @@
 
 
 
-(# delete _type_to_string)
+(# delete)
 
 
 
 (= gfx_shader_type (&:
 	(,,, data
 		(@@ (<- string$format "<gfx:shader type=%s entry_point=%s context=%s>"
-			(: _type_to_string data$type)
+			(: _shader_stage_to_string data$type)
 			data$entry_point
 			(:: data$ctx string_type)
 		))
@@ -41,22 +42,6 @@
 	(~ func_type) create
 	(~ func_type) delete
 ))
-
-
-
-(= TYPE_VERTEX 0)
-(= TYPE_TESSELLETION_CONTROL 1)
-(= TYPE_TESSELLETION_EVALUATION 2)
-(= TYPE_GEOMETRY 3)
-(= TYPE_FRAGMENT 4)
-
-(= _type_to_string <
-	TYPE_VERTEX "Vertex"
-	TYPE_TESSELLETION_CONTROL "TESSELLETION Control"
-	TYPE_TESSELLETION_EVALUATION "TESSELLETION Evaluation"
-	TYPE_GEOMETRY "Geometry"
-	TYPE_FRAGMENT "Fragment"
->)
 
 
 
