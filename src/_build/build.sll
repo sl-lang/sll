@@ -360,22 +360,16 @@
 			(++ i)
 		)
 		(<- log$log "    Removing compilation directories...")
-		(:> [keys module_file_root] '\n')
 		(-> (= i 0) (< i ($ keys))
-			(:> [(: keys i) ($ module_file_root) ($ (: keys i))] '\n')
 			(= file_path (>> (: keys i) ($ module_file_root)))
-			(:> [file_path] '\n')
 			(? file_path {
 				(<- log$log "      Removing 'build/lib/" file_path "'...")
 				(<- file$delete file_path)
 			})
 			(++ i)
 		)
-		(:> [cwd path] '\n')
 		(<- path$set_cwd cwd)
-		(:> "End!\n")
 	)
-	(:> "End!!\n")
 ))
 
 (= build_modules (,,,
