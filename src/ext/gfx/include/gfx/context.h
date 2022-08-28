@@ -111,6 +111,7 @@ typedef struct _GFX_CONTEXT_DATA{
 	sll_handle_container_t buffers;
 	sll_handle_container_t pipelines;
 	sll_handle_container_t shaders;
+	sll_handle_container_t textures;
 } gfx_context_data_t;
 
 

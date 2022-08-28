@@ -4,6 +4,7 @@
 #include <gfx/memory.h>
 #include <gfx/pipeline.h>
 #include <gfx/shader.h>
+#include <gfx/texture.h>
 #include <gfx/util.h>
 #include <gfx/vulkan.h>
 #include <gfx/vulkan_functions.h>
@@ -351,6 +352,9 @@ void _delete_context(gfx_context_data_t* ctx){
 	SLL_HANDLE_CONTAINER_ITER_CLEAR(&(ctx->shaders),gfx_shader_data_t,shader,{
 		_delete_shader(ctx,shader);
 	});
+	SLL_HANDLE_CONTAINER_ITER_CLEAR(&(ctx->textures),gfx_texture_data_t,texture,{
+		_delete_texture(ctx,texture);
+	});
 	ctx->function_table.vkDestroyFence(ctx->device.logical,ctx->buffer_transfer.fence,NULL);
 	ctx->function_table.vkFreeCommandBuffers(ctx->device.logical,ctx->buffer_transfer.command_pool,1,&(ctx->buffer_transfer.command_buffer));
 	ctx->function_table.vkDestroyCommandPool(ctx->device.logical,ctx->buffer_transfer.command_pool,NULL);
@@ -652,6 +656,7 @@ __GFX_API_CALL gfx_context_t gfx_api_context_create(void* handle,void* extra_dat
 	SLL_HANDLE_CONTAINER_INIT(&(ctx->buffers));
 	SLL_HANDLE_CONTAINER_INIT(&(ctx->pipelines));
 	SLL_HANDLE_CONTAINER_INIT(&(ctx->shaders));
+	SLL_HANDLE_CONTAINER_INIT(&(ctx->textures));
 	gfx_context_t out;
 	SLL_HANDLE_CONTAINER_ALLOC(&gfx_context_data,&out);
 	*(gfx_context_data.data+out)=ctx;
