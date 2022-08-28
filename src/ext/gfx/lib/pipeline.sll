@@ -3,7 +3,7 @@
 	"gfx/buffer.sll"
 	"gfx/context.sll"
 	"gfx/shader.sll"
-	"gfx/stages.sll"
+	"gfx/stage.sll"
 	"array.sll"
 	"string.sll"
 	"types.sll"

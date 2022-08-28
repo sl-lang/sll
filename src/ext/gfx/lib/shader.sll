@@ -1,7 +1,7 @@
 (---
 	"gfx/_load_library.sll"
 	"gfx/context.sll"
-	"gfx/stages.sll"
+	"gfx/stage.sll"
 	"array.sll"
 	"string.sll"
 	"types.sll"
