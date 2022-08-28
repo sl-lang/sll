@@ -127,6 +127,10 @@ void _delete_context(gfx_context_data_t* ctx);
 
 
 
+void _flush_transfer_buffer(gfx_context_data_t* ctx);
+
+
+
 __GFX_API_CALL gfx_context_t gfx_api_context_create(void* handle,void* extra_data,sll_bool_t debug);
 
 

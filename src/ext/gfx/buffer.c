@@ -9,18 +9,25 @@
 
 
 
-static void _delete_vulkan_buffers(const gfx_context_data_t* ctx,gfx_buffer_data_t* buffer_data){
+static void _delete_host_buffer(const gfx_context_data_t* ctx,gfx_buffer_data_t* buffer_data){
 	if (buffer_data->host_buffer_data){
 		ctx->function_table.vkUnmapMemory(ctx->device.logical,buffer_data->host.memory);
 		buffer_data->host_buffer_data=NULL;
 	}
-	if (buffer_data->flags&GFX_BUFFER_FLAG_HAS_DEVICE_BUFFER){
-		ctx->function_table.vkDestroyBuffer(ctx->device.logical,buffer_data->device.buffer,NULL);
-		_deallocate_device_memory(ctx,buffer_data->device.memory);
-	}
 	if (buffer_data->flags&GFX_BUFFER_FLAG_HAS_HOST_BUFFER){
 		ctx->function_table.vkDestroyBuffer(ctx->device.logical,buffer_data->host.buffer,NULL);
 		_deallocate_device_memory(ctx,buffer_data->host.memory);
+	}
+	buffer_data->flags&=GFX_BUFFER_FLAG_HAS_DEVICE_BUFFER;
+}
+
+
+
+static void _delete_both_buffers(const gfx_context_data_t* ctx,gfx_buffer_data_t* buffer_data){
+	_delete_host_buffer(ctx,buffer_data);
+	if (buffer_data->flags&GFX_BUFFER_FLAG_HAS_DEVICE_BUFFER){
+		ctx->function_table.vkDestroyBuffer(ctx->device.logical,buffer_data->device.buffer,NULL);
+		_deallocate_device_memory(ctx,buffer_data->device.memory);
 	}
 	buffer_data->flags=0;
 }
@@ -28,7 +35,7 @@ static void _delete_vulkan_buffers(const gfx_context_data_t* ctx,gfx_buffer_data
 
 
 void _delete_buffer(const gfx_context_data_t* ctx,gfx_buffer_data_t* buffer_data){
-	_delete_vulkan_buffers(ctx,buffer_data);
+	_delete_both_buffers(ctx,buffer_data);
 	sll_deallocate(buffer_data);
 }
 
@@ -113,15 +120,7 @@ __GFX_API_CALL void gfx_api_buffer_hint_update_frequency(gfx_context_t ctx_id,gf
 	}
 	buffer->update_frequency_hint=hint;
 	if (hint==GFX_BUFFER_UPDATE_FREQUENCY_HINT_NEVER){
-		if (buffer->flags&GFX_BUFFER_FLAG_HAS_HOST_BUFFER){
-			if (buffer->host_buffer_data){
-				ctx->function_table.vkUnmapMemory(ctx->device.logical,buffer->host.memory);
-				buffer->host_buffer_data=NULL;
-			}
-			ctx->function_table.vkDestroyBuffer(ctx->device.logical,buffer->host.buffer,NULL);
-			_deallocate_device_memory(ctx,buffer->host.memory);
-		}
-		buffer->flags&=~GFX_BUFFER_FLAG_HAS_HOST_BUFFER;
+		_delete_host_buffer(ctx,buffer);
 	}
 }
 
@@ -137,7 +136,7 @@ __GFX_API_CALL void gfx_api_buffer_sync(gfx_context_t ctx_id,gfx_buffer_t buffer
 		return;
 	}
 	if (buffer->length!=data->length){
-		_delete_vulkan_buffers(ctx,buffer);
+		_delete_both_buffers(ctx,buffer);
 		buffer->length=data->length;
 		buffer->size=data->length*buffer->elem_size;
 	}
@@ -222,6 +221,10 @@ __GFX_API_CALL void gfx_api_buffer_sync(gfx_context_t ctx_id,gfx_buffer_t buffer
 	};
 	ctx->function_table.vkCmdCopyBuffer(ctx->buffer_transfer.command_buffer,buffer->host.buffer,buffer->device.buffer,1,&buffer_copy);
 	ctx->buffer_transfer.has_data=1;
+	if (buffer->update_frequency_hint==GFX_BUFFER_UPDATE_FREQUENCY_HINT_NEVER){
+		_flush_transfer_buffer(ctx);
+		_delete_host_buffer(ctx,buffer);
+	}
 }
 
 
