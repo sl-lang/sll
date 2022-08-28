@@ -14,9 +14,4 @@ fi
 if [[ ! -f "build/_build_script.sla" || "$SLL_FORCE_REBUILD" != "" ]]; then
 	"build/_sll_runtime_$platform/sll" src/_build/main.sll -I "@build-script|src/_build" -O -x 5 -r -R -a -o build/_build_script
 fi
-if [ "$platform" == "linux" ]; then
-	sudo apt install gdb
-	gdb -ex r -iex "set pagination off" --args "build/_sll_runtime_$platform/sll" build/_build_script.sla -A "$@"
-else
-	"build/_sll_runtime_$platform/sll" build/_build_script.sla -A "$@"
-fi
+"build/_sll_runtime_$platform/sll" build/_build_script.sla -A "$@"
