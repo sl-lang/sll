@@ -371,6 +371,7 @@
 			})
 			(++ i)
 		)
+		(:> [cwd path] '\n')
 		(<- path$set_cwd cwd)
 	)
 ))
