@@ -1,9 +1,9 @@
 (---
 	"gfx/_load_library.sll"
-	"gfx/_shader_stages.sll"
 	"gfx/buffer.sll"
 	"gfx/context.sll"
 	"gfx/shader.sll"
+	"gfx/stages.sll"
 	"array.sll"
 	"string.sll"
 	"types.sll"
@@ -49,7 +49,7 @@
 		(@@ (<- string$format "<gfx:pipeline_config_descriptor type=%s binding=%u stage=%s data=%s>"
 			(: _descriptor_type_map data$type)
 			data$binding
-			(: _shader_stage_to_string data$stage)
+			(<- gfx:stage$to_string data$stage)
 			(<- string$str data$data)
 		))
 	) @@string@@

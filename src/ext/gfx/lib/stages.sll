@@ -1,0 +1,54 @@
+(---
+	"array.sll"
+	"string.sll"
+	"types.sll"
+)
+
+
+
+(= gfx_stages_module_type (&:
+	(~ int_type) STAGE_ALL
+	(~ int_type) STAGE_FRAGMENT
+	(~ int_type) STAGE_GEOMETRY
+	(~ int_type) STAGE_TESSELLATION_CONTROL
+	(~ int_type) STAGE_TESSELLATION_EVALUATION
+	(~ int_type) STAGE_VERTEX
+	(~ func_type) to_string
+))
+
+
+
+(= STAGE_VERTEX 1)
+(= STAGE_TESSELLATION_CONTROL 2)
+(= STAGE_TESSELLATION_EVALUATION 4)
+(= STAGE_GEOMETRY 8)
+(= STAGE_FRAGMENT 16)
+
+(= STAGE_ALL (| STAGE_VERTEX STAGE_TESSELLATION_CONTROL STAGE_TESSELLATION_EVALUATION STAGE_GEOMETRY STAGE_FRAGMENT))
+
+
+
+(= to_string (,,, stages
+	(= stages (& stages STAGE_ALL))
+	(? (=== stages STAGE_ALL) (@@ "All"))
+	(= out [])
+	(? (& stages STAGE_VERTEX) (<- array$push "Vertex"))
+	(? (& stages STAGE_TESSELLATION_CONTROL) (<- array$push "Tessellation control"))
+	(? (& stages STAGE_TESSELLATION_EVALUATION) (<- array$push "Tessellation evaluation"))
+	(? (& stages STAGE_GEOMETRY) (<- array$push "Geometry"))
+	(? (& stages STAGE_FRAGMENT) (<- array$push "Fragment"))
+	(@@ (<- string$join ", " out))
+))
+
+
+
+(= gfx:stages (. gfx_stages_module_type
+	STAGE_ALL
+	STAGE_FRAGMENT
+	STAGE_GEOMETRY
+	STAGE_TESSELLATION_CONTROL
+	STAGE_TESSELLATION_EVALUATION
+	STAGE_VERTEX
+	to_string
+))
+(## gfx:stages)
