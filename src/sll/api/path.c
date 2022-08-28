@@ -152,9 +152,6 @@ __SLL_EXTERNAL __SLL_API_CALL __SLL_CHECK_OUTPUT sll_error_t sll_api_path_size(c
 	sll_file_descriptor_t fd=sll_platform_file_open(path->data,SLL_FILE_FLAG_READ,&err);
 	if (fd!=SLL_UNKNOWN_FILE_DESCRIPTOR){
 		*out=sll_platform_file_size(fd,&err);
-		if (*out==SLL_NO_FILE_SIZE){
-			return err;
-		}
 		SLL_CRITICAL_ERROR(sll_platform_file_close(fd));
 	}
 	return err;
