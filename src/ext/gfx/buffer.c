@@ -181,11 +181,20 @@ __GFX_API_CALL void gfx_api_buffer_sync(gfx_context_t ctx_id,gfx_buffer_t buffer
 	if (!buffer->host_buffer_data){
 		VULKAN_CALL(ctx->function_table.vkMapMemory(ctx->device.logical,buffer->host.memory,0,buffer->size,0,&(buffer->host_buffer_data)));
 	}
-	if (buffer->data_type==GFX_BUFFER_DATA_TYPE_UINT16){
+	if (buffer->data_type==GFX_BUFFER_DATA_TYPE_UINT8){
+		uint8_t* ptr=buffer->host_buffer_data;
+		for (sll_array_length_t i=0;i<data->length;i++){
+			*(ptr+i)=data->data[i]->data.int_&0xff;
+		}
+	}
+	else if (buffer->data_type==GFX_BUFFER_DATA_TYPE_UINT16){
 		uint16_t* ptr=buffer->host_buffer_data;
 		for (sll_array_length_t i=0;i<data->length;i++){
 			*(ptr+i)=data->data[i]->data.int_&0xffff;
 		}
+	}
+	else if (buffer->data_type==GFX_BUFFER_DATA_TYPE_FLOAT16){
+		SLL_WARN("Unimplemented!");
 	}
 	else if (buffer->data_type==GFX_BUFFER_DATA_TYPE_UINT32){
 		uint32_t* ptr=buffer->host_buffer_data;
