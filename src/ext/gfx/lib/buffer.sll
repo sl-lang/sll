@@ -46,6 +46,7 @@
 	(~ gfx:context$gfx_context_type) ctx
 	array_type data
 	int_type update_frequency
+	int_type _is_default_frequency
 	weakref$weakref_type _ref_object
 ))
 
@@ -122,7 +123,8 @@
 		data_type
 		ctx
 		data
-		FREQUENCY_LOW
+		FREQUENCY_NEVER
+		true
 	))
 	(= out$_ref_object (<- weakref$ref out))
 	(<- array$push ctx$buffers out$_ref_object)
@@ -154,12 +156,17 @@
 		(> frequency FREQUENCY_HIGH)
 	) (= frequency FREQUENCY_LOW))
 	(= buffer$update_frequency frequency)
+	(= buffer$_is_default_frequency false)
 	(<- (... "gfx:buffer_hint_update_frequency") buffer$ctx$_handle buffer$_handle frequency)
 ))
 
 (= sync (,,, buffer
 	(? (! buffer) (@@))
 	(= buffer (:: buffer gfx_buffer_type))
+	(? buffer$_is_default_frequency {
+		(<- hint_update_frequency buffer FREQUENCY_LOW)
+		(= buffer$_is_default_frequency false)
+	})
 	(<- (... "gfx:buffer_sync") buffer$ctx$_handle buffer$_handle buffer$data)
 ))
 
