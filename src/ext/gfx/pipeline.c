@@ -11,13 +11,13 @@
 
 
 
-void _delete_pipeline(const gfx_context_data_t* ctx,gfx_pipeline_data_t* pipeline_data){
-	ctx->function_table.vkDestroyPipeline(ctx->device.logical,pipeline_data->handle,NULL);
-	ctx->function_table.vkDestroyPipelineLayout(ctx->device.logical,pipeline_data->layout,NULL);
-	ctx->function_table.vkFreeDescriptorSets(ctx->device.logical,pipeline_data->descriptor_pool,1,&(pipeline_data->descriptor_set));
-	ctx->function_table.vkDestroyDescriptorSetLayout(ctx->device.logical,pipeline_data->descriptor_set_layout,NULL);
-	ctx->function_table.vkDestroyDescriptorPool(ctx->device.logical,pipeline_data->descriptor_pool,NULL);
-	sll_deallocate(pipeline_data);
+void _delete_pipeline(const gfx_context_data_t* ctx,gfx_pipeline_data_t* pipeline){
+	ctx->function_table.vkDestroyPipeline(ctx->device.logical,pipeline->handle,NULL);
+	ctx->function_table.vkDestroyPipelineLayout(ctx->device.logical,pipeline->layout,NULL);
+	ctx->function_table.vkFreeDescriptorSets(ctx->device.logical,pipeline->descriptor_pool,1,&(pipeline->descriptor_set));
+	ctx->function_table.vkDestroyDescriptorSetLayout(ctx->device.logical,pipeline->descriptor_set_layout,NULL);
+	ctx->function_table.vkDestroyDescriptorPool(ctx->device.logical,pipeline->descriptor_pool,NULL);
+	sll_deallocate(pipeline);
 }
 
 

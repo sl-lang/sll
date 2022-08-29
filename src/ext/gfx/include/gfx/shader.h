@@ -25,7 +25,7 @@ typedef sll_size_t gfx_shader_t;
 
 
 
-void _delete_shader(const gfx_context_data_t* ctx,gfx_shader_data_t* shader_data);
+void _delete_shader(const gfx_context_data_t* ctx,gfx_shader_data_t* shader);
 
 
 

@@ -8,9 +8,9 @@
 
 
 
-void _delete_shader(const gfx_context_data_t* ctx,gfx_shader_data_t* shader_data){
-	ctx->function_table.vkDestroyShaderModule(ctx->device.logical,shader_data->handle,NULL);
-	sll_deallocate(shader_data);
+void _delete_shader(const gfx_context_data_t* ctx,gfx_shader_data_t* shader){
+	ctx->function_table.vkDestroyShaderModule(ctx->device.logical,shader->handle,NULL);
+	sll_deallocate(shader);
 }
 
 

@@ -9,34 +9,34 @@
 
 
 
-static void _delete_host_buffer(const gfx_context_data_t* ctx,gfx_buffer_data_t* buffer_data){
-	if (buffer_data->host_buffer_data){
-		ctx->function_table.vkUnmapMemory(ctx->device.logical,buffer_data->host.memory);
-		buffer_data->host_buffer_data=NULL;
+static void _delete_host_buffer(const gfx_context_data_t* ctx,gfx_buffer_data_t* buffer){
+	if (buffer->host_buffer_data){
+		ctx->function_table.vkUnmapMemory(ctx->device.logical,buffer->host.memory);
+		buffer->host_buffer_data=NULL;
 	}
-	if (buffer_data->flags&GFX_BUFFER_FLAG_HAS_HOST_BUFFER){
-		ctx->function_table.vkDestroyBuffer(ctx->device.logical,buffer_data->host.buffer,NULL);
-		_deallocate_device_memory(ctx,buffer_data->host.memory);
+	if (buffer->flags&GFX_BUFFER_FLAG_HAS_HOST_BUFFER){
+		ctx->function_table.vkDestroyBuffer(ctx->device.logical,buffer->host.buffer,NULL);
+		_deallocate_device_memory(ctx,buffer->host.memory);
 	}
-	buffer_data->flags&=GFX_BUFFER_FLAG_HAS_DEVICE_BUFFER;
+	buffer->flags&=GFX_BUFFER_FLAG_HAS_DEVICE_BUFFER;
 }
 
 
 
-static void _delete_both_buffers(const gfx_context_data_t* ctx,gfx_buffer_data_t* buffer_data){
-	_delete_host_buffer(ctx,buffer_data);
-	if (buffer_data->flags&GFX_BUFFER_FLAG_HAS_DEVICE_BUFFER){
-		ctx->function_table.vkDestroyBuffer(ctx->device.logical,buffer_data->device.buffer,NULL);
-		_deallocate_device_memory(ctx,buffer_data->device.memory);
+static void _delete_both_buffers(const gfx_context_data_t* ctx,gfx_buffer_data_t* buffer){
+	_delete_host_buffer(ctx,buffer);
+	if (buffer->flags&GFX_BUFFER_FLAG_HAS_DEVICE_BUFFER){
+		ctx->function_table.vkDestroyBuffer(ctx->device.logical,buffer->device.buffer,NULL);
+		_deallocate_device_memory(ctx,buffer->device.memory);
 	}
-	buffer_data->flags=0;
+	buffer->flags=0;
 }
 
 
 
-void _delete_buffer(const gfx_context_data_t* ctx,gfx_buffer_data_t* buffer_data){
-	_delete_both_buffers(ctx,buffer_data);
-	sll_deallocate(buffer_data);
+void _delete_buffer(const gfx_context_data_t* ctx,gfx_buffer_data_t* buffer){
+	_delete_both_buffers(ctx,buffer);
+	sll_deallocate(buffer);
 }
 
 

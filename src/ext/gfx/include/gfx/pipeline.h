@@ -61,7 +61,7 @@ typedef sll_size_t gfx_pipeline_t;
 
 
 
-void _delete_pipeline(const gfx_context_data_t* ctx,gfx_pipeline_data_t* pipeline_data);
+void _delete_pipeline(const gfx_context_data_t* ctx,gfx_pipeline_data_t* pipeline);
 
 
 

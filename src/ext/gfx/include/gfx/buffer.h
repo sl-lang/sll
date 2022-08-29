@@ -74,7 +74,7 @@ typedef sll_size_t gfx_buffer_t;
 
 
 
-void _delete_buffer(const gfx_context_data_t* ctx,gfx_buffer_data_t* buffer_data);
+void _delete_buffer(const gfx_context_data_t* ctx,gfx_buffer_data_t* buffer);
 
 
 
