@@ -1,0 +1,89 @@
+(---
+	"string.sll"
+	"types.sll"
+)
+
+
+
+(= gfx_data_type_module_type (&:
+	(~ int_type) COUNT_1
+	(~ int_type) COUNT_2
+	(~ int_type) COUNT_3
+	(~ int_type) COUNT_4
+	(~ int_type) COUNT_MASK
+	(~ int_type) MASK
+	(~ int_type) SIZE_16BIT
+	(~ int_type) SIZE_32BIT
+	(~ int_type) SIZE_64BIT
+	(~ int_type) SIZE_8BIT
+	(~ int_type) SIZE_MASK
+	(~ int_type) TYPE_COLOR
+	(~ int_type) TYPE_FLOAT
+	(~ int_type) TYPE_MASK
+	(~ int_type) TYPE_SINT
+	(~ int_type) TYPE_UINT
+	(~ func_type) to_string
+))
+
+
+
+(= SIZE_8BIT 0)
+(= SIZE_16BIT 1)
+(= SIZE_32BIT 2)
+(= SIZE_64BIT 3)
+(= SIZE_MASK 3)
+
+(= COUNT_1 0)
+(= COUNT_2 4)
+(= COUNT_3 8)
+(= COUNT_4 12)
+(= COUNT_MASK 12)
+
+(= TYPE_UINT 0)
+(= TYPE_SINT 16)
+(= TYPE_FLOAT 32)
+(= TYPE_COLOR 48)
+(= TYPE_MASK 48)
+
+(= MASK (| SIZE_MASK COUNT_MASK TYPE_MASK))
+
+(= _type_to_string <
+	TYPE_UINT "uint"
+	TYPE_SINT "sint"
+	TYPE_FLOAT "float"
+	TYPE_COLOR "color"
+>)
+
+
+
+(= to_string (,,, data_type
+	(= data_type (& (:: data_type int_type) MASK))
+	(@@ (<- string$format "%u x %s%u"
+		(+ (>> (& data_type COUNT_MASK) 2) 1)
+		(: _type_to_string (& data_type TYPE_MASK))
+		(<< (<< 1 (& data_type SIZE_MASK)) 3)
+	))
+))
+
+
+
+(= gfx:data_type (. gfx_data_type_module_type
+	COUNT_1
+	COUNT_2
+	COUNT_3
+	COUNT_4
+	COUNT_MASK
+	MASK
+	SIZE_16BIT
+	SIZE_32BIT
+	SIZE_64BIT
+	SIZE_8BIT
+	SIZE_MASK
+	TYPE_COLOR
+	TYPE_FLOAT
+	TYPE_MASK
+	TYPE_SINT
+	TYPE_UINT
+	to_string
+))
+(## gfx:data_type)

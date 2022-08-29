@@ -2,6 +2,7 @@
 	"gfx/_load_library.sll"
 	"gfx/buffer.sll"
 	"gfx/context.sll"
+	"gfx/data_type.sll"
 	"gfx/shader.sll"
 	"gfx/stage.sll"
 	"array.sll"
@@ -17,13 +18,11 @@
 
 (= gfx_pipeline_config_vertex_input_attribute_type (&:
 	(,,, data
-		(@@ (<- string$format "<gfx:pipeline_config_vertex_input_attribute binding=%u layout=%u offset=%u type=%u x %s%u>"
+		(@@ (<- string$format "<gfx:pipeline_config_vertex_input_attribute binding=%u layout=%u offset=%u type=%s>"
 			data$binding
 			data$layout
 			data$offset
-			(+ (>> (& data$type INPUT_COUNT_MASK) 2) 1)
-			(: _input_type_map (& data$type INPUT_TYPE_MASK))
-			(<< (<< 1 (& data$type INPUT_SIZE_MASK)) 3)
+			(<- gfx:data_type$to_string data$type)
 		))
 	) @@string@@
 	int_type binding
@@ -115,20 +114,6 @@
 	(~ int_type) DESCRIPTOR_TYPE_UNIFORM_BUFFER
 	(~ int_type) FRONT_FACE_CLOCKWISE
 	(~ int_type) FRONT_FACE_COUNTER_CLOCKWISE
-	(~ int_type) INPUT_COUNT_1
-	(~ int_type) INPUT_COUNT_2
-	(~ int_type) INPUT_COUNT_3
-	(~ int_type) INPUT_COUNT_4
-	(~ int_type) INPUT_COUNT_MASK
-	(~ int_type) INPUT_SIZE_16BIT
-	(~ int_type) INPUT_SIZE_32BIT
-	(~ int_type) INPUT_SIZE_64BIT
-	(~ int_type) INPUT_SIZE_8BIT
-	(~ int_type) INPUT_SIZE_MASK
-	(~ int_type) INPUT_TYPE_FLOAT
-	(~ int_type) INPUT_TYPE_MASK
-	(~ int_type) INPUT_TYPE_SINT
-	(~ int_type) INPUT_TYPE_UINT
 	(~ int_type) POLYGON_MODE_FILL
 	(~ int_type) POLYGON_MODE_LINE
 	(~ int_type) POLYGON_MODE_POINT
@@ -165,23 +150,6 @@
 (= TOPOLOGY_TRIANGLE_STRIP_WITH_ADJACENCY 9)
 (= TOPOLOGY_PATCH_LIST 10)
 
-(= INPUT_SIZE_8BIT 0)
-(= INPUT_SIZE_16BIT 1)
-(= INPUT_SIZE_32BIT 2)
-(= INPUT_SIZE_64BIT 3)
-(= INPUT_SIZE_MASK 3)
-
-(= INPUT_COUNT_1 0)
-(= INPUT_COUNT_2 4)
-(= INPUT_COUNT_3 8)
-(= INPUT_COUNT_4 12)
-(= INPUT_COUNT_MASK 12)
-
-(= INPUT_TYPE_UINT 0)
-(= INPUT_TYPE_SINT 16)
-(= INPUT_TYPE_FLOAT 32)
-(= INPUT_TYPE_MASK 48)
-
 (= POLYGON_MODE_POINT 0)
 (= POLYGON_MODE_LINE 1)
 (= POLYGON_MODE_FILL 2)
@@ -206,12 +174,6 @@
 	TOPOLOGY_TRIANGLE_LIST_WITH_ADJACENCY "Triangle list with adjacency"
 	TOPOLOGY_TRIANGLE_STRIP_WITH_ADJACENCY "Triangle strip with adjacency"
 	TOPOLOGY_PATCH_LIST "Patch list"
->)
-
-(= _input_type_map <
-	INPUT_TYPE_FLOAT "float"
-	INPUT_TYPE_UINT "uint"
-	INPUT_TYPE_SINT "sint"
 >)
 
 (= _polygon_mode_map <
@@ -311,20 +273,6 @@
 	DESCRIPTOR_TYPE_UNIFORM_BUFFER
 	FRONT_FACE_CLOCKWISE
 	FRONT_FACE_COUNTER_CLOCKWISE
-	INPUT_COUNT_1
-	INPUT_COUNT_2
-	INPUT_COUNT_3
-	INPUT_COUNT_4
-	INPUT_COUNT_MASK
-	INPUT_SIZE_16BIT
-	INPUT_SIZE_32BIT
-	INPUT_SIZE_64BIT
-	INPUT_SIZE_8BIT
-	INPUT_SIZE_MASK
-	INPUT_TYPE_FLOAT
-	INPUT_TYPE_MASK
-	INPUT_TYPE_SINT
-	INPUT_TYPE_UINT
 	POLYGON_MODE_FILL
 	POLYGON_MODE_LINE
 	POLYGON_MODE_POINT

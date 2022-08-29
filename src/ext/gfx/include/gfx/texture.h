@@ -12,10 +12,9 @@
 
 typedef struct _GFX_TEXTURE_DATA{
 	const gfx_buffer_data_t* data_buffer;
-	gfx_data_format_t format;
-	uint32_t width;
-	uint32_t height;
-	uint32_t depth;
+	VkFormat format;
+	VkExtent3D size;
+	VkImageLayout layout;
 	VkImage handle;
 	VkImageView view;
 	VkDeviceMemory memory;

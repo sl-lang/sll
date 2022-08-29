@@ -2,6 +2,7 @@
 	"gfx/_load_library.sll"
 	"gfx/buffer.sll"
 	"gfx/context.sll"
+	"gfx/data_type.sll"
 	"string.sll"
 	"types.sll"
 )
@@ -14,8 +15,9 @@
 
 (= gfx_texture_type (&:
 	(,,, data
-		(@@ (<- string$format "<gfx:texture size=%s buffer=%s context=%s>"
+		(@@ (<- string$format "<gfx:texture size=%s data_type=%s buffer=%s context=%s>"
 			(<- string$join 'x' data$size)
+			(<- gfx:data_type$to_string data$data_type)
 			(:: data$buffer string_type)
 			(:: data$ctx string_type)
 		))
@@ -25,6 +27,7 @@
 	) @@delete@@
 	(~ int_type) _handle
 	(~ array_type) size
+	(~ int_type) data_type
 	(~ gfx:buffer$gfx_buffer_type) buffer
 	(~ gfx:context$gfx_context_type) ctx
 ))
@@ -38,19 +41,23 @@
 
 
 
-(= create (,,, ctx size buffer
+(= create (,,, ctx size data_type buffer
 	(? (! ctx) (@@ nil))
 	(= ctx (:: ctx gfx:context$gfx_context_type))
 	(= size (: (:: size array_type) 0 3))
 	(? (! size) (@@ nil))
+	(= data_type (& (:: data_type int_type) gfx:data_type$MASK))
 	(= handle (<- (... "gfx:texture_create")
 		ctx$_handle
 		size
+		data_type
 		buffer$_handle
 	))
+	(<- (... "gfx:texture_sync") ctx$_handle handle)
 	(@@ (. gfx_texture_type
 		handle
 		size
+		data_type
 		buffer
 		ctx
 	))

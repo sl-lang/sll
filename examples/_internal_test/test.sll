@@ -13,6 +13,7 @@
 	"gfx/buffer.sll"
 	"gfx/color.sll"
 	"gfx/context.sll"
+	"gfx/data_type.sll"
 	"gfx/pipeline.sll"
 	"gfx/shader.sll"
 	"gfx/stage.sll"
@@ -801,7 +802,7 @@ abc` '\n')
 	0xff0000ff 0x00ff00ff 0xff00ffff
 	0x0000ffff 0xffff00ff 0x00ffffff
 ] true))
-(= texture (<- gfx:texture$create ctx [3 2] texture_buffer))
+(= texture (<- gfx:texture$create ctx [3 2] (| gfx:data_type$SIZE_8BIT gfx:data_type$COUNT_4 gfx:data_type$TYPE_COLOR) texture_buffer))
 (= pipeline (<- gfx:pipeline$create ctx (. gfx:pipeline$gfx_pipeline_config_type
 	gfx:pipeline$TOPOLOGY_TRIANGLE_LIST
 	[
@@ -810,13 +811,13 @@ abc` '\n')
 				0
 				0
 				0
-				(| gfx:pipeline$INPUT_SIZE_32BIT gfx:pipeline$INPUT_COUNT_3 gfx:pipeline$INPUT_TYPE_FLOAT)
+				(| gfx:data_type$SIZE_32BIT gfx:data_type$COUNT_3 gfx:data_type$TYPE_FLOAT)
 			]
 			[
 				0
 				1
 				12
-				(| gfx:pipeline$INPUT_SIZE_32BIT gfx:pipeline$INPUT_COUNT_3 gfx:pipeline$INPUT_TYPE_FLOAT)
+				(| gfx:data_type$SIZE_32BIT gfx:data_type$COUNT_3 gfx:data_type$TYPE_FLOAT)
 			]
 		]
 		24
