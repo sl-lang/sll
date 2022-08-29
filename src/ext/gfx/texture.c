@@ -11,11 +11,11 @@
 
 
 
-void _delete_texture(const gfx_context_data_t* ctx,gfx_texture_data_t* texture_data){
-	_deallocate_device_memory(ctx,texture_data->memory);
-	ctx->function_table.vkDestroyImageView(ctx->device.logical,texture_data->view,NULL);
-	ctx->function_table.vkDestroyImage(ctx->device.logical,texture_data->handle,NULL);
-	sll_deallocate(texture_data);
+void _delete_texture(const gfx_context_data_t* ctx,gfx_texture_data_t* texture){
+	_deallocate_device_memory(ctx,texture->memory);
+	ctx->function_table.vkDestroyImageView(ctx->device.logical,texture->view,NULL);
+	ctx->function_table.vkDestroyImage(ctx->device.logical,texture->handle,NULL);
+	sll_deallocate(texture);
 }
 
 

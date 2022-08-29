@@ -26,7 +26,7 @@ typedef sll_size_t gfx_texture_t;
 
 
 
-void _delete_texture(const gfx_context_data_t* ctx,gfx_texture_data_t* texture_data);
+void _delete_texture(const gfx_context_data_t* ctx,gfx_texture_data_t* texture);
 
 
 
