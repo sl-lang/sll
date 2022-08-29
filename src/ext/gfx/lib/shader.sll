@@ -15,7 +15,7 @@
 (= gfx_shader_type (&:
 	(,,, data
 		(@@ (<- string$format "<gfx:shader type=%s entry_point=%s context=%s>"
-			(<- gfx:stages$to_string data$type)
+			(<- gfx:stage$to_string data$type)
 			data$entry_point
 			(:: data$ctx string_type)
 		))
@@ -45,7 +45,7 @@
 (= create (,,, ctx bytecode type entry_point
 	(? (! ctx) (@@ nil))
 	(= ctx (:: ctx gfx:context$gfx_context_type))
-	(= type (& (:: type int_type) gfx:stages$STAGE_ALL))
+	(= type (& (:: type int_type) gfx:stage$STAGE_ALL))
 	(= entry_point (:: entry_point string_type))
 	(= handle (<- (... "gfx:shader_create")
 		ctx$_handle

@@ -6,6 +6,7 @@
 	"gfx/sampler.sll"
 	"gfx/shader.sll"
 	"gfx/stage.sll"
+	"gfx/texture.sll"
 	"array.sll"
 	"string.sll"
 	"types.sll"
@@ -41,6 +42,17 @@
 	) @@string@@
 	array_type input_attributes
 	int_type stride
+))
+
+(= gfx_pipeline_config_descriptor_sampler_type (&:
+	(,,, data
+		(@@ (<- string$format "<gfx:pipeline_config_descriptor_sampler texture=%s sampler=%s>"
+			(:: data$texture string_type)
+			(:: data$sampler string_type)
+		))
+	) @@string@@
+	gfx:texture$gfx_texture_type texture
+	gfx:sampler$gfx_sampler_type sampler
 ))
 
 (= gfx_pipeline_config_descriptor_type (&:
@@ -197,7 +209,7 @@
 
 (= _descriptor_data_type_map <
 	DESCRIPTOR_TYPE_UNIFORM_BUFFER gfx:buffer$gfx_buffer_type
-	DESCRIPTOR_TYPE_SAMPLER gfx:sampler$gfx_sampler_type
+	DESCRIPTOR_TYPE_SAMPLER gfx_pipeline_config_descriptor_sampler_type
 >)
 
 
@@ -215,19 +227,24 @@
 	(-> (= i 0) (< i ($ config$descriptors))
 		(= descriptor (:: (: config$descriptors i) gfx_pipeline_config_descriptor_type))
 		(= descriptor$data (:: descriptor$data (: _descriptor_data_type_map descriptor$type)))
+		(= (: config$descriptors i) descriptor)
 		(? (&&
 			(=== descriptor$type DESCRIPTOR_TYPE_UNIFORM_BUFFER)
 			(! (<- gfx:buffer$is_constant_size? descriptor$data))
 		) (:> "Uniform buffers must have a constant size!\n"))
-		(<- array$push (?:
-			(=== descriptor$type DESCRIPTOR_TYPE_UNIFORM_BUFFER) uniform_buffers
-			(=== descriptor$type DESCRIPTOR_TYPE_SAMPLER) samplers
-		) [
-			descriptor$binding
-			descriptor$stage
-			descriptor$data$_handle
-		])
-		(= (: config$descriptors i) descriptor)
+		(?? descriptor$type
+			DESCRIPTOR_TYPE_UNIFORM_BUFFER (<- array$push uniform_buffers [
+				descriptor$binding
+				descriptor$stage
+				descriptor$data$_handle
+			])
+			DESCRIPTOR_TYPE_SAMPLER (<- array$push samplers [
+				descriptor$binding
+				descriptor$stage
+				descriptor$data$texture$_handle
+				descriptor$data$sampler$_handle
+			])
+		)
 		(++ i)
 	)
 	(-> (= i 0) (< i ($ config$shaders))
