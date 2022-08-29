@@ -802,7 +802,7 @@ abc` '\n')
 	0xff0000ff 0x00ff00ff 0xff00ffff
 	0x0000ffff 0xffff00ff 0x00ffffff
 ] true))
-(= texture (<- gfx:texture$create ctx [3 2] (| gfx:data_type$SIZE_8BIT gfx:data_type$COUNT_4 gfx:data_type$TYPE_COLOR) texture_buffer))
+(= texture (<- gfx:texture$create ctx [3 2] (| gfx:data_type$SIZE_8BIT gfx:data_type$COUNT_4 gfx:data_type$TYPE_COLOR_UNORM) texture_buffer))
 (= pipeline (<- gfx:pipeline$create ctx (. gfx:pipeline$gfx_pipeline_config_type
 	gfx:pipeline$TOPOLOGY_TRIANGLE_LIST
 	[

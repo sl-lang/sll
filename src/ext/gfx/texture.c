@@ -158,6 +158,6 @@ __GFX_API_CALL void gfx_api_texture_sync(gfx_context_t ctx_id,gfx_texture_t text
 	image_memory_barrier.dstAccessMask=VK_ACCESS_SHADER_READ_BIT;
 	image_memory_barrier.oldLayout=VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL;
 	image_memory_barrier.newLayout=VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
-	ctx->function_table.vkCmdPipelineBarrier(ctx->buffer_transfer.command_buffer,VK_PIPELINE_STAGE_TRANSFER_BIT,VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT,0,0,NULL,0,NULL,1,&image_memory_barrier);
+	ctx->function_table.vkCmdPipelineBarrier(ctx->buffer_transfer.command_buffer,VK_PIPELINE_STAGE_TRANSFER_BIT,VK_PIPELINE_STAGE_ALL_GRAPHICS_BIT,0,0,NULL,0,NULL,1,&image_memory_barrier);
 	texture->layout=VK_ACCESS_SHADER_READ_BIT;
 }

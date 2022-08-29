@@ -17,7 +17,9 @@
 	(~ int_type) SIZE_64BIT
 	(~ int_type) SIZE_8BIT
 	(~ int_type) SIZE_MASK
-	(~ int_type) TYPE_COLOR
+	(~ int_type) TYPE_COLOR_SNORM
+	(~ int_type) TYPE_COLOR_SRGB
+	(~ int_type) TYPE_COLOR_UNORM
 	(~ int_type) TYPE_FLOAT
 	(~ int_type) TYPE_MASK
 	(~ int_type) TYPE_SINT
@@ -42,8 +44,10 @@
 (= TYPE_UINT 0)
 (= TYPE_SINT 16)
 (= TYPE_FLOAT 32)
-(= TYPE_COLOR 48)
-(= TYPE_MASK 48)
+(= TYPE_COLOR_UNORM 48)
+(= TYPE_COLOR_SNORM 64)
+(= TYPE_COLOR_SRGB 80)
+(= TYPE_MASK 112)
 
 (= MASK (| SIZE_MASK COUNT_MASK TYPE_MASK))
 
@@ -51,7 +55,9 @@
 	TYPE_UINT "uint"
 	TYPE_SINT "sint"
 	TYPE_FLOAT "float"
-	TYPE_COLOR "color"
+	TYPE_COLOR_UNORM "unorm"
+	TYPE_COLOR_SNORM "snorm"
+	TYPE_COLOR_SRGB "srgb"
 >)
 
 
@@ -79,7 +85,9 @@
 	SIZE_64BIT
 	SIZE_8BIT
 	SIZE_MASK
-	TYPE_COLOR
+	TYPE_COLOR_SRGB
+	TYPE_COLOR_SNORM
+	TYPE_COLOR_UNORM
 	TYPE_FLOAT
 	TYPE_MASK
 	TYPE_SINT
