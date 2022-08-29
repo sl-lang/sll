@@ -3,6 +3,7 @@
 #include <gfx/context.h>
 #include <gfx/pipeline.h>
 #include <gfx/shader.h>
+#include <gfx/texture.h>
 #include <gfx/vulkan.h>
 #include <sll.h>
 
@@ -90,6 +91,21 @@ static const sll_internal_function_descriptor_t _internal_function_table[]={
 		SLL_CHAR("QQ|")
 	},
 	{
+		SLL_CHAR("gfx:texture_create"),
+		gfx_api_texture_create,
+		SLL_CHAR("Q#aBQ|Q")
+	},
+	{
+		SLL_CHAR("gfx:texture_delete"),
+		gfx_api_texture_delete,
+		SLL_CHAR("QQ|")
+	},
+	{
+		SLL_CHAR("gfx:texture_sync"),
+		gfx_api_texture_sync,
+		SLL_CHAR("QQ|")
+	},
+	{
 		SLL_CHAR("gfx:vulkan_get_extensions"),
 		gfx_api_vulkan_get_extensions,
 		SLL_CHAR("|a")
@@ -105,7 +121,7 @@ static const sll_internal_function_descriptor_t _internal_function_table[]={
 
 static const sll_internal_function_table_descriptor_t _internal_function_table_descriptor_data={
 	(const sll_internal_function_descriptor_t*)(&_internal_function_table),
-	18
+	21
 };
 
 
