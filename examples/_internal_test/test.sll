@@ -797,6 +797,11 @@ abc` '\n')
 (= uniform_buffer (<- gfx:buffer$create ctx gfx:buffer$TYPE_UNIFORM gfx:buffer$DATA_TYPE_FLOAT32 [
 	1.0 0.5 0.3
 ] true))
+(= texture_buffer (<- gfx:buffer$create ctx gfx:buffer$TYPE_TEXTURE gfx:buffer$DATA_TYPE_UINT32 [
+	0xff0000ff 0x00ff00ff
+	0x0000ffff 0xffff00ff
+] true))
+(= texture (<- gfx:texture$create ctx 2 2 1 texture_buffer))
 (= pipeline (<- gfx:pipeline$create ctx (. gfx:pipeline$gfx_pipeline_config_type
 	gfx:pipeline$TOPOLOGY_TRIANGLE_LIST
 	[
@@ -859,3 +864,4 @@ abc` '\n')
 	(<- window_manager:event$poll false)
 	(<- gfx:context$render ctx)
 )
+(:> [texture_buffer texture] '\n')
