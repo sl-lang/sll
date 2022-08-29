@@ -10,3 +10,4 @@ if not exist build\_build_script.sla (
 	build\_sll_runtime_windows\sll.exe src\_build\main.sll -I "@build-script|src\_build" -O -x 5 -r -R -a -o build/_build_script
 )
 build\_sll_runtime_windows\sll.exe build\_build_script.sla -A %*
+if errorlevel -1073741819 exit /b 0
