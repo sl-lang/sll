@@ -94,7 +94,7 @@ __GFX_API_CALL gfx_pipeline_t gfx_api_pipeline_create(gfx_context_t ctx_id,gfx_p
 		0,
 		1,
 		&vertex_input_binding_descriptor,
-		2,
+		input_attributes->length,
 		vertex_input_attributes
 	};
 	VkPrimitiveTopology input_assembler_topology=VK_PRIMITIVE_TOPOLOGY_POINT_LIST;
