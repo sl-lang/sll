@@ -16,7 +16,7 @@ void _delete_texture(const gfx_context_data_t* ctx,gfx_texture_data_t* texture_d
 
 
 
-__GFX_API_CALL gfx_texture_t gfx_api_texture_create(gfx_context_t ctx_id,uint32_t width,uint32_t height,uint32_t depth,gfx_data_format_t format,gfx_buffer_t buffer_id){
+__GFX_API_CALL gfx_texture_t gfx_api_texture_create(gfx_context_t ctx_id,const sll_array_t* size,gfx_data_format_t format,gfx_buffer_t buffer_id){
 	gfx_context_data_t* ctx=SLL_HANDLE_CONTAINER_GET(&gfx_context_data,ctx_id);
 	if (!ctx){
 		return 0;
@@ -24,9 +24,9 @@ __GFX_API_CALL gfx_texture_t gfx_api_texture_create(gfx_context_t ctx_id,uint32_
 	gfx_texture_data_t* texture=sll_allocate(sizeof(gfx_texture_data_t));
 	texture->data_buffer=SLL_HANDLE_CONTAINER_GET(&(ctx->buffers),buffer_id);
 	texture->format=format;
-	texture->width=width;
-	texture->height=height;
-	texture->depth=depth;
+	texture->width=size->data[0]->data.int_;
+	texture->height=(size->length>1?size->data[1]->data.int_:0);
+	texture->depth=(size->length>2?size->data[2]->data.int_:0);
 	gfx_texture_t out;
 	SLL_HANDLE_CONTAINER_ALLOC(&(ctx->textures),&out);
 	*(ctx->textures.data+out)=texture;

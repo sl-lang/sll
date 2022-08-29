@@ -16,6 +16,9 @@ typedef struct _GFX_TEXTURE_DATA{
 	uint32_t width;
 	uint32_t height;
 	uint32_t depth;
+	VkImage handle;
+	VkImageView view;
+	VkDeviceMemory memory;
 } gfx_texture_data_t;
 
 
@@ -28,7 +31,7 @@ void _delete_texture(const gfx_context_data_t* ctx,gfx_texture_data_t* texture_d
 
 
 
-__GFX_API_CALL gfx_texture_t gfx_api_texture_create(gfx_context_t ctx_id,uint32_t width,uint32_t height,uint32_t depth,gfx_data_format_t format,gfx_buffer_t buffer_id);
+__GFX_API_CALL gfx_texture_t gfx_api_texture_create(gfx_context_t ctx_id,const sll_array_t* size,gfx_data_format_t format,gfx_buffer_t buffer_id);
 
 
 

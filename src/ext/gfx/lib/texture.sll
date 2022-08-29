@@ -14,10 +14,8 @@
 
 (= gfx_texture_type (&:
 	(,,, data
-		(@@ (<- string$format "<gfx:texture size=%ux%ux%u buffer=%s context=%s>"
-			data$width
-			data$height
-			data$depth
+		(@@ (<- string$format "<gfx:texture size=%s buffer=%s context=%s>"
+			(<- string$join 'x' data$size)
 			(:: data$buffer string_type)
 			(:: data$ctx string_type)
 		))
@@ -26,9 +24,7 @@
 		(<- delete data)
 	) @@delete@@
 	(~ int_type) _handle
-	(~ int_type) width
-	(~ int_type) height
-	(~ int_type) depth
+	(~ array_type) size
 	(~ gfx:buffer$gfx_buffer_type) buffer
 	(~ gfx:context$gfx_context_type) ctx
 ))
@@ -42,21 +38,19 @@
 
 
 
-(= create (,,, ctx width height depth buffer
+(= create (,,, ctx size buffer
 	(? (! ctx) (@@ nil))
 	(= ctx (:: ctx gfx:context$gfx_context_type))
+	(= size (: (:: size array_type) 0 3))
+	(? (! size) (@@ nil))
 	(= handle (<- (... "gfx:texture_create")
 		ctx$_handle
-		width
-		height
-		depth
+		size
 		buffer$_handle
 	))
 	(@@ (. gfx_texture_type
 		handle
-		width
-		height
-		depth
+		size
 		buffer
 		ctx
 	))
