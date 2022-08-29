@@ -64,10 +64,10 @@
 
 (= to_string (,,, data_type
 	(= data_type (& (:: data_type int_type) MASK))
-	(@@ (<- string$format "%u x %s%u"
-		(+ (>> (& data_type COUNT_MASK) 2) 1)
+	(@@ (<- string$format "%s%u[%u]"
 		(: _type_to_string (& data_type TYPE_MASK))
 		(<< (<< 1 (& data_type SIZE_MASK)) 3)
+		(+ (>> (& data_type COUNT_MASK) 2) 1)
 	))
 ))
 
