@@ -3,6 +3,7 @@
 	"gfx/buffer.sll"
 	"gfx/context.sll"
 	"gfx/data_type.sll"
+	"gfx/sampler.sll"
 	"gfx/shader.sll"
 	"gfx/stage.sll"
 	"array.sll"
@@ -111,6 +112,7 @@
 (= gfx_pipeline_module_type (&:
 	(~ int_type) CULL_MODE_BACK
 	(~ int_type) CULL_MODE_FRONT
+	(~ int_type) DESCRIPTOR_TYPE_SAMPLER
 	(~ int_type) DESCRIPTOR_TYPE_UNIFORM_BUFFER
 	(~ int_type) FRONT_FACE_CLOCKWISE
 	(~ int_type) FRONT_FACE_COUNTER_CLOCKWISE
@@ -161,6 +163,7 @@
 (= CULL_MODE_BACK 2)
 
 (= DESCRIPTOR_TYPE_UNIFORM_BUFFER 0)
+(= DESCRIPTOR_TYPE_SAMPLER 1)
 
 (= _topology_map <
 	TOPOLOGY_POINT_LIST "Point list"
@@ -189,10 +192,12 @@
 
 (= _descriptor_type_map <
 	DESCRIPTOR_TYPE_UNIFORM_BUFFER "Uniform buffer"
+	DESCRIPTOR_TYPE_SAMPLER "Sampler"
 >)
 
 (= _descriptor_data_type_map <
 	DESCRIPTOR_TYPE_UNIFORM_BUFFER gfx:buffer$gfx_buffer_type
+	DESCRIPTOR_TYPE_SAMPLER gfx:sampler$gfx_sampler_type
 >)
 
 
@@ -206,6 +211,7 @@
 		(++ i)
 	)
 	(= uniform_buffers [])
+	(= samplers [])
 	(-> (= i 0) (< i ($ config$descriptors))
 		(= descriptor (:: (: config$descriptors i) gfx_pipeline_config_descriptor_type))
 		(= descriptor$data (:: descriptor$data (: _descriptor_data_type_map descriptor$type)))
@@ -213,13 +219,14 @@
 			(=== descriptor$type DESCRIPTOR_TYPE_UNIFORM_BUFFER)
 			(! (<- gfx:buffer$is_constant_size? descriptor$data))
 		) (:> "Uniform buffers must have a constant size!\n"))
-		(?? descriptor$type
-			DESCRIPTOR_TYPE_UNIFORM_BUFFER (<- array$push uniform_buffers [
-				descriptor$binding
-				descriptor$stage
-				descriptor$data$_handle
-			])
-		)
+		(<- array$push (?:
+			(=== descriptor$type DESCRIPTOR_TYPE_UNIFORM_BUFFER) uniform_buffers
+			(=== descriptor$type DESCRIPTOR_TYPE_SAMPLER) samplers
+		) [
+			descriptor$binding
+			descriptor$stage
+			descriptor$data$_handle
+		])
 		(= (: config$descriptors i) descriptor)
 		(++ i)
 	)
@@ -237,6 +244,7 @@
 		)
 		config$vertex_input$stride
 		uniform_buffers
+		samplers
 		config$rasterizer$polygon_mode
 		config$rasterizer$front_face
 		config$rasterizer$cull_mode
@@ -270,6 +278,7 @@
 (= gfx:pipeline (. gfx_pipeline_module_type
 	CULL_MODE_BACK
 	CULL_MODE_FRONT
+	DESCRIPTOR_TYPE_SAMPLER
 	DESCRIPTOR_TYPE_UNIFORM_BUFFER
 	FRONT_FACE_CLOCKWISE
 	FRONT_FACE_COUNTER_CLOCKWISE

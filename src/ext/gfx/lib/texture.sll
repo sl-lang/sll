@@ -69,7 +69,7 @@
 	(<- (... "gfx:texture_delete") texture$ctx$_handle texture$_handle)
 ))
 
-(= use (,,, texture
+(= sync (,,, texture
 	(? (! texture) (@@))
 	(= texture (:: texture gfx_texture_type))
 	(<- (... "gfx:texture_sync") texture$ctx$_handle texture$_handle)

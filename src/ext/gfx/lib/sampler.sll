@@ -1,0 +1,65 @@
+(---
+	"gfx/_load_library.sll"
+	"gfx/context.sll"
+	"gfx/texture.sll"
+	"string.sll"
+	"types.sll"
+)
+
+
+
+(# delete)
+
+
+
+(= gfx_sampler_type (&:
+	(,,, data
+		(@@ (<- string$format "<gfx:sampler texture=%s context=%s>"
+			(:: data$texture string_type)
+			(:: data$ctx string_type)
+		))
+	) @@string@@
+	(,,, data
+		(<- delete data)
+	) @@delete@@
+	(~ int_type) _handle
+	(~ gfx:texture$gfx_texture_type) texture
+	(~ gfx:context$gfx_context_type) ctx
+))
+
+(= gfx_sampler_module_type (&:
+	(~ type_type) gfx_sampler_type
+	(~ func_type) create
+	(~ func_type) delete
+))
+
+
+
+(= create (,,, ctx texture
+	(? (! ctx) (@@ nil))
+	(= ctx (:: ctx gfx:context$gfx_context_type))
+	(= texture (:: texture gfx:texture$gfx_texture_type))
+	(= handle (<- (... "gfx:sampler_create")
+		ctx$_handle
+		texture$_handle
+	))
+	(@@ (. gfx_sampler_type
+		handle
+		texture
+		ctx
+	))
+))
+
+(= delete (,,, sampler
+	(? (! sampler) (@@))
+	(= sampler (:: sampler gfx_sampler_type))
+	(<- (... "gfx:sampler_delete") sampler$ctx$_handle sampler$_handle)
+))
+
+
+(= gfx:sampler (. gfx_sampler_module_type
+	gfx_sampler_type
+	create
+	delete
+))
+(## gfx:sampler)
