@@ -28,11 +28,11 @@ __GFX_API_CALL gfx_texture_t gfx_api_texture_create(gfx_context_t ctx_id,const s
 	gfx_texture_data_t* texture=sll_allocate(sizeof(gfx_texture_data_t));
 	texture->data_buffer=SLL_HANDLE_CONTAINER_GET(&(ctx->buffers),buffer_id);
 	texture->format=format;
-	texture->width=size->data[0]->data.int_;
-	texture->height=(size->length>1?size->data[1]->data.int_:0);
-	texture->depth=(size->length>2?size->data[2]->data.int_:0);
+	texture->width=(uint32_t)(size->data[0]->data.int_);
+	texture->height=(uint32_t)((size->length>1?size->data[1]->data.int_:0));
+	texture->depth=(uint32_t)((size->length>2?size->data[2]->data.int_:0));
 	VkImageType image_type=VK_IMAGE_TYPE_1D;
-	VkImageType image_view_type=VK_IMAGE_VIEW_TYPE_1D;
+	VkImageViewType image_view_type=VK_IMAGE_VIEW_TYPE_1D;
 	if (size->length==2){
 		image_type=VK_IMAGE_TYPE_2D;
 		image_view_type=VK_IMAGE_VIEW_TYPE_2D;
