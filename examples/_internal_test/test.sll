@@ -805,6 +805,8 @@ abc` '\n')
 ] true))
 (= texture (<- gfx:texture$create ctx [3 2] (| gfx:data_type$SIZE_8BIT gfx:data_type$COUNT_4 gfx:data_type$TYPE_COLOR_UNORM) texture_buffer))
 (= sampler (<- gfx:sampler$create ctx (. gfx:sampler$gfx_sampler_config_type
+	gfx:sampler$FILTER_NEAREST
+	gfx:sampler$FILTER_NEAREST
 	gfx:sampler$ADDRESS_MODE_TYPE_REPEAT
 	gfx:sampler$ADDRESS_MODE_TYPE_CLAMP
 	gfx:sampler$ADDRESS_MODE_TYPE_REPEAT

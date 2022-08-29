@@ -7,6 +7,10 @@
 
 
 
+#define GFX_SAMPLER_FILTER_TYPE_NEAREST 0
+#define GFX_SAMPLER_FILTER_TYPE_LINEAR 1
+#define GFX_SAMPLER_FILTER_TYPE_CUBIC 2
+
 #define GFX_ADDRESS_MODE_TYPE_REPEAT 0
 #define GFX_ADDRESS_MODE_TYPE_CLAMP 1
 #define GFX_ADDRESS_MODE_TYPE_MASK 1
@@ -15,7 +19,11 @@
 
 
 
-typedef uint8_t gfx_samler_address_mode_t;
+typedef uint8_t gfx_sampler_address_mode_t;
+
+
+
+typedef uint8_t gfx_sampler_filter_t;
 
 
 
@@ -33,7 +41,7 @@ void _delete_sampler(const gfx_context_data_t* ctx,gfx_sampler_data_t* sampler);
 
 
 
-__GFX_API_CALL gfx_sampler_t gfx_api_sampler_create(gfx_context_t ctx_id,gfx_samler_address_mode_t address_mode_x,gfx_samler_address_mode_t address_mode_y,gfx_samler_address_mode_t address_mode_z);
+__GFX_API_CALL gfx_sampler_t gfx_api_sampler_create(gfx_context_t ctx_id,gfx_sampler_filter_t upscale_filter,gfx_sampler_filter_t downscale_filter,gfx_sampler_address_mode_t address_mode_x,gfx_sampler_address_mode_t address_mode_y,gfx_sampler_address_mode_t address_mode_z);
 
 
 

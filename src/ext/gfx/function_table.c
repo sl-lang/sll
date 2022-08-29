@@ -84,7 +84,7 @@ static const sll_internal_function_descriptor_t _internal_function_table[]={
 	{
 		SLL_CHAR("gfx:sampler_create"),
 		gfx_api_sampler_create,
-		SLL_CHAR("QBBB|Q")
+		SLL_CHAR("QBBBBB|Q")
 	},
 	{
 		SLL_CHAR("gfx:sampler_delete"),

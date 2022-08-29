@@ -7,6 +7,33 @@
 
 
 
+static VkFilter _encode_filter(gfx_sampler_filter_t filter){
+	if (filter==GFX_SAMPLER_FILTER_TYPE_LINEAR){
+		return VK_FILTER_LINEAR;
+	}
+	if (filter==GFX_SAMPLER_FILTER_TYPE_CUBIC){
+		return VK_FILTER_CUBIC_EXT;
+	}
+	return VK_FILTER_NEAREST;
+}
+
+
+
+static VkSamplerAddressMode _encode_address_mode(gfx_sampler_address_mode_t address_mode){
+	if (address_mode==(GFX_ADDRESS_MODE_TYPE_REPEAT|GFX_ADDRESS_MODE_FLAG_MIRROR)){
+		return VK_SAMPLER_ADDRESS_MODE_MIRRORED_REPEAT;
+	}
+	if (address_mode==GFX_ADDRESS_MODE_TYPE_CLAMP){
+		return VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE;
+	}
+	if (address_mode==(GFX_ADDRESS_MODE_TYPE_CLAMP|GFX_ADDRESS_MODE_FLAG_MIRROR)){
+		return VK_SAMPLER_ADDRESS_MODE_MIRROR_CLAMP_TO_EDGE;
+	}
+	return VK_SAMPLER_ADDRESS_MODE_REPEAT;
+}
+
+
+
 void _delete_sampler(const gfx_context_data_t* ctx,gfx_sampler_data_t* sampler){
 	ctx->function_table.vkDestroySampler(ctx->device.logical,sampler->handle,NULL);
 	sll_deallocate(sampler);
@@ -14,7 +41,7 @@ void _delete_sampler(const gfx_context_data_t* ctx,gfx_sampler_data_t* sampler){
 
 
 
-__GFX_API_CALL gfx_sampler_t gfx_api_sampler_create(gfx_context_t ctx_id,gfx_samler_address_mode_t address_mode_x,gfx_samler_address_mode_t address_mode_y,gfx_samler_address_mode_t address_mode_z){
+__GFX_API_CALL gfx_sampler_t gfx_api_sampler_create(gfx_context_t ctx_id,gfx_sampler_filter_t upscale_filter,gfx_sampler_filter_t downscale_filter,gfx_sampler_address_mode_t address_mode_x,gfx_sampler_address_mode_t address_mode_y,gfx_sampler_address_mode_t address_mode_z){
 	gfx_context_data_t* ctx=SLL_HANDLE_CONTAINER_GET(&gfx_context_data,ctx_id);
 	if (!ctx){
 		return 0;
@@ -24,12 +51,12 @@ __GFX_API_CALL gfx_sampler_t gfx_api_sampler_create(gfx_context_t ctx_id,gfx_sam
 		VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO,
 		NULL,
 		0,
-		VK_FILTER_NEAREST,
-		VK_FILTER_NEAREST,
+		_encode_filter(upscale_filter),
+		_encode_filter(downscale_filter),
 		VK_SAMPLER_MIPMAP_MODE_NEAREST,
-		VK_SAMPLER_ADDRESS_MODE_REPEAT,
-		VK_SAMPLER_ADDRESS_MODE_REPEAT,
-		VK_SAMPLER_ADDRESS_MODE_REPEAT,
+		_encode_address_mode(address_mode_x),
+		_encode_address_mode(address_mode_y),
+		_encode_address_mode(address_mode_z),
 		0.0f,
 		VK_FALSE,
 		0.0f,

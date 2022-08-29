@@ -8,13 +8,15 @@
 
 
 
-(# delete _address_mode_type_to_string ADDRESS_MODE_TYPE_MASK ADDRESS_MODE_FLAG_MIRROR)
+(# delete _filter_to_string _address_mode_type_to_string ADDRESS_MODE_TYPE_MASK ADDRESS_MODE_FLAG_MIRROR)
 
 
 
 (= gfx_sampler_config_type (&:
 	(,,, data
-		(@@ (<- string$format "<gfx:sampler_config address_modes=[%s%s %s%s %s%s]>"
+		(@@ (<- string$format "<gfx:sampler_config upscale_filter=%s downscale_filter=%s address_modes=[%s%s %s%s %s%s]>"
+			(: _filter_to_string data$upscale_filter)
+			(: _filter_to_string data$downscale_filter)
 			(: _address_mode_type_to_string (& data$address_mode_x ADDRESS_MODE_TYPE_MASK))
 			(* " (mirrored)" (!! (& data$address_mode_x ADDRESS_MODE_FLAG_MIRROR)))
 			(: _address_mode_type_to_string (& data$address_mode_y ADDRESS_MODE_TYPE_MASK))
@@ -23,6 +25,8 @@
 			(* " (mirrored)" (!! (& data$address_mode_z ADDRESS_MODE_FLAG_MIRROR)))
 		))
 	) @@string@@
+	int_type upscale_filter
+	int_type downscale_filter
 	int_type address_mode_x
 	int_type address_mode_y
 	int_type address_mode_z
@@ -45,23 +49,36 @@
 ))
 
 (= gfx_sampler_module_type (&:
-	(~ type_type) gfx_sampler_config_type
-	(~ type_type) gfx_sampler_type
 	(~ int_type) ADDRESS_MODE_FLAG_MIRROR
 	(~ int_type) ADDRESS_MODE_TYPE_CLAMP
 	(~ int_type) ADDRESS_MODE_TYPE_MASK
 	(~ int_type) ADDRESS_MODE_TYPE_REPEAT
+	(~ int_type) FILTER_CUBIC
+	(~ int_type) FILTER_LINEAR
+	(~ int_type) FILTER_NEAREST
+	(~ type_type) gfx_sampler_config_type
+	(~ type_type) gfx_sampler_type
 	(~ func_type) create
 	(~ func_type) delete
 ))
 
 
 
+(= FILTER_NEAREST 0)
+(= FILTER_LINEAR 1)
+(= FILTER_CUBIC 2)
+
 (= ADDRESS_MODE_TYPE_REPEAT 0)
 (= ADDRESS_MODE_TYPE_CLAMP 1)
 (= ADDRESS_MODE_TYPE_MASK 1)
 
 (= ADDRESS_MODE_FLAG_MIRROR 2)
+
+(= _filter_to_string <
+	FILTER_NEAREST "Nearest"
+	FILTER_LINEAR "Linear"
+	FILTER_CUBIC "Cubic"
+>)
 
 (= _address_mode_type_to_string <
 	ADDRESS_MODE_TYPE_REPEAT "Repeat"
@@ -76,7 +93,8 @@
 	(= config (:: config gfx_sampler_config_type))
 	(= handle (<- (... "gfx:sampler_create")
 		ctx$_handle
-		texture$_handle
+		config$upscale_filter
+		config$downscale_filter
 		config$address_mode_x
 		config$address_mode_y
 		config$address_mode_z
@@ -84,7 +102,6 @@
 	(@@ (. gfx_sampler_type
 		handle
 		config
-		texture
 		ctx
 	))
 ))
@@ -97,12 +114,15 @@
 
 
 (= gfx:sampler (. gfx_sampler_module_type
-	gfx_sampler_config_type
-	gfx_sampler_type
 	ADDRESS_MODE_FLAG_MIRROR
 	ADDRESS_MODE_TYPE_CLAMP
 	ADDRESS_MODE_TYPE_MASK
 	ADDRESS_MODE_TYPE_REPEAT
+	FILTER_CUBIC
+	FILTER_LINEAR
+	FILTER_NEAREST
+	gfx_sampler_config_type
+	gfx_sampler_type
 	create
 	delete
 ))
