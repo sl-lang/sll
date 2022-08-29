@@ -4,12 +4,11 @@
 	"array.sll"
 	"string.sll"
 	"types.sll"
-	"weakref.sll"
 )
 
 
 
-(# delete _data_type_map FREQUENCY_NEVER FREQUENCY_MEDIUM FREQUENCY_HIGH TYPE_VERTEX TYPE_INDEX TYPE_UNIFORM TYPE_ANY)
+(# delete _data_type_map FREQUENCY_NEVER FREQUENCY_MEDIUM FREQUENCY_HIGH TYPE_VERTEX TYPE_INDEX TYPE_UNIFORM TYPE_TEXTURE TYPE_ANY)
 
 
 
@@ -49,7 +48,6 @@
 	int_type update_frequency
 	int_type _is_default_frequency?
 	(~ int_type) _original_size
-	weakref$weakref_type _ref_object
 ))
 
 (= gfx_buffer_module_type (&:
@@ -132,7 +130,7 @@
 		handle
 		data
 	))
-	(= out (. gfx_buffer_type
+	(@@ (. gfx_buffer_type
 		handle
 		type
 		data_type
@@ -142,15 +140,11 @@
 		true
 		(?: is_constant_size? ($ data) -1)
 	))
-	(= out$_ref_object (<- weakref$ref out))
-	(<- array$push ctx$buffers out$_ref_object)
-	(@@ out)
 ))
 
 (= delete (,,, buffer
 	(? (! buffer) (@@))
 	(= buffer (:: buffer gfx_buffer_type))
-	(<- array$remove buffer$ctx$buffers buffer$_ref_object)
 	(<- (... "gfx:buffer_delete") buffer$ctx$_handle buffer$_handle)
 ))
 

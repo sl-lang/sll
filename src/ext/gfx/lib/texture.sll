@@ -1,0 +1,85 @@
+(---
+	"gfx/_load_library.sll"
+	"gfx/buffer.sll"
+	"gfx/context.sll"
+	"string.sll"
+	"types.sll"
+)
+
+
+
+(# delete)
+
+
+
+(= gfx_texture_type (&:
+	(,,, data
+		(@@ (<- string$format "<gfx:texture size=%ux%ux%u buffer=%s context=%s>"
+			data$width
+			data$height
+			data$depth
+			(:: data$buffer string_type)
+			(:: data$ctx string_type)
+		))
+	) @@string@@
+	(,,, data
+		(<- delete data)
+	) @@delete@@
+	(~ int_type) _handle
+	(~ int_type) width
+	(~ int_type) height
+	(~ int_type) depth
+	(~ gfx:buffer$gfx_buffer_type) buffer
+	(~ gfx:context$gfx_context_type) ctx
+))
+
+(= gfx_texture_module_type (&:
+	(~ type_type) gfx_texture_type
+	(~ func_type) create
+	(~ func_type) delete
+	(~ func_type) sync
+))
+
+
+
+(= create (,,, ctx width height depth buffer
+	(? (! ctx) (@@ nil))
+	(= ctx (:: ctx gfx:context$gfx_context_type))
+	(= handle (<- (... "gfx:texture_create")
+		ctx$_handle
+		width
+		height
+		depth
+		buffer$_handle
+	))
+	(@@ (. gfx_texture_type
+		handle
+		width
+		height
+		depth
+		buffer
+		ctx
+	))
+))
+
+(= delete (,,, texture
+	(? (! texture) (@@))
+	(= texture (:: texture gfx_texture_type))
+	(<- (... "gfx:texture_delete") texture$ctx$_handle texture$_handle)
+))
+
+(= use (,,, texture
+	(? (! texture) (@@))
+	(= texture (:: texture gfx_texture_type))
+	(<- (... "gfx:texture_sync") texture$ctx$_handle texture$_handle)
+))
+
+
+
+(= gfx:texture (. gfx_texture_module_type
+	gfx_texture_type
+	create
+	delete
+	sync
+))
+(## gfx:texture)

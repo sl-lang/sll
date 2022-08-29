@@ -29,9 +29,6 @@
 	(~ int_type) _handle
 	(~ window_manager:window$window_manager_window_type) window
 	gfx_color_type clear_color
-	array_type buffers
-	array_type pipelines
-	array_type shaders
 	float_type delta_time
 	float_type _last_time
 ))
@@ -60,9 +57,6 @@
 		handle
 		window
 		[0 0 0 0]
-		[]
-		[]
-		[]
 		0
 		(<- time$time)
 	))
@@ -74,21 +68,6 @@
 	(? (! ctx) (@@))
 	(= ctx (:: ctx gfx_context_type))
 	(= ctx$window$_gfx_context weakref$NIL_REF)
-	(-> (= i 0) (< i ($ ctx$buffers))
-		(= buffer (<- weakref$get (: ctx$buffers i)))
-		(<- (... "gfx:buffer_delete") ctx$_handle buffer$_handle)
-		(++ i)
-	)
-	(-> (= i 0) (< i ($ ctx$pipelines))
-		(= pipeline (<- weakref$get (: ctx$pipelines i)))
-		(<- (... "gfx:pipeline_delete") ctx$_handle pipeline$_handle)
-		(++ i)
-	)
-	(-> (= i 0) (< i ($ ctx$shaders))
-		(= shader (<- weakref$get (: ctx$shaders i)))
-		(<- (... "gfx:shader_delete") ctx$_handle shader$_handle)
-		(++ i)
-	)
 	(<- (... "gfx:context_delete") ctx$_handle)
 ))
 

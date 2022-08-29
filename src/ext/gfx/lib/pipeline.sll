@@ -7,7 +7,6 @@
 	"array.sll"
 	"string.sll"
 	"types.sll"
-	"weakref.sll"
 )
 
 
@@ -108,7 +107,6 @@
 	(~ int_type) _handle
 	(~ gfx_pipeline_config_type) config
 	(~ gfx:context$gfx_context_type) ctx
-	weakref$weakref_type _ref_object
 ))
 
 (= gfx_pipeline_module_type (&:
@@ -286,20 +284,16 @@
 			shader$_handle
 		)
 	))
-	(= out (. gfx_pipeline_type
+	(@@ (. gfx_pipeline_type
 		handle
 		config
 		ctx
 	))
-	(= out$_ref_object (<- weakref$ref out))
-	(<- array$push ctx$pipelines out$_ref_object)
-	(@@ out)
 ))
 
 (= delete (,,, pipeline
 	(? (! pipeline) (@@))
 	(= pipeline (:: pipeline gfx_pipeline_type))
-	(<- array$remove pipeline$ctx$pipelines pipeline$_ref_object)
 	(<- (... "gfx:pipeline_delete") pipeline$ctx$_handle pipeline$_handle)
 ))
 
