@@ -1,20 +1,36 @@
 (---
 	"gfx/_load_library.sll"
 	"gfx/context.sll"
-	"gfx/texture.sll"
 	"string.sll"
 	"types.sll"
 )
 
 
 
-(# delete)
+(# delete _address_mode_type_to_string ADDRESS_MODE_TYPE_MASK ADDRESS_MODE_FLAG_MIRROR)
 
 
+
+(= gfx_sampler_config_type (&:
+	(,,, data
+		(@@ (<- string$format "<gfx:sampler_config address_modes=[%s%s %s%s %s%s]>"
+			(: _address_mode_type_to_string (& data$address_mode_x ADDRESS_MODE_TYPE_MASK))
+			(* " (mirrored)" (!! (& data$address_mode_x ADDRESS_MODE_FLAG_MIRROR)))
+			(: _address_mode_type_to_string (& data$address_mode_y ADDRESS_MODE_TYPE_MASK))
+			(* " (mirrored)" (!! (& data$address_mode_y ADDRESS_MODE_FLAG_MIRROR)))
+			(: _address_mode_type_to_string (& data$address_mode_z ADDRESS_MODE_TYPE_MASK))
+			(* " (mirrored)" (!! (& data$address_mode_z ADDRESS_MODE_FLAG_MIRROR)))
+		))
+	) @@string@@
+	int_type address_mode_x
+	int_type address_mode_y
+	int_type address_mode_z
+))
 
 (= gfx_sampler_type (&:
 	(,,, data
-		(@@ (<- string$format "<gfx:sampler texture=%s context=%s>"
+		(@@ (<- string$format "<gfx:sampler config=%s context=%s>"
+			(:: data$config string_type)
 			(:: data$texture string_type)
 			(:: data$ctx string_type)
 		))
@@ -23,28 +39,50 @@
 		(<- delete data)
 	) @@delete@@
 	(~ int_type) _handle
-	(~ gfx:texture$gfx_texture_type) texture
+	(~ gfx_sampler_config_type) config
 	(~ gfx:context$gfx_context_type) ctx
 ))
 
 (= gfx_sampler_module_type (&:
+	(~ type_type) gfx_sampler_config_type
 	(~ type_type) gfx_sampler_type
+	(~ int_type) ADDRESS_MODE_FLAG_MIRROR
+	(~ int_type) ADDRESS_MODE_TYPE_CLAMP
+	(~ int_type) ADDRESS_MODE_TYPE_MASK
+	(~ int_type) ADDRESS_MODE_TYPE_REPEAT
 	(~ func_type) create
 	(~ func_type) delete
 ))
 
 
 
-(= create (,,, ctx texture
+(= ADDRESS_MODE_TYPE_REPEAT 0)
+(= ADDRESS_MODE_TYPE_CLAMP 1)
+(= ADDRESS_MODE_TYPE_MASK 1)
+
+(= ADDRESS_MODE_FLAG_MIRROR 2)
+
+(= _address_mode_type_to_string <
+	ADDRESS_MODE_TYPE_REPEAT "Repeat"
+	ADDRESS_MODE_TYPE_CLAMP "Clamp"
+>)
+
+
+
+(= create (,,, ctx config
 	(? (! ctx) (@@ nil))
 	(= ctx (:: ctx gfx:context$gfx_context_type))
-	(= texture (:: texture gfx:texture$gfx_texture_type))
+	(= config (:: config gfx_sampler_config_type))
 	(= handle (<- (... "gfx:sampler_create")
 		ctx$_handle
 		texture$_handle
+		config$address_mode_x
+		config$address_mode_y
+		config$address_mode_z
 	))
 	(@@ (. gfx_sampler_type
 		handle
+		config
 		texture
 		ctx
 	))
@@ -58,7 +96,12 @@
 
 
 (= gfx:sampler (. gfx_sampler_module_type
+	gfx_sampler_config_type
 	gfx_sampler_type
+	ADDRESS_MODE_FLAG_MIRROR
+	ADDRESS_MODE_TYPE_CLAMP
+	ADDRESS_MODE_TYPE_MASK
+	ADDRESS_MODE_TYPE_REPEAT
 	create
 	delete
 ))

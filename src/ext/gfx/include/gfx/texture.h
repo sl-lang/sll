@@ -5,7 +5,6 @@
 #include <gfx/context.h>
 #include <gfx/util.h>
 #include <sll.h>
-#include <stdint.h>
 #include <vulkan/vulkan.h>
 
 

@@ -3,6 +3,7 @@
 #include <gfx/context.h>
 #include <gfx/memory.h>
 #include <gfx/pipeline.h>
+#include <gfx/sampler.h>
 #include <gfx/shader.h>
 #include <gfx/texture.h>
 #include <gfx/util.h>
@@ -349,6 +350,9 @@ void _delete_context(gfx_context_data_t* ctx){
 	SLL_HANDLE_CONTAINER_ITER_CLEAR(&(ctx->pipelines),gfx_pipeline_data_t,pipeline,{
 		_delete_pipeline(ctx,pipeline);
 	});
+	SLL_HANDLE_CONTAINER_ITER_CLEAR(&(ctx->samplers),gfx_sampler_data_t,sampler,{
+		_delete_sampler(ctx,sampler);
+	});
 	SLL_HANDLE_CONTAINER_ITER_CLEAR(&(ctx->shaders),gfx_shader_data_t,shader,{
 		_delete_shader(ctx,shader);
 	});
@@ -655,6 +659,7 @@ __GFX_API_CALL gfx_context_t gfx_api_context_create(void* handle,void* extra_dat
 	_begin_frame(ctx);
 	SLL_HANDLE_CONTAINER_INIT(&(ctx->buffers));
 	SLL_HANDLE_CONTAINER_INIT(&(ctx->pipelines));
+	SLL_HANDLE_CONTAINER_INIT(&(ctx->samplers));
 	SLL_HANDLE_CONTAINER_INIT(&(ctx->shaders));
 	SLL_HANDLE_CONTAINER_INIT(&(ctx->textures));
 	gfx_context_t out;
@@ -696,3 +701,4 @@ __GFX_API_CALL void gfx_api_context_resize(gfx_context_t ctx_id){
 	_create_swapchain(ctx);
 	_begin_frame(ctx);
 }
+

@@ -2,6 +2,7 @@
 #include <gfx/color.h>
 #include <gfx/context.h>
 #include <gfx/pipeline.h>
+#include <gfx/sampler.h>
 #include <gfx/shader.h>
 #include <gfx/texture.h>
 #include <gfx/vulkan.h>
@@ -81,6 +82,16 @@ static const sll_internal_function_descriptor_t _internal_function_table[]={
 		SLL_CHAR("QQ|")
 	},
 	{
+		SLL_CHAR("gfx:sampler_create"),
+		gfx_api_sampler_create,
+		SLL_CHAR("QBBB|Q")
+	},
+	{
+		SLL_CHAR("gfx:sampler_delete"),
+		gfx_api_sampler_delete,
+		SLL_CHAR("QQ|")
+	},
+	{
 		SLL_CHAR("gfx:shader_create"),
 		gfx_api_shader_create,
 		SLL_CHAR("Q#sB#s|Q")
@@ -121,7 +132,7 @@ static const sll_internal_function_descriptor_t _internal_function_table[]={
 
 static const sll_internal_function_table_descriptor_t _internal_function_table_descriptor_data={
 	(const sll_internal_function_descriptor_t*)(&_internal_function_table),
-	21
+	23
 };
 
 
