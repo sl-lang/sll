@@ -14,6 +14,7 @@
 
 typedef struct _GFX_CONTEXT_BUFFER_TRANSFER_DATA{
 	VkQueue queue;
+	uint32_t queue_index;
 	VkCommandPool command_pool;
 	VkCommandBuffer command_buffer;
 	VkFence fence;
@@ -26,6 +27,7 @@ typedef struct _GFX_CONTEXT_COMMAND_DATA{
 	VkCommandPool pool;
 	VkCommandBuffer* buffers;
 	VkQueue queue;
+	uint32_t queue_index;
 } gfx_context_command_data_t;
 
 

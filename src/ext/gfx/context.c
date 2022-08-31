@@ -474,18 +474,18 @@ __GFX_API_CALL gfx_context_t gfx_api_context_create(void* handle,void* extra_dat
 	ctx->function_table.vkGetPhysicalDeviceQueueFamilyProperties(ctx->device.physical,&count,NULL);
 	VkQueueFamilyProperties* queue_properties=sll_allocate_stack(count*sizeof(VkQueueFamilyProperties));
 	ctx->function_table.vkGetPhysicalDeviceQueueFamilyProperties(ctx->device.physical,&count,queue_properties);
-	uint32_t graphic_queue_index=0;
-	uint32_t transfer_queue_index=0;
+	ctx->command.queue_index=0;
+	ctx->buffer_transfer.queue_index=0;
 	for (uint32_t i=0;i<count;i++){
 		if ((queue_properties+i)->queueFlags&VK_QUEUE_GRAPHICS_BIT){
 			VkBool32 present_support;
 			VULKAN_CALL(ctx->function_table.vkGetPhysicalDeviceSurfaceSupportKHR(ctx->device.physical,i,ctx->surface.handle,&present_support));
 			if (present_support){
-				graphic_queue_index=i;
+				ctx->command.queue_index=i;
 			}
 		}
 		if ((queue_properties+i)->queueFlags&VK_QUEUE_TRANSFER_BIT){
-			transfer_queue_index=i;
+			ctx->buffer_transfer.queue_index=i;
 		}
 	}
 	sll_deallocate(queue_properties);
@@ -510,7 +510,7 @@ __GFX_API_CALL gfx_context_t gfx_api_context_create(void* handle,void* extra_dat
 			VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO,
 			NULL,
 			0,
-			graphic_queue_index,
+			ctx->command.queue_index,
 			1,
 			&_default_queue_priority
 		},
@@ -518,7 +518,7 @@ __GFX_API_CALL gfx_context_t gfx_api_context_create(void* handle,void* extra_dat
 			VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO,
 			NULL,
 			0,
-			transfer_queue_index,
+			ctx->buffer_transfer.queue_index,
 			1,
 			&_default_queue_priority
 		}
@@ -532,7 +532,7 @@ __GFX_API_CALL gfx_context_t gfx_api_context_create(void* handle,void* extra_dat
 		VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO,
 		NULL,
 		0,
-		1+(graphic_queue_index!=transfer_queue_index),
+		1+(ctx->command.queue_index!=ctx->buffer_transfer.queue_index),
 		device_queue_info,
 		0,
 		NULL,
@@ -545,10 +545,10 @@ __GFX_API_CALL gfx_context_t gfx_api_context_create(void* handle,void* extra_dat
 		VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO,
 		NULL,
 		VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT,
-		graphic_queue_index
+		ctx->command.queue_index
 	};
 	VULKAN_CALL(ctx->function_table.vkCreateCommandPool(ctx->device.logical,&command_pool_creation_info,NULL,&(ctx->command.pool)));
-	ctx->function_table.vkGetDeviceQueue(ctx->device.logical,graphic_queue_index,0,&(ctx->command.queue));
+	ctx->function_table.vkGetDeviceQueue(ctx->device.logical,ctx->command.queue_index,0,&(ctx->command.queue));
 	VkAttachmentDescription render_pass_attachments[2]={
 		{
 			0,
@@ -641,9 +641,9 @@ __GFX_API_CALL gfx_context_t gfx_api_context_create(void* handle,void* extra_dat
 	VULKAN_CALL(ctx->function_table.vkCreateSemaphore(ctx->device.logical,&semaphore_creation_info,NULL,&(ctx->sync.present_semaphore)));
 	VULKAN_CALL(ctx->function_table.vkCreateSemaphore(ctx->device.logical,&semaphore_creation_info,NULL,&(ctx->sync.render_semaphore)));
 	_create_swapchain(ctx);
-	command_pool_creation_info.queueFamilyIndex=transfer_queue_index;
+	command_pool_creation_info.queueFamilyIndex=ctx->buffer_transfer.queue_index;
 	VULKAN_CALL(ctx->function_table.vkCreateCommandPool(ctx->device.logical,&command_pool_creation_info,NULL,&(ctx->buffer_transfer.command_pool)));
-	ctx->function_table.vkGetDeviceQueue(ctx->device.logical,transfer_queue_index,0,&(ctx->buffer_transfer.queue));
+	ctx->function_table.vkGetDeviceQueue(ctx->device.logical,ctx->buffer_transfer.queue_index,0,&(ctx->buffer_transfer.queue));
 	VkCommandBufferAllocateInfo command_buffer_allocation_info={
 		VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO,
 		NULL,
