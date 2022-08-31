@@ -468,6 +468,9 @@ __GFX_API_CALL gfx_context_t gfx_api_context_create(void* handle,void* extra_dat
 	ctx->device.physical=physical_device_data[GFX_DEFAULT_GPU_INDEX];
 	sll_deallocate(physical_device_data);
 	ctx->function_table.vkGetPhysicalDeviceMemoryProperties(ctx->device.physical,&(ctx->device.memory_properties));
+	VkPhysicalDeviceProperties properties;
+	ctx->function_table.vkGetPhysicalDeviceProperties(ctx->device.physical,&properties);
+	ctx->device.limits=properties.limits;
 	ctx->function_table.vkGetPhysicalDeviceQueueFamilyProperties(ctx->device.physical,&count,NULL);
 	VkQueueFamilyProperties* queue_properties=sll_allocate_stack(count*sizeof(VkQueueFamilyProperties));
 	ctx->function_table.vkGetPhysicalDeviceQueueFamilyProperties(ctx->device.physical,&count,queue_properties);

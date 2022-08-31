@@ -42,6 +42,7 @@ typedef struct _GFX_CONTEXT_DEVICE_DATA{
 	VkPhysicalDevice physical;
 	VkDevice logical;
 	VkPhysicalDeviceMemoryProperties memory_properties;
+	VkPhysicalDeviceLimits limits;
 } gfx_context_device_data_t;
 
 

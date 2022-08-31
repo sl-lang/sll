@@ -114,6 +114,7 @@ sll_bool_t _load_vulkan_function_table(VkInstance instance,gfx_vulkan_function_t
 	LOAD_FUNCTION_TABLE(vkGetDeviceQueue);
 	LOAD_FUNCTION_TABLE(vkGetImageMemoryRequirements);
 	LOAD_FUNCTION_TABLE(vkGetPhysicalDeviceMemoryProperties);
+	LOAD_FUNCTION_TABLE(vkGetPhysicalDeviceProperties);
 	LOAD_FUNCTION_TABLE(vkGetPhysicalDeviceQueueFamilyProperties);
 	LOAD_FUNCTION_TABLE(vkGetPhysicalDeviceSurfaceCapabilitiesKHR);
 	LOAD_FUNCTION_TABLE(vkGetPhysicalDeviceSurfaceFormatsKHR);
