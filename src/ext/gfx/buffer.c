@@ -231,10 +231,10 @@ __GFX_API_CALL void gfx_api_buffer_sync(gfx_context_t ctx_id,gfx_buffer_t buffer
 		0,
 		buffer->size
 	};
-	ctx->function_table.vkCmdCopyBuffer(ctx->buffer_transfer.command_buffer,buffer->host.buffer,buffer->device.buffer,1,&buffer_copy);
-	ctx->buffer_transfer.has_data=1;
+	ctx->function_table.vkCmdCopyBuffer(ctx->transfer_queue.command_buffer,buffer->host.buffer,buffer->device.buffer,1,&buffer_copy);
+	ctx->transfer_queue.has_data=1;
 	if (buffer->update_frequency_hint==GFX_BUFFER_UPDATE_FREQUENCY_HINT_NEVER){
-		_flush_transfer_buffer(ctx);
+		_flush_transfer_and_graphics_queues(ctx);
 		_delete_host_buffer(ctx,buffer);
 	}
 }

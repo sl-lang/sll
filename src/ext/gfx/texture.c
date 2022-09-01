@@ -135,7 +135,7 @@ __GFX_API_CALL void gfx_api_texture_sync(gfx_context_t ctx_id,gfx_texture_t text
 			1
 		}
 	};
-	ctx->function_table.vkCmdPipelineBarrier(ctx->buffer_transfer.command_buffer,VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,VK_PIPELINE_STAGE_TRANSFER_BIT,0,0,NULL,0,NULL,1,&image_memory_barrier);
+	ctx->function_table.vkCmdPipelineBarrier(ctx->transfer_queue.command_buffer,VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,VK_PIPELINE_STAGE_TRANSFER_BIT,0,0,NULL,0,NULL,1,&image_memory_barrier);
 	VkBufferImageCopy buffer_copy_region={
 		0,
 		0,
@@ -153,11 +153,25 @@ __GFX_API_CALL void gfx_api_texture_sync(gfx_context_t ctx_id,gfx_texture_t text
 		},
 		texture->size
 	};
-	ctx->function_table.vkCmdCopyBufferToImage(ctx->buffer_transfer.command_buffer,texture->data_buffer->device.buffer,texture->handle,VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,1,&buffer_copy_region);
-	image_memory_barrier.srcAccessMask=VK_ACCESS_TRANSFER_WRITE_BIT;
-	image_memory_barrier.dstAccessMask=VK_ACCESS_SHADER_READ_BIT;
+	ctx->function_table.vkCmdCopyBufferToImage(ctx->transfer_queue.command_buffer,texture->data_buffer->device.buffer,texture->handle,VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,1,&buffer_copy_region);
 	image_memory_barrier.oldLayout=VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL;
 	image_memory_barrier.newLayout=VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
-	ctx->function_table.vkCmdPipelineBarrier(ctx->buffer_transfer.command_buffer,VK_PIPELINE_STAGE_TRANSFER_BIT,VK_PIPELINE_STAGE_ALL_GRAPHICS_BIT,0,0,NULL,0,NULL,1,&image_memory_barrier);
+	if (ctx->transfer_queue.queue_index==ctx->command.queue_index){
+		image_memory_barrier.srcAccessMask=VK_ACCESS_TRANSFER_WRITE_BIT;
+		image_memory_barrier.dstAccessMask=VK_ACCESS_SHADER_READ_BIT;
+		ctx->function_table.vkCmdPipelineBarrier(ctx->transfer_queue.command_buffer,VK_PIPELINE_STAGE_TRANSFER_BIT,VK_PIPELINE_STAGE_ALL_GRAPHICS_BIT,0,0,NULL,0,NULL,1,&image_memory_barrier);
+	}
+	else{
+		image_memory_barrier.srcAccessMask=VK_ACCESS_TRANSFER_WRITE_BIT;
+		image_memory_barrier.dstAccessMask=0;
+		image_memory_barrier.srcQueueFamilyIndex=ctx->transfer_queue.queue_index;
+		image_memory_barrier.dstQueueFamilyIndex=ctx->command.queue_index;
+		ctx->function_table.vkCmdPipelineBarrier(ctx->transfer_queue.command_buffer,VK_PIPELINE_STAGE_TRANSFER_BIT,VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT,0,0,NULL,0,NULL,1,&image_memory_barrier);
+		image_memory_barrier.srcAccessMask=0;
+		image_memory_barrier.dstAccessMask=VK_ACCESS_SHADER_READ_BIT;
+		ctx->function_table.vkCmdPipelineBarrier(ctx->graphics_queue.command_buffer,VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT,VK_PIPELINE_STAGE_ALL_GRAPHICS_BIT,0,0,NULL,0,NULL,1,&image_memory_barrier);
+		ctx->graphics_queue.has_data=1;
+	}
 	texture->layout=VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+	ctx->transfer_queue.has_data=1;
 }

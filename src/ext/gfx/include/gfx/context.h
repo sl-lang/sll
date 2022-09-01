@@ -12,14 +12,22 @@
 
 
 
-typedef struct _GFX_CONTEXT_BUFFER_TRANSFER_DATA{
+typedef struct _GFX_CONTEXT_TRANSFER_QUEUE_DATA{
 	VkQueue queue;
 	uint32_t queue_index;
 	VkCommandPool command_pool;
 	VkCommandBuffer command_buffer;
 	VkFence fence;
 	sll_bool_t has_data;
-} gfx_context_buffer_transfer_data_t;
+} gfx_context_transfer_queue_data_t;
+
+
+
+typedef struct _GFX_CONTEXT_GRAPHICS_QUEUE_DATA{
+	VkCommandBuffer command_buffer;
+	VkFence fence;
+	sll_bool_t has_data;
+} gfx_context_graphics_queue_data_t;
 
 
 
@@ -100,7 +108,6 @@ typedef struct _GFX_CONTEXT_SYNC_DATA{
 
 
 typedef struct _GFX_CONTEXT_DATA{
-	gfx_context_buffer_transfer_data_t buffer_transfer;
 	gfx_context_command_data_t command;
 	gfx_context_depth_stensil_data_t depth_stensil;
 	gfx_context_device_data_t device;
@@ -110,6 +117,8 @@ typedef struct _GFX_CONTEXT_DATA{
 	gfx_context_surface_data_t surface;
 	gfx_context_swapchain_data_t swapchain;
 	gfx_context_sync_data_t sync;
+	gfx_context_transfer_queue_data_t transfer_queue;
+	gfx_context_graphics_queue_data_t graphics_queue;
 	gfx_vulkan_function_table_t function_table;
 	sll_handle_container_t buffers;
 	sll_handle_container_t pipelines;
@@ -132,7 +141,7 @@ void _delete_context(gfx_context_data_t* ctx);
 
 
 
-void _flush_transfer_buffer(gfx_context_data_t* ctx);
+void _flush_transfer_and_graphics_queues(gfx_context_data_t* ctx);
 
 
 
