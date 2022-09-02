@@ -1,0 +1,28 @@
+(---
+	"string.sll"
+	"types.sll"
+)
+
+
+
+(= ui_size_type (&:
+	(,,, data
+		(@@ (<- string$format "(%f %f)"
+			data$width
+			data$height
+		))
+	) @@string@@
+	float_type width
+	float_type height
+))
+
+(= ui_size_module_type (&:
+	(~ type_type) ui_size_type
+))
+
+
+
+(= ui:size (. ui_size_module_type
+	ui_size_type
+))
+(## ui:size)

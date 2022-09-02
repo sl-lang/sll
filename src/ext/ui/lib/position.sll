@@ -1,0 +1,28 @@
+(---
+	"string.sll"
+	"types.sll"
+)
+
+
+
+(= ui_position_type (&:
+	(,,, data
+		(@@ (<- string$format "(%f %f)"
+			data$x
+			data$y
+		))
+	) @@string@@
+	float_type x
+	float_type y
+))
+
+(= ui_position_module_type (&:
+	(~ type_type) ui_position_type
+))
+
+
+
+(= ui:position (. ui_position_module_type
+	ui_position_type
+))
+(## ui:position)

@@ -1,0 +1,103 @@
+(---
+	"string.sll"
+	"types.sll"
+	"ui/_ui_type.sll"
+	"ui/position.sll"
+	"ui/size.sll"
+)
+
+
+
+(= ui_element_callbacks_type (&:
+	func_type add_child
+	func_type get_children
+	func_type remove_child
+))
+
+(= ui_element_type (&:
+	(,,, data
+		(@@ (<- string$format "<ui:element position=%s size=%s z-index=%u>"
+			(:: data$position string_type)
+			(:: data$size string_type)
+			data$z_index
+		))
+	) @@string@@
+	(~ _ui_type) ui
+	(~ ui_element_callbacks_type) callbacks
+	object_type parent
+	ui:position$ui_position_type position
+	ui:size$ui_size_type size
+	int_type z_index
+))
+
+(= ui_element_module_type (&:
+	(~ type_type) ui_element_callbacks_type
+	(~ type_type) ui_element_type
+	(~ func_type) create
+	(~ func_type) delete
+	(~ func_type) set_parent
+))
+
+
+
+(= _check_if_valid_element (,,, element
+	(? (!== (:? parent$base) ui_element_type) {
+		(:> "Invlid UI element: " parent '\n')
+		(@@ false)
+	})
+	(@@ true)
+))
+
+(= _add_to_parent (,,, element parent
+	(? (! (<- _check_if_valid_element parent)))
+	(= element$parent parent)
+	(= element$z_index (+ parent$base$z_index 1))
+))
+
+(= _get_element_base (,,, element
+	(@@ (?:
+		(=== (:? element) ui_element_type) element
+		(<- _check_if_valid_element) element$base
+		nil
+	))
+))
+
+(= create (,,, ui callbacks position size
+	(@@ (. ui_element_type
+		ui
+		callbacks
+		nil
+		position
+		size
+		0
+	))
+))
+
+(= delete (,,, element
+	(? (! element) (@@))
+	(= element (:: element ui_element_type))
+))
+
+(= set_parent (,,, element parent
+	(? (! element) (@@ false))
+	(? (||
+		(! (<- _check_if_valid_element element))
+		(! (<- _check_if_valid_element parent))
+	) (@@ false))
+	(? element$base$parent (<- element$base$parent$callbacks$remove_child element))
+	(? (! (<- parent$base$callbacks$add_child parent element)) (@@ false))
+	(= element$base$parent parent)
+	(= element$base$z_index (+ parent$base$z_index 1))
+	(@@ true)
+))
+
+
+
+(= ui:element (. ui_element_module_type
+	ui_element_callbacks_type
+	ui_element_type
+	create
+	delete
+	set_parent
+))
+(## ui:element)

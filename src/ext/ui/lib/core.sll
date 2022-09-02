@@ -8,28 +8,14 @@
 	"gfx/stage.sll"
 	"string.sll"
 	"types.sll"
+	"ui/_ui_type.sll"
+	"ui/element/container.sll"
 	"weakref.sll"
 	"window_manager/event.sll"
 	"window_manager/window.sll"
 )
 
 
-
-(= ui_type (&:
-	(,,, data
-		(@@ (<- string$format "<ui:ui window=%s>"
-			(:: data$window string_type)
-		))
-	) @@string@@
-	(~ window_manager:window$window_manager_window_type) window
-	(~ gfx:context$gfx_context_type) _ctx
-	array_type _objects
-	gfx:buffer$gfx_buffer_type _vertex_buffer
-	gfx:buffer$gfx_buffer_type _index_buffer
-	gfx:buffer$gfx_buffer_type _uniform_buffer
-	gfx:pipeline$gfx_pipeline_type _pipeline
-	int_type _ui_max_layer_count
-))
 
 (= ui_core_module_type (&:
 	(~ type_type) ui_type
@@ -120,6 +106,7 @@
 	))
 	(= out (. ui_type
 		window
+		nil
 		ctx
 		[]
 		vertex_buffer
@@ -128,6 +115,8 @@
 		pipeline
 		1
 	))
+	(= out$root (<- ui:element:container$create out [0 0] [500 500]))
+	(= out$root$base$z_index 0)
 	(<- _update_uniform_buffer out)
 	(= window$callbacks$size _window_resize_callback)
 	(= (: _window_to_ui window$id) (<- weakref$ref out))
