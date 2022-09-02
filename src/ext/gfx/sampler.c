@@ -69,8 +69,8 @@ __GFX_API_CALL gfx_sampler_t gfx_api_sampler_create(gfx_context_t ctx_id,gfx_sam
 	};
 	VULKAN_CALL(ctx->function_table.vkCreateSampler(ctx->device.logical,&sampler_creation_info,NULL,&(sampler->handle)));
 	gfx_sampler_t out;
-	SLL_HANDLE_CONTAINER_ALLOC(&(ctx->samplers),&out);
-	*(ctx->samplers.data+out)=sampler;
+	SLL_HANDLE_CONTAINER_ALLOC(&(ctx->child_objects.samplers),&out);
+	*(ctx->child_objects.samplers.data+out)=sampler;
 	return out;
 }
 
@@ -81,9 +81,9 @@ __GFX_API_CALL void gfx_api_sampler_delete(gfx_context_t ctx_id,gfx_sampler_t sa
 	if (!ctx){
 		return;
 	}
-	gfx_sampler_data_t* sampler=SLL_HANDLE_CONTAINER_GET(&(ctx->samplers),sampler_id);
+	gfx_sampler_data_t* sampler=SLL_HANDLE_CONTAINER_GET(&(ctx->child_objects.samplers),sampler_id);
 	if (sampler){
-		SLL_HANDLE_CONTAINER_DEALLOC(&(ctx->samplers),sampler_id);
+		SLL_HANDLE_CONTAINER_DEALLOC(&(ctx->child_objects.samplers),sampler_id);
 		_delete_sampler(ctx,sampler);
 	}
 }

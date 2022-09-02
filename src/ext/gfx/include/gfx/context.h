@@ -12,31 +12,11 @@
 
 
 
-typedef struct _GFX_CONTEXT_TRANSFER_QUEUE_DATA{
-	VkQueue queue;
-	uint32_t queue_index;
-	VkCommandPool command_pool;
+typedef struct _GFX_CONTEXT_COMMAND_BUFFER_DATA{
 	VkCommandBuffer command_buffer;
 	VkFence fence;
 	sll_bool_t has_data;
-} gfx_context_transfer_queue_data_t;
-
-
-
-typedef struct _GFX_CONTEXT_GRAPHICS_QUEUE_DATA{
-	VkCommandBuffer command_buffer;
-	VkFence fence;
-	sll_bool_t has_data;
-} gfx_context_graphics_queue_data_t;
-
-
-
-typedef struct _GFX_CONTEXT_COMMAND_DATA{
-	VkCommandPool pool;
-	VkCommandBuffer* buffers;
-	VkQueue queue;
-	uint32_t queue_index;
-} gfx_context_command_data_t;
+} gfx_context_command_buffer_data_t;
 
 
 
@@ -95,6 +75,7 @@ typedef struct _GFX_CONTEXT_SWAPCHAIN_DATA{
 	VkImage* images;
 	VkImageView* image_views;
 	VkFramebuffer* frame_buffers;
+	VkCommandBuffer* command_buffers;
 } gfx_context_swapchain_data_t;
 
 
@@ -107,24 +88,41 @@ typedef struct _GFX_CONTEXT_SYNC_DATA{
 
 
 
-typedef struct _GFX_CONTEXT_DATA{
-	gfx_context_command_data_t command;
-	gfx_context_depth_stensil_data_t depth_stensil;
-	gfx_context_device_data_t device;
-	gfx_context_frame_data_t frame;
-	gfx_context_instance_data_t instance;
-	gfx_context_pipeline_data_t pipeline;
-	gfx_context_surface_data_t surface;
-	gfx_context_swapchain_data_t swapchain;
-	gfx_context_sync_data_t sync;
-	gfx_context_transfer_queue_data_t transfer_queue;
-	gfx_context_graphics_queue_data_t graphics_queue;
-	gfx_vulkan_function_table_t function_table;
+typedef struct _GFX_CONTEXT_QUEUE_DATA{
+	VkCommandPool graphics_command_pool;
+	VkQueue graphics_queue;
+	uint32_t graphics_queue_index;
+	VkCommandPool transfer_command_pool;
+	VkQueue transfer_queue;
+	uint32_t transfer_queue_index;
+} gfx_context_queue_data_t;
+
+
+
+typedef struct _GFX_CONTEXT_CHILD_OBJECTS{
 	sll_handle_container_t buffers;
 	sll_handle_container_t pipelines;
 	sll_handle_container_t samplers;
 	sll_handle_container_t shaders;
 	sll_handle_container_t textures;
+} gfx_context_child_objects_t;
+
+
+
+typedef struct _GFX_CONTEXT_DATA{
+	gfx_context_instance_data_t instance;
+	gfx_context_device_data_t device;
+	gfx_context_surface_data_t surface;
+	gfx_context_swapchain_data_t swapchain;
+	gfx_context_queue_data_t queue;
+	gfx_context_command_buffer_data_t transfer_queue;
+	gfx_context_command_buffer_data_t graphics_queue;
+	gfx_context_pipeline_data_t pipeline;
+	gfx_context_sync_data_t sync;
+	gfx_context_depth_stensil_data_t depth_stensil;
+	gfx_context_frame_data_t frame;
+	gfx_vulkan_function_table_t function_table;
+	gfx_context_child_objects_t child_objects;
 } gfx_context_data_t;
 
 

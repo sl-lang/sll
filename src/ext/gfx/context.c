@@ -83,15 +83,15 @@ static void _create_swapchain(gfx_context_data_t* ctx){
 	VULKAN_CALL(ctx->function_table.vkGetSwapchainImagesKHR(ctx->device.logical,ctx->swapchain.handle,&(ctx->swapchain.image_count),NULL));
 	ctx->swapchain.images=sll_reallocate(ctx->swapchain.images,ctx->swapchain.image_count*sizeof(VkImage));
 	VULKAN_CALL(ctx->function_table.vkGetSwapchainImagesKHR(ctx->device.logical,ctx->swapchain.handle,&(ctx->swapchain.image_count),ctx->swapchain.images));
-	ctx->command.buffers=sll_reallocate(ctx->command.buffers,ctx->swapchain.image_count*sizeof(VkCommandBuffer));
+	ctx->swapchain.command_buffers=sll_reallocate(ctx->swapchain.command_buffers,ctx->swapchain.image_count*sizeof(VkCommandBuffer));
 	VkCommandBufferAllocateInfo command_buffer_allocation_info={
 		VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO,
 		NULL,
-		ctx->command.pool,
+		ctx->queue.graphics_command_pool,
 		VK_COMMAND_BUFFER_LEVEL_PRIMARY,
 		ctx->swapchain.image_count
 	};
-	VULKAN_CALL(ctx->function_table.vkAllocateCommandBuffers(ctx->device.logical,&command_buffer_allocation_info,ctx->command.buffers));
+	VULKAN_CALL(ctx->function_table.vkAllocateCommandBuffers(ctx->device.logical,&command_buffer_allocation_info,ctx->swapchain.command_buffers));
 	VkImageCreateInfo depth_stensil_image_creation_info={
 		VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO,
 		NULL,
@@ -216,7 +216,7 @@ static void _begin_frame(gfx_context_data_t* ctx){
 	if (err!=VK_SUBOPTIMAL_KHR){
 		VULKAN_CALL(err);
 	}
-	ctx->frame.command_buffer=ctx->command.buffers[ctx->frame.image_index];
+	ctx->frame.command_buffer=ctx->swapchain.command_buffers[ctx->frame.image_index];
 	VULKAN_CALL(ctx->function_table.vkWaitForFences(ctx->device.logical,1,ctx->sync.fences+ctx->frame.image_index,VK_TRUE,UINT64_MAX));
 	VULKAN_CALL(ctx->function_table.vkResetFences(ctx->device.logical,1,ctx->sync.fences+ctx->frame.image_index));
 	VkCommandBufferBeginInfo begin_info={
@@ -301,14 +301,14 @@ static void _end_transfer_and_graphics_queues(gfx_context_data_t* ctx){
 	};
 	if (ctx->transfer_queue.has_data){
 		VULKAN_CALL(ctx->function_table.vkEndCommandBuffer(ctx->transfer_queue.command_buffer));
-		VULKAN_CALL(ctx->function_table.vkQueueSubmit(ctx->transfer_queue.queue,1,&submit_info,ctx->transfer_queue.fence));
+		VULKAN_CALL(ctx->function_table.vkQueueSubmit(ctx->queue.transfer_queue,1,&submit_info,ctx->transfer_queue.fence));
 		VULKAN_CALL(ctx->function_table.vkWaitForFences(ctx->device.logical,1,&(ctx->transfer_queue.fence),VK_TRUE,UINT64_MAX));
 		VULKAN_CALL(ctx->function_table.vkResetFences(ctx->device.logical,1,&(ctx->transfer_queue.fence)));
 	}
 	if (ctx->graphics_queue.has_data){
 		submit_info.pCommandBuffers=&(ctx->graphics_queue.command_buffer);
 		VULKAN_CALL(ctx->function_table.vkEndCommandBuffer(ctx->graphics_queue.command_buffer));
-		VULKAN_CALL(ctx->function_table.vkQueueSubmit(ctx->command.queue,1,&submit_info,ctx->graphics_queue.fence));
+		VULKAN_CALL(ctx->function_table.vkQueueSubmit(ctx->queue.graphics_queue,1,&submit_info,ctx->graphics_queue.fence));
 		VULKAN_CALL(ctx->function_table.vkWaitForFences(ctx->device.logical,1,&(ctx->graphics_queue.fence),VK_TRUE,UINT64_MAX));
 		VULKAN_CALL(ctx->function_table.vkResetFences(ctx->device.logical,1,&(ctx->graphics_queue.fence)));
 	}
@@ -334,7 +334,7 @@ static void _end_frame(gfx_context_data_t* ctx){
 		1,
 		&(ctx->sync.render_semaphore)
 	};
-	VULKAN_CALL(ctx->function_table.vkQueueSubmit(ctx->command.queue,1,&submit_info,ctx->sync.fences[ctx->frame.image_index]));
+	VULKAN_CALL(ctx->function_table.vkQueueSubmit(ctx->queue.graphics_queue,1,&submit_info,ctx->sync.fences[ctx->frame.image_index]));
 	VkPresentInfoKHR present_info={
 		VK_STRUCTURE_TYPE_PRESENT_INFO_KHR,
 		NULL,
@@ -345,40 +345,40 @@ static void _end_frame(gfx_context_data_t* ctx){
 		&(ctx->frame.image_index),
 		NULL
 	};
-	VkResult err=ctx->function_table.vkQueuePresentKHR(ctx->command.queue,&present_info);
+	VkResult err=ctx->function_table.vkQueuePresentKHR(ctx->queue.graphics_queue,&present_info);
 	if (err==VK_SUBOPTIMAL_KHR){
 		_create_swapchain(ctx);
 	}
 	else{
 		VULKAN_CALL(err);
 	}
-	VULKAN_CALL(ctx->function_table.vkQueueWaitIdle(ctx->command.queue));
+	VULKAN_CALL(ctx->function_table.vkQueueWaitIdle(ctx->queue.graphics_queue));
 }
 
 
 
 void _delete_context(gfx_context_data_t* ctx){
 	_end_frame(ctx);
-	SLL_HANDLE_CONTAINER_ITER_CLEAR(&(ctx->buffers),gfx_buffer_data_t,buffer,{
+	SLL_HANDLE_CONTAINER_ITER_CLEAR(&(ctx->child_objects.buffers),gfx_buffer_data_t,buffer,{
 		_delete_buffer(ctx,buffer);
 	});
-	SLL_HANDLE_CONTAINER_ITER_CLEAR(&(ctx->pipelines),gfx_pipeline_data_t,pipeline,{
+	SLL_HANDLE_CONTAINER_ITER_CLEAR(&(ctx->child_objects.pipelines),gfx_pipeline_data_t,pipeline,{
 		_delete_pipeline(ctx,pipeline);
 	});
-	SLL_HANDLE_CONTAINER_ITER_CLEAR(&(ctx->samplers),gfx_sampler_data_t,sampler,{
+	SLL_HANDLE_CONTAINER_ITER_CLEAR(&(ctx->child_objects.samplers),gfx_sampler_data_t,sampler,{
 		_delete_sampler(ctx,sampler);
 	});
-	SLL_HANDLE_CONTAINER_ITER_CLEAR(&(ctx->shaders),gfx_shader_data_t,shader,{
+	SLL_HANDLE_CONTAINER_ITER_CLEAR(&(ctx->child_objects.shaders),gfx_shader_data_t,shader,{
 		_delete_shader(ctx,shader);
 	});
-	SLL_HANDLE_CONTAINER_ITER_CLEAR(&(ctx->textures),gfx_texture_data_t,texture,{
+	SLL_HANDLE_CONTAINER_ITER_CLEAR(&(ctx->child_objects.textures),gfx_texture_data_t,texture,{
 		_delete_texture(ctx,texture);
 	});
 	ctx->function_table.vkDestroyFence(ctx->device.logical,ctx->graphics_queue.fence,NULL);
-	ctx->function_table.vkFreeCommandBuffers(ctx->device.logical,ctx->command.pool,1,&(ctx->graphics_queue.command_buffer));
+	ctx->function_table.vkFreeCommandBuffers(ctx->device.logical,ctx->queue.graphics_command_pool,1,&(ctx->graphics_queue.command_buffer));
 	ctx->function_table.vkDestroyFence(ctx->device.logical,ctx->transfer_queue.fence,NULL);
-	ctx->function_table.vkFreeCommandBuffers(ctx->device.logical,ctx->transfer_queue.command_pool,1,&(ctx->transfer_queue.command_buffer));
-	ctx->function_table.vkDestroyCommandPool(ctx->device.logical,ctx->transfer_queue.command_pool,NULL);
+	ctx->function_table.vkFreeCommandBuffers(ctx->device.logical,ctx->queue.transfer_command_pool,1,&(ctx->transfer_queue.command_buffer));
+	ctx->function_table.vkDestroyCommandPool(ctx->device.logical,ctx->queue.transfer_command_pool,NULL);
 	_release_swapchain(ctx);
 	sll_deallocate(ctx->swapchain.image_views);
 	sll_deallocate(ctx->sync.fences);
@@ -387,7 +387,7 @@ void _delete_context(gfx_context_data_t* ctx){
 	ctx->function_table.vkDestroySemaphore(ctx->device.logical,ctx->sync.render_semaphore,NULL);
 	ctx->function_table.vkDestroyPipelineCache(ctx->device.logical,ctx->pipeline.cache,NULL);
 	ctx->function_table.vkDestroyRenderPass(ctx->device.logical,ctx->pipeline.render_pass,NULL);
-	ctx->function_table.vkDestroyCommandPool(ctx->device.logical,ctx->command.pool,NULL);
+	ctx->function_table.vkDestroyCommandPool(ctx->device.logical,ctx->queue.graphics_command_pool,NULL);
 	ctx->function_table.vkDestroyDevice(ctx->device.logical,NULL);
 	ctx->function_table.vkDestroySurfaceKHR(ctx->instance.handle,ctx->surface.handle,NULL);
 	if (ctx->instance.debug_messenger!=VK_NULL_HANDLE){
@@ -491,18 +491,18 @@ __GFX_API_CALL gfx_context_t gfx_api_context_create(void* handle,void* extra_dat
 	ctx->function_table.vkGetPhysicalDeviceQueueFamilyProperties(ctx->device.physical,&count,NULL);
 	VkQueueFamilyProperties* queue_properties=sll_allocate_stack(count*sizeof(VkQueueFamilyProperties));
 	ctx->function_table.vkGetPhysicalDeviceQueueFamilyProperties(ctx->device.physical,&count,queue_properties);
-	ctx->command.queue_index=0;
-	ctx->transfer_queue.queue_index=0;
+	ctx->queue.graphics_queue_index=0;
+	ctx->queue.transfer_queue_index=0;
 	for (uint32_t i=0;i<count;i++){
 		if ((queue_properties+i)->queueFlags&VK_QUEUE_GRAPHICS_BIT){
 			VkBool32 present_support;
 			VULKAN_CALL(ctx->function_table.vkGetPhysicalDeviceSurfaceSupportKHR(ctx->device.physical,i,ctx->surface.handle,&present_support));
 			if (present_support){
-				ctx->command.queue_index=i;
+				ctx->queue.graphics_queue_index=i;
 			}
 		}
 		if ((queue_properties+i)->queueFlags&VK_QUEUE_TRANSFER_BIT){
-			ctx->transfer_queue.queue_index=i;
+			ctx->queue.transfer_queue_index=i;
 		}
 	}
 	sll_deallocate(queue_properties);
@@ -527,7 +527,7 @@ __GFX_API_CALL gfx_context_t gfx_api_context_create(void* handle,void* extra_dat
 			VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO,
 			NULL,
 			0,
-			ctx->command.queue_index,
+			ctx->queue.graphics_queue_index,
 			1,
 			&_default_queue_priority
 		},
@@ -535,7 +535,7 @@ __GFX_API_CALL gfx_context_t gfx_api_context_create(void* handle,void* extra_dat
 			VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO,
 			NULL,
 			0,
-			ctx->transfer_queue.queue_index,
+			ctx->queue.transfer_queue_index,
 			1,
 			&_default_queue_priority
 		}
@@ -549,7 +549,7 @@ __GFX_API_CALL gfx_context_t gfx_api_context_create(void* handle,void* extra_dat
 		VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO,
 		NULL,
 		0,
-		1+(ctx->command.queue_index!=ctx->transfer_queue.queue_index),
+		1+(ctx->queue.graphics_queue_index!=ctx->queue.transfer_queue_index),
 		device_queue_info,
 		0,
 		NULL,
@@ -562,10 +562,10 @@ __GFX_API_CALL gfx_context_t gfx_api_context_create(void* handle,void* extra_dat
 		VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO,
 		NULL,
 		VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT,
-		ctx->command.queue_index
+		ctx->queue.graphics_queue_index
 	};
-	VULKAN_CALL(ctx->function_table.vkCreateCommandPool(ctx->device.logical,&command_pool_creation_info,NULL,&(ctx->command.pool)));
-	ctx->function_table.vkGetDeviceQueue(ctx->device.logical,ctx->command.queue_index,0,&(ctx->command.queue));
+	VULKAN_CALL(ctx->function_table.vkCreateCommandPool(ctx->device.logical,&command_pool_creation_info,NULL,&(ctx->queue.graphics_command_pool)));
+	ctx->function_table.vkGetDeviceQueue(ctx->device.logical,ctx->queue.graphics_queue_index,0,&(ctx->queue.graphics_queue));
 	VkAttachmentDescription render_pass_attachments[2]={
 		{
 			0,
@@ -658,13 +658,13 @@ __GFX_API_CALL gfx_context_t gfx_api_context_create(void* handle,void* extra_dat
 	VULKAN_CALL(ctx->function_table.vkCreateSemaphore(ctx->device.logical,&semaphore_creation_info,NULL,&(ctx->sync.present_semaphore)));
 	VULKAN_CALL(ctx->function_table.vkCreateSemaphore(ctx->device.logical,&semaphore_creation_info,NULL,&(ctx->sync.render_semaphore)));
 	_create_swapchain(ctx);
-	command_pool_creation_info.queueFamilyIndex=ctx->transfer_queue.queue_index;
-	VULKAN_CALL(ctx->function_table.vkCreateCommandPool(ctx->device.logical,&command_pool_creation_info,NULL,&(ctx->transfer_queue.command_pool)));
-	ctx->function_table.vkGetDeviceQueue(ctx->device.logical,ctx->transfer_queue.queue_index,0,&(ctx->transfer_queue.queue));
+	command_pool_creation_info.queueFamilyIndex=ctx->queue.transfer_queue_index;
+	VULKAN_CALL(ctx->function_table.vkCreateCommandPool(ctx->device.logical,&command_pool_creation_info,NULL,&(ctx->queue.transfer_command_pool)));
+	ctx->function_table.vkGetDeviceQueue(ctx->device.logical,ctx->queue.transfer_queue_index,0,&(ctx->queue.transfer_queue));
 	VkCommandBufferAllocateInfo command_buffer_allocation_info={
 		VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO,
 		NULL,
-		ctx->transfer_queue.command_pool,
+		ctx->queue.transfer_command_pool,
 		VK_COMMAND_BUFFER_LEVEL_PRIMARY,
 		1
 	};
@@ -676,16 +676,16 @@ __GFX_API_CALL gfx_context_t gfx_api_context_create(void* handle,void* extra_dat
 	};
 	VULKAN_CALL(ctx->function_table.vkCreateFence(ctx->device.logical,&fence_creation_info,NULL,&(ctx->transfer_queue.fence)));
 	ctx->transfer_queue.has_data=1;
-	command_buffer_allocation_info.commandPool=ctx->command.pool;
+	command_buffer_allocation_info.commandPool=ctx->queue.graphics_command_pool;
 	VULKAN_CALL(ctx->function_table.vkAllocateCommandBuffers(ctx->device.logical,&command_buffer_allocation_info,&(ctx->graphics_queue.command_buffer)));
 	VULKAN_CALL(ctx->function_table.vkCreateFence(ctx->device.logical,&fence_creation_info,NULL,&(ctx->graphics_queue.fence)));
 	ctx->graphics_queue.has_data=1;
 	_begin_frame(ctx);
-	SLL_HANDLE_CONTAINER_INIT(&(ctx->buffers));
-	SLL_HANDLE_CONTAINER_INIT(&(ctx->pipelines));
-	SLL_HANDLE_CONTAINER_INIT(&(ctx->samplers));
-	SLL_HANDLE_CONTAINER_INIT(&(ctx->shaders));
-	SLL_HANDLE_CONTAINER_INIT(&(ctx->textures));
+	SLL_HANDLE_CONTAINER_INIT(&(ctx->child_objects.buffers));
+	SLL_HANDLE_CONTAINER_INIT(&(ctx->child_objects.pipelines));
+	SLL_HANDLE_CONTAINER_INIT(&(ctx->child_objects.samplers));
+	SLL_HANDLE_CONTAINER_INIT(&(ctx->child_objects.shaders));
+	SLL_HANDLE_CONTAINER_INIT(&(ctx->child_objects.textures));
 	gfx_context_t out;
 	SLL_HANDLE_CONTAINER_ALLOC(&gfx_context_data,&out);
 	*(gfx_context_data.data+out)=ctx;

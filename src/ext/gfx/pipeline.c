@@ -64,7 +64,7 @@ __GFX_API_CALL gfx_pipeline_t gfx_api_pipeline_create(gfx_context_t ctx_id,gfx_p
 		if (elem->type!=SLL_OBJECT_TYPE_INT){
 			continue;
 		}
-		gfx_shader_data_t* shader=SLL_HANDLE_CONTAINER_GET(&(ctx->shaders),(gfx_shader_t)(elem->data.int_));
+		gfx_shader_data_t* shader=SLL_HANDLE_CONTAINER_GET(&(ctx->child_objects.shaders),(gfx_shader_t)(elem->data.int_));
 		if (!shader){
 			SLL_WARN("Should never happen!");
 			continue;
@@ -300,7 +300,7 @@ __GFX_API_CALL gfx_pipeline_t gfx_api_pipeline_create(gfx_context_t ctx_id,gfx_p
 	VkWriteDescriptorSet* write_descriptor_set=write_descriptor_sets;
 	for (sll_array_length_t i=0;i<uniform_buffers->length;i++){
 		sll_object_t elem=uniform_buffers->data[i];
-		const gfx_buffer_data_t* buffer=SLL_HANDLE_CONTAINER_GET(&(ctx->buffers),(gfx_buffer_t)(elem->data.array.data[2]->data.int_));
+		const gfx_buffer_data_t* buffer=SLL_HANDLE_CONTAINER_GET(&(ctx->child_objects.buffers),(gfx_buffer_t)(elem->data.array.data[2]->data.int_));
 		if (!buffer){
 			SLL_WARN("Should never happen!");
 			continue;
@@ -320,8 +320,8 @@ __GFX_API_CALL gfx_pipeline_t gfx_api_pipeline_create(gfx_context_t ctx_id,gfx_p
 	}
 	for (sll_array_length_t i=0;i<samplers->length;i++){
 		sll_object_t elem=samplers->data[i];
-		const gfx_texture_data_t* texture=SLL_HANDLE_CONTAINER_GET(&(ctx->textures),(gfx_texture_t)(elem->data.array.data[2]->data.int_));
-		const gfx_sampler_data_t* sampler=SLL_HANDLE_CONTAINER_GET(&(ctx->samplers),(gfx_sampler_t)(elem->data.array.data[3]->data.int_));
+		const gfx_texture_data_t* texture=SLL_HANDLE_CONTAINER_GET(&(ctx->child_objects.textures),(gfx_texture_t)(elem->data.array.data[2]->data.int_));
+		const gfx_sampler_data_t* sampler=SLL_HANDLE_CONTAINER_GET(&(ctx->child_objects.samplers),(gfx_sampler_t)(elem->data.array.data[3]->data.int_));
 		if (!texture||!sampler){
 			SLL_WARN("Should never happen!");
 			continue;
@@ -344,8 +344,8 @@ __GFX_API_CALL gfx_pipeline_t gfx_api_pipeline_create(gfx_context_t ctx_id,gfx_p
 	sll_deallocate(image_descriptors);
 	sll_deallocate(buffer_descriptors);
 	gfx_pipeline_t out;
-	SLL_HANDLE_CONTAINER_ALLOC(&(ctx->pipelines),&out);
-	*(ctx->pipelines.data+out)=pipeline;
+	SLL_HANDLE_CONTAINER_ALLOC(&(ctx->child_objects.pipelines),&out);
+	*(ctx->child_objects.pipelines.data+out)=pipeline;
 	return out;
 }
 
@@ -356,9 +356,9 @@ __GFX_API_CALL void gfx_api_pipeline_delete(gfx_context_t ctx_id,gfx_pipeline_t 
 	if (!ctx){
 		return;
 	}
-	gfx_pipeline_data_t* pipeline=SLL_HANDLE_CONTAINER_GET(&(ctx->pipelines),pipeline_id);
+	gfx_pipeline_data_t* pipeline=SLL_HANDLE_CONTAINER_GET(&(ctx->child_objects.pipelines),pipeline_id);
 	if (pipeline){
-		SLL_HANDLE_CONTAINER_DEALLOC(&(ctx->pipelines),pipeline_id);
+		SLL_HANDLE_CONTAINER_DEALLOC(&(ctx->child_objects.pipelines),pipeline_id);
 		_delete_pipeline(ctx,pipeline);
 	}
 }
@@ -370,7 +370,7 @@ __GFX_API_CALL void gfx_api_pipeline_use(gfx_context_t ctx_id,gfx_pipeline_t pip
 	if (!ctx){
 		return;
 	}
-	gfx_pipeline_data_t* pipeline=SLL_HANDLE_CONTAINER_GET(&(ctx->pipelines),pipeline_id);
+	gfx_pipeline_data_t* pipeline=SLL_HANDLE_CONTAINER_GET(&(ctx->child_objects.pipelines),pipeline_id);
 	if (!pipeline){
 		return;
 	}

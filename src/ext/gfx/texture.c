@@ -26,7 +26,7 @@ __GFX_API_CALL gfx_texture_t gfx_api_texture_create(gfx_context_t ctx_id,const s
 		return 0;
 	}
 	gfx_texture_data_t* texture=sll_allocate(sizeof(gfx_texture_data_t));
-	texture->data_buffer=SLL_HANDLE_CONTAINER_GET(&(ctx->buffers),buffer_id);
+	texture->data_buffer=SLL_HANDLE_CONTAINER_GET(&(ctx->child_objects.buffers),buffer_id);
 	texture->format=_encode_data_format(format);
 	texture->size.width=(uint32_t)(size->data[0]->data.int_);
 	texture->size.height=(uint32_t)((size->length>1?size->data[1]->data.int_:1));
@@ -87,8 +87,8 @@ __GFX_API_CALL gfx_texture_t gfx_api_texture_create(gfx_context_t ctx_id,const s
 	};
 	VULKAN_CALL(ctx->function_table.vkCreateImageView(ctx->device.logical,&image_view_creation_info,NULL,&(texture->view)));
 	gfx_texture_t out;
-	SLL_HANDLE_CONTAINER_ALLOC(&(ctx->textures),&out);
-	*(ctx->textures.data+out)=texture;
+	SLL_HANDLE_CONTAINER_ALLOC(&(ctx->child_objects.textures),&out);
+	*(ctx->child_objects.textures.data+out)=texture;
 	return out;
 }
 
@@ -99,9 +99,9 @@ __GFX_API_CALL void gfx_api_texture_delete(gfx_context_t ctx_id,gfx_texture_t te
 	if (!ctx){
 		return;
 	}
-	gfx_texture_data_t* texture=SLL_HANDLE_CONTAINER_GET(&(ctx->textures),texture_id);
+	gfx_texture_data_t* texture=SLL_HANDLE_CONTAINER_GET(&(ctx->child_objects.textures),texture_id);
 	if (texture){
-		SLL_HANDLE_CONTAINER_DEALLOC(&(ctx->textures),texture_id);
+		SLL_HANDLE_CONTAINER_DEALLOC(&(ctx->child_objects.textures),texture_id);
 		_delete_texture(ctx,texture);
 	}
 }
@@ -113,7 +113,7 @@ __GFX_API_CALL void gfx_api_texture_sync(gfx_context_t ctx_id,gfx_texture_t text
 	if (!ctx){
 		return;
 	}
-	gfx_texture_data_t* texture=SLL_HANDLE_CONTAINER_GET(&(ctx->textures),texture_id);
+	gfx_texture_data_t* texture=SLL_HANDLE_CONTAINER_GET(&(ctx->child_objects.textures),texture_id);
 	if (!texture){
 		return;
 	}
@@ -156,7 +156,7 @@ __GFX_API_CALL void gfx_api_texture_sync(gfx_context_t ctx_id,gfx_texture_t text
 	ctx->function_table.vkCmdCopyBufferToImage(ctx->transfer_queue.command_buffer,texture->data_buffer->device.buffer,texture->handle,VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,1,&buffer_copy_region);
 	image_memory_barrier.oldLayout=VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL;
 	image_memory_barrier.newLayout=VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
-	if (ctx->transfer_queue.queue_index==ctx->command.queue_index){
+	if (ctx->queue.transfer_queue_index==ctx->queue.graphics_queue_index){
 		image_memory_barrier.srcAccessMask=VK_ACCESS_TRANSFER_WRITE_BIT;
 		image_memory_barrier.dstAccessMask=VK_ACCESS_SHADER_READ_BIT;
 		ctx->function_table.vkCmdPipelineBarrier(ctx->transfer_queue.command_buffer,VK_PIPELINE_STAGE_TRANSFER_BIT,VK_PIPELINE_STAGE_ALL_GRAPHICS_BIT,0,0,NULL,0,NULL,1,&image_memory_barrier);
@@ -164,8 +164,8 @@ __GFX_API_CALL void gfx_api_texture_sync(gfx_context_t ctx_id,gfx_texture_t text
 	else{
 		image_memory_barrier.srcAccessMask=VK_ACCESS_TRANSFER_WRITE_BIT;
 		image_memory_barrier.dstAccessMask=0;
-		image_memory_barrier.srcQueueFamilyIndex=ctx->transfer_queue.queue_index;
-		image_memory_barrier.dstQueueFamilyIndex=ctx->command.queue_index;
+		image_memory_barrier.srcQueueFamilyIndex=ctx->queue.transfer_queue_index;
+		image_memory_barrier.dstQueueFamilyIndex=ctx->queue.graphics_queue_index;
 		ctx->function_table.vkCmdPipelineBarrier(ctx->transfer_queue.command_buffer,VK_PIPELINE_STAGE_TRANSFER_BIT,VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT,0,0,NULL,0,NULL,1,&image_memory_barrier);
 		image_memory_barrier.srcAccessMask=0;
 		image_memory_barrier.dstAccessMask=VK_ACCESS_SHADER_READ_BIT;

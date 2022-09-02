@@ -42,8 +42,8 @@ __GFX_API_CALL gfx_shader_t gfx_api_shader_create(gfx_context_t ctx_id,const sll
 	shader->pipeline_shader_creation_info.pName=(const char*)(shader->entry_point);
 	shader->pipeline_shader_creation_info.pSpecializationInfo=NULL;
 	gfx_shader_t out;
-	SLL_HANDLE_CONTAINER_ALLOC(&(ctx->shaders),&out);
-	*(ctx->shaders.data+out)=shader;
+	SLL_HANDLE_CONTAINER_ALLOC(&(ctx->child_objects.shaders),&out);
+	*(ctx->child_objects.shaders.data+out)=shader;
 	return out;
 }
 
@@ -54,9 +54,9 @@ __GFX_API_CALL void gfx_api_shader_delete(gfx_context_t ctx_id,gfx_shader_t shad
 	if (!ctx){
 		return;
 	}
-	gfx_shader_data_t* shader=SLL_HANDLE_CONTAINER_GET(&(ctx->shaders),shader_id);
+	gfx_shader_data_t* shader=SLL_HANDLE_CONTAINER_GET(&(ctx->child_objects.shaders),shader_id);
 	if (shader){
-		SLL_HANDLE_CONTAINER_DEALLOC(&(ctx->shaders),shader_id);
+		SLL_HANDLE_CONTAINER_DEALLOC(&(ctx->child_objects.shaders),shader_id);
 		_delete_shader(ctx,shader);
 	}
 }

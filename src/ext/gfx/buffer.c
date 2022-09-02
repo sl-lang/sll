@@ -77,8 +77,8 @@ __GFX_API_CALL gfx_buffer_t gfx_api_buffer_create(gfx_context_t ctx_id,gfx_buffe
 	buffer->size=0;
 	buffer->host_buffer_data=NULL;
 	gfx_buffer_t out;
-	SLL_HANDLE_CONTAINER_ALLOC(&(ctx->buffers),&out);
-	*(ctx->buffers.data+out)=buffer;
+	SLL_HANDLE_CONTAINER_ALLOC(&(ctx->child_objects.buffers),&out);
+	*(ctx->child_objects.buffers.data+out)=buffer;
 	return out;
 }
 
@@ -89,9 +89,9 @@ __GFX_API_CALL void gfx_api_buffer_delete(gfx_context_t ctx_id,gfx_buffer_t buff
 	if (!ctx){
 		return;
 	}
-	gfx_buffer_data_t* buffer=SLL_HANDLE_CONTAINER_GET(&(ctx->buffers),buffer_id);
+	gfx_buffer_data_t* buffer=SLL_HANDLE_CONTAINER_GET(&(ctx->child_objects.buffers),buffer_id);
 	if (buffer){
-		SLL_HANDLE_CONTAINER_DEALLOC(&(ctx->buffers),buffer_id);
+		SLL_HANDLE_CONTAINER_DEALLOC(&(ctx->child_objects.buffers),buffer_id);
 		_delete_buffer(ctx,buffer);
 	}
 }
@@ -103,7 +103,7 @@ __GFX_API_CALL void gfx_api_buffer_draw(gfx_context_t ctx_id,gfx_buffer_t buffer
 	if (!ctx){
 		return;
 	}
-	gfx_buffer_data_t* buffer=SLL_HANDLE_CONTAINER_GET(&(ctx->buffers),buffer_id);
+	gfx_buffer_data_t* buffer=SLL_HANDLE_CONTAINER_GET(&(ctx->child_objects.buffers),buffer_id);
 	if (!buffer||!(buffer->type&GFX_BUFFER_TYPE_INDEX)){
 		return;
 	}
@@ -117,7 +117,7 @@ __GFX_API_CALL void gfx_api_buffer_hint_update_frequency(gfx_context_t ctx_id,gf
 	if (!ctx){
 		return;
 	}
-	gfx_buffer_data_t* buffer=SLL_HANDLE_CONTAINER_GET(&(ctx->buffers),buffer_id);
+	gfx_buffer_data_t* buffer=SLL_HANDLE_CONTAINER_GET(&(ctx->child_objects.buffers),buffer_id);
 	if (!buffer||buffer->update_frequency_hint==hint){
 		return;
 	}
@@ -134,7 +134,7 @@ __GFX_API_CALL void gfx_api_buffer_sync(gfx_context_t ctx_id,gfx_buffer_t buffer
 	if (!ctx){
 		return;
 	}
-	gfx_buffer_data_t* buffer=SLL_HANDLE_CONTAINER_GET(&(ctx->buffers),buffer_id);
+	gfx_buffer_data_t* buffer=SLL_HANDLE_CONTAINER_GET(&(ctx->child_objects.buffers),buffer_id);
 	if (!buffer){
 		return;
 	}
@@ -246,7 +246,7 @@ __GFX_API_CALL void gfx_api_buffer_use(gfx_context_t ctx_id,gfx_buffer_t buffer_
 	if (!ctx){
 		return;
 	}
-	gfx_buffer_data_t* buffer=SLL_HANDLE_CONTAINER_GET(&(ctx->buffers),buffer_id);
+	gfx_buffer_data_t* buffer=SLL_HANDLE_CONTAINER_GET(&(ctx->child_objects.buffers),buffer_id);
 	if (!buffer){
 		return;
 	}
