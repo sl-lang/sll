@@ -11,6 +11,7 @@
 	(~ int_type) COUNT_3
 	(~ int_type) COUNT_4
 	(~ int_type) COUNT_MASK
+	(~ int_type) FLAG_BGR
 	(~ int_type) MASK
 	(~ int_type) SIZE_16BIT
 	(~ int_type) SIZE_32BIT
@@ -49,7 +50,9 @@
 (= TYPE_COLOR_SRGB 80)
 (= TYPE_MASK 112)
 
-(= MASK (| SIZE_MASK COUNT_MASK TYPE_MASK))
+(= FLAG_BGR 128)
+
+(= MASK (| SIZE_MASK COUNT_MASK TYPE_MASK FLAG_BGR))
 
 (= _type_to_string <
 	TYPE_UINT "uint"
@@ -64,8 +67,9 @@
 
 (= to_string (,,, data_type
 	(= data_type (& (:: data_type int_type) MASK))
-	(@@ (<- string$format "%s%u[%u]"
+	(@@ (<- string$format "%s%s%u[%u]"
 		(: _type_to_string (& data_type TYPE_MASK))
+		(* "_bgr" (!! (& data_type FLAG_BGR)))
 		(<< (<< 1 (& data_type SIZE_MASK)) 3)
 		(+ (>> (& data_type COUNT_MASK) 2) 1)
 	))
@@ -79,6 +83,7 @@
 	COUNT_3
 	COUNT_4
 	COUNT_MASK
+	FLAG_BGR
 	MASK
 	SIZE_16BIT
 	SIZE_32BIT

@@ -3,6 +3,7 @@
 ## Added
 
 - Uniform buffer, texture and sampler support to the GFX extension
+- Support for BGR and BGRA data types: `gfx:data_type$FLAG_BGR`
 
 ## Changed
 
