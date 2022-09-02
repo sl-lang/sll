@@ -38,7 +38,7 @@
 	(= ctx (<- gfx:context$create window true))
 	(= vertex_buffer (<- gfx:buffer$create ctx gfx:buffer$TYPE_VERTEX gfx:buffer$DATA_TYPE_FLOAT32))
 	(<- gfx:buffer$hint_update_frequency vertex_buffer gfx:buffer$FREQUENCY_LOW)
-	(= index_buffer (<- gfx:buffer$create ctx gfx:buffer$TYPE_INDEX gfx:buffer$DATA_TYPE_UINT16))
+	(= index_buffer (<- gfx:buffer$create ctx gfx:buffer$TYPE_INDEX gfx:buffer$DATA_TYPE_UINT32))
 	(<- gfx:buffer$hint_update_frequency index_buffer gfx:buffer$FREQUENCY_LOW)
 	(@@ (. ui_type
 		window
