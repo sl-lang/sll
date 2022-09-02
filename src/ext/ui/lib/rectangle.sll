@@ -1,0 +1,32 @@
+(---
+	"string.sll"
+	"types.sll"
+)
+
+
+
+(= ui_rectangle_type (&:
+	(,,, data
+		(@@ (<- string$format "((%f %f) (%f %f))"
+			data$x1
+			data$y1
+			data$x2
+			data$y2
+		))
+	) @@string@@
+	float_type x1
+	float_type y1
+	float_type x2
+	float_type y2
+))
+
+(= ui_rectangle_module_type (&:
+	(~ type_type) ui_rectangle_type
+))
+
+
+
+(= ui:rectangle (. ui_rectangle_module_type
+	ui_rectangle_type
+))
+(## ui:rectangle)

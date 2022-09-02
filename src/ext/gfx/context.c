@@ -213,7 +213,7 @@ static void _begin_frame(gfx_context_data_t* ctx){
 		_start_transfer_and_graphics_queues(ctx);
 	}
 	VkResult err=ctx->function_table.vkAcquireNextImageKHR(ctx->device.logical,ctx->swapchain.handle,UINT64_MAX,ctx->sync.present_semaphore,NULL,&(ctx->frame.image_index));
-	if (err!=VK_SUBOPTIMAL_KHR){
+	if (err!=VK_SUBOPTIMAL_KHR&&err!=VK_ERROR_OUT_OF_DATE_KHR){
 		VULKAN_CALL(err);
 	}
 	ctx->frame.command_buffer=ctx->swapchain.command_buffers[ctx->frame.image_index];
@@ -346,7 +346,7 @@ static void _end_frame(gfx_context_data_t* ctx){
 		NULL
 	};
 	VkResult err=ctx->function_table.vkQueuePresentKHR(ctx->queue.graphics_queue,&present_info);
-	if (err==VK_SUBOPTIMAL_KHR){
+	if (err==VK_SUBOPTIMAL_KHR||err==VK_ERROR_OUT_OF_DATE_KHR){
 		_create_swapchain(ctx);
 	}
 	else{
