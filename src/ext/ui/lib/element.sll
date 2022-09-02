@@ -1,4 +1,5 @@
 (---
+	"array.sll"
 	"string.sll"
 	"types.sll"
 	"ui/_ui_type.sll"
@@ -9,17 +10,15 @@
 
 
 (= ui_element_callbacks_type (&:
-	func_type add_child
-	func_type get_children
-	func_type remove_child
 ))
 
 (= ui_element_type (&:
 	(,,, data
-		(@@ (<- string$format "<ui:element position=%s size=%s z-index=%u>"
+		(@@ (<- string$format "<ui:element position=%s size=%s z-index=%u children=%s>"
 			(:: data$position string_type)
 			(:: data$size string_type)
 			data$z_index
+			(<- string$str data$children)
 		))
 	) @@string@@
 	(~ _ui_type) ui
@@ -28,6 +27,7 @@
 	ui:position$ui_position_type position
 	ui:size$ui_size_type size
 	int_type z_index
+	array_type children
 ))
 
 (= ui_element_module_type (&:
@@ -84,10 +84,10 @@
 		(! (<- _check_if_valid_element element))
 		(! (<- _check_if_valid_element parent))
 	) (@@ false))
-	(? element$base$parent (<- element$base$parent$callbacks$remove_child element))
-	(? (! (<- parent$base$callbacks$add_child parent element)) (@@ false))
+	(? element$base$parent (<- array$remove element$base$parent$base$children element))
 	(= element$base$parent parent)
 	(= element$base$z_index (+ parent$base$z_index 1))
+	(<- array$push parent$base$children element)
 	(@@ true)
 ))
 

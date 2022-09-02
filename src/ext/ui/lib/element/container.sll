@@ -9,13 +9,11 @@
 
 (= ui_container_element_type (&:
 	(,,, data
-		(@@ (<- string$format "<ui:element:container base=%s children=%s>"
+		(@@ (<- string$format "<ui:element:container base=%s>"
 			(:: data$base string_type)
-			(<- string$str data$children)
 		))
 	) @@string@@
 	ui:element$ui_element_type base
-	array_type children
 ))
 
 (= ui_container_element_module_type (&:
@@ -26,25 +24,9 @@
 
 
 
-(= _container_callbacks (. ui:element$ui_element_callbacks_type
-	(,,, container child
-		(<- array$push container$children child)
-		(@@ true)
-	)
-	(,,, container
-		(@@ container$children)
-	)
-	(,,, container child
-		(<- array$remove container$children child)
-	)
-))
-
-
-
 (= create (,,, ui position size parent
 	(= out (. ui_container_element_type
-		(<- ui:element$create ui _container_callbacks position size)
-		[]
+		(<- ui:element$create ui nil position size)
 	))
 	(? parent (<- ui:element$set_parent out parent))
 	(@@ out)
@@ -53,7 +35,7 @@
 (= delete (,,, container
 	(? (! container) (@@))
 	(= container (:: container ui_container_element_type))
-	(<- ui:element$delete container$base)
+	(<- ui:element$delete container)
 ))
 
 
