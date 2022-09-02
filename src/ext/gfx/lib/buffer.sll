@@ -162,7 +162,7 @@
 	(? (||
 		(< frequency FREQUENCY_NEVER)
 		(> frequency FREQUENCY_HIGH)
-	) (= frequency FREQUENCY_LOW))
+	) (= frequency FREQUENCY_NEVER))
 	(= buffer$update_frequency frequency)
 	(= buffer$_is_default_frequency? false)
 	(<- (... "gfx:buffer_hint_update_frequency") buffer$ctx$_handle buffer$_handle frequency)

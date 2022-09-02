@@ -104,7 +104,7 @@ __GFX_API_CALL void gfx_api_buffer_draw(gfx_context_t ctx_id,gfx_buffer_t buffer
 		return;
 	}
 	gfx_buffer_data_t* buffer=SLL_HANDLE_CONTAINER_GET(&(ctx->child_objects.buffers),buffer_id);
-	if (!buffer||!(buffer->type&GFX_BUFFER_TYPE_INDEX)){
+	if (!buffer||!(buffer->type&GFX_BUFFER_TYPE_INDEX)||!(buffer->flags&GFX_BUFFER_FLAG_HAS_DEVICE_BUFFER)){
 		return;
 	}
 	ctx->function_table.vkCmdDrawIndexed(ctx->frame.command_buffer,(uint32_t)(buffer->length),1,0,0,1);
@@ -247,7 +247,7 @@ __GFX_API_CALL void gfx_api_buffer_use(gfx_context_t ctx_id,gfx_buffer_t buffer_
 		return;
 	}
 	gfx_buffer_data_t* buffer=SLL_HANDLE_CONTAINER_GET(&(ctx->child_objects.buffers),buffer_id);
-	if (!buffer){
+	if (!buffer||!(buffer->flags&GFX_BUFFER_FLAG_HAS_DEVICE_BUFFER)){
 		return;
 	}
 	if (buffer->type&GFX_BUFFER_TYPE_VERTEX){
