@@ -12,19 +12,10 @@
 
 
 
-typedef struct _GFX_CONTEXT_COMMAND_BUFFER_DATA{
-	VkCommandBuffer command_buffer;
-	VkFence fence;
-	sll_bool_t has_data;
-} gfx_context_command_buffer_data_t;
-
-
-
-typedef struct _GFX_CONTEXT_DEPTH_STENSIL_DATA{
-	VkImage image;
-	VkImageView image_view;
-	VkDeviceMemory memory;
-} gfx_context_depth_stensil_data_t;
+typedef struct _GFX_CONTEXT_INSTANCE_DATA{
+	VkInstance handle;
+	VkDebugUtilsMessengerEXT debug_messenger;
+} gfx_context_instance_data_t;
 
 
 
@@ -34,27 +25,6 @@ typedef struct _GFX_CONTEXT_DEVICE_DATA{
 	VkPhysicalDeviceMemoryProperties memory_properties;
 	VkPhysicalDeviceLimits limits;
 } gfx_context_device_data_t;
-
-
-
-typedef struct _GFX_CONTEXT_FRAME_DATA{
-	uint32_t image_index;
-	VkCommandBuffer command_buffer;
-} gfx_context_frame_data_t;
-
-
-
-typedef struct _GFX_CONTEXT_INSTANCE_DATA{
-	VkInstance handle;
-	VkDebugUtilsMessengerEXT debug_messenger;
-} gfx_context_instance_data_t;
-
-
-
-typedef struct _GFX_CONTEXT_PIPELINE_DATA{
-	VkRenderPass render_pass;
-	VkPipelineCache cache;
-} gfx_context_pipeline_data_t;
 
 
 
@@ -80,14 +50,6 @@ typedef struct _GFX_CONTEXT_SWAPCHAIN_DATA{
 
 
 
-typedef struct _GFX_CONTEXT_SYNC_DATA{
-	VkFence* fences;
-	VkSemaphore present_semaphore;
-	VkSemaphore render_semaphore;
-} gfx_context_sync_data_t;
-
-
-
 typedef struct _GFX_CONTEXT_QUEUE_DATA{
 	VkCommandPool graphics_command_pool;
 	VkQueue graphics_queue;
@@ -96,6 +58,44 @@ typedef struct _GFX_CONTEXT_QUEUE_DATA{
 	VkQueue transfer_queue;
 	uint32_t transfer_queue_index;
 } gfx_context_queue_data_t;
+
+
+
+typedef struct _GFX_CONTEXT_COMMAND_BUFFER_DATA{
+	VkCommandBuffer command_buffer;
+	VkFence fence;
+	sll_bool_t has_data;
+} gfx_context_command_buffer_data_t;
+
+
+
+typedef struct _GFX_CONTEXT_PIPELINE_DATA{
+	VkRenderPass render_pass;
+	VkPipelineCache cache;
+} gfx_context_pipeline_data_t;
+
+
+
+typedef struct _GFX_CONTEXT_SYNC_DATA{
+	VkFence* fences;
+	VkSemaphore present_semaphore;
+	VkSemaphore render_semaphore;
+} gfx_context_sync_data_t;
+
+
+
+typedef struct _GFX_CONTEXT_DEPTH_STENSIL_DATA{
+	VkImage image;
+	VkImageView image_view;
+	VkDeviceMemory memory;
+} gfx_context_depth_stensil_data_t;
+
+
+
+typedef struct _GFX_CONTEXT_FRAME_DATA{
+	uint32_t image_index;
+	VkCommandBuffer command_buffer;
+} gfx_context_frame_data_t;
 
 
 
@@ -115,8 +115,8 @@ typedef struct _GFX_CONTEXT_DATA{
 	gfx_context_surface_data_t surface;
 	gfx_context_swapchain_data_t swapchain;
 	gfx_context_queue_data_t queue;
-	gfx_context_command_buffer_data_t transfer_queue;
-	gfx_context_command_buffer_data_t graphics_queue;
+	gfx_context_command_buffer_data_t transfer_command_buffer;
+	gfx_context_command_buffer_data_t graphics_command_buffer;
 	gfx_context_pipeline_data_t pipeline;
 	gfx_context_sync_data_t sync;
 	gfx_context_depth_stensil_data_t depth_stensil;
