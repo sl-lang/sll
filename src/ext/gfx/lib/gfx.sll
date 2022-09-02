@@ -2,8 +2,11 @@
 	"gfx/buffer.sll"
 	"gfx/color.sll"
 	"gfx/context.sll"
+	"gfx/data_type.sll"
 	"gfx/pipeline.sll"
+	"gfx/sampler.sll"
 	"gfx/shader.sll"
+	"gfx/texture.sll"
 	"gfx/vulkan.sll"
 )
 
@@ -13,8 +16,11 @@
 	(~ (:? gfx:buffer)) buffer
 	(~ (:? gfx:color)) color
 	(~ (:? gfx:context)) context
+	(~ (:? gfx:data_type)) data_type
 	(~ (:? gfx:pipeline)) pipeline
+	(~ (:? gfx:sampler)) sampler
 	(~ (:? gfx:shader)) shader
+	(~ (:? gfx:texture)) texture
 	(~ (:? gfx:vulkan)) vulkan
 ))
 
@@ -24,8 +30,11 @@
 	gfx:buffer
 	gfx:color
 	gfx:context
+	gfx:data_type
 	gfx:pipeline
+	gfx:sampler
 	gfx:shader
+	gfx:texture
 	gfx:vulkan
 ))
 (## gfx)
