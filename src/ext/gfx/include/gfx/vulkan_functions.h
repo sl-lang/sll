@@ -13,6 +13,9 @@
 
 typedef struct _GFX_VULKAN_FUNCTION_TABLE{
 	GFX_VULKAN_SYSTEM_SURFACE_CREATION_FUNCTION_PROTOTYPE create_system_surface;
+	PFN_vkCreateDebugUtilsMessengerEXT vkCreateDebugUtilsMessengerEXT;
+	PFN_vkDestroyDebugUtilsMessengerEXT vkDestroyDebugUtilsMessengerEXT;
+	sll_bool_t has_debug_utils;
 	PFN_vkAcquireNextImageKHR vkAcquireNextImageKHR;
 	PFN_vkAllocateCommandBuffers vkAllocateCommandBuffers;
 	PFN_vkAllocateDescriptorSets vkAllocateDescriptorSets;
@@ -34,7 +37,6 @@ typedef struct _GFX_VULKAN_FUNCTION_TABLE{
 	PFN_vkCmdSetViewport vkCmdSetViewport;
 	PFN_vkCreateBuffer vkCreateBuffer;
 	PFN_vkCreateCommandPool vkCreateCommandPool;
-	PFN_vkCreateDebugUtilsMessengerEXT vkCreateDebugUtilsMessengerEXT;
 	PFN_vkCreateDescriptorPool vkCreateDescriptorPool;
 	PFN_vkCreateDescriptorSetLayout vkCreateDescriptorSetLayout;
 	PFN_vkCreateDevice vkCreateDevice;
@@ -52,7 +54,6 @@ typedef struct _GFX_VULKAN_FUNCTION_TABLE{
 	PFN_vkCreateSwapchainKHR vkCreateSwapchainKHR;
 	PFN_vkDestroyBuffer vkDestroyBuffer;
 	PFN_vkDestroyCommandPool vkDestroyCommandPool;
-	PFN_vkDestroyDebugUtilsMessengerEXT vkDestroyDebugUtilsMessengerEXT;
 	PFN_vkDestroyDescriptorPool vkDestroyDescriptorPool;
 	PFN_vkDestroyDescriptorSetLayout vkDestroyDescriptorSetLayout;
 	PFN_vkDestroyDevice vkDestroyDevice;

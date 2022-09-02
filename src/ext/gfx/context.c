@@ -393,7 +393,7 @@ void _delete_context(gfx_context_data_t* ctx){
 	if (ctx->instance.debug_messenger!=VK_NULL_HANDLE){
 		ctx->function_table.vkDestroyDebugUtilsMessengerEXT(ctx->instance.handle,ctx->instance.debug_messenger,NULL);
 	}
-	// ctx->function_table.vkDestroyInstansce(ctx->instance.handle,NULL);
+	ctx->function_table.vkDestroyInstance(ctx->instance.handle,NULL);
 	sll_deallocate(ctx);
 }
 
@@ -440,7 +440,7 @@ __GFX_API_CALL gfx_context_t gfx_api_context_create(void* handle,void* extra_dat
 	gfx_context_data_t* ctx=sll_zero_allocate(sizeof(gfx_context_data_t));
 	VULKAN_CALL(vkCreateInstance(&instance_creation_info,NULL,&(ctx->instance.handle)));
 	sll_error_raise_bool(!_load_vulkan_function_table(ctx->instance.handle,&(ctx->function_table)));
-	if (debug){
+	if (debug&&ctx->function_table.has_debug_utils){
 		VkDebugUtilsMessengerCreateInfoEXT debug_messenger_cretion_info={
 			VK_STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT,
 			NULL,

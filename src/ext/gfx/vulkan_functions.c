@@ -46,6 +46,9 @@ sll_bool_t _load_vulkan_functions(PFN_vkGetInstanceProcAddr get_proc_addr){
 sll_bool_t _load_vulkan_function_table(VkInstance instance,gfx_vulkan_function_table_t* out){
 	sll_bool_t ret=1;
 	LOAD_FUNCTION_TABLE_VAR(create_system_surface,GFX_VULKAN_SYSTEM_SURFACE_CREATION_FUNCTION);
+	out->vkCreateDebugUtilsMessengerEXT=(PFN_vkCreateDebugUtilsMessengerEXT)vkGetInstanceProcAddr(instance,"vkCreateDebugUtilsMessengerEXT");
+	out->vkDestroyDebugUtilsMessengerEXT=(PFN_vkDestroyDebugUtilsMessengerEXT)vkGetInstanceProcAddr(instance,"vkDestroyDebugUtilsMessengerEXT");
+	out->has_debug_utils=out->vkCreateDebugUtilsMessengerEXT&&out->vkDestroyDebugUtilsMessengerEXT;
 	LOAD_FUNCTION_TABLE(vkAcquireNextImageKHR);
 	LOAD_FUNCTION_TABLE(vkAllocateCommandBuffers);
 	LOAD_FUNCTION_TABLE(vkAllocateDescriptorSets);
@@ -67,7 +70,6 @@ sll_bool_t _load_vulkan_function_table(VkInstance instance,gfx_vulkan_function_t
 	LOAD_FUNCTION_TABLE(vkCmdSetViewport);
 	LOAD_FUNCTION_TABLE(vkCreateBuffer);
 	LOAD_FUNCTION_TABLE(vkCreateCommandPool);
-	LOAD_FUNCTION_TABLE(vkCreateDebugUtilsMessengerEXT);
 	LOAD_FUNCTION_TABLE(vkCreateDescriptorPool);
 	LOAD_FUNCTION_TABLE(vkCreateDescriptorSetLayout);
 	LOAD_FUNCTION_TABLE(vkCreateDevice);
@@ -85,7 +87,6 @@ sll_bool_t _load_vulkan_function_table(VkInstance instance,gfx_vulkan_function_t
 	LOAD_FUNCTION_TABLE(vkCreateSwapchainKHR);
 	LOAD_FUNCTION_TABLE(vkDestroyBuffer);
 	LOAD_FUNCTION_TABLE(vkDestroyCommandPool);
-	LOAD_FUNCTION_TABLE(vkDestroyDebugUtilsMessengerEXT);
 	LOAD_FUNCTION_TABLE(vkDestroyDescriptorPool);
 	LOAD_FUNCTION_TABLE(vkDestroyDescriptorSetLayout);
 	LOAD_FUNCTION_TABLE(vkDestroyDevice);
