@@ -1,0 +1,53 @@
+(---
+	"gfx/context.sll"
+	"string.sll"
+	"types.sll"
+	"window_manager/event.sll"
+	"window_manager/window.sll"
+)
+
+
+
+(= ui_type (&:
+	(,,, data
+		(@@ (<- string$format "<ui:ui window=%s>"
+			(:: data$window string_type)
+		))
+	) @@string@@
+	(~ window_manager:window$window_manager_window_type) window
+	(~ gfx:context$gfx_context_type) context
+))
+
+(= ui_core_module_type (&:
+	(~ type_type) ui_type
+	(~ func_type) create
+	(~ func_type) update
+))
+
+
+
+(= create (,,, window
+	(? (! window) (@@ nil))
+	(= window (:: window window_manager:window$window_manager_window_type))
+	(= context (<- gfx:context$create window true))
+	(@@ (. ui_type
+		window
+		context
+	))
+))
+
+(= update (,,, ui blocking?
+	(? (! ui) (@@))
+	(= ui (:: ui ui_type))
+	(<- gfx:context$render ctx)
+	(<- window_manager:event$poll (!! blocking?))
+))
+
+
+
+(= ui:core (. ui_core_module_type
+	ui_type
+	create
+	update
+))
+(## ui:core)
