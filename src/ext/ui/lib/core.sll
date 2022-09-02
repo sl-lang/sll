@@ -28,6 +28,7 @@
 	gfx:buffer$gfx_buffer_type _index_buffer
 	gfx:buffer$gfx_buffer_type _uniform_buffer
 	gfx:pipeline$gfx_pipeline_type _pipeline
+	int_type _ui_max_layer_count
 ))
 
 (= ui_core_module_type (&:
@@ -46,6 +47,7 @@
 (= _update_uniform_buffer (,,, ui
 	(= (: ui$_uniform_buffer$data 0) (/ 2.0 ui$window$layout$geometry$width))
 	(= (: ui$_uniform_buffer$data 5) (/ 2.0 ui$window$layout$geometry$height))
+	(= (: ui$_uniform_buffer$data 10) (:: ui$_ui_max_layer_count float_type))
 	(<- gfx:buffer$sync ui$_uniform_buffer)
 ))
 
@@ -124,6 +126,7 @@
 		index_buffer
 		uniform_buffer
 		pipeline
+		1
 	))
 	(<- _update_uniform_buffer out)
 	(= window$callbacks$size _window_resize_callback)

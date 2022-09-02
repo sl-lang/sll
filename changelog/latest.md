@@ -8,6 +8,7 @@
 ## Changed
 
 - Fixed GFX buffer allocation granularity
+- Fixed Vulkan pipeline descriptor allocation
 - Vulkan error `VK_ERROR_OUT_OF_DATE_KHR` is now properly handled
 
 [0.8.0]: https://github.com/sl-lang/sll/compare/sll-v0.7.32...main

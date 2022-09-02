@@ -267,22 +267,24 @@ __GFX_API_CALL gfx_pipeline_t gfx_api_pipeline_create(gfx_context_t ctx_id,gfx_p
 	VULKAN_CALL(ctx->function_table.vkCreateGraphicsPipelines(ctx->device.logical,ctx->pipeline.cache,1,&pipeline_create_info,NULL,&(pipeline->handle)));
 	sll_deallocate(vertex_input_attributes);
 	sll_deallocate(shader_stages);
-	VkDescriptorPoolSize descriptor_pool_sizes[2]={
-		{
-			VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER,
-			uniform_buffers->length
-		},
-		{
-			VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,
-			samplers->length
-		}
-	};
+	VkDescriptorPoolSize descriptor_pool_sizes[2];
+	uint32_t descriptor_pool_size_count=0;
+	if (uniform_buffers->length){
+		(descriptor_pool_sizes+descriptor_pool_size_count)->type=VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+		(descriptor_pool_sizes+descriptor_pool_size_count)->descriptorCount=uniform_buffers->length;
+		descriptor_pool_size_count++;
+	}
+	if (samplers->length){
+		(descriptor_pool_sizes+descriptor_pool_size_count)->type=VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+		(descriptor_pool_sizes+descriptor_pool_size_count)->descriptorCount=samplers->length;
+		descriptor_pool_size_count++;
+	}
 	VkDescriptorPoolCreateInfo descriptor_pool_creation_info={
 		VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO,
 		NULL,
 		VK_DESCRIPTOR_POOL_CREATE_FREE_DESCRIPTOR_SET_BIT,
 		1,
-		2,
+		descriptor_pool_size_count,
 		descriptor_pool_sizes
 	};
 	VULKAN_CALL(ctx->function_table.vkCreateDescriptorPool(ctx->device.logical,&descriptor_pool_creation_info,NULL,&(pipeline->descriptor_pool)));
