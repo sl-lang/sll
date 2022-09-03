@@ -5,14 +5,9 @@
 
 
 
-(= ui_position_layout_fixed_type (&:
-	float_type x
-	float_type y
-))
-
 (= ui_position_layout_type (&:
 	(~ int_type) type
-	ui_position_layout_fixed_type fixed
+	float_type fixed
 ))
 
 (= ui_position_type (&:
@@ -24,7 +19,8 @@
 	) @@string@@
 	float_type x
 	float_type y
-	ui_position_layout_type layout
+	ui_position_layout_type x_layout
+	ui_position_layout_type y_layout
 ))
 
 (= ui_position_module_type (&:
@@ -41,31 +37,29 @@
 
 
 
-(= create_fixed_layout (,,, x y
-	(= x (:: x float_type))
-	(= y (:: y float_type))
+(= _solve_layout (,,, layout offset size
+	(?? layout$type
+		LAYOUT_TYPE_FIXED (@@ (+ offset layout$fixed))
+	)
+	(:> "Unknown position layout: " layout '\n')
+	(@@ offset)
+))
+
+(= create_fixed_layout (,,, value
+	(= value (:: value float_type))
 	(= out (. ui_position_layout_type
 		LAYOUT_TYPE_FIXED
 	))
-	(= out$fixed (. ui_position_layout_fixed_type
-		x
-		y
-	))
+	(= out$fixed value)
 	(@@ out)
 ))
 
 (= update (,,, position parent_element
 	(? (!== (:? position) ui_position_type) (@@ false))
-	(= base_x parent_element$position$x)
-	(= base_y parent_element$position$y)
 	(= prev_x position$x)
 	(= prev_y position$y)
-	(?? position$layout$type
-		LAYOUT_TYPE_FIXED {
-			(= position$x (+ base_x position$layout$fixed$x))
-			(= position$y (+ base_y position$layout$fixed$y))
-		}
-	)
+	(= position$x (<- _solve_layout position$x_layout parent_element$position$x parent_element$size$width))
+	(= position$y (<- _solve_layout position$y_layout parent_element$position$y parent_element$size$height))
 	(@@ (||
 		(!== prev_x position$x)
 		(!== prev_y position$y)

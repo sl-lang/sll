@@ -118,7 +118,10 @@
 	))
 	(= out$root (<- ui:element:container$create
 		out
-		(<- ui:position$create_fixed_layout 0 0)
+		[
+			(<- ui:position$create_fixed_layout 0)
+			(<- ui:position$create_fixed_layout 0)
+		]
 		(<- ui:size$create_fixed_layout window$layout$geometry$width window$layout$geometry$height)
 	))
 	(= out$root$base$z_index 0)

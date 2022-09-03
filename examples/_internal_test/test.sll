@@ -900,13 +900,19 @@ abc` '\n')
 (<- ui:core$set_background ui_window [0.5 0.1 0.8])
 (= rectangle (<- ui:element:rectangle$create
 	ui_window
-	(<- ui:position$create_fixed_layout 100 200)
+	[
+		(<- ui:position$create_fixed_layout 100)
+		(<- ui:position$create_fixed_layout 200)
+	]
 	(<- ui:size$create_fixed_layout 400 400)
 	ui_window$root
 ))
 (= rectangle2 (<- ui:element:rectangle$create
 	ui_window
-	(<- ui:position$create_fixed_layout 10 20)
+	[
+		(<- ui:position$create_fixed_layout 10)
+		(<- ui:position$create_fixed_layout 20)
+	]
 	(<- ui:size$create_fixed_layout 200 200)
 	rectangle
 	[0.4 0.2 0.1]

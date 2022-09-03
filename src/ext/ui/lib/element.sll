@@ -61,6 +61,7 @@
 ))
 
 (= create (,,, ui callbacks position_layout size_layout
+	(= position_layout (:: position_layout array_type))
 	(@@ (. ui_element_type
 		ui
 		callbacks
@@ -68,7 +69,8 @@
 		[
 			0
 			0
-			position_layout
+			(: position_layout 0)
+			(: position_layout 1)
 		]
 		[
 			0
