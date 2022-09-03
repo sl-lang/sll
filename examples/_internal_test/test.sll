@@ -41,7 +41,6 @@
 	"thread.sll"
 	"time.sll"
 	"types.sll"
-	"ui/button.sll"
 	"ui/core.sll"
 	"ui/element/rectangle.sll"
 	"uuid.sll"
@@ -897,7 +896,6 @@ abc` '\n')
 	(? (=== key window_manager:keyboard$KEY_ESCAPE) (<- window_manager:window$destroy window))
 ))
 (<- ui:core$set_background ui_window [0.5 0.1 0.8])
-(= button (<- ui:button$create ui_window [100 200 400 400]))
 (= rectangle (<- ui:element:rectangle$create ui_window [100 200] [400 400] ui_window$root))
 (= rectangle2 (<- ui:element:rectangle$create ui_window [10 20] [200 200] rectangle [0.4 0.2 0.1]))
 (:> ui_window$root '\n')
