@@ -54,7 +54,7 @@
 	(= uniform_buffer (<- gfx:buffer$create ctx gfx:buffer$TYPE_UNIFORM gfx:buffer$DATA_TYPE_FLOAT32 [
 		1.0 0.0 0.0 -1.0
 		0.0 1.0 0.0 -1.0
-		0.0 0.0 1.0 0.0
+		0.0 0.0 1.0 1.0
 		0.0 0.0 0.0 1.0
 	] true))
 	(<- gfx:buffer$hint_update_frequency uniform_buffer gfx:buffer$FREQUENCY_MEDIUM)

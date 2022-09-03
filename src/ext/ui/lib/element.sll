@@ -115,8 +115,8 @@
 		(! element)
 		(! (<- _check_if_valid_element element))
 		(&
-			(! (<- ui:position$update element$base$position))
-			(! (<- ui:size$update element$base$size))
+			(! (<- ui:position$update element$base$position element$base$parent$base))
+			(! (<- ui:size$update element$base$size element$base$parent$base))
 		)
 	) (@@))
 	(= callbacks (: _element_type_to_callbacks (:? element)))

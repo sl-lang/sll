@@ -54,7 +54,7 @@
 	(@@ out)
 ))
 
-(= update (,,, size
+(= update (,,, size parent_element
 	(? (!== (:? size) ui_size_type) (@@ false))
 	(= prev_width size$width)
 	(= prev_height size$height)
