@@ -1,4 +1,6 @@
-(--- "gfx/buffer.sll")
+(= UI_BUFFER_UPDATE_FLAG_VERTEX 1)
+(= UI_BUFFER_UPDATE_FLAG_INDEX 2)
+(= UI_BUFFER_UPDATE_FLAG_UNIFORM 4)
 
 
 
@@ -6,9 +8,9 @@
 	(= (: ui$_uniform_buffer$data 0) (/ 2.0 ui$window$layout$geometry$width))
 	(= (: ui$_uniform_buffer$data 5) (/ 2.0 ui$window$layout$geometry$height))
 	(= (: ui$_uniform_buffer$data 10) (/ 1.0 ui$_max_z_index))
-	(<- gfx:buffer$sync ui$_uniform_buffer)
+	(= ui$_buffer_update_flags (| ui$_buffer_update_flags UI_BUFFER_UPDATE_FLAG_UNIFORM))
 ))
 
 
 
-(## _update_ui_uniform_buffer)
+(## _update_ui_uniform_buffer UI_BUFFER_UPDATE_FLAG_VERTEX UI_BUFFER_UPDATE_FLAG_INDEX UI_BUFFER_UPDATE_FLAG_UNIFORM)

@@ -1,15 +1,16 @@
 (---
 	"array.sll"
-	"gfx/buffer.sll"
+	"gfx/color.sll"
 	"string.sll"
 	"types.sll"
 	"ui/core.sll"
 	"ui/element.sll"
+	"ui/_util.sll"
 )
 
 
 
-(# delete update)
+(# delete set_color set_parent update)
 
 
 
@@ -31,11 +32,14 @@
 	(~ type_type) ui_rectangle_element_type
 	(~ func_type) create
 	(~ func_type) delete
+	(~ func_type) set_color
+	(~ func_type) set_parent
+	(~ func_type) update
 ))
 
 
 
-(= create (,,, ui position size parent
+(= create (,,, ui position size parent color
 	(? (! ui) (@@ nil))
 	(= ui (:: ui ui:core$ui_type))
 	(= out (. ui_rectangle_element_type
@@ -43,7 +47,6 @@
 		($ ui$_vertex_buffer$data)
 		($ ui$_index_buffer$data)
 	))
-	(? parent (<- ui:element$set_parent out parent))
 	(= idx (// ($ ui$_vertex_buffer$data) 6))
 	(<- array$extend ui$_vertex_buffer$data [
 		0.0 0.0 1.0 1.0 0.0 0.0
@@ -55,7 +58,9 @@
 		idx (+ idx 2) (+ idx 1)
 		(+ idx 3) (+ idx 2) idx
 	])
-	(<- gfx:buffer$sync ui$_index_buffer)
+	(= ui$_buffer_update_flags (| ui$_buffer_update_flags UI_BUFFER_UPDATE_FLAG_INDEX))
+	(? color (<- set_color out color))
+	(? parent (<- set_parent out parent))
 	(<- update out)
 	(@@ out)
 ))
@@ -64,6 +69,24 @@
 	(? (! rectangle) (@@))
 	(= rectangle (:: rectangle ui_rectangle_element_type))
 	(<- ui:element$delete rectangle)
+))
+
+(= set_color (,,, rectangle color
+))
+
+(= set_parent (,,, rectangle parent
+	(? (! rectangle) (@@))
+	(= rectangle (:: rectangle ui_rectangle_element_type))
+	(? (! (<- ui:element$set_parent rectangle parent)) (@@ false))
+	(= idx rectangle$_vertex_buffer_offset)
+	(= z rectangle$base$z_index)
+	(= vertex_buffer rectangle$base$ui$_vertex_buffer)
+	(= (: vertex_buffer$data (+ idx 2)) z)
+	(= (: vertex_buffer$data (+ idx 8)) z)
+	(= (: vertex_buffer$data (+ idx 14)) z)
+	(= (: vertex_buffer$data (+ idx 20)) z)
+	(= rectangle$base$ui$_buffer_update_flags (| rectangle$base$ui$_buffer_update_flags UI_BUFFER_UPDATE_FLAG_VERTEX))
+	(@@ true)
 ))
 
 (= update (,,, rectangle
@@ -83,7 +106,7 @@
 	(= (: vertex_buffer$data (+ idx 13)) y2)
 	(= (: vertex_buffer$data (+ idx 18)) x1)
 	(= (: vertex_buffer$data (+ idx 19)) y2)
-	(<- gfx:buffer$sync vertex_buffer)
+	(= rectangle$base$ui$_buffer_update_flags (| rectangle$base$ui$_buffer_update_flags UI_BUFFER_UPDATE_FLAG_VERTEX))
 ))
 
 
@@ -92,6 +115,8 @@
 	ui_rectangle_element_type
 	create
 	delete
+	set_color
+	set_parent
 	update
 ))
 (## ui:element:rectangle)

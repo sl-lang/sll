@@ -105,6 +105,7 @@
 		vertex_buffer
 		index_buffer
 		uniform_buffer
+		0
 		pipeline
 		1
 	))
@@ -125,6 +126,12 @@
 (= update (,,, ui blocking?
 	(? (! ui) (@@))
 	(= ui (:: ui ui_type))
+	(? ui$_buffer_update_flags {
+		(? (& ui$_buffer_update_flags UI_BUFFER_UPDATE_FLAG_VERTEX) (<- gfx:buffer$sync ui$_vertex_buffer))
+		(? (& ui$_buffer_update_flags UI_BUFFER_UPDATE_FLAG_INDEX) (<- gfx:buffer$sync ui$_index_buffer))
+		(? (& ui$_buffer_update_flags UI_BUFFER_UPDATE_FLAG_UNIFORM) (<- gfx:buffer$sync ui$_uniform_buffer))
+		(= ui$_buffer_update_flags 0)
+	})
 	(<- gfx:pipeline$use ui$_pipeline)
 	(<- gfx:buffer$use ui$_vertex_buffer)
 	(<- gfx:buffer$use ui$_index_buffer)
