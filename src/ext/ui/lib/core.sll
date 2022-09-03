@@ -9,6 +9,7 @@
 	"string.sll"
 	"types.sll"
 	"ui/_ui_type.sll"
+	"ui/_util.sll"
 	"ui/element/container.sll"
 	"weakref.sll"
 	"window_manager/event.sll"
@@ -30,16 +31,9 @@
 
 
 
-(= _update_uniform_buffer (,,, ui
-	(= (: ui$_uniform_buffer$data 0) (/ 2.0 ui$window$layout$geometry$width))
-	(= (: ui$_uniform_buffer$data 5) (/ 2.0 ui$window$layout$geometry$height))
-	(= (: ui$_uniform_buffer$data 10) (:: ui$_ui_max_layer_count float_type))
-	(<- gfx:buffer$sync ui$_uniform_buffer)
-))
-
 (= _window_resize_callback (,,, window size
 	(= ui (<- weakref$get (: _window_to_ui window$id)))
-	(? ui (<- _update_uniform_buffer ui))
+	(? ui (<- _update_ui_uniform_buffer ui))
 ))
 
 (= create (,,, window
@@ -108,7 +102,6 @@
 		window
 		nil
 		ctx
-		[]
 		vertex_buffer
 		index_buffer
 		uniform_buffer
@@ -117,7 +110,7 @@
 	))
 	(= out$root (<- ui:element:container$create out [0 0] [500 500]))
 	(= out$root$base$z_index 0)
-	(<- _update_uniform_buffer out)
+	(<- _update_ui_uniform_buffer out)
 	(= window$callbacks$size _window_resize_callback)
 	(= (: _window_to_ui window$id) (<- weakref$ref out))
 	(@@ out)

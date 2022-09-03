@@ -1,0 +1,97 @@
+(---
+	"array.sll"
+	"gfx/buffer.sll"
+	"string.sll"
+	"types.sll"
+	"ui/core.sll"
+	"ui/element.sll"
+)
+
+
+
+(# delete update)
+
+
+
+(= ui_rectangle_element_type (&:
+	(,,, data
+		(@@ (<- string$format "<ui:element:rectangle base=%s>"
+			(:: data$base string_type)
+		))
+	) @@string@@
+	(,,, data
+		(<- delete data)
+	) @@delete@@
+	ui:element$ui_element_type base
+	int_type _vertex_buffer_offset
+	int_type _index_buffer_offset
+))
+
+(= ui_element_rectangle_module_type (&:
+	(~ type_type) ui_rectangle_element_type
+	(~ func_type) create
+	(~ func_type) delete
+))
+
+
+
+(= create (,,, ui position size parent
+	(? (! ui) (@@ nil))
+	(= ui (:: ui ui:core$ui_type))
+	(= out (. ui_rectangle_element_type
+		(<- ui:element$create ui nil position size)
+		($ ui$_vertex_buffer$data)
+		($ ui$_index_buffer$data)
+	))
+	(? parent (<- ui:element$set_parent out parent))
+	(= idx (// ($ ui$_vertex_buffer$data) 6))
+	(<- array$extend ui$_vertex_buffer$data [
+		0.0 0.0 1.0 1.0 0.0 0.0
+		0.0 0.0 1.0 1.0 0.0 0.0
+		0.0 0.0 1.0 1.0 0.0 0.0
+		0.0 0.0 1.0 1.0 0.0 0.0
+	])
+	(<- array$extend ui$_index_buffer$data [
+		idx (+ idx 2) (+ idx 1)
+		(+ idx 3) (+ idx 2) idx
+	])
+	(<- gfx:buffer$sync ui$_index_buffer)
+	(<- update out)
+	(@@ out)
+))
+
+(= delete (,,, rectangle
+	(? (! rectangle) (@@))
+	(= rectangle (:: rectangle ui_rectangle_element_type))
+	(<- ui:element$delete rectangle)
+))
+
+(= update (,,, rectangle
+	(? (! rectangle) (@@))
+	(= rectangle (:: rectangle ui_rectangle_element_type))
+	(= idx rectangle$_vertex_buffer_offset)
+	(= x1 rectangle$base$position$x)
+	(= y1 rectangle$base$position$y)
+	(= x2 (+ x1 rectangle$base$size$width))
+	(= y2 (+ y1 rectangle$base$size$height))
+	(= vertex_buffer rectangle$base$ui$_vertex_buffer)
+	(= (: vertex_buffer$data idx) x1)
+	(= (: vertex_buffer$data (+ idx 1)) y1)
+	(= (: vertex_buffer$data (+ idx 6)) x2)
+	(= (: vertex_buffer$data (+ idx 7)) y1)
+	(= (: vertex_buffer$data (+ idx 12)) x2)
+	(= (: vertex_buffer$data (+ idx 13)) y2)
+	(= (: vertex_buffer$data (+ idx 18)) x1)
+	(= (: vertex_buffer$data (+ idx 19)) y2)
+	(<- gfx:buffer$sync vertex_buffer)
+))
+
+
+
+(= ui:element:rectangle (. ui_element_rectangle_module_type
+	ui_rectangle_element_type
+	create
+	delete
+	update
+))
+(## ui:element:rectangle)

@@ -3,6 +3,7 @@
 	"string.sll"
 	"types.sll"
 	"ui/_ui_type.sll"
+	"ui/_util.sll"
 	"ui/position.sll"
 	"ui/size.sll"
 )
@@ -21,7 +22,7 @@
 			(<- string$str data$children)
 		))
 	) @@string@@
-	(~ _ui_type) ui
+	(~ ui_type) ui
 	(~ ui_element_callbacks_type) callbacks
 	object_type parent
 	ui:position$ui_position_type position
@@ -41,25 +42,11 @@
 
 
 (= _check_if_valid_element (,,, element
-	(? (!== (:? parent$base) ui_element_type) {
-		(:> "Invlid UI element: " parent '\n')
+	(? (!== (:? element$base) ui_element_type) {
+		(:> "Invlid UI element: " element '\n')
 		(@@ false)
 	})
 	(@@ true)
-))
-
-(= _add_to_parent (,,, element parent
-	(? (! (<- _check_if_valid_element parent)))
-	(= element$parent parent)
-	(= element$z_index (+ parent$base$z_index 1))
-))
-
-(= _get_element_base (,,, element
-	(@@ (?:
-		(=== (:? element) ui_element_type) element
-		(<- _check_if_valid_element) element$base
-		nil
-	))
 ))
 
 (= create (,,, ui callbacks position size
@@ -83,10 +70,15 @@
 	(? (||
 		(! (<- _check_if_valid_element element))
 		(! (<- _check_if_valid_element parent))
+		(!== (%% element$base$ui) (%% parent$base$ui))
 	) (@@ false))
 	(? element$base$parent (<- array$remove element$base$parent$base$children element))
 	(= element$base$parent parent)
 	(= element$base$z_index (+ parent$base$z_index 1))
+	(? (> element$base$z_index element$base$ui$_max_z_index) {
+		(= element$base$ui$_max_z_index element$base$z_index)
+		(<- _update_ui_uniform_buffer element$base$ui)
+	})
 	(<- array$push parent$base$children element)
 	(@@ true)
 ))

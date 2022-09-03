@@ -19,12 +19,11 @@
 	(~ window_manager:window$window_manager_window_type) window
 	object_type root
 	(~ gfx:context$gfx_context_type) _ctx
-	array_type _objects
 	gfx:buffer$gfx_buffer_type _vertex_buffer
 	gfx:buffer$gfx_buffer_type _index_buffer
 	gfx:buffer$gfx_buffer_type _uniform_buffer
 	gfx:pipeline$gfx_pipeline_type _pipeline
-	int_type _ui_max_layer_count
+	int_type _max_z_index
 ))
 
 
