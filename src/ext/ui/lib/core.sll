@@ -119,8 +119,8 @@
 	(= out$root (<- ui:element:container$create
 		out
 		[
-			(<- ui:position$create_fixed_layout 0)
-			(<- ui:position$create_fixed_layout 0)
+			(<- ui:position$create_standard_layout 0 0)
+			(<- ui:position$create_standard_layout 0 0)
 		]
 		[
 			(<- ui:size$create_fixed_layout window$layout$geometry$width)

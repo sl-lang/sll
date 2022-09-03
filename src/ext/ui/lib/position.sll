@@ -4,10 +4,14 @@
 )
 
 
+(= ui_position_layout_standard_type (&:
+	float_type multiplier
+	float_type bias
+))
 
 (= ui_position_layout_type (&:
 	(~ int_type) type
-	float_type fixed
+	ui_position_layout_standard_type standard
 ))
 
 (= ui_position_type (&:
@@ -26,31 +30,35 @@
 (= ui_position_module_type (&:
 	(~ type_type) ui_position_layout_type
 	(~ type_type) ui_position_type
-	(~ int_type) LAYOUT_TYPE_FIXED
-	(~ func_type) create_fixed_layout
+	(~ int_type) LAYOUT_TYPE_STANDARD
+	(~ func_type) create_standard_layout
 	(~ func_type) update
 ))
 
 
 
-(= LAYOUT_TYPE_FIXED 0)
+(= LAYOUT_TYPE_STANDARD 0)
 
 
 
 (= _solve_layout (,,, layout offset size
 	(?? layout$type
-		LAYOUT_TYPE_FIXED (@@ (+ offset layout$fixed))
+		LAYOUT_TYPE_STANDARD (@@ (+ offset (* layout$standard$multiplier size) layout$standard$bias))
 	)
 	(:> "Unknown position layout: " layout '\n')
 	(@@ offset)
 ))
 
-(= create_fixed_layout (,,, value
-	(= value (:: value float_type))
+(= create_standard_layout (,,, multiplier bias
+	(= multiplier (:: multiplier float_type))
+	(= bias (:: bias float_type))
 	(= out (. ui_position_layout_type
-		LAYOUT_TYPE_FIXED
+		LAYOUT_TYPE_STANDARD
 	))
-	(= out$fixed value)
+	(= out$standard (. ui_position_layout_standard_type
+		multiplier
+		bias
+	))
 	(@@ out)
 ))
 
@@ -71,8 +79,8 @@
 (= ui:position (. ui_position_module_type
 	ui_position_layout_type
 	ui_position_type
-	LAYOUT_TYPE_FIXED
-	create_fixed_layout
+	LAYOUT_TYPE_STANDARD
+	create_standard_layout
 	update
 ))
 (## ui:position)
