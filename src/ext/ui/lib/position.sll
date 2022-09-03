@@ -30,7 +30,7 @@
 (= ui_position_module_type (&:
 	(~ type_type) ui_position_layout_type
 	(~ type_type) ui_position_type
-	(~ ui_position_layout_type) LAYOUT_HALF
+	(~ ui_position_layout_type) LAYOUT_CENTER
 	(~ ui_position_layout_type) LAYOUT_INHERIT
 	(~ int_type) LAYOUT_TYPE_STANDARD
 	(~ func_type) create_standard_layout
@@ -78,15 +78,15 @@
 
 
 
-(= LAYOUT_HALF (<- create_standard_layout 0.5 0))
-(= LAYOUT_INHERIT (<- create_standard_layout 1 0))
+(= LAYOUT_CENTER (<- create_standard_layout 0.5 0))
+(= LAYOUT_INHERIT (<- create_standard_layout 0 0))
 
 
 
 (= ui:position (. ui_position_module_type
 	ui_position_layout_type
 	ui_position_type
-	LAYOUT_HALF
+	LAYOUT_CENTER
 	LAYOUT_INHERIT
 	LAYOUT_TYPE_STANDARD
 	create_standard_layout
