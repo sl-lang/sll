@@ -38,8 +38,8 @@
 	(= ui (<- weakref$get (: _window_to_ui window$id)))
 	(? (! ui) (@@))
 	(<- _update_ui_uniform_buffer ui)
-	(= ui$root$base$size$width_layout$fixed width)
-	(= ui$root$base$size$height_layout$fixed height)
+	(= ui$root$base$size$width_layout$standard$bias width)
+	(= ui$root$base$size$height_layout$standard$bias height)
 	(<- ui:element$update ui$root)
 ))
 
@@ -123,8 +123,8 @@
 			(<- ui:position$create_standard_layout 0 0)
 		]
 		[
-			(<- ui:size$create_fixed_layout window$layout$geometry$width)
-			(<- ui:size$create_fixed_layout window$layout$geometry$height)
+			(<- ui:size$create_standard_layout 0 window$layout$geometry$width)
+			(<- ui:size$create_standard_layout 0 window$layout$geometry$height)
 		]
 	))
 	(= out$root$base$z_index 0)
