@@ -7,7 +7,7 @@
 
 (= ui_position_type (&:
 	(,,, data
-		(@@ (<- string$format "(%f %f)"
+		(@@ (<- string$format "(%d %d)"
 			data$x
 			data$y
 		))

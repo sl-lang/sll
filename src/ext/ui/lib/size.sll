@@ -7,7 +7,7 @@
 
 (= ui_size_type (&:
 	(,,, data
-		(@@ (<- string$format "(%f %f)"
+		(@@ (<- string$format "(%d %d)"
 			data$width
 			data$height
 		))
