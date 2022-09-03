@@ -904,7 +904,10 @@ abc` '\n')
 		(<- ui:position$create_fixed_layout 100)
 		(<- ui:position$create_fixed_layout 200)
 	]
-	(<- ui:size$create_fixed_layout 400 400)
+	[
+		(<- ui:size$create_fixed_layout 400)
+		(<- ui:size$create_fixed_layout 400)
+	]
 	ui_window$root
 ))
 (= rectangle2 (<- ui:element:rectangle$create
@@ -913,7 +916,10 @@ abc` '\n')
 		(<- ui:position$create_fixed_layout 10)
 		(<- ui:position$create_fixed_layout 20)
 	]
-	(<- ui:size$create_fixed_layout 200 200)
+	[
+		(<- ui:size$create_fixed_layout 200)
+		(<- ui:size$create_fixed_layout 200)
+	]
 	rectangle
 	[0.4 0.2 0.1]
 ))

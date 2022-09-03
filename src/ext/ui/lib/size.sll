@@ -5,14 +5,9 @@
 
 
 
-(= ui_size_layout_fixed_type (&:
-	float_type width
-	float_type height
-))
-
 (= ui_size_layout_type (&:
 	(~ int_type) type
-	ui_size_layout_fixed_type fixed
+	float_type fixed
 ))
 
 (= ui_size_type (&:
@@ -24,7 +19,8 @@
 	) @@string@@
 	float_type width
 	float_type height
-	ui_size_layout_type layout
+	ui_size_layout_type width_layout
+	ui_size_layout_type height_layout
 ))
 
 (= ui_size_module_type (&:
@@ -41,16 +37,20 @@
 
 
 
-(= create_fixed_layout (,,, width height
-	(= width (:: width float_type))
-	(= height (:: height float_type))
+(= _solve_layout (,,, layout size
+	(?? layout$type
+		LAYOUT_TYPE_FIXED (@@ layout$fixed)
+	)
+	(:> "Unknown size layout: " layout '\n')
+	(@@ size)
+))
+
+(= create_fixed_layout (,,, value
+	(= value (:: value float_type))
 	(= out (. ui_size_layout_type
 		LAYOUT_TYPE_FIXED
 	))
-	(= out$fixed (. ui_size_layout_fixed_type
-		width
-		height
-	))
+	(= out$fixed value)
 	(@@ out)
 ))
 
@@ -58,12 +58,8 @@
 	(? (!== (:? size) ui_size_type) (@@ false))
 	(= prev_width size$width)
 	(= prev_height size$height)
-	(?? size$layout$type
-		LAYOUT_TYPE_FIXED {
-			(= size$width size$layout$fixed$width)
-			(= size$height size$layout$fixed$height)
-		}
-	)
+	(= size$width (<- _solve_layout size$width_layout parent_element$size$width))
+	(= size$height (<- _solve_layout size$height_layout parent_element$size$height))
 	(@@ (||
 		(!== prev_width size$width)
 		(!== prev_height size$height)
