@@ -104,7 +104,7 @@
 	(= rectangle (:: rectangle ui_rectangle_element_type))
 	(? (! (<- ui:element$set_parent rectangle parent)) (@@ false))
 	(= idx rectangle$_vertex_buffer_offset)
-	(= z (:: (- 2 rectangle$base$z_index) float_type))
+	(= z (:: rectangle$base$z_index float_type))
 	(= vertex_buffer rectangle$base$ui$_vertex_buffer)
 	(= (: vertex_buffer$data (+ idx 2)) z)
 	(= (: vertex_buffer$data (+ idx 8)) z)
