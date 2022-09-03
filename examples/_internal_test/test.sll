@@ -921,7 +921,7 @@ abc` '\n')
 		(<- ui:size$create_standard_layout 0 200)
 	]
 	rectangle
-	[0.4 0.2 0.1]
+	[0.8 0.09 0.22]
 ))
 (:> ui_window$root '\n')
 (-> nil (! (& ui_window$window$flags window_manager:window$FLAG_CLOSED))
