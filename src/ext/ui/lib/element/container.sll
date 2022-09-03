@@ -20,6 +20,7 @@
 	(~ type_type) ui_container_element_type
 	(~ func_type) create
 	(~ func_type) delete
+	(~ func_type) update
 ))
 
 
@@ -38,11 +39,18 @@
 	(<- ui:element$delete container)
 ))
 
+(= update (,,, container
+	(? (! container) (@@))
+	(= container (:: container ui_container_element_type))
+	(<- ui:element$update container)
+))
+
 
 
 (= ui:element:container (. ui_container_element_module_type
 	ui_container_element_type
 	create
 	delete
+	update
 ))
 (## ui:element:container)

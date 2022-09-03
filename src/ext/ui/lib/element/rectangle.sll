@@ -117,6 +117,7 @@
 (= update (,,, rectangle
 	(? (! rectangle) (@@))
 	(= rectangle (:: rectangle ui_rectangle_element_type))
+	(<- ui:element$update rectangle)
 	(= idx rectangle$_vertex_buffer_offset)
 	(= x1 rectangle$base$position$x)
 	(= y1 rectangle$base$position$y)
