@@ -13,7 +13,7 @@
 			(:: data$base string_type)
 		))
 	) @@string@@
-	ui:element$ui_element_type base
+	(~ ui:element$ui_element_type) base
 ))
 
 (= ui_container_element_module_type (&:
