@@ -38,16 +38,33 @@
 	(~ func_type) delete
 	(~ func_type) set_color
 	(~ func_type) set_parent
-	(~ func_type) update
 ))
 
 
 
-(= create (,,, ui position size parent color
+(= _update_position_and_size (,,, rectangle
+	(= idx rectangle$_vertex_buffer_offset)
+	(= x1 rectangle$base$position$x)
+	(= y1 rectangle$base$position$y)
+	(= x2 (+ x1 rectangle$base$size$width))
+	(= y2 (+ y1 rectangle$base$size$height))
+	(= vertex_buffer rectangle$base$ui$_vertex_buffer)
+	(= (: vertex_buffer$data idx) x1)
+	(= (: vertex_buffer$data (+ idx 1)) y1)
+	(= (: vertex_buffer$data (+ idx 6)) x2)
+	(= (: vertex_buffer$data (+ idx 7)) y1)
+	(= (: vertex_buffer$data (+ idx 12)) x2)
+	(= (: vertex_buffer$data (+ idx 13)) y2)
+	(= (: vertex_buffer$data (+ idx 18)) x1)
+	(= (: vertex_buffer$data (+ idx 19)) y2)
+	(= rectangle$base$ui$_buffer_update_flags (| rectangle$base$ui$_buffer_update_flags UI_BUFFER_UPDATE_FLAG_VERTEX))
+))
+
+(= create (,,, ui position_layout size_layout parent color
 	(? (! ui) (@@ nil))
 	(= ui (:: ui ui:core$ui_type))
 	(= out (. ui_rectangle_element_type
-		(<- ui:element$create ui nil position size)
+		(<- ui:element$create ui nil position_layout size_layout)
 		[0.0 0.0 0.0]
 		($ ui$_vertex_buffer$data)
 		($ ui$_index_buffer$data)
@@ -114,25 +131,10 @@
 	(@@ true)
 ))
 
-(= update (,,, rectangle
-	(? (! rectangle) (@@))
-	(= rectangle (:: rectangle ui_rectangle_element_type))
-	(<- ui:element$update rectangle)
-	(= idx rectangle$_vertex_buffer_offset)
-	(= x1 rectangle$base$position$x)
-	(= y1 rectangle$base$position$y)
-	(= x2 (+ x1 rectangle$base$size$width))
-	(= y2 (+ y1 rectangle$base$size$height))
-	(= vertex_buffer rectangle$base$ui$_vertex_buffer)
-	(= (: vertex_buffer$data idx) x1)
-	(= (: vertex_buffer$data (+ idx 1)) y1)
-	(= (: vertex_buffer$data (+ idx 6)) x2)
-	(= (: vertex_buffer$data (+ idx 7)) y1)
-	(= (: vertex_buffer$data (+ idx 12)) x2)
-	(= (: vertex_buffer$data (+ idx 13)) y2)
-	(= (: vertex_buffer$data (+ idx 18)) x1)
-	(= (: vertex_buffer$data (+ idx 19)) y2)
-	(= rectangle$base$ui$_buffer_update_flags (| rectangle$base$ui$_buffer_update_flags UI_BUFFER_UPDATE_FLAG_VERTEX))
+
+
+(<- ui:element$register_element ui_rectangle_element_type (. ui:element$ui_element_callbacks_type
+	_update_position_and_size
 ))
 
 
@@ -143,6 +145,5 @@
 	delete
 	set_color
 	set_parent
-	update
 ))
 (## ui:element:rectangle)

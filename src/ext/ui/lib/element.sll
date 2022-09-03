@@ -10,7 +10,12 @@
 
 
 
+(# update)
+
+
+
 (= ui_element_callbacks_type (&:
+	func_type update
 ))
 
 (= ui_element_type (&:
@@ -36,26 +41,40 @@
 	(~ type_type) ui_element_type
 	(~ func_type) create
 	(~ func_type) delete
+	(~ func_type) register_element
 	(~ func_type) set_parent
+	(~ func_type) update
 ))
 
 
 
+(= _element_type_to_callbacks <>)
+
+
+
 (= _check_if_valid_element (,,, element
-	(? (!== (:? element$base) ui_element_type) {
+	(? (! (: _element_type_to_callbacks (:? element))) {
 		(:> "Invlid UI element: " element '\n')
 		(@@ false)
 	})
 	(@@ true)
 ))
 
-(= create (,,, ui callbacks position size
+(= create (,,, ui callbacks position_layout size_layout
 	(@@ (. ui_element_type
 		ui
 		callbacks
 		nil
-		position
-		size
+		[
+			0
+			0
+			position_layout
+		]
+		[
+			0
+			0
+			size_layout
+		]
 		0
 	))
 ))
@@ -63,6 +82,13 @@
 (= delete (,,, element
 	(? (! element) (@@))
 	(= element (:: element ui_element_type))
+))
+
+(= register_element (,,, element_type callbacks
+	(? (! element_type) (@@))
+	(= element_type (:: element_type type_type))
+	(= callbacks (:: callbacks ui_element_callbacks_type))
+	(= (: _element_type_to_callbacks element_type) callbacks)
 ))
 
 (= set_parent (,,, element parent
@@ -80,7 +106,25 @@
 		(<- _update_ui_uniform_buffer element$base$ui)
 	})
 	(<- array$push parent$base$children element)
+	(<- update element)
 	(@@ true)
+))
+
+(= update (,,, element
+	(? (||
+		(! element)
+		(! (<- _check_if_valid_element element))
+		(&
+			(! (<- ui:position$update element$base$position))
+			(! (<- ui:size$update element$base$size))
+		)
+	) (@@))
+	(= callbacks (: _element_type_to_callbacks (:? element)))
+	(<- callbacks$update element)
+	(-> (= i 0) (< i ($ element$base$children))
+		(<- update (: element$base$children i))
+		(++ i)
+	)
 ))
 
 
@@ -90,6 +134,8 @@
 	ui_element_type
 	create
 	delete
+	register_element
 	set_parent
+	update
 ))
 (## ui:element)

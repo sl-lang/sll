@@ -5,24 +5,78 @@
 
 
 
+(= ui_position_layout_fixed_type (&:
+	float_type x
+	float_type y
+))
+
+(= ui_position_layout_type (&:
+	(~ int_type) type
+	ui_position_layout_fixed_type fixed
+))
+
 (= ui_position_type (&:
 	(,,, data
-		(@@ (<- string$format "(%d %d)"
+		(@@ (<- string$format "(%ld %ld)"
 			data$x
 			data$y
 		))
 	) @@string@@
 	float_type x
 	float_type y
+	ui_position_layout_type layout
 ))
 
 (= ui_position_module_type (&:
+	(~ type_type) ui_position_layout_type
 	(~ type_type) ui_position_type
+	(~ int_type) LAYOUT_TYPE_FIXED
+	(~ func_type) create_fixed_layout
+	(~ func_type) update
+))
+
+
+
+(= LAYOUT_TYPE_FIXED 0)
+
+
+
+(= create_fixed_layout (,,, x y
+	(= x (:: x float_type))
+	(= y (:: y float_type))
+	(= out (. ui_position_layout_type
+		LAYOUT_TYPE_FIXED
+	))
+	(= out$fixed (. ui_position_layout_fixed_type
+		x
+		y
+	))
+	(@@ out)
+))
+
+(= update (,,, position
+	(? (!== (:? position) ui_position_type) (@@ false))
+	(= prev_x position$x)
+	(= prev_y position$y)
+	(?? position$layout$type
+		LAYOUT_TYPE_FIXED {
+			(= position$x position$layout$fixed$x)
+			(= position$y position$layout$fixed$y)
+		}
+	)
+	(@@ (||
+		(!== prev_x position$x)
+		(!== prev_y position$y)
+	))
 ))
 
 
 
 (= ui:position (. ui_position_module_type
+	ui_position_layout_type
 	ui_position_type
+	LAYOUT_TYPE_FIXED
+	create_fixed_layout
+	update
 ))
 (## ui:position)

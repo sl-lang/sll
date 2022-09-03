@@ -5,24 +5,78 @@
 
 
 
+(= ui_size_layout_fixed_type (&:
+	float_type width
+	float_type height
+))
+
+(= ui_size_layout_type (&:
+	(~ int_type) type
+	ui_size_layout_fixed_type fixed
+))
+
 (= ui_size_type (&:
 	(,,, data
-		(@@ (<- string$format "(%d %d)"
+		(@@ (<- string$format "(%ld %ld)"
 			data$width
 			data$height
 		))
 	) @@string@@
 	float_type width
 	float_type height
+	ui_size_layout_type layout
 ))
 
 (= ui_size_module_type (&:
+	(~ type_type) ui_size_layout_type
 	(~ type_type) ui_size_type
+	(~ int_type) LAYOUT_TYPE_FIXED
+	(~ func_type) create_fixed_layout
+	(~ func_type) update
+))
+
+
+
+(= LAYOUT_TYPE_FIXED 0)
+
+
+
+(= create_fixed_layout (,,, width height
+	(= width (:: width float_type))
+	(= height (:: height float_type))
+	(= out (. ui_size_layout_type
+		LAYOUT_TYPE_FIXED
+	))
+	(= out$fixed (. ui_size_layout_fixed_type
+		width
+		height
+	))
+	(@@ out)
+))
+
+(= update (,,, size
+	(? (!== (:? size) ui_size_type) (@@ false))
+	(= prev_width size$width)
+	(= prev_height size$height)
+	(?? size$layout$type
+		LAYOUT_TYPE_FIXED {
+			(= size$width size$layout$fixed$width)
+			(= size$height size$layout$fixed$height)
+		}
+	)
+	(@@ (||
+		(!== prev_width size$width)
+		(!== prev_height size$height)
+	))
 ))
 
 
 
 (= ui:size (. ui_size_module_type
+	ui_size_layout_type
 	ui_size_type
+	LAYOUT_TYPE_FIXED
+	create_fixed_layout
+	update
 ))
 (## ui:size)

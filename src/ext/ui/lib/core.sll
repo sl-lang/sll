@@ -10,7 +10,10 @@
 	"types.sll"
 	"ui/_ui_type.sll"
 	"ui/_util.sll"
+	"ui/element.sll"
 	"ui/element/container.sll"
+	"ui/position.sll"
+	"ui/size.sll"
 	"weakref.sll"
 	"window_manager/event.sll"
 	"window_manager/window.sll"
@@ -31,9 +34,13 @@
 
 
 
-(= _window_resize_callback (,,, window size
+(= _window_resize_callback (,,, window width height
 	(= ui (<- weakref$get (: _window_to_ui window$id)))
-	(? ui (<- _update_ui_uniform_buffer ui))
+	(? (! ui) (@@))
+	(<- _update_ui_uniform_buffer ui)
+	(= ui$root$base$size$layout$fixed$width width)
+	(= ui$root$base$size$layout$fixed$height height)
+	(<- ui:element$update ui$root)
 ))
 
 (= create (,,, window
@@ -109,8 +116,13 @@
 		pipeline
 		1
 	))
-	(= out$root (<- ui:element:container$create out [0 0] [500 500]))
+	(= out$root (<- ui:element:container$create
+		out
+		(<- ui:position$create_fixed_layout 0 0)
+		(<- ui:size$create_fixed_layout window$layout$geometry$width window$layout$geometry$height)
+	))
 	(= out$root$base$z_index 0)
+	(<- ui:element$update out$root)
 	(<- _update_ui_uniform_buffer out)
 	(= window$callbacks$size _window_resize_callback)
 	(= (: _window_to_ui window$id) (<- weakref$ref out))
