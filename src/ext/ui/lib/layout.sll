@@ -15,10 +15,17 @@
 	array_type layouts
 ))
 
+(= ui_layout_range_type (&:
+ 	object_type min
+ 	object_type value
+ 	object_type max
+))
+
 (= ui_layout_type (&:
 	(~ int_type) type
 	ui_layout_standard_type standard
 	ui_layout_filter_type filter
+	ui_layout_range_type range
 ))
 
 (= ui_layout_module_type (&:
@@ -27,8 +34,10 @@
 	(~ int_type) FILTER_HIGHEST
 	(~ int_type) FILTER_LOWEST
 	(~ int_type) TYPE_FILTER
+	(~ int_type) TYPE_RANGE
 	(~ int_type) TYPE_STANDARD
 	(~ func_type) create_filter_layout
+	(~ func_type) create_range_layout
 	(~ func_type) create_standard_layout
 	(~ func_type) solve
 ))
@@ -37,6 +46,7 @@
 
 (= TYPE_STANDARD 0)
 (= TYPE_FILTER 1)
+(= TYPE_RANGE 2)
 
 (= FILTER_LOWEST 0)
 (= FILTER_HIGHEST 1)
@@ -53,6 +63,21 @@
 	(= out$filter (. ui_layout_filter_type
 		type
 		layouts
+	))
+	(@@ out)
+))
+
+(= create_range_layout (,,, min value max
+	(= min (:: min ui_layout_type))
+	(= value (:: value ui_layout_type))
+	(= max (:: max ui_layout_type))
+	(= out (. ui_layout_type
+		TYPE_RANGE
+	))
+	(= out$range (. ui_layout_range_type
+		min
+		value
+		max
 	))
 	(@@ out)
 ))
@@ -93,6 +118,19 @@
 			) (= out (/ out ($ layout$filter$layouts))))
 			(@@ out)
 		}
+		TYPE_RANGE {
+			(= min (<- solve (: layout$range$min) offset size))
+			(= value (<- solve (: layout$range$value) offset size))
+			(= max (<- solve (: layout$range$max) offset size))
+			(? (< max min) {
+				(= temp max)
+				(= max min)
+				(= min temp)
+			})
+			(? (< value min) (= value min))
+			(? (> value max) (= value max))
+			(@@ value)
+		}
 	)
 	(:> "Unknown layout: " layout '\n')
 	(@@ (+ offset (/ size 2)))
@@ -106,8 +144,10 @@
 	FILTER_HIGHEST
 	FILTER_LOWEST
 	TYPE_FILTER
+	TYPE_RANGE
 	TYPE_STANDARD
 	create_filter_layout
+	create_range_layout
 	create_standard_layout
 	solve
 ))
