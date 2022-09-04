@@ -81,15 +81,19 @@
 			}
 			3 {
 				(= mouse (:: event window_manager:cursor$window_manager_cursor_position_type))
-				(= window$inputs$mouse mouse)
+				(= x_change (!== window$inputs$mouse$x mouse$x))
+				(= y_change (!== window$inputs$mouse$y mouse$y))
+				(? (|| x_change y_change) {
+					(= window$inputs$mouse mouse)
+					(<- window$callbacks$mouse window (: event 0) (: event 1))
+					(? x_change (<- window$callbacks$mouse_x (: event 0)))
+					(? y_change (<- window$callbacks$mouse_y (: event 1)))
+				})
 				(? (! (& window$flags window_manager:window$FLAG_HAS_MOUSE)) {
 					(= window$flags (| window$flags window_manager:window$FLAG_HAS_MOUSE))
 					(<- window$callbacks$mouse_state window true)
 					(<- window$callbacks$mouse_enter window)
 				})
-				(<- window$callbacks$mouse window (: event 0) (: event 1))
-				(? (: event 0) (<- window$callbacks$mouse_x (: event 0)))
-				(? (: event 1) (<- window$callbacks$mouse_y (: event 1)))
 			}
 			4 {
 				(= state (: event 0))
@@ -111,16 +115,23 @@
 			}
 			6 {
 				(= geometry (:: event window_manager:geometry$window_manager_geometry_type))
-				(? (||
-					(!== window$layout$geometry$width (: event 2))
-					(!== window$layout$geometry$height (: event 3))
-				) {
-					(<- window_manager:util$__gfx_callbacks$resize window)
-				})
+				(= position_change (||
+					(!== window$layout$geometry$x geometry$x)
+					(!== window$layout$geometry$y geometry$y)
+				))
+				(= size_change (||
+					(!== window$layout$geometry$width geometry$width)
+					(!== window$layout$geometry$height geometry$height)
+				))
 				(= window$layout$geometry geometry)
-				(<- window$callbacks$geometry window geometry)
-				(<- window$callbacks$position window (: event 0) (: event 1))
-				(<- window$callbacks$size window (: event 2) (: event 3))
+				(? (|| position_change size_change) {
+					(? position_change (<- window$callbacks$position window (: event 0) (: event 1)))
+					(? size_change {
+						(<- window_manager:util$__gfx_callbacks$resize window)
+						(<- window$callbacks$size window (: event 2) (: event 3))
+					})
+					(<- window$callbacks$geometry window geometry)
+				})
 			}
 			7 {
 				(= vertical? (: event 0))
