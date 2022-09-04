@@ -4,6 +4,7 @@
 
 - Implemented `LAYOUT_CENTER_BOTH` and `LAYOUT_INHERIT_BOTH` in `ui:position`
 - Implemented `LAYOUT_HALF_BOTH` and `LAYOUT_INHERIT_BOTH` in `ui:size`
+- Implemented filter layouts in the UI extension
 
 ## Updated
 

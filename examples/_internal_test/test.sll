@@ -918,7 +918,10 @@ abc` '\n')
 	]
 	[
 		(<- ui:size$create_standard_layout 0 200)
-		(<- ui:size$create_standard_layout 0 200)
+		(<- ui:size$create_filter_layout ui:size$FILTER_LOWEST [
+			(<- ui:size$create_standard_layout 0 200)
+			(<- ui:size$create_standard_layout 1 -40)
+		])
 	]
 	rectangle
 	[0.8 0.09 0.22]
