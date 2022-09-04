@@ -46,8 +46,8 @@
 	(= idx rectangle$_vertex_buffer_offset)
 	(= x1 rectangle$base$position$x)
 	(= y1 rectangle$base$position$y)
-	(= x2 (+ x1 rectangle$base$size$width))
-	(= y2 (+ y1 rectangle$base$size$height))
+	(= x2 (+ x1 rectangle$base$position$width))
+	(= y2 (+ y1 rectangle$base$position$height))
 	(= vertex_buffer rectangle$base$ui$_vertex_buffer)
 	(= (: vertex_buffer$data idx) x1)
 	(= (: vertex_buffer$data (+ idx 1)) y1)
@@ -60,11 +60,11 @@
 	(= rectangle$base$ui$_buffer_update_flags (| rectangle$base$ui$_buffer_update_flags UI_BUFFER_UPDATE_FLAG_VERTEX))
 ))
 
-(= create (,,, ui position_layout size_layout parent color
+(= create (,,, ui position_layout parent color
 	(? (! ui) (@@ nil))
 	(= ui (:: ui ui:core$ui_type))
 	(= out (. ui_rectangle_element_type
-		(<- ui:element$create ui nil position_layout size_layout)
+		(<- ui:element$create ui nil position_layout)
 		[0.0 0.0 0.0]
 		($ ui$_vertex_buffer$data)
 		($ ui$_index_buffer$data)

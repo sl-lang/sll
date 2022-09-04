@@ -24,9 +24,9 @@
 
 
 
-(= create (,,, ui position_layout size_layout parent
+(= create (,,, ui position_layout parent
 	(= out (. ui_container_element_type
-		(<- ui:element$create ui nil position_layout size_layout)
+		(<- ui:element$create ui nil position_layout)
 	))
 	(? parent (<- ui:element$set_parent out parent))
 	(@@ out)

@@ -5,7 +5,6 @@
 	"ui/_ui_type.sll"
 	"ui/_util.sll"
 	"ui/position.sll"
-	"ui/size.sll"
 )
 
 
@@ -20,9 +19,8 @@
 
 (= ui_element_type (&:
 	(,,, data
-		(@@ (<- string$format "<ui:element position=%s size=%s z-index=%u children=%s>"
+		(@@ (<- string$format "<ui:element position=%s z-index=%u children=%s>"
 			(:: data$position string_type)
-			(:: data$size string_type)
 			data$z_index
 			(<- string$str data$children)
 		))
@@ -31,7 +29,6 @@
 	(~ ui_element_callbacks_type) callbacks
 	object_type parent
 	ui:position$ui_position_type position
-	ui:size$ui_size_type size
 	int_type z_index
 	array_type children
 ))
@@ -60,9 +57,8 @@
 	(@@ true)
 ))
 
-(= create (,,, ui callbacks position_layout size_layout
+(= create (,,, ui callbacks position_layout
 	(= position_layout (:: position_layout array_type))
-	(= size_layout (:: size_layout array_type))
 	(@@ (. ui_element_type
 		ui
 		callbacks
@@ -70,14 +66,12 @@
 		[
 			0
 			0
+			0
+			0
 			(: position_layout 0)
 			(: position_layout 1)
-		]
-		[
-			0
-			0
-			(: size_layout 0)
-			(: size_layout 1)
+			(: position_layout 2)
+			(: position_layout 3)
 		]
 		0
 	))
@@ -118,10 +112,7 @@
 	(? (||
 		(! element)
 		(! (<- _check_if_valid_element element))
-		(&
-			(! (<- ui:position$update element$base$position element$base$parent$base))
-			(! (<- ui:size$update element$base$size element$base$parent$base))
-		)
+		(! (<- ui:position$update element$base$position element$base$parent$base))
 	) (@@))
 	(= callbacks (: _element_type_to_callbacks (:? element)))
 	(<- callbacks$update element)

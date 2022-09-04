@@ -44,7 +44,7 @@
 	"ui/core.sll"
 	"ui/element/rectangle.sll"
 	"ui/layout.sll"
-	"ui/size.sll"
+	"ui/position.sll"
 	"uuid.sll"
 	"vm.sll"
 	"weakref.sll"
@@ -903,10 +903,8 @@ abc` '\n')
 	[
 		(<- ui:layout$create_standard_layout 0.5 -400)
 		(<- ui:layout$create_standard_layout 0 50)
-	]
-	[
 		(<- ui:layout$create_standard_layout 0 400)
-		ui:size$LAYOUT_HALF
+		ui:position$LAYOUT_HALF
 	]
 	ui_window$root
 ))
@@ -915,8 +913,6 @@ abc` '\n')
 	[
 		(<- ui:layout$create_standard_layout 0 20)
 		(<- ui:layout$create_standard_layout 0 20)
-	]
-	[
 		(<- ui:layout$create_standard_layout 0 200)
 		(<- ui:layout$create_filter_layout ui:layout$FILTER_LOWEST [
 			(<- ui:layout$create_standard_layout 0 200)

@@ -8,23 +8,27 @@
 
 (= ui_position_type (&:
 	(,,, data
-		(@@ (<- string$format "(%ld %ld)"
+		(@@ (<- string$format "(%ld %ld %ld %ld)"
 			data$x
 			data$y
+			data$width
+			data$height
 		))
 	) @@string@@
 	float_type x
 	float_type y
+	float_type width
+	float_type height
 	ui:layout$ui_layout_type x_layout
 	ui:layout$ui_layout_type y_layout
+	ui:layout$ui_layout_type width_layout
+	ui:layout$ui_layout_type height_layout
 ))
 
 (= ui_position_module_type (&:
 	(~ type_type) ui_position_type
-	(~ ui:layout$ui_layout_type) LAYOUT_CENTER
-	(~ array_type) LAYOUT_CENTER_BOTH
+	(~ ui:layout$ui_layout_type) LAYOUT_HALF
 	(~ ui:layout$ui_layout_type) LAYOUT_INHERIT
-	(~ array_type) LAYOUT_INHERIT_BOTH
 	(~ func_type) update
 ))
 
@@ -34,30 +38,31 @@
 	(? (!== (:? position) ui_position_type) (@@ false))
 	(= prev_x position$x)
 	(= prev_y position$y)
-	(= position$x (<- ui:layout$solve position$x_layout parent_element$position$x parent_element$size$width))
-	(= position$y (<- ui:layout$solve position$y_layout parent_element$position$y parent_element$size$height))
+	(= prev_width position$width)
+	(= prev_height position$height)
+	(= position$x (<- ui:layout$solve position$x_layout parent_element$position$x parent_element$position$width))
+	(= position$y (<- ui:layout$solve position$y_layout parent_element$position$y parent_element$position$height))
+	(= position$width (<- ui:layout$solve position$width_layout 0 parent_element$position$width))
+	(= position$height (<- ui:layout$solve position$height_layout 0 parent_element$position$height))
 	(@@ (||
 		(!== prev_x position$x)
 		(!== prev_y position$y)
+		(!== prev_width position$width)
+		(!== prev_height position$height)
 	))
 ))
 
 
 
-(= LAYOUT_CENTER (<- create_standard_layout 0.5 0))
-(= LAYOUT_INHERIT (<- create_standard_layout 0 0))
-
-(= LAYOUT_CENTER_BOTH [LAYOUT_CENTER LAYOUT_CENTER])
-(= LAYOUT_INHERIT_BOTH [LAYOUT_INHERIT LAYOUT_INHERIT])
+(= LAYOUT_HALF (<- ui:layout$create_standard_layout 0.5 0))
+(= LAYOUT_INHERIT (<- ui:layout$create_standard_layout 0 0))
 
 
 
 (= ui:position (. ui_position_module_type
 	ui_position_type
-	LAYOUT_CENTER
-	LAYOUT_CENTER_BOTH
+	LAYOUT_HALF
 	LAYOUT_INHERIT
-	LAYOUT_INHERIT_BOTH
 	update
 ))
 (## ui:position)
