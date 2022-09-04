@@ -141,7 +141,7 @@ __GFX_API_CALL void gfx_api_buffer_sync(gfx_context_t ctx_id,gfx_buffer_t buffer
 	if (buffer->length!=data->length){
 		_delete_both_buffers(ctx,buffer);
 		buffer->length=data->length;
-		buffer->size=(data->length*buffer->elem_size+ctx->device.limits.nonCoherentAtomSize-1)&(-ctx->device.limits.nonCoherentAtomSize);
+		buffer->size=(data->length*buffer->elem_size+ctx->device.limits.nonCoherentAtomSize-1)&((~ctx->device.limits.nonCoherentAtomSize)+1);
 	}
 	if (!(buffer->flags&GFX_BUFFER_FLAG_HAS_DEVICE_BUFFER)){
 		VkBufferCreateInfo buffer_creation_info={
