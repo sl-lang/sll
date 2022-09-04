@@ -1,0 +1,100 @@
+(---
+	"string.sll"
+	"types.sll"
+)
+
+
+
+(= ui_layout_standard_type (&:
+	float_type multiplier
+	float_type bias
+))
+
+(= ui_layout_filter_type (&:
+	int_type type
+	array_type layouts
+))
+
+(= ui_layout_type (&:
+	(~ int_type) type
+	ui_layout_standard_type standard
+	ui_layout_filter_type filter
+))
+
+(= ui_layout_module_type (&:
+	(~ type_type) ui_layout_type
+	(~ int_type) FILTER_LOWEST
+	(~ int_type) LAYOUT_TYPE_FILTER
+	(~ int_type) LAYOUT_TYPE_STANDARD
+	(~ func_type) create_filter_layout
+	(~ func_type) create_standard_layout
+	(~ func_type) solve
+))
+
+
+
+(= LAYOUT_TYPE_STANDARD 0)
+(= LAYOUT_TYPE_FILTER 1)
+
+(= FILTER_LOWEST 0)
+
+
+
+(= create_filter_layout (,,, type layouts
+	(= type (:: type int_type))
+	(= layouts (:: layouts array_type))
+	(= out (. ui_layout_type
+		LAYOUT_TYPE_FILTER
+	))
+	(= out$filter (. ui_layout_filter_type
+		type
+		layouts
+	))
+	(@@ out)
+))
+
+(= create_standard_layout (,,, multiplier bias
+	(= multiplier (:: multiplier float_type))
+	(= bias (:: bias float_type))
+	(= out (. ui_layout_type
+		LAYOUT_TYPE_STANDARD
+	))
+	(= out$standard (. ui_layout_standard_type
+		multiplier
+		bias
+	))
+	(@@ out)
+))
+
+(= solve (,,, layout offset size
+	(?? layout$type
+		LAYOUT_TYPE_STANDARD (@@ (+ offset (* layout$standard$multiplier size) layout$standard$bias))
+		LAYOUT_TYPE_FILTER {
+			(= out nil)
+			(-> (= i 0) (< i ($ layout$filter$layouts))
+				(= value (<- solve (: layout$filter$layouts i) offset size))
+				(? (||
+					(! i)
+					(&& (=== layout$filter$type FILTER_LOWEST) (< value out))
+				) (= out value))
+				(++ i)
+			)
+			(@@ out)
+		}
+	)
+	(:> "Unknown layout: " layout '\n')
+	(@@ (+ offset (/ size 2)))
+))
+
+
+
+(= ui:layout (. ui_layout_module_type
+	ui_layout_type
+	FILTER_LOWEST
+	LAYOUT_TYPE_FILTER
+	LAYOUT_TYPE_STANDARD
+	create_filter_layout
+	create_standard_layout
+	solve
+))
+(## ui:layout)

@@ -1,25 +1,10 @@
 (---
 	"string.sll"
 	"types.sll"
+	"ui/layout.sll"
 )
 
 
-
-(= ui_size_layout_standard_type (&:
-	float_type multiplier
-	float_type bias
-))
-
-(= ui_size_layout_filter_type (&:
-	int_type type
-	array_type layouts
-))
-
-(= ui_size_layout_type (&:
-	(~ int_type) type
-	ui_size_layout_standard_type standard
-	ui_size_layout_filter_type filter
-))
 
 (= ui_size_type (&:
 	(,,, data
@@ -30,86 +15,27 @@
 	) @@string@@
 	float_type width
 	float_type height
-	ui_size_layout_type width_layout
-	ui_size_layout_type height_layout
+	ui:layout$ui_layout_type width_layout
+	ui:layout$ui_layout_type height_layout
 ))
 
 (= ui_size_module_type (&:
-	(~ type_type) ui_size_layout_type
 	(~ type_type) ui_size_type
-	(~ int_type) FILTER_LOWEST
-	(~ ui_size_layout_type) LAYOUT_HALF
+	(~ ui:layout$ui_layout_type) LAYOUT_HALF
 	(~ array_type) LAYOUT_HALF_BOTH
-	(~ ui_size_layout_type) LAYOUT_INHERIT
+	(~ ui:layout$ui_layout_type) LAYOUT_INHERIT
 	(~ array_type) LAYOUT_INHERIT_BOTH
-	(~ int_type) LAYOUT_TYPE_FILTER
-	(~ int_type) LAYOUT_TYPE_STANDARD
-	(~ func_type) create_filter_layout
-	(~ func_type) create_standard_layout
 	(~ func_type) update
 ))
 
 
 
-(= LAYOUT_TYPE_STANDARD 0)
-(= LAYOUT_TYPE_FILTER 1)
-
-(= FILTER_LOWEST 0)
-
-
-
-(= _solve_layout (,,, layout size
-	(?? layout$type
-		LAYOUT_TYPE_STANDARD (@@ (+ (* layout$standard$multiplier size) layout$standard$bias))
-		LAYOUT_TYPE_FILTER {
-			(= out nil)
-			(-> (= i 0) (< i ($ layout$filter$layouts))
-				(= value (<- _solve_layout (: layout$filter$layouts i) size))
-				(? (||
-					(! i)
-					(&& (=== layout$filter$type FILTER_LOWEST) (< value out))
-				) (= out value))
-				(++ i)
-			)
-			(@@ out)
-		}
-	)
-	(:> "Unknown size layout: " layout '\n')
-	(@@ size)
-))
-
-(= create_filter_layout (,,, type layouts
-	(= type (:: type int_type))
-	(= layouts (:: layouts array_type))
-	(= out (. ui_size_layout_type
-		LAYOUT_TYPE_FILTER
-	))
-	(= out$filter (. ui_size_layout_filter_type
-		type
-		layouts
-	))
-	(@@ out)
-))
-
-(= create_standard_layout (,,, multiplier bias
-	(= multiplier (:: multiplier float_type))
-	(= bias (:: bias float_type))
-	(= out (. ui_size_layout_type
-		LAYOUT_TYPE_STANDARD
-	))
-	(= out$standard (. ui_size_layout_standard_type
-		multiplier
-		bias
-	))
-	(@@ out)
-))
-
 (= update (,,, size parent_element
 	(? (!== (:? size) ui_size_type) (@@ false))
 	(= prev_width size$width)
 	(= prev_height size$height)
-	(= size$width (<- _solve_layout size$width_layout parent_element$size$width))
-	(= size$height (<- _solve_layout size$height_layout parent_element$size$height))
+	(= size$width (<- ui:layout$solve size$width_layout 0 parent_element$size$width))
+	(= size$height (<- ui:layout$solve size$height_layout 0 parent_element$size$height))
 	(@@ (||
 		(!== prev_width size$width)
 		(!== prev_height size$height)
@@ -118,8 +44,8 @@
 
 
 
-(= LAYOUT_HALF (<- create_standard_layout 0.5 0))
-(= LAYOUT_INHERIT (<- create_standard_layout 1 0))
+(= LAYOUT_HALF (<- ui:layout$create_standard_layout 0.5 0))
+(= LAYOUT_INHERIT (<- ui:layout$create_standard_layout 1 0))
 
 (= LAYOUT_HALF_BOTH [LAYOUT_HALF LAYOUT_HALF])
 (= LAYOUT_INHERIT_BOTH [LAYOUT_INHERIT LAYOUT_INHERIT])
@@ -127,17 +53,11 @@
 
 
 (= ui:size (. ui_size_module_type
-	ui_size_layout_type
 	ui_size_type
-	FILTER_LOWEST
 	LAYOUT_HALF
 	LAYOUT_HALF_BOTH
 	LAYOUT_INHERIT
 	LAYOUT_INHERIT_BOTH
-	LAYOUT_TYPE_FILTER
-	LAYOUT_TYPE_STANDARD
-	create_filter_layout
-	create_standard_layout
 	update
 ))
 (## ui:size)

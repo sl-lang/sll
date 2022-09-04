@@ -43,6 +43,7 @@
 	"types.sll"
 	"ui/core.sll"
 	"ui/element/rectangle.sll"
+	"ui/layout.sll"
 	"ui/position.sll"
 	"ui/size.sll"
 	"uuid.sll"
@@ -905,7 +906,7 @@ abc` '\n')
 		(<- ui:position$create_standard_layout 0 50)
 	]
 	[
-		(<- ui:size$create_standard_layout 0 400)
+		(<- ui:layout$create_standard_layout 0 400)
 		ui:size$LAYOUT_HALF
 	]
 	ui_window$root
@@ -917,10 +918,10 @@ abc` '\n')
 		(<- ui:position$create_standard_layout 0 20)
 	]
 	[
-		(<- ui:size$create_standard_layout 0 200)
-		(<- ui:size$create_filter_layout ui:size$FILTER_LOWEST [
-			(<- ui:size$create_standard_layout 0 200)
-			(<- ui:size$create_standard_layout 1 -40)
+		(<- ui:layout$create_standard_layout 0 200)
+		(<- ui:layout$create_filter_layout ui:layout$FILTER_LOWEST [
+			(<- ui:layout$create_standard_layout 0 200)
+			(<- ui:layout$create_standard_layout 1 -40)
 		])
 	]
 	rectangle
