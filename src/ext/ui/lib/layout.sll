@@ -1,5 +1,5 @@
 (---
-	"string.sll"
+	"math.sll"
 	"types.sll"
 )
 
@@ -31,6 +31,7 @@
 (= ui_layout_module_type (&:
 	(~ type_type) ui_layout_type
 	(~ int_type) FILTER_AVERAGE
+	(~ int_type) FILTER_GEOMETRIC_AVERAGE
 	(~ int_type) FILTER_HIGHEST
 	(~ int_type) FILTER_LOWEST
 	(~ int_type) TYPE_FILTER
@@ -53,6 +54,7 @@
 (= FILTER_LOWEST 0)
 (= FILTER_HIGHEST 1)
 (= FILTER_AVERAGE 2)
+(= FILTER_GEOMETRIC_AVERAGE 3)
 
 (= _type_to_string <
 	TYPE_STANDARD "standard"
@@ -70,12 +72,14 @@
 	FILTER_LOWEST "lowest"
 	FILTER_HIGHEST "highest"
 	FILTER_AVERAGE "average"
+	FILTER_GEOMETRIC_AVERAGE "geometric_average"
 >)
 
 (= _string_to_filter_type <
 	"lowest" FILTER_LOWEST
 	"highest" FILTER_HIGHEST
 	"average" FILTER_AVERAGE
+	"geometric_average" FILTER_GEOMETRIC_AVERAGE
 >)
 
 
@@ -189,13 +193,14 @@
 						(&& (=== layout$filter$type FILTER_HIGHEST) (> value out))
 					) (= out value)
 					(=== layout$filter$type FILTER_AVERAGE) (= out (+ out value))
+					(=== layout$filter$type FILTER_GEOMETRIC_AVERAGE) (= out (* out value))
 				)
 				(++ i)
 			)
-			(? (&&
-				(=== layout$filter$type FILTER_AVERAGE)
-				layout$filter$values
-			) (= out (/ out ($ layout$filter$values))))
+			(? layout$filter$values (?? layout$filter$type
+				FILTER_AVERAGE (= out (/ out ($ layout$filter$values)))
+				FILTER_GEOMETRIC_AVERAGE (= out (<- math$pow out (/ 1.0 ($ layout$filter$values))))
+			))
 			(@@ out)
 		}
 		TYPE_RANGE {
@@ -221,6 +226,7 @@
 (= ui:layout (. ui_layout_module_type
 	ui_layout_type
 	FILTER_AVERAGE
+	FILTER_GEOMETRIC_AVERAGE
 	FILTER_HIGHEST
 	FILTER_LOWEST
 	TYPE_FILTER
