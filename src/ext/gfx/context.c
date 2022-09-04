@@ -69,7 +69,7 @@ static void _create_swapchain(gfx_context_data_t* ctx){
 		NULL,
 		((surface_caps.supportedTransforms&VK_SURFACE_TRANSFORM_IDENTITY_BIT_KHR)?VK_SURFACE_TRANSFORM_IDENTITY_BIT_KHR:surface_caps.supportedTransforms),
 		VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR,
-		VK_PRESENT_MODE_FIFO_KHR,
+		VK_PRESENT_MODE_IMMEDIATE_KHR,
 		VK_TRUE,
 		ctx->swapchain.handle
 	};

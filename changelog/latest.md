@@ -8,5 +8,6 @@
 ## Updated
 
 - Fixed incorrect window callback calls
+- *\[Linux Only\]* Fixed X11 lag when using a GFX context
 
 [0.8.1]: https://github.com/sl-lang/sll/compare/sll-v0.8.0...main
