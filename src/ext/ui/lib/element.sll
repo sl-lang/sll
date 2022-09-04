@@ -10,7 +10,7 @@
 
 
 
-(# is_valid_element update)
+(# update)
 
 
 
@@ -44,9 +44,9 @@
 	(~ type_type) ui_element_type
 	(~ func_type) create
 	(~ func_type) delete
-	(~ func_type) dump_to_json
 	(~ func_type) is_valid_element
 	(~ func_type) register_element
+	(~ func_type) serialize
 	(~ func_type) set_parent
 	(~ func_type) update
 ))
@@ -81,30 +81,6 @@
 	(= element (:: element ui_element_type))
 ))
 
-(= dump_to_json (,,, element
-	(? (||
-		(! element)
-		(! (<- is_valid_element element))
-	) (@@ nil))
-	(= data (: _element_type_data (:? element)))
-	(= out <
-		"type" data$name
-		"layout" [
-			(<- ui:layout$dump_to_json element$base$position$x_layout)
-			(<- ui:layout$dump_to_json element$base$position$y_layout)
-			(<- ui:layout$dump_to_json element$base$position$width_layout)
-			(<- ui:layout$dump_to_json element$base$position$height_layout)
-		]
-		"children" ([> (= i 0) (< i ($ element$base$children))
-			(= child (: element$base$children i))
-			(++ i)
-			(<- dump_to_json child)
-		)
-	>)
-	(? data$callbacks$serialize (= out$data (<- data$callbacks$serialize element)))
-	(@@ out)
-))
-
 (= is_valid_element (,,, element
 	(? (! (: _element_type_data (:? element))) {
 		(:> "Invlid UI element: " element '\n')
@@ -122,6 +98,30 @@
 		name
 		callbacks
 	))
+))
+
+(= serialize (,,, element
+	(? (||
+		(! element)
+		(! (<- is_valid_element element))
+	) (@@ nil))
+	(= data (: _element_type_data (:? element)))
+	(= out <
+		"type" data$name
+		"layout" [
+			(<- ui:layout$serialize element$base$position$x_layout)
+			(<- ui:layout$serialize element$base$position$y_layout)
+			(<- ui:layout$serialize element$base$position$width_layout)
+			(<- ui:layout$serialize element$base$position$height_layout)
+		]
+		"children" ([> (= i 0) (< i ($ element$base$children))
+			(= child (: element$base$children i))
+			(++ i)
+			(<- serialize child)
+		)
+	>)
+	(? data$callbacks$serialize (= out$data (<- data$callbacks$serialize element)))
+	(@@ out)
 ))
 
 (= set_parent (,,, element parent
@@ -164,9 +164,9 @@
 	ui_element_type
 	create
 	delete
-	dump_to_json
 	is_valid_element
 	register_element
+	serialize
 	set_parent
 	update
 ))

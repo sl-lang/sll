@@ -39,7 +39,7 @@
 	(~ func_type) create_filter_layout
 	(~ func_type) create_range_layout
 	(~ func_type) create_standard_layout
-	(~ func_type) dump_to_json
+	(~ func_type) serialize
 	(~ func_type) solve
 ))
 
@@ -108,7 +108,7 @@
 	(@@ out)
 ))
 
-(= dump_to_json (,,, layout
+(= serialize (,,, layout
 	(? (! layout) (@@ nil))
 	(= layout (:: layout ui_layout_type))
 	(= out <
@@ -124,13 +124,13 @@
 			(= out$values ([> (= i 0) (< i ($ layout$filter$layouts))
 				(= value (: layout$filter$layouts i))
 				(++ i)
-				(<- dump_to_json value)
+				(<- serialize value)
 			))
 		}
 		TYPE_RANGE {
-			(= out$min (<- dump_to_json layout$range$min))
-			(= out$value (<- dump_to_json layout$range$value))
-			(= out$max (<- dump_to_json layout$range$max))
+			(= out$min (<- serialize layout$range$min))
+			(= out$value (<- serialize layout$range$value))
+			(= out$max (<- serialize layout$range$max))
 		}
 	)
 	(@@ out)
@@ -190,7 +190,7 @@
 	create_filter_layout
 	create_range_layout
 	create_standard_layout
-	dump_to_json
+	serialize
 	solve
 ))
 (## ui:layout)
