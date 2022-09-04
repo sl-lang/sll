@@ -913,7 +913,7 @@ abc` '\n')
 (= rectangle2 (<- ui:element:rectangle$create
 	ui_window
 	[
-		(<- ui:position$create_standard_layout 0 10)
+		(<- ui:position$create_standard_layout 0 20)
 		(<- ui:position$create_standard_layout 0 20)
 	]
 	[
