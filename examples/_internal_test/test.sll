@@ -44,7 +44,6 @@
 	"ui/core.sll"
 	"ui/element/rectangle.sll"
 	"ui/layout.sll"
-	"ui/position.sll"
 	"ui/size.sll"
 	"uuid.sll"
 	"vm.sll"
@@ -902,8 +901,8 @@ abc` '\n')
 (= rectangle (<- ui:element:rectangle$create
 	ui_window
 	[
-		(<- ui:position$create_standard_layout 0.5 -400)
-		(<- ui:position$create_standard_layout 0 50)
+		(<- ui:layout$create_standard_layout 0.5 -400)
+		(<- ui:layout$create_standard_layout 0 50)
 	]
 	[
 		(<- ui:layout$create_standard_layout 0 400)
@@ -914,8 +913,8 @@ abc` '\n')
 (= rectangle2 (<- ui:element:rectangle$create
 	ui_window
 	[
-		(<- ui:position$create_standard_layout 0 20)
-		(<- ui:position$create_standard_layout 0 20)
+		(<- ui:layout$create_standard_layout 0 20)
+		(<- ui:layout$create_standard_layout 0 20)
 	]
 	[
 		(<- ui:layout$create_standard_layout 0 200)

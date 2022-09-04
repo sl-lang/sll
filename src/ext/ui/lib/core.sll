@@ -13,7 +13,6 @@
 	"ui/element.sll"
 	"ui/element/container.sll"
 	"ui/layout.sll"
-	"ui/position.sll"
 	"weakref.sll"
 	"window_manager/event.sll"
 	"window_manager/window.sll"
@@ -119,8 +118,8 @@
 	(= out$root (<- ui:element:container$create
 		out
 		[
-			(<- ui:position$create_standard_layout 0 0)
-			(<- ui:position$create_standard_layout 0 0)
+			(<- ui:layout$create_standard_layout 0 0)
+			(<- ui:layout$create_standard_layout 0 0)
 		]
 		[
 			(<- ui:layout$create_standard_layout 0 window$layout$geometry$width)

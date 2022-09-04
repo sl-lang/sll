@@ -1,18 +1,10 @@
 (---
 	"string.sll"
 	"types.sll"
+	"ui/layout.sll"
 )
 
 
-(= ui_position_layout_standard_type (&:
-	float_type multiplier
-	float_type bias
-))
-
-(= ui_position_layout_type (&:
-	(~ int_type) type
-	ui_position_layout_standard_type standard
-))
 
 (= ui_position_type (&:
 	(,,, data
@@ -23,55 +15,27 @@
 	) @@string@@
 	float_type x
 	float_type y
-	ui_position_layout_type x_layout
-	ui_position_layout_type y_layout
+	ui:layout$ui_layout_type x_layout
+	ui:layout$ui_layout_type y_layout
 ))
 
 (= ui_position_module_type (&:
-	(~ type_type) ui_position_layout_type
 	(~ type_type) ui_position_type
-	(~ ui_position_layout_type) LAYOUT_CENTER
+	(~ ui:layout$ui_layout_type) LAYOUT_CENTER
 	(~ array_type) LAYOUT_CENTER_BOTH
-	(~ ui_position_layout_type) LAYOUT_INHERIT
+	(~ ui:layout$ui_layout_type) LAYOUT_INHERIT
 	(~ array_type) LAYOUT_INHERIT_BOTH
-	(~ int_type) LAYOUT_TYPE_STANDARD
-	(~ func_type) create_standard_layout
 	(~ func_type) update
 ))
 
 
 
-(= LAYOUT_TYPE_STANDARD 0)
-
-
-
-(= _solve_layout (,,, layout offset size
-	(?? layout$type
-		LAYOUT_TYPE_STANDARD (@@ (+ offset (* layout$standard$multiplier size) layout$standard$bias))
-	)
-	(:> "Unknown position layout: " layout '\n')
-	(@@ offset)
-))
-
-(= create_standard_layout (,,, multiplier bias
-	(= multiplier (:: multiplier float_type))
-	(= bias (:: bias float_type))
-	(= out (. ui_position_layout_type
-		LAYOUT_TYPE_STANDARD
-	))
-	(= out$standard (. ui_position_layout_standard_type
-		multiplier
-		bias
-	))
-	(@@ out)
-))
-
 (= update (,,, position parent_element
 	(? (!== (:? position) ui_position_type) (@@ false))
 	(= prev_x position$x)
 	(= prev_y position$y)
-	(= position$x (<- _solve_layout position$x_layout parent_element$position$x parent_element$size$width))
-	(= position$y (<- _solve_layout position$y_layout parent_element$position$y parent_element$size$height))
+	(= position$x (<- ui:layout$solve position$x_layout parent_element$position$x parent_element$size$width))
+	(= position$y (<- ui:layout$solve position$y_layout parent_element$position$y parent_element$size$height))
 	(@@ (||
 		(!== prev_x position$x)
 		(!== prev_y position$y)
@@ -89,14 +53,11 @@
 
 
 (= ui:position (. ui_position_module_type
-	ui_position_layout_type
 	ui_position_type
 	LAYOUT_CENTER
 	LAYOUT_CENTER_BOTH
 	LAYOUT_INHERIT
 	LAYOUT_INHERIT_BOTH
-	LAYOUT_TYPE_STANDARD
-	create_standard_layout
 	update
 ))
 (## ui:position)
