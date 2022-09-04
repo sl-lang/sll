@@ -32,7 +32,9 @@
 	(~ type_type) ui_size_layout_type
 	(~ type_type) ui_size_type
 	(~ ui_size_layout_type) LAYOUT_HALF
+	(~ array_type) LAYOUT_HALF_BOTH
 	(~ ui_size_layout_type) LAYOUT_INHERIT
+	(~ array_type) LAYOUT_INHERIT_BOTH
 	(~ int_type) LAYOUT_TYPE_STANDARD
 	(~ func_type) create_standard_layout
 	(~ func_type) update
@@ -82,13 +84,18 @@
 (= LAYOUT_HALF (<- create_standard_layout 0.5 0))
 (= LAYOUT_INHERIT (<- create_standard_layout 1 0))
 
+(= LAYOUT_HALF_BOTH [LAYOUT_HALF LAYOUT_HALF])
+(= LAYOUT_INHERIT_BOTH [LAYOUT_INHERIT LAYOUT_INHERIT])
+
 
 
 (= ui:size (. ui_size_module_type
 	ui_size_layout_type
 	ui_size_type
 	LAYOUT_HALF
+	LAYOUT_HALF_BOTH
 	LAYOUT_INHERIT
+	LAYOUT_INHERIT_BOTH
 	LAYOUT_TYPE_STANDARD
 	create_standard_layout
 	update
