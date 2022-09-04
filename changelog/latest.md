@@ -2,6 +2,7 @@
 
 ## Added
 
+- Ability to serialize and deserialize UI elements and layouts
 - Implemented filter layouts in the UI extension
 
 ## Updated

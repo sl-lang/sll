@@ -15,8 +15,9 @@
 
 
 (= ui_element_callbacks_type (&:
-	func_type update
+	func_type deserialize
 	func_type serialize
+	func_type update
 ))
 
 (= ui_element_data_type (&:
@@ -32,7 +33,7 @@
 			(<- string$str data$children)
 		))
 	) @@string@@
-	(~ ui_type) ui
+	(~ object_type) ui
 	object_type parent
 	ui:position$ui_position_type position
 	int_type z_index
@@ -44,6 +45,7 @@
 	(~ type_type) ui_element_type
 	(~ func_type) create
 	(~ func_type) delete
+	(~ func_type) deserialize
 	(~ func_type) is_valid_element
 	(~ func_type) register_element
 	(~ func_type) serialize
@@ -54,6 +56,7 @@
 
 
 (= _element_type_data <>)
+(= _element_name_to_type <>)
 
 
 
@@ -73,12 +76,45 @@
 			(: position_layout 3)
 		]
 		0
+		[]
 	))
 ))
 
 (= delete (,,, element
 	(? (! element) (@@))
 	(= element (:: element ui_element_type))
+))
+
+(= deserialize (,,, ui data parent
+	(= data (:: data map_type))
+	(= element_data (: _element_type_data (: _element_name_to_type data$type)))
+	(= out (<- element_data$callbacks$deserialize
+		ui
+		(. ui_element_type
+			ui
+			nil
+			[
+				0
+				0
+				0
+				0
+				(<- ui:layout$deserialize (: data$layout 0))
+				(<- ui:layout$deserialize (: data$layout 1))
+				(<- ui:layout$deserialize (: data$layout 2))
+				(<- ui:layout$deserialize (: data$layout 3))
+			]
+			0
+			[]
+		)
+		parent
+		data$data
+	))
+	(<- ui:position$update out$base$position out$base$parent$base)
+	(-> (= i 0) (< i ($ data$children))
+		(<- deserialize ui (: data$children i) out)
+		(++ i)
+	)
+	(@@ out)
 ))
 
 (= is_valid_element (,,, element
@@ -94,10 +130,18 @@
 	(= element_type (:: element_type type_type))
 	(= name (:: name string_type))
 	(= callbacks (:: callbacks ui_element_callbacks_type))
+	(? (&&
+		(: _element_name_to_type name)
+		(!== (: _element_name_to_type name) element_type)
+	) {
+		(:> "UI element '" name "' already exists!\n")
+		(@@)
+	})
 	(= (: _element_type_data element_type) (. ui_element_data_type
 		name
 		callbacks
 	))
+	(= (: _element_name_to_type name) element_type)
 ))
 
 (= serialize (,,, element
@@ -119,8 +163,8 @@
 			(++ i)
 			(<- serialize child)
 		)
+		"data" (<- data$callbacks$serialize element)
 	>)
-	(? data$callbacks$serialize (= out$data (<- data$callbacks$serialize element)))
 	(@@ out)
 ))
 
@@ -164,6 +208,7 @@
 	ui_element_type
 	create
 	delete
+	deserialize
 	is_valid_element
 	register_element
 	serialize

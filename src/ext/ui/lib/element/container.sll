@@ -24,6 +24,14 @@
 
 
 
+(= _deserialize_container (,,, ui base parent
+	(= out (. ui_container_element_type
+		base
+	))
+	(? parent (<- ui:element$set_parent out parent))
+	(@@ out)
+))
+
 (= create (,,, ui position_layout parent
 	(= out (. ui_container_element_type
 		(<- ui:element$create ui position_layout)
@@ -40,7 +48,11 @@
 
 
 
-(<- ui:element$register_element ui_container_element_type "ui:element:container" nil)
+(<- ui:element$register_element ui_container_element_type "ui:element:container" (. ui:element$ui_element_callbacks_type
+	_deserialize_container
+	nil
+	nil
+))
 
 
 

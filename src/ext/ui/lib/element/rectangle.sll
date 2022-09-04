@@ -42,7 +42,47 @@
 
 
 
+(= _create_rectangle (,,, ui base parent color
+	(= out (. ui_rectangle_element_type
+		base
+		[0.0 0.0 0.0]
+		($ ui$_vertex_buffer$data)
+		($ ui$_index_buffer$data)
+	))
+	(? ui {
+		(= idx (// ($ ui$_vertex_buffer$data) 6))
+		(<- array$extend ui$_vertex_buffer$data [
+			0.0 0.0 0.0 0.0 0.0 0.0
+			0.0 0.0 0.0 0.0 0.0 0.0
+			0.0 0.0 0.0 0.0 0.0 0.0
+			0.0 0.0 0.0 0.0 0.0 0.0
+		])
+		(<- array$extend ui$_index_buffer$data [
+			idx (+ idx 2) (+ idx 1)
+			(+ idx 3) (+ idx 2) idx
+		])
+		(= ui$_buffer_update_flags (| ui$_buffer_update_flags UI_BUFFER_UPDATE_FLAG_INDEX))
+	})
+	(? color (<- set_color out color))
+	(? parent (<- set_parent out parent))
+	(<- update out)
+	(@@ out)
+))
+
+(= _deseralize_data (,,, ui base parent data
+	(@@ (<- _create_rectangle ui base parent data))
+))
+
+(= _seralize_data (,,, rectangle
+	(@@ [
+		rectangle$color$red
+		rectangle$color$green
+		rectangle$color$blue
+	])
+))
+
 (= _update_position_and_size (,,, rectangle
+	(? (! rectangle$base$ui) (@@))
 	(= idx rectangle$_vertex_buffer_offset)
 	(= x1 rectangle$base$position$x)
 	(= y1 rectangle$base$position$y)
@@ -60,39 +100,14 @@
 	(= rectangle$base$ui$_buffer_update_flags (| rectangle$base$ui$_buffer_update_flags UI_BUFFER_UPDATE_FLAG_VERTEX))
 ))
 
-(= _seralize_data (,,, rectangle
-	(@@ [
-		rectangle$color$red
-		rectangle$color$green
-		rectangle$color$blue
-	])
-))
-
 (= create (,,, ui position_layout parent color
-	(? (! ui) (@@ nil))
-	(= ui (:: ui ui:core$ui_type))
-	(= out (. ui_rectangle_element_type
+	(= ui (?: ui (:: ui ui:core$ui_type) nil))
+	(@@ (<- _create_rectangle
+		ui
 		(<- ui:element$create ui position_layout)
-		[0.0 0.0 0.0]
-		($ ui$_vertex_buffer$data)
-		($ ui$_index_buffer$data)
+		parent
+		color
 	))
-	(= idx (// ($ ui$_vertex_buffer$data) 6))
-	(<- array$extend ui$_vertex_buffer$data [
-		0.0 0.0 0.0 0.0 0.0 0.0
-		0.0 0.0 0.0 0.0 0.0 0.0
-		0.0 0.0 0.0 0.0 0.0 0.0
-		0.0 0.0 0.0 0.0 0.0 0.0
-	])
-	(<- array$extend ui$_index_buffer$data [
-		idx (+ idx 2) (+ idx 1)
-		(+ idx 3) (+ idx 2) idx
-	])
-	(= ui$_buffer_update_flags (| ui$_buffer_update_flags UI_BUFFER_UPDATE_FLAG_INDEX))
-	(? color (<- set_color out color))
-	(? parent (<- set_parent out parent))
-	(<- update out)
-	(@@ out)
 ))
 
 (= delete (,,, rectangle
@@ -106,6 +121,7 @@
 	(= rectangle (:: rectangle ui_rectangle_element_type))
 	(= color (:: color gfx:color$gfx_color_type))
 	(= rectangle$color (: color))
+	(? (! rectangle$base$ui) (@@))
 	(= idx rectangle$_vertex_buffer_offset)
 	(= vertex_buffer rectangle$base$ui$_vertex_buffer)
 	(= (: vertex_buffer$data (+ idx 3)) color$red)
@@ -121,13 +137,16 @@
 	(= (: vertex_buffer$data (+ idx 22)) color$green)
 	(= (: vertex_buffer$data (+ idx 23)) color$blue)
 	(= rectangle$base$ui$_buffer_update_flags (| rectangle$base$ui$_buffer_update_flags UI_BUFFER_UPDATE_FLAG_VERTEX))
-	(@@ true)
+	(@@)
 ))
 
 (= set_parent (,,, rectangle parent
 	(? (! rectangle) (@@))
 	(= rectangle (:: rectangle ui_rectangle_element_type))
-	(? (! (<- ui:element$set_parent rectangle parent)) (@@ false))
+	(?
+		(! (<- ui:element$set_parent rectangle parent)) (@@ false)
+		(! rectangle$base$ui) (@@ true)
+	)
 	(= idx rectangle$_vertex_buffer_offset)
 	(= z (:: rectangle$base$z_index float_type))
 	(= vertex_buffer rectangle$base$ui$_vertex_buffer)
@@ -142,8 +161,9 @@
 
 
 (<- ui:element$register_element ui_rectangle_element_type "ui:element:rectangle" (. ui:element$ui_element_callbacks_type
-	_update_position_and_size
+	_deseralize_data
 	_seralize_data
+	_update_position_and_size
 ))
 
 

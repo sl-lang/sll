@@ -12,7 +12,7 @@
 
 (= ui_layout_filter_type (&:
 	int_type type
-	array_type layouts
+	array_type values
 ))
 
 (= ui_layout_range_type (&:
@@ -39,6 +39,7 @@
 	(~ func_type) create_filter_layout
 	(~ func_type) create_range_layout
 	(~ func_type) create_standard_layout
+	(~ func_type) deserialize
 	(~ func_type) serialize
 	(~ func_type) solve
 ))
@@ -59,23 +60,35 @@
 	TYPE_RANGE "range"
 >)
 
+(= _string_to_type <
+	"standard" TYPE_STANDARD
+	"filter" TYPE_FILTER
+	"range" TYPE_RANGE
+>)
+
 (= _filter_type_to_string <
 	FILTER_LOWEST "lowest"
 	FILTER_HIGHEST "highest"
 	FILTER_AVERAGE "average"
 >)
 
+(= _string_to_filter_type <
+	"lowest" FILTER_LOWEST
+	"highest" FILTER_HIGHEST
+	"average" FILTER_AVERAGE
+>)
 
 
-(= create_filter_layout (,,, type layouts
+
+(= create_filter_layout (,,, type values
 	(= type (:: type int_type))
-	(= layouts (:: layouts array_type))
+	(= values (:: values array_type))
 	(= out (. ui_layout_type
 		TYPE_FILTER
 	))
 	(= out$filter (. ui_layout_filter_type
 		type
-		layouts
+		values
 	))
 	(@@ out)
 ))
@@ -101,10 +114,36 @@
 	(= out (. ui_layout_type
 		TYPE_STANDARD
 	))
-	(= out$standard (. ui_layout_standard_type
-		multiplier
-		bias
+	(= out$standard$multiplier multiplier)
+	(= out$standard$bias bias)
+	(@@ out)
+))
+
+(= deserialize (,,, data
+	(= data (:: data map_type))
+	(= type (: _string_to_type data$type))
+	(= out (. ui_layout_type
+		type
 	))
+	(?? type
+		TYPE_STANDARD {
+			(= out$standard$multiplier data$multiplier)
+			(= out$standard$bias data$bias)
+		}
+		TYPE_FILTER {
+			(= out$filter$type (: _string_to_filter_type data$filter))
+			(= out$filter$values ([> (= i 0) (< i ($ data$values))
+				(= value (: data$values i))
+				(++ i)
+				(<- deserialize value)
+			))
+		}
+		TYPE_RANGE {
+			(= out$range$min (<- deserialize data$min))
+			(= out$range$value (<- deserialize data$value))
+			(= out$range$max (<- deserialize data$max))
+		}
+	)
 	(@@ out)
 ))
 
@@ -121,8 +160,8 @@
 		}
 		TYPE_FILTER {
 			(= out$filter (: _filter_type_to_string layout$filter$type))
-			(= out$values ([> (= i 0) (< i ($ layout$filter$layouts))
-				(= value (: layout$filter$layouts i))
+			(= out$values ([> (= i 0) (< i ($ layout$filter$values))
+				(= value (: layout$filter$values i))
 				(++ i)
 				(<- serialize value)
 			))
@@ -141,8 +180,8 @@
 		TYPE_STANDARD (@@ (+ offset (* layout$standard$multiplier size) layout$standard$bias))
 		TYPE_FILTER {
 			(= out nil)
-			(-> (= i 0) (< i ($ layout$filter$layouts))
-				(= value (<- solve (: layout$filter$layouts i) offset size))
+			(-> (= i 0) (< i ($ layout$filter$values))
+				(= value (<- solve (: layout$filter$values i) offset size))
 				(?
 					(||
 						(! i)
@@ -155,8 +194,8 @@
 			)
 			(? (&&
 				(=== layout$filter$type FILTER_AVERAGE)
-				layout$filter$layouts
-			) (= out (/ out ($ layout$filter$layouts))))
+				layout$filter$values
+			) (= out (/ out ($ layout$filter$values))))
 			(@@ out)
 		}
 		TYPE_RANGE {
@@ -190,6 +229,7 @@
 	create_filter_layout
 	create_range_layout
 	create_standard_layout
+	deserialize
 	serialize
 	solve
 ))
