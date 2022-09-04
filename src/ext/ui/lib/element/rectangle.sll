@@ -60,11 +60,19 @@
 	(= rectangle$base$ui$_buffer_update_flags (| rectangle$base$ui$_buffer_update_flags UI_BUFFER_UPDATE_FLAG_VERTEX))
 ))
 
+(= _seralize_data (,,, rectangle
+	(@@ [
+		rectangle$color$red
+		rectangle$color$green
+		rectangle$color$blue
+	])
+))
+
 (= create (,,, ui position_layout parent color
 	(? (! ui) (@@ nil))
 	(= ui (:: ui ui:core$ui_type))
 	(= out (. ui_rectangle_element_type
-		(<- ui:element$create ui nil position_layout)
+		(<- ui:element$create ui position_layout)
 		[0.0 0.0 0.0]
 		($ ui$_vertex_buffer$data)
 		($ ui$_index_buffer$data)
@@ -133,8 +141,9 @@
 
 
 
-(<- ui:element$register_element ui_rectangle_element_type (. ui:element$ui_element_callbacks_type
+(<- ui:element$register_element ui_rectangle_element_type "ui:element:rectangle" (. ui:element$ui_element_callbacks_type
 	_update_position_and_size
+	_seralize_data
 ))
 
 

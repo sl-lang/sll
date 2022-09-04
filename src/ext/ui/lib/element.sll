@@ -4,17 +4,24 @@
 	"types.sll"
 	"ui/_ui_type.sll"
 	"ui/_util.sll"
+	"ui/layout.sll"
 	"ui/position.sll"
 )
 
 
 
-(# update)
+(# is_valid_element update)
 
 
 
 (= ui_element_callbacks_type (&:
 	func_type update
+	func_type serialize
+))
+
+(= ui_element_data_type (&:
+	string_type name
+	ui_element_callbacks_type callbacks
 ))
 
 (= ui_element_type (&:
@@ -26,7 +33,6 @@
 		))
 	) @@string@@
 	(~ ui_type) ui
-	(~ ui_element_callbacks_type) callbacks
 	object_type parent
 	ui:position$ui_position_type position
 	int_type z_index
@@ -38,6 +44,8 @@
 	(~ type_type) ui_element_type
 	(~ func_type) create
 	(~ func_type) delete
+	(~ func_type) dump_to_json
+	(~ func_type) is_valid_element
 	(~ func_type) register_element
 	(~ func_type) set_parent
 	(~ func_type) update
@@ -45,23 +53,14 @@
 
 
 
-(= _element_type_to_callbacks <>)
+(= _element_type_data <>)
 
 
 
-(= _check_if_valid_element (,,, element
-	(? (! (: _element_type_to_callbacks (:? element))) {
-		(:> "Invlid UI element: " element '\n')
-		(@@ false)
-	})
-	(@@ true)
-))
-
-(= create (,,, ui callbacks position_layout
+(= create (,,, ui position_layout
 	(= position_layout (:: position_layout array_type))
 	(@@ (. ui_element_type
 		ui
-		callbacks
 		nil
 		[
 			0
@@ -82,18 +81,54 @@
 	(= element (:: element ui_element_type))
 ))
 
-(= register_element (,,, element_type callbacks
+(= dump_to_json (,,, element
+	(? (||
+		(! element)
+		(! (<- is_valid_element element))
+	) (@@ nil))
+	(= data (: _element_type_data (:? element)))
+	(= out <
+		"type" data$name
+		"layout" [
+			(<- ui:layout$dump_to_json element$base$position$x_layout)
+			(<- ui:layout$dump_to_json element$base$position$y_layout)
+			(<- ui:layout$dump_to_json element$base$position$width_layout)
+			(<- ui:layout$dump_to_json element$base$position$height_layout)
+		]
+		"children" ([> (= i 0) (< i ($ element$base$children))
+			(= child (: element$base$children i))
+			(++ i)
+			(<- dump_to_json child)
+		)
+	>)
+	(? data$callbacks$serialize (= out$data (<- data$callbacks$serialize element)))
+	(@@ out)
+))
+
+(= is_valid_element (,,, element
+	(? (! (: _element_type_data (:? element))) {
+		(:> "Invlid UI element: " element '\n')
+		(@@ false)
+	})
+	(@@ true)
+))
+
+(= register_element (,,, element_type name callbacks
 	(? (! element_type) (@@))
 	(= element_type (:: element_type type_type))
+	(= name (:: name string_type))
 	(= callbacks (:: callbacks ui_element_callbacks_type))
-	(= (: _element_type_to_callbacks element_type) callbacks)
+	(= (: _element_type_data element_type) (. ui_element_data_type
+		name
+		callbacks
+	))
 ))
 
 (= set_parent (,,, element parent
-	(? (! element) (@@ false))
 	(? (||
-		(! (<- _check_if_valid_element element))
-		(! (<- _check_if_valid_element parent))
+		(! element)
+		(! (<- is_valid_element element))
+		(&& (!== parent nil) (! (<- is_valid_element parent)))
 		(!== (%% element$base$ui) (%% parent$base$ui))
 	) (@@ false))
 	(? element$base$parent (<- array$remove element$base$parent$base$children element))
@@ -111,11 +146,11 @@
 (= update (,,, element
 	(? (||
 		(! element)
-		(! (<- _check_if_valid_element element))
+		(! (<- is_valid_element element))
 		(! (<- ui:position$update element$base$position element$base$parent$base))
 	) (@@))
-	(= callbacks (: _element_type_to_callbacks (:? element)))
-	(<- callbacks$update element)
+	(= data (: _element_type_data (:? element)))
+	(<- data$callbacks$update element)
 	(-> (= i 0) (< i ($ element$base$children))
 		(<- update (: element$base$children i))
 		(++ i)
@@ -129,6 +164,8 @@
 	ui_element_type
 	create
 	delete
+	dump_to_json
+	is_valid_element
 	register_element
 	set_parent
 	update

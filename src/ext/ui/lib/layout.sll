@@ -39,6 +39,7 @@
 	(~ func_type) create_filter_layout
 	(~ func_type) create_range_layout
 	(~ func_type) create_standard_layout
+	(~ func_type) dump_to_json
 	(~ func_type) solve
 ))
 
@@ -51,6 +52,18 @@
 (= FILTER_LOWEST 0)
 (= FILTER_HIGHEST 1)
 (= FILTER_AVERAGE 2)
+
+(= _type_to_string <
+	TYPE_STANDARD "standard"
+	TYPE_FILTER "filter"
+	TYPE_RANGE "range"
+>)
+
+(= _filter_type_to_string <
+	FILTER_LOWEST "lowest"
+	FILTER_HIGHEST "highest"
+	FILTER_AVERAGE "average"
+>)
 
 
 
@@ -92,6 +105,34 @@
 		multiplier
 		bias
 	))
+	(@@ out)
+))
+
+(= dump_to_json (,,, layout
+	(? (! layout) (@@ nil))
+	(= layout (:: layout ui_layout_type))
+	(= out <
+		"type" (: _type_to_string layout$type)
+	>)
+	(?? layout$type
+		TYPE_STANDARD {
+			(? layout$standard$multiplier (= out$multiplier layout$standard$multiplier))
+			(? layout$standard$bias (= out$bias layout$standard$bias))
+		}
+		TYPE_FILTER {
+			(= out$filter (: _filter_type_to_string layout$filter$type))
+			(= out$values ([> (= i 0) (< i ($ layout$filter$layouts))
+				(= value (: layout$filter$layouts i))
+				(++ i)
+				(<- dump_to_json value)
+			))
+		}
+		TYPE_RANGE {
+			(= out$min (<- dump_to_json layout$range$min))
+			(= out$value (<- dump_to_json layout$range$value))
+			(= out$max (<- dump_to_json layout$range$max))
+		}
+	)
 	(@@ out)
 ))
 
@@ -149,6 +190,7 @@
 	create_filter_layout
 	create_range_layout
 	create_standard_layout
+	dump_to_json
 	solve
 ))
 (## ui:layout)
