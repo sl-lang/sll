@@ -44,7 +44,6 @@
 	"ui/core.sll"
 	"ui/element/rectangle.sll"
 	"ui/layout.sll"
-	"ui/position.sll"
 	"uuid.sll"
 	"vm.sll"
 	"weakref.sll"
@@ -904,7 +903,7 @@ abc` '\n')
 		(<- ui:layout$create_standard_layout 0.5 -400)
 		(<- ui:layout$create_standard_layout 0 50)
 		(<- ui:layout$create_standard_layout 0 400)
-		ui:position$LAYOUT_HALF
+		(<- ui:layout$create_standard_layout 0.5 0)
 	]
 	ui_window$root
 ))

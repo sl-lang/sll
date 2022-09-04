@@ -27,8 +27,6 @@
 
 (= ui_position_module_type (&:
 	(~ type_type) ui_position_type
-	(~ ui:layout$ui_layout_type) LAYOUT_HALF
-	(~ ui:layout$ui_layout_type) LAYOUT_INHERIT
 	(~ func_type) update
 ))
 
@@ -54,15 +52,8 @@
 
 
 
-(= LAYOUT_HALF (<- ui:layout$create_standard_layout 0.5 0))
-(= LAYOUT_INHERIT (<- ui:layout$create_standard_layout 0 0))
-
-
-
 (= ui:position (. ui_position_module_type
 	ui_position_type
-	LAYOUT_HALF
-	LAYOUT_INHERIT
 	update
 ))
 (## ui:position)

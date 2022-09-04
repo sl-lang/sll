@@ -23,9 +23,11 @@
 
 (= ui_layout_module_type (&:
 	(~ type_type) ui_layout_type
+	(~ int_type) FILTER_AVERAGE
+	(~ int_type) FILTER_HIGHEST
 	(~ int_type) FILTER_LOWEST
-	(~ int_type) LAYOUT_TYPE_FILTER
-	(~ int_type) LAYOUT_TYPE_STANDARD
+	(~ int_type) TYPE_FILTER
+	(~ int_type) TYPE_STANDARD
 	(~ func_type) create_filter_layout
 	(~ func_type) create_standard_layout
 	(~ func_type) solve
@@ -33,10 +35,12 @@
 
 
 
-(= LAYOUT_TYPE_STANDARD 0)
-(= LAYOUT_TYPE_FILTER 1)
+(= TYPE_STANDARD 0)
+(= TYPE_FILTER 1)
 
 (= FILTER_LOWEST 0)
+(= FILTER_HIGHEST 1)
+(= FILTER_AVERAGE 2)
 
 
 
@@ -44,7 +48,7 @@
 	(= type (:: type int_type))
 	(= layouts (:: layouts array_type))
 	(= out (. ui_layout_type
-		LAYOUT_TYPE_FILTER
+		TYPE_FILTER
 	))
 	(= out$filter (. ui_layout_filter_type
 		type
@@ -57,7 +61,7 @@
 	(= multiplier (:: multiplier float_type))
 	(= bias (:: bias float_type))
 	(= out (. ui_layout_type
-		LAYOUT_TYPE_STANDARD
+		TYPE_STANDARD
 	))
 	(= out$standard (. ui_layout_standard_type
 		multiplier
@@ -68,17 +72,25 @@
 
 (= solve (,,, layout offset size
 	(?? layout$type
-		LAYOUT_TYPE_STANDARD (@@ (+ offset (* layout$standard$multiplier size) layout$standard$bias))
-		LAYOUT_TYPE_FILTER {
+		TYPE_STANDARD (@@ (+ offset (* layout$standard$multiplier size) layout$standard$bias))
+		TYPE_FILTER {
 			(= out nil)
 			(-> (= i 0) (< i ($ layout$filter$layouts))
 				(= value (<- solve (: layout$filter$layouts i) offset size))
-				(? (||
-					(! i)
-					(&& (=== layout$filter$type FILTER_LOWEST) (< value out))
-				) (= out value))
+				(?
+					(||
+						(! i)
+						(&& (=== layout$filter$type FILTER_LOWEST) (< value out))
+						(&& (=== layout$filter$type FILTER_HIGHEST) (> value out))
+					) (= out value)
+					(=== layout$filter$type FILTER_AVERAGE) (= out (+ out value))
+				)
 				(++ i)
 			)
+			(? (&&
+				(=== layout$filter$type FILTER_AVERAGE)
+				layout$filter$layouts
+			) (= out (/ out ($ layout$filter$layouts))))
 			(@@ out)
 		}
 	)
@@ -90,9 +102,11 @@
 
 (= ui:layout (. ui_layout_module_type
 	ui_layout_type
+	FILTER_AVERAGE
+	FILTER_HIGHEST
 	FILTER_LOWEST
-	LAYOUT_TYPE_FILTER
-	LAYOUT_TYPE_STANDARD
+	TYPE_FILTER
+	TYPE_STANDARD
 	create_filter_layout
 	create_standard_layout
 	solve
