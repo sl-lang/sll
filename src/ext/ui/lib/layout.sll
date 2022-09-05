@@ -6,21 +6,40 @@
 
 
 
-(# _type_to_string)
+(# _type_to_string _filter_type_to_string)
 
 
 
 (= ui_layout_standard_type (&:
+	(,,, data
+		(@@ (<- string$format " multiplier=%f bias=%f"
+			data$multiplier
+			data$bias
+		))
+	) @@string@@
 	float_type multiplier
 	float_type bias
 ))
 
 (= ui_layout_filter_type (&:
+	(,,, data
+		(@@ (<- string$format " filter=%s values=%s"
+			(: _filter_type_to_string data$type)
+			(<- string$str data$values)
+		))
+	) @@string@@
 	int_type type
 	array_type values
 ))
 
 (= ui_layout_range_type (&:
+	(,,, data
+		(@@ (<- string$format " min=%s value=%s max=%s"
+			(:: data$min string_type)
+			(:: data$values string_type)
+			(:: data$max string_type)
+		))
+	) @@string@@
  	object_type min
  	object_type value
  	object_type max
