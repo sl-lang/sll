@@ -1,7 +1,12 @@
 (---
 	"math.sll"
+	"string.sll"
 	"types.sll"
 )
+
+
+
+(# _type_to_string)
 
 
 
@@ -22,6 +27,12 @@
 ))
 
 (= ui_layout_type (&:
+	(,,, data
+		(@@ (<- string$format "<ui:layout type=%s%s>"
+			(: _type_to_string data$type)
+			(:: (: data (: _type_to_string data$type)) string_type)
+		))
+	) @@string@@
 	(~ int_type) type
 	ui_layout_standard_type standard
 	ui_layout_filter_type filter
