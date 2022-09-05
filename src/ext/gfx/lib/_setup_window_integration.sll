@@ -14,5 +14,5 @@
 
 (= window_manager:util$__gfx_callbacks$resize (,,, window
 	(= ctx (<- weakref$get_default window$_gfx_context))
-	(? ctx weakref$WEAKREF_NO_OBJECT (<- (... "gfx:context_resize") ctx$_handle))
+	(? ctx (<- (... "gfx:context_resize") ctx$_handle))
 ))

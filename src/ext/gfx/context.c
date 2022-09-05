@@ -710,6 +710,10 @@ __GFX_API_CALL void gfx_api_context_render(gfx_context_t ctx_id){
 		return;
 	}
 	_end_frame(ctx);
+	if (ctx->swapchain.rebuild){
+		_create_swapchain(ctx);
+		ctx->swapchain.rebuild=0;
+	}
 	_begin_frame(ctx);
 }
 
@@ -721,8 +725,6 @@ __GFX_API_CALL void gfx_api_context_resize(gfx_context_t ctx_id){
 	if (!ctx){
 		return;
 	}
-	_end_frame(ctx);
-	_create_swapchain(ctx);
-	_begin_frame(ctx);
+	ctx->swapchain.rebuild=1;
 }
 

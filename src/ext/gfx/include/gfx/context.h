@@ -41,6 +41,7 @@ typedef struct _GFX_CONTEXT_SURFACE_DATA{
 
 typedef struct _GFX_CONTEXT_SWAPCHAIN_DATA{
 	VkSwapchainKHR handle;
+	sll_bool_t rebuild;
 	uint32_t image_count;
 	VkImage* images;
 	VkImageView* image_views;
