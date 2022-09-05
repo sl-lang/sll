@@ -905,7 +905,7 @@ abc` '\n')
 			(<- ui:layout$create_standard_layout 0.5 -400)
 			(<- ui:layout$create_standard_layout 0 20)
 		])
-		(<- ui:layout$create_standard_layout 0 50)
+		(<- ui:layout$create_standard_layout 0 20)
 		(<- ui:layout$create_standard_layout 0 400)
 		(<- ui:layout$create_range_layout
 			(<- ui:layout$create_standard_layout 0 100)
