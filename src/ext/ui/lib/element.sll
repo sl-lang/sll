@@ -61,6 +61,10 @@
 
 
 
+(= _update_position (,,, element
+	(@@ (<- ui:position$update element$base$position element$base$parent$base$position))
+))
+
 (= create (,,, ui position_layout
 	(= position_layout (:: position_layout array_type))
 	(@@ (. ui_element_type
@@ -110,7 +114,7 @@
 		parent
 		data$data
 	))
-	(<- ui:position$update out$base$position out$base$parent$base$position)
+	(<- _update_position out)
 	(-> (= i 0) (< i ($ data$children))
 		(<- deserialize ui (: data$children i) out)
 		(++ i)
@@ -192,7 +196,7 @@
 	(? (||
 		(! element)
 		(! (<- is_valid_element element))
-		(! (<- ui:position$update element$base$position element$base$parent$base$position))
+		(! (<- _update_position element))
 	) (@@))
 	(= data (: _element_type_data (:? element)))
 	(<- data$callbacks$update element)
