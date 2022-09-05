@@ -162,6 +162,7 @@
 
 (<- ui:element$register_element ui_rectangle_element_type "ui:element:rectangle" (. ui:element$ui_element_callbacks_type
 	_deseralize_data
+	nil
 	_seralize_data
 	_update_position_and_size
 ))

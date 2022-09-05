@@ -16,6 +16,7 @@
 
 (= ui_element_callbacks_type (&:
 	func_type deserialize
+	func_type get_position
 	func_type serialize
 	func_type update
 ))
