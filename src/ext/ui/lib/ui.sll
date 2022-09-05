@@ -1,0 +1,31 @@
+(---
+	"ui/core.sll"
+	"ui/element.sll"
+	"ui/element/container.sll"
+	"ui/element/rectangle.sll"
+	"ui/layout.sll"
+	"ui/position.sll"
+)
+
+
+
+(= ui_module_type (&:
+	(~ (:? ui:core)) core
+	(~ (:? ui:element)) element
+	(~ (:? ui:element:container)) element:container
+	(~ (:? ui:element:rectangle)) element:rectangle
+	(~ (:? ui:layout)) layout
+	(~ (:? ui:position)) position
+))
+
+
+
+(= ui (. ui_module_type
+	ui:core
+	ui:element
+	ui:element:container
+	ui:element:rectangle
+	ui:layout
+	ui:position
+))
+(## ui)
