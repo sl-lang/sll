@@ -158,12 +158,12 @@
 			(<- ui:layout$serialize element$base$position$width_layout)
 			(<- ui:layout$serialize element$base$position$height_layout)
 		]
+		"data" (<- data$callbacks$serialize element)
 		"children" ([> (= i 0) (< i ($ element$base$children))
 			(= child (: element$base$children i))
 			(++ i)
 			(<- serialize child)
 		)
-		"data" (<- data$callbacks$serialize element)
 	>)
 	(@@ out)
 ))
