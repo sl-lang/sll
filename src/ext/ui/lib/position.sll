@@ -32,16 +32,16 @@
 
 
 
-(= update (,,, position parent_element
+(= update (,,, position parent_position
 	(? (!== (:? position) ui_position_type) (@@ false))
 	(= prev_x position$x)
 	(= prev_y position$y)
 	(= prev_width position$width)
 	(= prev_height position$height)
-	(= position$x (<- ui:layout$solve position$x_layout parent_element$position$x parent_element$position$width))
-	(= position$y (<- ui:layout$solve position$y_layout parent_element$position$y parent_element$position$height))
-	(= position$width (<- ui:layout$solve position$width_layout 0 parent_element$position$width))
-	(= position$height (<- ui:layout$solve position$height_layout 0 parent_element$position$height))
+	(= position$x (<- ui:layout$solve position$x_layout parent_position$x parent_position$width))
+	(= position$y (<- ui:layout$solve position$y_layout parent_position$y parent_position$height))
+	(= position$width (<- ui:layout$solve position$width_layout 0 parent_position$width))
+	(= position$height (<- ui:layout$solve position$height_layout 0 parent_position$height))
 	(@@ (||
 		(!== prev_x position$x)
 		(!== prev_y position$y)

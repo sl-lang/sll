@@ -110,7 +110,7 @@
 		parent
 		data$data
 	))
-	(<- ui:position$update out$base$position out$base$parent$base)
+	(<- ui:position$update out$base$position out$base$parent$base$position)
 	(-> (= i 0) (< i ($ data$children))
 		(<- deserialize ui (: data$children i) out)
 		(++ i)
@@ -192,7 +192,7 @@
 	(? (||
 		(! element)
 		(! (<- is_valid_element element))
-		(! (<- ui:position$update element$base$position element$base$parent$base))
+		(! (<- ui:position$update element$base$position element$base$parent$base$position))
 	) (@@))
 	(= data (: _element_type_data (:? element)))
 	(<- data$callbacks$update element)
