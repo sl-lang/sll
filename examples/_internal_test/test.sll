@@ -901,7 +901,10 @@ abc` '\n')
 (= rectangle (<- ui:element:rectangle$create
 	ui_window
 	[
-		(<- ui:layout$create_standard_layout 0.5 -400)
+		(<- ui:layout$create_filter_layout ui:layout$FILTER_HIGHEST [
+			(<- ui:layout$create_standard_layout 0.5 -400)
+			(<- ui:layout$create_standard_layout 0 20)
+		])
 		(<- ui:layout$create_standard_layout 0 50)
 		(<- ui:layout$create_standard_layout 0 400)
 		(<- ui:layout$create_range_layout
