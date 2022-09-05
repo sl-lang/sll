@@ -29,6 +29,29 @@
 
 
 
+(= _update_position (,,, window x y
+	(? (&&
+		(=== window$layout$geometry$x x)
+		(=== window$layout$geometry$y y)
+	) (@@))
+	(= window$layout$geometry$x x)
+	(= window$layout$geometry$y y)
+	(<- window$callbacks$geometry window window$layout$geometry)
+	(<- window$callbacks$position window x y)
+))
+
+(= _update_size (,,, window width height
+	(? (&&
+		(=== window$layout$geometry$width width)
+		(=== window$layout$geometry$height height)
+	) (@@))
+	(= window$layout$geometry$width width)
+	(= window$layout$geometry$height height)
+	(<- window$callbacks$geometry window window$layout$geometry)
+	(<- window$callbacks$size window width height)
+	(<- window_manager:util$__gfx_callbacks$resize window)
+))
+
 (= poll (,,, blocking?
 	(? (!.) {
 		(:> "Event polling from non-main threads in not permitted!\n")
@@ -114,24 +137,8 @@
 				) window)
 			}
 			6 {
-				(= geometry (:: event window_manager:geometry$window_manager_geometry_type))
-				(= position_change (||
-					(!== window$layout$geometry$x geometry$x)
-					(!== window$layout$geometry$y geometry$y)
-				))
-				(= size_change (||
-					(!== window$layout$geometry$width geometry$width)
-					(!== window$layout$geometry$height geometry$height)
-				))
-				(= window$layout$geometry geometry)
-				(? (|| position_change size_change) {
-					(? position_change (<- window$callbacks$position window (: event 0) (: event 1)))
-					(? size_change {
-						(<- window_manager:util$__gfx_callbacks$resize window)
-						(<- window$callbacks$size window (: event 2) (: event 3))
-					})
-					(<- window$callbacks$geometry window geometry)
-				})
+				(<- _update_position window (: event 0) (: event 1))
+				(<- _update_size window (: event 2) (: event 3))
 			}
 			7 {
 				(= vertical? (: event 0))
@@ -151,17 +158,10 @@
 				(<- window$callbacks$state window (: event 0))
 			}
 			11 {
-				(= window$layout$geometry$x (: event 0))
-				(= window$layout$geometry$y (: event 1))
-				(<- window$callbacks$geometry window window$layout$geometry)
-				(<- window$callbacks$position window (: event 0) (: event 1))
+				(<- _update_position window (: event 0) (: event 1))
 			}
 			12 {
-				(= window$layout$geometry$width (: event 0))
-				(= window$layout$geometry$height (: event 1))
-				(<- window$callbacks$geometry window window$layout$geometry)
-				(<- window$callbacks$size window (: event 0) (: event 1))
-				(<- window_manager:util$__gfx_callbacks$resize window)
+				(<- _update_size window (: event 0) (: event 1))
 			}
 		)
 	)
