@@ -2,6 +2,7 @@
 
 ## Added
 
+- Ability to create UI elements without the parent UI, for layout calculation purposes
 - Ability to serialize and deserialize UI elements and layouts
 - Implemented filter layouts in the UI extension
 
