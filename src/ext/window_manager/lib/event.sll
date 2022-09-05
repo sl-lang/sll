@@ -36,7 +36,6 @@
 	) (@@))
 	(= window$layout$geometry$x x)
 	(= window$layout$geometry$y y)
-	(<- window$callbacks$geometry window window$layout$geometry)
 	(<- window$callbacks$position window x y)
 ))
 
@@ -47,7 +46,6 @@
 	) (@@))
 	(= window$layout$geometry$width width)
 	(= window$layout$geometry$height height)
-	(<- window$callbacks$geometry window window$layout$geometry)
 	(<- window$callbacks$size window width height)
 	(<- window_manager:util$__gfx_callbacks$resize window)
 ))

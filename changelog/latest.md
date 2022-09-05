@@ -16,5 +16,6 @@
 ## Removed
 
 - Unneeded file: `ui/size.sll`
+- Window manage geometry-change callabck: `window_manager_window_type$callbacks$geometry`
 
 [0.8.1]: https://github.com/sl-lang/sll/compare/sll-v0.8.0...main

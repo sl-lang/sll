@@ -29,7 +29,6 @@
 	func_type focus
 	func_type focus_acquire
 	func_type focus_lose
-	func_type geometry
 	func_type ignore_close_request?
 	func_type key
 	func_type key_down
