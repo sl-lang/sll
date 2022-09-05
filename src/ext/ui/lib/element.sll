@@ -62,7 +62,11 @@
 
 
 (= _update_position (,,, element
-	(@@ (<- ui:position$update element$base$position element$base$parent$base$position))
+	(= data (: _element_type_data (:? element$base$parent)))
+	(@@ (<- ui:position$update element$base$position (||
+		(<- data$callbacks$get_position element$base$parent element)
+		element$base$parent$base$position
+	)))
 ))
 
 (= create (,,, ui position_layout

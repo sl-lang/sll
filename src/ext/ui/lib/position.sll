@@ -34,6 +34,7 @@
 
 (= update (,,, position parent_position
 	(? (!== (:? position) ui_position_type) (@@ false))
+	(= parent_position (:: parent_position ui_position_type))
 	(= prev_x position$x)
 	(= prev_y position$y)
 	(= prev_width position$width)
