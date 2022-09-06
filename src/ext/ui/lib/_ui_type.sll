@@ -9,6 +9,11 @@
 
 
 
+(= ui_mouse_event_targets_type (&:
+	array_type button
+	array_type move
+))
+
 (= ui_type (&:
 	(,,, data
 		(@@ (<- string$format "<ui:ui window=%s root=%s>"
@@ -25,6 +30,7 @@
 	int_type _buffer_update_flags
 	gfx:pipeline$gfx_pipeline_type _pipeline
 	int_type _max_z_index
+	ui_mouse_event_targets_type _mouse_events
 ))
 
 

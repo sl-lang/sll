@@ -932,10 +932,10 @@ abc` '\n')
 (= rectangle2 (<- ui:element:rectangle$create
 	ui_window
 	[
-		(<- ui:layout$create_standard_layout 0 1)
-		(<- ui:layout$create_standard_layout 0 1)
-		(<- ui:layout$create_standard_layout 1 -2)
-		(<- ui:layout$create_standard_layout 1 -2)
+		(<- ui:layout$create_standard_layout 0 0)
+		(<- ui:layout$create_standard_layout 0 0)
+		(<- ui:layout$create_standard_layout 1 0)
+		(<- ui:layout$create_standard_layout 1 0)
 	]
 	button
 	[0.8 0.09 0.22]

@@ -114,6 +114,10 @@
 		0
 		pipeline
 		1
+		[
+			[]
+			[]
+		]
 	))
 	(= out$root (<- ui:element:container$create
 		out
