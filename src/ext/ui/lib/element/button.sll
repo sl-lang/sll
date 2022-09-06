@@ -2,6 +2,7 @@
 	"string.sll"
 	"types.sll"
 	"ui/element.sll"
+	"window_manager/window.sll"
 )
 
 
@@ -23,12 +24,12 @@
 
 
 
-(= _deserialize_button (,,, ui base parent
-	(= out (. ui_button_element_type
-		base
-	))
-	(? parent (<- ui:element$set_parent out parent))
-	(@@ out)
+(= _handle_button_event (,,, button mouse_button state
+	(? (||
+		(!== mouse_button window_manager:window$FLAG_BUTTON_LEFT)
+		(! state)
+	) (@@))
+	(:> "Click!\n")
 ))
 
 (= create (,,, ui position_layout parent
@@ -36,6 +37,7 @@
 		(<- ui:element$create ui position_layout)
 	))
 	(? parent (<- ui:element$set_parent out parent))
+	(<- ui:element$register_event_handlers out)
 	(@@ out)
 ))
 
@@ -48,7 +50,8 @@
 
 
 (<- ui:element$register_element ui_button_element_type "ui:element:button" (. ui:element$ui_element_callbacks_type
-	_deserialize_button
+	_handle_button_event
+	nil
 	nil
 	nil
 	nil

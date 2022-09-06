@@ -9,6 +9,11 @@
 
 
 
+(= ui_event_target_type (&:
+	(~ func_type) callback
+	(~ object_type) element
+))
+
 (= ui_event_targets_type (&:
 	array_type button
 	array_type key
@@ -31,9 +36,9 @@
 	int_type _buffer_update_flags
 	gfx:pipeline$gfx_pipeline_type _pipeline
 	int_type _max_z_index
-	ui_event_targets_type _events_targets
+	ui_event_targets_type _event_targets
 ))
 
 
 
-(## ui_type)
+(## ui_event_target_type ui_type)

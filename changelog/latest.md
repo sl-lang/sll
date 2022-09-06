@@ -10,6 +10,7 @@
 
 - All UI layout functions and types are now located in `ui/layout.sll`
 - Fixed incorrect window callback calls
+- Fixed Window Manager Button events
 - *\[Linux Only\]* Fixed X11 lag when using a GFX context
 - Merged `ui/position.sll` and `ui/size.sll`
 

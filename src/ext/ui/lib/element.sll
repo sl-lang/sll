@@ -15,6 +15,7 @@
 
 
 (= ui_element_callbacks_type (&:
+	func_type button_event
 	func_type deserialize
 	func_type get_position
 	func_type serialize
@@ -49,6 +50,7 @@
 	(~ func_type) deserialize
 	(~ func_type) is_valid_element
 	(~ func_type) register_element
+	(~ func_type) register_event_handlers
 	(~ func_type) serialize
 	(~ func_type) set_parent
 	(~ func_type) update
@@ -153,6 +155,15 @@
 	(= (: _element_name_to_type name) element_type)
 ))
 
+(= register_event_handlers (,,, element
+	(? (! (<- is_valid_element element)) (@@))
+	(= data (: _element_type_data (:? element)))
+	(? data$callbacks$button_event (<- array$push element$base$ui$_event_targets$button (. ui_event_target_type
+		data$callbacks$button_event
+		element
+	)))
+))
+
 (= serialize (,,, element
 	(? (||
 		(! element)
@@ -223,6 +234,7 @@
 	deserialize
 	is_valid_element
 	register_element
+	register_event_handlers
 	serialize
 	set_parent
 	update

@@ -161,6 +161,7 @@
 
 
 (<- ui:element$register_element ui_rectangle_element_type "ui:element:rectangle" (. ui:element$ui_element_callbacks_type
+	nil
 	_deseralize_data
 	nil
 	_seralize_data

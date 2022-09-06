@@ -94,11 +94,11 @@
 					(| window$flags mask)
 					(& window$flags (~ mask))
 				))
-				(<- window$callbacks$button window button state)
+				(<- window$callbacks$button window mask state)
 				(<- (?: state
 					window$callbacks$button_down
 					window$callbacks$button_up
-				) window button)
+				) window mask)
 			}
 			3 {
 				(= mouse (:: event window_manager:cursor$window_manager_cursor_position_type))
