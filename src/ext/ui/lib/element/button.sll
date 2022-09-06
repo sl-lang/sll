@@ -25,9 +25,15 @@
 
 
 (= _handle_button_event (,,, button mouse_button state
+	(= x button$base$ui$window$inputs$mouse$x)
+	(= y button$base$ui$window$inputs$mouse$y)
 	(? (||
 		(!== mouse_button window_manager:window$FLAG_BUTTON_LEFT)
 		(! state)
+		(< x button$base$position$x)
+		(< y button$base$position$y)
+		(>= x (+ button$base$position$x button$base$position$width))
+		(>= y (+ button$base$position$y button$base$position$height))
 	) (@@))
 	(:> "Click!\n")
 ))
