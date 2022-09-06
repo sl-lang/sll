@@ -10,7 +10,7 @@
 
 
 
-(# update)
+(# set_parent update)
 
 
 
@@ -97,27 +97,27 @@
 (= deserialize (,,, ui data parent
 	(= data (:: data map_type))
 	(= element_data (: _element_type_data (: _element_name_to_type data$type)))
-	(= out (<- element_data$callbacks$deserialize
+	(= base (. ui_element_type
 		ui
-		(. ui_element_type
-			ui
-			nil
-			[
-				0
-				0
-				0
-				0
-				(<- ui:layout$deserialize (: data$layout 0))
-				(<- ui:layout$deserialize (: data$layout 1))
-				(<- ui:layout$deserialize (: data$layout 2))
-				(<- ui:layout$deserialize (: data$layout 3))
-			]
+		nil
+		[
 			0
-			[]
-		)
-		parent
-		data$data
+			0
+			0
+			0
+			(<- ui:layout$deserialize (: data$layout 0))
+			(<- ui:layout$deserialize (: data$layout 1))
+			(<- ui:layout$deserialize (: data$layout 2))
+			(<- ui:layout$deserialize (: data$layout 3))
+		]
+		0
+		[]
 	))
+	(= out (<- element_data$callbacks$deserialize ui base parent data$data))
+	(? (! out) {
+		(= out (. (: _element_name_to_type data$type) base))
+		(<- set_parent out parent)
+	})
 	(<- _update_position out)
 	(-> (= i 0) (< i ($ data$children))
 		(<- deserialize ui (: data$children i) out)

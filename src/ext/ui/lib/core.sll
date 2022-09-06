@@ -33,8 +33,35 @@
 
 
 
+(= _window_button_callback (,,, window button state
+	(= ui (<- weakref$get_default (: _window_to_ui window$id)))
+	(? (! ui) (@@))
+	(-> (= i 0) (< i ($ ui$_event_targets$button))
+		(<- (: ui$_event_targets$button i) button state)
+		(++ i)
+	)
+))
+
+(= _window_key_callback (,,, window key state
+	(= ui (<- weakref$get_default (: _window_to_ui window$id)))
+	(? (! ui) (@@))
+	(-> (= i 0) (< i ($ ui$_event_targets$key))
+		(<- (: ui$_event_targets$key i) key state)
+		(++ i)
+	)
+))
+
+(= _window_mouse_callback (,,, window x y
+	(= ui (<- weakref$get_default (: _window_to_ui window$id)))
+	(? (! ui) (@@))
+	(-> (= i 0) (< i ($ ui$_event_targets$mouse))
+		(<- (: ui$_event_targets$mouse i) x y)
+		(++ i)
+	)
+))
+
 (= _window_resize_callback (,,, window width height
-	(= ui (<- weakref$get (: _window_to_ui window$id)))
+	(= ui (<- weakref$get_default (: _window_to_ui window$id)))
 	(? (! ui) (@@))
 	(<- _update_ui_uniform_buffer ui)
 	(= ui$root$base$position$width_layout$standard$bias width)
@@ -117,6 +144,7 @@
 		[
 			[]
 			[]
+			[]
 		]
 	))
 	(= out$root (<- ui:element:container$create
@@ -131,6 +159,9 @@
 	(= out$root$base$z_index 0)
 	(<- ui:element$update out$root)
 	(<- _update_ui_uniform_buffer out)
+	(= window$callbacks$button _window_button_callback)
+	(= window$callbacks$key _window_key_callback)
+	(= window$callbacks$mouse _window_mouse_callback)
 	(= window$callbacks$size _window_resize_callback)
 	(= (: _window_to_ui window$id) (<- weakref$ref out))
 	(@@ out)
