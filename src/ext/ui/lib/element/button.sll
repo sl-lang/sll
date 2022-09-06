@@ -14,6 +14,7 @@
 		))
 	) @@string@@
 	(~ ui:element$ui_element_type) base
+	func_type callback
 ))
 
 (= ui_button_element_module_type (&:
@@ -35,12 +36,13 @@
 		(>= x (+ button$base$position$x button$base$position$width))
 		(>= y (+ button$base$position$y button$base$position$height))
 	) (@@))
-	(:> "Click!\n")
+	(<- button$callback mouse_button state)
 ))
 
-(= create (,,, ui position_layout parent
+(= create (,,, ui position_layout parent callback
 	(= out (. ui_button_element_type
 		(<- ui:element$create ui position_layout)
+		callback
 	))
 	(? parent (<- ui:element$set_parent out parent))
 	(<- ui:element$register_event_handlers out)
