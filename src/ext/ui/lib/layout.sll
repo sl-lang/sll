@@ -248,7 +248,7 @@
 		}
 	)
 	(:> "Unknown layout: " layout '\n')
-	(@@ (+ offset (/ size 2)))
+	(@@ (+ offset (/ size 4)))
 ))
 
 
