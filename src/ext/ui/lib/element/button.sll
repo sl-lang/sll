@@ -1,0 +1,64 @@
+(---
+	"string.sll"
+	"types.sll"
+	"ui/element.sll"
+)
+
+
+
+(= ui_button_element_type (&:
+	(,,, data
+		(@@ (<- string$format "<ui:element:button base=%s>"
+			(:: data$base string_type)
+		))
+	) @@string@@
+	(~ ui:element$ui_element_type) base
+))
+
+(= ui_button_element_module_type (&:
+	(~ type_type) ui_button_element_type
+	(~ func_type) create
+	(~ func_type) delete
+))
+
+
+
+(= _deserialize_button (,,, ui base parent
+	(= out (. ui_button_element_type
+		base
+	))
+	(? parent (<- ui:element$set_parent out parent))
+	(@@ out)
+))
+
+(= create (,,, ui position_layout parent
+	(= out (. ui_button_element_type
+		(<- ui:element$create ui position_layout)
+	))
+	(? parent (<- ui:element$set_parent out parent))
+	(@@ out)
+))
+
+(= delete (,,, button
+	(? (! button) (@@))
+	(= button (:: button ui_button_element_type))
+	(<- ui:element$delete button)
+))
+
+
+
+(<- ui:element$register_element ui_button_element_type "ui:element:button" (. ui:element$ui_element_callbacks_type
+	_deserialize_button
+	nil
+	nil
+	nil
+))
+
+
+
+(= ui:element:button (. ui_button_element_module_type
+	ui_button_element_type
+	create
+	delete
+))
+(## ui:element:button)

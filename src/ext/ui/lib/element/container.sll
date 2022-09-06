@@ -1,5 +1,4 @@
 (---
-	"array.sll"
 	"string.sll"
 	"types.sll"
 	"ui/element.sll"
