@@ -187,7 +187,10 @@
 	(? element$base$parent (<- array$remove element$base$parent$base$children element))
 	(= element$base$parent parent)
 	(= element$base$z_index (+ parent$base$z_index 1))
-	(? (> element$base$z_index element$base$ui$_max_z_index) {
+	(? (&&
+		element$base$ui
+		(> element$base$z_index element$base$ui$_max_z_index)
+	) {
 		(= element$base$ui$_max_z_index element$base$z_index)
 		(<- _update_ui_uniform_buffer element$base$ui)
 	})

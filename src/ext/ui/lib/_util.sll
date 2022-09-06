@@ -7,7 +7,7 @@
 (= _update_ui_uniform_buffer (,,, ui
 	(= (: ui$_uniform_buffer$data 0) (/ 2.0 ui$window$layout$geometry$width))
 	(= (: ui$_uniform_buffer$data 5) (/ 2.0 ui$window$layout$geometry$height))
-	(= (: ui$_uniform_buffer$data 10) (/ -1.0 ui$_max_z_index))
+	(= (: ui$_uniform_buffer$data 10) (/ -1.0 (+ ui$_max_z_index 1)))
 	(= ui$_buffer_update_flags (| ui$_buffer_update_flags UI_BUFFER_UPDATE_FLAG_UNIFORM))
 ))
 
