@@ -31,8 +31,6 @@
 	(@@ out)
 ))
 
-
-
 (= create (,,, ui position_layout parent
 	(= out (. ui_button_element_type
 		(<- ui:element$create ui position_layout)
