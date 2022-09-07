@@ -49,18 +49,14 @@
 	(? (!== mouse_button window_manager:window$FLAG_BUTTON_LEFT) (@@))
 	(= x slider$base$ui$window$inputs$mouse$x)
 	(= y slider$base$ui$window$inputs$mouse$y)
-	(? (||
-		(! state)
-		(< x slider$base$position$x)
-		(< y slider$base$position$y)
-		(>= x (+ slider$base$position$x slider$base$position$width))
-		(>= y (+ slider$base$position$y slider$base$position$height))
-	) {
-		(= slider$_has_mouse_focus 0)
-		(@@)
-	})
-	(= slider$_has_mouse_focus 1)
-	(<- _update_handle_position slider x y)
+	(= slider$_has_mouse_focus (&&
+		state
+		(>= x slider$base$position$x)
+		(>= y slider$base$position$y)
+		(< x (+ slider$base$position$x slider$base$position$width))
+		(< y (+ slider$base$position$y slider$base$position$height))
+	))
+	(? slider$_has_mouse_focus (<- _update_handle_position slider x y))
 ))
 
 (= _deseralize_data (,,, ui base parent data
