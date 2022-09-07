@@ -19,6 +19,7 @@
 	float_type x
 	float_type y
 	ui:position$ui_position_type range
+	int_type _has_mouse_focus
 ))
 
 (= ui_slider_element_module_type (&:
@@ -44,16 +45,20 @@
 ))
 
 (= _handle_button_event (,,, slider mouse_button state
+	(? (!== mouse_button window_manager:window$FLAG_BUTTON_LEFT) (@@))
 	(= x slider$base$ui$window$inputs$mouse$x)
 	(= y slider$base$ui$window$inputs$mouse$y)
 	(? (||
-		(!== mouse_button window_manager:window$FLAG_BUTTON_LEFT)
 		(! state)
 		(< x slider$base$position$x)
 		(< y slider$base$position$y)
 		(>= x (+ slider$base$position$x slider$base$position$width))
 		(>= y (+ slider$base$position$y slider$base$position$height))
-	) (@@))
+	) {
+		(= slider$_has_mouse_focus 0)
+		(@@)
+	})
+	(= slider$_has_mouse_focus 1)
 	(<- _update_handle_position slider x y)
 ))
 
@@ -62,6 +67,10 @@
 		[slider$x slider$y slider$base$position$width slider$base$position$height]
 		slider$base$position
 	))
+))
+
+(= _handle_mouse_event (,,, slider x y
+	(? slider$_has_mouse_focus (<- _update_handle_position slider x y))
 ))
 
 (= _update_position_and_size (,,, slider
@@ -85,6 +94,7 @@
 			(: range 2)
 			(: range 3)
 		]
+		0
 	))
 	(? parent (<- ui:element$set_parent out parent))
 	(<- ui:element$register_event_handlers out)
@@ -124,6 +134,7 @@
 	_handle_button_event
 	nil
 	_get_position
+	_handle_mouse_event
 	nil
 	_update_position_and_size
 ))

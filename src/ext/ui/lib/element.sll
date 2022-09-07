@@ -18,6 +18,7 @@
 	func_type button_event
 	func_type deserialize
 	func_type get_position
+	func_type mouse_event
 	func_type serialize
 	func_type update
 ))
@@ -160,6 +161,10 @@
 	(= data (: _element_type_data (:? element)))
 	(? data$callbacks$button_event (<- array$push element$base$ui$_event_targets$button (. ui_event_target_type
 		data$callbacks$button_event
+		element
+	)))
+	(? data$callbacks$mouse_event (<- array$push element$base$ui$_event_targets$mouse (. ui_event_target_type
+		data$callbacks$mouse_event
 		element
 	)))
 ))

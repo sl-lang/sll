@@ -976,7 +976,7 @@ abc` '\n')
 (= rectangle4 (<- ui:element:rectangle$create
 	ui_window
 	[
-		(<- ui:layout$create_standard_layout 0 0)
+		(<- ui:layout$create_standard_layout 0 -15)
 		(<- ui:layout$create_standard_layout 0 -10)
 		(<- ui:layout$create_standard_layout 0 30)
 		(<- ui:layout$create_standard_layout 1 20)
