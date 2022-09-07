@@ -1,5 +1,6 @@
 (---
 	"array.sll"
+	"math.sll"
 	"string.sll"
 	"types.sll"
 	"ui/element.sll"
@@ -17,9 +18,10 @@
 		))
 	) @@string@@
 	(~ ui:element$ui_element_type) base
+	ui:position$ui_position_type range
+	float_type steps
 	float_type x
 	float_type y
-	ui:position$ui_position_type range
 	int_type _has_mouse_focus
 ))
 
@@ -33,12 +35,20 @@
 
 
 (= _update_handle_position (,,, slider x y
-	(? (< x slider$range$x) (= x slider$range$x))
-	(? (< y slider$range$y) (= y slider$range$y))
-	(= x2 (+ slider$range$x slider$range$width))
-	(= y2 (+ slider$range$y slider$range$height))
-	(? (>= x x2) (= x x2))
-	(? (>= y y2) (= y y2))
+	(= x (- x slider$range$x))
+	(= y (- y slider$range$y))
+	(? (< x 0) (= x 0))
+	(? (< y 0) (= y 0))
+	(? (> slider$steps 1) {
+		(= scale (/ slider$range$width (- slider$steps 1)))
+		(= x (* (<- math$round (/ x scale)) scale))
+		(= scale (/ slider$range$height (- slider$steps 1)))
+		(= y (* (<- math$round (/ y scale)) scale))
+	})
+	(? (>= x slider$range$width) (= x slider$range$width))
+	(? (>= y slider$range$height) (= y slider$range$height))
+	(= x (+ x slider$range$x))
+	(= y (+ y slider$range$y))
 	(? (&& (=== x slider$x) (=== y slider$y)) (@@))
 	(= slider$x x)
 	(= slider$y y)
@@ -62,8 +72,6 @@
 (= _deseralize_data (,,, ui base parent data
 	(= out (. ui_slider_element_type
 		base
-		0.0
-		0.0
 		[
 			0
 			0
@@ -75,10 +83,14 @@
 			(<- ui:layout$deserialize (: data 3))
 		]
 		0
+		0.0
+		0.0
+		0
 	))
 	(? parent (<- ui:element$set_parent out parent))
 	(<- ui:element$register_event_handlers out)
-	(<- _update_position_and_size out)
+	(<- ui:position$update out$range out$base$position)
+	(<- _update_handle_position out 0.0 0.0)
 	(@@ out)
 ))
 
@@ -102,17 +114,11 @@
 	])
 ))
 
-(= _update_position_and_size (,,, slider
-	(<- ui:position$update slider$range slider$base$position)
-	(<- _update_handle_position slider slider$x slider$y)
-))
-
-(= create (,,, ui position_layout parent range
+(= create (,,, ui position_layout parent range steps
 	(= range (:: range array_type))
+	(= steps (:: steps int_type))
 	(= out (. ui_slider_element_type
 		(<- ui:element$create ui position_layout)
-		0.0
-		0.0
 		[
 			0
 			0
@@ -123,11 +129,15 @@
 			(: range 2)
 			(: range 3)
 		]
+		steps
+		0.0
+		0.0
 		0
 	))
 	(? parent (<- ui:element$set_parent out parent))
 	(<- ui:element$register_event_handlers out)
-	(<- _update_position_and_size out)
+	(<- ui:position$update out$range out$base$position)
+	(<- _update_handle_position out 0.0 0.0)
 	(@@ out)
 ))
 
