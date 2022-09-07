@@ -5,6 +5,8 @@
 	],
 	"shaders": {
 		"shader/color_vertex.vert": "lib/shader/_color_vertex_shader.sll",
-		"shader/color_fragment.frag": "lib/shader/_color_fragment_shader.sll"
+		"shader/color_fragment.frag": "lib/shader/_color_fragment_shader.sll",
+		"shader/texture_vertex.vert": "lib/shader/_texture_vertex_shader.sll",
+		"shader/texture_fragment.frag": "lib/shader/_texture_fragment_shader.sll"
 	}
 }
