@@ -971,9 +971,9 @@ abc` '\n')
 	ui_window
 	[
 		(<- ui:layout$create_standard_layout 0 0)
-		(<- ui:layout$create_standard_layout 0 0)
-		(<- ui:layout$create_standard_layout 1 0)
-		(<- ui:layout$create_standard_layout 1 0)
+		(<- ui:layout$create_standard_layout 0 -10)
+		(<- ui:layout$create_standard_layout 0 30)
+		(<- ui:layout$create_standard_layout 1 20)
 	]
 	slider
 	[0.72 0.67 0.3]

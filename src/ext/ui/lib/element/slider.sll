@@ -34,6 +34,21 @@
 	))
 ))
 
+(= _update_position_and_size (,,, slider
+	(= new_x slider$x)
+	(= new_y slider$y)
+	(? (< new_x slider$base$position$x) (= new_x slider$base$position$x))
+	(? (< new_y slider$base$position$y) (= new_y slider$base$position$y))
+	(= x2 (+ slider$base$position$x slider$base$position$width))
+	(= y2 (+ slider$base$position$y slider$base$position$height))
+	(? (>= new_x x2) (= new_x x2))
+	(? (>= new_y y2) (= new_y y2))
+	(= update? (|| (!== new_x slider$x) (!== new_y slider$y)))
+	(= slider$x new_x)
+	(= slider$y new_y)
+	(? update? (<- ui:element$update (: slider$base$children 0)))
+))
+
 (= create (,,, ui position_layout parent
 	(= out (. ui_slider_element_type
 		(<- ui:element$create ui position_layout)
@@ -58,10 +73,12 @@
 		(!== (%% element$base$parent) (%% slider))
 	) (@@))
 	(-> (= i 0) (< i ($ slider$base$children))
-		(? (=== (%% (: slider$base$children i) (%% element))) {
+		(? (=== (%% (: slider$base$children i)) (%% element)) {
 			(= temp (: slider$base$children 0))
 			(= (: slider$base$children 0) element)
 			(= (: slider$base$children i) temp)
+			(<- ui:element$update temp)
+			(<- ui:element$update element)
 			(@)
 		})
 		(++ i)
@@ -75,7 +92,7 @@
 	nil
 	_get_position
 	nil
-	nil
+	_update_position_and_size
 ))
 
 
