@@ -29,6 +29,7 @@
 	(~ type_type) ui_slider_element_type
 	(~ func_type) create
 	(~ func_type) delete
+	(~ func_type) set_position
 	(~ func_type) set_slider_element
 ))
 
@@ -82,7 +83,7 @@
 			(<- ui:layout$deserialize (: data 2))
 			(<- ui:layout$deserialize (: data 3))
 		]
-		0
+		(: data 4)
 		0.0
 		0.0
 		0
@@ -111,6 +112,7 @@
 		(<- ui:layout$serialize slider$range$y_layout)
 		(<- ui:layout$serialize slider$range$width_layout)
 		(<- ui:layout$serialize slider$range$height_layout)
+		slider$steps
 	])
 ))
 
@@ -145,6 +147,21 @@
 	(? (! slider) (@@))
 	(= slider (:: slider ui_slider_element_type))
 	(<- ui:element$delete slider)
+))
+
+(= set_position (,,, slider x y
+	(? (! slider) (@@))
+	(= slider (:: slider ui_slider_element_type))
+	(= x (:: x float_type))
+	(= y (:: y float_type))
+	(? (> slider$steps 0) {
+		(= x (/ (* x slider$base$position$width) slider$steps))
+		(= y (/ (* y slider$base$position$height) slider$steps))
+	})
+	(<- _update_handle_position slider
+		(+ slider$base$position$x x)
+		(+ slider$base$position$y y)
+	)
 ))
 
 (= set_slider_element (,,, slider element
@@ -184,6 +201,7 @@
 	ui_slider_element_type
 	create
 	delete
+	set_position
 	set_slider_element
 ))
 (## ui:element:slider)

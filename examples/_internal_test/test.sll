@@ -896,9 +896,6 @@ abc` '\n')
 ; )
 
 (= ui_window (<- ui:core$create (<- window_manager:window$create [0 0 900 600] nil "Example Window" true)))
-(= ui_window$window$callbacks$key_down (,,, window key
-	(? (=== key window_manager:keyboard$KEY_ESCAPE) (<- window_manager:window$destroy window))
-))
 (<- ui:core$set_background ui_window [0.5 0.1 0.8])
 (= rectangle (<- ui:element:rectangle$create
 	ui_window
@@ -961,7 +958,7 @@ abc` '\n')
 		(<- ui:layout$create_standard_layout 1 0)
 		(<- ui:layout$create_standard_layout 0 0)
 	]
-	8
+	9
 ))
 (= rectangle3 (<- ui:element:rectangle$create
 	ui_window
@@ -991,6 +988,12 @@ abc` '\n')
 (:> (<- json$stringify layout_data) '\n')
 (= new_layout_data (<- ui:element$serialize (<- ui:element$deserialize nil layout_data)))
 (:> [new_layout_data (=== new_layout_data layout_data)] '\n')
+(= ui_window$window$callbacks$key_down (,,, window key
+	(?? key
+		window_manager:keyboard$KEY_ESCAPE (<- window_manager:window$destroy window)
+		'S' (<- ui:element:slider$set_position slider 5 0)
+	)
+))
 (-> nil (! (& ui_window$window$flags window_manager:window$FLAG_CLOSED))
 	(<- ui:core$update ui_window false)
 )
