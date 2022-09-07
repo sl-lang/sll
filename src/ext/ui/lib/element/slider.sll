@@ -95,7 +95,8 @@
 	(? parent (<- ui:element$set_parent out parent))
 	(<- ui:element$register_event_handlers out)
 	(<- ui:position$update out$range out$base$position)
-	(<- _update_handle_position out 0.0 0.0)
+	(= out$x out$base$position$x)
+	(= out$y out$base$position$y)
 	(@@ out)
 ))
 
@@ -146,7 +147,8 @@
 	(? parent (<- ui:element$set_parent out parent))
 	(<- ui:element$register_event_handlers out)
 	(<- ui:position$update out$range out$base$position)
-	(<- _update_handle_position out 0.0 0.0)
+	(= out$x out$base$position$x)
+	(= out$y out$base$position$y)
 	(@@ out)
 ))
 
