@@ -4,7 +4,7 @@
 		"window_manager"
 	],
 	"shaders": {
-		"shader/color_vertex.vert": "lib/_color_vertex_shader.sll",
-		"shader/color_fragment.frag": "lib/_color_fragment_shader.sll"
+		"shader/color_vertex.vert": "lib/shader/_color_vertex_shader.sll",
+		"shader/color_fragment.frag": "lib/shader/_color_fragment_shader.sll"
 	}
 }
