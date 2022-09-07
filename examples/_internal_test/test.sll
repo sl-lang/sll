@@ -991,6 +991,7 @@ abc` '\n')
 (= ui_window$window$callbacks$key_down (,,, window key
 	(?? key
 		window_manager:keyboard$KEY_ESCAPE (<- window_manager:window$destroy window)
+		'D' (:> (<- ui:element:slider$get_position slider) '\n')
 		'S' (<- ui:element:slider$set_position slider 5 0)
 	)
 ))

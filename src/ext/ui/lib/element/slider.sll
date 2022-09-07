@@ -30,6 +30,7 @@
 	(~ type_type) ui_slider_element_type
 	(~ func_type) create
 	(~ func_type) delete
+	(~ func_type) get_position
 	(~ func_type) set_position
 	(~ func_type) set_slider_element
 ))
@@ -158,6 +159,23 @@
 	(<- ui:element$delete slider)
 ))
 
+(= get_position (,,, slider
+	(? (! slider) (@@ [0 0]))
+	(= slider (:: slider ui_slider_element_type))
+	(= x (- slider$x slider$range$x))
+	(= y (- slider$y slider$range$y))
+	(@@ [
+		(?: (> slider$x_steps 1)
+			(<- math$round (/ (* x slider$x_steps) slider$base$position$width))
+			x
+		)
+		(?: (> slider$y_steps 1)
+			(<- math$round (/ (* y slider$y_steps) slider$base$position$height))
+			y
+		)
+	])
+))
+
 (= set_position (,,, slider x y
 	(? (! slider) (@@))
 	(= slider (:: slider ui_slider_element_type))
@@ -208,6 +226,7 @@
 	ui_slider_element_type
 	create
 	delete
+	get_position
 	set_position
 	set_slider_element
 ))
