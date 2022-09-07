@@ -21,6 +21,7 @@
 	ui:position$ui_position_type range
 	float_type x_steps
 	float_type y_steps
+	func_type callback
 	float_type x
 	float_type y
 	int_type _has_mouse_focus
@@ -58,6 +59,8 @@
 	(= slider$x x)
 	(= slider$y y)
 	(<- ui:element$update (: slider$base$children 0))
+	(<- slider$callback slider x y)
+	(<- slider$callback slider x y)
 ))
 
 (= _handle_button_event (,,, slider mouse_button state
@@ -89,6 +92,7 @@
 		]
 		(: data 4)
 		(: data 5)
+		nil
 		0.0
 		0.0
 		0
@@ -123,10 +127,11 @@
 	])
 ))
 
-(= create (,,, ui position_layout parent range x_steps y_steps
+(= create (,,, ui position_layout parent range x_steps y_steps callback
 	(= range (:: range array_type))
 	(= x_steps (:: x_steps int_type))
 	(= y_steps (:: y_steps int_type))
+	(= callback (:: callback func_type))
 	(= out (. ui_slider_element_type
 		(<- ui:element$create ui position_layout)
 		[
@@ -141,6 +146,7 @@
 		]
 		x_steps
 		y_steps
+		callback
 		0.0
 		0.0
 		0

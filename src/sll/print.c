@@ -180,9 +180,9 @@ static sll_node_t _print_node_internal(const sll_source_file_t* source_file,cons
 		case SLL_NODE_TYPE_STRING:
 			{
 				sll_file_write_char(out,'"',NULL);
-				sll_string_t* s=source_file->string_table.data+node->data.string_index;
-				for (sll_string_length_t i=0;i<s->length;i++){
-					_print_char(s->data[i],out);
+				const sll_string_t* str=source_file->string_table.data+node->data.string_index;
+				for (sll_string_length_t i=0;i<str->length;i++){
+					_print_char(str->data[i],out);
 				}
 				sll_file_write_char(out,'"',NULL);
 				return node+1;
@@ -256,7 +256,12 @@ static sll_node_t _print_node_internal(const sll_source_file_t* source_file,cons
 					_print_identifier(function->args[i],source_file,out);
 				}
 				if (function->description_string_index!=SLL_MAX_STRING_INDEX){
-					SLL_UNIMPLEMENTED();
+					PRINT_STATIC_STRING(" \"",out);
+					const sll_string_t* str=source_file->string_table.data+function->description_string_index;
+					for (sll_string_length_t i=0;i<str->length;i++){
+						_print_char(str->data[i],out);
+					}
+					sll_file_write_char(out,'"',NULL);
 				}
 			}
 		case SLL_NODE_TYPE_INTERNAL_FUNC:
