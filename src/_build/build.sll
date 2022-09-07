@@ -1,6 +1,7 @@
 (---
 	"@build-script/config.sll"
 	"@build-script/hashlist.sll"
+	"@build-script/shader.sll"
 	"@build-script/util.sll"
 	"array.sll"
 	"error.sll"
@@ -92,6 +93,11 @@
 		)
 		"r"
 	))
+	(= root (<- string$replace
+		config$EXTENSION_ROOT_SOURCE_FILE_PATH
+		"<name>"
+		name
+	))
 	(? (! fh$error_data) {
 		(= data (<- json$parse
 			(<- file$read
@@ -115,14 +121,7 @@
 				(<- path$mkdir install_dir)
 				(= script (: data$installation_scripts sys$PLATFORM))
 				(? script {
-					(= script (<- path$join
-						(<- string$replace
-							config$EXTENSION_ROOT_SOURCE_FILE_PATH
-							"<name>"
-							name
-						)
-						script
-					))
+					(= script (<- path$join root script))
 					(? (=== sys$PLATFORM "windows") (= script (<- string$replace
 						script
 						'/'
@@ -135,6 +134,19 @@
 					})
 				})
 			})
+		})
+		(? (&&
+			data$shaders
+			(=== (:? data$shaders) map_type)
+		) {
+			(= keys (:: data$shaders map_key_type))
+			(-> (= i 0) (< i ($ keys))
+				(<- shader$compile
+					(<- path$join root (: keys i))
+					(<- path$join root (: data$shaders (: keys i)))
+				)
+				(++ i)
+			)
 		})
 		(? (&&
 			data$required_extensions
@@ -155,15 +167,7 @@
 				string_type
 			))
 			(? dir {
-				(= out$platform_file_path (+
-					(<- string$replace
-						config$EXTENSION_ROOT_SOURCE_FILE_PATH
-						"<name>"
-						name
-					)
-					'/'
-					dir
-				))
+				(= out$platform_file_path (+ root '/' dir))
 			})
 		})
 		(? (&&

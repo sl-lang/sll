@@ -96,6 +96,8 @@
 	(~ array_type) FUZZER_COMPILATION_COMMAND
 	(~ array_type) FUZZER_DEBUGGER_COMPILATION_COMMAND
 	(~ array_type) FUZZER_EXECUTION_COMMAND
+	(~ array_type) GLSL_COMPILATION_COMMAND
+	(~ array_type) GLSL_COMPILATION_SHADER_FILE_PATH
 	(~ array_type) HASHLIST_FILE_EXTENSIONS
 	(~ string_type) HASHLIST_FILE_PATH
 	(~ array_type) HASHLIST_INCLUDE_FILE_EXTENSIONS
@@ -480,6 +482,8 @@
 		"-max_total_time="
 		(<- sys$get_env "SLL_FUZZER_TIME" 60)
 	)]
+	[(+ "build/ext/gfx_" sys$PLATFORM "/glslang/bin/glslangValidator" (* ".exe" (=== sys$PLATFORM "windows"))) "--target-env" "spirv1.0" "-g0" "-Os" "-V" "-o" "build/compiled_shader.spv"]
+	"build/compiled_shader.spv"
 	[".asm" ".c" ".h" ".inc"]
 	"build/.files"
 	[".h" ".inc"]

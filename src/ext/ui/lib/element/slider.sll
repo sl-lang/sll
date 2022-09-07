@@ -59,7 +59,7 @@
 	(= slider$x screen_x)
 	(= slider$y screen_y)
 	(<- ui:element$update (: slider$base$children 0))
-	;;; FIXME: Currently due to an unknown bug the following line needs to be duplicated!
+	;;; FIXME: Currently due to an unknown bug the following line needs to be duplicated
 	(<- slider$callback slider x y)
 	(<- slider$callback slider x y)
 ))

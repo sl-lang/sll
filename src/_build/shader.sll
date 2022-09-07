@@ -1,0 +1,37 @@
+(---
+	"@build-script/config.sll"
+	"@build-script/util.sll"
+	"file.sll"
+	"log.sll"
+	"path.sll"
+	"string.sll"
+	"types.sll"
+)
+
+
+
+(= shader_module_type (&:
+	(~ func_type) compile
+))
+
+
+
+(= compile (,,, source_file_path target_file_path
+	(<- log$log "Compiling GLSL shader from '" source_file_path "'...")
+	(<- log$log "  Compiling shader...")
+	(? (<- util$execute (+ config$GLSL_COMPILATION_COMMAND [source_file_path])) (<- util$fail_and_exit))
+	(<- log$log "  Loading compiled shader...")
+	(= data (<- file$read (<- file$open config$GLSL_COMPILATION_SHADER_FILE_PATH "r")))
+	(= name (: (<- path$split target_file_path) 1))
+	(= name (<- string$upper_case (: name 0 (<- string$index name '.'))))
+	(<- log$log "  Generating code in '" target_file_path "' as '" name "'...")
+	(= fh (<- file$open target_file_path "w"))
+	(<- file$write fh "(= " name ' ' (: (<- string$str [data]) 1 -1) ")\n(## " name ")\n")
+))
+
+
+
+(= shader (. shader_module_type
+	compile
+))
+(## shader)
