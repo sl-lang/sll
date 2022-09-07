@@ -19,7 +19,8 @@
 	) @@string@@
 	(~ ui:element$ui_element_type) base
 	ui:position$ui_position_type range
-	float_type steps
+	float_type x_steps
+	float_type y_steps
 	float_type x
 	float_type y
 	int_type _has_mouse_focus
@@ -40,10 +41,12 @@
 	(= y (- y slider$range$y))
 	(? (< x 0) (= x 0))
 	(? (< y 0) (= y 0))
-	(? (> slider$steps 1) {
-		(= scale (/ slider$range$width (- slider$steps 1)))
+	(? (> slider$x_steps 1) {
+		(= scale (/ slider$range$width (- slider$x_steps 1)))
 		(= x (* (<- math$round (/ x scale)) scale))
-		(= scale (/ slider$range$height (- slider$steps 1)))
+	})
+	(? (> slider$y_steps 1) {
+		(= scale (/ slider$range$height (- slider$y_steps 1)))
 		(= y (* (<- math$round (/ y scale)) scale))
 	})
 	(? (>= x slider$range$width) (= x slider$range$width))
@@ -84,6 +87,7 @@
 			(<- ui:layout$deserialize (: data 3))
 		]
 		(: data 4)
+		(: data 5)
 		0.0
 		0.0
 		0
@@ -112,13 +116,15 @@
 		(<- ui:layout$serialize slider$range$y_layout)
 		(<- ui:layout$serialize slider$range$width_layout)
 		(<- ui:layout$serialize slider$range$height_layout)
-		slider$steps
+		slider$x_steps
+		slider$y_steps
 	])
 ))
 
-(= create (,,, ui position_layout parent range steps
+(= create (,,, ui position_layout parent range x_steps y_steps
 	(= range (:: range array_type))
-	(= steps (:: steps int_type))
+	(= x_steps (:: x_steps int_type))
+	(= y_steps (:: y_steps int_type))
 	(= out (. ui_slider_element_type
 		(<- ui:element$create ui position_layout)
 		[
@@ -131,7 +137,8 @@
 			(: range 2)
 			(: range 3)
 		]
-		steps
+		x_steps
+		y_steps
 		0.0
 		0.0
 		0
@@ -154,10 +161,8 @@
 	(= slider (:: slider ui_slider_element_type))
 	(= x (:: x float_type))
 	(= y (:: y float_type))
-	(? (> slider$steps 0) {
-		(= x (/ (* x slider$base$position$width) slider$steps))
-		(= y (/ (* y slider$base$position$height) slider$steps))
-	})
+	(? (> slider$x_steps 1) (= x (/ (* x slider$base$position$width) slider$x_steps)))
+	(? (> slider$y_steps 1) (= y (/ (* y slider$base$position$width) slider$y_steps)))
 	(<- _update_handle_position slider
 		(+ slider$base$position$x x)
 		(+ slider$base$position$y y)
