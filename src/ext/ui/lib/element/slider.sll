@@ -1,0 +1,89 @@
+(---
+	"array.sll"
+	"string.sll"
+	"types.sll"
+	"ui/element.sll"
+)
+
+
+
+(= ui_slider_element_type (&:
+	(,,, data
+		(@@ (<- string$format "<ui:element:slider base=%s>"
+			(:: data$base string_type)
+		))
+	) @@string@@
+	(~ ui:element$ui_element_type) base
+	float_type x
+	float_type y
+))
+
+(= ui_slider_element_module_type (&:
+	(~ type_type) ui_slider_element_type
+	(~ func_type) create
+	(~ func_type) delete
+	(~ func_type) set_slider_element
+))
+
+
+
+(= _get_position (,,, slider element
+	(@@ (?: (=== (%% element) (%% (: slider$base$children 0)))
+		[slider$x slider$y slider$base$position$width slider$base$position$height]
+		slider$base$position
+	))
+))
+
+(= create (,,, ui position_layout parent
+	(= out (. ui_slider_element_type
+		(<- ui:element$create ui position_layout)
+		0.0
+		0.0
+	))
+	(? parent (<- ui:element$set_parent out parent))
+	(@@ out)
+))
+
+(= delete (,,, slider
+	(? (! slider) (@@))
+	(= slider (:: slider ui_slider_element_type))
+	(<- ui:element$delete slider)
+))
+
+(= set_slider_element (,,, slider element
+	(? (! slider) (@@))
+	(= slider (:: slider ui_slider_element_type))
+	(? (||
+		(! (<- ui:element$is_valid_element element))
+		(!== (%% element$base$parent) (%% slider))
+	) (@@))
+	(-> (= i 0) (< i ($ slider$base$children))
+		(? (=== (%% (: slider$base$children i) (%% element))) {
+			(= temp (: slider$base$children 0))
+			(= (: slider$base$children 0) element)
+			(= (: slider$base$children i) temp)
+			(@)
+		})
+		(++ i)
+	)
+))
+
+
+
+(<- ui:element$register_element ui_slider_element_type "ui:element:slider" (. ui:element$ui_element_callbacks_type
+	nil
+	nil
+	_get_position
+	nil
+	nil
+))
+
+
+
+(= ui:element:slider (. ui_slider_element_module_type
+	ui_slider_element_type
+	create
+	delete
+	set_slider_element
+))
+(## ui:element:slider)
