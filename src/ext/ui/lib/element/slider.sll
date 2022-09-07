@@ -3,6 +3,8 @@
 	"string.sll"
 	"types.sll"
 	"ui/element.sll"
+	"ui/position.sll"
+	"window_manager/window.sll"
 )
 
 
@@ -16,7 +18,7 @@
 	(~ ui:element$ui_element_type) base
 	float_type x
 	float_type y
-	ui:postion$ui_position_type range
+	ui:position$ui_position_type range
 ))
 
 (= ui_slider_element_module_type (&:
@@ -28,6 +30,33 @@
 
 
 
+(= _update_handle_position (,,, slider x y
+	(? (< x slider$range$x) (= x slider$range$x))
+	(? (< y slider$range$y) (= y slider$range$y))
+	(= x2 (+ slider$range$x slider$range$width))
+	(= y2 (+ slider$range$y slider$range$height))
+	(? (>= x x2) (= x x2))
+	(? (>= y y2) (= y y2))
+	(? (&& (=== x slider$x) (=== y slider$y)) (@@))
+	(= slider$x x)
+	(= slider$y y)
+	(<- ui:element$update (: slider$base$children 0))
+))
+
+(= _handle_button_event (,,, slider mouse_button state
+	(= x slider$base$ui$window$inputs$mouse$x)
+	(= y slider$base$ui$window$inputs$mouse$y)
+	(? (||
+		(!== mouse_button window_manager:window$FLAG_BUTTON_LEFT)
+		(! state)
+		(< x slider$base$position$x)
+		(< y slider$base$position$y)
+		(>= x (+ slider$base$position$x slider$base$position$width))
+		(>= y (+ slider$base$position$y slider$base$position$height))
+	) (@@))
+	(<- _update_handle_position slider x y)
+))
+
 (= _get_position (,,, slider element
 	(@@ (?: (=== (%% element) (%% (: slider$base$children 0)))
 		[slider$x slider$y slider$base$position$width slider$base$position$height]
@@ -37,18 +66,7 @@
 
 (= _update_position_and_size (,,, slider
 	(<- ui:position$update slider$range slider$base$position)
-	(= new_x slider$x)
-	(= new_y slider$y)
-	(? (< new_x slider$base$position$x) (= new_x slider$base$position$x))
-	(? (< new_y slider$base$position$y) (= new_y slider$base$position$y))
-	(= x2 (+ slider$base$position$x slider$base$position$width))
-	(= y2 (+ slider$base$position$y slider$base$position$height))
-	(? (>= new_x x2) (= new_x x2))
-	(? (>= new_y y2) (= new_y y2))
-	(? (&& (=== new_x slider$x) (=== new_y slider$y)) (@@))
-	(= slider$x new_x)
-	(= slider$y new_y)
-	(<- ui:element$update (: slider$base$children 0))
+	(<- _update_handle_position slider slider$x slider$y)
 ))
 
 (= create (,,, ui position_layout parent range
@@ -69,6 +87,7 @@
 		]
 	))
 	(? parent (<- ui:element$set_parent out parent))
+	(<- ui:element$register_event_handlers out)
 	(<- _update_position_and_size out)
 	(@@ out)
 ))
@@ -102,7 +121,7 @@
 
 
 (<- ui:element$register_element ui_slider_element_type "ui:element:slider" (. ui:element$ui_element_callbacks_type
-	nil
+	_handle_button_event
 	nil
 	_get_position
 	nil
