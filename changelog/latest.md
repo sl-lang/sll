@@ -5,7 +5,7 @@
 - Ability to create UI elements without the parent UI, for layout calculation purposes
 - Ability to serialize and deserialize UI elements and layouts
 - Implemented filter layouts in the UI extension
-- UI button element
+- UI elements: `ui:element:button` and `ui:element:slider`
 
 ## Updated
 
@@ -13,6 +13,7 @@
 - Fixed incorrect window callback calls
 - Fixed Window manager mouse-button related events
 - *\[Linux Only\]* Fixed X11 lag when using a GFX context
+- *\[Linux Only\]* Fixed X11 negative mouse position overflow
 - Merged `ui/position.sll` and `ui/size.sll`
 
 ## Removed
