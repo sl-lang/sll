@@ -16,6 +16,7 @@
 	(~ ui:element$ui_element_type) base
 	float_type x
 	float_type y
+	ui:postion$ui_position_type range
 ))
 
 (= ui_slider_element_module_type (&:
@@ -35,6 +36,7 @@
 ))
 
 (= _update_position_and_size (,,, slider
+	(<- ui:position$update slider$range slider$base$position)
 	(= new_x slider$x)
 	(= new_y slider$y)
 	(? (< new_x slider$base$position$x) (= new_x slider$base$position$x))
@@ -49,13 +51,25 @@
 	(<- ui:element$update (: slider$base$children 0))
 ))
 
-(= create (,,, ui position_layout parent
+(= create (,,, ui position_layout parent range
+	(= range (:: range array_type))
 	(= out (. ui_slider_element_type
 		(<- ui:element$create ui position_layout)
 		0.0
 		0.0
+		[
+			0
+			0
+			0
+			0
+			(: range 0)
+			(: range 1)
+			(: range 2)
+			(: range 3)
+		]
 	))
 	(? parent (<- ui:element$set_parent out parent))
+	(<- _update_position_and_size out)
 	(@@ out)
 ))
 

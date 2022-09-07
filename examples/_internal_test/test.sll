@@ -955,6 +955,12 @@ abc` '\n')
 		(<- ui:layout$create_standard_layout 0 100)
 	]
 	ui_window$root
+	[
+		(<- ui:layout$create_standard_layout 0 0)
+		(<- ui:layout$create_standard_layout 0 0)
+		(<- ui:layout$create_standard_layout 1 0)
+		(<- ui:layout$create_standard_layout 0 0)
+	]
 ))
 (= rectangle3 (<- ui:element:rectangle$create
 	ui_window
