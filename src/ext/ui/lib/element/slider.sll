@@ -43,10 +43,10 @@
 	(= y2 (+ slider$base$position$y slider$base$position$height))
 	(? (>= new_x x2) (= new_x x2))
 	(? (>= new_y y2) (= new_y y2))
-	(= update? (|| (!== new_x slider$x) (!== new_y slider$y)))
+	(? (&& (=== new_x slider$x) (=== new_y slider$y)) (@@))
 	(= slider$x new_x)
 	(= slider$y new_y)
-	(? update? (<- ui:element$update (: slider$base$children 0)))
+	(<- ui:element$update (: slider$base$children 0))
 ))
 
 (= create (,,, ui position_layout parent
