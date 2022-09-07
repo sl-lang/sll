@@ -3,6 +3,7 @@
 	"string.sll"
 	"types.sll"
 	"ui/element.sll"
+	"ui/layout.sll"
 	"ui/position.sll"
 	"window_manager/window.sll"
 )
@@ -62,6 +63,29 @@
 	(<- _update_handle_position slider x y)
 ))
 
+(= _deseralize_data (,,, ui base parent data
+	(= out (. ui_slider_element_type
+		base
+		0.0
+		0.0
+		[
+			0
+			0
+			0
+			0
+			(<- ui:layout$deserialize (: data 0))
+			(<- ui:layout$deserialize (: data 1))
+			(<- ui:layout$deserialize (: data 2))
+			(<- ui:layout$deserialize (: data 3))
+		]
+		0
+	))
+	(? parent (<- ui:element$set_parent out parent))
+	(<- ui:element$register_event_handlers out)
+	(<- _update_position_and_size out)
+	(@@ out)
+))
+
 (= _get_position (,,, slider element
 	(@@ (?: (=== (%% element) (%% (: slider$base$children 0)))
 		[slider$x slider$y slider$base$position$width slider$base$position$height]
@@ -71,6 +95,15 @@
 
 (= _handle_mouse_event (,,, slider x y
 	(? slider$_has_mouse_focus (<- _update_handle_position slider x y))
+))
+
+(= _serialize_data (,,, slider
+	(@@ [
+		(<- ui:layout$serialize slider$range$x_layout)
+		(<- ui:layout$serialize slider$range$y_layout)
+		(<- ui:layout$serialize slider$range$width_layout)
+		(<- ui:layout$serialize slider$range$height_layout)
+	])
 ))
 
 (= _update_position_and_size (,,, slider
@@ -132,10 +165,10 @@
 
 (<- ui:element$register_element ui_slider_element_type "ui:element:slider" (. ui:element$ui_element_callbacks_type
 	_handle_button_event
-	nil
+	_deseralize_data
 	_get_position
 	_handle_mouse_event
-	nil
+	_serialize_data
 	_update_position_and_size
 ))
 
