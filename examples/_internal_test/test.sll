@@ -44,7 +44,7 @@
 	"ui/core.sll"
 	"ui/element.sll"
 	"ui/element/button.sll"
-	"ui/element/rectangle.sll"
+	"ui/element/color.sll"
 	"ui/element/slider.sll"
 	"ui/layout.sll"
 	"ui/texture.sll"
@@ -898,7 +898,7 @@ abc` '\n')
 
 (= ui_window (<- ui:core$create (<- window_manager:window$create [0 0 900 600] nil "Example Window" true)))
 (<- ui:core$set_background ui_window [0.5 0.1 0.8])
-(= rectangle (<- ui:element:rectangle$create
+(= rectangle (<- ui:element:color$create
 	ui_window
 	[
 		(<- ui:layout$create_filter_layout ui:layout$FILTER_HIGHEST [
@@ -930,10 +930,10 @@ abc` '\n')
 	rectangle
 	(,,,
 		(:> "Click!\n")
-		(<- ui:element:rectangle$set_color rectangle2 [rectangle2$color$blue rectangle2$color$red rectangle2$color$green])
+		(<- ui:element:color$set_color rectangle2 [rectangle2$rgb$blue rectangle2$rgb$red rectangle2$rgb$green])
 	)
 ))
-(= rectangle2 (<- ui:element:rectangle$create
+(= rectangle2 (<- ui:element:color$create
 	ui_window
 	[
 		(<- ui:layout$create_standard_layout 0 0)
@@ -965,7 +965,7 @@ abc` '\n')
 		(:> [x y] '\n')
 	)
 ))
-(= rectangle3 (<- ui:element:rectangle$create
+(= rectangle3 (<- ui:element:color$create
 	ui_window
 	[
 		(<- ui:layout$create_standard_layout 0 0)
@@ -976,7 +976,7 @@ abc` '\n')
 	slider
 	[0.2 0.67 0.72]
 ))
-(= rectangle4 (<- ui:element:rectangle$create
+(= rectangle4 (<- ui:element:color$create
 	ui_window
 	[
 		(<- ui:layout$create_standard_layout 0 -15)
