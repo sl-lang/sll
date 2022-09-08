@@ -193,6 +193,11 @@
 	(<- gfx:buffer$draw ui$_index_buffer)
 	(-> (= i 0) (< i ($ ui$_textures))
 		(= texture (: ui$_textures i))
+		(? texture$_buffer_update_flags {
+			(? (& texture$_buffer_update_flags UI_BUFFER_UPDATE_FLAG_VERTEX) (<- gfx:buffer$sync texture$_vertex_buffer))
+			(? (& texture$_buffer_update_flags UI_BUFFER_UPDATE_FLAG_INDEX) (<- gfx:buffer$sync texture$_index_buffer))
+			(= texture$_buffer_update_flags 0)
+		})
 		(<- gfx:pipeline$use texture$_pipeline)
 		(<- gfx:buffer$use texture$_vertex_buffer)
 		(<- gfx:buffer$use texture$_index_buffer)
