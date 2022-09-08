@@ -169,7 +169,7 @@
 ))
 
 (= get_position (,,, slider
-	(? (! slider) (@@ [0 0]))
+	(? (! slider) (@@ [0.0 0.0]))
 	(= slider (:: slider ui_slider_element_type))
 	(= x (- slider$x slider$range$x))
 	(= y (- slider$y slider$range$y))
