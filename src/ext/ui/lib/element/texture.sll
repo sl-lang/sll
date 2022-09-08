@@ -168,7 +168,6 @@
 	(= (: vertex_buffer$data (+ idx 18)) range$x)
 	(= (: vertex_buffer$data (+ idx 19)) y2)
 	(= texture$texture$_buffer_update_flags (| texture$texture$_buffer_update_flags UI_BUFFER_UPDATE_FLAG_VERTEX))
-	(@@)
 ))
 
 

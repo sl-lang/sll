@@ -137,7 +137,6 @@
 	(= (: vertex_buffer$data (+ idx 22)) rgb$green)
 	(= (: vertex_buffer$data (+ idx 23)) rgb$blue)
 	(= color$base$ui$_buffer_update_flags (| color$base$ui$_buffer_update_flags UI_BUFFER_UPDATE_FLAG_VERTEX))
-	(@@)
 ))
 
 (= set_parent (,,, color parent
