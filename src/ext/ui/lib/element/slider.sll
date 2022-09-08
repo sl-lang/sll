@@ -59,8 +59,8 @@
 	(= slider$x screen_x)
 	(= slider$y screen_y)
 	(<- ui:element$update (: slider$base$children 0))
-	(? (> slider$x_steps 1) (= x (<- math$round (/ (* x slider$x_steps) slider$base$position$width))))
-	(? (> slider$y_steps 1) (= y (<- math$round (/ (* y slider$y_steps) slider$base$position$height))))
+	(? (> slider$x_steps 1) (= x (// (* x slider$x_steps) slider$base$position$width)))
+	(? (> slider$y_steps 1) (= y (// (* y slider$y_steps) slider$base$position$height)))
 	;;; FIXME: Currently due to an unknown bug the following line needs to be duplicated
 	(<- slider$callback slider x y)
 	(<- slider$callback slider x y)
