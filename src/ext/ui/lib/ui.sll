@@ -5,6 +5,7 @@
 	"ui/element/color.sll"
 	"ui/element/container.sll"
 	"ui/element/slider.sll"
+	"ui/element/texture.sll"
 	"ui/layout.sll"
 	"ui/position.sll"
 	"ui/texture.sll"
@@ -19,6 +20,7 @@
 	(~ (:? ui:element:color)) element:color
 	(~ (:? ui:element:container)) element:container
 	(~ (:? ui:element:slider)) element:slider
+	(~ (:? ui:element:texture)) element:texture
 	(~ (:? ui:layout)) layout
 	(~ (:? ui:position)) position
 	(~ (:? ui:texture)) texture
@@ -33,6 +35,7 @@
 	ui:element:color
 	ui:element:container
 	ui:element:slider
+	ui:element:texture
 	ui:layout
 	ui:position
 	ui:texture

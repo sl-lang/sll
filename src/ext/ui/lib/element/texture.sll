@@ -1,0 +1,195 @@
+(---
+	"array.sll"
+	"gfx/color.sll"
+	"string.sll"
+	"types.sll"
+	"ui/_util.sll"
+	"ui/core.sll"
+	"ui/element.sll"
+	"ui/texture.sll"
+)
+
+
+
+(# delete set_parent set_range update)
+
+
+
+(= ui_texture_range_type (&:
+	float_type x
+	float_type y
+	float_type width
+	float_type height
+))
+
+(= ui_texture_element_type (&:
+	(,,, data
+		(@@ (<- string$format "<ui:element:texture range=(%f %f %f %f) base=%s>"
+			data$range$x
+			data$range$y
+			data$range$width
+			data$range$height
+			(:: data$base string_type)
+		))
+	) @@string@@
+	(,,, data
+		(<- delete data)
+	) @@delete@@
+	(~ ui:element$ui_element_type) base
+	(~ ui:texture$ui_texture_type) texture
+	ui_texture_range_type range
+	int_type _vertex_buffer_offset
+	int_type _index_buffer_offset
+))
+
+(= ui_element_texture_module_type (&:
+	(~ type_type) ui_texture_element_type
+	(~ type_type) ui_texture_range_type
+	(~ func_type) create
+	(~ func_type) delete
+	(~ func_type) set_parent
+	(~ func_type) set_range
+))
+
+
+
+(= _create_texture (,,, ui base parent texture range
+	(= out (. ui_texture_element_type
+		base
+		texture
+		[0.0 0.0 0.0 0.0]
+		($ texture$_vertex_buffer$data)
+		($ texture$_index_buffer$data)
+	))
+	(? texture {
+		(= idx (// ($ texture$_vertex_buffer$data) 5))
+		(<- array$extend texture$_vertex_buffer$data [
+			0.0 0.0 0.0 0.0 0.0
+			0.0 0.0 0.0 1.0 0.0
+			0.0 0.0 0.0 1.0 1.0
+			0.0 0.0 0.0 0.0 1.0
+		])
+		(<- array$extend texture$_index_buffer$data [
+			(+ idx 2) (+ idx 1) idx
+			(+ idx 3) (+ idx 2) idx
+		])
+		(= texture$_buffer_update_flags (| texture$_buffer_update_flags UI_BUFFER_UPDATE_FLAG_INDEX))
+	})
+	(? range (<- set_range out range))
+	(? parent (<- set_parent out parent))
+	(<- update out)
+	(@@ out)
+))
+
+(= _deseralize_data (,,, ui base parent data
+	(@@ (<- _create_texture ui base parent data))
+))
+
+(= _seralize_data (,,, texture
+	(@@ [
+		texture$range$x
+		texture$range$y
+		texture$range$width
+		texture$range$height
+	])
+))
+
+(= _update_position_and_size (,,, texture
+	(? (! texture$base$ui) (@@))
+	(= idx texture$_vertex_buffer_offset)
+	(= x1 texture$base$position$x)
+	(= y1 texture$base$position$y)
+	(= x2 (+ x1 texture$base$position$width))
+	(= y2 (+ y1 texture$base$position$height))
+	(= vertex_buffer texture$texture$_vertex_buffer)
+	(= (: vertex_buffer$data idx) x1)
+	(= (: vertex_buffer$data (+ idx 1)) y1)
+	(= (: vertex_buffer$data (+ idx 5)) x2)
+	(= (: vertex_buffer$data (+ idx 6)) y1)
+	(= (: vertex_buffer$data (+ idx 10)) x2)
+	(= (: vertex_buffer$data (+ idx 11)) y2)
+	(= (: vertex_buffer$data (+ idx 15)) x1)
+	(= (: vertex_buffer$data (+ idx 16)) y2)
+	(= texture$texture$_buffer_update_flags (| texture$texture$_buffer_update_flags UI_BUFFER_UPDATE_FLAG_VERTEX))
+))
+
+(= create (,,, ui position_layout parent texture range
+	(= ui (?: ui (:: ui ui:core$ui_type) nil))
+	(= texture (?: texture (:: texture ui:texture$ui_texture_type) nil))
+	(@@ (<- _create_texture
+		ui
+		(<- ui:element$create ui position_layout)
+		parent
+		texture
+		range
+	))
+))
+
+(= delete (,,, texture
+	(? (! texture) (@@))
+	(= texture (:: texture ui_texture_element_type))
+	(<- ui:element$delete texture)
+))
+
+(= set_parent (,,, texture parent
+	(? (! texture) (@@))
+	(= texture (:: texture ui_texture_element_type))
+	(?
+		(! (<- ui:element$set_parent texture parent)) (@@ false)
+		(! texture$base$ui) (@@ true)
+	)
+	(= idx texture$_vertex_buffer_offset)
+	(= z (:: texture$base$z_index float_type))
+	(= vertex_buffer texture$texture$_vertex_buffer)
+	(= (: vertex_buffer$data (+ idx 2)) z)
+	(= (: vertex_buffer$data (+ idx 7)) z)
+	(= (: vertex_buffer$data (+ idx 12)) z)
+	(= (: vertex_buffer$data (+ idx 17)) z)
+	(= texture$texture$_buffer_update_flags (| texture$texture$_buffer_update_flags UI_BUFFER_UPDATE_FLAG_VERTEX))
+	(@@ true)
+))
+
+(= set_range (,,, texture range
+	(? (! texture) (@@))
+	(= texture (:: texture ui_texture_element_type))
+	(= range (:: range ui_texture_range_type))
+	(= texture$range (: range))
+	(? (! texture$texture) (@@))
+	(= idx texture$_vertex_buffer_offset)
+	(= vertex_buffer texture$texture$_vertex_buffer)
+	(= x2 (+ range$x range$width))
+	(= y2 (+ range$y range$height))
+	(= (: vertex_buffer$data (+ idx 3)) range$x)
+	(= (: vertex_buffer$data (+ idx 4)) range$y)
+	(= (: vertex_buffer$data (+ idx 8)) x2)
+	(= (: vertex_buffer$data (+ idx 9)) range$y)
+	(= (: vertex_buffer$data (+ idx 13)) x2)
+	(= (: vertex_buffer$data (+ idx 14)) y2)
+	(= (: vertex_buffer$data (+ idx 18)) range$x)
+	(= (: vertex_buffer$data (+ idx 19)) y2)
+	(= texture$texture$_buffer_update_flags (| texture$texture$_buffer_update_flags UI_BUFFER_UPDATE_FLAG_VERTEX))
+	(@@)
+))
+
+
+
+(<- ui:element$register_element ui_texture_element_type "ui:element:texture" (. ui:element$ui_element_callbacks_type
+	nil
+	_deseralize_data
+	nil
+	nil
+	_seralize_data
+	_update_position_and_size
+))
+
+
+
+(= ui:element:texture (. ui_element_texture_module_type
+	ui_texture_element_type
+	ui_texture_range_type
+	create
+	delete
+	set_parent
+	set_range
+))
+(## ui:element:texture)

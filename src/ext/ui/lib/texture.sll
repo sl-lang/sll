@@ -26,7 +26,7 @@
 ))
 
 (= ui_texture_module_type (&:
-	(~ type_type) ui_type
+	(~ type_type) ui_texture_type
 	(~ func_type) create
 ))
 
@@ -37,13 +37,9 @@
 	(= ui (:: ui ui:core$ui_type))
 	(= texture (:: texture gfx:texture$gfx_texture_type))
 	(= sampler (:: sampler gfx:sampler$gfx_sampler_type))
-	(= vertex_buffer (<- gfx:buffer$create ui$context gfx:buffer$TYPE_VERTEX gfx:buffer$DATA_TYPE_FLOAT32 [
-		0.0 0.0 3.0 0.0 0.0
-		0.0 300.0 3.0 0.0 1.0
-		300.0 300.0 3.0 1.0 1.0
-	]))
+	(= vertex_buffer (<- gfx:buffer$create ui$context gfx:buffer$TYPE_VERTEX gfx:buffer$DATA_TYPE_FLOAT32))
 	(<- gfx:buffer$hint_update_frequency vertex_buffer gfx:buffer$FREQUENCY_LOW)
-	(= index_buffer (<- gfx:buffer$create ui$context gfx:buffer$TYPE_INDEX gfx:buffer$DATA_TYPE_UINT16 [0 1 2]))
+	(= index_buffer (<- gfx:buffer$create ui$context gfx:buffer$TYPE_INDEX gfx:buffer$DATA_TYPE_UINT16))
 	(<- gfx:buffer$hint_update_frequency index_buffer gfx:buffer$FREQUENCY_LOW)
 	(= pipeline (<- gfx:pipeline$create ui$context (. gfx:pipeline$gfx_pipeline_config_type
 		gfx:pipeline$TOPOLOGY_TRIANGLE_LIST
