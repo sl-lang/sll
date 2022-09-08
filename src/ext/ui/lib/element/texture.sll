@@ -36,7 +36,7 @@
 		(<- delete data)
 	) @@delete@@
 	(~ ui:element$ui_element_type) base
-	(~ ui:texture$ui_texture_type) texture
+	(~ object_type) texture
 	ui_texture_range_type range
 	int_type _vertex_buffer_offset
 	int_type _index_buffer_offset
@@ -65,9 +65,9 @@
 		(= idx (// ($ texture$_vertex_buffer$data) 5))
 		(<- array$extend texture$_vertex_buffer$data [
 			0.0 0.0 0.0 0.0 0.0
-			0.0 0.0 0.0 1.0 0.0
-			0.0 0.0 0.0 1.0 1.0
-			0.0 0.0 0.0 0.0 1.0
+			0.0 0.0 0.0 0.0 0.0
+			0.0 0.0 0.0 0.0 0.0
+			0.0 0.0 0.0 0.0 0.0
 		])
 		(<- array$extend texture$_index_buffer$data [
 			(+ idx 2) (+ idx 1) idx
