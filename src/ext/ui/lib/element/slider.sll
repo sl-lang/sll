@@ -175,11 +175,11 @@
 	(= y (- slider$y slider$range$y))
 	(@@ [
 		(?: (> slider$x_steps 1)
-			(<- math$round (/ (* x slider$x_steps) slider$base$position$width))
+			(// (* x slider$x_steps) slider$base$position$width)
 			x
 		)
 		(?: (> slider$y_steps 1)
-			(<- math$round (/ (* y slider$y_steps) slider$base$position$height))
+			(// (* y slider$y_steps) slider$base$position$height)
 			y
 		)
 	])
