@@ -24,11 +24,12 @@
 
 (= ui_texture_element_type (&:
 	(,,, data
-		(@@ (<- string$format "<ui:element:texture range=(%f %f %f %f) base=%s>"
+		(@@ (<- string$format "<ui:element:texture range=(%f %f %f %f) texture=%s base=%s>"
 			data$range$x
 			data$range$y
 			data$range$width
 			data$range$height
+			(:: data$texture string_type)
 			(:: data$base string_type)
 		))
 	) @@string@@

@@ -7,6 +7,7 @@
 	"gfx/shader.sll"
 	"gfx/stage.sll"
 	"gfx/texture.sll"
+	"string.sll"
 	"types.sll"
 	"ui/core.sll"
 	"ui/shader/_texture_fragment_shader.sll"
@@ -16,6 +17,12 @@
 
 
 (= ui_texture_type (&:
+	(,,, data
+		(@@ (<- string$format "<ui:texture texture=%s sampler=%s>"
+			(:: data$texture string_type)
+			(:: data$sampler string_type)
+		))
+	) @@string@@
 	(~ ui:core$ui_type) ui
 	gfx:texture$gfx_texture_type texture
 	gfx:sampler$gfx_sampler_type sampler
