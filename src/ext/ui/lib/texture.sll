@@ -1,4 +1,5 @@
 (---
+	"array.sll"
 	"types.sll"
 	"ui/core.sll"
 )
@@ -22,6 +23,7 @@
 	(= out (. ui_texture_type
 		ui
 	))
+	(<- array$push ui$_textures out)
 	(@@ out)
 ))
 
