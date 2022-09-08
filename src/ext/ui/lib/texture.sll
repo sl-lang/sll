@@ -1,0 +1,34 @@
+(---
+	"types.sll"
+	"ui/core.sll"
+)
+
+
+
+(= ui_texture_type (&:
+	(~ ui:core$ui_type)
+))
+
+(= ui_texture_module_type (&:
+	(~ type_type) ui_type
+	(~ func_type) create
+))
+
+
+
+(= create (,,, ui
+	(? (! ui) (@@ nil))
+	(= ui (:: ui ui:core$ui_type))
+	(= out (. ui_texture_type
+		ui
+	))
+	(@@ out)
+))
+
+
+
+(= ui:texture (. ui_texture_module_type
+	ui_texture_type
+	create
+))
+(## ui:texture)

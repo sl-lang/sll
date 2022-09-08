@@ -47,6 +47,7 @@
 	"ui/element/rectangle.sll"
 	"ui/element/slider.sll"
 	"ui/layout.sll"
+	"ui/texture.sll"
 	"uuid.sll"
 	"vm.sll"
 	"weakref.sll"
