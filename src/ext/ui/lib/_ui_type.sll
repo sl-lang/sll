@@ -29,12 +29,12 @@
 	) @@string@@
 	(~ window_manager:window$window_manager_window_type) window
 	object_type root
-	(~ gfx:context$gfx_context_type) _ctx
+	(~ gfx:context$gfx_context_type) context
 	gfx:buffer$gfx_buffer_type _vertex_buffer
 	gfx:buffer$gfx_buffer_type _index_buffer
 	gfx:buffer$gfx_buffer_type _uniform_buffer
 	int_type _buffer_update_flags
-	gfx:pipeline$gfx_pipeline_type _pipeline
+	(~ gfx:pipeline$gfx_pipeline_type) _pipeline
 	int_type _max_z_index
 	ui_event_targets_type _event_targets
 	array_type _textures

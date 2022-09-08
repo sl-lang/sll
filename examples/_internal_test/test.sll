@@ -987,6 +987,21 @@ abc` '\n')
 	slider
 	[0.72 0.67 0.3]
 ))
+(= texture_buffer (<- gfx:buffer$create ui_window$context gfx:buffer$TYPE_TEXTURE gfx:buffer$DATA_TYPE_UINT32 [
+	0xffff0000 0xff00ff00 0xffff00ff
+	0xff0000ff 0xffffff00 0xff00ffff
+] true))
+(= texture (<- ui:texture$create
+	ui_window
+	(<- gfx:texture$create ui_window$context [3 2] (| gfx:data_type$SIZE_8BIT gfx:data_type$COUNT_4 gfx:data_type$TYPE_COLOR_UNORM) texture_buffer)
+	(<- gfx:sampler$create ui_window$context (. gfx:sampler$gfx_sampler_config_type
+		gfx:sampler$FILTER_NEAREST
+		gfx:sampler$FILTER_NEAREST
+		gfx:sampler$ADDRESS_MODE_TYPE_REPEAT
+		gfx:sampler$ADDRESS_MODE_TYPE_CLAMP
+		gfx:sampler$ADDRESS_MODE_TYPE_REPEAT
+	)
+))
 (<- ui:element:slider$set_slider_element slider rectangle4)
 (:> ui_window$root '\n')
 (= layout_data (<- ui:element$serialize ui_window$root))

@@ -175,7 +175,7 @@
 (= set_background (,,, ui color
 	(? (! ui) (@@))
 	(= ui (:: ui ui_type))
-	(<- gfx:color$set_clear_color ui$_ctx color)
+	(<- gfx:color$set_clear_color ui$context color)
 ))
 
 (= update (,,, ui blocking?
@@ -191,7 +191,15 @@
 	(<- gfx:buffer$use ui$_vertex_buffer)
 	(<- gfx:buffer$use ui$_index_buffer)
 	(<- gfx:buffer$draw ui$_index_buffer)
-	(<- gfx:context$render ui$_ctx)
+	(-> (= i 0) (< i ($ ui$_textures))
+		(= texture (: ui$_textures i))
+		(<- gfx:pipeline$use texture$_pipeline)
+		(<- gfx:buffer$use texture$_vertex_buffer)
+		(<- gfx:buffer$use texture$_index_buffer)
+		(<- gfx:buffer$draw texture$_index_buffer)
+		(++ i)
+	)
+	(<- gfx:context$render ui$context)
 	(<- window_manager:event$poll (!! blocking?))
 ))
 

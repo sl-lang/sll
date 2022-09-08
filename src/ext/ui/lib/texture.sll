@@ -1,13 +1,28 @@
 (---
 	"array.sll"
+	"gfx/buffer.sll"
+	"gfx/data_type.sll"
+	"gfx/pipeline.sll"
+	"gfx/sampler.sll"
+	"gfx/shader.sll"
+	"gfx/stage.sll"
+	"gfx/texture.sll"
 	"types.sll"
 	"ui/core.sll"
+	"ui/shader/_texture_fragment_shader.sll"
+	"ui/shader/_texture_vertex_shader.sll"
 )
 
 
 
 (= ui_texture_type (&:
-	(~ ui:core$ui_type)
+	(~ ui:core$ui_type) ui
+	gfx:texture$gfx_texture_type texture
+	gfx:sampler$gfx_sampler_type sampler
+	gfx:buffer$gfx_buffer_type _vertex_buffer
+	gfx:buffer$gfx_buffer_type _index_buffer
+	int_type _buffer_update_flags
+	(~ gfx:pipeline$gfx_pipeline_type) _pipeline
 ))
 
 (= ui_texture_module_type (&:
@@ -17,11 +32,83 @@
 
 
 
-(= create (,,, ui
+(= create (,,, ui texture sampler
 	(? (! ui) (@@ nil))
 	(= ui (:: ui ui:core$ui_type))
+	(= texture (:: texture gfx:texture$gfx_texture_type))
+	(= sampler (:: sampler gfx:sampler$gfx_sampler_type))
+	(= vertex_buffer (<- gfx:buffer$create ui$context gfx:buffer$TYPE_VERTEX gfx:buffer$DATA_TYPE_FLOAT32 [
+		0.0 0.0 3.0 0.0 0.0
+		0.0 300.0 3.0 0.0 1.0
+		300.0 300.0 3.0 1.0 1.0
+	]))
+	(<- gfx:buffer$hint_update_frequency vertex_buffer gfx:buffer$FREQUENCY_LOW)
+	(= index_buffer (<- gfx:buffer$create ui$context gfx:buffer$TYPE_INDEX gfx:buffer$DATA_TYPE_UINT16 [0 1 2]))
+	(<- gfx:buffer$hint_update_frequency index_buffer gfx:buffer$FREQUENCY_LOW)
+	(= pipeline (<- gfx:pipeline$create ui$context (. gfx:pipeline$gfx_pipeline_config_type
+		gfx:pipeline$TOPOLOGY_TRIANGLE_LIST
+		[
+			[
+				[
+					0
+					0
+					0
+					(| gfx:data_type$SIZE_32BIT gfx:data_type$COUNT_3 gfx:data_type$TYPE_FLOAT)
+				]
+				[
+					0
+					1
+					12
+					(| gfx:data_type$SIZE_32BIT gfx:data_type$COUNT_2 gfx:data_type$TYPE_FLOAT)
+				]
+			]
+			20
+		]
+		[
+			[
+				gfx:pipeline$DESCRIPTOR_TYPE_UNIFORM_BUFFER
+				0
+				gfx:stage$STAGE_VERTEX
+				ui$_uniform_buffer
+			]
+			[
+				gfx:pipeline$DESCRIPTOR_TYPE_SAMPLER
+				1
+				gfx:stage$STAGE_FRAGMENT
+				[
+					texture
+					sampler
+				]
+			]
+		]
+		[
+			gfx:pipeline$POLYGON_MODE_FILL
+			gfx:pipeline$FRONT_FACE_COUNTER_CLOCKWISE
+			gfx:pipeline$CULL_MODE_BACK
+		]
+		[
+			(<- gfx:shader$create
+				ui$context
+				_TEXTURE_VERTEX_SHADER
+				gfx:stage$STAGE_VERTEX
+				"main"
+			)
+			(<- gfx:shader$create
+				ui$context
+				_TEXTURE_FRAGMENT_SHADER
+				gfx:stage$STAGE_FRAGMENT
+				"main"
+			)
+		]
+	))
 	(= out (. ui_texture_type
 		ui
+		texture
+		sampler
+		vertex_buffer
+		index_buffer
+		0
+		pipeline
 	))
 	(<- array$push ui$_textures out)
 	(@@ out)
