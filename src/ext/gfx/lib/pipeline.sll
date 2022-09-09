@@ -227,19 +227,14 @@
 	(= samplers [])
 	(-> (= i 0) (< i ($ config$descriptors))
 		(= descriptor (:: (: config$descriptors i) gfx_pipeline_config_descriptor_type))
-		(= type (: _descriptor_data_type_map descriptor$type))
 		(= descriptor$data (?:
-			(|| (=== (:? descriptor$data) int_type) (=== (:? descriptor$data) type)) descriptor$data
-			(&& (=== (:? descriptor$data) array_type) (!== (:? (: descriptor$data 0)) array_type)) (:: descriptor$data type)
-			([> (= j 0) (< j ($ descriptor$data))
-				(= element (: descriptor$data j))
-				(++ j)
-				(:: element type)
-			)
+			(=== (:? descriptor$data) int_type) descriptor$data
+			(:: descriptor$data (: _descriptor_data_type_map descriptor$type))
 		))
 		(= (: config$descriptors i) descriptor)
 		(? (&&
 			(=== descriptor$type DESCRIPTOR_TYPE_UNIFORM_BUFFER)
+			(!== (:? descriptor$data) int_type)
 			(! (<- gfx:buffer$is_constant_size? descriptor$data))
 		) (:> "Uniform buffers must have a constant size!\n"))
 		(<- array$push (?: (=== descriptor$type DESCRIPTOR_TYPE_UNIFORM_BUFFER) uniform_buffers samplers) (?:
@@ -300,14 +295,15 @@
 	(<- (... "gfx:pipeline_delete") pipeline$ctx$_handle pipeline$_handle)
 ))
 
-(= update_descriptor (,,, pipeline descriptor
+(= update_descriptor (,,, pipeline descriptor index
 	(? (! pipeline) (@@))
 	(= pipeline (:: pipeline gfx_pipeline_type))
 	(= descriptor (:: descriptor gfx_pipeline_config_descriptor_type))
-	(<- (... "gfx:pipeline_update_descriptor") pipeline$ctx$_handle pipeline$_handle descriptor$binding descriptor$stage (?:
+	(= index (:: index int_type))
+	(<- (... "gfx:pipeline_update_descriptor") pipeline$ctx$_handle pipeline$_handle descriptor$binding descriptor$type descriptor$stage (?:
 		(=== descriptor$type DESCRIPTOR_TYPE_UNIFORM_BUFFER) [descriptor$data$_handle]
 		(=== descriptor$type DESCRIPTOR_TYPE_SAMPLER) [descriptor$data$texture$_handle descriptor$data$sampler$_handle]
-	))
+	) index)
 ))
 
 (= use (,,, pipeline

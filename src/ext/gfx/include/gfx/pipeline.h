@@ -8,6 +8,9 @@
 
 
 
+#define GFX_DESCRIPTOR_TYPE_UNIFORM_BUFFER 0
+#define GFX_DESCRIPTOR_TYPE_SAMPLER 1
+
 #define GFX_TOPOLOGY_POINT_LIST 0
 #define GFX_TOPOLOGY_LINE_LIST 1
 #define GFX_TOPOLOGY_LINE_STRIP 2
@@ -29,6 +32,10 @@
 
 #define GFX_CULL_MODE_FRONT 1
 #define GFX_CULL_MODE_BACK 2
+
+
+
+typedef uint8_t gfx_descriptor_type_t;
 
 
 
@@ -71,6 +78,10 @@ __GFX_API_CALL gfx_pipeline_t gfx_api_pipeline_create(gfx_context_t ctx_id,gfx_p
 
 
 __GFX_API_CALL void gfx_api_pipeline_delete(gfx_context_t ctx_id,gfx_pipeline_t pipeline_id);
+
+
+
+__GFX_API_CALL void gfx_api_pipeline_update_descriptor(gfx_context_t ctx_id,gfx_pipeline_t pipeline_id,gfx_descriptor_type_t type,uint32_t binding,gfx_shader_stage_t stage,const sll_array_t* data,uint32_t index);
 
 
 

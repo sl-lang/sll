@@ -33,6 +33,8 @@
 
 (= _window_to_ui <>)
 
+(= MAX_TEXTURE_COUNT 4096)
+
 
 
 (= _window_button_callback (,,, window button state
@@ -119,7 +121,7 @@
 				gfx:pipeline$DESCRIPTOR_TYPE_SAMPLER
 				1
 				gfx:stage$STAGE_FRAGMENT
-				nil
+				MAX_TEXTURE_COUNT
 			]
 		]
 		[
