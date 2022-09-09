@@ -77,11 +77,6 @@ static const sll_internal_function_descriptor_t _internal_function_table[]={
 		SLL_CHAR("QQ|")
 	},
 	{
-		SLL_CHAR("gfx:pipeline_update_descriptor"),
-		gfx_api_pipeline_update_descriptor,
-		SLL_CHAR("QQDB#a|")
-	},
-	{
 		SLL_CHAR("gfx:pipeline_use"),
 		gfx_api_pipeline_use,
 		SLL_CHAR("QQ|")
@@ -137,7 +132,7 @@ static const sll_internal_function_descriptor_t _internal_function_table[]={
 
 static const sll_internal_function_table_descriptor_t _internal_function_table_descriptor_data={
 	(const sll_internal_function_descriptor_t*)(&_internal_function_table),
-	24
+	23
 };
 
 

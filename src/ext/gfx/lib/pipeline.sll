@@ -227,31 +227,40 @@
 	(= samplers [])
 	(-> (= i 0) (< i ($ config$descriptors))
 		(= descriptor (:: (: config$descriptors i) gfx_pipeline_config_descriptor_type))
-		(= descriptor$data (?: descriptor$data (:: descriptor$data (: _descriptor_data_type_map descriptor$type)) nil))
+		(= type (: _descriptor_data_type_map descriptor$type))
+		(= descriptor$data (?:
+			(|| (=== (:? descriptor$data) int_type) (=== (:? descriptor$data) type)) descriptor$data
+			(&& (=== (:? descriptor$data) array_type) (!== (:? (: descriptor$data 0)) array_type)) (:: descriptor$data type)
+			([> (= j 0) (< j ($ descriptor$data))
+				(= element (: descriptor$data j))
+				(++ j)
+				(:: element type)
+			)
+		))
 		(= (: config$descriptors i) descriptor)
 		(? (&&
 			(=== descriptor$type DESCRIPTOR_TYPE_UNIFORM_BUFFER)
 			(! (<- gfx:buffer$is_constant_size? descriptor$data))
 		) (:> "Uniform buffers must have a constant size!\n"))
-		(? (! descriptor$data)
-			(<- array$push (?: (=== descriptor$type DESCRIPTOR_TYPE_UNIFORM_BUFFER) uniform_buffers samplers) [
+		(<- array$push (?: (=== descriptor$type DESCRIPTOR_TYPE_UNIFORM_BUFFER) uniform_buffers samplers) (?:
+			(=== (:? descriptor$data) int_type) [
 				descriptor$binding
 				descriptor$stage
-			])
-			(?? descriptor$type
-				DESCRIPTOR_TYPE_UNIFORM_BUFFER (<- array$push uniform_buffers [
-					descriptor$binding
-					descriptor$stage
-					descriptor$data$_handle
-				])
-				DESCRIPTOR_TYPE_SAMPLER (<- array$push samplers [
-					descriptor$binding
-					descriptor$stage
-					descriptor$data$texture$_handle
-					descriptor$data$sampler$_handle
-				])
-			)
-		)
+				descriptor$data
+			]
+			(=== descriptor$type DESCRIPTOR_TYPE_UNIFORM_BUFFER) [
+				descriptor$binding
+				descriptor$stage
+				descriptor$data$_handle
+				nil
+			]
+			(=== descriptor$type DESCRIPTOR_TYPE_SAMPLER) [
+				descriptor$binding
+				descriptor$stage
+				descriptor$data$texture$_handle
+				descriptor$data$sampler$_handle
+			]
+		))
 		(++ i)
 	)
 	(-> (= i 0) (< i ($ config$shaders))
