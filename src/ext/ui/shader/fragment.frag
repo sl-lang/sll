@@ -1,0 +1,14 @@
+#version 450 core
+#extension GL_ARB_separate_shader_objects:enable
+
+
+
+layout (location=0) in vec3 in_data;
+layout (location=0) out vec4 out_color;
+layout (binding=1) uniform sampler2D texture_sampler[4096];
+
+
+
+void main(void){
+	out_color=vec4(in_data,1.0)+texture(texture_sampler[int(in_data.z*4096)],in_data.xy);
+}

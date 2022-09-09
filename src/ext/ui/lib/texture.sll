@@ -8,8 +8,6 @@
 	"string.sll"
 	"types.sll"
 	"ui/core.sll"
-	"ui/shader/_texture_fragment_shader.sll"
-	"ui/shader/_texture_vertex_shader.sll"
 )
 
 

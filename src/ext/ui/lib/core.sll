@@ -13,8 +13,8 @@
 	"ui/element.sll"
 	"ui/element/container.sll"
 	"ui/layout.sll"
-	"ui/shader/_color_fragment_shader.sll"
-	"ui/shader/_color_vertex_shader.sll"
+	"ui/shader/_fragment_shader.sll"
+	"ui/shader/_vertex_shader.sll"
 	"weakref.sll"
 	"window_manager/event.sll"
 	"window_manager/window.sll"
@@ -132,13 +132,13 @@
 		[
 			(<- gfx:shader$create
 				ctx
-				_COLOR_VERTEX_SHADER
+				_VERTEX_SHADER
 				gfx:stage$STAGE_VERTEX
 				"main"
 			)
 			(<- gfx:shader$create
 				ctx
-				_COLOR_FRAGMENT_SHADER
+				_FRAGMENT_SHADER
 				gfx:stage$STAGE_FRAGMENT
 				"main"
 			)
