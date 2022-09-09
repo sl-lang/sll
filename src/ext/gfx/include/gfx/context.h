@@ -100,6 +100,15 @@ typedef struct _GFX_CONTEXT_FRAME_DATA{
 
 
 
+typedef struct _GFX_CONTEXT_WRITE_DESCRIPTORS{
+	uint32_t count;
+	VkWriteDescriptorSet* data;
+	VkDescriptorBufferInfo* buffers;
+	VkDescriptorImageInfo* images;
+} gfx_context_write_descriptors_t;
+
+
+
 typedef struct _GFX_CONTEXT_CHILD_OBJECTS{
 	sll_handle_container_t buffers;
 	sll_handle_container_t pipelines;
@@ -122,6 +131,7 @@ typedef struct _GFX_CONTEXT_DATA{
 	gfx_context_sync_data_t sync;
 	gfx_context_depth_stensil_data_t depth_stensil;
 	gfx_context_frame_data_t frame;
+	gfx_context_write_descriptors_t write_descriptors;
 	gfx_vulkan_function_table_t function_table;
 	gfx_context_child_objects_t child_objects;
 } gfx_context_data_t;

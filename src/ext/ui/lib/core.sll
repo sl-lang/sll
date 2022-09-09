@@ -206,12 +206,6 @@
 			(? (& texture$_buffer_update_flags UI_BUFFER_UPDATE_FLAG_INDEX) (<- gfx:buffer$sync texture$_index_buffer))
 			(= texture$_buffer_update_flags 0)
 		})
-		(<- gfx:pipeline$update_descriptor ui$_pipeline [
-			gfx:pipeline$DESCRIPTOR_TYPE_SAMPLER
-			1
-			texture$texture
-			texture$sampler
-		])
 		(<- gfx:buffer$use texture$_vertex_buffer)
 		(<- gfx:buffer$use texture$_index_buffer)
 		(<- gfx:buffer$draw texture$_index_buffer)

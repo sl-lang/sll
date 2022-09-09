@@ -394,6 +394,12 @@ __GFX_API_CALL void gfx_api_pipeline_update_descriptor(gfx_context_t ctx_id,gfx_
 	if (!pipeline){
 		return;
 	}
+	if (type==GFX_DESCRIPTOR_TYPE_UNIFORM_BUFFER){
+		SLL_WARN("Unimplemented!");
+	}
+	else{
+		SLL_WARN("Unimplemented!");
+	}
 }
 
 

@@ -1,7 +1,9 @@
 (---
 	"array.sll"
 	"gfx/buffer.sll"
+	"gfx/pipeline.sll"
 	"gfx/sampler.sll"
+	"gfx/stage.sll"
 	"gfx/texture.sll"
 	"string.sll"
 	"types.sll"
@@ -51,6 +53,15 @@
 		index_buffer
 		0
 	))
+	(<- gfx:pipeline$update_descriptor ui$_pipeline [
+		gfx:pipeline$DESCRIPTOR_TYPE_SAMPLER
+		1
+		gfx:stage$TYPE_FRAGMENT
+		[
+			texture
+			sampler
+		]
+	] ($ ui$_textures))
 	(<- array$push ui$_textures out)
 	(@@ out)
 ))

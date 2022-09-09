@@ -353,6 +353,16 @@ static void _end_frame(gfx_context_data_t* ctx){
 		VULKAN_CALL(err);
 	}
 	VULKAN_CALL(ctx->function_table.vkQueueWaitIdle(ctx->queue.graphics_queue));
+	if (ctx->write_descriptors.count){
+		ctx->function_table.vkUpdateDescriptorSets(ctx->device.logical,ctx->write_descriptors.count,ctx->write_descriptors.data,0,NULL);
+		ctx->write_descriptors.count=0;
+		sll_deallocate(ctx->write_descriptors.data);
+		ctx->write_descriptors.data=NULL;
+		sll_deallocate(ctx->write_descriptors.buffers);
+		ctx->write_descriptors.buffers=NULL;
+		sll_deallocate(ctx->write_descriptors.images);
+		ctx->write_descriptors.images=NULL;
+	}
 }
 
 
@@ -681,6 +691,10 @@ __GFX_API_CALL gfx_context_t gfx_api_context_create(void* handle,void* extra_dat
 	VULKAN_CALL(ctx->function_table.vkCreateFence(ctx->device.logical,&fence_creation_info,NULL,&(ctx->graphics_command_buffer.fence)));
 	ctx->graphics_command_buffer.has_data=1;
 	_begin_frame(ctx);
+	ctx->write_descriptors.count=0;
+	ctx->write_descriptors.data=NULL;
+	ctx->write_descriptors.buffers=NULL;
+	ctx->write_descriptors.images=NULL;
 	SLL_HANDLE_CONTAINER_INIT(&(ctx->child_objects.buffers));
 	SLL_HANDLE_CONTAINER_INIT(&(ctx->child_objects.pipelines));
 	SLL_HANDLE_CONTAINER_INIT(&(ctx->child_objects.samplers));
