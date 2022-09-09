@@ -103,8 +103,7 @@ typedef struct _GFX_CONTEXT_FRAME_DATA{
 typedef struct _GFX_CONTEXT_WRITE_DESCRIPTORS{
 	uint32_t count;
 	VkWriteDescriptorSet* data;
-	VkDescriptorBufferInfo* buffers;
-	VkDescriptorImageInfo* images;
+	void** pointers;
 } gfx_context_write_descriptors_t;
 
 

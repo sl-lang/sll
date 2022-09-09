@@ -394,12 +394,37 @@ __GFX_API_CALL void gfx_api_pipeline_update_descriptor(gfx_context_t ctx_id,gfx_
 	if (!pipeline){
 		return;
 	}
+	ctx->write_descriptors.count++;
+	ctx->write_descriptors.data=sll_reallocate(ctx->write_descriptors.data,ctx->write_descriptors.count*sizeof(VkWriteDescriptorSet));
+	VkWriteDescriptorSet* descriptor=ctx->write_descriptors.data+ctx->write_descriptors.count-1;
+	descriptor->sType=VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+	descriptor->pNext=NULL;
+	descriptor->dstSet=pipeline->descriptor_set;
+	descriptor->dstBinding=binding;
+	descriptor->dstArrayElement=index;
+	descriptor->descriptorCount=1;
+	void* ptr;
 	if (type==GFX_DESCRIPTOR_TYPE_UNIFORM_BUFFER){
 		SLL_WARN("Unimplemented!");
+		ptr=NULL;
 	}
 	else{
-		SLL_WARN("Unimplemented!");
+		VkDescriptorImageInfo* extra_data=sll_allocate_stack(sizeof(VkDescriptorImageInfo));
+		descriptor->descriptorType=VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+		descriptor->pImageInfo=extra_data;
+		const gfx_texture_data_t* texture=SLL_HANDLE_CONTAINER_GET(&(ctx->child_objects.textures),(gfx_texture_t)(data->data[0]->data.int_));
+		const gfx_sampler_data_t* sampler=SLL_HANDLE_CONTAINER_GET(&(ctx->child_objects.samplers),(gfx_sampler_t)(data->data[1]->data.int_));
+		if (!texture||!sampler){
+			SLL_WARN("Should never happen!");
+			return;
+		}
+		extra_data->sampler=sampler->handle;
+		extra_data->imageView=texture->view;
+		extra_data->imageLayout=texture->layout;
+		ptr=extra_data;
 	}
+	ctx->write_descriptors.pointers=sll_reallocate(ctx->write_descriptors.pointers,ctx->write_descriptors.count*sizeof(void*));
+	*(ctx->write_descriptors.pointers+ctx->write_descriptors.count-1)=ptr;
 }
 
 
