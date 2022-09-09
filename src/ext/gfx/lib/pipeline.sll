@@ -147,6 +147,7 @@
 	(~ type_type) gfx_pipeline_type
 	(~ func_type) create
 	(~ func_type) delete
+	(~ func_type) update_descriptor
 	(~ func_type) use
 ))
 
@@ -226,24 +227,30 @@
 	(= samplers [])
 	(-> (= i 0) (< i ($ config$descriptors))
 		(= descriptor (:: (: config$descriptors i) gfx_pipeline_config_descriptor_type))
-		(= descriptor$data (:: descriptor$data (: _descriptor_data_type_map descriptor$type)))
+		(= descriptor$data (?: descriptor$data (:: descriptor$data (: _descriptor_data_type_map descriptor$type)) nil))
 		(= (: config$descriptors i) descriptor)
 		(? (&&
 			(=== descriptor$type DESCRIPTOR_TYPE_UNIFORM_BUFFER)
 			(! (<- gfx:buffer$is_constant_size? descriptor$data))
 		) (:> "Uniform buffers must have a constant size!\n"))
-		(?? descriptor$type
-			DESCRIPTOR_TYPE_UNIFORM_BUFFER (<- array$push uniform_buffers [
+		(? (! descriptor$data)
+			(<- array$push (?: (=== descriptor$type DESCRIPTOR_TYPE_UNIFORM_BUFFER) uniform_buffers samplers) [
 				descriptor$binding
 				descriptor$stage
-				descriptor$data$_handle
 			])
-			DESCRIPTOR_TYPE_SAMPLER (<- array$push samplers [
-				descriptor$binding
-				descriptor$stage
-				descriptor$data$texture$_handle
-				descriptor$data$sampler$_handle
-			])
+			(?? descriptor$type
+				DESCRIPTOR_TYPE_UNIFORM_BUFFER (<- array$push uniform_buffers [
+					descriptor$binding
+					descriptor$stage
+					descriptor$data$_handle
+				])
+				DESCRIPTOR_TYPE_SAMPLER (<- array$push samplers [
+					descriptor$binding
+					descriptor$stage
+					descriptor$data$texture$_handle
+					descriptor$data$sampler$_handle
+				])
+			)
 		)
 		(++ i)
 	)
@@ -284,6 +291,16 @@
 	(<- (... "gfx:pipeline_delete") pipeline$ctx$_handle pipeline$_handle)
 ))
 
+(= update_descriptor (,,, pipeline descriptor
+	(? (! pipeline) (@@))
+	(= pipeline (:: pipeline gfx_pipeline_type))
+	(= descriptor (:: descriptor gfx_pipeline_config_descriptor_type))
+	(<- (... "gfx:pipeline_update_descriptor") pipeline$ctx$_handle pipeline$_handle descriptor$binding descriptor$stage (?:
+		(=== descriptor$type DESCRIPTOR_TYPE_UNIFORM_BUFFER) [descriptor$data$_handle]
+		(=== descriptor$type DESCRIPTOR_TYPE_SAMPLER) [descriptor$data$texture$_handle descriptor$data$sampler$_handle]
+	))
+))
+
 (= use (,,, pipeline
 	(? (! pipeline) (@@))
 	(= pipeline (:: pipeline gfx_pipeline_type))
@@ -318,6 +335,7 @@
 	gfx_pipeline_type
 	create
 	delete
+	update_descriptor
 	use
 ))
 (## gfx:pipeline)

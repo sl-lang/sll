@@ -2,6 +2,7 @@
 #define __GFX_PIPELINE_H__ 1
 #include <gfx/common.h>
 #include <gfx/context.h>
+#include <gfx/util.h>
 #include <sll.h>
 #include <vulkan/vulkan.h>
 
@@ -70,6 +71,10 @@ __GFX_API_CALL gfx_pipeline_t gfx_api_pipeline_create(gfx_context_t ctx_id,gfx_p
 
 
 __GFX_API_CALL void gfx_api_pipeline_delete(gfx_context_t ctx_id,gfx_pipeline_t pipeline_id);
+
+
+
+__GFX_API_CALL void gfx_api_pipeline_update_descriptor(gfx_context_t ctx_id,gfx_pipeline_t pipeline_id,uint32_t binding,gfx_shader_stage_t stage,const sll_array_t* data);
 
 
 

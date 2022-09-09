@@ -45,6 +45,7 @@
 	"ui/element.sll"
 	"ui/element/button.sll"
 	"ui/element/color.sll"
+	"ui/element/container.sll"
 	"ui/element/slider.sll"
 	"ui/element/texture.sll"
 	"ui/layout.sll"
@@ -993,7 +994,7 @@ abc` '\n')
 	texture
 	[0.0 0.0 1.0 1.0]
 ))
-(= rectangle4 (<- ui:element:color$create
+(= handle (<- ui:element:container$create
 	ui_window
 	[
 		(<- ui:layout$create_standard_layout 0 -15)
@@ -1002,9 +1003,19 @@ abc` '\n')
 		(<- ui:layout$create_standard_layout 1 20)
 	]
 	slider
+))
+(= rectangle4 (<- ui:element:color$create
+	ui_window
+	[
+		(<- ui:layout$create_standard_layout 0 0)
+		(<- ui:layout$create_standard_layout 0 0)
+		(<- ui:layout$create_standard_layout 1 0)
+		(<- ui:layout$create_standard_layout 1 0)
+	]
+	handle
 	[0.72 0.67 0.3]
 ))
-(<- ui:element:slider$set_slider_element slider rectangle4)
+(<- ui:element:slider$set_slider_element slider handle)
 (= slider2 (<- ui:element:slider$create
 	ui_window
 	[

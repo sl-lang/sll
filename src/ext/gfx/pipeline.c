@@ -275,10 +275,11 @@ __GFX_API_CALL gfx_pipeline_t gfx_api_pipeline_create(gfx_context_t ctx_id,gfx_p
 		descriptor_pool_size_count++;
 	}
 	if (samplers->length){
-		(descriptor_pool_sizes+descriptor_pool_size_count)->type=VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+		(descriptor_pool_sizes+descriptor_pool_size_count)->type=VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
 		(descriptor_pool_sizes+descriptor_pool_size_count)->descriptorCount=samplers->length;
 		descriptor_pool_size_count++;
 	}
+	SLL_WARN("%u %u %u",uniform_buffers->length,samplers->length,descriptor_pool_size_count);
 	VkDescriptorPoolCreateInfo descriptor_pool_creation_info={
 		VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO,
 		NULL,
@@ -300,8 +301,12 @@ __GFX_API_CALL gfx_pipeline_t gfx_api_pipeline_create(gfx_context_t ctx_id,gfx_p
 	VkDescriptorImageInfo* image_descriptors=sll_allocate_stack(samplers->length*sizeof(VkDescriptorImageInfo));
 	VkWriteDescriptorSet* write_descriptor_sets=sll_allocate_stack((uniform_buffers->length+samplers->length)*sizeof(VkWriteDescriptorSet));
 	VkWriteDescriptorSet* write_descriptor_set=write_descriptor_sets;
+	sll_array_length_t count=0;
 	for (sll_array_length_t i=0;i<uniform_buffers->length;i++){
 		sll_object_t elem=uniform_buffers->data[i];
+		if (elem->data.array.length!=3){
+			continue;
+		}
 		const gfx_buffer_data_t* buffer=SLL_HANDLE_CONTAINER_GET(&(ctx->child_objects.buffers),(gfx_buffer_t)(elem->data.array.data[2]->data.int_));
 		if (!buffer){
 			SLL_WARN("Should never happen!");
@@ -319,9 +324,13 @@ __GFX_API_CALL gfx_pipeline_t gfx_api_pipeline_create(gfx_context_t ctx_id,gfx_p
 		write_descriptor_set->descriptorType=VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
 		write_descriptor_set->pBufferInfo=buffer_descriptors+i;
 		write_descriptor_set++;
+		count++;
 	}
 	for (sll_array_length_t i=0;i<samplers->length;i++){
 		sll_object_t elem=samplers->data[i];
+		if (elem->data.array.length!=4){
+			continue;
+		}
 		const gfx_texture_data_t* texture=SLL_HANDLE_CONTAINER_GET(&(ctx->child_objects.textures),(gfx_texture_t)(elem->data.array.data[2]->data.int_));
 		const gfx_sampler_data_t* sampler=SLL_HANDLE_CONTAINER_GET(&(ctx->child_objects.samplers),(gfx_sampler_t)(elem->data.array.data[3]->data.int_));
 		if (!texture||!sampler){
@@ -340,8 +349,9 @@ __GFX_API_CALL gfx_pipeline_t gfx_api_pipeline_create(gfx_context_t ctx_id,gfx_p
 		write_descriptor_set->descriptorType=VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
 		write_descriptor_set->pImageInfo=image_descriptors+i;
 		write_descriptor_set++;
+		count++;
 	}
-	ctx->function_table.vkUpdateDescriptorSets(ctx->device.logical,uniform_buffers->length+samplers->length,write_descriptor_sets,0,NULL);
+	ctx->function_table.vkUpdateDescriptorSets(ctx->device.logical,count,write_descriptor_sets,0,NULL);
 	sll_deallocate(write_descriptor_sets);
 	sll_deallocate(image_descriptors);
 	sll_deallocate(buffer_descriptors);
@@ -363,6 +373,42 @@ __GFX_API_CALL void gfx_api_pipeline_delete(gfx_context_t ctx_id,gfx_pipeline_t 
 		SLL_HANDLE_CONTAINER_DEALLOC(&(ctx->child_objects.pipelines),pipeline_id);
 		_delete_pipeline(ctx,pipeline);
 	}
+}
+
+
+
+__GFX_API_CALL void gfx_api_pipeline_update_descriptor(gfx_context_t ctx_id,gfx_pipeline_t pipeline_id,uint32_t binding,gfx_shader_stage_t stage,const sll_array_t* data){
+	gfx_context_data_t* ctx=SLL_HANDLE_CONTAINER_GET(&gfx_context_data,ctx_id);
+	if (!ctx){
+		return;
+	}
+	gfx_pipeline_data_t* pipeline=SLL_HANDLE_CONTAINER_GET(&(ctx->child_objects.pipelines),pipeline_id);
+	if (!pipeline){
+		return;
+	}
+	const gfx_texture_data_t* texture=SLL_HANDLE_CONTAINER_GET(&(ctx->child_objects.textures),(gfx_texture_t)(data->data[0]->data.int_));
+	const gfx_sampler_data_t* sampler=SLL_HANDLE_CONTAINER_GET(&(ctx->child_objects.samplers),(gfx_sampler_t)(data->data[1]->data.int_));
+	if (!texture||!sampler){
+		SLL_WARN("Should never happen!");
+		return;
+	}
+	VkDescriptorImageInfo image_descriptor_info={
+		sampler->handle,
+		texture->view,
+		texture->layout
+	};
+	VkWriteDescriptorSet write_descriptor_set={
+		VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET,
+		NULL,
+		pipeline->descriptor_set,
+		binding,
+		0,
+		1,
+		VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,
+		.pImageInfo=&image_descriptor_info
+	};
+	ctx->function_table.vkUpdateDescriptorSets(ctx->device.logical,1,&write_descriptor_set,0,NULL);
+	ctx->function_table.vkCmdBindDescriptorSets(ctx->frame.command_buffer,VK_PIPELINE_BIND_POINT_GRAPHICS,pipeline->layout,0,1,&(pipeline->descriptor_set),0,NULL);
 }
 
 

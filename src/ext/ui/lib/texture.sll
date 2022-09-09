@@ -1,11 +1,7 @@
 (---
 	"array.sll"
 	"gfx/buffer.sll"
-	"gfx/data_type.sll"
-	"gfx/pipeline.sll"
 	"gfx/sampler.sll"
-	"gfx/shader.sll"
-	"gfx/stage.sll"
 	"gfx/texture.sll"
 	"string.sll"
 	"types.sll"
@@ -29,7 +25,6 @@
 	gfx:buffer$gfx_buffer_type _vertex_buffer
 	gfx:buffer$gfx_buffer_type _index_buffer
 	int_type _buffer_update_flags
-	(~ gfx:pipeline$gfx_pipeline_type) _pipeline
 ))
 
 (= ui_texture_module_type (&:
@@ -48,62 +43,6 @@
 	(<- gfx:buffer$hint_update_frequency vertex_buffer gfx:buffer$FREQUENCY_LOW)
 	(= index_buffer (<- gfx:buffer$create ui$context gfx:buffer$TYPE_INDEX gfx:buffer$DATA_TYPE_UINT16))
 	(<- gfx:buffer$hint_update_frequency index_buffer gfx:buffer$FREQUENCY_LOW)
-	(= pipeline (<- gfx:pipeline$create ui$context (. gfx:pipeline$gfx_pipeline_config_type
-		gfx:pipeline$TOPOLOGY_TRIANGLE_LIST
-		[
-			[
-				[
-					0
-					0
-					0
-					(| gfx:data_type$SIZE_32BIT gfx:data_type$COUNT_3 gfx:data_type$TYPE_FLOAT)
-				]
-				[
-					0
-					1
-					12
-					(| gfx:data_type$SIZE_32BIT gfx:data_type$COUNT_3 gfx:data_type$TYPE_FLOAT)
-				]
-			]
-			24
-		]
-		[
-			[
-				gfx:pipeline$DESCRIPTOR_TYPE_UNIFORM_BUFFER
-				0
-				gfx:stage$STAGE_VERTEX
-				ui$_uniform_buffer
-			]
-			[
-				gfx:pipeline$DESCRIPTOR_TYPE_SAMPLER
-				1
-				gfx:stage$STAGE_FRAGMENT
-				[
-					texture
-					sampler
-				]
-			]
-		]
-		[
-			gfx:pipeline$POLYGON_MODE_FILL
-			gfx:pipeline$FRONT_FACE_COUNTER_CLOCKWISE
-			gfx:pipeline$CULL_MODE_BACK
-		]
-		[
-			(<- gfx:shader$create
-				ui$context
-				_TEXTURE_VERTEX_SHADER
-				gfx:stage$STAGE_VERTEX
-				"main"
-			)
-			(<- gfx:shader$create
-				ui$context
-				_TEXTURE_FRAGMENT_SHADER
-				gfx:stage$STAGE_FRAGMENT
-				"main"
-			)
-		]
-	))
 	(= out (. ui_texture_type
 		ui
 		texture
@@ -111,7 +50,6 @@
 		vertex_buffer
 		index_buffer
 		0
-		pipeline
 	))
 	(<- array$push ui$_textures out)
 	(@@ out)
