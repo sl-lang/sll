@@ -66,6 +66,7 @@ sll_bool_t _load_vulkan_function_table(VkInstance instance,gfx_vulkan_function_t
 	LOAD_FUNCTION_TABLE(vkCmdDrawIndexed);
 	LOAD_FUNCTION_TABLE(vkCmdEndRenderPass);
 	LOAD_FUNCTION_TABLE(vkCmdPipelineBarrier);
+	LOAD_FUNCTION_TABLE(vkCmdPushConstants);
 	LOAD_FUNCTION_TABLE(vkCmdSetScissor);
 	LOAD_FUNCTION_TABLE(vkCmdSetViewport);
 	LOAD_FUNCTION_TABLE(vkCreateBuffer);

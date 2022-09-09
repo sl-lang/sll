@@ -33,6 +33,7 @@ typedef struct _GFX_VULKAN_FUNCTION_TABLE{
 	PFN_vkCmdDrawIndexed vkCmdDrawIndexed;
 	PFN_vkCmdEndRenderPass vkCmdEndRenderPass;
 	PFN_vkCmdPipelineBarrier vkCmdPipelineBarrier;
+	PFN_vkCmdPushConstants vkCmdPushConstants;
 	PFN_vkCmdSetScissor vkCmdSetScissor;
 	PFN_vkCmdSetViewport vkCmdSetViewport;
 	PFN_vkCreateBuffer vkCreateBuffer;
