@@ -62,10 +62,10 @@
 					0
 					1
 					12
-					(| gfx:data_type$SIZE_32BIT gfx:data_type$COUNT_2 gfx:data_type$TYPE_FLOAT)
+					(| gfx:data_type$SIZE_32BIT gfx:data_type$COUNT_3 gfx:data_type$TYPE_FLOAT)
 				]
 			]
-			20
+			24
 		]
 		[
 			[

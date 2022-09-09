@@ -63,12 +63,12 @@
 		($ texture$_index_buffer$data)
 	))
 	(? texture {
-		(= idx (// ($ texture$_vertex_buffer$data) 5))
+		(= idx (// ($ texture$_vertex_buffer$data) 6))
 		(<- array$extend texture$_vertex_buffer$data [
-			0.0 0.0 0.0 0.0 0.0
-			0.0 0.0 0.0 0.0 0.0
-			0.0 0.0 0.0 0.0 0.0
-			0.0 0.0 0.0 0.0 0.0
+			0.0 0.0 0.0 0.0 0.0 0.0
+			0.0 0.0 0.0 0.0 0.0 0.0
+			0.0 0.0 0.0 0.0 0.0 0.0
+			0.0 0.0 0.0 0.0 0.0 0.0
 		])
 		(<- array$extend texture$_index_buffer$data [
 			(+ idx 2) (+ idx 1) idx
@@ -105,12 +105,12 @@
 	(= vertex_buffer texture$texture$_vertex_buffer)
 	(= (: vertex_buffer$data idx) x1)
 	(= (: vertex_buffer$data (+ idx 1)) y1)
-	(= (: vertex_buffer$data (+ idx 5)) x2)
-	(= (: vertex_buffer$data (+ idx 6)) y1)
-	(= (: vertex_buffer$data (+ idx 10)) x2)
-	(= (: vertex_buffer$data (+ idx 11)) y2)
-	(= (: vertex_buffer$data (+ idx 15)) x1)
-	(= (: vertex_buffer$data (+ idx 16)) y2)
+	(= (: vertex_buffer$data (+ idx 6)) x2)
+	(= (: vertex_buffer$data (+ idx 7)) y1)
+	(= (: vertex_buffer$data (+ idx 12)) x2)
+	(= (: vertex_buffer$data (+ idx 13)) y2)
+	(= (: vertex_buffer$data (+ idx 18)) x1)
+	(= (: vertex_buffer$data (+ idx 19)) y2)
 	(= texture$texture$_buffer_update_flags (| texture$texture$_buffer_update_flags UI_BUFFER_UPDATE_FLAG_VERTEX))
 ))
 
@@ -143,9 +143,9 @@
 	(= z (:: texture$base$z_index float_type))
 	(= vertex_buffer texture$texture$_vertex_buffer)
 	(= (: vertex_buffer$data (+ idx 2)) z)
-	(= (: vertex_buffer$data (+ idx 7)) z)
-	(= (: vertex_buffer$data (+ idx 12)) z)
-	(= (: vertex_buffer$data (+ idx 17)) z)
+	(= (: vertex_buffer$data (+ idx 8)) z)
+	(= (: vertex_buffer$data (+ idx 14)) z)
+	(= (: vertex_buffer$data (+ idx 20)) z)
 	(= texture$texture$_buffer_update_flags (| texture$texture$_buffer_update_flags UI_BUFFER_UPDATE_FLAG_VERTEX))
 	(@@ true)
 ))
@@ -162,12 +162,12 @@
 	(= y2 (+ range$y range$height))
 	(= (: vertex_buffer$data (+ idx 3)) range$x)
 	(= (: vertex_buffer$data (+ idx 4)) range$y)
-	(= (: vertex_buffer$data (+ idx 8)) x2)
-	(= (: vertex_buffer$data (+ idx 9)) range$y)
-	(= (: vertex_buffer$data (+ idx 13)) x2)
-	(= (: vertex_buffer$data (+ idx 14)) y2)
-	(= (: vertex_buffer$data (+ idx 18)) range$x)
-	(= (: vertex_buffer$data (+ idx 19)) y2)
+	(= (: vertex_buffer$data (+ idx 9)) x2)
+	(= (: vertex_buffer$data (+ idx 10)) range$y)
+	(= (: vertex_buffer$data (+ idx 15)) x2)
+	(= (: vertex_buffer$data (+ idx 16)) y2)
+	(= (: vertex_buffer$data (+ idx 21)) range$x)
+	(= (: vertex_buffer$data (+ idx 22)) y2)
 	(= texture$texture$_buffer_update_flags (| texture$texture$_buffer_update_flags UI_BUFFER_UPDATE_FLAG_VERTEX))
 ))
 
