@@ -279,7 +279,6 @@ __GFX_API_CALL gfx_pipeline_t gfx_api_pipeline_create(gfx_context_t ctx_id,gfx_p
 		(descriptor_pool_sizes+descriptor_pool_size_count)->descriptorCount=samplers->length;
 		descriptor_pool_size_count++;
 	}
-	SLL_WARN("%u %u %u",uniform_buffers->length,samplers->length,descriptor_pool_size_count);
 	VkDescriptorPoolCreateInfo descriptor_pool_creation_info={
 		VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO,
 		NULL,
