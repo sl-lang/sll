@@ -88,6 +88,7 @@
 
 (= _seralize_data (,,, texture
 	(@@ [
+		texture$texture
 		texture$range$x
 		texture$range$y
 		texture$range$width

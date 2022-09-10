@@ -2,11 +2,13 @@
 	"array.sll"
 	"data_file.sll"
 	"file.sll"
+	"gfx/buffer.sll"
 	"sys.sll"
 	"types.sll"
 	"ui/_element_types.sll"
 	"ui/core.sll"
 	"ui/layout.sll"
+	"ui/texture.sll"
 )
 
 
@@ -20,6 +22,18 @@
 (= DATA_TYPE_INT 0)
 (= DATA_TYPE_FLOAT 1)
 (= DATA_TYPE_ARRAY 2)
+(= DATA_TYPE_LAYOUT 3)
+(= DATA_TYPE_TEXTURE 4)
+
+(= _buffer_type_to_writer_function <
+	gfx:buffer$DATA_TYPE_UINT8 data_file$write_byte
+	gfx:buffer$DATA_TYPE_UINT16 data_file$write_word
+	gfx:buffer$DATA_TYPE_FLOAT16 (,,, (:> "Unimplemented!\n"))
+	gfx:buffer$DATA_TYPE_UINT32 data_file$write_dword
+	gfx:buffer$DATA_TYPE_FLOAT32 data_file$write_float
+	gfx:buffer$DATA_TYPE_UINT64 data_file$write_qword
+	gfx:buffer$DATA_TYPE_FLOAT64 data_file$write_double
+>)
 
 
 
@@ -63,6 +77,20 @@
 				(<- _serialize_data (: data i) used_textures out)
 				(++ i)
 			)
+		}
+		ui:layout$ui_layout_type {
+			(<- data_file$write_byte out DATA_TYPE_LAYOUT)
+			(<- _serialize_layout data out)
+		}
+		ui:texture$ui_texture_type {
+			(<- data_file$write_byte out DATA_TYPE_TEXTURE)
+			(= i 0)
+			(-> nil (< i ($ used_textures))
+				(? (=== (%% (: used_textures i)) (%% data)) (@))
+				(++ i)
+			)
+			(? (=== i ($ used_textures)) (<- array$push used_textures data))
+			(<- data_file$write_word out i)
 		}
 		(:> "Unable to serialize type: " (&:? (:? data)) '\n')
 	)
@@ -110,6 +138,27 @@
 		(= element_type (: used_element_types i))
 		(<- data_file$write_byte out ($ element_type))
 		(<- file$write out element_type)
+		(++ i)
+	)
+	(<- data_file$write_word out ($ used_textures))
+	(-> (= i 0) (< i ($ used_textures))
+		(= texture (: used_textures i))
+		(<- data_file$write_word out (: texture$texture$size 0))
+		(<- data_file$write_word out (: texture$texture$size 1))
+		(<- data_file$write_byte out texture$texture$data_type)
+		(<- data_file$write_byte out texture$texture$buffer$data_type)
+		(<- data_file$write_dword out ($ texture$texture$buffer$data))
+		(= write_fn (: _buffer_type_to_writer_function texture$texture$buffer$data_type))
+		(-> (= j 0) (< j ($ texture$texture$buffer$data))
+			(<- write_fn out (: texture$texture$buffer$data j))
+			(++ j)
+		)
+		(<- file$write out texture$texture$buffer$data)
+		(<- data_file$write_byte out texture$sampler$config$upscale_filter)
+		(<- data_file$write_byte out texture$sampler$config$downscale_filter)
+		(<- data_file$write_byte out texture$sampler$config$address_mode_x)
+		(<- data_file$write_byte out texture$sampler$config$address_mode_y)
+		(<- data_file$write_byte out texture$sampler$config$address_mode_z)
 		(++ i)
 	)
 	(@@ (+

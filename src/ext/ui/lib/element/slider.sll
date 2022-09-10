@@ -125,10 +125,10 @@
 
 (= _serialize_data (,,, slider
 	(@@ [
-		(<- ui:layout$serialize slider$range$x_layout)
-		(<- ui:layout$serialize slider$range$y_layout)
-		(<- ui:layout$serialize slider$range$width_layout)
-		(<- ui:layout$serialize slider$range$height_layout)
+		slider$range$x_layout
+		slider$range$y_layout
+		slider$range$width_layout
+		slider$range$height_layout
 		slider$x_steps
 		slider$y_steps
 	])
