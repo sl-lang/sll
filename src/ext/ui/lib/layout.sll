@@ -70,8 +70,6 @@
 	(~ func_type) create_filter_layout
 	(~ func_type) create_range_layout
 	(~ func_type) create_standard_layout
-	(~ func_type) deserialize
-	(~ func_type) serialize
 	(~ func_type) solve
 ))
 
@@ -153,62 +151,6 @@
 	(@@ out)
 ))
 
-(= deserialize (,,, data
-	(= data (:: data map_type))
-	(= type (: _string_to_type data$type))
-	(= out (. ui_layout_type
-		type
-	))
-	(?? type
-		TYPE_STANDARD {
-			(= out$standard$multiplier data$multiplier)
-			(= out$standard$bias data$bias)
-		}
-		TYPE_FILTER {
-			(= out$filter$type (: _string_to_filter_type data$filter))
-			(= out$filter$values ([> (= i 0) (< i ($ data$values))
-				(= value (: data$values i))
-				(++ i)
-				(<- deserialize value)
-			))
-		}
-		TYPE_RANGE {
-			(= out$range$min (<- deserialize data$min))
-			(= out$range$value (<- deserialize data$value))
-			(= out$range$max (<- deserialize data$max))
-		}
-	)
-	(@@ out)
-))
-
-(= serialize (,,, layout
-	(? (! layout) (@@ nil))
-	(= layout (:: layout ui_layout_type))
-	(= out <
-		"type" (: _type_to_string layout$type)
-	>)
-	(?? layout$type
-		TYPE_STANDARD {
-			(? layout$standard$multiplier (= out$multiplier layout$standard$multiplier))
-			(? layout$standard$bias (= out$bias layout$standard$bias))
-		}
-		TYPE_FILTER {
-			(= out$filter (: _filter_type_to_string layout$filter$type))
-			(= out$values ([> (= i 0) (< i ($ layout$filter$values))
-				(= value (: layout$filter$values i))
-				(++ i)
-				(<- serialize value)
-			))
-		}
-		TYPE_RANGE {
-			(= out$min (<- serialize layout$range$min))
-			(= out$value (<- serialize layout$range$value))
-			(= out$max (<- serialize layout$range$max))
-		}
-	)
-	(@@ out)
-))
-
 (= solve (,,, layout offset size
 	(?? layout$type
 		TYPE_STANDARD (@@ (+ offset (* layout$standard$multiplier size) layout$standard$bias))
@@ -265,8 +207,6 @@
 	create_filter_layout
 	create_range_layout
 	create_standard_layout
-	deserialize
-	serialize
 	solve
 ))
 (## ui:layout)

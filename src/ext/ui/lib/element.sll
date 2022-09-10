@@ -48,11 +48,9 @@
 	(~ type_type) ui_element_type
 	(~ func_type) create
 	(~ func_type) delete
-	(~ func_type) deserialize
 	(~ func_type) is_valid_element
 	(~ func_type) register_element
 	(~ func_type) register_event_handlers
-	(~ func_type) serialize
 	(~ func_type) set_parent
 	(~ func_type) update
 ))
@@ -97,38 +95,6 @@
 	(= element (:: element ui_element_type))
 ))
 
-(= deserialize (,,, ui data parent
-	(= data (:: data map_type))
-	(= element_data (: _element_type_data (: _element_name_to_type data$type)))
-	(= base (. ui_element_type
-		ui
-		nil
-		[
-			0
-			0
-			0
-			0
-			(<- ui:layout$deserialize (: data$layout 0))
-			(<- ui:layout$deserialize (: data$layout 1))
-			(<- ui:layout$deserialize (: data$layout 2))
-			(<- ui:layout$deserialize (: data$layout 3))
-		]
-		0
-		[]
-	))
-	(= out (<- element_data$callbacks$deserialize ui base parent data$data))
-	(? (! out) {
-		(= out (. (: _element_name_to_type data$type) base))
-		(<- set_parent out parent)
-	})
-	(<- _update_position out)
-	(-> (= i 0) (< i ($ data$children))
-		(<- deserialize ui (: data$children i) out)
-		(++ i)
-	)
-	(@@ out)
-))
-
 (= is_valid_element (,,, element
 	(? (! (: _element_type_data (:? element))) {
 		(:> "Invlid UI element: " element '\n')
@@ -167,30 +133,6 @@
 		data$callbacks$mouse_event
 		element
 	)))
-))
-
-(= serialize (,,, element
-	(? (||
-		(! element)
-		(! (<- is_valid_element element))
-	) (@@ nil))
-	(= data (: _element_type_data (:? element)))
-	(= out <
-		"type" data$name
-		"layout" [
-			(<- ui:layout$serialize element$base$position$x_layout)
-			(<- ui:layout$serialize element$base$position$y_layout)
-			(<- ui:layout$serialize element$base$position$width_layout)
-			(<- ui:layout$serialize element$base$position$height_layout)
-		]
-		"data" (<- data$callbacks$serialize element)
-		"children" ([> (= i 0) (< i ($ element$base$children))
-			(= child (: element$base$children i))
-			(++ i)
-			(<- serialize child)
-		)
-	>)
-	(@@ out)
 ))
 
 (= set_parent (,,, element parent
@@ -236,11 +178,9 @@
 	ui_element_type
 	create
 	delete
-	deserialize
 	is_valid_element
 	register_element
 	register_event_handlers
-	serialize
 	set_parent
 	update
 ))
