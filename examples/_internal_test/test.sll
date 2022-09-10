@@ -1036,7 +1036,7 @@ abc` '\n')
 	slider2
 	[0.1 0.5 0.8]
 ))
-(= button2 (<- ui:element:button$create
+(= handle2 (<- ui:element:button$create
 	ui_window
 	[
 		(<- ui:layout$create_standard_layout 0 -15)
@@ -1054,27 +1054,27 @@ abc` '\n')
 		(<- ui:layout$create_standard_layout 1 0)
 		(<- ui:layout$create_standard_layout 1 0)
 	]
-	button2
+	handle2
 	[0.8 0.5 0.13]
 ))
-(<- ui:element:slider$set_slider_element slider2 button2)
+(<- ui:element:slider$set_slider_element slider2 handle2)
 (<- ui:element$set_name button "left-button")
 (<- ui:element$set_name rectangle2 "left-button-color")
+(<- ui:element$set_name slider "top-slider")
+(<- ui:element$set_name handle "top-slider-handle")
+(<- ui:element$set_name slider2 "bottom-slider")
+(<- ui:element$set_name handle2 "bottom-slider-handle")
 (= data (<- ui:serialize$serialize ui_window))
 (:> [data ($ data)] '\n')
-(= slider_id slider$base$id)
-(= handle_id handle$base$id)
-(= button2_id button2$base$id)
-(= slider2_id slider2$base$id)
 (<- window_manager:window$destroy ui_window$window)
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (= ui_window (<- ui:serialize$deserialize data))
 (= button (<- ui:element$get ui_window "left-button"))
 (= rectangle2 (<- ui:element$get ui_window "left-button-color"))
-(= slider (<- ui:element$get ui_window slider_id))
-(= handle (<- ui:element$get ui_window handle_id))
-(= button2 (<- ui:element$get ui_window button2_id))
-(= slider2 (<- ui:element$get ui_window slider2_id))
+(= slider (<- ui:element$get ui_window "top-slider"))
+(= handle (<- ui:element$get ui_window "top-slider-handle"))
+(= slider2 (<- ui:element$get ui_window "bottom-slider"))
+(= handle2 (<- ui:element$get ui_window "bottom-slider-handle"))
 (= button$callback (,,,
 	(:> "Click!\n")
 	(<- ui:element:color$set_color rectangle2 [rectangle2$rgb$blue rectangle2$rgb$red rectangle2$rgb$green])
@@ -1085,7 +1085,7 @@ abc` '\n')
 (= handle$callback (,,,
 	(<- ui:element:slider$start_drag slider)
 ))
-(= button2$callback (,,,
+(= handle2$callback (,,,
 	(<- ui:element:slider$start_drag slider2)
 ))
 (= ui_window$window$callbacks$key_down (,,, window key
