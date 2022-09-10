@@ -79,7 +79,7 @@ static const sll_internal_function_descriptor_t _internal_function_table[]={
 	{
 		SLL_CHAR("gfx:pipeline_update_descriptor"),
 		gfx_api_pipeline_update_descriptor,
-		SLL_CHAR("QQBDB#aD|")
+		SLL_CHAR("QQBDB#aDb|")
 	},
 	{
 		SLL_CHAR("gfx:pipeline_update_push_constant"),

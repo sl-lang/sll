@@ -5,7 +5,7 @@
 layout (location=0) in vec3 in_data;
 layout (location=0) out vec4 out_color;
 layout (binding=1) uniform sampler2D texture_sampler[4096];
-layout (push_constant) uniform texture_index_data{
+layout (push_constant) uniform texture_index_buffer{
 	uint texture_index;
 };
 

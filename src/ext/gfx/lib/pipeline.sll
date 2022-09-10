@@ -342,6 +342,7 @@
 	(? (! pipeline) (@@))
 	(= pipeline (:: pipeline gfx_pipeline_type))
 	(= descriptor (:: descriptor gfx_pipeline_config_descriptor_type))
+	(= descriptor$data (:: descriptor$data (: _descriptor_data_type_map descriptor$type)))
 	(= index (:: index int_type))
 	(<- (... "gfx:pipeline_update_descriptor") pipeline$ctx$_handle pipeline$_handle descriptor$binding descriptor$type descriptor$stage (?:
 		(=== descriptor$type DESCRIPTOR_TYPE_UNIFORM_BUFFER) [descriptor$data$_handle]

@@ -408,13 +408,12 @@ __GFX_API_CALL void gfx_api_pipeline_update_descriptor(gfx_context_t ctx_id,gfx_
 		index,
 		1
 	};
-	void* ptr;
+	void* ptr=NULL;
 	if (type==GFX_DESCRIPTOR_TYPE_UNIFORM_BUFFER){
 		SLL_WARN("Unimplemented!");
-		ptr=NULL;
 	}
 	else{
-		VkDescriptorImageInfo* extra_data=sll_allocate_stack(sizeof(VkDescriptorImageInfo));
+		VkDescriptorImageInfo* extra_data=sll_allocate(sizeof(VkDescriptorImageInfo));
 		descriptor.descriptorType=VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
 		descriptor.pImageInfo=extra_data;
 		const gfx_texture_data_t* texture=SLL_HANDLE_CONTAINER_GET(&(ctx->child_objects.textures),(gfx_texture_t)(data->data[0]->data.int_));
@@ -433,11 +432,11 @@ __GFX_API_CALL void gfx_api_pipeline_update_descriptor(gfx_context_t ctx_id,gfx_
 		sll_deallocate(ptr);
 		return;
 	}
-	ctx->write_descriptors.pointers=sll_reallocate(ctx->write_descriptors.pointers,ctx->write_descriptors.count*sizeof(void*));
-	*(ctx->write_descriptors.pointers+ctx->write_descriptors.count-1)=ptr;
 	ctx->write_descriptors.count++;
 	ctx->write_descriptors.data=sll_reallocate(ctx->write_descriptors.data,ctx->write_descriptors.count*sizeof(VkWriteDescriptorSet));
 	*(ctx->write_descriptors.data+ctx->write_descriptors.count-1)=descriptor;
+	ctx->write_descriptors.pointers=sll_reallocate(ctx->write_descriptors.pointers,ctx->write_descriptors.count*sizeof(void*));
+	*(ctx->write_descriptors.pointers+ctx->write_descriptors.count-1)=ptr;
 }
 
 
