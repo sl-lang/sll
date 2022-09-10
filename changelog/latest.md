@@ -4,7 +4,7 @@
 
 - Ability to add etxtures to the UI
 - Ability to create UI elements without the parent UI, for layout calculation purposes
-- Ability to serialize and deserialize UI elements and layouts
+- Ability to serialize and deserialize UI
 - Functions to update descriptors and push constants: `gfx:pipeline$update_descriptor` and `gfx:pipeline$update_push_constant`
 - Implemented filter layouts in the UI extension
 - Push constant allocation to the GFX pipeline config
