@@ -51,6 +51,7 @@
 	(~ type_type) ui_element_type
 	(~ func_type) create
 	(~ func_type) delete
+	(~ func_type) get
 	(~ func_type) is_valid_element
 	(~ func_type) register_element
 	(~ func_type) set_parent
@@ -92,6 +93,13 @@
 (= delete (,,, element
 	(? (! element) (@@))
 	(= element (:: element ui_element_type))
+))
+
+(= get (,,, ui id
+	(? (! ui) (@@ nil))
+	(= ui (:: ui ui_type))
+	(= id (:: id int_type))
+	(@@ (<- weakref$get_default (: ui$_elements id)))
 ))
 
 (= is_valid_element (,,, element
@@ -182,6 +190,7 @@
 	ui_element_type
 	create
 	delete
+	get
 	is_valid_element
 	register_element
 	set_parent

@@ -19,8 +19,8 @@
 	) @@string@@
 	(~ ui:element$ui_element_type) base
 	ui:position$ui_position_type range
-	float_type x_steps
-	float_type y_steps
+	int_type x_steps
+	int_type y_steps
 	func_type callback
 	float_type x
 	float_type y
