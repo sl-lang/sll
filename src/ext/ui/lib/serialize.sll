@@ -1,0 +1,67 @@
+(---
+	"array.sll"
+	"data_file.sll"
+	"file.sll"
+	"sys.sll"
+	"types.sll"
+	"ui/_element_types.sll"
+	"ui/core.sll"
+)
+
+
+
+(= ui_serialize_module_type (&:
+	(~ func_type) serialize
+))
+
+
+
+(= _serialize_element (,,, element used_element_types used_textures out
+	(= type_data (: _element_type_data (:? element)))
+	(= type_idx (<- array$index used_element_types type_data$name))
+	(? (=== type_idx -1) {
+		(= type_idx ($ used_element_types))
+		(<- array$push used_element_types type_data$name)
+	})
+	(<- data_file$write_word out type_idx)
+	(-> (= i 0) (< i ($ element$base$children))
+		(<- _serialize_element (: element$base$children i) used_element_types used_textures out)
+		(++ i)
+	)
+))
+
+(= serialize (,,, ui
+	(? (! ui) (@@ ""))
+	(= ui (:: ui ui:core$ui_type))
+	(= out (<- file$from_data "" file$FLAG_WRITE))
+	(<- data_file$write_dword out (|
+		(<< sys$VERSION$major 24)
+		(<< sys$VERSION$minor 16)
+		sys$VERSION$patch
+	))
+	(= title (: ui$window$layout$title 0 0xffff))
+	(<- data_file$write_word out ($ title))
+	(<- file$write out title)
+	(= used_element_types [])
+	(= used_textures [])
+	(= data (<- file$from_data "" file$FLAG_WRITE))
+	(<- _serialize_element ui$root used_element_types used_textures data)
+	(<- data_file$write_word out ($ used_element_types))
+	(-> (= i 0) (< i ($ used_element_types))
+		(= element_type (: used_element_types i))
+		(<- data_file$write_byte out ($ element_type))
+		(<- file$write out element_type)
+		(++ i)
+	)
+	(@@ (+
+		(<- file$get_buffer out)
+		(<- file$get_buffer data)
+	))
+))
+
+
+
+(= ui:serialize (. ui_serialize_module_type
+	serialize
+))
+(## ui:serialize)

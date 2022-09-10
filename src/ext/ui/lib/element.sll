@@ -2,6 +2,7 @@
 	"array.sll"
 	"string.sll"
 	"types.sll"
+	"ui/_element_types.sll"
 	"ui/_ui_type.sll"
 	"ui/_util.sll"
 	"ui/layout.sll"
@@ -57,11 +58,6 @@
 
 
 
-(= _element_type_data <>)
-(= _element_name_to_type <>)
-
-
-
 (= _update_position (,,, element
 	(= data (: _element_type_data (:? element$base$parent)))
 	(@@ (<- ui:position$update element$base$position (||
@@ -106,7 +102,7 @@
 (= register_element (,,, element_type name callbacks
 	(? (! element_type) (@@))
 	(= element_type (:: element_type type_type))
-	(= name (:: name string_type))
+	(= name (: (:: name string_type) 0 255))
 	(= callbacks (:: callbacks ui_element_callbacks_type))
 	(? (&&
 		(: _element_name_to_type name)
