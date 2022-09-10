@@ -42,6 +42,7 @@
 	ui:position$ui_position_type position
 	int_type z_index
 	array_type children
+	array_type textures
 ))
 
 (= ui_element_module_type (&:
@@ -82,6 +83,7 @@
 			(: position_layout 3)
 		]
 		0
+		[]
 		[]
 	))
 ))
