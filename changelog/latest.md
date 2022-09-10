@@ -8,7 +8,7 @@
 - Functions to update descriptors and push constants: `gfx:pipeline$update_descriptor` and `gfx:pipeline$update_push_constant`
 - Implemented filter layouts in the UI extension
 - Push constant allocation in GFX pipeline config
-- UI elements: `ui:element:button` and `ui:element:slider`
+- UI elements: `ui:element:button`, `ui:element:slider` and `ui:element:texture`
 
 ## Updated
 
@@ -18,6 +18,7 @@
 - *\[Linux Only\]* Fixed X11 lag when using a GFX context
 - *\[Linux Only\]* Fixed X11 negative mouse position overflow
 - Merged `ui/position.sll` and `ui/size.sll`
+- Renamed `ui:element:rectangle` to `ui:element:color`
 
 ## Removed
 
