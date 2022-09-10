@@ -27,11 +27,13 @@
 
 
 (= DATA_TYPE_INT 0)
-(= DATA_TYPE_FLOAT 1)
-(= DATA_TYPE_FLOAT_ZERO 2)
-(= DATA_TYPE_ARRAY 3)
-(= DATA_TYPE_LAYOUT 4)
-(= DATA_TYPE_TEXTURE 5)
+(= DATA_TYPE_INT_ZERO 1)
+(= DATA_TYPE_INT_ONE 2)
+(= DATA_TYPE_FLOAT 3)
+(= DATA_TYPE_FLOAT_ZERO 4)
+(= DATA_TYPE_ARRAY 5)
+(= DATA_TYPE_LAYOUT 6)
+(= DATA_TYPE_TEXTURE 7)
 
 (= LAYOUT_TYPE_MASK 63)
 
@@ -124,6 +126,8 @@
 	(= type (<- data_file$read_byte stream))
 	(?? type
 		DATA_TYPE_INT (@@ (<- data_file$read_sqword stream))
+		DATA_TYPE_INT_ZERO (@@ 0)
+		DATA_TYPE_INT_ONE (@@ 1)
 		DATA_TYPE_FLOAT (@@ (<- data_file$read_float stream))
 		DATA_TYPE_FLOAT_ZERO (@@ 0.0)
 		DATA_TYPE_ARRAY {
@@ -143,8 +147,14 @@
 (= _serialize_data (,,, data used_textures out
 	(?? (:? data)
 		int_type {
-			(<- data_file$write_byte out DATA_TYPE_INT)
-			(<- data_file$write_sqword out data)
+			(?:
+				(! data) (<- data_file$write_byte out DATA_TYPE_INT_ZERO)
+				(=== data 1) (<- data_file$write_byte out DATA_TYPE_INT_ONE)
+				{
+					(<- data_file$write_byte out DATA_TYPE_INT)
+					(<- data_file$write_sqword out data)
+				}
+			)
 		}
 		float_type {
 			(? data {
