@@ -17,25 +17,54 @@
 
 
 
+(= DATA_TYPE_INT 0)
+(= DATA_TYPE_FLOAT 1)
+(= DATA_TYPE_ARRAY 2)
+
+
+
 (= _serialize_layout (,,, layout out
 	(<- data_file$write_byte out layout$type)
 	(?? layout$type
-		TYPE_STANDARD {
+		ui:layout$TYPE_STANDARD {
 			(<- data_file$write_float out layout$standard$multiplier)
 			(<- data_file$write_float out layout$standard$bias)
 		}
-		TYPE_FILTER {
+		ui:layout$TYPE_FILTER {
 			(<- data_file$write_byte out layout$filter$type)
 			(-> (= i 0) (< i ($ layout$filter$values))
 				(<- _serialize_layout (: layout$filter$values i))
 				(++ i)
 			)
 		}
-		TYPE_RANGE {
+		ui:layout$TYPE_RANGE {
 			(<- _serialize_layout layout$range$min)
 			(<- _serialize_layout layout$range$value)
 			(<- _serialize_layout layout$range$max)
 		}
+	)
+))
+
+(= _serialize_data (,,, data used_textures out
+	(?? (:? data)
+		int_type {
+			(<- data_file$write_byte out DATA_TYPE_INT)
+			(<- data_file$write_sqword out data)
+		}
+		float_type {
+			(<- data_file$write_byte out DATA_TYPE_FLOAT)
+			(<- data_file$write_float out data)
+		}
+		array_type {
+			(<- data_file$write_byte out DATA_TYPE_ARRAY)
+			(? (> ($ data) 0xffff) (:> "Array too long to serialize!\n"))
+			(<- data_file$write_word out ($ data))
+			(-> (= i 0) (< i ($ data))
+				(<- _serialize_data (: data i) used_textures out)
+				(++ i)
+			)
+		}
+		(:> "Unable to serialize type: " (&:? (:? data)) '\n')
 	)
 ))
 
@@ -51,6 +80,8 @@
 	(<- _serialize_layout element$base$position$y_layout out)
 	(<- _serialize_layout element$base$position$width_layout out)
 	(<- _serialize_layout element$base$position$height_layout out)
+	(= data (<- type_data$callbacks$serialize element))
+	(? (!== data nil) (<- _serialize_data data used_textures out))
 	(<- data_file$write_word out ($ element$base$children))
 	(-> (= i 0) (< i ($ element$base$children))
 		(<- _serialize_element (: element$base$children i) used_element_types used_textures out)

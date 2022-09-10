@@ -62,7 +62,6 @@
 		($ texture$_vertex_buffer$data)
 		($ texture$_index_buffer$data)
 	))
-	(<- array$push base$textures texture)
 	(? texture {
 		(= idx (// ($ texture$_vertex_buffer$data) 6))
 		(<- array$extend texture$_vertex_buffer$data [
