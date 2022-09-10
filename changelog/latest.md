@@ -1,4 +1,4 @@
-# Sll [0.8.1] - Ongoing
+# Sll [0.8.1] - 2022-09-10
 
 ## Added
 
@@ -27,4 +27,4 @@
 - Unneeded file: `ui/size.sll`
 - Window manager geometry-change callabck: `window_manager_window_type$callbacks$geometry`
 
-[0.8.1]: https://github.com/sl-lang/sll/compare/sll-v0.8.0...main
+[0.8.1]: https://github.com/sl-lang/sll/compare/sll-v0.8.0...sll-v0.8.1
