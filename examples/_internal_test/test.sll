@@ -899,6 +899,8 @@ abc` '\n')
 ; 	(<- gfx:context$render ctx)
 ; )
 
+(= data nil)
+(? 1 {
 (= ui_window (<- ui:core$create (<- window_manager:window$create [0 0 900 600] nil "Example Window" true)))
 (<- ui:core$set_background ui_window [0.5 0.1 0.8])
 (= rectangle (<- ui:element:color$create
@@ -956,7 +958,7 @@ abc` '\n')
 		gfx:sampler$ADDRESS_MODE_TYPE_CLAMP
 		gfx:sampler$ADDRESS_MODE_TYPE_REPEAT
 	)
-))
+)))
 (= slider (<- ui:element:slider$create
 	ui_window
 	[
@@ -1067,6 +1069,7 @@ abc` '\n')
 (= data (<- ui:serialize$serialize ui_window))
 (:> [data ($ data)] '\n')
 (<- window_manager:window$destroy ui_window$window)
+})
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (= ui_window (<- ui:serialize$deserialize data))
 (= button (<- ui:element$get ui_window "left-button"))
