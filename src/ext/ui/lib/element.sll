@@ -54,6 +54,7 @@
 	(~ func_type) get
 	(~ func_type) is_valid_element
 	(~ func_type) register_element
+	(~ func_type) set_name
 	(~ func_type) set_parent
 	(~ func_type) setup
 	(~ func_type) update
@@ -90,8 +91,10 @@
 (= get (,,, ui id
 	(? (! ui) (@@ nil))
 	(= ui (:: ui ui_type))
-	(= id (:: id int_type))
-	(@@ (<- weakref$get_default (: ui$_elements id)))
+	(@@ (<- weakref$get_default (?: (=== (:? id) int_type)
+		(: ui$_elements id)
+		(: ui$_name_to_element (:: id string_type))
+	)))
 ))
 
 (= is_valid_element (,,, element
@@ -119,6 +122,16 @@
 		callbacks
 	))
 	(= (: _element_name_to_type name) element_type)
+))
+
+(= set_name (,,, element name
+	(? (||
+		(! element)
+		(! (<- is_valid_element element))
+	) (@@))
+	(= name (:: name string_type))
+	(= (: element$base$ui$_name_to_element name) (<- weakref$ref element))
+	(= (: element$base$ui$_element_to_name element$id) name)
 ))
 
 (= set_parent (,,, element parent
@@ -177,6 +190,7 @@
 	get
 	is_valid_element
 	register_element
+	set_name
 	set_parent
 	setup
 	update

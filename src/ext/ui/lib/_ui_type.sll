@@ -39,6 +39,8 @@
 	ui_event_targets_type _event_targets
 	array_type _textures
 	array_type _elements
+	map_type _name_to_element
+	map_type _element_to_name
 ))
 
 
