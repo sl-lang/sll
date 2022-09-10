@@ -142,8 +142,10 @@
 		(<< sys$VERSION$minor 16)
 		sys$VERSION$patch
 	))
-	(= title (: ui$window$layout$title 0 0xffff))
-	(<- data_file$write_word out ($ title))
+	(<- data_file$write_word out ui$window$layout$geometry$width)
+	(<- data_file$write_word out ui$window$layout$geometry$height)
+	(= title (: ui$window$layout$title 0 0xff))
+	(<- data_file$write_byte out ($ title))
 	(<- file$write out title)
 	(<- data_file$write_float out ui$context$clear_color$red)
 	(<- data_file$write_float out ui$context$clear_color$green)
