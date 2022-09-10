@@ -14,6 +14,7 @@
 
 
 (= ui_serialize_module_type (&:
+	(~ func_type) deserialize
 	(~ func_type) serialize
 ))
 
@@ -21,9 +22,13 @@
 
 (= DATA_TYPE_INT 0)
 (= DATA_TYPE_FLOAT 1)
-(= DATA_TYPE_ARRAY 2)
-(= DATA_TYPE_LAYOUT 3)
-(= DATA_TYPE_TEXTURE 4)
+(= DATA_TYPE_FLOAT_ZERO 2)
+(= DATA_TYPE_ARRAY 3)
+(= DATA_TYPE_LAYOUT 4)
+(= DATA_TYPE_TEXTURE 5)
+
+(= LAYOUT_FLAG_HAS_MULITPLIER 64)
+(= LAYOUT_FLAG_HAS_BIAS 128)
 
 (= _buffer_type_to_writer_function <
 	gfx:buffer$DATA_TYPE_UINT8 data_file$write_byte
@@ -38,11 +43,15 @@
 
 
 (= _serialize_layout (,,, layout out
-	(<- data_file$write_byte out layout$type)
+	(<- data_file$write_byte out (|
+		layout$type
+		(* LAYOUT_FLAG_HAS_MULITPLIER (&& (=== layout$type ui:layout$TYPE_STANDARD) layout$standard$multiplier))
+		(* LAYOUT_FLAG_HAS_BIAS (&& (=== layout$type ui:layout$TYPE_STANDARD) layout$standard$bias))
+	))
 	(?? layout$type
 		ui:layout$TYPE_STANDARD {
-			(<- data_file$write_float out layout$standard$multiplier)
-			(<- data_file$write_float out layout$standard$bias)
+			(? layout$standard$multiplier (<- data_file$write_float out layout$standard$multiplier))
+			(? layout$standard$bias (<- data_file$write_float out layout$standard$bias))
 		}
 		ui:layout$TYPE_FILTER {
 			(<- data_file$write_byte out layout$filter$type)
@@ -66,8 +75,10 @@
 			(<- data_file$write_sqword out data)
 		}
 		float_type {
-			(<- data_file$write_byte out DATA_TYPE_FLOAT)
-			(<- data_file$write_float out data)
+			(? data {
+				(<- data_file$write_byte out DATA_TYPE_FLOAT)
+				(<- data_file$write_float out data)
+			} (<- data_file$write_byte out DATA_TYPE_FLOAT_ZERO))
 		}
 		array_type {
 			(<- data_file$write_byte out DATA_TYPE_ARRAY)
@@ -115,6 +126,10 @@
 		(<- _serialize_element (: element$base$children i) used_element_types used_textures out)
 		(++ i)
 	)
+))
+
+(= deserialize (,,, data
+	(@@ nil)
 ))
 
 (= serialize (,,, ui
@@ -170,6 +185,7 @@
 
 
 (= ui:serialize (. ui_serialize_module_type
+	deserialize
 	serialize
 ))
 (## ui:serialize)
