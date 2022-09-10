@@ -69,7 +69,7 @@ static const sll_internal_function_descriptor_t _internal_function_table[]={
 	{
 		SLL_CHAR("gfx:pipeline_create"),
 		gfx_api_pipeline_create,
-		SLL_CHAR("QB#aD#a#aBbB#a|Q")
+		SLL_CHAR("QB#aD#a#aBbB#aDB|Q")
 	},
 	{
 		SLL_CHAR("gfx:pipeline_delete"),
@@ -80,6 +80,11 @@ static const sll_internal_function_descriptor_t _internal_function_table[]={
 		SLL_CHAR("gfx:pipeline_update_descriptor"),
 		gfx_api_pipeline_update_descriptor,
 		SLL_CHAR("QQBDB#aD|")
+	},
+	{
+		SLL_CHAR("gfx:pipeline_update_push_constant"),
+		gfx_api_pipeline_update_push_constant,
+		SLL_CHAR("QQ#s|")
 	},
 	{
 		SLL_CHAR("gfx:pipeline_use"),
@@ -137,7 +142,7 @@ static const sll_internal_function_descriptor_t _internal_function_table[]={
 
 static const sll_internal_function_table_descriptor_t _internal_function_table_descriptor_data={
 	(const sll_internal_function_descriptor_t*)(&_internal_function_table),
-	24
+	25
 };
 
 

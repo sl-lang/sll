@@ -89,6 +89,17 @@
 	int_type cull_mode
 ))
 
+(= gfx_pipeline_config_push_constant_type (&:
+	(,,, data
+		(@@ (<- string$format "<gfx:pipeline_config_push_constant size=%u stage=%s>"
+			data$size
+			(<- gfx:stage$to_string data$stage)
+		))
+	) @@string@@
+	int_type size
+	int_type stage
+))
+
 (= gfx_pipeline_config_type (&:
 	(,,, data
 		(@@ (<- string$format "<gfx:pipeline_config topology=%s vertex_input=%s descriptors=%s rasterizer=%s shaders=%s>"
@@ -104,6 +115,7 @@
 	array_type descriptors
 	gfx_pipeline_config_rasterizer_type rasterizer
 	array_type shaders
+	gfx_pipeline_config_push_constant_type push_constant
 ))
 
 (= gfx_pipeline_type (&:
@@ -148,6 +160,7 @@
 	(~ func_type) create
 	(~ func_type) delete
 	(~ func_type) update_descriptor
+	(~ func_type) update_push_constant
 	(~ func_type) use
 ))
 
@@ -281,6 +294,8 @@
 			(++ i)
 			shader$_handle
 		)
+		config$push_constant$size
+		config$push_constant$stage
 	))
 	(@@ (. gfx_pipeline_type
 		handle
@@ -304,6 +319,13 @@
 		(=== descriptor$type DESCRIPTOR_TYPE_UNIFORM_BUFFER) [descriptor$data$_handle]
 		(=== descriptor$type DESCRIPTOR_TYPE_SAMPLER) [descriptor$data$texture$_handle descriptor$data$sampler$_handle]
 	) index)
+))
+
+(= update_push_constant (,,, pipeline data
+	(? (! pipeline) (@@))
+	(= pipeline (:: pipeline gfx_pipeline_type))
+	(= data (:: data string_type))
+	(<- (... "gfx:pipeline_update_push_constant") pipeline$ctx$_handle pipeline$_handle data)
 ))
 
 (= use (,,, pipeline
@@ -341,6 +363,7 @@
 	create
 	delete
 	update_descriptor
+	update_push_constant
 	use
 ))
 (## gfx:pipeline)

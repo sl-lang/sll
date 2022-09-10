@@ -24,12 +24,17 @@ void _delete_pipeline(const gfx_context_data_t* ctx,gfx_pipeline_data_t* pipelin
 
 
 
-__GFX_API_CALL gfx_pipeline_t gfx_api_pipeline_create(gfx_context_t ctx_id,gfx_pipeline_topology_t topology,const sll_array_t* input_attributes,uint32_t stride,const sll_array_t* uniform_buffers,const sll_array_t* samplers,gfx_pipeline_polygone_mode_t polygon_mode,gfx_pipeline_front_face_t front_face,gfx_pipeline_cull_mode_t cull_mode,const sll_array_t* shaders){
+__GFX_API_CALL gfx_pipeline_t gfx_api_pipeline_create(gfx_context_t ctx_id,gfx_pipeline_topology_t topology,const sll_array_t* input_attributes,uint32_t stride,const sll_array_t* uniform_buffers,const sll_array_t* samplers,gfx_pipeline_polygone_mode_t polygon_mode,gfx_pipeline_front_face_t front_face,gfx_pipeline_cull_mode_t cull_mode,const sll_array_t* shaders,uint32_t push_constant_size,gfx_shader_stage_t push_constant_stage){
 	gfx_context_data_t* ctx=SLL_HANDLE_CONTAINER_GET(&gfx_context_data,ctx_id);
 	if (!ctx){
 		return 0;
 	}
 	gfx_pipeline_data_t* pipeline=sll_allocate(sizeof(gfx_pipeline_data_t));
+	VkPushConstantRange push_constant_range={
+		_encode_shader_stages(push_constant_stage),
+		0,
+		(push_constant_size+3)&0xfffffffc
+	};
 	VkDescriptorSetLayoutBinding* layout_bindings=sll_allocate_stack((uniform_buffers->length+samplers->length)*sizeof(VkDescriptorSetLayoutBinding));
 	uint32_t uniform_buffer_descriptor_count=0;
 	uint32_t sampler_descriptor_count=0;
@@ -63,8 +68,8 @@ __GFX_API_CALL gfx_pipeline_t gfx_api_pipeline_create(gfx_context_t ctx_id,gfx_p
 		0,
 		1,
 		&(pipeline->descriptor_set_layout),
-		0,
-		NULL
+		1,
+		&push_constant_range
 	};
 	VULKAN_CALL(ctx->function_table.vkCreatePipelineLayout(ctx->device.logical,&pipeline_layout_creation_info,NULL,&(pipeline->layout)));
 	VkPipelineShaderStageCreateInfo* shader_stages=sll_allocate_stack(shaders->length*sizeof(VkPipelineShaderStageCreateInfo));
@@ -425,6 +430,20 @@ __GFX_API_CALL void gfx_api_pipeline_update_descriptor(gfx_context_t ctx_id,gfx_
 	}
 	ctx->write_descriptors.pointers=sll_reallocate(ctx->write_descriptors.pointers,ctx->write_descriptors.count*sizeof(void*));
 	*(ctx->write_descriptors.pointers+ctx->write_descriptors.count-1)=ptr;
+}
+
+
+
+__GFX_API_CALL void gfx_api_pipeline_update_push_constant(gfx_context_t ctx_id,gfx_pipeline_t pipeline_id,const sll_string_t* data){
+	gfx_context_data_t* ctx=SLL_HANDLE_CONTAINER_GET(&gfx_context_data,ctx_id);
+	if (!ctx){
+		return;
+	}
+	gfx_pipeline_data_t* pipeline=SLL_HANDLE_CONTAINER_GET(&(ctx->child_objects.pipelines),pipeline_id);
+	if (!pipeline){
+		return;
+	}
+	ctx->function_table.vkCmdPushConstants(ctx->frame.command_buffer,pipeline->layout,VK_SHADER_STAGE_FRAGMENT_BIT/*pipeline->push_constant_stage*/,0,(data->length+3)&0xfffffffc,data->data);
 }
 
 

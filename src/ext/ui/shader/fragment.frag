@@ -13,5 +13,5 @@ layout (push_constant) uniform texture_index_data{
 
 
 void main(void){
-	out_color=vec4(in_data,1.0)+texture(texture_sampler[0],in_data.xy);
+	out_color=(texture_index==0xffffffff?vec4(in_data,1.0):texture(texture_sampler[texture_index],in_data.xy));
 }
