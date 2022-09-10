@@ -77,6 +77,9 @@ __WINDOW_MANAGER_API_CALL void window_api_event_poll(sll_bool_t blocking,sll_arr
 						xcb_window_t parent=(xcb_window_t)(intptr_t)sll_map_container_get(&_window_to_parent,(void*)(intptr_t)(configure_event->window),(void*)(intptr_t)(_xcb_screen->root));
 						if (parent!=_xcb_screen->root){
 							xcb_translate_coordinates_reply_t* pos=xcb_translate_coordinates_reply(_xcb_conn,xcb_translate_coordinates(_xcb_conn,parent,_xcb_screen->root,x,y),NULL);
+							if (!pos){
+								break;
+							}
 							x=pos->dst_x;
 							y=pos->dst_y;
 							free(pos);
@@ -90,6 +93,9 @@ __WINDOW_MANAGER_API_CALL void window_api_event_poll(sll_bool_t blocking,sll_arr
 					const xcb_property_notify_event_t* property_event=(const xcb_property_notify_event_t*)event;
 					if (property_event->atom==_xcb_net_wm_state){
 						xcb_get_property_reply_t* data=xcb_get_property_reply(_xcb_conn,xcb_get_property(_xcb_conn,0,property_event->window,_xcb_net_wm_state,XCB_ATOM_ATOM,0,32),NULL);
+						if (!data){
+							break;
+						}
 						const xcb_atom_t* wm_state=xcb_get_property_value(data);
 						unsigned int state=WINDOW_STATE_NORMAL;
 						if (*wm_state==_xcb_net_wm_state_hidden){

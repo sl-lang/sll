@@ -9,6 +9,7 @@
 	"ui/core.sll"
 	"ui/layout.sll"
 	"ui/texture.sll"
+	"window_manager/window.sll"
 )
 
 
@@ -39,6 +40,12 @@
 	gfx:buffer$DATA_TYPE_UINT64 data_file$write_qword
 	gfx:buffer$DATA_TYPE_FLOAT64 data_file$write_double
 >)
+
+(= _ui_version (|
+	(<< sys$VERSION$major 24)
+	(<< sys$VERSION$minor 16)
+	sys$VERSION$patch
+))
 
 
 
@@ -130,18 +137,23 @@
 ))
 
 (= deserialize (,,, data
-	(@@ nil)
+	(? (! data) (@@ nil))
+	(= data (:: data string_type))
+	(= stream (<- file$from_data data file$FLAG_READ))
+	(? (!== (<- data_file$read_dword stream) _ui_version) (@@ nil))
+	(= width (<- data_file$read_word stream))
+	(= height (<- data_file$read_word stream))
+	(= title (<- file$read stream (<- data_file$read_byte stream)))
+	(= out (<- ui:core$create (<- window_manager:window$create [0 0 width height] nil title true)))
+	; (!@@ 0)
+	(@@ out)
 ))
 
 (= serialize (,,, ui
 	(? (! ui) (@@ ""))
 	(= ui (:: ui ui:core$ui_type))
 	(= out (<- file$from_data "" file$FLAG_WRITE))
-	(<- data_file$write_dword out (|
-		(<< sys$VERSION$major 24)
-		(<< sys$VERSION$minor 16)
-		sys$VERSION$patch
-	))
+	(<- data_file$write_dword out _ui_version)
 	(<- data_file$write_word out ui$window$layout$geometry$width)
 	(<- data_file$write_word out ui$window$layout$geometry$height)
 	(= title (: ui$window$layout$title 0 0xff))
