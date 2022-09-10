@@ -84,7 +84,7 @@
 ))
 
 (= _deseralize_data (,,, ui base parent data
-	(@@ (<- _create_texture ui base parent nil data))
+	(@@ (<- _create_texture ui base parent (: data 0) (>> data 1)))
 ))
 
 (= _seralize_data (,,, texture

@@ -8,9 +8,12 @@
 	"sys.sll"
 	"types.sll"
 	"ui/_element_types.sll"
+	"ui/_util.sll"
 	"ui/core.sll"
+	"ui/element.sll"
 	"ui/layout.sll"
 	"ui/texture.sll"
+	"weakref.sll"
 	"window_manager/window.sll"
 )
 
@@ -29,6 +32,8 @@
 (= DATA_TYPE_ARRAY 3)
 (= DATA_TYPE_LAYOUT 4)
 (= DATA_TYPE_TEXTURE 5)
+
+(= LAYOUT_TYPE_MASK 63)
 
 (= LAYOUT_FLAG_MULITPLIER 64)
 (= LAYOUT_FLAG_BIAS 128)
@@ -61,11 +66,38 @@
 
 
 
+(= _deserialize_layout (,,, stream
+	(= type (<- data_file$read_byte stream))
+	(= out (. ui:layout$ui_layout_type
+		(& type LAYOUT_TYPE_MASK)
+	))
+	(?? out$type
+		ui:layout$TYPE_STANDARD {
+			(? (& type LAYOUT_FLAG_MULITPLIER) (= out$standard$multiplier (<- data_file$read_float stream)))
+			(? (& type LAYOUT_FLAG_BIAS) (= out$standard$bias (<- data_file$read_float stream)))
+		}
+		ui:layout$TYPE_FILTER {
+			(= out$filter$type (<- data_file$read_byte stream))
+			(= out$filter$values (<- array$create (<- data_file$read_byte stream)))
+			(-> (= i 0) (< i ($ out$filter$values))
+				(= (: out$filter$values i) (<- _deserialize_layout stream))
+				(++ i)
+			)
+		}
+		ui:layout$TYPE_RANGE {
+			(= out$range$min (<- _deserialize_layout stream))
+			(= out$range$value (<- _deserialize_layout stream))
+			(= out$range$max (<- _deserialize_layout stream))
+		}
+	)
+	(@@ out)
+))
+
 (= _serialize_layout (,,, layout out
 	(<- data_file$write_byte out (|
 		layout$type
-		(* LAYOUT_FLAG_MULITPLIER (&& (=== layout$type ui:layout$TYPE_STANDARD) layout$standard$multiplier))
-		(* LAYOUT_FLAG_BIAS (&& (=== layout$type ui:layout$TYPE_STANDARD) layout$standard$bias))
+		(* LAYOUT_FLAG_MULITPLIER (!! (&& (=== layout$type ui:layout$TYPE_STANDARD) layout$standard$multiplier)))
+		(* LAYOUT_FLAG_BIAS (!! (&& (=== layout$type ui:layout$TYPE_STANDARD) layout$standard$bias)))
 	))
 	(?? layout$type
 		ui:layout$TYPE_STANDARD {
@@ -74,17 +106,38 @@
 		}
 		ui:layout$TYPE_FILTER {
 			(<- data_file$write_byte out layout$filter$type)
+			(<- data_file$write_byte out ($ layout$filter$values))
 			(-> (= i 0) (< i ($ layout$filter$values))
-				(<- _serialize_layout (: layout$filter$values i))
+				(<- _serialize_layout (: layout$filter$values i) out)
 				(++ i)
 			)
 		}
 		ui:layout$TYPE_RANGE {
-			(<- _serialize_layout layout$range$min)
-			(<- _serialize_layout layout$range$value)
-			(<- _serialize_layout layout$range$max)
+			(<- _serialize_layout layout$range$min out)
+			(<- _serialize_layout layout$range$value out)
+			(<- _serialize_layout layout$range$max out)
 		}
 	)
+))
+
+(= _deserialize_data (,,, stream used_textures
+	(= type (<- data_file$read_byte stream))
+	(?? type
+		DATA_TYPE_INT (@@ (<- data_file$read_sqword stream))
+		DATA_TYPE_FLOAT (@@ (<- data_file$read_float stream))
+		DATA_TYPE_FLOAT_ZERO (@@ 0.0)
+		DATA_TYPE_ARRAY {
+			(= out (<- array$create (<- data_file$read_word stream)))
+			(-> (= i 0) (< i ($ out))
+				(= (: out i) (<- _deserialize_data stream used_textures))
+				(++ i)
+			)
+			(@@ out)
+		}
+		DATA_TYPE_LAYOUT (@@ (<- _deserialize_layout stream))
+		DATA_TYPE_TEXTURE (@@ (: used_textures (<- data_file$read_word stream)))
+	)
+	(!@@ 1)
 ))
 
 (= _serialize_data (,,, data used_textures out
@@ -126,9 +179,40 @@
 	)
 ))
 
-(= _deserialize_element (,,, stream ui used_element_types used_textures
+(= _deserialize_element (,,, stream ui parent used_element_types used_textures
 	(= type (: used_element_types (<- data_file$read_word stream)))
-	(:> type '\n')
+	(= data (: _element_type_data type))
+	(= base (. ui:element$ui_element_type
+		ui
+		(<- data_file$read_word stream)
+		nil
+		[
+			0
+			0
+			0
+			0
+			(<- _deserialize_layout stream)
+			(<- _deserialize_layout stream)
+			(<- _deserialize_layout stream)
+			(<- _deserialize_layout stream)
+		]
+		0
+		[]
+	))
+	(= out (<- data$callbacks$deserialize ui base parent (<- _deserialize_data stream used_textures)))
+	(? (! out) {
+		(= out (. type base))
+		(<- ui:element$set_parent out parent)
+	})
+	(? (<= ($ ui$_elements) base$id) (<- array$extend ui$_elements (<- array$create (- base$id ($ ui$_elements) -1))))
+	(= (: ui$_elements base$id) (<- weakref$ref out))
+	(<- _setup_element out)
+	(= child_count (<- data_file$read_word stream))
+	(-> (= i 0) (< i child_count)
+		(<- _deserialize_element stream ui out used_element_types used_textures)
+		(++ i)
+	)
+	(@@ out)
 ))
 
 (= _serialize_element (,,, element used_element_types used_textures out
@@ -144,8 +228,7 @@
 	(<- _serialize_layout element$base$position$y_layout out)
 	(<- _serialize_layout element$base$position$width_layout out)
 	(<- _serialize_layout element$base$position$height_layout out)
-	(= data (<- type_data$callbacks$serialize element))
-	(? (!== data nil) (<- _serialize_data data used_textures out))
+	(<- _serialize_data (<- type_data$callbacks$serialize element) used_textures out)
 	(<- data_file$write_word out ($ element$base$children))
 	(-> (= i 0) (< i ($ element$base$children))
 		(<- _serialize_element (: element$base$children i) used_element_types used_textures out)
@@ -198,8 +281,7 @@
 		(= (: used_textures i) (<- ui:texture$create out texture sampler))
 		(++ i)
 	)
-	(<- _deserialize_element stream out used_element_types used_textures)
-	(:> out '\n')(!@@ 0)
+	(= out$root (<- _deserialize_element stream out nil used_element_types used_textures))
 	(@@ out)
 ))
 

@@ -61,14 +61,6 @@
 
 
 
-(= _update_position (,,, element
-	(= data (: _element_type_data (:? element$base$parent)))
-	(@@ (<- ui:position$update element$base$position (||
-		(<- data$callbacks$get_position element$base$parent element)
-		element$base$parent$base$position
-	)))
-))
-
 (= create (,,, ui position_layout
 	(= position_layout (:: position_layout array_type))
 	(@@ (. ui_element_type
@@ -158,22 +150,14 @@
 	) (@@))
 	(= element$base$id ($ element$base$ui$_elements))
 	(<- array$push element$base$ui$_elements (<- weakref$ref element))
-	(= data (: _element_type_data (:? element)))
-	(? data$callbacks$button_event (<- array$push element$base$ui$_event_targets$button (. ui_event_target_type
-		data$callbacks$button_event
-		element
-	)))
-	(? data$callbacks$mouse_event (<- array$push element$base$ui$_event_targets$mouse (. ui_event_target_type
-		data$callbacks$mouse_event
-		element
-	)))
+	(<- _setup_element element)
 ))
 
 (= update (,,, element
 	(? (||
 		(! element)
 		(! (<- is_valid_element element))
-		(! (<- _update_position element))
+		(! (<- _update_element_position element))
 	) (@@))
 	(= data (: _element_type_data (:? element)))
 	(<- data$callbacks$update element)

@@ -1058,7 +1058,6 @@ abc` '\n')
 	[0.8 0.5 0.13]
 ))
 (<- ui:element:slider$set_slider_element slider2 button2)
-(:> ui_window$root '\n')
 (= data (<- ui:serialize$serialize ui_window))
 (:> [data ($ data)] '\n')
 (= button_id button$base$id)
