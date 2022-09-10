@@ -1045,7 +1045,7 @@ abc` '\n')
 	slider2
 	[0.1 0.5 0.8]
 ))
-(= button2 (<- ui:element:button$cr/eate
+(= button2 (<- ui:element:button$create
 	ui_window
 	[
 		(<- ui:layout$create_standard_layout 0 -15)
@@ -1069,7 +1069,8 @@ abc` '\n')
 ))
 (<- ui:element:slider$set_slider_element slider2 button2)
 (:> ui_window$root '\n')
-(:> [(<- ui:serialize$serialize ui_window)] '\n')
+(= data (<- ui:serialize$serialize ui_window))
+(:> [data ($ data)] '\n')
 (= ui_window$window$callbacks$key_down (,,, window key
 	(?? key
 		window_manager:keyboard$KEY_ESCAPE (<- window_manager:window$destroy window)

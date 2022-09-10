@@ -6,6 +6,7 @@
 	"types.sll"
 	"ui/_element_types.sll"
 	"ui/core.sll"
+	"ui/layout.sll"
 )
 
 
@@ -16,6 +17,28 @@
 
 
 
+(= _serialize_layout (,,, layout out
+	(<- data_file$write_byte out layout$type)
+	(?? layout$type
+		TYPE_STANDARD {
+			(<- data_file$write_float out layout$standard$multiplier)
+			(<- data_file$write_float out layout$standard$bias)
+		}
+		TYPE_FILTER {
+			(<- data_file$write_byte out layout$filter$type)
+			(-> (= i 0) (< i ($ layout$filter$values))
+				(<- _serialize_layout (: layout$filter$values i))
+				(++ i)
+			)
+		}
+		TYPE_RANGE {
+			(<- _serialize_layout layout$range$min)
+			(<- _serialize_layout layout$range$value)
+			(<- _serialize_layout layout$range$max)
+		}
+	)
+))
+
 (= _serialize_element (,,, element used_element_types used_textures out
 	(= type_data (: _element_type_data (:? element)))
 	(= type_idx (<- array$index used_element_types type_data$name))
@@ -24,6 +47,11 @@
 		(<- array$push used_element_types type_data$name)
 	})
 	(<- data_file$write_word out type_idx)
+	(<- _serialize_layout element$base$position$x_layout out)
+	(<- _serialize_layout element$base$position$y_layout out)
+	(<- _serialize_layout element$base$position$width_layout out)
+	(<- _serialize_layout element$base$position$height_layout out)
+	(<- data_file$write_word out ($ element$base$children))
 	(-> (= i 0) (< i ($ element$base$children))
 		(<- _serialize_element (: element$base$children i) used_element_types used_textures out)
 		(++ i)
