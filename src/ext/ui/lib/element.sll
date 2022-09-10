@@ -7,6 +7,7 @@
 	"ui/_util.sll"
 	"ui/layout.sll"
 	"ui/position.sll"
+	"weakref.sll"
 )
 
 
@@ -38,6 +39,7 @@
 		))
 	) @@string@@
 	(~ object_type) ui
+	int_type id
 	object_type parent
 	ui:position$ui_position_type position
 	int_type z_index
@@ -51,8 +53,8 @@
 	(~ func_type) delete
 	(~ func_type) is_valid_element
 	(~ func_type) register_element
-	(~ func_type) register_event_handlers
 	(~ func_type) set_parent
+	(~ func_type) setup
 	(~ func_type) update
 ))
 
@@ -70,6 +72,7 @@
 	(= position_layout (:: position_layout array_type))
 	(@@ (. ui_element_type
 		ui
+		-1
 		nil
 		[
 			0
@@ -118,19 +121,6 @@
 	(= (: _element_name_to_type name) element_type)
 ))
 
-(= register_event_handlers (,,, element
-	(? (! (<- is_valid_element element)) (@@))
-	(= data (: _element_type_data (:? element)))
-	(? data$callbacks$button_event (<- array$push element$base$ui$_event_targets$button (. ui_event_target_type
-		data$callbacks$button_event
-		element
-	)))
-	(? data$callbacks$mouse_event (<- array$push element$base$ui$_event_targets$mouse (. ui_event_target_type
-		data$callbacks$mouse_event
-		element
-	)))
-))
-
 (= set_parent (,,, element parent
 	(? (||
 		(! element)
@@ -151,6 +141,24 @@
 	(<- array$push parent$base$children element)
 	(<- update element)
 	(@@ true)
+))
+
+(= setup (,,, element
+	(? (||
+		(! (<- is_valid_element element))
+		(!== element$base$id -1)
+	) (@@))
+	(= element$base$id ($ element$base$ui$_elements))
+	(<- array$push element$base$ui$_elements (<- weakref$ref element))
+	(= data (: _element_type_data (:? element)))
+	(? data$callbacks$button_event (<- array$push element$base$ui$_event_targets$button (. ui_event_target_type
+		data$callbacks$button_event
+		element
+	)))
+	(? data$callbacks$mouse_event (<- array$push element$base$ui$_event_targets$mouse (. ui_event_target_type
+		data$callbacks$mouse_event
+		element
+	)))
 ))
 
 (= update (,,, element
@@ -176,8 +184,8 @@
 	delete
 	is_valid_element
 	register_element
-	register_event_handlers
 	set_parent
+	setup
 	update
 ))
 (## ui:element)

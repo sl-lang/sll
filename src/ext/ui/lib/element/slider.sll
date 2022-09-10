@@ -109,6 +109,7 @@
 	(<- ui:position$update out$range out$base$position)
 	(= out$x out$base$position$x)
 	(= out$y out$base$position$y)
+	(<- ui:element$setup out)
 	(@@ out)
 ))
 
@@ -163,6 +164,7 @@
 	(<- ui:position$update out$range out$base$position)
 	(= out$x out$base$position$x)
 	(= out$y out$base$position$y)
+	(<- ui:element$setup out)
 	(@@ out)
 ))
 

@@ -38,6 +38,7 @@
 	int_type _max_z_index
 	ui_event_targets_type _event_targets
 	array_type _textures
+	array_type _elements
 ))
 
 

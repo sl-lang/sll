@@ -45,7 +45,7 @@
 		callback
 	))
 	(? parent (<- ui:element$set_parent out parent))
-	(<- ui:element$register_event_handlers out)
+	(<- ui:element$setup out)
 	(@@ out)
 ))
 

@@ -66,6 +66,7 @@
 	(? rgb (<- set_color out rgb))
 	(? parent (<- set_parent out parent))
 	(<- update out)
+	(<- ui:element$setup out)
 	(@@ out)
 ))
 

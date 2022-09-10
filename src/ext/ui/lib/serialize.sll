@@ -115,6 +115,7 @@
 		(<- array$push used_element_types type_data$name)
 	})
 	(<- data_file$write_word out type_idx)
+	(<- data_file$write_word out element$base$id)
 	(<- _serialize_layout element$base$position$x_layout out)
 	(<- _serialize_layout element$base$position$y_layout out)
 	(<- _serialize_layout element$base$position$width_layout out)
@@ -148,6 +149,7 @@
 	(= used_textures [])
 	(= data (<- file$from_data "" file$FLAG_WRITE))
 	(<- _serialize_element ui$root used_element_types used_textures data)
+	(= root (<- file$get_buffer data))
 	(<- data_file$write_word out ($ used_element_types))
 	(-> (= i 0) (< i ($ used_element_types))
 		(= element_type (: used_element_types i))
@@ -177,7 +179,7 @@
 	)
 	(@@ (+
 		(<- file$get_buffer out)
-		(<- file$get_buffer data)
+		root
 	))
 ))
 

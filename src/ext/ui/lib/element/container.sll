@@ -28,6 +28,7 @@
 		(<- ui:element$create ui position_layout)
 	))
 	(? parent (<- ui:element$set_parent out parent))
+	(<- ui:element$setup out)
 	(@@ out)
 ))
 
