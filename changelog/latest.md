@@ -7,7 +7,8 @@
 - Ability to serialize and deserialize UI elements and layouts
 - Functions to update descriptors and push constants: `gfx:pipeline$update_descriptor` and `gfx:pipeline$update_push_constant`
 - Implemented filter layouts in the UI extension
-- Push constant allocation in GFX pipeline config
+- Push constant allocation to the GFX pipeline config
+- Support for shader arrays in GFX pipeline config
 - UI elements: `ui:element:button`, `ui:element:slider` and `ui:element:texture`
 
 ## Updated
