@@ -994,7 +994,7 @@ abc` '\n')
 	texture
 	[0.0 0.0 1.0 1.0]
 ))
-(= handle (<- ui:element:container$create
+(= handle (<- ui:element:button$create
 	ui_window
 	[
 		(<- ui:layout$create_standard_layout 0 -15)
@@ -1003,6 +1003,7 @@ abc` '\n')
 		(<- ui:layout$create_standard_layout 1 20)
 	]
 	slider
+	(,,, (<- ui:element:slider$start_drag slider))
 ))
 (= rectangle4 (<- ui:element:color$create
 	ui_window
@@ -1043,7 +1044,7 @@ abc` '\n')
 	slider2
 	[0.1 0.5 0.8]
 ))
-(= rectangle6 (<- ui:element:color$create
+(= button2 (<- ui:element:button$create
 	ui_window
 	[
 		(<- ui:layout$create_standard_layout 0 -15)
@@ -1052,9 +1053,20 @@ abc` '\n')
 		(<- ui:layout$create_standard_layout 0 30)
 	]
 	slider2
+	(,,, (<- ui:element:slider$start_drag slider2))
+))
+(= rectangle6 (<- ui:element:color$create
+	ui_window
+	[
+		(<- ui:layout$create_standard_layout 0 0)
+		(<- ui:layout$create_standard_layout 0 0)
+		(<- ui:layout$create_standard_layout 1 0)
+		(<- ui:layout$create_standard_layout 1 0)
+	]
+	button2
 	[0.8 0.5 0.13]
 ))
-(<- ui:element:slider$set_slider_element slider2 rectangle6)
+(<- ui:element:slider$set_slider_element slider2 button2)
 (:> ui_window$root '\n')
 (= layout_data (<- ui:element$serialize ui_window$root))
 (:> (<- json$stringify layout_data) '\n')

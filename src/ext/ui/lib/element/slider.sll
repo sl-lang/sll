@@ -34,6 +34,7 @@
 	(~ func_type) get_position
 	(~ func_type) set_position
 	(~ func_type) set_slider_element
+	(~ func_type) start_drag
 ))
 
 
@@ -67,7 +68,10 @@
 ))
 
 (= _handle_button_event (,,, slider mouse_button state
-	(? (!== mouse_button window_manager:window$FLAG_BUTTON_LEFT) (@@))
+	(? (||
+		(!== mouse_button window_manager:window$FLAG_BUTTON_LEFT)
+		(=== state slider$_has_mouse_focus)
+	) (@@))
 	(= x slider$base$ui$window$inputs$mouse$x)
 	(= y slider$base$ui$window$inputs$mouse$y)
 	(= slider$_has_mouse_focus (&&
@@ -218,6 +222,13 @@
 	)
 ))
 
+(= start_drag (,,, slider
+	(? (! slider) (@@))
+	(= slider (:: slider ui_slider_element_type))
+	(= slider$_has_mouse_focus true)
+	(<- _update_handle_position slider slider$base$ui$window$inputs$mouse$x slider$base$ui$window$inputs$mouse$y)
+))
+
 
 
 (<- ui:element$register_element ui_slider_element_type "ui:element:slider" (. ui:element$ui_element_callbacks_type
@@ -238,5 +249,6 @@
 	get_position
 	set_position
 	set_slider_element
+	start_drag
 ))
 (## ui:element:slider)
