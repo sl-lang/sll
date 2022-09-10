@@ -145,6 +145,11 @@
 	(= height (<- data_file$read_word stream))
 	(= title (<- file$read stream (<- data_file$read_byte stream)))
 	(= out (<- ui:core$create (<- window_manager:window$create [0 0 width height] nil title true)))
+	(<- ui:core$set_background out [
+		(<- data_file$read_float stream)
+		(<- data_file$read_float stream)
+		(<- data_file$read_float stream)
+	])
 	(@@ out)
 ))
 
