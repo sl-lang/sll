@@ -443,7 +443,7 @@ __GFX_API_CALL void gfx_api_pipeline_update_push_constant(gfx_context_t ctx_id,g
 	if (!pipeline){
 		return;
 	}
-	ctx->function_table.vkCmdPushConstants(ctx->frame.command_buffer,pipeline->layout,VK_SHADER_STAGE_FRAGMENT_BIT/*pipeline->push_constant_stage*/,0,(data->length+3)&0xfffffffc,data->data);
+	ctx->function_table.vkCmdPushConstants(ctx->frame.command_buffer,pipeline->layout,VK_SHADER_STAGE_FRAGMENT_BIT,0,(data->length+3)&0xfffffffc,data->data);
 }
 
 
