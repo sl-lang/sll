@@ -21,6 +21,7 @@
 	ui:position$ui_position_type range
 	int_type x_steps
 	int_type y_steps
+	int_type disable_mouse_focus
 	func_type callback
 	float_type x
 	float_type y
@@ -71,6 +72,7 @@
 	(? (||
 		(!== mouse_button window_manager:window$FLAG_BUTTON_LEFT)
 		(=== state slider$_has_mouse_focus)
+		(&& state slider$disable_mouse_focus)
 	) (@@))
 	(= x slider$base$ui$window$inputs$mouse$x)
 	(= y slider$base$ui$window$inputs$mouse$y)
@@ -99,6 +101,7 @@
 		]
 		(: data 4)
 		(: data 5)
+		(: data 6)
 		nil
 		0.0
 		0.0
@@ -132,10 +135,11 @@
 		slider$range$height_layout
 		slider$x_steps
 		slider$y_steps
+		slider$disable_mouse_focus
 	])
 ))
 
-(= create (,,, ui position_layout parent range x_steps y_steps callback
+(= create (,,, ui position_layout parent range x_steps y_steps callback disable_mouse_focus
 	(= range (:: range array_type))
 	(= x_steps (:: x_steps int_type))
 	(= y_steps (:: y_steps int_type))
@@ -154,6 +158,7 @@
 		]
 		x_steps
 		y_steps
+		(!! disable_mouse_focus)
 		callback
 		0.0
 		0.0

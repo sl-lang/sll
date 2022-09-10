@@ -1026,6 +1026,10 @@ abc` '\n')
 		(<- ui:layout$create_standard_layout 1 0)
 		(<- ui:layout$create_standard_layout 1 0)
 	]
+	0
+	0
+	nil
+	true
 ))
 (= rectangle5 (<- ui:element:color$create
 	ui_window
