@@ -168,7 +168,6 @@
 			(<- write_fn out (: texture$texture$buffer$data j))
 			(++ j)
 		)
-		(<- file$write out texture$texture$buffer$data)
 		(<- data_file$write_byte out texture$sampler$config$upscale_filter)
 		(<- data_file$write_byte out texture$sampler$config$downscale_filter)
 		(<- data_file$write_byte out texture$sampler$config$address_mode_x)
