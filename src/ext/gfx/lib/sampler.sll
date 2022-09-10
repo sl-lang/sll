@@ -36,7 +36,6 @@
 	(,,, data
 		(@@ (<- string$format "<gfx:sampler config=%s context=%s>"
 			(:: data$config string_type)
-			(:: data$texture string_type)
 			(:: data$ctx string_type)
 		))
 	) @@string@@

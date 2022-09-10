@@ -3,6 +3,8 @@
 	"data_file.sll"
 	"file.sll"
 	"gfx/buffer.sll"
+	"gfx/sampler.sll"
+	"gfx/texture.sll"
 	"sys.sll"
 	"types.sll"
 	"ui/_element_types.sll"
@@ -39,6 +41,16 @@
 	gfx:buffer$DATA_TYPE_FLOAT32 data_file$write_float
 	gfx:buffer$DATA_TYPE_UINT64 data_file$write_qword
 	gfx:buffer$DATA_TYPE_FLOAT64 data_file$write_double
+>)
+
+(= _buffer_type_to_reader_function <
+	gfx:buffer$DATA_TYPE_UINT8 data_file$read_byte
+	gfx:buffer$DATA_TYPE_UINT16 data_file$read_word
+	gfx:buffer$DATA_TYPE_FLOAT16 (,,, (:> "Unimplemented!\n"))
+	gfx:buffer$DATA_TYPE_UINT32 data_file$read_dword
+	gfx:buffer$DATA_TYPE_FLOAT32 data_file$read_float
+	gfx:buffer$DATA_TYPE_UINT64 data_file$read_qword
+	gfx:buffer$DATA_TYPE_FLOAT64 data_file$read_double
 >)
 
 (= _ui_version (|
@@ -114,6 +126,11 @@
 	)
 ))
 
+(= _deserialize_element (,,, stream ui used_element_types used_textures
+	(= type (: used_element_types (<- data_file$read_word stream)))
+	(:> type '\n')
+))
+
 (= _serialize_element (,,, element used_element_types used_textures out
 	(= type_data (: _element_type_data (:? element)))
 	(= type_idx (<- array$index used_element_types type_data$name))
@@ -150,6 +167,39 @@
 		(<- data_file$read_float stream)
 		(<- data_file$read_float stream)
 	])
+	(= used_element_types (<- array$create (<- data_file$read_word stream)))
+	(-> (= i 0) (< i ($ used_element_types))
+		(= name (<- file$read stream (<- data_file$read_byte stream)))
+		(= type (: _element_name_to_type name))
+		(? (! type) (:> "Unknown element type: '" name "'\n"))
+		(= (: used_element_types i) type)
+		(++ i)
+	)
+	(= used_textures (<- array$create (<- data_file$read_word stream)))
+	(-> (= i 0) (< i ($ used_textures))
+		(= width (<- data_file$read_word stream))
+		(= height (<- data_file$read_word stream))
+		(= data_type (<- data_file$read_byte stream))
+		(= buffer_data_type (<- data_file$read_byte stream))
+		(= buffer_data (<- array$create (<- data_file$read_dword stream)))
+		(= read_fn (: _buffer_type_to_reader_function buffer_data_type))
+		(-> (= j 0) (< j ($ buffer_data))
+			(= (: buffer_data j) (<- read_fn stream))
+			(++ j)
+		)
+		(= texture (<- gfx:texture$create out$context [width height] data_type (<- gfx:buffer$create out$context gfx:buffer$TYPE_TEXTURE buffer_data_type buffer_data true)))
+		(= sampler (<- gfx:sampler$create out$context (. gfx:sampler$gfx_sampler_config_type
+			(<- data_file$read_byte stream)
+			(<- data_file$read_byte stream)
+			(<- data_file$read_byte stream)
+			(<- data_file$read_byte stream)
+			(<- data_file$read_byte stream)
+		)))
+		(= (: used_textures i) (<- ui:texture$create out texture sampler))
+		(++ i)
+	)
+	(<- _deserialize_element stream out used_element_types used_textures)
+	(:> out '\n')(!@@ 0)
 	(@@ out)
 ))
 
