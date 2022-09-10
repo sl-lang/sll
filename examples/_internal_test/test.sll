@@ -1090,10 +1090,10 @@ abc` '\n')
 	(:> [x y] '\n')
 ))
 (= handle$callback (,,,
-	(<- ui:element:slider$start_drag slider)
+	(<- ui:element:slider$set_focus slider true)
 ))
 (= handle2$callback (,,,
-	(<- ui:element:slider$start_drag slider2)
+	(<- ui:element:slider$set_focus slider2 true)
 ))
 (= ui_window$window$callbacks$key_down (,,, window key
 	(?? key

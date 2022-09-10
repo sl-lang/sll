@@ -35,7 +35,7 @@
 	(~ func_type) get_position
 	(~ func_type) set_position
 	(~ func_type) set_slider_element
-	(~ func_type) start_drag
+	(~ func_type) set_focus
 ))
 
 
@@ -229,11 +229,11 @@
 	)
 ))
 
-(= start_drag (,,, slider
+(= set_focus (,,, slider focus
 	(? (! slider) (@@))
 	(= slider (:: slider ui_slider_element_type))
-	(= slider$_has_mouse_focus true)
-	(<- _update_handle_position slider slider$base$ui$window$inputs$mouse$x slider$base$ui$window$inputs$mouse$y)
+	(= slider$_has_mouse_focus (!! focus))
+	(? slider$_has_mouse_focus (<- _update_handle_position slider slider$base$ui$window$inputs$mouse$x slider$base$ui$window$inputs$mouse$y))
 ))
 
 
@@ -256,6 +256,6 @@
 	get_position
 	set_position
 	set_slider_element
-	start_drag
+	set_focus
 ))
 (## ui:element:slider)
