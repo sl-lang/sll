@@ -228,6 +228,31 @@
 
 
 
+(= _initialize_decriptor_arrays (,,, ctx handle descriptors
+	(? (! ctx$_empty_objects$sampler) (= ctx$_empty_objects$sampler (<- gfx:sampler$create ctx (. gfx:sampler$gfx_sampler_config_type
+		gfx:sampler$FILTER_NEAREST
+		gfx:sampler$FILTER_NEAREST
+		gfx:sampler$ADDRESS_MODE_TYPE_REPEAT
+		gfx:sampler$ADDRESS_MODE_TYPE_CLAMP
+		gfx:sampler$ADDRESS_MODE_TYPE_REPEAT
+	))))
+	(? (! ctx$_empty_objects$texture) (= ctx$_empty_objects$texture (<- gfx:texture$create ctx [1 1] (| gfx:data_type$SIZE_8BIT gfx:data_type$COUNT_4 gfx:data_type$TYPE_COLOR_UNORM) (<- gfx:buffer$create ctx gfx:buffer$TYPE_TEXTURE gfx:buffer$DATA_TYPE_UINT32 [0] true))))
+	(? (! ctx$_empty_objects$uniform_buffer) (= ctx$_empty_objects$uniform_buffer (<- gfx:buffer$create ctx gfx:buffer$TYPE_UNIFORM gfx:buffer$DATA_TYPE_FLOAT32 [] true)))
+	(-> (= i 0) (< i ($ descriptors))
+		(= descriptor (: descriptors i)) (= index (:: index int_type))
+		(++ i)
+		(? (! descriptor$data) (<<<))
+		(= data (?:
+			(=== descriptor$type DESCRIPTOR_TYPE_UNIFORM_BUFFER) [ctx$_empty_objects$uniform_buffer$_handle]
+			(=== descriptor$type DESCRIPTOR_TYPE_SAMPLER) [ctx$_empty_objects$texture$_handle ctx$_empty_objects$sampler$_handle]
+		))
+		(-> (= j 0) (< j descriptor$data)
+			(<- (... "gfx:pipeline_update_descriptor") ctx$handle handle descriptor$binding descriptor$type descriptor$stage data j true)
+			(++ j)
+		)
+	)
+))
+
 (= create (,,, ctx config
 	(? (! ctx) (@@ nil))
 	(= ctx (:: ctx gfx:context$gfx_context_type))
@@ -238,6 +263,7 @@
 	)
 	(= uniform_buffers [])
 	(= samplers [])
+	(= uninitialized_descriptor_arrays [])
 	(-> (= i 0) (< i ($ config$descriptors))
 		(= descriptor (:: (: config$descriptors i) gfx_pipeline_config_descriptor_type))
 		(= descriptor$data (?:
@@ -250,6 +276,7 @@
 			(!== (:? descriptor$data) int_type)
 			(! (<- gfx:buffer$is_constant_size? descriptor$data))
 		) (:> "Uniform buffers must have a constant size!\n"))
+		(? (=== (:? descriptor$data) int_type) (<- array$push uninitialized_descriptor_arrays descriptor))
 		(<- array$push (?: (=== descriptor$type DESCRIPTOR_TYPE_UNIFORM_BUFFER) uniform_buffers samplers) (?:
 			(=== (:? descriptor$data) int_type) [
 				descriptor$binding
@@ -297,6 +324,7 @@
 		config$push_constant$size
 		config$push_constant$stage
 	))
+	(<- _initialize_decriptor_arrays ctx handle uninitialized_descriptor_arrays)
 	(@@ (. gfx_pipeline_type
 		handle
 		config
@@ -318,7 +346,7 @@
 	(<- (... "gfx:pipeline_update_descriptor") pipeline$ctx$_handle pipeline$_handle descriptor$binding descriptor$type descriptor$stage (?:
 		(=== descriptor$type DESCRIPTOR_TYPE_UNIFORM_BUFFER) [descriptor$data$_handle]
 		(=== descriptor$type DESCRIPTOR_TYPE_SAMPLER) [descriptor$data$texture$_handle descriptor$data$sampler$_handle]
-	) index)
+	) index false)
 ))
 
 (= update_push_constant (,,, pipeline data

@@ -16,6 +16,12 @@
 
 
 
+(= gfx_context_empty_objects_type (&:
+	object_type sampler
+	object_type texture
+	object_type uniform_buffer
+))
+
 (= gfx_context_type (&:
 	(,,, data
 		(@@ (<- string$format "<gfx:context window=%s clear_color=%s>"
@@ -31,6 +37,7 @@
 	gfx_color_type clear_color
 	float_type delta_time
 	float_type _last_time
+	gfx_context_empty_objects_type _empty_objects
 ))
 
 (= gfx_context_module_type (&:
@@ -59,6 +66,7 @@
 		[0 0 0 0]
 		0
 		(<- time$time)
+		[nil nil nil]
 	))
 	(= window$_gfx_context (<- weakref$ref out))
 	(@@ out)

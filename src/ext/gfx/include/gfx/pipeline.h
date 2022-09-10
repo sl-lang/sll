@@ -57,6 +57,7 @@ typedef uint8_t gfx_pipeline_cull_mode_t;
 
 typedef struct _GFX_PIPELINE_DATA{
 	VkPipeline handle;
+	VkShaderStageFlags push_constant_stage;
 	VkPipelineLayout layout;
 	VkDescriptorSet descriptor_set;
 	VkDescriptorSetLayout descriptor_set_layout;
@@ -81,7 +82,7 @@ __GFX_API_CALL void gfx_api_pipeline_delete(gfx_context_t ctx_id,gfx_pipeline_t 
 
 
 
-__GFX_API_CALL void gfx_api_pipeline_update_descriptor(gfx_context_t ctx_id,gfx_pipeline_t pipeline_id,gfx_descriptor_type_t type,uint32_t binding,gfx_shader_stage_t stage,const sll_array_t* data,uint32_t index);
+__GFX_API_CALL void gfx_api_pipeline_update_descriptor(gfx_context_t ctx_id,gfx_pipeline_t pipeline_id,gfx_descriptor_type_t type,uint32_t binding,gfx_shader_stage_t stage,const sll_array_t* data,uint32_t index,sll_bool_t immediate);
 
 
 

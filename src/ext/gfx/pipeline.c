@@ -30,8 +30,9 @@ __GFX_API_CALL gfx_pipeline_t gfx_api_pipeline_create(gfx_context_t ctx_id,gfx_p
 		return 0;
 	}
 	gfx_pipeline_data_t* pipeline=sll_allocate(sizeof(gfx_pipeline_data_t));
+	pipeline->push_constant_stage=_encode_shader_stages(push_constant_stage);
 	VkPushConstantRange push_constant_range={
-		_encode_shader_stages(push_constant_stage),
+		pipeline->push_constant_stage,
 		0,
 		(push_constant_size+3)&0xfffffffc
 	};
@@ -390,7 +391,7 @@ __GFX_API_CALL void gfx_api_pipeline_delete(gfx_context_t ctx_id,gfx_pipeline_t 
 
 
 
-__GFX_API_CALL void gfx_api_pipeline_update_descriptor(gfx_context_t ctx_id,gfx_pipeline_t pipeline_id,gfx_descriptor_type_t type,uint32_t binding,gfx_shader_stage_t stage,const sll_array_t* data,uint32_t index){
+__GFX_API_CALL void gfx_api_pipeline_update_descriptor(gfx_context_t ctx_id,gfx_pipeline_t pipeline_id,gfx_descriptor_type_t type,uint32_t binding,gfx_shader_stage_t stage,const sll_array_t* data,uint32_t index,sll_bool_t immediate){
 	gfx_context_data_t* ctx=SLL_HANDLE_CONTAINER_GET(&gfx_context_data,ctx_id);
 	if (!ctx){
 		return;
@@ -399,15 +400,14 @@ __GFX_API_CALL void gfx_api_pipeline_update_descriptor(gfx_context_t ctx_id,gfx_
 	if (!pipeline){
 		return;
 	}
-	ctx->write_descriptors.count++;
-	ctx->write_descriptors.data=sll_reallocate(ctx->write_descriptors.data,ctx->write_descriptors.count*sizeof(VkWriteDescriptorSet));
-	VkWriteDescriptorSet* descriptor=ctx->write_descriptors.data+ctx->write_descriptors.count-1;
-	descriptor->sType=VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-	descriptor->pNext=NULL;
-	descriptor->dstSet=pipeline->descriptor_set;
-	descriptor->dstBinding=binding;
-	descriptor->dstArrayElement=index;
-	descriptor->descriptorCount=1;
+	VkWriteDescriptorSet descriptor={
+		VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET,
+		NULL,
+		pipeline->descriptor_set,
+		binding,
+		index,
+		1
+	};
 	void* ptr;
 	if (type==GFX_DESCRIPTOR_TYPE_UNIFORM_BUFFER){
 		SLL_WARN("Unimplemented!");
@@ -415,8 +415,8 @@ __GFX_API_CALL void gfx_api_pipeline_update_descriptor(gfx_context_t ctx_id,gfx_
 	}
 	else{
 		VkDescriptorImageInfo* extra_data=sll_allocate_stack(sizeof(VkDescriptorImageInfo));
-		descriptor->descriptorType=VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
-		descriptor->pImageInfo=extra_data;
+		descriptor.descriptorType=VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+		descriptor.pImageInfo=extra_data;
 		const gfx_texture_data_t* texture=SLL_HANDLE_CONTAINER_GET(&(ctx->child_objects.textures),(gfx_texture_t)(data->data[0]->data.int_));
 		const gfx_sampler_data_t* sampler=SLL_HANDLE_CONTAINER_GET(&(ctx->child_objects.samplers),(gfx_sampler_t)(data->data[1]->data.int_));
 		if (!texture||!sampler){
@@ -428,8 +428,16 @@ __GFX_API_CALL void gfx_api_pipeline_update_descriptor(gfx_context_t ctx_id,gfx_
 		extra_data->imageLayout=texture->layout;
 		ptr=extra_data;
 	}
+	if (immediate){
+		ctx->function_table.vkUpdateDescriptorSets(ctx->device.logical,1,&descriptor,0,NULL);
+		sll_deallocate(ptr);
+		return;
+	}
 	ctx->write_descriptors.pointers=sll_reallocate(ctx->write_descriptors.pointers,ctx->write_descriptors.count*sizeof(void*));
 	*(ctx->write_descriptors.pointers+ctx->write_descriptors.count-1)=ptr;
+	ctx->write_descriptors.count++;
+	ctx->write_descriptors.data=sll_reallocate(ctx->write_descriptors.data,ctx->write_descriptors.count*sizeof(VkWriteDescriptorSet));
+	*(ctx->write_descriptors.data+ctx->write_descriptors.count-1)=descriptor;
 }
 
 
@@ -443,7 +451,7 @@ __GFX_API_CALL void gfx_api_pipeline_update_push_constant(gfx_context_t ctx_id,g
 	if (!pipeline){
 		return;
 	}
-	ctx->function_table.vkCmdPushConstants(ctx->frame.command_buffer,pipeline->layout,VK_SHADER_STAGE_FRAGMENT_BIT,0,(data->length+3)&0xfffffffc,data->data);
+	ctx->function_table.vkCmdPushConstants(ctx->frame.command_buffer,pipeline->layout,pipeline->push_constant_stage,0,(data->length+3)&0xfffffffc,data->data);
 }
 
 
