@@ -1084,7 +1084,8 @@ abc` '\n')
 (= handle2 (<- ui:element$get ui_window "bottom-slider-handle"))
 (= button$callback (,,,
 	(:> "Click!\n")
-	(<- ui:element:color$set_color rectangle2 [rectangle2$rgb$blue rectangle2$rgb$red rectangle2$rgb$green])
+	(= color (: rectangle2$colors 0))
+	(<- ui:element:color$set_color rectangle2 [color$blue color$red color$green])
 ))
 (= slider$callback (,,, _ x y
 	(:> [x y] '\n')

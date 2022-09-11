@@ -14,12 +14,23 @@
 
 
 
+(= ui_rgb_type (&:
+	(,,, data
+		(@@ (<- string$format "(%f %f %f)"
+			data$red
+			data$green
+			data$blue
+		))
+	) @@string@@
+	float_type red
+	float_type green
+	float_type blue
+))
+
 (= ui_color_element_type (&:
 	(,,, data
-		(@@ (<- string$format "<ui:element:color rgb=(%f %f %f) base=%s>"
-			data$rgb$red
-			data$rgb$green
-			data$rgb$blue
+		(@@ (<- string$format "<ui:element:color colors=%s base=%s>"
+			(<- string$str data$colors)
 			(:: data$base string_type)
 		))
 	) @@string@@
@@ -27,7 +38,7 @@
 		(<- delete data)
 	) @@delete@@
 	(~ ui:element$ui_element_type) base
-	gfx:color$gfx_color_type rgb
+	array_type colors
 	int_type _vertex_buffer_offset
 	int_type _index_buffer_offset
 ))
@@ -42,10 +53,12 @@
 
 
 
-(= _create_color (,,, ui base parent rgb
+(= _create_color (,,, ui base parent colors
 	(= out (. ui_color_element_type
 		base
-		[0.0 0.0 0.0]
+		[
+			(. ui_rgb_type 0.0 0.0 0.0)
+		]
 		($ ui$_vertex_buffer$data)
 		($ ui$_index_buffer$data)
 	))
@@ -63,7 +76,7 @@
 		])
 		(= ui$_buffer_update_flags (| ui$_buffer_update_flags UI_BUFFER_UPDATE_FLAG_INDEX))
 	})
-	(? rgb (<- set_color out rgb))
+	(? colors (<- set_color out colors))
 	(? parent (<- set_parent out parent))
 	(<- update out)
 	(<- ui:element$setup out)
@@ -75,11 +88,24 @@
 ))
 
 (= _seralize_data (,,, color
-	(@@ [
-		color$rgb$red
-		color$rgb$green
-		color$rgb$blue
-	])
+	(= c0 (: color$colors 0))
+	(= c1 (: color$colors 1))
+	(= c2 (: color$colors 2))
+	(= c3 (: color$colors 3))
+	(@@ (: [
+		c0$red
+		c0$green
+		c0$blue
+		c1$red
+		c1$green
+		c1$blue
+		c2$red
+		c2$green
+		c2$blue
+		c3$red
+		c3$green
+		c3$blue
+	] 0 (* ($ color$colors) 3)))
 ))
 
 (= _update_position_and_size (,,, color
@@ -117,26 +143,39 @@
 	(<- ui:element$delete color)
 ))
 
-(= set_color (,,, color rgb
+(= set_color (,,, color colors
 	(? (! color) (@@))
 	(= color (:: color ui_color_element_type))
-	(= rgb (:: rgb gfx:color$gfx_color_type))
-	(= color$rgb (: rgb))
+	(= colors (: (:: colors array_type)))
+	(= colors (?:
+		(=== ($ colors) 2) (* colors 2)
+		(=== ($ colors) 3) [colors]
+		(: colors 0 4)
+	)
+	(-> (= i 0) (< i ($ colors))
+		(= (: colors i) (:: (: colors i) ui_rgb_type))
+		(++ i)
+	)
+	(= color$colors colors)
 	(? (! color$base$ui) (@@))
 	(= idx color$_vertex_buffer_offset)
 	(= vertex_buffer color$base$ui$_vertex_buffer)
-	(= (: vertex_buffer$data (+ idx 3)) rgb$red)
-	(= (: vertex_buffer$data (+ idx 4)) rgb$green)
-	(= (: vertex_buffer$data (+ idx 5)) rgb$blue)
-	(= (: vertex_buffer$data (+ idx 9)) rgb$red)
-	(= (: vertex_buffer$data (+ idx 10)) rgb$green)
-	(= (: vertex_buffer$data (+ idx 11)) rgb$blue)
-	(= (: vertex_buffer$data (+ idx 15)) rgb$red)
-	(= (: vertex_buffer$data (+ idx 16)) rgb$green)
-	(= (: vertex_buffer$data (+ idx 17)) rgb$blue)
-	(= (: vertex_buffer$data (+ idx 21)) rgb$red)
-	(= (: vertex_buffer$data (+ idx 22)) rgb$green)
-	(= (: vertex_buffer$data (+ idx 23)) rgb$blue)
+	(= c0 (: colors 0))
+	(= c1 (|| (: colors 1) c0))
+	(= c2 (|| (: colors 2) c0))
+	(= c3 (|| (: colors 3) c0))
+	(= (: vertex_buffer$data (+ idx 3)) c0$red)
+	(= (: vertex_buffer$data (+ idx 4)) c0$green)
+	(= (: vertex_buffer$data (+ idx 5)) c0$blue)
+	(= (: vertex_buffer$data (+ idx 9)) c1$red)
+	(= (: vertex_buffer$data (+ idx 10)) c1$green)
+	(= (: vertex_buffer$data (+ idx 11)) c1$blue)
+	(= (: vertex_buffer$data (+ idx 15)) c2$red)
+	(= (: vertex_buffer$data (+ idx 16)) c2$green)
+	(= (: vertex_buffer$data (+ idx 17)) c2$blue)
+	(= (: vertex_buffer$data (+ idx 21)) c3$red)
+	(= (: vertex_buffer$data (+ idx 22)) c3$green)
+	(= (: vertex_buffer$data (+ idx 23)) c3$blue)
 	(= color$base$ui$_buffer_update_flags (| color$base$ui$_buffer_update_flags UI_BUFFER_UPDATE_FLAG_VERTEX))
 ))
 
