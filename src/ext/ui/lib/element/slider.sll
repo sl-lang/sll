@@ -26,6 +26,8 @@
 	float_type x
 	float_type y
 	int_type _has_mouse_focus
+	float_type _prev_pos_x
+	float_type _prev_pos_y
 ))
 
 (= ui_slider_element_module_type (&:
@@ -106,12 +108,16 @@
 		0.0
 		0.0
 		0
+		0.0
+		0.0
 	))
 	(? parent (<- ui:element$set_parent out parent))
 	(<- ui:element$register_event_handlers out)
 	(<- ui:position$update out$range out$base$position)
 	(= out$x out$base$position$x)
 	(= out$y out$base$position$y)
+	(= out$_prev_pos_x out$base$position$x)
+	(= out$_prev_pos_y out$base$position$y)
 	(<- ui:element$setup out)
 	(@@ out)
 ))
@@ -140,7 +146,10 @@
 ))
 
 (= _update_position_and_size (,,, slider
-	(? (<- ui:position$update slider$range slider$base$position) (<- _update_handle_position slider slider$x slider$y))
+	(? (! (<- ui:position$update slider$range slider$base$position)) (@@))
+	(<- _update_handle_position slider (+ slider$x (- slider$base$position$x slider$_prev_pos_x)) (+ slider$y (- slider$base$position$y slider$_prev_pos_y)))
+	(= slider$_prev_pos_x slider$base$position$x)
+	(= slider$_prev_pos_y slider$base$position$y)
 ))
 
 (= create (,,, ui position_layout parent range x_steps y_steps callback disable_mouse_focus
