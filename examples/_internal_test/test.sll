@@ -46,6 +46,7 @@
 	"ui/element/button.sll"
 	"ui/element/color.sll"
 	"ui/element/container.sll"
+	"ui/element/gradient.sll"
 	"ui/element/slider.sll"
 	"ui/element/texture.sll"
 	"ui/layout.sll"
@@ -1021,7 +1022,7 @@ abc` '\n')
 	[
 		(<- ui:layout$create_standard_layout 0.5 0)
 		(<- ui:layout$create_standard_layout 0.5 0)
-		(<- ui:layout$create_standard_layout 0 200)
+		(<- ui:layout$create_standard_layout 0 300)
 		(<- ui:layout$create_standard_layout 0 200)
 	]
 	ui_window$root
@@ -1036,7 +1037,7 @@ abc` '\n')
 	nil
 	true
 ))
-(= rectangle5 (<- ui:element:color$create
+(= rectangle5 (<- ui:element:gradient$create
 	ui_window
 	[
 		(<- ui:layout$create_standard_layout 0 0)
@@ -1045,7 +1046,13 @@ abc` '\n')
 		(<- ui:layout$create_standard_layout 1 0)
 	]
 	slider2
-	[0.1 0.5 0.8]
+	0.93
+	[
+		[0.0 0.0 0.0]
+		[1.0 1.0 1.0]
+		; [0.1 0.5 0.8]
+		; [0.5 0.8 0.1]
+	]
 ))
 (= handle2 (<- ui:element:button$create
 	ui_window
@@ -1099,9 +1106,6 @@ abc` '\n')
 (= top-slider-handle$callback (,,,
 	(<- ui:element:top-slider$set_focus top-slider true)
 ))
-(= bottom-slider-bg$base$callbacks$resize (,,,
-	(<- ui:element:color$set_color bottom-slider-bg [0.0 (/ bottom-slider-bg$base$position$x (+ bottom-slider-bg$base$position$width bottom-slider-bg$base$position$height)) (/ bottom-slider-bg$base$position$y (+ bottom-slider-bg$base$position$width bottom-slider-bg$base$position$height))])
-))
 (= bottom-slider-handle$callback (,,,
 	(<- ui:element:slider$set_focus bottom-slider true)
 ))
@@ -1113,5 +1117,6 @@ abc` '\n')
 	)
 ))
 (-> nil (! (& ui_window$window$flags window_manager:window$FLAG_CLOSED))
+	; (<- ui:element:gradient$set_angle bottom-slider-bg (+ bottom-slider-bg$angle 0.01))
 	(<- ui:core$update ui_window false)
 )

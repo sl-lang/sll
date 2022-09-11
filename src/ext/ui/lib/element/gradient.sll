@@ -1,0 +1,266 @@
+(---
+	"array.sll"
+	"math.sll"
+	"string.sll"
+	"types.sll"
+	"ui/_util.sll"
+	"ui/core.sll"
+	"ui/element.sll"
+	"ui/rgb.sll"
+)
+
+
+
+(# delete set_colors set_parent)
+
+
+
+(= ui_gradient_element_type (&:
+	(,,, data
+		(@@ (<- string$format "<ui:element:gradient angle=%f colors=%s base=%s>"
+			data$angle
+			(<- string$str data$colors)
+			(:: data$base string_type)
+		))
+	) @@string@@
+	(,,, data
+		(<- delete data)
+	) @@delete@@
+	(~ ui:element$ui_element_type) base
+	float_type angle
+	array_type colors
+	int_type _vertex_buffer_offset
+	int_type _index_buffer_offset
+))
+
+(= ui_element_gradient_module_type (&:
+	(~ type_type) ui_gradient_element_type
+	(~ func_type) create
+	(~ func_type) delete
+	(~ func_type) set_angle
+	(~ func_type) set_colors
+	(~ func_type) set_parent
+))
+
+
+
+(= _calculate_vertex_distances (,,, gradient
+	(= base_width gradient$base$position$width)
+	(= base_height gradient$base$position$height)
+	(= angle gradient$angle)
+	(? (>= angle math$PI) (= angle (- angle math$PI)))
+	(= corner_angle (<- math$atan (/ base_height base_width)))
+	(= flip_sides (< corner_angle angle (- math$PI corner_angle)))
+	(= width (?: flip_sides base_height base_width))
+	(= height (?: flip_sides base_width base_height))
+	(? (>= angle math$PI_DIV_2) (= angle (- math$PI angle)))
+	(? flip_sides (= angle (- math$PI_DIV_2 angle)))
+	(= sin (<- math$sin angle))
+	(= cos (<- math$cos angle))
+	(= tan (/ sin cos))
+	(= sin^2 (* sin sin))
+	(= a (+ (* width width (- (* tan tan) sin^2)) (* height height sin^2)))
+	(= b (<- math$abs (* 2 width height (- tan (* sin cos)))))
+	(= d_base (/ width 2 cos))
+	(= d_min (- d_base (/ (<- math$sqrt (+ a b)) 2)))
+	(= d_max (+ d_base (/ (<- math$sqrt (- a b)) 2)))
+	(@@ [d_min d_max flip_sides])
+))
+
+(= _get_color_at_offset (,,, gradient offset
+	(= a (: gradient$colors 0))
+	(= b (: gradient$colors 1))
+	(@@ (. ui:rgb$ui_rgb_type
+		(+ a$red (* (- b$red a$red) offset))
+		(+ a$green (* (- b$green a$green) offset))
+		(+ a$blue (* (- b$blue a$blue) offset))
+	))
+))
+
+(= _swap (,,, colors i j
+	(= tmp (: colors i))
+	(= (: colors i) (: colors j))
+	(= (: colors j) tmp)
+))
+
+(= _calculate_vertex_colors (,,, gradient distances
+	(= d_min (: distances 0))
+	(= d_max (: distances 1))
+	(= flip_sides (: distances 2))
+	(= total_length (* d_max 2))
+	(= out [
+		(<- _get_color_at_offset gradient (/ (+ d_max d_min) total_length))
+		(<- _get_color_at_offset gradient 0)
+		(<- _get_color_at_offset gradient (/ (- d_max d_min) total_length))
+		(<- _get_color_at_offset gradient 1)
+	])
+	(? flip_sides (<- _swap out 0 2))
+	(@@ out)
+))
+
+(= _recalculate_vertex_colors (,,, gradient
+	(? (! gradient$base$ui) (@@))
+	(= gradient$angle (% gradient$angle math$TAU))
+	(= distances (<- _calculate_vertex_distances gradient))
+	(= colors (<- _calculate_vertex_colors gradient distances))
+	(= idx gradient$_vertex_buffer_offset)
+	(= vertex_buffer gradient$base$ui$_vertex_buffer)
+	(= c0 (: colors 0))
+	(= c1 (: colors 1))
+	(= c2 (: colors 2))
+	(= c3 (: colors 3))
+	(= (: vertex_buffer$data (+ idx 3)) c0$red)
+	(= (: vertex_buffer$data (+ idx 4)) c0$green)
+	(= (: vertex_buffer$data (+ idx 5)) c0$blue)
+	(= (: vertex_buffer$data (+ idx 9)) c1$red)
+	(= (: vertex_buffer$data (+ idx 10)) c1$green)
+	(= (: vertex_buffer$data (+ idx 11)) c1$blue)
+	(= (: vertex_buffer$data (+ idx 15)) c2$red)
+	(= (: vertex_buffer$data (+ idx 16)) c2$green)
+	(= (: vertex_buffer$data (+ idx 17)) c2$blue)
+	(= (: vertex_buffer$data (+ idx 21)) c3$red)
+	(= (: vertex_buffer$data (+ idx 22)) c3$green)
+	(= (: vertex_buffer$data (+ idx 23)) c3$blue)
+	(= gradient$base$ui$_buffer_update_flags (| gradient$base$ui$_buffer_update_flags UI_BUFFER_UPDATE_FLAG_VERTEX))
+))
+
+(= _create_gradient (,,, ui base parent angle colors
+	(= out (. ui_gradient_element_type
+		base
+		angle
+		[
+			(. ui:rgb$ui_rgb_type 0.0 0.0 0.0)
+		]
+		($ ui$_vertex_buffer$data)
+		($ ui$_index_buffer$data)
+	))
+	(? ui {
+		(= idx (// ($ ui$_vertex_buffer$data) 6))
+		(<- array$extend ui$_vertex_buffer$data [
+			0.0 0.0 0.0 0.0 0.0 0.0
+			0.0 0.0 0.0 0.0 0.0 0.0
+			0.0 0.0 0.0 0.0 0.0 0.0
+			0.0 0.0 0.0 0.0 0.0 0.0
+		])
+		(<- array$extend ui$_index_buffer$data [
+			(+ idx 2) (+ idx 1) idx
+			(+ idx 3) (+ idx 2) idx
+		])
+		(= ui$_buffer_update_flags (| ui$_buffer_update_flags UI_BUFFER_UPDATE_FLAG_INDEX))
+	})
+	(? colors (<- set_colors out colors))
+	(? parent (<- set_parent out parent))
+	(<- _recalculate_vertex_colors out)
+	(<- update out)
+	(<- ui:element$setup out)
+	(@@ out)
+))
+
+(= _deseralize_data (,,, ui base parent data
+	(@@ (<- _create_gradient ui base parent (: data 0) (: data 1)))
+))
+
+(= _seralize_data (,,, gradient
+	(@@ [
+		gradient$angle
+		gradient$colors
+	])
+))
+
+(= _update_position_and_size (,,, gradient
+	(? (! gradient$base$ui) (@@))
+	(= idx gradient$_vertex_buffer_offset)
+	(= x1 gradient$base$position$x)
+	(= y1 gradient$base$position$y)
+	(= x2 (+ x1 gradient$base$position$width))
+	(= y2 (+ y1 gradient$base$position$height))
+	(= vertex_buffer gradient$base$ui$_vertex_buffer)
+	(= (: vertex_buffer$data idx) x1)
+	(= (: vertex_buffer$data (+ idx 1)) y1)
+	(= (: vertex_buffer$data (+ idx 6)) x2)
+	(= (: vertex_buffer$data (+ idx 7)) y1)
+	(= (: vertex_buffer$data (+ idx 12)) x2)
+	(= (: vertex_buffer$data (+ idx 13)) y2)
+	(= (: vertex_buffer$data (+ idx 18)) x1)
+	(= (: vertex_buffer$data (+ idx 19)) y2)
+	(= gradient$base$ui$_buffer_update_flags (| gradient$base$ui$_buffer_update_flags UI_BUFFER_UPDATE_FLAG_VERTEX))
+	(<- _recalculate_vertex_colors gradient)
+))
+
+(= create (,,, ui position_layout parent angle colors
+	(= ui (?: ui (:: ui ui:core$ui_type) nil))
+	(@@ (<- _create_gradient
+		ui
+		(<- ui:element$create ui position_layout)
+		parent
+		angle
+		colors
+	))
+))
+
+(= delete (,,, gradient
+	(? (! gradient) (@@))
+	(= gradient (:: gradient ui_gradient_element_type))
+	(<- ui:element$delete gradient)
+))
+
+(= set_angle (,,, gradient angle
+	(? (! gradient) (@@))
+	(= gradient (:: gradient ui_gradient_element_type))
+	(? (=== gradient$angle angle) (@@))
+	(= gradient$angle angle)
+	(<- _recalculate_vertex_colors gradient)
+))
+
+(= set_colors (,,, gradient colors
+	(? (! gradient) (@@))
+	(= gradient (:: gradient ui_gradient_element_type))
+	(= colors (:: colors array_type))
+	(= gradient$colors ([> (= i 0) (< i ($ colors))
+		(= color (: colors i))
+		(++ i)
+		(:: color ui:rgb$ui_rgb_type)
+	))
+	(<- _recalculate_vertex_colors gradient)
+))
+
+(= set_parent (,,, gradient parent
+	(? (! gradient) (@@))
+	(= gradient (:: gradient ui_gradient_element_type))
+	(?
+		(! (<- ui:element$set_parent gradient parent)) (@@ false)
+		(! gradient$base$ui) (@@ true)
+	)
+	(= idx gradient$_vertex_buffer_offset)
+	(= z (:: gradient$base$z_index float_type))
+	(= vertex_buffer gradient$base$ui$_vertex_buffer)
+	(= (: vertex_buffer$data (+ idx 2)) z)
+	(= (: vertex_buffer$data (+ idx 8)) z)
+	(= (: vertex_buffer$data (+ idx 14)) z)
+	(= (: vertex_buffer$data (+ idx 20)) z)
+	(= gradient$base$ui$_buffer_update_flags (| gradient$base$ui$_buffer_update_flags UI_BUFFER_UPDATE_FLAG_VERTEX))
+	(@@ true)
+))
+
+
+
+(<- ui:element$register_element ui_gradient_element_type "ui:element:gradient" (. ui:element$ui_element_data_callbacks_type
+	nil
+	_deseralize_data
+	nil
+	nil
+	_seralize_data
+	_update_position_and_size
+))
+
+
+
+(= ui:element:gradient (. ui_element_gradient_module_type
+	ui_gradient_element_type
+	create
+	delete
+	set_angle
+	set_colors
+	set_parent
+))
+(## ui:element:gradient)

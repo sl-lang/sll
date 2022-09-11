@@ -1,6 +1,5 @@
 (---
 	"array.sll"
-	"gfx/color.sll"
 	"string.sll"
 	"types.sll"
 	"ui/_util.sll"
@@ -11,7 +10,7 @@
 
 
 
-(# delete set_color set_parent update)
+(# delete set_color set_parent)
 
 
 
