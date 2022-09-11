@@ -3,6 +3,7 @@
 ## Added
 
 - Ability to specify element-specific callbacks in the UI: `element$base$callbacks`
+- Moved all UI color-related types and functions to `ui/rgb.sll`
 
 ## Changed
 

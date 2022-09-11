@@ -12,6 +12,7 @@
 	"ui/core.sll"
 	"ui/element.sll"
 	"ui/layout.sll"
+	"ui/rgb.sll"
 	"ui/texture.sll"
 	"weakref.sll"
 	"window_manager/window.sll"
@@ -34,6 +35,7 @@
 (= DATA_TYPE_ARRAY 5)
 (= DATA_TYPE_LAYOUT 6)
 (= DATA_TYPE_TEXTURE 7)
+(= DATA_TYPE_RGB 8)
 
 (= LAYOUT_TYPE_MASK 63)
 
@@ -140,6 +142,11 @@
 		}
 		DATA_TYPE_LAYOUT (@@ (<- _deserialize_layout stream))
 		DATA_TYPE_TEXTURE (@@ (: used_textures (<- data_file$read_word stream)))
+		DATA_TYPE_RGB (@@ (. ui:rgb$ui_rgb_type
+			(<- data_file$read_float stream)
+			(<- data_file$read_float stream)
+			(<- data_file$read_float stream)
+		))
 	)
 	(!@@ 1)
 ))
@@ -184,6 +191,12 @@
 			)
 			(? (=== i ($ used_textures)) (<- array$push used_textures data))
 			(<- data_file$write_word out i)
+		}
+		ui:rgb$ui_rgb_type {
+			(<- data_file$write_byte out DATA_TYPE_RGB)
+			(<- data_file$write_float out data$red)
+			(<- data_file$write_float out data$green)
+			(<- data_file$write_float out data$blue)
 		}
 		(:> "Unable to serialize type: " (&:? (:? data)) '\n')
 	)

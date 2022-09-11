@@ -6,6 +6,7 @@
 	"ui/_util.sll"
 	"ui/core.sll"
 	"ui/element.sll"
+	"ui/rgb.sll"
 )
 
 
@@ -13,19 +14,6 @@
 (# delete set_color set_parent update)
 
 
-
-(= ui_rgb_type (&:
-	(,,, data
-		(@@ (<- string$format "(%f %f %f)"
-			data$red
-			data$green
-			data$blue
-		))
-	) @@string@@
-	float_type red
-	float_type green
-	float_type blue
-))
 
 (= ui_color_element_type (&:
 	(,,, data
@@ -57,7 +45,7 @@
 	(= out (. ui_color_element_type
 		base
 		[
-			(. ui_rgb_type 0.0 0.0 0.0)
+			(. ui:rgb$ui_rgb_type 0.0 0.0 0.0)
 		]
 		($ ui$_vertex_buffer$data)
 		($ ui$_index_buffer$data)
@@ -88,16 +76,7 @@
 ))
 
 (= _seralize_data (,,, color
-	(= c0 (: color$colors 0))
-	(= c1 (: color$colors 1))
-	(= c2 (: color$colors 2))
-	(= c3 (: color$colors 3))
-	(@@ (: [
-		[c0$red c0$green c0$blue]
-		[c1$red c1$green c1$blue]
-		[c2$red c2$green c2$blue]
-		[c3$red c3$green c3$blue]
-	] 0 ($ color$colors)))
+	(@@ color$colors)
 ))
 
 (= _update_position_and_size (,,, color
@@ -145,7 +124,7 @@
 		(: colors 0 4)
 	)
 	(-> (= i 0) (< i ($ colors))
-		(= (: colors i) (:: (: colors i) ui_rgb_type))
+		(= (: colors i) (:: (: colors i) ui:rgb$ui_rgb_type))
 		(++ i)
 	)
 	(= color$colors colors)

@@ -1,0 +1,30 @@
+(---
+	"string.sll"
+	"types.sll"
+)
+
+
+
+(= ui_rgb_type (&:
+	(,,, data
+		(@@ (<- string$format "(%f %f %f)"
+			data$red
+			data$green
+			data$blue
+		))
+	) @@string@@
+	float_type red
+	float_type green
+	float_type blue
+))
+
+(= ui_rgb_module_type (&:
+	(~ type_type) ui_rgb_type
+))
+
+
+
+(= ui:rgb (. ui_rgb_module_type
+	ui_rgb_type
+))
+(## ui:rgb)

@@ -8,6 +8,7 @@
 	"ui/element/texture.sll"
 	"ui/layout.sll"
 	"ui/position.sll"
+	"ui/rgb.sll"
 	"ui/texture.sll"
 )
 
@@ -23,6 +24,7 @@
 	(~ (:? ui:element:texture)) element:texture
 	(~ (:? ui:layout)) layout
 	(~ (:? ui:position)) position
+	(~ (:? ui:rgb)) rgb
 	(~ (:? ui:texture)) texture
 ))
 
@@ -38,6 +40,7 @@
 	ui:element:texture
 	ui:layout
 	ui:position
+	ui:rgb
 	ui:texture
 ))
 (## ui)
