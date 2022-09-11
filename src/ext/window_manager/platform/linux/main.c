@@ -28,7 +28,7 @@
 
 
 
-static const uint8_t _blank_cursor_bits[]={0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+static const uint64_t _blank_cursor_bits[4]={0,0,0,0};
 
 
 
