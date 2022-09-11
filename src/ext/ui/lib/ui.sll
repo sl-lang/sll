@@ -4,6 +4,7 @@
 	"ui/element/button.sll"
 	"ui/element/color.sll"
 	"ui/element/container.sll"
+	"ui/element/gradient.sll"
 	"ui/element/slider.sll"
 	"ui/element/texture.sll"
 	"ui/layout.sll"
@@ -20,6 +21,7 @@
 	(~ (:? ui:element:button)) element:button
 	(~ (:? ui:element:color)) element:color
 	(~ (:? ui:element:container)) element:container
+	(~ (:? ui:element:gradient)) element:gradient
 	(~ (:? ui:element:slider)) element:slider
 	(~ (:? ui:element:texture)) element:texture
 	(~ (:? ui:layout)) layout
@@ -36,6 +38,7 @@
 	ui:element:button
 	ui:element:color
 	ui:element:container
+	ui:element:gradient
 	ui:element:slider
 	ui:element:texture
 	ui:layout
