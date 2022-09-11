@@ -128,7 +128,7 @@
 		[
 			gfx:pipeline$POLYGON_MODE_FILL
 			gfx:pipeline$FRONT_FACE_COUNTER_CLOCKWISE
-			gfx:pipeline$CULL_MODE_BACK
+			0
 		]
 		[
 			(<- gfx:shader$create
