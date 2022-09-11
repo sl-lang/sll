@@ -5,6 +5,7 @@
 - Ability to specify element-specific callbacks in the UI: `element$base$callbacks`
 - Moved all UI color-related types and functions to `ui/rgb.sll`
 - New UI element: `ui:element:gradient`
+- UI serializer compression levels
 
 ## Changed
 

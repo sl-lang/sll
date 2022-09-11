@@ -38,11 +38,17 @@
 (= DATA_TYPE_TEXTURE 7)
 (= DATA_TYPE_RGB 8)
 (= DATA_TYPE_POSITION 9)
+(= DATA_TYPE_RGB_COMPRESSED 10)
+(= DATA_TYPE_RGB_COMPRESSED_HIGH 11)
 
 (= LAYOUT_TYPE_MASK 63)
 
 (= LAYOUT_FLAG_MULITPLIER 64)
 (= LAYOUT_FLAG_BIAS 128)
+
+(= COLOR_COMPRESSION_LOW 0)
+(= COLOR_COMPRESSION_MEDIUM 1)
+(= COLOR_COMPRESSION_HIGH 2)
 
 (= _buffer_type_to_writer_function <
 	gfx:buffer$DATA_TYPE_UINT8 data_file$write_byte
@@ -159,11 +165,22 @@
 			(<- _deserialize_layout stream)
 			(<- _deserialize_layout stream)
 		))
+		DATA_TYPE_RGB_COMPRESSED (@@ (. ui:rgb$ui_rgb_type
+			(/ (<- data_file$read_word stream) 65535)
+			(/ (<- data_file$read_word stream) 65535)
+			(/ (<- data_file$read_word stream) 65535)
+		))
+		DATA_TYPE_RGB_COMPRESSED_HIGH (@@ (. ui:rgb$ui_rgb_type
+			(/ (<- data_file$read_byte stream) 255)
+			(/ (<- data_file$read_byte stream) 255)
+			(/ (<- data_file$read_byte stream) 255)
+		))
 	)
 	(!@@ 1)
 ))
 
-(= _serialize_data (,,, data used_textures out
+(= _serialize_data (,,, data used_textures color_compression_level out
+	(<- file$write out " ")
 	(?? (:? data)
 		int_type {
 			(?:
@@ -186,7 +203,7 @@
 			(? (> ($ data) 0xffff) (:> "Array too long to serialize!\n"))
 			(<- data_file$write_word out ($ data))
 			(-> (= i 0) (< i ($ data))
-				(<- _serialize_data (: data i) used_textures out)
+				(<- _serialize_data (: data i) used_textures color_compression_level out)
 				(++ i)
 			)
 		}
@@ -205,10 +222,26 @@
 			(<- data_file$write_word out i)
 		}
 		ui:rgb$ui_rgb_type {
-			(<- data_file$write_byte out DATA_TYPE_RGB)
-			(<- data_file$write_float out data$red)
-			(<- data_file$write_float out data$green)
-			(<- data_file$write_float out data$blue)
+			(?? color_compression_level
+				COLOR_COMPRESSION_LOW {
+					(<- data_file$write_byte out DATA_TYPE_RGB)
+					(<- data_file$write_float out data$red)
+					(<- data_file$write_float out data$green)
+					(<- data_file$write_float out data$blue)
+				}
+				COLOR_COMPRESSION_MEDIUM{
+					(<- data_file$write_byte out DATA_TYPE_RGB_COMPRESSED)
+					(<- data_file$write_word out (:: (* data$red 65535) int_type))
+					(<- data_file$write_word out (:: (* data$green 65535) int_type))
+					(<- data_file$write_word out (:: (* data$blue 65535) int_type))
+				}
+				COLOR_COMPRESSION_HIGH {
+					(<- data_file$write_byte out DATA_TYPE_RGB_COMPRESSED_HIGH)
+					(<- data_file$write_byte out (:: (* data$red 255) int_type))
+					(<- data_file$write_byte out (:: (* data$green 255) int_type))
+					(<- data_file$write_byte out (:: (* data$blue 255) int_type))
+				}
+			)
 		}
 		ui:position$ui_position_type {
 			(<- data_file$write_byte out DATA_TYPE_POSITION)
@@ -271,7 +304,7 @@
 	(<- _serialize_layout element$base$position$y_layout out)
 	(<- _serialize_layout element$base$position$width_layout out)
 	(<- _serialize_layout element$base$position$height_layout out)
-	(<- _serialize_data (<- type_data$callbacks$serialize element) used_textures out)
+	(<- _serialize_data (<- type_data$callbacks$serialize element) used_textures COLOR_COMPRESSION_HIGH out)
 	(<- data_file$write_word out ($ element$base$children))
 	(-> (= i 0) (< i ($ element$base$children))
 		(<- _serialize_element (: element$base$children i) used_element_types used_textures out)
