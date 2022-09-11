@@ -1087,7 +1087,7 @@ abc` '\n')
 (<- window_manager:window$destroy ui_window$window)
 })
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(= ui_window (<- ui:serialize$deserialize data))
+(= ui_window (<- ui:serialize$deserialize data true))
 (= left-button (<- ui:element$get ui_window "left-button"))
 (= left-button-color (<- ui:element$get ui_window "left-button-color"))
 (= top-slider (<- ui:element$get ui_window "top-slider"))
