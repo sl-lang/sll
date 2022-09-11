@@ -8,6 +8,7 @@
 ## Changed
 
 - Fixed UI slider movement and resizing
+- Floored division resulting in a floating-point number is now be correctly rounded down
 - UI `ui:element:color` element now accepts per-vertex colors
 - UI color and position types are now serializeable
 

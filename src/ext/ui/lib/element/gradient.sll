@@ -45,26 +45,24 @@
 
 
 (= _calculate_vertex_distances (,,, gradient
-	(= base_width gradient$base$position$width)
-	(= base_height gradient$base$position$height)
+	(= width gradient$base$position$width)
+	(= height gradient$base$position$height)
 	(= angle gradient$angle)
-	(? (>= angle math$PI) (= angle (- angle math$PI)))
-	(= corner_angle (<- math$atan (/ base_height base_width)))
-	(= flip_sides (< corner_angle angle (- math$PI corner_angle)))
-	(= width (?: flip_sides base_height base_width))
-	(= height (?: flip_sides base_width base_height))
-	(? (>= angle math$PI_DIV_2) (= angle (- math$PI angle)))
-	(? flip_sides (= angle (- math$PI_DIV_2 angle)))
+	(= semicircle_angle (?: (>= angle math$PI) (- angle math$PI) angle)
+	(= corner_angle (<- math$atan (/ height width)))
 	(= sin (<- math$sin angle))
 	(= cos (<- math$cos angle))
 	(= tan (/ sin cos))
 	(= sin^2 (* sin sin))
 	(= a (+ (* width width (- (* tan tan) sin^2)) (* height height sin^2)))
 	(= b (<- math$abs (* 2 width height (- tan (* sin cos)))))
-	(= d_base (/ width 2 cos))
-	(= d_min (- d_base (/ (<- math$sqrt (+ a b)) 2)))
-	(= d_max (+ d_base (/ (<- math$sqrt (- a b)) 2)))
-	(@@ [d_min d_max flip_sides])
+	(= d_base (<- math$abs (/ width 2 cos)))
+	(= d_min (- (/ (<- math$sqrt (+ a b)) 2) d_base))
+	(? (< (- math$PI_DIV_2 corner_angle) semicircle_angle (+ math$PI_DIV_2 corner_angle)) (= d_min (- 0 d_min)))
+	(= d_max (/ (<- math$sqrt (- a b)) -2))
+	(? (< corner_angle semicircle_angle (- math$PI corner_angle)) (= d_max (- 0 d_max)))
+	(= d_max (- d_base d_max))
+	(@@ [d_min d_max])
 ))
 
 (= _get_color_at_offset (,,, gradient offset
@@ -83,18 +81,41 @@
 	(= (: colors j) tmp)
 ))
 
+(= _rotate (,,, colors n
+	(@@ (+
+		(>> colors n)
+		(: colors 0 n)
+	))
+))
+
 (= _calculate_vertex_colors (,,, gradient distances
 	(= d_min (: distances 0))
 	(= d_max (: distances 1))
-	(= flip_sides (: distances 2))
 	(= total_length (* d_max 2))
 	(= out [
 		(<- _get_color_at_offset gradient (/ (+ d_max d_min) total_length))
-		(<- _get_color_at_offset gradient 0)
-		(<- _get_color_at_offset gradient (/ (- d_max d_min) total_length))
 		(<- _get_color_at_offset gradient 1)
+		(<- _get_color_at_offset gradient (/ (- d_max d_min) total_length))
+		(<- _get_color_at_offset gradient 0)
 	])
-	(? flip_sides (<- _swap out 0 2))
+	(= semicircle_angle (?: (>= gradient$angle math$PI) (- gradient$angle math$PI) gradient$angle)
+	(? (> gradient$angle semicircle_angle) (= out (<- _rotate out 2)))
+	(= corner_angle (<- math$atan (/ gradient$base$position$width gradient$base$position$height)))
+	(?
+		(<= corner_angle semicircle_angle math$PI_DIV_2) (<- _swap out 0 2)
+		(<= math$PI_DIV_2 semicircle_angle (- math$PI corner_angle)) {
+			(<- _swap out 0 2)
+			(<- _swap out 0 1)
+			(<- _swap out 2 3)
+		}
+		(<= (- math$PI corner_angle) semicircle_angle math$PI) {
+			(<- _swap out 0 2)
+			(<- _swap out 0 1)
+			(<- _swap out 2 3)
+			(<- _swap out 1 3)
+		}
+	)
+	(= rotation (// gradient$angle math$PI_DIV_2))
 	(@@ out)
 ))
 

@@ -174,15 +174,15 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_object_t sll_operator_floor_div(sll_object
 				return o;
 			}
 		case COMBINED_TYPE_FI:
-			return sll_int_to_object((sll_integer_t)round(a->data.float_/b->data.int_));
+			return sll_int_to_object((sll_integer_t)(a->data.float_/b->data.int_));
 		case COMBINED_TYPE_FF:
-			return sll_int_to_object((sll_integer_t)round(a->data.float_/b->data.float_));
+			return sll_int_to_object((sll_integer_t)(a->data.float_/b->data.float_));
 		case COMBINED_TYPE_FC:
-			return sll_int_to_object((sll_integer_t)round(a->data.float_/b->data.char_));
+			return sll_int_to_object((sll_integer_t)(a->data.float_/b->data.char_));
 		case COMBINED_TYPE_CI:
 			return sll_int_to_object(a->data.char_/b->data.int_);
 		case COMBINED_TYPE_CF:
-			return sll_int_to_object((sll_integer_t)round(a->data.char_/b->data.float_));
+			return sll_int_to_object((sll_integer_t)(a->data.char_/b->data.float_));
 		case COMBINED_TYPE_CC:
 			return SLL_FROM_CHAR(a->data.char_/b->data.char_);
 		case COMBINED_TYPE_CS:
