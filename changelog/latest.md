@@ -2,6 +2,7 @@
 
 ## Added
 
+- Ability to enable GFX debug mode in `ui:core$create` and `ui:serialize$deserialize`
 - Ability to specify element-specific callbacks in the UI: `element$base$callbacks`
 - Moved all UI color-related types and functions to `ui/rgb.sll`
 - New UI element: `ui:element:gradient`
