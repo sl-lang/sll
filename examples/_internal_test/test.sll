@@ -1099,7 +1099,7 @@ abc` '\n')
 (= top-slider-handle$callback (,,,
 	(<- ui:element:top-slider$set_focus top-slider true)
 ))
-(= bottom-slider-bg$base$callback$resize (,,,
+(= bottom-slider-bg$base$callbacks$resize (,,,
 	(<- ui:element:color$set_color bottom-slider-bg [[0.0 (/ bottom-slider-bg$base$position$width (+ bottom-slider-bg$base$position$width bottom-slider-bg$base$position$height)) (/ bottom-slider-bg$base$position$height (+ bottom-slider-bg$base$position$width bottom-slider-bg$base$position$height))]])
 ))
 (= bottom-slider-handle$callback (,,,

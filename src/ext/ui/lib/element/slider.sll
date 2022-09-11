@@ -139,6 +139,10 @@
 	])
 ))
 
+(= _update_position_and_size (,,, slider
+	(? (<- ui:position$update slider$range slider$base$position) (<- _update_handle_position slider slider$x slider$y))
+))
+
 (= create (,,, ui position_layout parent range x_steps y_steps callback disable_mouse_focus
 	(= range (:: range array_type))
 	(= x_steps (:: x_steps int_type))
