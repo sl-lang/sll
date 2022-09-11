@@ -57,7 +57,7 @@
 
 
 
-(<- ui:element$register_element ui_button_element_type "ui:element:button" (. ui:element$ui_element_callbacks_type
+(<- ui:element$register_element ui_button_element_type "ui:element:button" (. ui:element$ui_element_data_callbacks_type
 	_handle_button_event
 	nil
 	nil

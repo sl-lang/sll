@@ -238,7 +238,7 @@
 
 
 
-(<- ui:element$register_element ui_slider_element_type "ui:element:slider" (. ui:element$ui_element_callbacks_type
+(<- ui:element$register_element ui_slider_element_type "ui:element:slider" (. ui:element$ui_element_data_callbacks_type
 	_handle_button_event
 	_deseralize_data
 	_get_position

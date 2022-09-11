@@ -206,6 +206,7 @@
 			(<- _deserialize_layout stream)
 			(<- _deserialize_layout stream)
 		]
+		[]
 		0
 		[]
 	))

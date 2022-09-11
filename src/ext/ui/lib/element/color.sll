@@ -191,7 +191,7 @@
 
 
 
-(<- ui:element$register_element ui_color_element_type "ui:element:color" (. ui:element$ui_element_callbacks_type
+(<- ui:element$register_element ui_color_element_type "ui:element:color" (. ui:element$ui_element_data_callbacks_type
 	nil
 	_deseralize_data
 	nil

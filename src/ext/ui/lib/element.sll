@@ -16,7 +16,7 @@
 
 
 
-(= ui_element_callbacks_type (&:
+(= ui_element_data_callbacks_type (&:
 	func_type button_event
 	func_type deserialize
 	func_type get_position
@@ -27,7 +27,11 @@
 
 (= ui_element_data_type (&:
 	string_type name
-	ui_element_callbacks_type callbacks
+	ui_element_data_callbacks_type callbacks
+))
+
+(= ui_element_callbacks_type (&:
+	func_type resize
 ))
 
 (= ui_element_type (&:
@@ -42,12 +46,13 @@
 	int_type id
 	object_type parent
 	ui:position$ui_position_type position
+	ui_element_callbacks_type callbacks
 	int_type z_index
 	array_type children
 ))
 
 (= ui_element_module_type (&:
-	(~ type_type) ui_element_callbacks_type
+	(~ type_type) ui_element_data_callbacks_type
 	(~ type_type) ui_element_type
 	(~ func_type) create
 	(~ func_type) delete
@@ -78,6 +83,7 @@
 			(: position_layout 2)
 			(: position_layout 3)
 		]
+		[]
 		0
 		[]
 	))
@@ -109,7 +115,7 @@
 	(? (! element_type) (@@))
 	(= element_type (:: element_type type_type))
 	(= name (: (:: name string_type) 0 255))
-	(= callbacks (:: callbacks ui_element_callbacks_type))
+	(= callbacks (:: callbacks ui_element_data_callbacks_type))
 	(? (&&
 		(: _element_name_to_type name)
 		(!== (: _element_name_to_type name) element_type)
@@ -174,6 +180,7 @@
 	) (@@))
 	(= data (: _element_type_data (:? element)))
 	(<- data$callbacks$update element)
+	(<- element$base$callbacks$resize element)
 	(-> (= i 0) (< i ($ element$base$children))
 		(<- update (: element$base$children i))
 		(++ i)
@@ -183,7 +190,7 @@
 
 
 (= ui:element (. ui_element_module_type
-	ui_element_callbacks_type
+	ui_element_data_callbacks_type
 	ui_element_type
 	create
 	delete

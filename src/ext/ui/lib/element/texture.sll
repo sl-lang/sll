@@ -175,7 +175,7 @@
 
 
 
-(<- ui:element$register_element ui_texture_element_type "ui:element:texture" (. ui:element$ui_element_callbacks_type
+(<- ui:element$register_element ui_texture_element_type "ui:element:texture" (. ui:element$ui_element_data_callbacks_type
 	nil
 	_deseralize_data
 	nil
