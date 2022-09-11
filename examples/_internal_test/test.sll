@@ -1100,7 +1100,7 @@ abc` '\n')
 	(<- ui:element:top-slider$set_focus top-slider true)
 ))
 (= bottom-slider-bg$base$callbacks$resize (,,,
-	(<- ui:element:color$set_color bottom-slider-bg [[0.0 (/ bottom-slider-bg$base$position$x (+ bottom-slider-bg$base$position$width bottom-slider-bg$base$position$height)) (/ bottom-slider-bg$base$position$y (+ bottom-slider-bg$base$position$width bottom-slider-bg$base$position$height))]])
+	(<- ui:element:color$set_color bottom-slider-bg [0.0 (/ bottom-slider-bg$base$position$x (+ bottom-slider-bg$base$position$width bottom-slider-bg$base$position$height)) (/ bottom-slider-bg$base$position$y (+ bottom-slider-bg$base$position$width bottom-slider-bg$base$position$height))])
 ))
 (= bottom-slider-handle$callback (,,,
 	(<- ui:element:slider$set_focus bottom-slider true)
