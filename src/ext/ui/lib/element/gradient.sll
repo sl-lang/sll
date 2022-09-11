@@ -81,13 +81,6 @@
 	(= (: colors j) tmp)
 ))
 
-(= _rotate (,,, colors n
-	(@@ (+
-		(>> colors n)
-		(: colors 0 n)
-	))
-))
-
 (= _calculate_vertex_colors (,,, gradient distances
 	(= d_min (: distances 0))
 	(= d_max (: distances 1))
@@ -106,7 +99,7 @@
 		(<- _swap out 2 3)
 	})
 	(? (>= semicircle_angle (- math$PI corner_angle)) (<- _swap out 1 3))
-	(? (> gradient$angle semicircle_angle) (= out (<- _rotate out 2)))
+	(? (> gradient$angle semicircle_angle) (= out (+ (>> out 2) (: out 0 2))))
 	(= rotation (// gradient$angle math$PI_DIV_2))
 	(@@ out)
 ))
