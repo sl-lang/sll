@@ -902,7 +902,7 @@ abc` '\n')
 
 (= data nil)
 (? 1 {
-(= ui_window (<- ui:core$create (<- window_manager:window$create [0 0 900 600] nil "Example Window" true)))
+(= ui_window (<- ui:core$create (<- window_manager:window$create [0 0 900 600] nil "Example Window" true) true))
 (<- ui:core$set_background_color ui_window [0.5 0.1 0.8])
 (= rectangle (<- ui:element:color$create
 	ui_window
@@ -1119,13 +1119,14 @@ abc` '\n')
 (= texture top-slider-bg$texture$texture)
 (= texture_buffer texture$buffer)
 (<- gfx:buffer$hint_update_frequency texture_buffer gfx:buffer$FREQUENCY_HIGH)
+(= color_red 0.0)
 (-> nil (! (& ui_window$window$flags window_manager:window$FLAG_CLOSED))
-	(= color (: texture_buffer$data 1))
+	(= color_red (% (+ color_red ui_window$context$delta_time) 1))
 	(= color (|
-		(& color 0xff0000ff)
-		(& (+ color 0x10200) 0x00ffff00)
+		(& (: texture_buffer$data 0) 0xffffff00)
+		(:: (* color_red 255) int_type)
 	))
-	(= (: texture_buffer$data 1) color)
+	(= (: texture_buffer$data 0) color)
 	(<- ui:element:gradient$set_angle bottom-slider-bg (+ bottom-slider-bg$angle ui_window$context$delta_time))
 	(<- ui:core$update ui_window false)
 	(<- gfx:buffer$sync texture_buffer)

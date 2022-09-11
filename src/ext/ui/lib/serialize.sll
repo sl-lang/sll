@@ -311,7 +311,7 @@
 	)
 ))
 
-(= deserialize (,,, data
+(= deserialize (,,, data debug_mode?
 	(? (! data) (@@ nil))
 	(= data (:: data string_type))
 	(= stream (<- file$from_data data file$FLAG_READ))
@@ -319,7 +319,7 @@
 	(= width (<- data_file$read_word stream))
 	(= height (<- data_file$read_word stream))
 	(= title (<- file$read stream (<- data_file$read_byte stream)))
-	(= out (<- ui:core$create (<- window_manager:window$create [0 0 width height] nil title true)))
+	(= out (<- ui:core$create (<- window_manager:window$create [0 0 width height] nil title true) (!! debug_mode?)))
 	(<- ui:core$set_background_color out [
 		(<- data_file$read_float stream)
 		(<- data_file$read_float stream)

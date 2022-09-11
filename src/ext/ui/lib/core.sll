@@ -77,10 +77,10 @@
 	(<- ui:element$update ui$root)
 ))
 
-(= create (,,, window
+(= create (,,, window debug_mode?
 	(? (! window) (@@ nil))
 	(= window (:: window window_manager:window$window_manager_window_type))
-	(= ctx (<- gfx:context$create window true))
+	(= ctx (<- gfx:context$create window (!! debug_mode?)))
 	(= vertex_buffer (<- gfx:buffer$create ctx gfx:buffer$TYPE_VERTEX gfx:buffer$DATA_TYPE_FLOAT32))
 	(<- gfx:buffer$hint_update_frequency vertex_buffer gfx:buffer$FREQUENCY_LOW)
 	(= index_buffer (<- gfx:buffer$create ctx gfx:buffer$TYPE_INDEX gfx:buffer$DATA_TYPE_UINT16))
