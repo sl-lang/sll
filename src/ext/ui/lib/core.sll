@@ -144,10 +144,6 @@
 				"main"
 			)
 		]
-		[
-			4
-			gfx:stage$STAGE_FRAGMENT
-		]
 	))
 	(= out (. ui_type
 		window
@@ -207,23 +203,9 @@
 		(= ui$_buffer_update_flags 0)
 	})
 	(<- gfx:pipeline$use ui$_pipeline)
-	(<- gfx:pipeline$update_push_constant ui$_pipeline [0xff 0xff 0xff 0xff])
 	(<- gfx:buffer$use ui$_vertex_buffer)
 	(<- gfx:buffer$use ui$_index_buffer)
 	(<- gfx:buffer$draw ui$_index_buffer)
-	(-> (= i 0) (< i ($ ui$_textures))
-		(= texture (: ui$_textures i))
-		(? texture$_buffer_update_flags {
-			(? (& texture$_buffer_update_flags UI_BUFFER_UPDATE_FLAG_VERTEX) (<- gfx:buffer$sync texture$_vertex_buffer))
-			(? (& texture$_buffer_update_flags UI_BUFFER_UPDATE_FLAG_INDEX) (<- gfx:buffer$sync texture$_index_buffer))
-			(= texture$_buffer_update_flags 0)
-		})
-		(<- gfx:pipeline$update_push_constant ui$_pipeline [0 0 (>> i 8) (& i 0xff)])
-		(<- gfx:buffer$use texture$_vertex_buffer)
-		(<- gfx:buffer$use texture$_index_buffer)
-		(<- gfx:buffer$draw texture$_index_buffer)
-		(++ i)
-	)
 	(<- gfx:context$render ui$context)
 	(<- window_manager:event$poll (!! blocking?))
 ))

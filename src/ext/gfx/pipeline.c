@@ -69,7 +69,7 @@ __GFX_API_CALL gfx_pipeline_t gfx_api_pipeline_create(gfx_context_t ctx_id,gfx_p
 		0,
 		1,
 		&(pipeline->descriptor_set_layout),
-		1,
+		!!push_constant_size,
 		&push_constant_range
 	};
 	VULKAN_CALL(ctx->function_table.vkCreatePipelineLayout(ctx->device.logical,&pipeline_layout_creation_info,NULL,&(pipeline->layout)));
