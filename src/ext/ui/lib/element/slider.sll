@@ -91,19 +91,10 @@
 (= _deseralize_data (,,, ui base parent data
 	(= out (. ui_slider_element_type
 		base
-		[
-			0
-			0
-			0
-			0
-			(: data 0)
-			(: data 1)
-			(: data 2)
-			(: data 3)
-		]
-		(: data 4)
-		(: data 5)
-		(: data 6)
+		(: data 0)
+		(: data 1)
+		(: data 2)
+		(: data 3)
 		nil
 		0.0
 		0.0
@@ -135,10 +126,7 @@
 
 (= _serialize_data (,,, slider
 	(@@ [
-		slider$range$x_layout
-		slider$range$y_layout
-		slider$range$width_layout
-		slider$range$height_layout
+		slider$range
 		slider$x_steps
 		slider$y_steps
 		slider$disable_mouse_focus

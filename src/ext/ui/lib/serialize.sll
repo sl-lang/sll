@@ -12,6 +12,7 @@
 	"ui/core.sll"
 	"ui/element.sll"
 	"ui/layout.sll"
+	"ui/position.sll"
 	"ui/rgb.sll"
 	"ui/texture.sll"
 	"weakref.sll"
@@ -36,6 +37,7 @@
 (= DATA_TYPE_LAYOUT 6)
 (= DATA_TYPE_TEXTURE 7)
 (= DATA_TYPE_RGB 8)
+(= DATA_TYPE_POSITION 9)
 
 (= LAYOUT_TYPE_MASK 63)
 
@@ -147,6 +149,16 @@
 			(<- data_file$read_float stream)
 			(<- data_file$read_float stream)
 		))
+		DATA_TYPE_POSITION (@@ (. ui:position$ui_position_type
+			0
+			0
+			0
+			0
+			(<- _deserialize_layout stream)
+			(<- _deserialize_layout stream)
+			(<- _deserialize_layout stream)
+			(<- _deserialize_layout stream)
+		))
 	)
 	(!@@ 1)
 ))
@@ -197,6 +209,13 @@
 			(<- data_file$write_float out data$red)
 			(<- data_file$write_float out data$green)
 			(<- data_file$write_float out data$blue)
+		}
+		ui:position$ui_position_type {
+			(<- data_file$write_byte out DATA_TYPE_POSITION)
+			(<- _serialize_layout data$x_layout out)
+			(<- _serialize_layout data$y_layout out)
+			(<- _serialize_layout data$width_layout out)
+			(<- _serialize_layout data$height_layout out)
 		}
 		(:> "Unable to serialize type: " (&:? (:? data)) '\n')
 	)
