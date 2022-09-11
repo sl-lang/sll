@@ -40,7 +40,7 @@
 		ui
 		texture
 		sampler
-		(+ ($ ui$_textures) 2)
+		(- -1 ($ ui$_textures))
 	))
 	(<- gfx:pipeline$update_descriptor ui$_pipeline [
 		gfx:pipeline$DESCRIPTOR_TYPE_SAMPLER
