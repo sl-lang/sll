@@ -1081,24 +1081,24 @@ abc` '\n')
 })
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (= ui_window (<- ui:serialize$deserialize data))
-(= button (<- ui:element$get ui_window "left-button"))
-(= rectangle2 (<- ui:element$get ui_window "left-button-color"))
-(= slider (<- ui:element$get ui_window "top-slider"))
-(= handle (<- ui:element$get ui_window "top-slider-handle"))
-(= slider2 (<- ui:element$get ui_window "bottom-slider"))
-(= handle2 (<- ui:element$get ui_window "bottom-slider-handle"))
-(= button$callback (,,,
+(= left-button (<- ui:element$get ui_window "left-button"))
+(= left-button-color (<- ui:element$get ui_window "left-button-color"))
+(= top-slider (<- ui:element$get ui_window "top-slider"))
+(= top-slider-handle (<- ui:element$get ui_window "top-slider-handle"))
+(= bottom-slider (<- ui:element$get ui_window "bottom-slider"))
+(= bottom-slider-handle (<- ui:element$get ui_window "bottom-slider-handle"))
+(= left-button$callback (,,,
 	(:> "Click!\n")
-	(<- ui:element:color$set_color rectangle2 (+ (>> rectangle2$colors 1) [(: rectangle2$colors 0)]))
+	(<- ui:element:color$set_color left-button-color (+ (>> left-button-color$colors 1) [(: left-button-color$colors 0)]))
 ))
-(= slider$callback (,,, _ x y
+(= top-slider$callback (,,, _ x y
 	(:> [x y] '\n')
 ))
-(= handle$callback (,,,
-	(<- ui:element:slider$set_focus slider true)
+(= top-slider-handle$callback (,,,
+	(<- ui:element:top-slider$set_focus top-slider true)
 ))
-(= handle2$callback (,,,
-	(<- ui:element:slider$set_focus slider2 true)
+(= bottom-slider-handle$callback (,,,
+	(<- ui:element:slider$set_focus bottom-slider true)
 ))
 (= ui_window$window$callbacks$key_down (,,, window key
 	(?? key
