@@ -180,7 +180,6 @@
 ))
 
 (= _serialize_data (,,, data used_textures color_compression_level out
-	(<- file$write out " ")
 	(?? (:? data)
 		int_type {
 			(?:
@@ -321,7 +320,7 @@
 	(= height (<- data_file$read_word stream))
 	(= title (<- file$read stream (<- data_file$read_byte stream)))
 	(= out (<- ui:core$create (<- window_manager:window$create [0 0 width height] nil title true)))
-	(<- ui:core$set_background out [
+	(<- ui:core$set_background_color out [
 		(<- data_file$read_float stream)
 		(<- data_file$read_float stream)
 		(<- data_file$read_float stream)
@@ -384,9 +383,9 @@
 	(= title (: ui$window$layout$title 0 0xff))
 	(<- data_file$write_byte out ($ title))
 	(<- file$write out title)
-	(<- data_file$write_float out ui$context$clear_color$red)
-	(<- data_file$write_float out ui$context$clear_color$green)
-	(<- data_file$write_float out ui$context$clear_color$blue)
+	(<- data_file$write_float out ui$background_color$red)
+	(<- data_file$write_float out ui$background_color$green)
+	(<- data_file$write_float out ui$background_color$blue)
 	(= used_element_types [])
 	(= used_textures [])
 	(= data (<- file$from_data "" file$FLAG_WRITE))

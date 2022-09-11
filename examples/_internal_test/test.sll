@@ -903,7 +903,7 @@ abc` '\n')
 (= data nil)
 (? 1 {
 (= ui_window (<- ui:core$create (<- window_manager:window$create [0 0 900 600] nil "Example Window" true)))
-(<- ui:core$set_background ui_window [0.5 0.1 0.8])
+(<- ui:core$set_background_color ui_window [0.5 0.1 0.8])
 (= rectangle (<- ui:element:color$create
 	ui_window
 	[

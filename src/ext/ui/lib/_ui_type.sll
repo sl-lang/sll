@@ -4,6 +4,7 @@
 	"gfx/pipeline.sll"
 	"string.sll"
 	"types.sll"
+	"ui/rgb.sll"
 	"window_manager/window.sll"
 )
 
@@ -30,6 +31,7 @@
 	(~ window_manager:window$window_manager_window_type) window
 	object_type root
 	(~ gfx:context$gfx_context_type) context
+	ui:rgb$ui_rgb_type background_color
 	gfx:buffer$gfx_buffer_type _vertex_buffer
 	gfx:buffer$gfx_buffer_type _index_buffer
 	gfx:buffer$gfx_buffer_type _uniform_buffer

@@ -13,6 +13,7 @@
 	"ui/element.sll"
 	"ui/element/container.sll"
 	"ui/layout.sll"
+	"ui/rgb.sll"
 	"ui/shader/_fragment_shader.sll"
 	"ui/shader/_vertex_shader.sll"
 	"weakref.sll"
@@ -25,7 +26,7 @@
 (= ui_core_module_type (&:
 	(~ type_type) ui_type
 	(~ func_type) create
-	(~ func_type) set_background
+	(~ func_type) set_background_color
 	(~ func_type) update
 ))
 
@@ -152,6 +153,7 @@
 		window
 		nil
 		ctx
+		[0.0 0.0 0.0]
 		vertex_buffer
 		index_buffer
 		uniform_buffer
@@ -187,10 +189,12 @@
 	(@@ out)
 ))
 
-(= set_background (,,, ui color
+(= set_background_color (,,, ui color
 	(? (! ui) (@@))
 	(= ui (:: ui ui_type))
-	(<- gfx:color$set_clear_color ui$context color)
+	(= color (:: color ui:rgb$ui_rgb_type))
+	(= ui$background_color color)
+	(<- gfx:color$set_clear_color ui$context [color$red color$green color$blue])
 ))
 
 (= update (,,, ui blocking?
@@ -229,7 +233,7 @@
 (= ui:core (. ui_core_module_type
 	ui_type
 	create
-	set_background
+	set_background_color
 	update
 ))
 (## ui:core)
