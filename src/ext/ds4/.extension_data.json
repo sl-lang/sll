@@ -1,5 +1,9 @@
 {
 	"installation_scripts": {
 		"linux": "install/linux.sh",
-	}
+	},
+	"platform_directories": {
+		"linux": "platform/linux",
+		"windows": "platform/windows"
+	},
 }
