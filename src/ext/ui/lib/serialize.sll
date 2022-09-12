@@ -359,7 +359,7 @@
 	(= name_count (<- data_file$read_word stream))
 	(-> (= i 0) (< i name_count)
 		(= name (<- file$read stream (<- data_file$read_byte stream)))
-		(= id (<- data_file$read_byte stream))
+		(= id (<- data_file$read_word stream))
 		(= (: out$_element_to_name id) name)
 		(++ i)
 	)
@@ -426,7 +426,7 @@
 		(? (! element) (<<<))
 		(<- data_file$write_byte out ($ name))
 		(<- file$write out name)
-		(<- data_file$write_byte out element$base$id)
+		(<- data_file$write_word out element$base$id)
 		(++ i)
 	)
 	(@@ (+
