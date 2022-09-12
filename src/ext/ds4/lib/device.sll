@@ -178,7 +178,7 @@
 	(= data (<- file$read device$_file 64))
 	(= device$buttons 0)
 	(= d-pad (& (: data 5) 15))
-	(? (|| (=== d-pad 0) (=== d-pad 1) (=== d-pad 7)) (= device$buttons (| device$buttons BUTTON_UP)))
+	(? (|| (<= d-pad 1) (=== d-pad 7)) (= device$buttons (| device$buttons BUTTON_UP)))
 	(? (<= 3 d-pad 5) (= device$buttons (| device$buttons BUTTON_DOWN)))
 	(? (<= 5 d-pad 7) (= device$buttons (| device$buttons BUTTON_LEFT)))
 	(? (<= 1 d-pad 3) (= device$buttons (| device$buttons BUTTON_RIGHT)))
