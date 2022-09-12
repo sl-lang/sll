@@ -1136,4 +1136,10 @@ abc` '\n')
 ; 	(<- ui:core$update ui_window false)
 ; )
 
-(:> (<- ds4:device$list) '\n')
+(= devices (<- ds4:device$list))
+(:> devices '\n')
+(? devices {
+	(= device (<- ds4:device$create (: devices 0)))
+	(<- ds4:device$update device)
+	(:> device '\n')
+})

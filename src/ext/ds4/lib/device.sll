@@ -1,21 +1,98 @@
 (---
 	"ds4/_load_library.sll"
+	"file.sll"
+	"string.sll"
 	"types.sll"
 )
 
 
 
+(# delete)
+
+
+
+(= ds4_device_type (&:
+	(,,, data
+		(@@ (<- string$format "<ds4:device path=%s color=%0.2x%0.2x%0.2x>"
+			data$path
+			data$red
+			data$green
+			data$blue
+		))
+	) @@string@@
+	(,,, data
+		(<- delete data)
+	) @@delete@@
+	(~ string_type) path
+	int_type red
+	int_type green
+	int_type blue
+	(~ file$file_type) _file
+	string_type _tx_buffer
+))
+
 (= ds4_device_module_type (&:
+	(~ type_type) ds4_device_type
+	(~ func_type) create
 	(~ func_type) list
+	(~ func_type) update
 ))
 
 
 
+(= create (,,, path
+	(= path (:: path string_type))
+	(= handle (<- file$open path (| file$FLAG_READ file$FLAG_WRITE file$FLAG_NO_BUFFER)))
+	(? (!== (:? handle) file$file_type) (@@ handle))
+	(@@ (. ds4_device_type
+		path
+		0
+		0
+		0
+		handle
+		"\x05\x7f\x04\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00"
+	))
+))
+
+(= delete (,,, device
+	(? (! device) (@@ false))
+	(= device (:: device ds4_device_type))
+	(= (: device$_tx_buffer 4) 0)
+	(= (: device$_tx_buffer 5) 0)
+	(= (: device$_tx_buffer 6) 0)
+	(= (: device$_tx_buffer 7) 0)
+	(= (: device$_tx_buffer 8) 0)
+	(<- file$write device$_file device$_tx_buffer)
+	(<- file$close device$_file)
+))
+
 (= list (... "ds4:device_list"))
+
+(= update (,,, device
+	(? (! device) (@@ false))
+	(= device (:: device ds4_device_type))
+	(= device$red (& device$red 255))
+	(= device$green (& device$green 255))
+	(= device$blue (& device$blue 255))
+	(= (: device$_tx_buffer 4) 0)
+	(= (: device$_tx_buffer 5) 0)
+	(= (: device$_tx_buffer 6) device$red)
+	(= (: device$_tx_buffer 7) device$green)
+	(= (: device$_tx_buffer 8) device$blue)
+	(? (!== (<- file$write device$_file device$_tx_buffer) 32) {
+		(:> "Device error!\n")
+		(@@ false)
+	})
+	(= data (<- file$read device$_file 64))
+	(@@ true)
+))
 
 
 
 (= ds4:device (. ds4_device_module_type
+	ds4_device_type
+	create
 	list
+	update
 ))
 (## ds4:device)
