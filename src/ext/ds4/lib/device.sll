@@ -73,6 +73,7 @@
 
 (= ds4_device_module_type (&:
 	(~ type_type) ds4_device_type
+	(~ int_type) BATTERY_CHARGING
 	(~ int_type) BUTTON_CIRCLE
 	(~ int_type) BUTTON_CROSS
 	(~ int_type) BUTTON_DOWN
@@ -116,6 +117,8 @@
 (= BUTTON_SHARE 32768)
 (= BUTTON_LOGO 65536)
 (= BUTTON_TOUCHPAD 131072)
+
+(= BATTERY_CHARGING 0)
 
 
 
@@ -207,6 +210,7 @@
 
 (= ds4:device (. ds4_device_module_type
 	ds4_device_type
+	BATTERY_CHARGING
 	BUTTON_CIRCLE
 	BUTTON_CROSS
 	BUTTON_DOWN
