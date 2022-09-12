@@ -33,13 +33,15 @@
 		(? (& data$buttons BUTTON_SHARE) (<- array$push buttons "Share"))
 		(? (& data$buttons BUTTON_LOGO) (<- array$push buttons "Logo"))
 		(? (& data$buttons BUTTON_TOUCHPAD) (<- array$push buttons "Touchpad"))
-		(@@ (<- string$format "<ds4:device path=%s buttons=%s left=(%d %d) right=(%d %d) color=%0.2x%0.2x%0.2x small_rumble=%u big_rumble=%u>"
+		(@@ (<- string$format "<ds4:device path=%s buttons=%s left=(%d %d) right=(%d %d) left-trigger=%u right-trigger=%u color=%0.2x%0.2x%0.2x small_rumble=%u big_rumble=%u>"
 			data$path
 			(<- string$join ", " buttons)
 			data$left-x
 			data$left-y
 			data$right-x
 			data$right-y
+			data$left-trigger
+			data$right-trigger
 			data$red
 			data$green
 			data$blue
@@ -56,6 +58,8 @@
 	int_type left-y
 	int_type right-x
 	int_type right-y
+	int_type left-trigger
+	int_type right-trigger
 	int_type red
 	int_type green
 	int_type blue
@@ -129,6 +133,8 @@
 		0
 		0
 		0
+		0
+		0
 		handle
 		"\x05\x7f\x04\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00"
 	))
@@ -188,6 +194,8 @@
 	(= device$left-y (- 127 (: data 2)))
 	(= device$right-x (+ -128 (: data 3)))
 	(= device$right-y (- 127 (: data 4)))
+	(= device$left-trigger (: data 8))
+	(= device$right-trigger (: data 9))
 	(@@ true)
 ))
 
