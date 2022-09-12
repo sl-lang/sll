@@ -1,0 +1,21 @@
+(---
+	"ds4/_load_library.sll"
+	"types.sll"
+)
+
+
+
+(= ds4_device_module_type (&:
+	(~ func_type) list
+))
+
+
+
+(= list (... "ds4:device_list"))
+
+
+
+(= ds4:device (. ds4_device_module_type
+	list
+))
+(## ds4:device)

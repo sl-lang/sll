@@ -8,6 +8,7 @@
 	"clib/library.sll"
 	"clib/types.sll"
 	"date.sll"
+	"ds4/device.sll"
 	"error.sll"
 	"file.sll"
 	"gfx/buffer.sll"
@@ -1116,21 +1117,23 @@ abc` '\n')
 		'S' (<- ui:element:slider$set_position top-slider 4 0)
 	)
 ))
-(= texture top-slider-bg$texture$texture)
-(= texture_buffer texture$buffer)
-(<- gfx:buffer$hint_update_frequency texture_buffer gfx:buffer$FREQUENCY_HIGH)
-(= color_red 0.0)
-(-> nil (! (& ui_window$window$flags window_manager:window$FLAG_CLOSED))
-	(= color_red (% (+ color_red ui_window$context$delta_time) 1))
-	(= color (|
-		(& (: texture_buffer$data 0) 0xffffff00)
-		(:: (* color_red 255) int_type)
-	))
-	(= (: texture_buffer$data 0) color)
-	(<- gfx:buffer$sync texture_buffer)
-	(<- gfx:texture$sync texture)
-	(<- gfx:texture$sync texture)
-	(<- gfx:texture$sync texture)
-	(<- ui:element:gradient$set_angle bottom-slider-bg (+ bottom-slider-bg$angle ui_window$context$delta_time))
-	(<- ui:core$update ui_window false)
-)
+; (= texture top-slider-bg$texture$texture)
+; (= texture_buffer texture$buffer)
+; (<- gfx:buffer$hint_update_frequency texture_buffer gfx:buffer$FREQUENCY_HIGH)
+; (= color_red 0.0)
+; (-> nil (! (& ui_window$window$flags window_manager:window$FLAG_CLOSED))
+; 	(= color_red (% (+ color_red ui_window$context$delta_time) 1))
+; 	(= color (|
+; 		(& (: texture_buffer$data 0) 0xffffff00)
+; 		(:: (* color_red 255) int_type)
+; 	))
+; 	(= (: texture_buffer$data 0) color)
+; 	(<- gfx:buffer$sync texture_buffer)
+; 	(<- gfx:texture$sync texture)
+; 	(<- gfx:texture$sync texture)
+; 	(<- gfx:texture$sync texture)
+; 	(<- ui:element:gradient$set_angle bottom-slider-bg (+ bottom-slider-bg$angle ui_window$context$delta_time))
+; 	(<- ui:core$update ui_window false)
+; )
+
+(:> (<- ds4:device$list) '\n')

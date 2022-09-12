@@ -4,7 +4,7 @@
 
 
 
-__DS4_API_CALL void ds4_list_devices(sll_array_t* out){
+__DS4_API_CALL void ds4_api_device_list(sll_array_t* out){
 	SLL_INIT_ARRAY(out);
 }
 

@@ -6,4 +6,7 @@
 		"linux": "platform/linux",
 		"windows": "platform/windows"
 	},
+	"extra_link_options": {
+		"linux": ["-ludev"]
+	}
 }
