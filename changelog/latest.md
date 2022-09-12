@@ -12,6 +12,7 @@
 - Fixed UI serialization of named elements
 - Fixed UI slider movement and resizing
 - Floored division resulting in a floating-point number is now be correctly rounded down
+- Improved GFX texture synchronization performance
 - Improved performance of UI renderer
 - Renamed `ui:core$set_background` to `ui:core$set_background_color`
 - UI `ui:element:color` element now accepts per-vertex colors
