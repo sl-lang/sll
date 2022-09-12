@@ -12,6 +12,19 @@
 
 
 
+(= ds4_device_acceleration_type (&:
+	(,,, data
+		(@@ (<- string$format "(%f %f %f)"
+			data$x
+			data$y
+			data$z
+		))
+	) @@string@@
+	float_type x
+	float_type y
+	float_type z
+))
+
 (= ds4_device_angular_velocity_type (&:
 	(,,, data
 		(@@ (<- string$format "(%f %f %f)"
@@ -46,7 +59,7 @@
 		(? (& data$buttons BUTTON_SHARE) (<- array$push buttons "Share"))
 		(? (& data$buttons BUTTON_LOGO) (<- array$push buttons "Logo"))
 		(? (& data$buttons BUTTON_TOUCHPAD) (<- array$push buttons "Touchpad"))
-		(@@ (<- string$format "<ds4:device path=%s buttons=%s left=(%d %d) right=(%d %d) left-trigger=%u right-trigger=%u battery=%s angular-velocity=%s color=%0.2x%0.2x%0.2x small_rumble=%u big_rumble=%u>"
+		(@@ (<- string$format "<ds4:device path=%s buttons=%s left=(%d %d) right=(%d %d) left-trigger=%u right-trigger=%u battery=%s acceleration=%s angular-velocity=%s color=%0.2x%0.2x%0.2x small_rumble=%u big_rumble=%u>"
 			data$path
 			(<- string$join ", " buttons)
 			data$left-x
@@ -56,6 +69,7 @@
 			data$left-trigger
 			data$right-trigger
 			(|| data$battery "Charging")
+			(:: data$acceleration string_type)
 			(:: data$angular_velocity string_type)
 			data$red
 			data$green
@@ -76,6 +90,7 @@
 	int_type left-trigger
 	int_type right-trigger
 	int_type battery
+	ds4_device_acceleration_type acceleration
 	ds4_device_angular_velocity_type angular_velocity
 	int_type red
 	int_type green
@@ -114,6 +129,7 @@
 
 
 
+(= ACCELERATION_FACTOR 0.0011733020388230986)
 (= ANGULAR_VELOCITY_FACTOR 0.0010652969463144809)
 
 (= BUTTON_UP 1)
@@ -162,6 +178,7 @@
 		0
 		0
 		0
+		[0.0 0.0 0.0]
 		[0.0 0.0 0.0]
 		0
 		0
@@ -230,6 +247,9 @@
 	(= device$left-trigger (: data 8))
 	(= device$right-trigger (: data 9))
 	(= device$battery (* (<< (: data 30) 5) (!== (& (: data 30) 15) 11)))
+	(= device$acceleration$x (* (<- _decode_imu_data data 19) ACCELERATION_FACTOR))
+	(= device$acceleration$y (* (<- _decode_imu_data data 21) ACCELERATION_FACTOR))
+	(= device$acceleration$z (* (<- _decode_imu_data data 23) ACCELERATION_FACTOR))
 	(= device$angular_velocity$x (- 0 (* (<- _decode_imu_data data 13) ANGULAR_VELOCITY_FACTOR)))
 	(= device$angular_velocity$y (* (<- _decode_imu_data data 15) ANGULAR_VELOCITY_FACTOR))
 	(= device$angular_velocity$z (* (<- _decode_imu_data data 17) ANGULAR_VELOCITY_FACTOR))
