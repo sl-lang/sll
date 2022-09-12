@@ -189,28 +189,27 @@ static void _create_swapchain(gfx_context_data_t* ctx){
 
 
 
-static void _start_transfer_and_graphics_queues(gfx_context_data_t* ctx){
+static void _start_command_buffers(gfx_context_data_t* ctx){
 	VkCommandBufferBeginInfo command_buffer_begin_info={
 		VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO,
 		NULL,
 		0,
 		NULL
 	};
-	if (ctx->transfer_command_buffer.has_data){
-		VULKAN_CALL(ctx->function_table.vkBeginCommandBuffer(ctx->transfer_command_buffer.command_buffer,&command_buffer_begin_info));
-		ctx->transfer_command_buffer.has_data=0;
+	if (ctx->command_buffers.flags&GFX_FLAG_HAS_TRANSFER_COMMAND_BUFFER_DATA){
+		VULKAN_CALL(ctx->function_table.vkBeginCommandBuffer(ctx->command_buffers.transfer,&command_buffer_begin_info));
 	}
-	if (ctx->graphics_command_buffer.has_data){
-		VULKAN_CALL(ctx->function_table.vkBeginCommandBuffer(ctx->graphics_command_buffer.command_buffer,&command_buffer_begin_info));
-		ctx->graphics_command_buffer.has_data=0;
+	if (ctx->command_buffers.flags&GFX_FLAG_HAS_GRAPHICS_COMMAND_BUFFER_DATA){
+		VULKAN_CALL(ctx->function_table.vkBeginCommandBuffer(ctx->command_buffers.graphics,&command_buffer_begin_info));
 	}
+	ctx->command_buffers.flags=0;
 }
 
 
 
 static void _begin_frame(gfx_context_data_t* ctx){
-	if (ctx->transfer_command_buffer.has_data||ctx->graphics_command_buffer.has_data){
-		_start_transfer_and_graphics_queues(ctx);
+	if (ctx->command_buffers.flags){
+		_start_command_buffers(ctx);
 	}
 	VkResult err=ctx->function_table.vkAcquireNextImageKHR(ctx->device.logical,ctx->swapchain.handle,UINT64_MAX,ctx->sync.present_semaphore,NULL,&(ctx->frame.image_index));
 	if (err!=VK_SUBOPTIMAL_KHR&&err!=VK_ERROR_OUT_OF_DATE_KHR){
@@ -287,7 +286,7 @@ static void _begin_frame(gfx_context_data_t* ctx){
 
 
 
-static void _end_transfer_and_graphics_queues(gfx_context_data_t* ctx){
+static void _end_command_buffers(gfx_context_data_t* ctx){
 	VkSubmitInfo submit_info={
 		VK_STRUCTURE_TYPE_SUBMIT_INFO,
 		NULL,
@@ -295,30 +294,31 @@ static void _end_transfer_and_graphics_queues(gfx_context_data_t* ctx){
 		NULL,
 		NULL,
 		1,
-		&(ctx->transfer_command_buffer.command_buffer),
+		&(ctx->command_buffers.transfer),
 		0,
 		NULL
 	};
-	if (ctx->transfer_command_buffer.has_data){
-		VULKAN_CALL(ctx->function_table.vkEndCommandBuffer(ctx->transfer_command_buffer.command_buffer));
-		VULKAN_CALL(ctx->function_table.vkQueueSubmit(ctx->queue.transfer_queue,1,&submit_info,ctx->transfer_command_buffer.fence));
-		VULKAN_CALL(ctx->function_table.vkWaitForFences(ctx->device.logical,1,&(ctx->transfer_command_buffer.fence),VK_TRUE,UINT64_MAX));
-		VULKAN_CALL(ctx->function_table.vkResetFences(ctx->device.logical,1,&(ctx->transfer_command_buffer.fence)));
+	if (ctx->command_buffers.flags&GFX_FLAG_HAS_TRANSFER_COMMAND_BUFFER_DATA){
+		VULKAN_CALL(ctx->function_table.vkEndCommandBuffer(ctx->command_buffers.transfer));
+		VULKAN_CALL(ctx->function_table.vkQueueSubmit(ctx->queue.transfer_queue,1,&submit_info,ctx->command_buffers.fence));
+		VULKAN_CALL(ctx->function_table.vkWaitForFences(ctx->device.logical,1,&(ctx->command_buffers.fence),VK_TRUE,UINT64_MAX));
+		VULKAN_CALL(ctx->function_table.vkResetFences(ctx->device.logical,1,&(ctx->command_buffers.fence)));
 	}
-	if (ctx->graphics_command_buffer.has_data){
-		submit_info.pCommandBuffers=&(ctx->graphics_command_buffer.command_buffer);
-		VULKAN_CALL(ctx->function_table.vkEndCommandBuffer(ctx->graphics_command_buffer.command_buffer));
-		VULKAN_CALL(ctx->function_table.vkQueueSubmit(ctx->queue.graphics_queue,1,&submit_info,ctx->graphics_command_buffer.fence));
-		VULKAN_CALL(ctx->function_table.vkWaitForFences(ctx->device.logical,1,&(ctx->graphics_command_buffer.fence),VK_TRUE,UINT64_MAX));
-		VULKAN_CALL(ctx->function_table.vkResetFences(ctx->device.logical,1,&(ctx->graphics_command_buffer.fence)));
+	if (ctx->command_buffers.flags&GFX_FLAG_HAS_GRAPHICS_COMMAND_BUFFER_DATA){
+		submit_info.pCommandBuffers=&(ctx->command_buffers.graphics);
+		VULKAN_CALL(ctx->function_table.vkEndCommandBuffer(ctx->command_buffers.graphics));
+		VULKAN_CALL(ctx->function_table.vkQueueSubmit(ctx->queue.graphics_queue,1,&submit_info,ctx->command_buffers.fence));
+		VULKAN_CALL(ctx->function_table.vkWaitForFences(ctx->device.logical,1,&(ctx->command_buffers.fence),VK_TRUE,UINT64_MAX));
+		VULKAN_CALL(ctx->function_table.vkResetFences(ctx->device.logical,1,&(ctx->command_buffers.fence)));
 	}
+	ctx->command_buffers.index++;
 }
 
 
 
 static void _end_frame(gfx_context_data_t* ctx){
-	if (ctx->transfer_command_buffer.has_data||ctx->graphics_command_buffer.has_data){
-		_end_transfer_and_graphics_queues(ctx);
+	if (ctx->command_buffers.flags){
+		_end_command_buffers(ctx);
 	}
 	ctx->function_table.vkCmdEndRenderPass(ctx->frame.command_buffer);
 	VULKAN_CALL(ctx->function_table.vkEndCommandBuffer(ctx->frame.command_buffer));
@@ -364,6 +364,7 @@ static void _end_frame(gfx_context_data_t* ctx){
 		sll_deallocate(ctx->write_descriptors.pointers);
 		ctx->write_descriptors.pointers=NULL;
 	}
+	ctx->frame.index++;
 }
 
 
@@ -385,10 +386,9 @@ void _delete_context(gfx_context_data_t* ctx){
 	SLL_HANDLE_CONTAINER_ITER_CLEAR(&(ctx->child_objects.textures),gfx_texture_data_t,texture,{
 		_delete_texture(ctx,texture);
 	});
-	ctx->function_table.vkDestroyFence(ctx->device.logical,ctx->graphics_command_buffer.fence,NULL);
-	ctx->function_table.vkFreeCommandBuffers(ctx->device.logical,ctx->queue.graphics_command_pool,1,&(ctx->graphics_command_buffer.command_buffer));
-	ctx->function_table.vkDestroyFence(ctx->device.logical,ctx->transfer_command_buffer.fence,NULL);
-	ctx->function_table.vkFreeCommandBuffers(ctx->device.logical,ctx->queue.transfer_command_pool,1,&(ctx->transfer_command_buffer.command_buffer));
+	ctx->function_table.vkFreeCommandBuffers(ctx->device.logical,ctx->queue.graphics_command_pool,1,&(ctx->command_buffers.graphics));
+	ctx->function_table.vkFreeCommandBuffers(ctx->device.logical,ctx->queue.transfer_command_pool,1,&(ctx->command_buffers.transfer));
+	ctx->function_table.vkDestroyFence(ctx->device.logical,ctx->command_buffers.fence,NULL);
 	ctx->function_table.vkDestroyCommandPool(ctx->device.logical,ctx->queue.transfer_command_pool,NULL);
 	_release_swapchain(ctx);
 	sll_deallocate(ctx->swapchain.image_views);
@@ -410,12 +410,12 @@ void _delete_context(gfx_context_data_t* ctx){
 
 
 
-void _flush_transfer_and_graphics_queues(gfx_context_data_t* ctx){
-	if (!ctx->transfer_command_buffer.has_data){
+void _flush_command_buffers(gfx_context_data_t* ctx){
+	if (!ctx->command_buffers.flags){
 		return;
 	}
-	_end_transfer_and_graphics_queues(ctx);
-	_start_transfer_and_graphics_queues(ctx);
+	_end_command_buffers(ctx);
+	_start_command_buffers(ctx);
 }
 
 
@@ -679,18 +679,18 @@ __GFX_API_CALL gfx_context_t gfx_api_context_create(void* handle,void* extra_dat
 		VK_COMMAND_BUFFER_LEVEL_PRIMARY,
 		1
 	};
-	VULKAN_CALL(ctx->function_table.vkAllocateCommandBuffers(ctx->device.logical,&command_buffer_allocation_info,&(ctx->transfer_command_buffer.command_buffer)));
+	VULKAN_CALL(ctx->function_table.vkAllocateCommandBuffers(ctx->device.logical,&command_buffer_allocation_info,&(ctx->command_buffers.transfer)));
+	command_buffer_allocation_info.commandPool=ctx->queue.graphics_command_pool;
+	VULKAN_CALL(ctx->function_table.vkAllocateCommandBuffers(ctx->device.logical,&command_buffer_allocation_info,&(ctx->command_buffers.graphics)));
 	VkFenceCreateInfo fence_creation_info={
 		VK_STRUCTURE_TYPE_FENCE_CREATE_INFO,
 		0,
 		0
 	};
-	VULKAN_CALL(ctx->function_table.vkCreateFence(ctx->device.logical,&fence_creation_info,NULL,&(ctx->transfer_command_buffer.fence)));
-	ctx->transfer_command_buffer.has_data=1;
-	command_buffer_allocation_info.commandPool=ctx->queue.graphics_command_pool;
-	VULKAN_CALL(ctx->function_table.vkAllocateCommandBuffers(ctx->device.logical,&command_buffer_allocation_info,&(ctx->graphics_command_buffer.command_buffer)));
-	VULKAN_CALL(ctx->function_table.vkCreateFence(ctx->device.logical,&fence_creation_info,NULL,&(ctx->graphics_command_buffer.fence)));
-	ctx->graphics_command_buffer.has_data=1;
+	VULKAN_CALL(ctx->function_table.vkCreateFence(ctx->device.logical,&fence_creation_info,NULL,&(ctx->command_buffers.fence)));
+	ctx->command_buffers.index=0;
+	ctx->command_buffers.flags=GFX_FLAG_HAS_TRANSFER_COMMAND_BUFFER_DATA|GFX_FLAG_HAS_GRAPHICS_COMMAND_BUFFER_DATA;
+	ctx->frame.index=0;
 	_begin_frame(ctx);
 	ctx->write_descriptors.count=0;
 	ctx->write_descriptors.data=NULL;

@@ -10,6 +10,13 @@
 
 #define GFX_DEFAULT_GPU_INDEX 0
 
+#define GFX_FLAG_HAS_TRANSFER_COMMAND_BUFFER_DATA 1
+#define GFX_FLAG_HAS_GRAPHICS_COMMAND_BUFFER_DATA 2
+
+
+
+typedef uint8_t gfx_context_command_buffer_data_flags_t;
+
 
 
 typedef struct _GFX_CONTEXT_INSTANCE_DATA{
@@ -62,11 +69,13 @@ typedef struct _GFX_CONTEXT_QUEUE_DATA{
 
 
 
-typedef struct _GFX_CONTEXT_COMMAND_BUFFER_DATA{
-	VkCommandBuffer command_buffer;
+typedef struct _GFX_CONTEXT_COMMAND_BUFFERS_DATA{
+	VkCommandBuffer transfer;
+	VkCommandBuffer graphics;
 	VkFence fence;
-	sll_bool_t has_data;
-} gfx_context_command_buffer_data_t;
+	uint64_t index;
+	gfx_context_command_buffer_data_flags_t flags;
+} gfx_context_command_buffers_data_t;
 
 
 
@@ -96,6 +105,7 @@ typedef struct _GFX_CONTEXT_DEPTH_STENSIL_DATA{
 typedef struct _GFX_CONTEXT_FRAME_DATA{
 	uint32_t image_index;
 	VkCommandBuffer command_buffer;
+	uint64_t index;
 } gfx_context_frame_data_t;
 
 
@@ -124,8 +134,7 @@ typedef struct _GFX_CONTEXT_DATA{
 	gfx_context_surface_data_t surface;
 	gfx_context_swapchain_data_t swapchain;
 	gfx_context_queue_data_t queue;
-	gfx_context_command_buffer_data_t transfer_command_buffer;
-	gfx_context_command_buffer_data_t graphics_command_buffer;
+	gfx_context_command_buffers_data_t command_buffers;
 	gfx_context_pipeline_data_t pipeline;
 	gfx_context_sync_data_t sync;
 	gfx_context_depth_stensil_data_t depth_stensil;
@@ -149,7 +158,7 @@ void _delete_context(gfx_context_data_t* ctx);
 
 
 
-void _flush_transfer_and_graphics_queues(gfx_context_data_t* ctx);
+void _flush_command_buffers(gfx_context_data_t* ctx);
 
 
 

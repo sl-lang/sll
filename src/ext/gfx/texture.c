@@ -86,6 +86,7 @@ __GFX_API_CALL gfx_texture_t gfx_api_texture_create(gfx_context_t ctx_id,const s
 		}
 	};
 	VULKAN_CALL(ctx->function_table.vkCreateImageView(ctx->device.logical,&image_view_creation_info,NULL,&(texture->view)));
+	texture->last_index=UINT64_MAX;
 	gfx_texture_t out;
 	SLL_HANDLE_CONTAINER_ALLOC(&(ctx->child_objects.textures),&out);
 	*(ctx->child_objects.textures.data+out)=texture;
@@ -114,7 +115,7 @@ __GFX_API_CALL void gfx_api_texture_sync(gfx_context_t ctx_id,gfx_texture_t text
 		return;
 	}
 	gfx_texture_data_t* texture=SLL_HANDLE_CONTAINER_GET(&(ctx->child_objects.textures),texture_id);
-	if (!texture){
+	if (!texture||texture->last_index==ctx->command_buffers.index){
 		return;
 	}
 	VkImageMemoryBarrier image_memory_barrier={
@@ -135,7 +136,7 @@ __GFX_API_CALL void gfx_api_texture_sync(gfx_context_t ctx_id,gfx_texture_t text
 			1
 		}
 	};
-	ctx->function_table.vkCmdPipelineBarrier(ctx->transfer_command_buffer.command_buffer,VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,VK_PIPELINE_STAGE_TRANSFER_BIT,0,0,NULL,0,NULL,1,&image_memory_barrier);
+	ctx->function_table.vkCmdPipelineBarrier(ctx->command_buffers.transfer,VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,VK_PIPELINE_STAGE_TRANSFER_BIT,0,0,NULL,0,NULL,1,&image_memory_barrier);
 	VkBufferImageCopy buffer_copy_region={
 		0,
 		0,
@@ -153,25 +154,26 @@ __GFX_API_CALL void gfx_api_texture_sync(gfx_context_t ctx_id,gfx_texture_t text
 		},
 		texture->size
 	};
-	ctx->function_table.vkCmdCopyBufferToImage(ctx->transfer_command_buffer.command_buffer,texture->data_buffer->device.buffer,texture->handle,VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,1,&buffer_copy_region);
+	ctx->function_table.vkCmdCopyBufferToImage(ctx->command_buffers.transfer,texture->data_buffer->device.buffer,texture->handle,VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,1,&buffer_copy_region);
 	image_memory_barrier.oldLayout=VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL;
 	image_memory_barrier.newLayout=VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
 	if (ctx->queue.transfer_queue_index==ctx->queue.graphics_queue_index){
 		image_memory_barrier.srcAccessMask=VK_ACCESS_TRANSFER_WRITE_BIT;
 		image_memory_barrier.dstAccessMask=VK_ACCESS_SHADER_READ_BIT;
-		ctx->function_table.vkCmdPipelineBarrier(ctx->transfer_command_buffer.command_buffer,VK_PIPELINE_STAGE_TRANSFER_BIT,VK_PIPELINE_STAGE_ALL_GRAPHICS_BIT,0,0,NULL,0,NULL,1,&image_memory_barrier);
+		ctx->function_table.vkCmdPipelineBarrier(ctx->command_buffers.transfer,VK_PIPELINE_STAGE_TRANSFER_BIT,VK_PIPELINE_STAGE_ALL_GRAPHICS_BIT,0,0,NULL,0,NULL,1,&image_memory_barrier);
 	}
 	else{
 		image_memory_barrier.srcAccessMask=VK_ACCESS_TRANSFER_WRITE_BIT;
 		image_memory_barrier.dstAccessMask=0;
 		image_memory_barrier.srcQueueFamilyIndex=ctx->queue.transfer_queue_index;
 		image_memory_barrier.dstQueueFamilyIndex=ctx->queue.graphics_queue_index;
-		ctx->function_table.vkCmdPipelineBarrier(ctx->transfer_command_buffer.command_buffer,VK_PIPELINE_STAGE_TRANSFER_BIT,VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT,0,0,NULL,0,NULL,1,&image_memory_barrier);
+		ctx->function_table.vkCmdPipelineBarrier(ctx->command_buffers.transfer,VK_PIPELINE_STAGE_TRANSFER_BIT,VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT,0,0,NULL,0,NULL,1,&image_memory_barrier);
 		image_memory_barrier.srcAccessMask=0;
 		image_memory_barrier.dstAccessMask=VK_ACCESS_SHADER_READ_BIT;
-		ctx->function_table.vkCmdPipelineBarrier(ctx->graphics_command_buffer.command_buffer,VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT,VK_PIPELINE_STAGE_ALL_GRAPHICS_BIT,0,0,NULL,0,NULL,1,&image_memory_barrier);
-		ctx->graphics_command_buffer.has_data=1;
+		ctx->function_table.vkCmdPipelineBarrier(ctx->command_buffers.graphics,VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT,VK_PIPELINE_STAGE_ALL_GRAPHICS_BIT,0,0,NULL,0,NULL,1,&image_memory_barrier);
+		ctx->command_buffers.flags|=GFX_FLAG_HAS_GRAPHICS_COMMAND_BUFFER_DATA;
 	}
 	texture->layout=VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
-	ctx->transfer_command_buffer.has_data=1;
+	ctx->command_buffers.flags|=GFX_FLAG_HAS_TRANSFER_COMMAND_BUFFER_DATA;
+	texture->last_index=ctx->command_buffers.index;
 }

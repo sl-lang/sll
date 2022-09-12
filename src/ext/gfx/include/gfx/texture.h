@@ -17,6 +17,7 @@ typedef struct _GFX_TEXTURE_DATA{
 	VkImage handle;
 	VkImageView view;
 	VkDeviceMemory memory;
+	uint64_t last_index;
 } gfx_texture_data_t;
 
 
