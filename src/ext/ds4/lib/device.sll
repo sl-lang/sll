@@ -1,4 +1,5 @@
 (---
+	"array.sll"
 	"ds4/_load_library.sll"
 	"file.sll"
 	"string.sll"
@@ -7,36 +8,100 @@
 
 
 
-(# delete)
+(# BUTTON_UP BUTTON_DOWN BUTTON_LEFT BUTTON_RIGHT BUTTON_L1 BUTTON_R1 BUTTON_L2 BUTTON_R2 BUTTON_L3 BUTTON_R3 BUTTON_CROSS BUTTON_CIRCLE BUTTON_SQURARE BUTTON_TRIANGLE BUTTON_OPTIONS BUTTON_SHARE BUTTON_LOGO BUTTON_TOUCHPAD delete)
 
 
 
 (= ds4_device_type (&:
 	(,,, data
-		(@@ (<- string$format "<ds4:device path=%s color=%0.2x%0.2x%0.2x>"
+		(= buttons [])
+		(? (& data$buttons BUTTON_UP) (<- array$push buttons "Up"))
+		(? (& data$buttons BUTTON_DOWN) (<- array$push buttons "Down"))
+		(? (& data$buttons BUTTON_LEFT) (<- array$push buttons "Left"))
+		(? (& data$buttons BUTTON_RIGHT) (<- array$push buttons "Right"))
+		(? (& data$buttons BUTTON_L1) (<- array$push buttons "L1"))
+		(? (& data$buttons BUTTON_R1) (<- array$push buttons "R1"))
+		(? (& data$buttons BUTTON_L2) (<- array$push buttons "L2"))
+		(? (& data$buttons BUTTON_R2) (<- array$push buttons "R2"))
+		(? (& data$buttons BUTTON_L3) (<- array$push buttons "L3"))
+		(? (& data$buttons BUTTON_R3) (<- array$push buttons "R3"))
+		(? (& data$buttons BUTTON_CROSS) (<- array$push buttons "Cross"))
+		(? (& data$buttons BUTTON_CIRCLE) (<- array$push buttons "Circle"))
+		(? (& data$buttons BUTTON_SQURARE) (<- array$push buttons "Squrare"))
+		(? (& data$buttons BUTTON_TRIANGLE) (<- array$push buttons "Triangle"))
+		(? (& data$buttons BUTTON_OPTIONS) (<- array$push buttons "Options"))
+		(? (& data$buttons BUTTON_SHARE) (<- array$push buttons "Share"))
+		(? (& data$buttons BUTTON_LOGO) (<- array$push buttons "Logo"))
+		(? (& data$buttons BUTTON_TOUCHPAD) (<- array$push buttons "Touchpad"))
+		(@@ (<- string$format "<ds4:device path=%s buttons=%s color=%0.2x%0.2x%0.2x small_rumble=%u big_rumble=%u>"
 			data$path
+			(<- string$join ", " buttons)
 			data$red
 			data$green
 			data$blue
+			data$small_rumble
+			data$big_rumble
 		))
 	) @@string@@
 	(,,, data
 		(<- delete data)
 	) @@delete@@
 	(~ string_type) path
+	int_type buttons
 	int_type red
 	int_type green
 	int_type blue
+	int_type small_rumble
+	int_type big_rumble
 	(~ file$file_type) _file
 	string_type _tx_buffer
 ))
 
 (= ds4_device_module_type (&:
 	(~ type_type) ds4_device_type
+	(~ int_type) BUTTON_CIRCLE
+	(~ int_type) BUTTON_CROSS
+	(~ int_type) BUTTON_DOWN
+	(~ int_type) BUTTON_L1
+	(~ int_type) BUTTON_L2
+	(~ int_type) BUTTON_L3
+	(~ int_type) BUTTON_LEFT
+	(~ int_type) BUTTON_LOGO
+	(~ int_type) BUTTON_OPTIONS
+	(~ int_type) BUTTON_R1
+	(~ int_type) BUTTON_R2
+	(~ int_type) BUTTON_R3
+	(~ int_type) BUTTON_RIGHT
+	(~ int_type) BUTTON_SHARE
+	(~ int_type) BUTTON_SQURARE
+	(~ int_type) BUTTON_TOUCHPAD
+	(~ int_type) BUTTON_TRIANGLE
+	(~ int_type) BUTTON_UP
 	(~ func_type) create
 	(~ func_type) list
 	(~ func_type) update
 ))
+
+
+
+(= BUTTON_UP 1)
+(= BUTTON_DOWN 2)
+(= BUTTON_LEFT 4)
+(= BUTTON_RIGHT 8)
+(= BUTTON_L1 16)
+(= BUTTON_R1 32)
+(= BUTTON_L2 64)
+(= BUTTON_R2 128)
+(= BUTTON_L3 256)
+(= BUTTON_R3 512)
+(= BUTTON_CROSS 1024)
+(= BUTTON_CIRCLE 2048)
+(= BUTTON_SQURARE 4096)
+(= BUTTON_TRIANGLE 8192)
+(= BUTTON_OPTIONS 16384)
+(= BUTTON_SHARE 32768)
+(= BUTTON_LOGO 65536)
+(= BUTTON_TOUCHPAD 131072)
 
 
 
@@ -46,6 +111,9 @@
 	(? (!== (:? handle) file$file_type) (@@ handle))
 	(@@ (. ds4_device_type
 		path
+		0
+		0
+		0
 		0
 		0
 		0
@@ -74,8 +142,8 @@
 	(= device$red (& device$red 255))
 	(= device$green (& device$green 255))
 	(= device$blue (& device$blue 255))
-	(= (: device$_tx_buffer 4) 0)
-	(= (: device$_tx_buffer 5) 0)
+	(= (: device$_tx_buffer 4) device$small_rumble)
+	(= (: device$_tx_buffer 5) device$big_rumble)
 	(= (: device$_tx_buffer 6) device$red)
 	(= (: device$_tx_buffer 7) device$green)
 	(= (: device$_tx_buffer 8) device$blue)
@@ -84,6 +152,26 @@
 		(@@ false)
 	})
 	(= data (<- file$read device$_file 64))
+	(= device$buttons 0)
+	(= d-pad (& (: data 5) 15))
+	(? (|| (=== d-pad 0) (=== d-pad 1) (=== d-pad 7)) (= device$buttons (| device$buttons BUTTON_UP)))
+	(? (<= 3 d-pad 5) (= device$buttons (| device$buttons BUTTON_DOWN)))
+	(? (<= 5 d-pad 7) (= device$buttons (| device$buttons BUTTON_LEFT)))
+	(? (<= 1 d-pad 3) (= device$buttons (| device$buttons BUTTON_RIGHT)))
+	(? (& (: data 5) 32) (= device$buttons (| device$buttons BUTTON_CROSS)))
+	(? (& (: data 5) 64) (= device$buttons (| device$buttons BUTTON_CIRCLE)))
+	(? (& (: data 5) 16) (= device$buttons (| device$buttons BUTTON_SQURARE)))
+	(? (& (: data 5) 128) (= device$buttons (| device$buttons BUTTON_TRIANGLE)))
+	(? (& (: data 6) 1) (= device$buttons (| device$buttons BUTTON_L1)))
+	(? (& (: data 6) 2) (= device$buttons (| device$buttons BUTTON_R1)))
+	(? (& (: data 6) 4) (= device$buttons (| device$buttons BUTTON_L2)))
+	(? (& (: data 6) 8) (= device$buttons (| device$buttons BUTTON_R2)))
+	(? (& (: data 6) 16) (= device$buttons (| device$buttons BUTTON_SHARE)))
+	(? (& (: data 6) 32) (= device$buttons (| device$buttons BUTTON_OPTIONS)))
+	(? (& (: data 6) 64) (= device$buttons (| device$buttons BUTTON_L3)))
+	(? (& (: data 6) 128) (= device$buttons (| device$buttons BUTTON_R3)))
+	(? (& (: data 7) 1) (= device$buttons (| device$buttons BUTTON_LOGO)))
+	(? (& (: data 7) 2) (= device$buttons (| device$buttons BUTTON_TOUCHPAD)))
 	(@@ true)
 ))
 
@@ -91,6 +179,24 @@
 
 (= ds4:device (. ds4_device_module_type
 	ds4_device_type
+	BUTTON_CIRCLE
+	BUTTON_CROSS
+	BUTTON_DOWN
+	BUTTON_L1
+	BUTTON_L2
+	BUTTON_L3
+	BUTTON_LEFT
+	BUTTON_LOGO
+	BUTTON_OPTIONS
+	BUTTON_R1
+	BUTTON_R2
+	BUTTON_R3
+	BUTTON_RIGHT
+	BUTTON_SHARE
+	BUTTON_SQURARE
+	BUTTON_TOUCHPAD
+	BUTTON_TRIANGLE
+	BUTTON_UP
 	create
 	list
 	update
