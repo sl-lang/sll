@@ -8,6 +8,12 @@ static struct udev* _udev_ctx;
 
 
 
+__DS4_API_CALL void ds4_list_devices(sll_array_t* out){
+	SLL_INIT_ARRAY(out);
+}
+
+
+
 __DS4_EXTERNAL sll_bool_t SLL_ABI_INIT(sll_version_t version){
 	if (version!=SLL_VERSION){
 		return 0;

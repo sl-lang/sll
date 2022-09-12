@@ -1,5 +1,12 @@
+#include <ds4/common.h>
 #include <sll.h>
 #include <windows.h>
+
+
+
+__DS4_API_CALL void ds4_list_devices(sll_array_t* out){
+	SLL_INIT_ARRAY(out);
+}
 
 
 
