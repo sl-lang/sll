@@ -41,7 +41,7 @@ __GFX_API_CALL gfx_pipeline_t gfx_api_pipeline_create(gfx_context_t ctx_id,gfx_p
 	uint32_t sampler_descriptor_count=0;
 	for (sll_array_length_t i=0;i<uniform_buffers->length+samplers->length;i++){
 		sll_object_t elem=(i>=uniform_buffers->length?samplers->data[i-uniform_buffers->length]:uniform_buffers->data[i]);
-		uint32_t descriptor_count=(elem->data.array.length<4&&elem->data.array.data[2]->data.int_?elem->data.array.data[2]->data.int_:1);
+		uint32_t descriptor_count=(uint32_t)(elem->data.array.length<4&&elem->data.array.data[2]->data.int_?elem->data.array.data[2]->data.int_:1);
 		if (i<uniform_buffers->length){
 			uniform_buffer_descriptor_count+=descriptor_count;
 		}
