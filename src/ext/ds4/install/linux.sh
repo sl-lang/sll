@@ -8,3 +8,4 @@ done
 if [ "" != "$packages_to_install" ]; then
 	eval "sudo apt install$packages_to_install"
 fi
+sudo apt install libudev-dev
