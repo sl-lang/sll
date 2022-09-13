@@ -18,9 +18,9 @@ __DS4_API_CALL void ds4_api_device_list(sll_array_t* out){
 		struct udev_device* dev=udev_device_new_from_syspath(_udev_ctx,udev_list_entry_get_name(entry));
 		struct udev_device* parent=udev_device_get_parent(dev);
 		const sll_char_t* name=SLL_CHAR(udev_device_get_property_value(parent,"HID_NAME"));
-		const char* path=udev_device_get_devnode(dev);
+		const sll_char_t* path=SLL_CHAR(udev_device_get_devnode(dev));
 		if (parent&&name&&path&&sll_string_compare_pointer(SLL_CHAR(udev_device_get_subsystem(parent)),SLL_CHAR("hid"))==SLL_COMPARE_RESULT_EQUAL&&(sll_string_compare_pointer(name,SLL_CHAR("Sony Interactive Entertainment Wireless Controller"))==SLL_COMPARE_RESULT_EQUAL||sll_string_compare_pointer(name,SLL_CHAR("Sony Computer Entertainment Wireless Controller"))==SLL_COMPARE_RESULT_EQUAL)){
-			sll_array_push(NULL,sll_string_pointer_to_object(SLL_CHAR(path)),out);
+			sll_array_push(NULL,sll_string_pointer_to_object(path),out);
 		}
 		udev_device_unref(dev);
 		entry=udev_list_entry_get_next(entry);
