@@ -6,6 +6,6 @@ for pkg in "udev libudev-dev"; do
 	fi
 done
 if [ "" != "$packages_to_install" ]; then
+	echo "Installing packages:$packages_to_install"
 	eval "sudo apt install$packages_to_install"
 fi
-sudo apt install libudev-dev

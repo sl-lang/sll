@@ -6,5 +6,6 @@ for pkg in "libxcb-randr0 libxcb-randr0-dev libxcb-xkb-dev libxcb-icccm4 libxcb-
 	fi
 done
 if [ "" != "$packages_to_install" ]; then
+	echo "Installing packages:$packages_to_install"
 	eval "sudo apt install$packages_to_install"
 fi
