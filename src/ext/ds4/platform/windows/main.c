@@ -1,38 +1,15 @@
-#undef NOGDICAPMASKS
-#undef NOVIRTUALKEYCODES
-#undef NOWINMESSAGES
-#undef NOWINSTYLES
-#undef NOSYSMETRICS
-#undef NOMENUS
-#undef NOICONS
-#undef NOKEYSTATES
-#undef NOSYSCOMMANDS
-#undef NORASTEROPS
-#undef NOSHOWWINDOW
 #undef OEMRESOURCE
-#undef NOATOM
-#undef NOCLIPBOARD
-#undef NOCOLOR
 #undef NOCTLMGR
-#undef NODRAWTEXT
 #undef NOGDI
 #undef NOKERNEL
 #undef NOUSER
 #undef NOMB
 #undef NOMEMMGR
 #undef NOMETAFILE
-#undef NOMINMAX
-#undef NOMSG
 #undef NOOPENFILE
-#undef NOSCROLL
 #undef NOSERVICE
-#undef NOSOUND
-#undef NOTEXTMETRIC
 #undef NOWH
-#undef NOWINOFFSETS
 #undef NOCOMM
-#undef NOKANJI
-#undef NOHELP
 #undef NOPROFILER
 #undef NODEFERWINDOWPOS
 #undef NOMCX
@@ -77,10 +54,10 @@ __DS4_API_CALL void ds4_api_device_list(sll_array_t* out){
 			continue;
 		}
 		DWORD j=0;
+		SP_DEVINFO_DATA dev_info={
+			sizeof(SP_DEVINFO_DATA)
+		};
 		do{
-			SP_DEVINFO_DATA dev_info={
-				sizeof(SP_DEVINFO_DATA)
-			};
 			if (!SetupDiEnumDeviceInfo(dev_list,j,&dev_info)){
 				goto _check_next_device;
 			}
