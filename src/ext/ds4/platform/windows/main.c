@@ -1,3 +1,41 @@
+#undef NOGDICAPMASKS
+#undef NOVIRTUALKEYCODES
+#undef NOWINMESSAGES
+#undef NOWINSTYLES
+#undef NOSYSMETRICS
+#undef NOMENUS
+#undef NOICONS
+#undef NOKEYSTATES
+#undef NOSYSCOMMANDS
+#undef NORASTEROPS
+#undef NOSHOWWINDOW
+#undef OEMRESOURCE
+#undef NOATOM
+#undef NOCLIPBOARD
+#undef NOCOLOR
+#undef NOCTLMGR
+#undef NODRAWTEXT
+#undef NOGDI
+#undef NOKERNEL
+#undef NOUSER
+#undef NOMB
+#undef NOMEMMGR
+#undef NOMETAFILE
+#undef NOMINMAX
+#undef NOMSG
+#undef NOOPENFILE
+#undef NOSCROLL
+#undef NOSERVICE
+#undef NOSOUND
+#undef NOTEXTMETRIC
+#undef NOWH
+#undef NOWINOFFSETS
+#undef NOCOMM
+#undef NOKANJI
+#undef NOHELP
+#undef NOPROFILER
+#undef NODEFERWINDOWPOS
+#undef NOMCX
 #include <windows.h>
 #include <setupapi.h>
 #include <initguid.h>
@@ -5,6 +43,7 @@
 #include <hidsdi.h>
 #include <ds4/common.h>
 #include <sll.h>
+#include <stdint.h>
 
 
 
