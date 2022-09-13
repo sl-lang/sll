@@ -126,6 +126,8 @@
 ))
 
 (= ds4_device_module_type (&:
+	(~ type_type) ds4_device_controls_type
+	(~ type_type) ds4_device_touch_point_type
 	(~ type_type) ds4_device_type
 	(~ int_type) BATTERY_CHARGING
 	(~ int_type) BUTTON_CIRCLE
@@ -304,6 +306,8 @@
 
 
 (= ds4:device (. ds4_device_module_type
+	ds4_device_controls_type
+	ds4_device_touch_point_type
 	ds4_device_type
 	BATTERY_CHARGING
 	BUTTON_CIRCLE
