@@ -1,7 +1,5 @@
 #undef NOWINMESSAGES
-#undef NOCTLMGR
 #undef NOUSER
-#undef NOMB
 #undef NOMEMMGR
 #undef NOSERVICE
 #include <windows.h>
