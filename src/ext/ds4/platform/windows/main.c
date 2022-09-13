@@ -14,15 +14,10 @@
 #undef NOCLIPBOARD
 #undef NOCOLOR
 #undef NOCTLMGR
-#undef NODRAWTEXT
-#undef NOGDI
 #undef NOKERNEL
 #undef NOUSER
 #undef NOMB
 #undef NOMEMMGR
-#undef NOMETAFILE
-#undef NOMINMAX
-#undef NOMSG
 #undef NOSERVICE
 #include <windows.h>
 #include <setupapi.h>
