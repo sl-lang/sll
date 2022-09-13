@@ -309,7 +309,7 @@
 			["gcc" "-fno-exceptions" "-fno-stack-protector" "-fdiagnostics-color=always" "-fPIC" "-c" "-fvisibility=hidden" "-Wall" "-g" "-O0" "-Werror" "-I" "src/sll/include" "-o" COMMAND_MARKER_OUTPUT COMMAND_MARKER_INPUT]
 			["nasm" "-I" "src/sll/include" "-D__SLL_BUILD_DARWIN" "-DDEBUG_BUILD" "-o" COMMAND_MARKER_OUTPUT "-O0" "-Wall" "-Werror" "-gdwarf" "-f" "macho64" COMMAND_MARKER_INPUT]
 			nil
-			["gcc" "-z" "noexecstack" "-fno-exceptions" "-fno-stack-protector" "-fdiagnostics-color=always" "-shared" "-fPIC" "-fvisibility=hidden" "-Wall" "-Werror" "-g" "-O0" "-o" output_library COMMAND_MARKER_INPUT "-lm" "-ldl" "-pthread"]
+			["gcc" "-fno-exceptions" "-fno-stack-protector" "-fdiagnostics-color=always" "-shared" "-fPIC" "-fvisibility=hidden" "-Wall" "-Werror" "-g" "-O0" "-o" output_library COMMAND_MARKER_INPUT "-lm" "-ldl" "-pthread"]
 			nil
 			""
 		)
@@ -317,7 +317,7 @@
 			["gcc" "-fno-exceptions" "-fno-stack-protector" "-fdiagnostics-color=always" "-fPIC" "-c" "-fvisibility=hidden" "-Wall" "-O3" "-Werror" "-I" "src/sll/include" "-o" COMMAND_MARKER_OUTPUT COMMAND_MARKER_INPUT]
 			["nasm" "-I" "src/sll/include" "-D__SLL_BUILD_DARWIN" "-o" COMMAND_MARKER_OUTPUT "-O3" "-Wall" "-Werror" "-f" "macho64" COMMAND_MARKER_INPUT]
 			nil
-			["gcc" "-z" "noexecstack" "-fno-exceptions" "-fno-stack-protector" "-fdiagnostics-color=always" "-shared" "-fPIC" "-fvisibility=hidden" "-Wall" "-O3" "-Werror" "-o" output_library COMMAND_MARKER_INPUT "-lm" "-ldl" "-pthread"]
+			["gcc" "-fno-exceptions" "-fno-stack-protector" "-fdiagnostics-color=always" "-shared" "-fPIC" "-fvisibility=hidden" "-Wall" "-O3" "-Werror" "-o" output_library COMMAND_MARKER_INPUT "-lm" "-ldl" "-pthread"]
 			nil
 			""
 		)
@@ -325,7 +325,7 @@
 			(+ ["gcc" "-fno-exceptions" "-fno-stack-protector" "-fdiagnostics-color=always" "-fPIC" "-c" "-fvisibility=hidden" "-Wall" "-g" "-O0" "-Werror" "-I" "src/sll/include" "-mavx" "-mavx2" "-o" COMMAND_MARKER_OUTPUT COMMAND_MARKER_INPUT] (* ["--coverage"] options$COVERAGE))
 			["nasm" "-I" "src/sll/include" "-D__SLL_BUILD_LINUX" "-DDEBUG_BUILD" "-o" COMMAND_MARKER_OUTPUT "-O0" "-Wall" "-Werror" "-gdwarf" "-f" "elf64" COMMAND_MARKER_INPUT]
 			["strip" "-x" "-o" COMMAND_MARKER_OUTPUT COMMAND_MARKER_OUTPUT]
-			(+ ["gcc" "-z" "noexecstack" "-fno-exceptions" "-fno-stack-protector" "-fdiagnostics-color=always" "-shared" "-fPIC" "-fvisibility=hidden" "-Wall" "-Werror" "-g" "-O0" "-mavx" "-mavx2" "-o" output_library COMMAND_MARKER_INPUT "-lm" "-ldl" "-pthread"] (* ["--coverage"] options$COVERAGE))
+			(+ ["gcc" "-fno-exceptions" "-fno-stack-protector" "-fdiagnostics-color=always" "-shared" "-fPIC" "-fvisibility=hidden" "-Wall" "-Werror" "-g" "-O0" "-mavx" "-mavx2" "-o" output_library COMMAND_MARKER_INPUT "-lm" "-ldl" "-pthread"] (* ["--coverage"] options$COVERAGE))
 			nil
 			""
 		)
@@ -341,7 +341,7 @@
 			(+ ["gcc" "-fno-exceptions" "-fno-stack-protector" "-fdiagnostics-color=always" "-fPIC" "-c" "-fvisibility=hidden" "-Wall" "-O3" "-Werror" "-I" "src/sll/include" "-mavx" "-mavx2" "-o" COMMAND_MARKER_OUTPUT COMMAND_MARKER_INPUT] (* ["-g"] options$DEBUG))
 			["nasm" "-I" "src/sll/include" "-D__SLL_BUILD_LINUX" "-o" COMMAND_MARKER_OUTPUT "-O3" "-Wall" "-Werror" "-f" "elf64" COMMAND_MARKER_INPUT]
 			["strip" "-x" "-o" COMMAND_MARKER_OUTPUT COMMAND_MARKER_OUTPUT]
-			(+ ["gcc" "-z" "noexecstack" "-fno-exceptions" "-fno-stack-protector" "-fdiagnostics-color=always" "-shared" "-fPIC" "-fvisibility=hidden" "-Wall" "-O3" "-Werror" "-mavx" "-mavx2" "-o" output_library COMMAND_MARKER_INPUT "-lm" "-ldl" "-pthread"] (* ["-g"] options$DEBUG))
+			(+ ["gcc" "-fno-exceptions" "-fno-stack-protector" "-fdiagnostics-color=always" "-shared" "-fPIC" "-fvisibility=hidden" "-Wall" "-O3" "-Werror" "-mavx" "-mavx2" "-o" output_library COMMAND_MARKER_INPUT "-lm" "-ldl" "-pthread"] (* ["-g"] options$DEBUG))
 			(* ["strip" output_library "-s" "-R" ".note.*" "-R" ".comment"] (! options$DEBUG))
 			""
 		)
@@ -389,7 +389,7 @@
 			["gcc" "-fno-exceptions" "-fno-stack-protector" "-fdiagnostics-color=always" "-fPIC" "-c" "-fvisibility=hidden" "-Wall" "-g" "-O0" "-Werror" "-I" "build" "-I" COMMAND_MARKER_INCLUDE "-o" COMMAND_MARKER_OUTPUT COMMAND_MARKER_INPUT]
 			["nasm" "-I" COMMAND_MARKER_INCLUDE "-D__SLL_BUILD_DARWIN" "-DDEBUG_BUILD" "-o" COMMAND_MARKER_OUTPUT "-O0" "-Wall" "-Werror" "-gdwarf" "-f" "macho64" COMMAND_MARKER_INPUT]
 			nil
-			["gcc" "-z" "noexecstack" "-fno-exceptions" "-fno-stack-protector" "-fdiagnostics-color=always" "-shared" "-fPIC" "-fvisibility=hidden" "-Wall" "-Werror" "-g" "-O0" output_library "-o" COMMAND_MARKER_OUTPUT COMMAND_MARKER_INPUT]
+			["gcc" "-fno-exceptions" "-fno-stack-protector" "-fdiagnostics-color=always" "-shared" "-fPIC" "-fvisibility=hidden" "-Wall" "-Werror" "-g" "-O0" output_library "-o" COMMAND_MARKER_OUTPUT COMMAND_MARKER_INPUT]
 			nil
 			""
 			""
@@ -398,7 +398,7 @@
 			["gcc" "-fno-exceptions" "-fno-stack-protector" "-fdiagnostics-color=always" "-fPIC" "-c" "-fvisibility=hidden" "-Wall" "-O3" "-Werror" "-I" "build" "-I" COMMAND_MARKER_INCLUDE "-o" COMMAND_MARKER_OUTPUT COMMAND_MARKER_INPUT]
 			["nasm" "-I" COMMAND_MARKER_INCLUDE "-D__SLL_BUILD_DARWIN" "-o" COMMAND_MARKER_OUTPUT "-O3" "-Wall" "-Werror" "-f" "macho64" COMMAND_MARKER_INPUT]
 			nil
-			["gcc" "-z" "noexecstack" "-fno-exceptions" "-fno-stack-protector" "-fdiagnostics-color=always" "-shared" "-fPIC" "-fvisibility=hidden" "-Wall" "-O3" "-Werror" output_library "-o" COMMAND_MARKER_OUTPUT COMMAND_MARKER_INPUT]
+			["gcc" "-fno-exceptions" "-fno-stack-protector" "-fdiagnostics-color=always" "-shared" "-fPIC" "-fvisibility=hidden" "-Wall" "-O3" "-Werror" output_library "-o" COMMAND_MARKER_OUTPUT COMMAND_MARKER_INPUT]
 			nil
 			""
 			""
@@ -407,7 +407,7 @@
 			(+ ["gcc" "-fno-exceptions" "-fno-stack-protector" "-fdiagnostics-color=always" "-fPIC" "-c" "-fvisibility=hidden" "-Wall" "-g" "-O0" "-Werror" "-I" "build" "-I" COMMAND_MARKER_INCLUDE "-mavx" "-mavx2" "-o" COMMAND_MARKER_OUTPUT COMMAND_MARKER_INPUT] (* ["--coverage"] options$COVERAGE))
 			["nasm" "-I" COMMAND_MARKER_INCLUDE "-D__SLL_BUILD_LINUX" "-DDEBUG_BUILD" "-o" COMMAND_MARKER_OUTPUT "-O0" "-Wall" "-Werror" "-gdwarf" "-f" "elf64" COMMAND_MARKER_INPUT]
 			["strip" "-x" "-o" COMMAND_MARKER_OUTPUT COMMAND_MARKER_OUTPUT]
-			(+ ["gcc" "-z" "noexecstack" "-fno-exceptions" "-fno-stack-protector" "-fdiagnostics-color=always" "-shared" "-fPIC" "-fvisibility=hidden" "-Wall" "-Werror" "-g" "-O0" "-mavx" "-mavx2" output_library "-o" COMMAND_MARKER_OUTPUT COMMAND_MARKER_INPUT] (* ["--coverage"] options$COVERAGE))
+			(+ ["gcc" "-fno-exceptions" "-fno-stack-protector" "-fdiagnostics-color=always" "-shared" "-fPIC" "-fvisibility=hidden" "-Wall" "-Werror" "-g" "-O0" "-mavx" "-mavx2" output_library "-o" COMMAND_MARKER_OUTPUT COMMAND_MARKER_INPUT] (* ["--coverage"] options$COVERAGE))
 			nil
 			""
 			""
@@ -425,7 +425,7 @@
 			(+ ["gcc" "-fno-exceptions" "-fno-stack-protector" "-fdiagnostics-color=always" "-fPIC" "-c" "-fvisibility=hidden" "-Wall" "-O3" "-Werror" "-I" "build" "-I" COMMAND_MARKER_INCLUDE "-mavx" "-mavx2" "-o" COMMAND_MARKER_OUTPUT COMMAND_MARKER_INPUT] (* ["-g"] options$DEBUG))
 			["nasm" "-I" COMMAND_MARKER_INCLUDE "-D__SLL_BUILD_LINUX" "-o" COMMAND_MARKER_OUTPUT "-O3" "-Wall" "-Werror" "-f" "elf64" COMMAND_MARKER_INPUT]
 			["strip" "-x" "-o" COMMAND_MARKER_OUTPUT COMMAND_MARKER_OUTPUT]
-			(+ ["gcc" "-z" "noexecstack" "-fno-exceptions" "-fno-stack-protector" "-fdiagnostics-color=always" "-shared" "-fPIC" "-fvisibility=hidden" "-Wall" "-O3" "-Werror" "-mavx" "-mavx2" output_library "-o" COMMAND_MARKER_OUTPUT COMMAND_MARKER_INPUT] (* ["-g"] options$DEBUG))
+			(+ ["gcc" "-fno-exceptions" "-fno-stack-protector" "-fdiagnostics-color=always" "-shared" "-fPIC" "-fvisibility=hidden" "-Wall" "-O3" "-Werror" "-mavx" "-mavx2" output_library "-o" COMMAND_MARKER_OUTPUT COMMAND_MARKER_INPUT] (* ["-g"] options$DEBUG))
 			(* ["strip" COMMAND_MARKER_OUTPUT "-s" "-R" ".note.*" "-R" ".comment"] (! options$DEBUG))
 			""
 			""
