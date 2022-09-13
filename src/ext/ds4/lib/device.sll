@@ -51,6 +51,23 @@
 	int_type y
 ))
 
+(= ds4_device_controls_type (&:
+	(,,, data
+		(@@ (<- string$format "<ds4:device_controls color=%0.2x%0.2x%0.2x small_rumble=%u big_rumble=%u>"
+			data$red
+			data$green
+			data$blue
+			data$small_rumble
+			data$big_rumble
+		))
+	) @@string@@
+	int_type red
+	int_type green
+	int_type blue
+	int_type small_rumble
+	int_type big_rumble
+))
+
 (= ds4_device_type (&:
 	(,,, data
 		(= buttons [])
@@ -72,7 +89,7 @@
 		(? (& data$buttons BUTTON_SHARE) (<- array$push buttons "Share"))
 		(? (& data$buttons BUTTON_LOGO) (<- array$push buttons "Logo"))
 		(? (& data$buttons BUTTON_TOUCHPAD) (<- array$push buttons "Touchpad"))
-		(@@ (<- string$format "<ds4:device path=%s buttons=%s left=(%d %d) right=(%d %d) left-trigger=%u right-trigger=%u battery=%s acceleration=%s angular-velocity=%s touchpad=%s color=%0.2x%0.2x%0.2x small_rumble=%u big_rumble=%u>"
+		(@@ (<- string$format "<ds4:device path=%s buttons=%s left=(%d %d) right=(%d %d) left-trigger=%u right-trigger=%u battery=%s acceleration=%s angular-velocity=%s touchpad=%s controls=%s>"
 			data$path
 			(<- string$join ", " buttons)
 			data$left-x
@@ -85,11 +102,7 @@
 			(:: data$acceleration string_type)
 			(:: data$angular_velocity string_type)
 			(<- string$str data$touchpad)
-			data$red
-			data$green
-			data$blue
-			data$small_rumble
-			data$big_rumble
+			(:: data$controls string_type)
 		))
 	) @@string@@
 	(,,, data
@@ -107,13 +120,9 @@
 	ds4_device_acceleration_type acceleration
 	ds4_device_angular_velocity_type angular_velocity
 	array_type touchpad
-	int_type red
-	int_type green
-	int_type blue
-	int_type small_rumble
-	int_type big_rumble
+	ds4_device_controls_type controls
 	(~ file$file_type) _file
-	string_type _tx_buffer
+	string_type _data_buffer
 ))
 
 (= ds4_device_module_type (&:
@@ -210,11 +219,13 @@
 		[0.0 0.0 0.0]
 		[0.0 0.0 0.0]
 		[]
-		0
-		0
-		0
-		0
-		0
+		[
+			0
+			0
+			0
+			0
+			0
+		]
 		handle
 		"\x05\x7f\x04\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00"
 	))
@@ -223,12 +234,12 @@
 (= delete (,,, device
 	(? (! device) (@@ false))
 	(= device (:: device ds4_device_type))
-	(= (: device$_tx_buffer 4) 0)
-	(= (: device$_tx_buffer 5) 0)
-	(= (: device$_tx_buffer 6) 0)
-	(= (: device$_tx_buffer 7) 0)
-	(= (: device$_tx_buffer 8) 0)
-	(<- file$write device$_file device$_tx_buffer)
+	(= (: device$_data_buffer 4) 0)
+	(= (: device$_data_buffer 5) 0)
+	(= (: device$_data_buffer 6) 0)
+	(= (: device$_data_buffer 7) 0)
+	(= (: device$_data_buffer 8) 0)
+	(<- file$write device$_file device$_data_buffer)
 	(<- file$close device$_file)
 ))
 
@@ -237,15 +248,15 @@
 (= update (,,, device
 	(? (! device) (@@ false))
 	(= device (:: device ds4_device_type))
-	(= device$red (& device$red 255))
-	(= device$green (& device$green 255))
-	(= device$blue (& device$blue 255))
-	(= (: device$_tx_buffer 4) device$small_rumble)
-	(= (: device$_tx_buffer 5) device$big_rumble)
-	(= (: device$_tx_buffer 6) device$red)
-	(= (: device$_tx_buffer 7) device$green)
-	(= (: device$_tx_buffer 8) device$blue)
-	(? (!== (<- file$write device$_file device$_tx_buffer) 32) {
+	(= device$controls$red (& device$controls$red 255))
+	(= device$controls$green (& device$controls$green 255))
+	(= device$controls$blue (& device$controls$blue 255))
+	(= (: device$_data_buffer 4) device$controls$small_rumble)
+	(= (: device$_data_buffer 5) device$controls$big_rumble)
+	(= (: device$_data_buffer 6) device$controls$red)
+	(= (: device$_data_buffer 7) device$controls$green)
+	(= (: device$_data_buffer 8) device$controls$blue)
+	(? (!== (<- file$write device$_file device$_data_buffer) 32) {
 		(:> "Device error!\n")
 		(@@ false)
 	})
