@@ -1,6 +1,5 @@
 #undef NOWINMESSAGES
 #undef NOCTLMGR
-#undef NOKERNEL
 #undef NOUSER
 #undef NOMB
 #undef NOMEMMGR
