@@ -1,5 +1,3 @@
-#undef NOWINMESSAGES
-#undef NOWINSTYLES
 #undef NOCTLMGR
 #undef NOKERNEL
 #undef NOUSER
