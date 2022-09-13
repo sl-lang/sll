@@ -187,7 +187,7 @@
 		(: data offset)
 		(<< (: data (+ offset 1)) 8)
 	))
-	(? (& value 0x8000) (= value (& (~ value) 0xffff)))
+	(? (& value 0x8000) (= value (~ (- 0xffff value))))
 	(@@ (:: value float_type))
 ))
 
