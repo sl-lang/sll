@@ -30,8 +30,6 @@
 #undef NOTEXTMETRIC
 #undef NOWH
 #undef NOWINOFFSETS
-#undef NOCOMM
-#undef NOKANJI
 #include <windows.h>
 #include <setupapi.h>
 #include <initguid.h>
@@ -76,12 +74,12 @@ __DS4_API_CALL void ds4_api_device_list(sll_array_t* out){
 		SP_DEVINFO_DATA dev_info={
 			sizeof(SP_DEVINFO_DATA)
 		};
+		char dev_name[MAX_PATH];
 		do{
 			if (!SetupDiEnumDeviceInfo(dev_list,j,&dev_info)){
 				goto _check_next_device;
 			}
 			j++;
-			char dev_name[MAX_PATH];
 			if (!SetupDiGetDeviceRegistryPropertyA(dev_list,&dev_info,SPDRP_CLASS,NULL,(PBYTE)dev_name,MAX_PATH,NULL)||sll_string_compare_pointer(SLL_CHAR(dev_name),SLL_CHAR("HIDClass"))){
 				continue;
 			}
