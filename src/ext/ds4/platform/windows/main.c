@@ -1,16 +1,10 @@
 #undef NOGDICAPMASKS
 #undef NOVIRTUALKEYCODES
-#undef NOWINMESSAGES
-#undef NOWINSTYLES
-#undef NOSYSMETRICS
-#undef NOMENUS
-#undef OEMRESOURCE
 #undef NOCTLMGR
 #undef NOKERNEL
 #undef NOUSER
 #undef NOMB
 #undef NOMEMMGR
-#undef NOSERVICE
 #include <windows.h>
 #include <setupapi.h>
 #include <initguid.h>
