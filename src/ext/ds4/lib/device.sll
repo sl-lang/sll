@@ -150,6 +150,7 @@
 	(~ int_type) BUTTON_UP
 	(~ func_type) create
 	(~ func_type) list
+	(~ func_type) poll
 	(~ func_type) update
 ))
 
@@ -247,21 +248,9 @@
 
 (= list (... "ds4:device_list"))
 
-(= update (,,, device
+(= poll (,,, device
 	(? (! device) (@@ false))
 	(= device (:: device ds4_device_type))
-	(= device$controls$red (& device$controls$red 255))
-	(= device$controls$green (& device$controls$green 255))
-	(= device$controls$blue (& device$controls$blue 255))
-	(= (: device$_data_buffer 4) device$controls$small_rumble)
-	(= (: device$_data_buffer 5) device$controls$big_rumble)
-	(= (: device$_data_buffer 6) device$controls$red)
-	(= (: device$_data_buffer 7) device$controls$green)
-	(= (: device$_data_buffer 8) device$controls$blue)
-	(? (!== (<- file$write device$_file device$_data_buffer) 32) {
-		(:> "Device error!\n")
-		(@@ false)
-	})
 	(= data (<- file$read device$_file 64))
 	(? (!== ($ data) 64) (@@ false))
 	(= device$buttons 0)
@@ -303,6 +292,24 @@
 	(@@ true)
 ))
 
+(= update (,,, device do_not_poll?
+	(? (! device) (@@ false))
+	(= device (:: device ds4_device_type))
+	(= device$controls$red (& device$controls$red 255))
+	(= device$controls$green (& device$controls$green 255))
+	(= device$controls$blue (& device$controls$blue 255))
+	(= (: device$_data_buffer 4) device$controls$small_rumble)
+	(= (: device$_data_buffer 5) device$controls$big_rumble)
+	(= (: device$_data_buffer 6) device$controls$red)
+	(= (: device$_data_buffer 7) device$controls$green)
+	(= (: device$_data_buffer 8) device$controls$blue)
+	(? (!== (<- file$write device$_file device$_data_buffer) 32) {
+		(:> "Device error!\n")
+		(@@ false)
+	})
+	(@@ (|| do_not_poll? (<- poll device)))
+))
+
 
 
 (= ds4:device (. ds4_device_module_type
@@ -330,6 +337,7 @@
 	BUTTON_UP
 	create
 	list
+	poll
 	update
 ))
 (## ds4:device)
