@@ -2,7 +2,6 @@
 #undef NOCTLMGR
 #undef NOUSER
 #undef NOMB
-#undef NOMEMMGR
 #include <windows.h>
 #include <setupapi.h>
 #include <initguid.h>
@@ -48,7 +47,7 @@ __DS4_API_CALL void ds4_api_device_list(sll_array_t* out){
 			sizeof(SP_DEVINFO_DATA)
 		};
 		char dev_name[MAX_PATH];
-		do{
+		while (1){
 			if (!SetupDiEnumDeviceInfo(dev_list,j,&dev_info)){
 				goto _check_next_device;
 			}
@@ -56,7 +55,10 @@ __DS4_API_CALL void ds4_api_device_list(sll_array_t* out){
 			if (!SetupDiGetDeviceRegistryPropertyA(dev_list,&dev_info,SPDRP_CLASS,NULL,(PBYTE)dev_name,MAX_PATH,NULL)||sll_string_compare_pointer(SLL_CHAR(dev_name),SLL_CHAR("HIDClass"))){
 				continue;
 			}
-		} while (!SetupDiGetDeviceRegistryPropertyA(dev_list,&dev_info,SPDRP_DRIVER,NULL,(PBYTE)dev_name,MAX_PATH,NULL));
+			if (SetupDiGetDeviceRegistryPropertyA(dev_list,&dev_info,SPDRP_DRIVER,NULL,(PBYTE)dev_name,MAX_PATH,NULL)){
+				break;
+			}
+		}
 		HANDLE fh=CreateFileA(dev.DevicePath,0,FILE_SHARE_READ|FILE_SHARE_WRITE,NULL,OPEN_EXISTING,FILE_FLAG_OVERLAPPED,0);
 		if (fh==INVALID_HANDLE_VALUE){
 			continue;
