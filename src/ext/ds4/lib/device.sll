@@ -38,6 +38,19 @@
 	float_type z
 ))
 
+(= ds4_device_touch_point_type (&:
+	(,,, data
+		(@@ (<- string$format "{%u}(%u %u)"
+			data$id
+			data$x
+			data$y
+		))
+	) @@string@@
+	int_type id
+	int_type x
+	int_type y
+))
+
 (= ds4_device_type (&:
 	(,,, data
 		(= buttons [])
@@ -59,7 +72,7 @@
 		(? (& data$buttons BUTTON_SHARE) (<- array$push buttons "Share"))
 		(? (& data$buttons BUTTON_LOGO) (<- array$push buttons "Logo"))
 		(? (& data$buttons BUTTON_TOUCHPAD) (<- array$push buttons "Touchpad"))
-		(@@ (<- string$format "<ds4:device path=%s buttons=%s left=(%d %d) right=(%d %d) left-trigger=%u right-trigger=%u battery=%s acceleration=%s angular-velocity=%s color=%0.2x%0.2x%0.2x small_rumble=%u big_rumble=%u>"
+		(@@ (<- string$format "<ds4:device path=%s buttons=%s left=(%d %d) right=(%d %d) left-trigger=%u right-trigger=%u battery=%s acceleration=%s angular-velocity=%s touchpad=%s color=%0.2x%0.2x%0.2x small_rumble=%u big_rumble=%u>"
 			data$path
 			(<- string$join ", " buttons)
 			data$left-x
@@ -71,6 +84,7 @@
 			(|| data$battery "Charging")
 			(:: data$acceleration string_type)
 			(:: data$angular_velocity string_type)
+			(<- string$str data$touchpad)
 			data$red
 			data$green
 			data$blue
@@ -92,6 +106,7 @@
 	int_type battery
 	ds4_device_acceleration_type acceleration
 	ds4_device_angular_velocity_type angular_velocity
+	array_type touchpad
 	int_type red
 	int_type green
 	int_type blue
@@ -164,6 +179,20 @@
 	(@@ (:: value float_type))
 ))
 
+(= _decode_touchpad_point (,,, data offset
+	(@@ (. ds4_device_touch_point_type
+		(: data offset)
+		(|
+			(: data (+ offset 1))
+			(<< (& (: data (+ offset 2)) 15) 8)
+		)
+		(|
+			(>> (: data (+ offset 2)) 4)
+			(<< (: data (+ offset 3)) 4)
+		)
+	))
+))
+
 (= create (,,, path
 	(= path (:: path string_type))
 	(= handle (<- file$open path (| file$FLAG_READ file$FLAG_WRITE file$FLAG_NO_BUFFER)))
@@ -180,6 +209,7 @@
 		0
 		[0.0 0.0 0.0]
 		[0.0 0.0 0.0]
+		[]
 		0
 		0
 		0
@@ -220,6 +250,7 @@
 		(@@ false)
 	})
 	(= data (<- file$read device$_file 64))
+	(? (!== ($ data) 64) (@@ false))
 	(= device$buttons 0)
 	(= d-pad (& (: data 5) 15))
 	(? (|| (<= d-pad 1) (=== d-pad 7)) (= device$buttons (| device$buttons BUTTON_UP)))
@@ -253,6 +284,9 @@
 	(= device$angular_velocity$x (- 0 (* (<- _decode_imu_data data 13) ANGULAR_VELOCITY_FACTOR)))
 	(= device$angular_velocity$y (* (<- _decode_imu_data data 15) ANGULAR_VELOCITY_FACTOR))
 	(= device$angular_velocity$z (* (<- _decode_imu_data data 17) ANGULAR_VELOCITY_FACTOR))
+	(= device$touchpad [])
+	(? (! (>> (: data 35) 7)) (<- array$push device$touchpad (<- _decode_touchpad_point data 35)))
+	(? (! (>> (: data 39) 7)) (<- array$push device$touchpad (<- _decode_touchpad_point data 39)))
 	(@@ true)
 ))
 
