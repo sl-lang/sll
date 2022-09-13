@@ -53,12 +53,14 @@
 
 (= ds4_device_controls_type (&:
 	(,,, data
-		(@@ (<- string$format "<ds4:device_controls color=%0.2x%0.2x%0.2x small_rumble=%u big_rumble=%u>"
+		(@@ (<- string$format "<ds4:device_controls color=%0.2x%0.2x%0.2x small_rumble=%u big_rumble=%u led-timer=(%u %u)>"
 			data$red
 			data$green
 			data$blue
 			data$small_rumble
 			data$big_rumble
+			data$led_on
+			data$led_off
 		))
 	) @@string@@
 	int_type red
@@ -66,6 +68,8 @@
 	int_type blue
 	int_type small_rumble
 	int_type big_rumble
+	int_type led_on
+	int_type led_off
 ))
 
 (= ds4_device_type (&:
@@ -228,6 +232,8 @@
 			0
 			0
 			0
+			0
+			0
 		]
 		handle
 		"\x05\x7f\x04\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00"
@@ -242,6 +248,8 @@
 	(= (: device$_data_buffer 6) 0)
 	(= (: device$_data_buffer 7) 0)
 	(= (: device$_data_buffer 8) 0)
+	(= (: device$_data_buffer 9) 0)
+	(= (: device$_data_buffer 10) 0)
 	(<- file$write device$_file device$_data_buffer)
 	(<- file$close device$_file)
 ))
@@ -303,6 +311,8 @@
 	(= (: device$_data_buffer 6) device$controls$red)
 	(= (: device$_data_buffer 7) device$controls$green)
 	(= (: device$_data_buffer 8) device$controls$blue)
+	(= (: device$_data_buffer 9) device$controls$led_on)
+	(= (: device$_data_buffer 10) device$controls$led_off)
 	(? (!== (<- file$write device$_file device$_data_buffer) 32) {
 		(:> "Device error!\n")
 		(@@ false)
