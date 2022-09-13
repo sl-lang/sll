@@ -1,6 +1,16 @@
+#include <windows.h>
+#include <setupapi.h>
+#include <initguid.h>
+#include <hidclass.h>
+#include <hidsdi.h>
 #include <ds4/common.h>
 #include <sll.h>
-#include <windows.h>
+
+
+
+#define SONY_VENDOR_ID 0x054c
+#define DS4_PRODUT_ID1 0x054c
+#define DS4_PRODUT_ID2 0x09cc
 
 
 

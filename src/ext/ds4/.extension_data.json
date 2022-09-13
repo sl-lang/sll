@@ -8,6 +8,7 @@
 		"windows": "platform/windows"
 	},
 	"extra_link_options": {
-		"linux": ["-ludev"]
+		"linux": ["-ludev"],
+		"windows": ["setupapi.lib","hid.lib"]
 	}
 }
