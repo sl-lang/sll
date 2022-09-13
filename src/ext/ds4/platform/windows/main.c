@@ -4,15 +4,7 @@
 #undef NOWINSTYLES
 #undef NOSYSMETRICS
 #undef NOMENUS
-#undef NOICONS
-#undef NOKEYSTATES
-#undef NOSYSCOMMANDS
-#undef NORASTEROPS
-#undef NOSHOWWINDOW
 #undef OEMRESOURCE
-#undef NOATOM
-#undef NOCLIPBOARD
-#undef NOCOLOR
 #undef NOCTLMGR
 #undef NOKERNEL
 #undef NOUSER
