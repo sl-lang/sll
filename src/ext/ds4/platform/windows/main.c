@@ -1,7 +1,5 @@
 #undef NOWINMESSAGES
 #undef NOWINSTYLES
-#undef NOSYSMETRICS
-#undef OEMRESOURCE
 #undef NOCTLMGR
 #undef NOKERNEL
 #undef NOUSER
