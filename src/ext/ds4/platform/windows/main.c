@@ -23,13 +23,7 @@
 #undef NOMETAFILE
 #undef NOMINMAX
 #undef NOMSG
-#undef NOOPENFILE
-#undef NOSCROLL
 #undef NOSERVICE
-#undef NOSOUND
-#undef NOTEXTMETRIC
-#undef NOWH
-#undef NOWINOFFSETS
 #include <windows.h>
 #include <setupapi.h>
 #include <initguid.h>
