@@ -134,7 +134,14 @@
 ))
 
 (= _deserialize_layout_pointer (,,, data
-	(@@ (: (: data$layouts (<- data_file$read_word data$stream))))
+	(= idx (<- data_file$read_byte data$stream))
+	(= flag (& idx 1))
+	(= idx (>> idx 1))
+	(? flag (= idx (|
+		idx
+		(<< (<- data_file$read_byte data$stream) 7)
+	)))
+	(@@ (: (: data$layouts idx)))
 ))
 
 (= _serialize_layout_pointer (,,, layout out
@@ -143,7 +150,10 @@
 		(= idx ($ out$layouts))
 		(<- array$push out$layouts layout)
 	})
-	(<- data_file$write_word out$stream idx)
+	(? (> idx 127) {
+		(<- data_file$write_byte out$stream (| (<< idx 1) 1))
+		(<- data_file$write_byte out$stream (>> idx 7))
+	} (<- data_file$write_byte out$stream (<< idx 1)))
 ))
 
 (= _deserialize_data (,,, data
