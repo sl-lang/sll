@@ -1028,10 +1028,10 @@ abc` '\n')
 	]
 	ui_window$root
 	[
-		(<- ui:layout$create_standard_layout 0 0)
-		(<- ui:layout$create_standard_layout 0 0)
-		(<- ui:layout$create_standard_layout 1 0)
-		(<- ui:layout$create_standard_layout 1 0)
+		(<- ui:layout$create_standard_layout 0 15)
+		(<- ui:layout$create_standard_layout 0 15)
+		(<- ui:layout$create_standard_layout 1 -30)
+		(<- ui:layout$create_standard_layout 1 -30)
 	]
 	0
 	0
