@@ -91,10 +91,10 @@
 ))
 
 (= _compress_word (,,, stream value
-	(? (> value 127) {
-		(<- data_file$write_byte stream (| (<< value 1) 1))
-		(<- data_file$write_byte stream (>> value 7))
-	} (<- data_file$write_byte stream (<< value 1)))
+	(? (> value 127)
+		(<- data_file$write_word stream (| (<< value 1) 1))
+		(<- data_file$write_byte stream (<< value 1))
+	)
 ))
 
 (= _deserialize_layout (,,, stream
