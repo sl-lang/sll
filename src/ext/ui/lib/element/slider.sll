@@ -63,8 +63,8 @@
 	(= slider$x screen_x)
 	(= slider$y screen_y)
 	(<- ui:element$update (: slider$base$children 0))
-	(? (> slider$x_steps 1) (= x (// (* x slider$x_steps) slider$base$position$width)))
-	(? (> slider$y_steps 1) (= y (// (* y slider$y_steps) slider$base$position$height)))
+	(? (> slider$x_steps 1) (= x (// (* x slider$x_steps) slider$range$width)))
+	(? (> slider$y_steps 1) (= y (// (* y slider$y_steps) slider$range$height)))
 	;;; FIXME: Currently due to an unknown bug the following line needs to be duplicated
 	(<- slider$callback slider x y)
 	(<- slider$callback slider x y)
@@ -80,10 +80,10 @@
 	(= y slider$base$ui$window$inputs$mouse$y)
 	(= slider$_has_mouse_focus (&&
 		state
-		(>= x slider$base$position$x)
-		(>= y slider$base$position$y)
-		(< x (+ slider$base$position$x slider$base$position$width))
-		(< y (+ slider$base$position$y slider$base$position$height))
+		(>= x slider$range$x)
+		(>= y slider$range$y)
+		(< x (+ slider$range$x slider$range$width))
+		(< y (+ slider$range$y slider$range$height))
 	))
 	(? slider$_has_mouse_focus (<- _update_handle_position slider x y))
 ))
@@ -107,8 +107,8 @@
 	(<- ui:position$update out$range out$base$position)
 	(= out$x out$range$x)
 	(= out$y out$range$y)
-	(= out$_prev_pos_x out$base$position$x)
-	(= out$_prev_pos_y out$base$position$y)
+	(= out$_prev_pos_x out$range$x)
+	(= out$_prev_pos_y out$range$y)
 	(<- ui:element$setup out)
 	(@@ out)
 ))
@@ -135,9 +135,9 @@
 
 (= _update_position_and_size (,,, slider
 	(? (! (<- ui:position$update slider$range slider$base$position)) (@@))
-	(<- _update_handle_position slider (+ slider$x (- slider$base$position$x slider$_prev_pos_x)) (+ slider$y (- slider$base$position$y slider$_prev_pos_y)))
-	(= slider$_prev_pos_x slider$base$position$x)
-	(= slider$_prev_pos_y slider$base$position$y)
+	(<- _update_handle_position slider (+ slider$x (- slider$range$x slider$_prev_pos_x)) (+ slider$y (- slider$range$y slider$_prev_pos_y)))
+	(= slider$_prev_pos_x slider$range$x)
+	(= slider$_prev_pos_y slider$range$y)
 ))
 
 (= create (,,, ui position_layout parent range x_steps y_steps callback disable_mouse_focus
@@ -168,8 +168,8 @@
 	(? parent (<- ui:element$set_parent out parent))
 	(<- ui:element$register_event_handlers out)
 	(<- ui:position$update out$range out$base$position)
-	(= out$x out$base$position$x)
-	(= out$y out$base$position$y)
+	(= out$x out$range$x)
+	(= out$y out$range$y)
 	(<- ui:element$setup out)
 	(@@ out)
 ))
@@ -187,11 +187,11 @@
 	(= y (- slider$y slider$range$y))
 	(@@ [
 		(?: (> slider$x_steps 1)
-			(// (* x slider$x_steps) slider$base$position$width)
+			(// (* x slider$x_steps) slider$range$width)
 			x
 		)
 		(?: (> slider$y_steps 1)
-			(// (* y slider$y_steps) slider$base$position$height)
+			(// (* y slider$y_steps) slider$range$height)
 			y
 		)
 	])
@@ -202,11 +202,11 @@
 	(= slider (:: slider ui_slider_element_type))
 	(= x (:: x float_type))
 	(= y (:: y float_type))
-	(? (> slider$x_steps 1) (= x (/ (* x slider$base$position$width) slider$x_steps)))
-	(? (> slider$y_steps 1) (= y (/ (* y slider$base$position$width) slider$y_steps)))
+	(? (> slider$x_steps 1) (= x (/ (* x slider$range$width) slider$x_steps)))
+	(? (> slider$y_steps 1) (= y (/ (* y slider$range$width) slider$y_steps)))
 	(<- _update_handle_position slider
-		(+ slider$base$position$x x)
-		(+ slider$base$position$y y)
+		(+ slider$range$x x)
+		(+ slider$range$y y)
 	)
 ))
 
