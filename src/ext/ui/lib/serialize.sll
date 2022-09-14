@@ -109,7 +109,7 @@
 		}
 		ui:layout$TYPE_FILTER {
 			(= out$filter$type (<- data_file$read_byte stream))
-			(= out$filter$values (<- array$create (<- data_file$read_byte stream)))
+			(= out$filter$values (<- array$create (<- _decompress_word stream)))
 			(-> (= i 0) (< i ($ out$filter$values))
 				(= (: out$filter$values i) (<- _deserialize_layout stream))
 				(++ i)
@@ -137,7 +137,7 @@
 		}
 		ui:layout$TYPE_FILTER {
 			(<- data_file$write_byte out layout$filter$type)
-			(<- data_file$write_byte out ($ layout$filter$values))
+			(<- _compress_word out ($ layout$filter$values))
 			(-> (= i 0) (< i ($ layout$filter$values))
 				(<- _serialize_layout (: layout$filter$values i) out)
 				(++ i)
