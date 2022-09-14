@@ -79,6 +79,24 @@
 
 
 
+(= _decompress_word (,,, stream
+	(= out (<- data_file$read_byte stream))
+	(= flag (& out 1))
+	(= out (>> out 1))
+	(? flag (= out (|
+		out
+		(<< (<- data_file$read_byte stream) 7)
+	)))
+	(@@ out)
+))
+
+(= _compress_word (,,, stream value
+	(? (> value 127) {
+		(<- data_file$write_byte stream (| (<< value 1) 1))
+		(<- data_file$write_byte stream (>> value 7))
+	} (<- data_file$write_byte stream (<< value 1)))
+))
+
 (= _deserialize_layout (,,, stream
 	(= type (<- data_file$read_byte stream))
 	(= out (. ui:layout$ui_layout_type
@@ -134,14 +152,7 @@
 ))
 
 (= _deserialize_layout_pointer (,,, data
-	(= idx (<- data_file$read_byte data$stream))
-	(= flag (& idx 1))
-	(= idx (>> idx 1))
-	(? flag (= idx (|
-		idx
-		(<< (<- data_file$read_byte data$stream) 7)
-	)))
-	(@@ (: (: data$layouts idx)))
+	(@@ (: (: data$layouts (<- _decompress_word data$stream))))
 ))
 
 (= _serialize_layout_pointer (,,, layout out
@@ -150,10 +161,7 @@
 		(= idx ($ out$layouts))
 		(<- array$push out$layouts layout)
 	})
-	(? (> idx 127) {
-		(<- data_file$write_byte out$stream (| (<< idx 1) 1))
-		(<- data_file$write_byte out$stream (>> idx 7))
-	} (<- data_file$write_byte out$stream (<< idx 1)))
+	(<- _compress_word out$stream idx)
 ))
 
 (= _deserialize_data (,,, data
@@ -165,7 +173,7 @@
 		DATA_TYPE_FLOAT (@@ (<- data_file$read_float data$stream))
 		DATA_TYPE_FLOAT_ZERO (@@ 0.0)
 		DATA_TYPE_ARRAY {
-			(= out (<- array$create (<- data_file$read_word data$stream)))
+			(= out (<- array$create (<- _decompress_word data$stream)))
 			(-> (= i 0) (< i ($ out))
 				(= (: out i) (<- _deserialize_data data))
 				(++ i)
@@ -173,7 +181,7 @@
 			(@@ out)
 		}
 		DATA_TYPE_LAYOUT (@@ (<- _deserialize_layout_pointer data))
-		DATA_TYPE_TEXTURE (@@ (: data$textures (<- data_file$read_word data$stream)))
+		DATA_TYPE_TEXTURE (@@ (: data$textures (<- _decompress_word data$stream)))
 		DATA_TYPE_RGB (@@ (. ui:rgb$ui_rgb_type
 			(/ (<- data_file$read_byte data$stream) 255)
 			(/ (<- data_file$read_byte data$stream) 255)
@@ -213,8 +221,8 @@
 		}
 		array_type {
 			(<- data_file$write_byte out$stream DATA_TYPE_ARRAY)
-			(? (> ($ data) 0xffff) (:> "Array too long to serialize!\n"))
-			(<- data_file$write_word out$stream ($ data))
+			(? (> ($ data) 0x7fff) (:> "Array too long to serialize!\n"))
+			(<- _compress_word out$stream ($ data))
 			(-> (= i 0) (< i ($ data))
 				(<- _serialize_data (: data i) out)
 				(++ i)
@@ -232,7 +240,7 @@
 				(++ i)
 			)
 			(? (=== i ($ out$textures)) (<- array$push out$textures data))
-			(<- data_file$write_word out$stream i)
+			(<- _compress_word out$stream i)
 		}
 		ui:rgb$ui_rgb_type {
 			(<- data_file$write_byte out$stream DATA_TYPE_RGB)
@@ -252,11 +260,11 @@
 ))
 
 (= _deserialize_element (,,, data ui parent
-	(= type (: data$element_types (<- data_file$read_word data$stream)))
+	(= type (: data$element_types (<- _decompress_word data$stream)))
 	(= type_data (: _element_type_data type))
 	(= base (. ui:element$ui_element_type
 		ui
-		(<- data_file$read_word data$stream)
+		(<- _decompress_word data$stream)
 		nil
 		[
 			0
@@ -280,7 +288,7 @@
 	(? (<= ($ ui$_elements) base$id) (<- array$extend ui$_elements (<- array$create (- base$id ($ ui$_elements) -1))))
 	(= (: ui$_elements base$id) (<- weakref$ref out))
 	(<- _setup_element out)
-	(= child_count (<- data_file$read_word data$stream))
+	(= child_count (<- _decompress_word data$stream))
 	(-> (= i 0) (< i child_count)
 		(<- _deserialize_element data ui out)
 		(++ i)
@@ -295,14 +303,14 @@
 		(= type_idx ($ out$element_types))
 		(<- array$push out$element_types type_data$name)
 	})
-	(<- data_file$write_word out$stream type_idx)
-	(<- data_file$write_word out$stream element$base$id)
+	(<- _compress_word out$stream type_idx)
+	(<- _compress_word out$stream element$base$id)
 	(<- _serialize_layout_pointer element$base$position$x_layout out)
 	(<- _serialize_layout_pointer element$base$position$y_layout out)
 	(<- _serialize_layout_pointer element$base$position$width_layout out)
 	(<- _serialize_layout_pointer element$base$position$height_layout out)
 	(<- _serialize_data (<- type_data$callbacks$serialize element) out)
-	(<- data_file$write_word out$stream ($ element$base$children))
+	(<- _compress_word out$stream ($ element$base$children))
 	(-> (= i 0) (< i ($ element$base$children))
 		(<- _serialize_element (: element$base$children i) out)
 		(++ i)
@@ -314,8 +322,8 @@
 	(= data (:: data string_type))
 	(= stream (<- file$from_data data file$FLAG_READ))
 	(? (!== (<- data_file$read_dword stream) _ui_version) (@@ nil))
-	(= width (<- data_file$read_word stream))
-	(= height (<- data_file$read_word stream))
+	(= width (<- _decompress_word stream))
+	(= height (<- _decompress_word stream))
 	(= title (<- file$read stream (<- data_file$read_byte stream)))
 	(= out (<- ui:core$create (<- window_manager:window$create [0 0 width height] nil title true) (!! debug_mode?)))
 	(<- ui:core$set_background_color out [
@@ -323,7 +331,7 @@
 		(<- data_file$read_float stream)
 		(<- data_file$read_float stream)
 	])
-	(= element_types (<- array$create (<- data_file$read_word stream)))
+	(= element_types (<- array$create (<- _decompress_word stream)))
 	(-> (= i 0) (< i ($ element_types))
 		(= name (<- file$read stream (<- data_file$read_byte stream)))
 		(= type (: _element_name_to_type name))
@@ -331,10 +339,10 @@
 		(= (: element_types i) type)
 		(++ i)
 	)
-	(= textures (<- array$create (<- data_file$read_word stream)))
+	(= textures (<- array$create (<- _decompress_word stream)))
 	(-> (= i 0) (< i ($ textures))
-		(= width (<- data_file$read_word stream))
-		(= height (<- data_file$read_word stream))
+		(= width (<- _decompress_word stream))
+		(= height (<- _decompress_word stream))
 		(= data_type (<- data_file$read_byte stream))
 		(= buffer_data_type (<- data_file$read_byte stream))
 		(= buffer_data (<- array$create (<- data_file$read_dword stream)))
@@ -354,15 +362,15 @@
 		(= (: textures i) (<- ui:texture$create out texture sampler))
 		(++ i)
 	)
-	(= layouts (<- array$create (<- data_file$read_word stream)))
+	(= layouts (<- array$create (<- _decompress_word stream)))
 	(-> (= i 0) (< i ($ layouts))
 		(= (: layouts i) (<- _deserialize_layout stream))
 		(++ i)
 	)
-	(= name_count (<- data_file$read_word stream))
+	(= name_count (<- _decompress_word stream))
 	(-> (= i 0) (< i name_count)
 		(= name (<- file$read stream (<- data_file$read_byte stream)))
-		(= id (<- data_file$read_word stream))
+		(= id (<- _decompress_word stream))
 		(= (: out$_element_to_name id) name)
 		(++ i)
 	)
@@ -386,8 +394,8 @@
 	(= ui (:: ui ui:core$ui_type))
 	(= out (<- file$from_data "" file$FLAG_WRITE))
 	(<- data_file$write_dword out _ui_version)
-	(<- data_file$write_word out ui$window$layout$geometry$width)
-	(<- data_file$write_word out ui$window$layout$geometry$height)
+	(<- _compress_word out ui$window$layout$geometry$width)
+	(<- _compress_word out ui$window$layout$geometry$height)
 	(= title (: ui$window$layout$title 0 0xff))
 	(<- data_file$write_byte out ($ title))
 	(<- file$write out title)
@@ -402,18 +410,18 @@
 	))
 	(<- _serialize_element ui$root data)
 	(= root (<- file$get_buffer data$stream))
-	(<- data_file$write_word out ($ data$element_types))
+	(<- _compress_word out ($ data$element_types))
 	(-> (= i 0) (< i ($ data$element_types))
 		(= element_type (: data$element_types i))
 		(<- data_file$write_byte out ($ element_type))
 		(<- file$write out element_type)
 		(++ i)
 	)
-	(<- data_file$write_word out ($ data$textures))
+	(<- _compress_word out ($ data$textures))
 	(-> (= i 0) (< i ($ data$textures))
 		(= texture (: data$textures i))
-		(<- data_file$write_word out (: texture$texture$size 0))
-		(<- data_file$write_word out (: texture$texture$size 1))
+		(<- _compress_word out (: texture$texture$size 0))
+		(<- _compress_word out (: texture$texture$size 1))
 		(<- data_file$write_byte out texture$texture$data_type)
 		(<- data_file$write_byte out texture$texture$buffer$data_type)
 		(<- data_file$write_dword out ($ texture$texture$buffer$data))
@@ -429,21 +437,21 @@
 		(<- data_file$write_byte out texture$sampler$config$address_mode_z)
 		(++ i)
 	)
-	(<- data_file$write_word out ($ data$layouts))
+	(<- _compress_word out ($ data$layouts))
 	(-> (= i 0) (< i ($ data$layouts))
 		(= layout (: data$layouts i))
 		(<- _serialize_layout layout out)
 		(++ i)
 	)
 	(= names (:: ui$_name_to_element map_key_type))
-	(<- data_file$write_word out ($ names))
+	(<- _compress_word out ($ names))
 	(-> (= i 0) (< i ($ names))
 		(= name (: names i))
 		(= element (<- weakref$get_default (: ui$_name_to_element name)))
 		(? (! element) (<<<))
 		(<- data_file$write_byte out ($ name))
 		(<- file$write out name)
-		(<- data_file$write_word out element$base$id)
+		(<- _compress_word out element$base$id)
 		(++ i)
 	)
 	(@@ (+
