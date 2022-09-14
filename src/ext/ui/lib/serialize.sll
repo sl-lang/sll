@@ -95,6 +95,20 @@
 	)
 ))
 
+(= _deseralize_rgb (,,, stream
+	(@@ (. ui:rgb$ui_rgb_type
+		(/ (<- data_file$read_byte stream) 255)
+		(/ (<- data_file$read_byte stream) 255)
+		(/ (<- data_file$read_byte stream) 255)
+	))
+))
+
+(= _serialize_rgb (,,, rgb out
+	(<- data_file$write_byte out (:: (* rgb$red 255) int_type))
+	(<- data_file$write_byte out (:: (* rgb$green 255) int_type))
+	(<- data_file$write_byte out (:: (* rgb$blue 255) int_type))
+))
+
 (= _deserialize_layout (,,, stream
 	(= type (<- data_file$read_byte stream))
 	(= out (. ui:layout$ui_layout_type
@@ -180,11 +194,7 @@
 		}
 		DATA_TYPE_LAYOUT (@@ (<- _deserialize_layout_pointer data))
 		DATA_TYPE_TEXTURE (@@ (: data$textures (<- _decompress_word data$stream)))
-		DATA_TYPE_RGB (@@ (. ui:rgb$ui_rgb_type
-			(/ (<- data_file$read_byte data$stream) 255)
-			(/ (<- data_file$read_byte data$stream) 255)
-			(/ (<- data_file$read_byte data$stream) 255)
-		))
+		DATA_TYPE_RGB (@@ (<- _deseralize_rgb data$stream))
 		DATA_TYPE_POSITION (@@ (. ui:position$ui_position_type
 			0
 			0
@@ -242,9 +252,7 @@
 		}
 		ui:rgb$ui_rgb_type {
 			(<- data_file$write_byte out$stream DATA_TYPE_RGB)
-			(<- data_file$write_byte out$stream (:: (* data$red 255) int_type))
-			(<- data_file$write_byte out$stream (:: (* data$green 255) int_type))
-			(<- data_file$write_byte out$stream (:: (* data$blue 255) int_type))
+			(<- _serialize_rgb data out$stream)
 		}
 		ui:position$ui_position_type {
 			(<- data_file$write_byte out$stream DATA_TYPE_POSITION)
@@ -324,11 +332,7 @@
 	(= height (<- _decompress_word stream))
 	(= title (<- file$read stream (<- data_file$read_byte stream)))
 	(= out (<- ui:core$create (<- window_manager:window$create [0 0 width height] nil title true) (!! debug_mode?)))
-	(<- ui:core$set_background_color out [
-		(<- data_file$read_float stream)
-		(<- data_file$read_float stream)
-		(<- data_file$read_float stream)
-	])
+	(<- ui:core$set_background_color out (<- _deseralize_rgb stream))
 	(= element_types (<- array$create (<- _decompress_word stream)))
 	(-> (= i 0) (< i ($ element_types))
 		(= name (<- file$read stream (<- data_file$read_byte stream)))
@@ -397,9 +401,7 @@
 	(= title (: ui$window$layout$title 0 0xff))
 	(<- data_file$write_byte out ($ title))
 	(<- file$write out title)
-	(<- data_file$write_float out ui$background_color$red)
-	(<- data_file$write_float out ui$background_color$green)
-	(<- data_file$write_float out ui$background_color$blue)
+	(<- _serialize_rgb ui$background_color out)
 	(= data (. ui_serializer_data_type
 		(<- file$from_data "" file$FLAG_WRITE)
 		[]
