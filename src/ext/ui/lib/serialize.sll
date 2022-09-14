@@ -88,7 +88,8 @@
 ))
 
 (= _compress_word (,,, stream value
-	(? (> value 127)
+	(? (> value 0x7fff) (:> "Value too big to serialize: " value '\n'))
+	(? (> value 0x7f)
 		(<- data_file$write_word stream (| (<< value 1) 1))
 		(<- data_file$write_byte stream (<< value 1))
 	)
