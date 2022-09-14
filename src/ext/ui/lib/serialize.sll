@@ -21,6 +21,12 @@
 
 
 
+(= ui_serializer_data_type (&:
+	file$file_type stream
+	array_type used_element_types
+	array_type used_textures
+))
+
 (= ui_serialize_module_type (&:
 	(~ func_type) deserialize
 	(~ func_type) serialize
@@ -163,59 +169,59 @@
 	(!@@ 1)
 ))
 
-(= _serialize_data (,,, data used_textures out
+(= _serialize_data (,,, data out
 	(?? (:? data)
 		int_type {
 			(?:
-				(! data) (<- data_file$write_byte out DATA_TYPE_INT_ZERO)
-				(=== data 1) (<- data_file$write_byte out DATA_TYPE_INT_ONE)
+				(! data) (<- data_file$write_byte out$stream DATA_TYPE_INT_ZERO)
+				(=== data 1) (<- data_file$write_byte out$stream DATA_TYPE_INT_ONE)
 				{
-					(<- data_file$write_byte out DATA_TYPE_INT)
-					(<- data_file$write_sqword out data)
+					(<- data_file$write_byte out$stream DATA_TYPE_INT)
+					(<- data_file$write_sqword out$stream data)
 				}
 			)
 		}
 		float_type {
 			(? data {
-				(<- data_file$write_byte out DATA_TYPE_FLOAT)
-				(<- data_file$write_float out data)
-			} (<- data_file$write_byte out DATA_TYPE_FLOAT_ZERO))
+				(<- data_file$write_byte out$stream DATA_TYPE_FLOAT)
+				(<- data_file$write_float out$stream data)
+			} (<- data_file$write_byte out$stream DATA_TYPE_FLOAT_ZERO))
 		}
 		array_type {
-			(<- data_file$write_byte out DATA_TYPE_ARRAY)
+			(<- data_file$write_byte out$stream DATA_TYPE_ARRAY)
 			(? (> ($ data) 0xffff) (:> "Array too long to serialize!\n"))
-			(<- data_file$write_word out ($ data))
+			(<- data_file$write_word out$stream ($ data))
 			(-> (= i 0) (< i ($ data))
-				(<- _serialize_data (: data i) used_textures out)
+				(<- _serialize_data (: data i) out)
 				(++ i)
 			)
 		}
 		ui:layout$ui_layout_type {
-			(<- data_file$write_byte out DATA_TYPE_LAYOUT)
-			(<- _serialize_layout data out)
+			(<- data_file$write_byte out$stream DATA_TYPE_LAYOUT)
+			(<- _serialize_layout data out$stream)
 		}
 		ui:texture$ui_texture_type {
-			(<- data_file$write_byte out DATA_TYPE_TEXTURE)
+			(<- data_file$write_byte out$stream DATA_TYPE_TEXTURE)
 			(= i 0)
-			(-> nil (< i ($ used_textures))
-				(? (=== (%% (: used_textures i)) (%% data)) (@))
+			(-> nil (< i ($ out$used_textures))
+				(? (=== (%% (: out$used_textures i)) (%% data)) (@))
 				(++ i)
 			)
-			(? (=== i ($ used_textures)) (<- array$push used_textures data))
-			(<- data_file$write_word out i)
+			(? (=== i ($ out$used_textures)) (<- array$push out$used_textures data))
+			(<- data_file$write_word out$stream i)
 		}
 		ui:rgb$ui_rgb_type {
-			(<- data_file$write_byte out DATA_TYPE_RGB)
-			(<- data_file$write_byte out (:: (* data$red 255) int_type))
-			(<- data_file$write_byte out (:: (* data$green 255) int_type))
-			(<- data_file$write_byte out (:: (* data$blue 255) int_type))
+			(<- data_file$write_byte out$stream DATA_TYPE_RGB)
+			(<- data_file$write_byte out$stream (:: (* data$red 255) int_type))
+			(<- data_file$write_byte out$stream (:: (* data$green 255) int_type))
+			(<- data_file$write_byte out$stream (:: (* data$blue 255) int_type))
 		}
 		ui:position$ui_position_type {
-			(<- data_file$write_byte out DATA_TYPE_POSITION)
-			(<- _serialize_layout data$x_layout out)
-			(<- _serialize_layout data$y_layout out)
-			(<- _serialize_layout data$width_layout out)
-			(<- _serialize_layout data$height_layout out)
+			(<- data_file$write_byte out$stream DATA_TYPE_POSITION)
+			(<- _serialize_layout data$x_layout out$stream)
+			(<- _serialize_layout data$y_layout out$stream)
+			(<- _serialize_layout data$width_layout out$stream)
+			(<- _serialize_layout data$height_layout out$stream)
 		}
 		(:> "Unable to serialize type: " (&:? (:? data)) '\n')
 	)
@@ -258,23 +264,23 @@
 	(@@ out)
 ))
 
-(= _serialize_element (,,, element used_element_types used_textures out
+(= _serialize_element (,,, element out
 	(= type_data (: _element_type_data (:? element)))
-	(= type_idx (<- array$index used_element_types type_data$name))
+	(= type_idx (<- array$index out$used_element_types type_data$name))
 	(? (=== type_idx -1) {
-		(= type_idx ($ used_element_types))
-		(<- array$push used_element_types type_data$name)
+		(= type_idx ($ out$used_element_types))
+		(<- array$push out$used_element_types type_data$name)
 	})
-	(<- data_file$write_word out type_idx)
-	(<- data_file$write_word out element$base$id)
-	(<- _serialize_layout element$base$position$x_layout out)
-	(<- _serialize_layout element$base$position$y_layout out)
-	(<- _serialize_layout element$base$position$width_layout out)
-	(<- _serialize_layout element$base$position$height_layout out)
-	(<- _serialize_data (<- type_data$callbacks$serialize element) used_textures out)
-	(<- data_file$write_word out ($ element$base$children))
+	(<- data_file$write_word out$stream type_idx)
+	(<- data_file$write_word out$stream element$base$id)
+	(<- _serialize_layout element$base$position$x_layout out$stream)
+	(<- _serialize_layout element$base$position$y_layout out$stream)
+	(<- _serialize_layout element$base$position$width_layout out$stream)
+	(<- _serialize_layout element$base$position$height_layout out$stream)
+	(<- _serialize_data (<- type_data$callbacks$serialize element) out)
+	(<- data_file$write_word out$stream ($ element$base$children))
 	(-> (= i 0) (< i ($ element$base$children))
-		(<- _serialize_element (: element$base$children i) used_element_types used_textures out)
+		(<- _serialize_element (: element$base$children i) out)
 		(++ i)
 	)
 ))
@@ -354,21 +360,23 @@
 	(<- data_file$write_float out ui$background_color$red)
 	(<- data_file$write_float out ui$background_color$green)
 	(<- data_file$write_float out ui$background_color$blue)
-	(= used_element_types [])
-	(= used_textures [])
-	(= data (<- file$from_data "" file$FLAG_WRITE))
-	(<- _serialize_element ui$root used_element_types used_textures data)
-	(= root (<- file$get_buffer data))
-	(<- data_file$write_word out ($ used_element_types))
-	(-> (= i 0) (< i ($ used_element_types))
-		(= element_type (: used_element_types i))
+	(= data (. ui_serializer_data_type
+		(<- file$from_data "" file$FLAG_WRITE)
+		[]
+		[]
+	))
+	(<- _serialize_element ui$root data)
+	(= root (<- file$get_buffer data$stream))
+	(<- data_file$write_word out ($ data$used_element_types))
+	(-> (= i 0) (< i ($ data$used_element_types))
+		(= element_type (: data$used_element_types i))
 		(<- data_file$write_byte out ($ element_type))
 		(<- file$write out element_type)
 		(++ i)
 	)
-	(<- data_file$write_word out ($ used_textures))
-	(-> (= i 0) (< i ($ used_textures))
-		(= texture (: used_textures i))
+	(<- data_file$write_word out ($ data$used_textures))
+	(-> (= i 0) (< i ($ data$used_textures))
+		(= texture (: data$used_textures i))
 		(<- data_file$write_word out (: texture$texture$size 0))
 		(<- data_file$write_word out (: texture$texture$size 1))
 		(<- data_file$write_byte out texture$texture$data_type)
