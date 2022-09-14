@@ -132,38 +132,38 @@
 	)
 ))
 
-(= _deserialize_data (,,, stream used_textures
-	(= type (<- data_file$read_byte stream))
+(= _deserialize_data (,,, data
+	(= type (<- data_file$read_byte data$stream))
 	(?? type
-		DATA_TYPE_INT (@@ (<- data_file$read_sqword stream))
+		DATA_TYPE_INT (@@ (<- data_file$read_sqword data$stream))
 		DATA_TYPE_INT_ZERO (@@ 0)
 		DATA_TYPE_INT_ONE (@@ 1)
-		DATA_TYPE_FLOAT (@@ (<- data_file$read_float stream))
+		DATA_TYPE_FLOAT (@@ (<- data_file$read_float data$stream))
 		DATA_TYPE_FLOAT_ZERO (@@ 0.0)
 		DATA_TYPE_ARRAY {
-			(= out (<- array$create (<- data_file$read_word stream)))
+			(= out (<- array$create (<- data_file$read_word data$stream)))
 			(-> (= i 0) (< i ($ out))
-				(= (: out i) (<- _deserialize_data stream used_textures))
+				(= (: out i) (<- _deserialize_data data))
 				(++ i)
 			)
 			(@@ out)
 		}
-		DATA_TYPE_LAYOUT (@@ (<- _deserialize_layout stream))
-		DATA_TYPE_TEXTURE (@@ (: used_textures (<- data_file$read_word stream)))
+		DATA_TYPE_LAYOUT (@@ (<- _deserialize_layout data$stream))
+		DATA_TYPE_TEXTURE (@@ (: data$used_textures (<- data_file$read_word data$stream)))
 		DATA_TYPE_RGB (@@ (. ui:rgb$ui_rgb_type
-			(/ (<- data_file$read_byte stream) 255)
-			(/ (<- data_file$read_byte stream) 255)
-			(/ (<- data_file$read_byte stream) 255)
+			(/ (<- data_file$read_byte data$stream) 255)
+			(/ (<- data_file$read_byte data$stream) 255)
+			(/ (<- data_file$read_byte data$stream) 255)
 		))
 		DATA_TYPE_POSITION (@@ (. ui:position$ui_position_type
 			0
 			0
 			0
 			0
-			(<- _deserialize_layout stream)
-			(<- _deserialize_layout stream)
-			(<- _deserialize_layout stream)
-			(<- _deserialize_layout stream)
+			(<- _deserialize_layout data$stream)
+			(<- _deserialize_layout data$stream)
+			(<- _deserialize_layout data$stream)
+			(<- _deserialize_layout data$stream)
 		))
 	)
 	(!@@ 1)
@@ -248,7 +248,7 @@
 		0
 		[]
 	))
-	(= out (<- type_data$callbacks$deserialize ui base parent (<- _deserialize_data data$stream data$used_textures)))
+	(= out (<- type_data$callbacks$deserialize ui base parent (<- _deserialize_data data)))
 	(? (! out) {
 		(= out (. type base))
 		(<- ui:element$set_parent out parent)
