@@ -81,13 +81,10 @@
 
 (= _decompress_word (,,, stream
 	(= out (<- data_file$read_byte stream))
-	(= flag (& out 1))
-	(= out (>> out 1))
-	(? flag (= out (|
-		out
-		(<< (<- data_file$read_byte stream) 7)
-	)))
-	(@@ out)
+	(@@ (|
+		(>> out 1)
+		(&& (& out 1) (<< (<- data_file$read_byte stream) 7))
+	))
 ))
 
 (= _compress_word (,,, stream value
