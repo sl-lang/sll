@@ -174,10 +174,10 @@
 			0
 			0
 			0
-			(<- _deserialize_layout data$stream)
-			(<- _deserialize_layout data$stream)
-			(<- _deserialize_layout data$stream)
-			(<- _deserialize_layout data$stream)
+			(<- _deserialize_layout_pointer data)
+			(<- _deserialize_layout_pointer data)
+			(<- _deserialize_layout_pointer data)
+			(<- _deserialize_layout_pointer data)
 		))
 	)
 	(!@@ 1)
@@ -232,10 +232,10 @@
 		}
 		ui:position$ui_position_type {
 			(<- data_file$write_byte out$stream DATA_TYPE_POSITION)
-			(<- _serialize_layout data$x_layout out$stream)
-			(<- _serialize_layout data$y_layout out$stream)
-			(<- _serialize_layout data$width_layout out$stream)
-			(<- _serialize_layout data$height_layout out$stream)
+			(<- _serialize_layout_pointer data$x_layout out)
+			(<- _serialize_layout_pointer data$y_layout out)
+			(<- _serialize_layout_pointer data$width_layout out)
+			(<- _serialize_layout_pointer data$height_layout out)
 		}
 		(:> "Unable to serialize type: " (&:? (:? data)) '\n')
 	)
