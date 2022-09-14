@@ -25,6 +25,7 @@
 	file$file_type stream
 	array_type element_types
 	array_type textures
+	array_type layouts
 ))
 
 (= ui_serialize_module_type (&:
@@ -132,6 +133,19 @@
 	)
 ))
 
+(= _deserialize_layout_pointer (,,, data
+	(@@ (: (: data$layouts (<- data_file$read_word data$stream))))
+))
+
+(= _serialize_layout_pointer (,,, layout out
+	(= idx (<- array$index out$layouts layout))
+	(? (=== idx -1) {
+		(= idx ($ out$layouts))
+		(<- array$push out$layouts layout)
+	})
+	(<- data_file$write_word out$stream idx)
+))
+
 (= _deserialize_data (,,, data
 	(= type (<- data_file$read_byte data$stream))
 	(?? type
@@ -148,7 +162,7 @@
 			)
 			(@@ out)
 		}
-		DATA_TYPE_LAYOUT (@@ (<- _deserialize_layout data$stream))
+		DATA_TYPE_LAYOUT (@@ (<- _deserialize_layout_pointer data))
 		DATA_TYPE_TEXTURE (@@ (: data$textures (<- data_file$read_word data$stream)))
 		DATA_TYPE_RGB (@@ (. ui:rgb$ui_rgb_type
 			(/ (<- data_file$read_byte data$stream) 255)
@@ -198,7 +212,7 @@
 		}
 		ui:layout$ui_layout_type {
 			(<- data_file$write_byte out$stream DATA_TYPE_LAYOUT)
-			(<- _serialize_layout data out$stream)
+			(<- _serialize_layout_pointer data out)
 		}
 		ui:texture$ui_texture_type {
 			(<- data_file$write_byte out$stream DATA_TYPE_TEXTURE)
@@ -239,10 +253,10 @@
 			0
 			0
 			0
-			(<- _deserialize_layout data$stream)
-			(<- _deserialize_layout data$stream)
-			(<- _deserialize_layout data$stream)
-			(<- _deserialize_layout data$stream)
+			(<- _deserialize_layout_pointer data)
+			(<- _deserialize_layout_pointer data)
+			(<- _deserialize_layout_pointer data)
+			(<- _deserialize_layout_pointer data)
 		]
 		[]
 		0
@@ -273,10 +287,10 @@
 	})
 	(<- data_file$write_word out$stream type_idx)
 	(<- data_file$write_word out$stream element$base$id)
-	(<- _serialize_layout element$base$position$x_layout out$stream)
-	(<- _serialize_layout element$base$position$y_layout out$stream)
-	(<- _serialize_layout element$base$position$width_layout out$stream)
-	(<- _serialize_layout element$base$position$height_layout out$stream)
+	(<- _serialize_layout_pointer element$base$position$x_layout out)
+	(<- _serialize_layout_pointer element$base$position$y_layout out)
+	(<- _serialize_layout_pointer element$base$position$width_layout out)
+	(<- _serialize_layout_pointer element$base$position$height_layout out)
 	(<- _serialize_data (<- type_data$callbacks$serialize element) out)
 	(<- data_file$write_word out$stream ($ element$base$children))
 	(-> (= i 0) (< i ($ element$base$children))
@@ -330,6 +344,11 @@
 		(= (: textures i) (<- ui:texture$create out texture sampler))
 		(++ i)
 	)
+	(= layouts (<- array$create (<- data_file$read_word stream)))
+	(-> (= i 0) (< i ($ layouts))
+		(= (: layouts i) (<- _deserialize_layout stream))
+		(++ i)
+	)
 	(= name_count (<- data_file$read_word stream))
 	(-> (= i 0) (< i name_count)
 		(= name (<- file$read stream (<- data_file$read_byte stream)))
@@ -341,6 +360,7 @@
 		stream
 		element_types
 		textures
+		layouts
 	) out nil))
 	(= id_list (:: out$_element_to_name map_key_type))
 	(-> (= i 0) (< i ($ id_list))
@@ -366,6 +386,7 @@
 	(<- data_file$write_float out ui$background_color$blue)
 	(= data (. ui_serializer_data_type
 		(<- file$from_data "" file$FLAG_WRITE)
+		[]
 		[]
 		[]
 	))
@@ -396,6 +417,12 @@
 		(<- data_file$write_byte out texture$sampler$config$address_mode_x)
 		(<- data_file$write_byte out texture$sampler$config$address_mode_y)
 		(<- data_file$write_byte out texture$sampler$config$address_mode_z)
+		(++ i)
+	)
+	(<- data_file$write_word out ($ data$layouts))
+	(-> (= i 0) (< i ($ data$layouts))
+		(= layout (: data$layouts i))
+		(<- _serialize_layout layout out)
 		(++ i)
 	)
 	(= names (:: ui$_name_to_element map_key_type))
