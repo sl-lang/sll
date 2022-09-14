@@ -23,8 +23,8 @@
 
 (= ui_serializer_data_type (&:
 	file$file_type stream
-	array_type used_element_types
-	array_type used_textures
+	array_type element_types
+	array_type textures
 ))
 
 (= ui_serialize_module_type (&:
@@ -149,7 +149,7 @@
 			(@@ out)
 		}
 		DATA_TYPE_LAYOUT (@@ (<- _deserialize_layout data$stream))
-		DATA_TYPE_TEXTURE (@@ (: data$used_textures (<- data_file$read_word data$stream)))
+		DATA_TYPE_TEXTURE (@@ (: data$textures (<- data_file$read_word data$stream)))
 		DATA_TYPE_RGB (@@ (. ui:rgb$ui_rgb_type
 			(/ (<- data_file$read_byte data$stream) 255)
 			(/ (<- data_file$read_byte data$stream) 255)
@@ -203,11 +203,11 @@
 		ui:texture$ui_texture_type {
 			(<- data_file$write_byte out$stream DATA_TYPE_TEXTURE)
 			(= i 0)
-			(-> nil (< i ($ out$used_textures))
-				(? (=== (%% (: out$used_textures i)) (%% data)) (@))
+			(-> nil (< i ($ out$textures))
+				(? (=== (%% (: out$textures i)) (%% data)) (@))
 				(++ i)
 			)
-			(? (=== i ($ out$used_textures)) (<- array$push out$used_textures data))
+			(? (=== i ($ out$textures)) (<- array$push out$textures data))
 			(<- data_file$write_word out$stream i)
 		}
 		ui:rgb$ui_rgb_type {
@@ -228,7 +228,7 @@
 ))
 
 (= _deserialize_element (,,, data ui parent
-	(= type (: data$used_element_types (<- data_file$read_word data$stream)))
+	(= type (: data$element_types (<- data_file$read_word data$stream)))
 	(= type_data (: _element_type_data type))
 	(= base (. ui:element$ui_element_type
 		ui
@@ -266,10 +266,10 @@
 
 (= _serialize_element (,,, element out
 	(= type_data (: _element_type_data (:? element)))
-	(= type_idx (<- array$index out$used_element_types type_data$name))
+	(= type_idx (<- array$index out$element_types type_data$name))
 	(? (=== type_idx -1) {
-		(= type_idx ($ out$used_element_types))
-		(<- array$push out$used_element_types type_data$name)
+		(= type_idx ($ out$element_types))
+		(<- array$push out$element_types type_data$name)
 	})
 	(<- data_file$write_word out$stream type_idx)
 	(<- data_file$write_word out$stream element$base$id)
@@ -299,16 +299,16 @@
 		(<- data_file$read_float stream)
 		(<- data_file$read_float stream)
 	])
-	(= used_element_types (<- array$create (<- data_file$read_word stream)))
-	(-> (= i 0) (< i ($ used_element_types))
+	(= element_types (<- array$create (<- data_file$read_word stream)))
+	(-> (= i 0) (< i ($ element_types))
 		(= name (<- file$read stream (<- data_file$read_byte stream)))
 		(= type (: _element_name_to_type name))
 		(? (! type) (:> "Unknown element type: '" name "'\n"))
-		(= (: used_element_types i) type)
+		(= (: element_types i) type)
 		(++ i)
 	)
-	(= used_textures (<- array$create (<- data_file$read_word stream)))
-	(-> (= i 0) (< i ($ used_textures))
+	(= textures (<- array$create (<- data_file$read_word stream)))
+	(-> (= i 0) (< i ($ textures))
 		(= width (<- data_file$read_word stream))
 		(= height (<- data_file$read_word stream))
 		(= data_type (<- data_file$read_byte stream))
@@ -327,7 +327,7 @@
 			(<- data_file$read_byte stream)
 			(<- data_file$read_byte stream)
 		)))
-		(= (: used_textures i) (<- ui:texture$create out texture sampler))
+		(= (: textures i) (<- ui:texture$create out texture sampler))
 		(++ i)
 	)
 	(= name_count (<- data_file$read_word stream))
@@ -339,8 +339,8 @@
 	)
 	(= out$root (<- _deserialize_element (. ui_serializer_data_type
 		stream
-		used_element_types
-		used_textures
+		element_types
+		textures
 	) out nil))
 	(= id_list (:: out$_element_to_name map_key_type))
 	(-> (= i 0) (< i ($ id_list))
@@ -371,16 +371,16 @@
 	))
 	(<- _serialize_element ui$root data)
 	(= root (<- file$get_buffer data$stream))
-	(<- data_file$write_word out ($ data$used_element_types))
-	(-> (= i 0) (< i ($ data$used_element_types))
-		(= element_type (: data$used_element_types i))
+	(<- data_file$write_word out ($ data$element_types))
+	(-> (= i 0) (< i ($ data$element_types))
+		(= element_type (: data$element_types i))
 		(<- data_file$write_byte out ($ element_type))
 		(<- file$write out element_type)
 		(++ i)
 	)
-	(<- data_file$write_word out ($ data$used_textures))
-	(-> (= i 0) (< i ($ data$used_textures))
-		(= texture (: data$used_textures i))
+	(<- data_file$write_word out ($ data$textures))
+	(-> (= i 0) (< i ($ data$textures))
+		(= texture (: data$textures i))
 		(<- data_file$write_word out (: texture$texture$size 0))
 		(<- data_file$write_word out (: texture$texture$size 1))
 		(<- data_file$write_byte out texture$texture$data_type)
