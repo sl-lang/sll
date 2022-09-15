@@ -6,6 +6,7 @@
 	"ui/element/container.sll"
 	"ui/element/gradient.sll"
 	"ui/element/slider.sll"
+	"ui/element/text.sll"
 	"ui/element/texture.sll"
 	"ui/layout.sll"
 	"ui/position.sll"
@@ -23,6 +24,7 @@
 	(~ (:? ui:element:container)) element:container
 	(~ (:? ui:element:gradient)) element:gradient
 	(~ (:? ui:element:slider)) element:slider
+	(~ (:? ui:element:text)) element:text
 	(~ (:? ui:element:texture)) element:texture
 	(~ (:? ui:layout)) layout
 	(~ (:? ui:position)) position
@@ -40,6 +42,7 @@
 	ui:element:container
 	ui:element:gradient
 	ui:element:slider
+	ui:element:text
 	ui:element:texture
 	ui:layout
 	ui:position
