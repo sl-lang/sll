@@ -11,6 +11,7 @@
 	"ds4/device.sll"
 	"error.sll"
 	"file.sll"
+	"font/true_type.sll"
 	"gfx/buffer.sll"
 	"gfx/color.sll"
 	"gfx/context.sll"

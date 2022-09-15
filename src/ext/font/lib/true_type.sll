@@ -1,0 +1,23 @@
+(---
+	"font/_load_library.sll"
+	"types.sll"
+)
+
+
+
+(= font_true_type_module_type (&:
+	(~ func_type) create
+))
+
+
+
+(= create (,,, data
+	(@@ nil)
+))
+
+
+
+(= font:true_type (. font_true_type_module_type
+	create
+))
+(## font:true_type)

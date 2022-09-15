@@ -1,0 +1,15 @@
+{
+	"required_extensions": [
+		"gfx"
+	],
+	"installation_scripts": {
+		"darwin": "install/darwin.sh",
+		"linux": "install/linux.sh",
+		"windows": "install\\windows.bat"
+	},
+	"extra_options": {
+		"darwin": ["-I","build/ext/font_darwin/stb_libraries"],
+		"linux": ["-I","build/ext/font_linux/stb_libraries"],
+		"windows": ["/I","build/ext/font_windows/stb_libraries"]
+	}
+}

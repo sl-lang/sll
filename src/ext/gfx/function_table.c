@@ -1,5 +1,6 @@
 #include <gfx/buffer.h>
 #include <gfx/color.h>
+#include <gfx/common.h>
 #include <gfx/context.h>
 #include <gfx/pipeline.h>
 #include <gfx/sampler.h>
