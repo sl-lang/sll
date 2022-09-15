@@ -206,7 +206,6 @@
 			(<- _deserialize_layout_pointer data)
 		))
 	)
-	(!@@ 1)
 ))
 
 (= _serialize_data (,,, data out
