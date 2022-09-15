@@ -38,16 +38,18 @@
 (= DATA_TYPE_INT 0)
 (= DATA_TYPE_INT_ZERO 1)
 (= DATA_TYPE_INT_ONE 2)
-(= DATA_TYPE_FLOAT 3)
-(= DATA_TYPE_FLOAT_ZERO 4)
-(= DATA_TYPE_ARRAY 5)
-(= DATA_TYPE_LAYOUT 6)
-(= DATA_TYPE_TEXTURE 7)
-(= DATA_TYPE_RGB 8)
-(= DATA_TYPE_POSITION 9)
-(= DATA_TYPE_INT_8BIT 10)
-(= DATA_TYPE_INT_16BIT 11)
-(= DATA_TYPE_INT_32BIT 12)
+(= DATA_TYPE_INT_8BIT 3)
+(= DATA_TYPE_INT_16BIT 4)
+(= DATA_TYPE_INT_32BIT 5)
+(= DATA_TYPE_FLOAT 6)
+(= DATA_TYPE_FLOAT_ZERO 7)
+(= DATA_TYPE_FLOAT_ONE 8)
+(= DATA_TYPE_FLOAT_HALF 9)
+(= DATA_TYPE_ARRAY 10)
+(= DATA_TYPE_LAYOUT 11)
+(= DATA_TYPE_TEXTURE 12)
+(= DATA_TYPE_RGB 13)
+(= DATA_TYPE_POSITION 14)
 
 (= LAYOUT_TYPE_MASK 63)
 
@@ -185,8 +187,13 @@
 		DATA_TYPE_INT (@@ (<- data_file$read_sqword data$stream))
 		DATA_TYPE_INT_ZERO (@@ 0)
 		DATA_TYPE_INT_ONE (@@ 1)
+		DATA_TYPE_INT_8BIT (@@ (<- data_file$read_sbyte data$stream))
+		DATA_TYPE_INT_16BIT (@@ (<- data_file$read_sword data$stream))
+		DATA_TYPE_INT_32BIT (@@ (<- data_file$read_sdword data$stream))
 		DATA_TYPE_FLOAT (@@ (<- data_file$read_float data$stream))
 		DATA_TYPE_FLOAT_ZERO (@@ 0.0)
+		DATA_TYPE_FLOAT_ONE (@@ 1.0)
+		DATA_TYPE_FLOAT_HALF (@@ 0.5)
 		DATA_TYPE_ARRAY {
 			(= out (<- array$create (<- _decompress_word data$stream)))
 			(-> (= i 0) (< i ($ out))
@@ -208,9 +215,6 @@
 			(<- _deserialize_layout_pointer data)
 			(<- _deserialize_layout_pointer data)
 		))
-		DATA_TYPE_INT_8BIT (@@ (<- data_file$read_sbyte data$stream))
-		DATA_TYPE_INT_16BIT (@@ (<- data_file$read_sword data$stream))
-		DATA_TYPE_INT_32BIT (@@ (<- data_file$read_sdword data$stream))
 	)
 ))
 
@@ -239,14 +243,18 @@
 			)
 		}
 		float_type {
-			(? data {
-				(<- data_file$write_byte out$stream DATA_TYPE_FLOAT)
-				(<- data_file$write_float out$stream data)
-			} (<- data_file$write_byte out$stream DATA_TYPE_FLOAT_ZERO))
+			(?
+				(! data) (<- data_file$write_byte out$stream DATA_TYPE_FLOAT_ZERO)
+				(=== data 1.0) (<- data_file$write_byte out$stream DATA_TYPE_FLOAT_ONE)
+				(=== data 0.5) (<- data_file$write_byte out$stream DATA_TYPE_FLOAT_HALF)
+				{
+					(<- data_file$write_byte out$stream DATA_TYPE_FLOAT)
+					(<- data_file$write_float out$stream data)
+				}
+			)
 		}
 		array_type {
 			(<- data_file$write_byte out$stream DATA_TYPE_ARRAY)
-			(? (> ($ data) 0x7fff) (:> "Array too long to serialize!\n"))
 			(<- _compress_word out$stream ($ data))
 			(-> (= i 0) (< i ($ data))
 				(<- _serialize_data (: data i) out)
