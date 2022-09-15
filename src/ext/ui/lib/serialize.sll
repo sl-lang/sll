@@ -5,6 +5,7 @@
 	"gfx/buffer.sll"
 	"gfx/sampler.sll"
 	"gfx/texture.sll"
+	"serial.sll"
 	"sys.sll"
 	"types.sll"
 	"ui/_element_types.sll"
@@ -374,7 +375,7 @@
 (= deserialize (,,, data debug_mode?
 	(? (! data) (@@ nil))
 	(= data (:: data string_type))
-	(= stream (<- file$from_data data file$FLAG_READ))
+	(= stream (<- file$from_data (<- serial$decode_string (<- file$from_data data file$FLAG_READ)) file$FLAG_READ))
 	(? (!== (<- data_file$read_dword stream) _ui_version) (@@ nil))
 	(= width (<- _decompress_word stream))
 	(= height (<- _decompress_word stream))
@@ -502,10 +503,9 @@
 		(<- _compress_word out element$base$id)
 		(++ i)
 	)
-	(@@ (+
-		(<- file$get_buffer out)
-		root
-	))
+	(= compressed_file (<- file$from_data "" file$FLAG_WRITE))
+	(<- serial$encode_string compressed_file (+ (<- file$get_buffer out) root))
+	(@@ (<- file$get_buffer compressed_file))
 ))
 
 
