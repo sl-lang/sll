@@ -55,10 +55,6 @@
 	(@@ text$text)
 ))
 
-(= _update_position_and_size (,,, text
-	(? (! text$base$ui) (@@))
-))
-
 (= create (,,, ui position_layout parent text
 	(= ui (?: ui (:: ui ui:core$ui_type) nil))
 	(@@ (<- _create_text
@@ -101,7 +97,7 @@
 	nil
 	nil
 	_seralize_data
-	_update_position_and_size
+	nil
 ))
 
 
