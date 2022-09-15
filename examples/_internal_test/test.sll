@@ -1076,6 +1076,10 @@ abc` '\n')
 	handle2
 	[0.8 0.5 0.13]
 ))
+(= font_file_path (<- font:true_type$find "consolas" "monospace"))
+(= font (<- font:true_type$create
+	(<- file$read (<- file$open font_file_path "r"))
+))
 (= text (<- ui:element:text$create
 	ui_window
 	[

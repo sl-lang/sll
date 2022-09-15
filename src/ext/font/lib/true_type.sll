@@ -7,6 +7,7 @@
 
 (= font_true_type_module_type (&:
 	(~ func_type) create
+	(~ func_type) find
 ))
 
 
@@ -15,9 +16,14 @@
 	(@@ nil)
 ))
 
+(= find (,,, @@names@@
+	(@@ nil)
+))
+
 
 
 (= font:true_type (. font_true_type_module_type
 	create
+	find
 ))
 (## font:true_type)
