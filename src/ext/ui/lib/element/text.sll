@@ -1,0 +1,116 @@
+(---
+	"string.sll"
+	"types.sll"
+	"ui/_util.sll"
+	"ui/core.sll"
+	"ui/element.sll"
+)
+
+
+
+(# delete set_text set_parent)
+
+
+
+(= ui_text_element_type (&:
+	(,,, data
+		(@@ (<- string$format "<ui:element:text text=%s base=%s>"
+			data$text
+			(:: data$base string_type)
+		))
+	) @@string@@
+	(,,, data
+		(<- delete data)
+	) @@delete@@
+	(~ ui:element$ui_element_type) base
+	string_type text
+))
+
+(= ui_element_text_module_type (&:
+	(~ type_type) ui_text_element_type
+	(~ func_type) create
+	(~ func_type) delete
+	(~ func_type) set_text
+	(~ func_type) set_parent
+))
+
+
+
+(= _create_text (,,, ui base parent text
+	(= out (. ui_text_element_type
+		base
+		""
+	))
+	(? text (<- set_text out text))
+	(? parent (<- set_parent out parent))
+	(<- ui:element$setup out)
+	(@@ out)
+))
+
+(= _deseralize_data (,,, ui base parent data
+	(@@ (<- _create_text ui base parent data))
+))
+
+(= _seralize_data (,,, text
+	(@@ text$text)
+))
+
+(= _update_position_and_size (,,, text
+	(? (! text$base$ui) (@@))
+))
+
+(= create (,,, ui position_layout parent text
+	(= ui (?: ui (:: ui ui:core$ui_type) nil))
+	(@@ (<- _create_text
+		ui
+		(<- ui:element$create ui position_layout)
+		parent
+		text
+	))
+))
+
+(= delete (,,, text
+	(? (! text) (@@))
+	(= text (:: text ui_text_element_type))
+	(<- ui:element$delete text)
+))
+
+(= set_text (,,, text content
+	(? (! text) (@@))
+	(= text (:: text ui_text_element_type))
+	(= content (: (:: content string_type)))
+	(= text$text content)
+	(? (! text$base$ui) (@@))
+))
+
+(= set_parent (,,, text parent
+	(? (! text) (@@))
+	(= text (:: text ui_text_element_type))
+	(?
+		(! (<- ui:element$set_parent text parent)) (@@ false)
+		(! text$base$ui) (@@ true)
+	)
+	(@@ true)
+))
+
+
+
+(<- ui:element$register_element ui_text_element_type "ui:element:text" (. ui:element$ui_element_data_callbacks_type
+	nil
+	_deseralize_data
+	nil
+	nil
+	_seralize_data
+	_update_position_and_size
+))
+
+
+
+(= ui:element:text (. ui_element_text_module_type
+	ui_text_element_type
+	create
+	delete
+	set_text
+	set_parent
+))
+(## ui:element:text)

@@ -49,6 +49,7 @@
 	"ui/element/container.sll"
 	"ui/element/gradient.sll"
 	"ui/element/slider.sll"
+	"ui/element/text.sll"
 	"ui/element/texture.sll"
 	"ui/layout.sll"
 	"ui/serialize.sll"
@@ -1073,6 +1074,17 @@ abc` '\n')
 	]
 	handle2
 	[0.8 0.5 0.13]
+))
+(= text (<- ui:element:text$create
+	ui_window
+	[
+		(<- ui:layout$create_standard_layout 0 0)
+		(<- ui:layout$create_standard_layout 1 -50)
+		(<- ui:layout$create_standard_layout 1 0)
+		(<- ui:layout$create_standard_layout 0 50)
+	]
+	ui_window$root
+	"The quick brown fox jumps over the lazy dog"
 ))
 (<- ui:element:slider$set_slider_element slider2 handle2)
 (<- ui:element$set_name button "left-button")

@@ -78,7 +78,6 @@
 	})
 	(? range (<- set_range out range))
 	(? parent (<- set_parent out parent))
-	(<- update out)
 	(<- ui:element$setup out)
 	(@@ out)
 ))
