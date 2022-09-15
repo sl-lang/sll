@@ -45,11 +45,12 @@
 (= DATA_TYPE_FLOAT_ZERO 7)
 (= DATA_TYPE_FLOAT_ONE 8)
 (= DATA_TYPE_FLOAT_HALF 9)
-(= DATA_TYPE_ARRAY 10)
-(= DATA_TYPE_LAYOUT 11)
-(= DATA_TYPE_TEXTURE 12)
-(= DATA_TYPE_RGB 13)
-(= DATA_TYPE_POSITION 14)
+(= DATA_TYPE_STRING 10)
+(= DATA_TYPE_ARRAY 11)
+(= DATA_TYPE_LAYOUT 12)
+(= DATA_TYPE_TEXTURE 13)
+(= DATA_TYPE_RGB 14)
+(= DATA_TYPE_POSITION 15)
 
 (= LAYOUT_TYPE_MASK 63)
 
@@ -194,6 +195,7 @@
 		DATA_TYPE_FLOAT_ZERO (@@ 0.0)
 		DATA_TYPE_FLOAT_ONE (@@ 1.0)
 		DATA_TYPE_FLOAT_HALF (@@ 0.5)
+		DATA_TYPE_STRING (@@ (<- file$read data$stream (<- _decompress_word data$stream)))
 		DATA_TYPE_ARRAY {
 			(= out (<- array$create (<- _decompress_word data$stream)))
 			(-> (= i 0) (< i ($ out))
@@ -252,6 +254,11 @@
 					(<- data_file$write_float out$stream data)
 				}
 			)
+		}
+		string_type {
+			(<- data_file$write_byte out$stream DATA_TYPE_STRING)
+			(<- _compress_word out$stream ($ data))
+			(<- file$write out$stream data)
 		}
 		array_type {
 			(<- data_file$write_byte out$stream DATA_TYPE_ARRAY)
