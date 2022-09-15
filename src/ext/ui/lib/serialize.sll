@@ -47,10 +47,11 @@
 (= DATA_TYPE_FLOAT_HALF 9)
 (= DATA_TYPE_STRING 10)
 (= DATA_TYPE_ARRAY 11)
-(= DATA_TYPE_LAYOUT 12)
-(= DATA_TYPE_TEXTURE 13)
-(= DATA_TYPE_RGB 14)
-(= DATA_TYPE_POSITION 15)
+(= DATA_TYPE_MAP 12)
+(= DATA_TYPE_LAYOUT 13)
+(= DATA_TYPE_TEXTURE 14)
+(= DATA_TYPE_RGB 15)
+(= DATA_TYPE_POSITION 16)
 
 (= LAYOUT_TYPE_MASK 63)
 
@@ -204,6 +205,12 @@
 			)
 			(@@ out)
 		}
+		DATA_TYPE_MAP {
+			(@@ ({> (= count (<- _decompress_word data$stream)) count
+				(-- count)
+				(<- _deserialize_data data) (<- _deserialize_data data)
+			))
+		}
 		DATA_TYPE_LAYOUT (@@ (<- _deserialize_layout_pointer data))
 		DATA_TYPE_TEXTURE (@@ (: data$textures (<- _decompress_word data$stream)))
 		DATA_TYPE_RGB (@@ (<- _deseralize_rgb data$stream))
@@ -263,6 +270,15 @@
 		array_type {
 			(<- data_file$write_byte out$stream DATA_TYPE_ARRAY)
 			(<- _compress_word out$stream ($ data))
+			(-> (= i 0) (< i ($ data))
+				(<- _serialize_data (: data i) out)
+				(++ i)
+			)
+		}
+		map_type {
+			(<- data_file$write_byte out$stream DATA_TYPE_MAP)
+			(<- _compress_word out$stream ($ data))
+			(= data (:: data array_type))
 			(-> (= i 0) (< i ($ data))
 				(<- _serialize_data (: data i) out)
 				(++ i)
