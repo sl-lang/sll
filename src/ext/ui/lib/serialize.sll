@@ -45,6 +45,9 @@
 (= DATA_TYPE_TEXTURE 7)
 (= DATA_TYPE_RGB 8)
 (= DATA_TYPE_POSITION 9)
+(= DATA_TYPE_INT_8BIT 10)
+(= DATA_TYPE_INT_16BIT 11)
+(= DATA_TYPE_INT_32BIT 12)
 
 (= LAYOUT_TYPE_MASK 63)
 
@@ -205,6 +208,9 @@
 			(<- _deserialize_layout_pointer data)
 			(<- _deserialize_layout_pointer data)
 		))
+		DATA_TYPE_INT_8BIT (@@ (<- data_file$read_sbyte data$stream))
+		DATA_TYPE_INT_16BIT (@@ (<- data_file$read_sword data$stream))
+		DATA_TYPE_INT_32BIT (@@ (<- data_file$read_sdword data$stream))
 	)
 ))
 
@@ -214,6 +220,18 @@
 			(?:
 				(! data) (<- data_file$write_byte out$stream DATA_TYPE_INT_ZERO)
 				(=== data 1) (<- data_file$write_byte out$stream DATA_TYPE_INT_ONE)
+				(< -0x80 data 0x80) {
+					(<- data_file$write_byte out$stream DATA_TYPE_INT_8BIT)
+					(<- data_file$write_sbyte out$stream data)
+				}
+				(< -0x8000 data 0x8000) {
+					(<- data_file$write_byte out$stream DATA_TYPE_INT_16BIT)
+					(<- data_file$write_sword out$stream data)
+				}
+				(< -0x80000000 data 0x80000000) {
+					(<- data_file$write_byte out$stream DATA_TYPE_INT_32BIT)
+					(<- data_file$write_sdword out$stream data)
+				}
 				{
 					(<- data_file$write_byte out$stream DATA_TYPE_INT)
 					(<- data_file$write_sqword out$stream data)
