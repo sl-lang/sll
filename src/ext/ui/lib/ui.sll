@@ -11,6 +11,7 @@
 	"ui/layout.sll"
 	"ui/position.sll"
 	"ui/rgb.sll"
+	"ui/serialize.sll"
 	"ui/texture.sll"
 )
 
@@ -29,6 +30,7 @@
 	(~ (:? ui:layout)) layout
 	(~ (:? ui:position)) position
 	(~ (:? ui:rgb)) rgb
+	(~ (:? ui:serialize)) serialize
 	(~ (:? ui:texture)) texture
 ))
 
@@ -47,6 +49,7 @@
 	ui:layout
 	ui:position
 	ui:rgb
+	ui:serialize
 	ui:texture
 ))
 (## ui)
