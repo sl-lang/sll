@@ -62,23 +62,23 @@
 
 
 
-(= read_byte (,,, f
-	(? (=== f nil) (@@ nil))
-	(@@ (:: (: (<- file$read (:: f file$file_type) 1) 0) int_type))
+(= read_byte (,,, file_
+	(? (=== file_ nil) (@@ nil))
+	(@@ (:: (: (<- file$read (:: file_ file$file_type) 1) 0) int_type))
 ))
 
-(= read_word_le (,,, f
-	(? (=== f nil) (@@ nil))
-	(= buffer (<- file$read (:: f file$file_type) 2))
+(= read_word_le (,,, file_
+	(? (=== file_ nil) (@@ nil))
+	(= buffer (<- file$read (:: file_ file$file_type) 2))
 	(@@ (|
 		(: buffer 0)
 		(<< (: buffer 1) 8)
 	))
 ))
 
-(= read_dword_le (,,, f
-	(? (=== f nil) (@@ nil))
-	(= buffer (<- file$read (:: f file$file_type) 4))
+(= read_dword_le (,,, file_
+	(? (=== file_ nil) (@@ nil))
+	(= buffer (<- file$read (:: file_ file$file_type) 4))
 	(@@ (|
 		(: buffer 0)
 		(<< (: buffer 1) 8)
@@ -87,9 +87,9 @@
 	))
 ))
 
-(= read_qword_le (,,, f
-	(? (=== f nil) (@@ nil))
-	(= buffer (<- file$read (:: f file$file_type) 8))
+(= read_qword_le (,,, file_
+	(? (=== file_ nil) (@@ nil))
+	(= buffer (<- file$read (:: file_ file$file_type) 8))
 	(@@ (|
 		(: buffer 0)
 		(<< (: buffer 1) 8)
@@ -102,35 +102,35 @@
 	))
 ))
 
-(= read_sbyte (,,, f
-	(= value (<- read_byte f))
+(= read_sbyte (,,, file_
+	(= value (<- read_byte file_))
 	(@@ (?: (& value 0x80) (- value 0x100) value))
 ))
 
-(= read_sword_le (,,, f
-	(= value (<- read_word_le f))
+(= read_sword_le (,,, file_
+	(= value (<- read_word_le file_))
 	(@@ (?: (& value 0x8000) (- value 0x10000) value))
 ))
 
-(= read_sdword_le (,,, f
-	(= value (<- read_word_le f))
+(= read_sdword_le (,,, file_
+	(= value (<- read_word_le file_))
 	(@@ (?: (& value 0x80000000) (- value 0x100000000) value))
 ))
 
 (= read_sqword_le read_qword_le)
 
-(= read_word_be (,,, f
-	(? (=== f nil) (@@ nil))
-	(= buffer (<- file$read (:: f file$file_type) 2))
+(= read_word_be (,,, file_
+	(? (=== file_ nil) (@@ nil))
+	(= buffer (<- file$read (:: file_ file$file_type) 2))
 	(@@ (|
 		(<< (: buffer 0) 8)
 		(: buffer 1)
 	))
 ))
 
-(= read_dword_be (,,, f
-	(? (=== f nil) (@@ nil))
-	(= buffer (<- file$read (:: f file$file_type) 4))
+(= read_dword_be (,,, file_
+	(? (=== file_ nil) (@@ nil))
+	(= buffer (<- file$read (:: file_ file$file_type) 4))
 	(@@ (|
 		(<< (: buffer 0) 24)
 		(<< (: buffer 1) 16)
@@ -139,9 +139,9 @@
 	))
 ))
 
-(= read_qword_be (,,, f
-	(? (=== f nil) (@@ nil))
-	(= buffer (<- file$read (:: f file$file_type) 8))
+(= read_qword_be (,,, file_
+	(? (=== file_ nil) (@@ nil))
+	(= buffer (<- file$read (:: file_ file$file_type) 8))
 	(@@ (|
 		(<< (: buffer 0) 56)
 		(<< (: buffer 1) 48)
@@ -154,44 +154,44 @@
 	))
 ))
 
-(= read_sword_be (,,, f
-	(= value (<- read_word_be f))
+(= read_sword_be (,,, file_
+	(= value (<- read_word_be file_))
 	(@@ (?: value (~ (& (~ value) 0xffff)) value))
 ))
 
-(= read_sdword_be (,,, f
-	(= value (<- read_word_be f))
+(= read_sdword_be (,,, file_
+	(= value (<- read_word_be file_))
 	(@@ (?: value (~ (& (~ value) 0xffffffff)) value))
 ))
 
 (= read_sqword_be read_qword_be)
 
-(= read_float (,,, f
-	(@@ (<- (... "sll:struct_float_from_bits") (<- read_dword_le f)))
+(= read_float (,,, file_
+	(@@ (<- (... "sll:struct_float_from_bits") (<- read_dword_le file_)))
 ))
 
-(= read_double (,,, f
-	(@@ (<- (... "sll:struct_double_from_bits") (<- read_qword_le f)))
+(= read_double (,,, file_
+	(@@ (<- (... "sll:struct_double_from_bits") (<- read_qword_le file_)))
 ))
 
-(= write_byte (,,, f value
-	(? (=== f nil) (@@ nil))
-	(@@ (<- file$write (:: f file$file_type) (:: value int_type char_type string_type)))
+(= write_byte (,,, file_ value
+	(? (=== file_ nil) (@@ nil))
+	(@@ (<- file$write (:: file_ file$file_type) (:: value int_type char_type string_type)))
 ))
 
-(= write_word_le (,,, f value
-	(? (=== f nil) (@@ nil))
+(= write_word_le (,,, file_ value
+	(? (=== file_ nil) (@@ nil))
 	(= value (:: value int_type))
-	(@@ (<- file$write (:: f file$file_type) (+
+	(@@ (<- file$write (:: file_ file$file_type) (+
 		(:: value char_type string_type)
 		(:: (>> value 8) char_type)
 	)))
 ))
 
-(= write_dword_le (,,, f value
-	(? (=== f nil) (@@ nil))
+(= write_dword_le (,,, file_ value
+	(? (=== file_ nil) (@@ nil))
 	(= value (:: value int_type))
-	(@@ (<- file$write (:: f file$file_type) (+
+	(@@ (<- file$write (:: file_ file$file_type) (+
 		(:: value char_type string_type)
 		(:: (>> value 8) char_type)
 		(:: (>> value 16) char_type)
@@ -199,10 +199,10 @@
 	)))
 ))
 
-(= write_qword_le (,,, f value
-	(? (=== f nil) (@@ nil))
+(= write_qword_le (,,, file_ value
+	(? (=== file_ nil) (@@ nil))
 	(= value (:: value int_type))
-	(@@ (<- file$write (:: f file$file_type) (+
+	(@@ (<- file$write (:: file_ file$file_type) (+
 		(:: value char_type string_type)
 		(:: (>> value 8) char_type)
 		(:: (>> value 16) char_type)
@@ -222,19 +222,19 @@
 
 (= write_sqword_le write_qword_le)
 
-(= write_word_be (,,, f value
-	(? (=== f nil) (@@ nil))
+(= write_word_be (,,, file_ value
+	(? (=== file_ nil) (@@ nil))
 	(= value (:: value int_type))
-	(@@ (<- file$write (:: f file$file_type) (+
+	(@@ (<- file$write (:: file_ file$file_type) (+
 		(:: (>> value 8) char_type string_type)
 		(:: value char_type)
 	)))
 ))
 
-(= write_dword_be (,,, f value
-	(? (=== f nil) (@@ nil))
+(= write_dword_be (,,, file_ value
+	(? (=== file_ nil) (@@ nil))
 	(= value (:: value int_type))
-	(@@ (<- file$write (:: f file$file_type) (+
+	(@@ (<- file$write (:: file_ file$file_type) (+
 		(:: (>> value 24) char_type string_type)
 		(:: (>> value 16) char_type)
 		(:: (>> value 8) char_type)
@@ -242,10 +242,10 @@
 	)))
 ))
 
-(= write_qword_be (,,, f value
-	(? (=== f nil) (@@ nil))
+(= write_qword_be (,,, file_ value
+	(? (=== file_ nil) (@@ nil))
 	(= value (:: value int_type))
-	(@@ (<- file$write (:: f file$file_type) (+
+	(@@ (<- file$write (:: file_ file$file_type) (+
 		(:: (>> value 56) char_type string_type)
 		(:: (>> value 48) char_type)
 		(:: (>> value 40) char_type)
@@ -263,18 +263,18 @@
 
 (= write_sqword_be write_qword_be)
 
-(= write_float (,,, f value
-	(? (=== f nil) (@@ nil))
+(= write_float (,,, file_ value
+	(? (=== file_ nil) (@@ nil))
 	(@@ (<- write_dword_le
-		f
+		file_
 		(<- (... "sll:struct_float_to_bits") value)
 	))
 ))
 
-(= write_double (,,, f value
-	(? (=== f nil) (@@ nil))
+(= write_double (,,, file_ value
+	(? (=== file_ nil) (@@ nil))
 	(@@ (<- write_qword_le
-		f
+		file_
 		(<- (... "sll:struct_double_to_bits") value)
 	))
 ))
