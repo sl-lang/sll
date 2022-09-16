@@ -15,7 +15,7 @@ __FONT_API_CALL void font_api_true_type_create(const sll_string_t* data,sll_arra
 	stbtt_PackFontRange(&pack_ctx,data->data,0,32.0f,32,95,render_data);
 	stbtt_PackEnd(&pack_ctx);
 	stbtt_fontinfo font;
-	stbtt_InitFont(&font,data->data,NULL);
+	stbtt_InitFont(&font,data->data,0);
 	int ascent;
 	int descent;
 	int line_gap;
