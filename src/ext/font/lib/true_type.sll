@@ -16,6 +16,7 @@
 	(= out (<- (... "font:true_type_create")
 		(:: data string_type)
 	))
+	(:> out '\n')
 	(@@ nil)
 ))
 

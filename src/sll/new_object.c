@@ -80,6 +80,7 @@ static void _build_struct_offsets(const sll_char_t** format,sll_string_length_t*
 		case 'u':
 		case 'i':
 		case 'f':
+		case 'F':
 		case 'c':
 		case 'C':
 		case 'd':
@@ -219,7 +220,15 @@ static sll_object_t _build_single(const sll_char_t** format,sll_string_length_t*
 					SLL_UNIMPLEMENTED();
 				}
 				return sll_int_to_object((__SLL_U32)sll_var_arg_get_int(va));
+			case 'F':
+				if (fl&NEW_OBJECT_FLAG_ARRAY){
+					SLL_UNIMPLEMENTED();
+				}
+				return sll_float_to_object(_var_arg_get_float32(va));
 			case 'M':
+				if (fl&NEW_OBJECT_FLAG_ARRAY){
+					SLL_UNIMPLEMENTED();
+				}
 				return sll_int_to_object(_var_arg_get_mask(va));
 			case 'p':
 				return sll_int_to_object(_var_arg_get_pointer(va));

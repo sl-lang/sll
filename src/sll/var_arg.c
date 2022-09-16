@@ -42,6 +42,19 @@ sll_object_t _var_arg_converter(sll_var_arg_list_t* va){
 
 
 
+float _var_arg_get_float32(sll_var_arg_list_t* va){
+	if (va->type==VAR_ARG_LIST_TYPE_STRUCT){
+		SLL_ASSERT(va->data.struct_.offset_count);
+		sll_size_t off=*(va->data.struct_.offset_data);
+		va->data.struct_.offset_data++;
+		va->data.struct_.offset_count--;
+		return *((float*)PTR(ADDR(va->data.struct_.base_pointer)+off));
+	}
+	return sll_var_arg_get_float(va);
+}
+
+
+
 addr_t _var_arg_get_pointer(sll_var_arg_list_t* va){
 	if (va->type==SLL_VAR_ARG_LIST_TYPE_C){
 		return va_arg(*(va->data.c),addr_t);
