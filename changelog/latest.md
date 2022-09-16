@@ -6,6 +6,7 @@
 - Ability to specify element-specific callbacks in the UI: `element$base$callbacks`
 - DS4 controller interface library: `ds4`
 - Font rasterizer library: `font`
+- Format code to read a 32-bit float from an array of structures: `F`
 - Moved all UI color-related types and functions to `ui/rgb.sll`
 - New UI elements: `ui:element:gradient` and `ui:element:text`
 
