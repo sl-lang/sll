@@ -80,10 +80,10 @@
 	(= y slider$base$ui$window$inputs$mouse$y)
 	(= slider$_has_mouse_focus (&&
 		state
-		(>= x slider$range$x)
-		(>= y slider$range$y)
-		(< x (+ slider$range$x slider$range$width))
-		(< y (+ slider$range$y slider$range$height))
+		(>= x slider$base$position$x)
+		(>= y slider$base$position$y)
+		(<= x (+ slider$base$position$x slider$base$position$width))
+		(<= y (+ slider$base$position$y slider$base$position$height))
 	))
 	(? slider$_has_mouse_focus (<- _update_handle_position slider x y))
 ))

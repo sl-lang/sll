@@ -104,7 +104,7 @@
 
 (= read_sbyte (,,, f
 	(= value (<- read_byte f))
-	(@@ (?: value (~ (& (~ value) 0xff)) value))
+	(@@ (?: (& value 0x80) (~ (- 0xff value)) value))
 ))
 
 (= read_sword_le (,,, f
