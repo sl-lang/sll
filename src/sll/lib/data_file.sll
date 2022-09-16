@@ -104,17 +104,17 @@
 
 (= read_sbyte (,,, f
 	(= value (<- read_byte f))
-	(@@ (?: (& value 0x80) (~ (- 0xff value)) value))
+	(@@ (?: (& value 0x80) (- value 0x100) value))
 ))
 
 (= read_sword_le (,,, f
 	(= value (<- read_word_le f))
-	(@@ (?: value (~ (& (~ value) 0xffff)) value))
+	(@@ (?: (& value 0x8000) (- value 0x10000) value))
 ))
 
 (= read_sdword_le (,,, f
 	(= value (<- read_word_le f))
-	(@@ (?: value (~ (& (~ value) 0xffffffff)) value))
+	(@@ (?: (& value 0x80000000) (- value 0x100000000) value))
 ))
 
 (= read_sqword_le read_qword_le)
