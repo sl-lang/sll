@@ -36,7 +36,7 @@
 
 
 
-(= create (,,, data characters
+(= create (,,, data
 	(= out (:: (<- (... "font:true_type_create")
 		(:: data string_type)
 	) font_type))
