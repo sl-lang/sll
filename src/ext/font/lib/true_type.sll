@@ -12,13 +12,18 @@
 
 
 
-(= create (,,, data
+(= create (,,, data characters
+	(= out (<- (... "font:true_type_create")
+		(:: data string_type)
+	))
 	(@@ nil)
 ))
 
 (= find (,,, @@names@@
 	(-> (= i 0) (< i ($ @@names@@))
-		(= out (<- (... "font:true_type_find") (: @@names@@ i)))
+		(= out (<- (... "font:true_type_find")
+			(:: (: @@names@@ i) string_type)
+		))
 		(? out (@@ out))
 		(++ i)
 	)

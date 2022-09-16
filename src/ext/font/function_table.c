@@ -6,6 +6,11 @@
 
 static const sll_internal_function_descriptor_t _internal_function_table[]={
 	{
+		SLL_CHAR("font:true_type_create"),
+		font_api_true_type_create,
+		SLL_CHAR("#s|s")
+	},
+	{
 		SLL_CHAR("font:true_type_find"),
 		font_api_true_type_find,
 		SLL_CHAR("#s|s")
@@ -16,7 +21,7 @@ static const sll_internal_function_descriptor_t _internal_function_table[]={
 
 static const sll_internal_function_table_descriptor_t _internal_function_table_descriptor_data={
 	(const sll_internal_function_descriptor_t*)(&_internal_function_table),
-	1
+	2
 };
 
 

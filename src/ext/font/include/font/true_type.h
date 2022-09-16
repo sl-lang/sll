@@ -5,7 +5,11 @@
 
 
 
-__FONT_API_CALL void font_api_true_type_find(const sll_string_t* nam,sll_string_t* out);
+__FONT_API_CALL void font_api_true_type_create(const sll_string_t* data,sll_string_t* out);
+
+
+
+__FONT_API_CALL void font_api_true_type_find(const sll_string_t* name,sll_string_t* out);
 
 
 
