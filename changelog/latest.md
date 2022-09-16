@@ -10,6 +10,7 @@
 
 ## Changed
 
+- Fixed signed `dats_file` read functions
 - Fixed UI serialization of named elements
 - Fixed UI slider movement and resizing
 - Floored division resulting in a floating-point number is now be correctly rounded down
