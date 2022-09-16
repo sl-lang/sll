@@ -11,5 +11,8 @@
 		"darwin": ["-I","build/ext/font_darwin/stb_libraries"],
 		"linux": ["-I","build/ext/font_linux/stb_libraries"],
 		"windows": ["/I","build/ext/font_windows/stb_libraries"]
+	},
+	"extra_link_options": {
+		"linux": ["-lfontconfig"]
 	}
 }

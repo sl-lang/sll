@@ -17,6 +17,11 @@
 ))
 
 (= find (,,, @@names@@
+	(-> (= i 0) (< i ($ @@names@@))
+		(= out (<- (... "font:true_type_find") (: @@names@@ i)))
+		(? out (@@ out))
+		(++ i)
+	)
 	(@@ nil)
 ))
 
