@@ -5,7 +5,30 @@
 
 
 
+(= font_glyph_type (&:
+	float_type tx0
+	float_type ty0
+	float_type tx1
+	float_type ty1
+	float_type gx0
+	float_type gy0
+	float_type gx1
+	float_type gy1
+	float_type advance
+))
+
+(= font_type (&:
+	int_type width
+	int_type height
+	string_type data
+	array_type glypths
+	int_type ascent
+	int_type descent
+	int_type line_gap
+))
+
 (= font_true_type_module_type (&:
+	(~ type_type) font_type
 	(~ func_type) create
 	(~ func_type) find
 ))
@@ -13,11 +36,21 @@
 
 
 (= create (,,, data characters
-	(= out (<- (... "font:true_type_create")
+	(= out (:: (<- (... "font:true_type_create")
 		(:: data string_type)
-	))
-	(:> out '\n')
-	(@@ nil)
+	) font_type))
+	(= inv_width (/ 1 out$width))
+	(= inv_height (/ 1 out$height))
+	(-> (= i 0) (< i ($ out$glypths))
+		(= glypth (:: (: out$glypths i) font_glyph_type))
+		(= glypth$tx0 (* glypth$tx0 inv_width))
+		(= glypth$ty0 (* glypth$ty0 inv_height))
+		(= glypth$tx1 (* glypth$tx1 inv_width))
+		(= glypth$ty1 (* glypth$ty1 inv_height))
+		(= (: out$glypths i) glypth)
+		(++ i)
+	)
+	(@@ out)
 ))
 
 (= find (,,, @@names@@
@@ -34,6 +67,7 @@
 
 
 (= font:true_type (. font_true_type_module_type
+	font_type
 	create
 	find
 ))
