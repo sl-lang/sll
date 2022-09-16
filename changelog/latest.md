@@ -5,6 +5,7 @@
 - Ability to enable GFX debug mode in `ui:core$create` and `ui:serialize$deserialize`
 - Ability to specify element-specific callbacks in the UI: `element$base$callbacks`
 - DS4 controller interface library: `ds4`
+- Font rasterizer library: `font`
 - Moved all UI color-related types and functions to `ui/rgb.sll`
 - New UI elements: `ui:element:gradient` and `ui:element:text`
 

@@ -7,6 +7,11 @@
 		"linux": "install/linux.sh",
 		"windows": "install\\windows.bat"
 	},
+	"platform_directories": {
+		"darwin": "platform/darwin",
+		"linux": "platform/linux",
+		"windows": "platform/windows"
+	},
 	"extra_options": {
 		"darwin": ["-I","build/ext/font_darwin/stb_libraries"],
 		"linux": ["-I","build/ext/font_linux/stb_libraries"],
