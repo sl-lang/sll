@@ -28,6 +28,7 @@
 ))
 
 (= font_true_type_module_type (&:
+	(~ type_type) font_glyph_type
 	(~ type_type) font_type
 	(~ func_type) create
 	(~ func_type) find
@@ -67,6 +68,7 @@
 
 
 (= font:true_type (. font_true_type_module_type
+	font_glyph_type
 	font_type
 	create
 	find
