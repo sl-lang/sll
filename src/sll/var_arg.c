@@ -50,7 +50,7 @@ float _var_arg_get_float32(sll_var_arg_list_t* va){
 		va->data.struct_.offset_count--;
 		return *((float*)PTR(ADDR(va->data.struct_.base_pointer)+off));
 	}
-	return sll_var_arg_get_float(va);
+	return (float)sll_var_arg_get_float(va);
 }
 
 
