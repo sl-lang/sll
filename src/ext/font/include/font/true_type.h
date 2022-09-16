@@ -5,7 +5,7 @@
 
 
 
-__FONT_API_CALL void font_api_true_type_create(const sll_string_t* data,sll_string_t* out);
+__FONT_API_CALL void font_api_true_type_create(const sll_string_t* data,sll_array_t* out);
 
 
 

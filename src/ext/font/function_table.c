@@ -8,7 +8,7 @@ static const sll_internal_function_descriptor_t _internal_function_table[]={
 	{
 		SLL_CHAR("font:true_type_create"),
 		font_api_true_type_create,
-		SLL_CHAR("#s|s")
+		SLL_CHAR("#s|a")
 	},
 	{
 		SLL_CHAR("font:true_type_find"),
