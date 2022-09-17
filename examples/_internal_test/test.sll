@@ -1080,24 +1080,6 @@ abc` '\n')
 (= font (<- font:true_type$create
 	(<- file$read (<- file$open font_file_path "r"))
 ))
-; (= atlas (<- font:true_type$create_atlas ui_window$context))
-; (<- font:true_type$add_font atlas font)
-; (<- ui:element:texture$create
-; 	ui_window
-; 	[
-; 		(<- ui:layout$create_standard_layout 0 0)
-; 		(<- ui:layout$create_standard_layout 0 0)
-; 		(<- ui:layout$create_standard_layout 1 0)
-; 		(<- ui:layout$create_standard_layout 1 0)
-; 	]
-; 	ui_window$root
-; 	(<- ui:texture$create
-; 		ui_window
-; 		atlas$texture
-; 		atlas$sampler
-; 	)
-; 	[0.0 0.0 1.0 1.0]
-; )
 (= text (<- ui:element:text$create
 	ui_window
 	[
@@ -1106,7 +1088,7 @@ abc` '\n')
 		(<- ui:layout$create_standard_layout 1 0)
 		(<- ui:layout$create_standard_layout 0 50)
 	]
-	ui_window$root
+	rectangle6; ui_window$root
 	font
 	"The quick brown fox jumps over the lazy dog"
 ))

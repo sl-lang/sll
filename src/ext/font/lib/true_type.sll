@@ -95,6 +95,7 @@
 	(~ func_type) find
 	(~ func_type) update_rendered_text
 	(~ func_type) update_rendered_text_font
+	(~ func_type) update_rendered_text_z_coords
 ))
 
 
@@ -329,6 +330,15 @@
 (= update_rendered_text_z_coords (,,, rendered_text
 	(? (! rendered_text) (@@))
 	(= rendered_text (:: rendered_text font_rendered_text_type))
+	(= z rendered_text$z_coord)
+	(= tz rendered_text$color_z_coord)
+	(-> (= i 2) (< i ($ rendered_text$vertex_buffer$data))
+		(= (: rendered_text$vertex_buffer$data i) z)
+		(= i (+ i 3))
+		(= (: rendered_text$vertex_buffer$data i) tz)
+		(= i (+ i 3))
+	)
+	(<- gfx:buffer$sync rendered_text$vertex_buffer)
 ))
 
 (= update_rendered_text_font (,,, rendered_text font
@@ -355,5 +365,6 @@
 	find
 	update_rendered_text
 	update_rendered_text_font
+	update_rendered_text_z_coords
 ))
 (## font:true_type)
