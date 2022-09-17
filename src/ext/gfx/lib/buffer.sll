@@ -125,12 +125,7 @@
 		type
 		data_type
 	))
-	(? data (<- (... "gfx:buffer_sync")
-		ctx$_handle
-		handle
-		data
-	))
-	(@@ (. gfx_buffer_type
+	(= out (. gfx_buffer_type
 		handle
 		type
 		data_type
@@ -140,6 +135,11 @@
 		true
 		(?: is_constant_size? ($ data) -1)
 	))
+	(? data {
+		(<- (... "gfx:buffer_sync") ctx$_handle handle data)
+		(<- array$push ctx$_sync_objects out)
+	})
+	(@@ out)
 ))
 
 (= delete (,,, buffer

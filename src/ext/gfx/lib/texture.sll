@@ -62,6 +62,7 @@
 		buffer
 		ctx
 	))
+	(<- array$push ctx$_sync_objects out)
 	(@@ out)
 ))
 
