@@ -146,7 +146,7 @@ __SLL_EXTERNAL void sll_file_close(sll_file_t* file){
 			dynamic_buffer_chunk_t* chunk=file->data.file._write_buffer.dynamic.start;
 			do{
 				dynamic_buffer_chunk_t* next=chunk->next;
-				SLL_CRITICAL_ERROR(sll_platform_free_page(chunk,chunk->size));
+				SLL_CRITICAL_ERROR(sll_platform_free_page(chunk,chunk->size+sizeof(dynamic_buffer_chunk_t)));
 				chunk=next;
 			} while (chunk);
 		}
@@ -194,7 +194,7 @@ __SLL_EXTERNAL void sll_file_from_data(const void* pointer,sll_size_t size,sll_f
 	if (flags&SLL_FILE_FLAG_WRITE){
 		flags|=FILE_FLAG_DYNAMIC_BUFFERS;
 		dynamic_buffer_chunk_t* buffer=sll_platform_allocate_page(SLL_ROUND_PAGE(FILE_DYNAMIC_BUFFER_ALLOC_SIZE),0,NULL);
-		buffer->size=SLL_ROUND_PAGE(FILE_DYNAMIC_BUFFER_ALLOC_SIZE);
+		buffer->size=SLL_ROUND_PAGE(FILE_DYNAMIC_BUFFER_ALLOC_SIZE)-sizeof(dynamic_buffer_chunk_t);
 		buffer->next=NULL;
 		out->data.file._write_buffer.dynamic.start=buffer;
 		out->data.file._write_buffer.dynamic.end=buffer;
@@ -556,13 +556,23 @@ __SLL_EXTERNAL sll_size_t sll_file_write(sll_file_t* file,const void* pointer,sl
 	if (file->flags&FILE_FLAG_MEMORY){
 		if (file->flags&FILE_FLAG_DYNAMIC_BUFFERS){
 			dynamic_buffer_chunk_t* c=file->data.file._write_buffer.dynamic.end;
-			if (c->size-file->data.file._write_buffer.dynamic.offset>=size){
+			sll_size_t capacity=c->size-file->data.file._write_buffer.dynamic.offset;
+			file->data.file._write_buffer.dynamic.size+=size;
+			if (capacity>=size){
 				sll_copy_data(pointer,size,c->data+file->data.file._write_buffer.dynamic.offset);
-				file->data.file._write_buffer.dynamic.size+=size;
 				file->data.file._write_buffer.dynamic.offset+=size;
 			}
 			else{
-				SLL_UNIMPLEMENTED();
+				sll_copy_data(pointer,capacity,c->data+file->data.file._write_buffer.dynamic.offset);
+				size-=capacity;
+				file->data.file._write_buffer.dynamic.offset=size;
+				sll_size_t round_size=SLL_ROUND_PAGE((size+sizeof(dynamic_buffer_chunk_t)<FILE_DYNAMIC_BUFFER_ALLOC_SIZE?FILE_DYNAMIC_BUFFER_ALLOC_SIZE:size+sizeof(dynamic_buffer_chunk_t)));
+				dynamic_buffer_chunk_t* buffer=sll_platform_allocate_page(round_size,0,NULL);
+				buffer->size=round_size-sizeof(dynamic_buffer_chunk_t);
+				buffer->next=NULL;
+				c->next=buffer;
+				file->data.file._write_buffer.dynamic.end=buffer;
+				sll_copy_data(PTR(ADDR(pointer)+capacity),size,buffer->data);
 			}
 			UNLOCK;
 			return size;
