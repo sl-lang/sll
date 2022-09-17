@@ -578,7 +578,7 @@
 			(<- _compress_sword out glyph$y)
 			(<- _compress_word out glyph$width)
 			(<- _compress_word out glyph$height)
-			(<- _compress_word out glyph$ascent)
+			(<- _compress_word out glyph$advance)
 			(<- file$write out glyph$_data)
 			(++ j)
 		)

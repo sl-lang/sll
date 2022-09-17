@@ -34,6 +34,7 @@
 
 
 (= _window_to_ui <>)
+(= _atlas_to_ui <>)
 
 (= MAX_TEXTURE_COUNT 4096)
 
@@ -79,7 +80,17 @@
 ))
 
 (= _update_font_atlas (,,, atlas
-	(:> atlas '\n')
+	(= ui (<- weakref$get_default (: _atlas_to_ui (%% atlas))))
+	(? (! ui) (@@))
+	(<- gfx:pipeline$update_descriptor ui$_pipeline [
+		gfx:pipeline$DESCRIPTOR_TYPE_SAMPLER
+		1
+		gfx:stage$TYPE_FRAGMENT
+		[
+			atlas$texture
+			atlas$sampler
+		]
+	] 0)
 ))
 
 (= create (,,, window debug_mode?
@@ -190,6 +201,7 @@
 	(= window$callbacks$mouse _window_mouse_callback)
 	(= window$callbacks$size _window_resize_callback)
 	(= (: _window_to_ui window$id) (<- weakref$ref out))
+	(= (: _atlas_to_ui (%% out$_font_atlas)) (<- weakref$ref out))
 	(@@ out)
 ))
 
