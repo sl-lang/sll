@@ -1,5 +1,7 @@
 (---
 	"font/_load_library.sll"
+	"gfx/sampler.sll"
+	"gfx/texture.sll"
 	"types.sll"
 )
 
@@ -18,13 +20,14 @@
 ))
 
 (= font_type (&:
-	int_type width
-	int_type height
-	string_type data
-	array_type glypths
-	int_type ascent
-	int_type descent
-	int_type line_gap
+	(~ gfx:sampler$gfx_sampler_type) sampler
+	(~ gfx:texture$gfx_texture_type) texture
+	(~ int_type) width
+	(~ int_type) height
+	(~ array_type) glypths
+	(~ int_type) ascent
+	(~ int_type) descent
+	(~ int_type) line_gap
 ))
 
 (= font_true_type_module_type (&:
@@ -37,21 +40,30 @@
 
 
 (= create (,,, data
-	(= out (:: (<- (... "font:true_type_create")
+	(= out (<- (... "font:true_type_create")
 		(:: data string_type)
-	) font_type))
+	))
 	(= inv_width (/ 1 out$width))
 	(= inv_height (/ 1 out$height))
-	(-> (= i 0) (< i ($ out$glypths))
-		(= glypth (:: (: out$glypths i) font_glyph_type))
-		(= glypth$tx0 (* glypth$tx0 inv_width))
-		(= glypth$ty0 (* glypth$ty0 inv_height))
-		(= glypth$tx1 (* glypth$tx1 inv_width))
-		(= glypth$ty1 (* glypth$ty1 inv_height))
-		(= (: out$glypths i) glypth)
-		(++ i)
-	)
-	(@@ out)
+	(= glypths (: out 3))
+	(@@ (. font_type
+		nil
+		nil
+		(: out 0)
+		(: out 1)
+		([> (= i 0) (< i ($ glypths))
+			(= glypth (:: (: glypths i) font_glyph_type))
+			(= glypth$tx0 (* glypth$tx0 inv_width))
+			(= glypth$ty0 (* glypth$ty0 inv_height))
+			(= glypth$tx1 (* glypth$tx1 inv_width))
+			(= glypth$ty1 (* glypth$ty1 inv_height))
+			(++ i)
+			glypth
+		)
+		(: out 4)
+		(: out 5)
+		(: out 6)
+	))
 ))
 
 (= find (,,, @@names@@
