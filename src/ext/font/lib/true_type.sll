@@ -75,7 +75,13 @@
 	(= ctx (:: ctx gfx:context$gfx_context_type))
 	(= out (. font_atlas_type
 		ctx
-		nil
+		(<- gfx:sampler$create ui_window$context (. gfx:sampler$gfx_sampler_config_type
+			gfx:sampler$FILTER_NEAREST
+			gfx:sampler$FILTER_NEAREST
+			gfx:sampler$ADDRESS_MODE_TYPE_REPEAT
+			gfx:sampler$ADDRESS_MODE_TYPE_CLAMP
+			gfx:sampler$ADDRESS_MODE_TYPE_REPEAT
+		)
 		nil
 	))
 	(-> (= i 0) (< i ($ @@fonts@@))
