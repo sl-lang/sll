@@ -74,6 +74,8 @@
 (= font_rendered_text_type (&:
 	object_type font
 	string_type text
+	float_type z_coord
+	float_type color_z_coord
 	gfx:buffer$gfx_buffer_type vertex_buffer
 	gfx:buffer$gfx_buffer_type index_buffer
 ))
@@ -231,6 +233,8 @@
 	(= out (. font_rendered_text_type
 		nil
 		""
+		0.0
+		0.0
 		vertex_buffer
 		index_buffer
 	))
@@ -268,8 +272,8 @@
 	(= scale 0.5)
 	(= x 0.0)
 	(= y (* rendered_text$font$font$ascent scale))
-	(= TEXTURE_COORD_Z 3.0)
-	(= TEXTURE_Z -1.0)
+	(= z rendered_text$z_coord)
+	(= tz rendered_text$color_z_coord)
 	(-> (= i 0) (< i ($ text))
 		(= glyph (: rendered_text$font$glyphs (:: (: text i) int_type)))
 		(? glyph {
@@ -284,28 +288,28 @@
 			(= j (* i 24))
 			(= (: rendered_text$vertex_buffer$data j) x0)
 			(= (: rendered_text$vertex_buffer$data (+ j 1)) y0)
-			(= (: rendered_text$vertex_buffer$data (+ j 2)) TEXTURE_COORD_Z)
+			(= (: rendered_text$vertex_buffer$data (+ j 2)) z)
 			(= (: rendered_text$vertex_buffer$data (+ j 3)) tx0)
 			(= (: rendered_text$vertex_buffer$data (+ j 4)) ty0)
-			(= (: rendered_text$vertex_buffer$data (+ j 5)) TEXTURE_Z)
+			(= (: rendered_text$vertex_buffer$data (+ j 5)) tz)
 			(= (: rendered_text$vertex_buffer$data (+ j 6)) x1)
 			(= (: rendered_text$vertex_buffer$data (+ j 7)) y0)
-			(= (: rendered_text$vertex_buffer$data (+ j 8)) TEXTURE_COORD_Z)
+			(= (: rendered_text$vertex_buffer$data (+ j 8)) z)
 			(= (: rendered_text$vertex_buffer$data (+ j 9)) tx1)
 			(= (: rendered_text$vertex_buffer$data (+ j 10)) ty0)
-			(= (: rendered_text$vertex_buffer$data (+ j 11)) TEXTURE_Z)
+			(= (: rendered_text$vertex_buffer$data (+ j 11)) tz)
 			(= (: rendered_text$vertex_buffer$data (+ j 12)) x1)
 			(= (: rendered_text$vertex_buffer$data (+ j 13)) y1)
-			(= (: rendered_text$vertex_buffer$data (+ j 14)) TEXTURE_COORD_Z)
+			(= (: rendered_text$vertex_buffer$data (+ j 14)) z)
 			(= (: rendered_text$vertex_buffer$data (+ j 15)) tx1)
 			(= (: rendered_text$vertex_buffer$data (+ j 16)) ty1)
-			(= (: rendered_text$vertex_buffer$data (+ j 17)) TEXTURE_Z)
+			(= (: rendered_text$vertex_buffer$data (+ j 17)) tz)
 			(= (: rendered_text$vertex_buffer$data (+ j 18)) x0)
 			(= (: rendered_text$vertex_buffer$data (+ j 19)) y1)
-			(= (: rendered_text$vertex_buffer$data (+ j 20)) TEXTURE_COORD_Z)
+			(= (: rendered_text$vertex_buffer$data (+ j 20)) z)
 			(= (: rendered_text$vertex_buffer$data (+ j 21)) tx0)
 			(= (: rendered_text$vertex_buffer$data (+ j 22)) ty1)
-			(= (: rendered_text$vertex_buffer$data (+ j 23)) TEXTURE_Z)
+			(= (: rendered_text$vertex_buffer$data (+ j 23)) tz)
 			(= x (+ x (* glyph$advance scale)))
 		})
 		(= j (* i 6))
@@ -320,6 +324,11 @@
 	)
 	(<- gfx:buffer$sync rendered_text$vertex_buffer)
 	(<- gfx:buffer$sync rendered_text$index_buffer)
+))
+
+(= update_rendered_text_z_coords (,,, rendered_text
+	(? (! rendered_text) (@@))
+	(= rendered_text (:: rendered_text font_rendered_text_type))
 ))
 
 (= update_rendered_text_font (,,, rendered_text font

@@ -47,6 +47,7 @@
 		nil
 		(<- font:true_type$create_rendered_text ui$context)
 	))
+	(= out$_rendered_text$color_z_coord -1.0)
 	(? font (<- set_font out font))
 	(? text (<- set_text out text))
 	(? parent (<- set_parent out parent))
@@ -105,10 +106,9 @@
 (= set_parent (,,, text parent
 	(? (! text) (@@))
 	(= text (:: text ui_text_element_type))
-	(?
-		(! (<- ui:element$set_parent text parent)) (@@ false)
-		(! text$base$ui) (@@ true)
-	)
+	(? (! (<- ui:element$set_parent text parent)) (@@ false))
+	(= text$_rendered_text$z_coord text$base$z_index)
+	(<- font:true_type$update_rendered_text_z_coords text$_rendered_text)
 	(@@ true)
 ))
 
