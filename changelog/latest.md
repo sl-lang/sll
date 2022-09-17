@@ -1,4 +1,4 @@
-# Sll [0.8.2] - Ongoing
+# Sll [0.8.2] - 2022-09-17
 
 ## Added
 
@@ -25,4 +25,4 @@
 - UI `ui:element:color` element now accepts per-vertex colors
 - UI color and position types are now serializeable
 
-[0.8.2]: https://github.com/sl-lang/sll/compare/sll-v0.8.1...main
+[0.8.2]: https://github.com/sl-lang/sll/compare/sll-v0.8.1...sll-v0.8.2
