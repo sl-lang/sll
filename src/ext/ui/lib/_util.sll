@@ -39,6 +39,10 @@
 		data$callbacks$mouse_event
 		element
 	)))
+	(? data$callbacks$render (<- array$push element$base$ui$_event_targets$render (. ui_event_target_type
+		data$callbacks$render
+		element
+	)))
 ))
 
 

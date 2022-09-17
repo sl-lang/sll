@@ -14,7 +14,7 @@
 
 
 
-(# create_font)
+(# create_font update_rendered_text update_rendered_text_font)
 
 
 
@@ -71,16 +71,28 @@
 	(~ array_type) glyphs
 ))
 
+(= font_rendered_text_type (&:
+	object_type font
+	string_type text
+	gfx:buffer$gfx_buffer_type vertex_buffer
+	gfx:buffer$gfx_buffer_type index_buffer
+))
+
 (= font_true_type_module_type (&:
 	(~ type_type) font_atlas_type
 	(~ type_type) font_glyph_type
+	(~ type_type) font_rendered_text_type
 	(~ type_type) font_texture_type
 	(~ type_type) font_type
 	(~ func_type) add_font
 	(~ func_type) create
 	(~ func_type) create_atlas
 	(~ func_type) create_font
+	(~ func_type) create_rendered_text
+	(~ func_type) draw_rendered_text
 	(~ func_type) find
+	(~ func_type) update_rendered_text
+	(~ func_type) update_rendered_text_font
 ))
 
 
@@ -205,6 +217,29 @@
 	(@@ out)
 ))
 
+(= create_rendered_text (,,, ctx font text
+	(? (! ctx) (@@ nil))
+	(= ctx (:: ctx gfx:context$gfx_context_type))
+	(= vertex_buffer (<- gfx:buffer$create ctx gfx:buffer$TYPE_VERTEX gfx:buffer$DATA_TYPE_FLOAT32))
+	(<- gfx:buffer$hint_update_frequency vertex_buffer gfx:buffer$FREQUENCY_MEDIUM)
+	(= index_buffer (<- gfx:buffer$create ctx gfx:buffer$TYPE_INDEX gfx:buffer$DATA_TYPE_UINT16))
+	(<- gfx:buffer$hint_update_frequency index_buffer gfx:buffer$FREQUENCY_MEDIUM)
+	(= out (. font_rendered_text_type
+		nil
+		""
+		vertex_buffer
+		index_buffer
+	))
+	(? font (<- update_rendered_text_font out font))
+	(? text (<- update_rendered_text out text))
+	(@@ out)
+))
+
+(= draw_rendered_text (,,, rendered_text
+	(? (! rendered_text) (@@))
+	(= rendered_text (:: rendered_text font_rendered_text_type))
+))
+
 (= find (,,, @@names@@
 	(-> (= i 0) (< i ($ @@names@@))
 		(= out (<- (... "font:true_type_find")
@@ -216,17 +251,35 @@
 	(@@ nil)
 ))
 
+(= update_rendered_text (,,, rendered_text text
+	(? (! rendered_text) (@@))
+	(= rendered_text (:: rendered_text font_rendered_text_type))
+	(= text (:: text string_type))
+	(= rendered_text$text text)
+))
+
+(= update_rendered_text_font (,,, rendered_text font
+	(? (! rendered_text) (@@))
+	(= rendered_text (:: rendered_text font_rendered_text_type))
+	(= font (:: font font_texture_type))
+))
+
 
 
 (= font:true_type (. font_true_type_module_type
 	font_atlas_type
 	font_glyph_type
+	font_rendered_text_type
 	font_texture_type
 	font_type
 	add_font
 	create
 	create_atlas
 	create_font
+	create_rendered_text
+	draw_rendered_text
 	find
+	update_rendered_text
+	update_rendered_text_font
 ))
 (## font:true_type)

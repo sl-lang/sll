@@ -165,6 +165,7 @@
 			[]
 			[]
 			[]
+			[]
 		]
 		[]
 		[]
@@ -213,6 +214,11 @@
 	(<- gfx:buffer$use ui$_vertex_buffer)
 	(<- gfx:buffer$use ui$_index_buffer)
 	(<- gfx:buffer$draw ui$_index_buffer)
+	(-> (= i 0) (< i ($ ui$_event_targets$render))
+		(= target (: ui$_event_targets$render i))
+		(<- target$callback target$element)
+		(++ i)
+	)
 	(<- gfx:context$render ui$context)
 	(<- window_manager:event$poll (!! blocking?))
 ))

@@ -244,6 +244,7 @@
 	_deseralize_data
 	_get_position
 	_handle_mouse_event
+	nil
 	_serialize_data
 	_update_position_and_size
 ))

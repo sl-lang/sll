@@ -21,6 +21,7 @@
 	func_type deserialize
 	func_type get_position
 	func_type mouse_event
+	func_type render
 	func_type serialize
 	func_type update
 ))

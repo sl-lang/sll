@@ -20,6 +20,7 @@
 	array_type button
 	array_type key
 	array_type mouse
+	array_type render
 ))
 
 (= ui_type (&:

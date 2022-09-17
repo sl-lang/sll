@@ -179,6 +179,7 @@
 	_deseralize_data
 	nil
 	nil
+	nil
 	_seralize_data
 	_update_position_and_size
 ))

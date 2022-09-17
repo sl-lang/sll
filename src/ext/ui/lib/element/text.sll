@@ -26,6 +26,7 @@
 	(~ ui:element$ui_element_type) base
 	string_type text
 	object_type _font
+	font:true_type$font_rendered_text_type _rendered_text
 ))
 
 (= ui_element_text_module_type (&:
@@ -39,16 +40,12 @@
 
 
 
-(= _rebuild_verticies (,,, text
-	(? (! text$_font) (@@))
-	(:> "Rebuild\n")
-))
-
 (= _create_text (,,, ui base parent font text
 	(= out (. ui_text_element_type
 		base
 		""
 		nil
+		(<- font:true_type$create_rendered_text ui$context)
 	))
 	(? font (<- set_font out font))
 	(? text (<- set_text out text))
@@ -59,6 +56,10 @@
 
 (= _deseralize_data (,,, ui base parent data
 	(@@ (<- _create_text ui base parent (: data 0) (: data 1)))
+))
+
+(= _render_text (,,, text
+	(<- font:true_type$draw_rendered_text text$_rendered_text)
 ))
 
 (= _seralize_data (,,, text
@@ -90,7 +91,7 @@
 	(= text (:: text ui_text_element_type))
 	(= font (:: font font:true_type$font_type))
 	(= text$_font (<- font:true_type$add_font text$base$ui$_font_atlas font))
-	(<- _rebuild_verticies text)
+	(<- font:true_type$update_rendered_text_font text$_rendered_text text$_font)
 ))
 
 (= set_text (,,, text content
@@ -98,7 +99,7 @@
 	(= text (:: text ui_text_element_type))
 	(= content (: (:: content string_type)))
 	(= text$text content)
-	(<- _rebuild_verticies text)
+	(<- font:true_type$update_rendered_text text$_rendered_text content)
 ))
 
 (= set_parent (,,, text parent
@@ -118,6 +119,7 @@
 	_deseralize_data
 	nil
 	nil
+	_render_text
 	_seralize_data
 	nil
 ))
