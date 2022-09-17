@@ -12,6 +12,7 @@
 
 ## Changed
 
+- Fixed dynamic file buffers
 - Fixed signed `dats_file` read functions
 - Fixed UI serialization of named elements
 - Fixed UI slider movement and resizing

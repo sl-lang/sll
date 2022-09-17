@@ -5,21 +5,19 @@
 	"gfx/data_type.sll"
 	"gfx/sampler.sll"
 	"gfx/texture.sll"
+	"string.sll"
 	"types.sll"
 )
 
 
 
 (= font_glyph_type (&:
-	float_type tx0
-	float_type ty0
-	float_type tx1
-	float_type ty1
-	float_type gx0
-	float_type gy0
-	float_type gx1
-	float_type gy1
-	float_type advance
+	int_type x
+	int_type y
+	int_type width
+	int_type height
+	int_type advance
+	string_type _data
 ))
 
 (= font_atlas_type (&:
@@ -30,13 +28,10 @@
 ))
 
 (= font_type (&:
-	(~ int_type) width
-	(~ int_type) height
-	(~ array_type) glypths
 	(~ int_type) ascent
 	(~ int_type) descent
 	(~ int_type) line_gap
-	(~ string_type) _data
+	(~ array_type) glypths
 ))
 
 (= font_true_type_module_type (&:
@@ -60,15 +55,8 @@
 	(= out (:: (<- (... "font:true_type_create")
 		(:: data string_type)
 	) font_type))
-	(= inv_width (/ 1 out$width))
-	(= inv_height (/ 1 out$height))
 	(-> (= i 0) (< i ($ out$glypths))
-		(= glypth (:: (: out$glypths i) font_glyph_type))
-		(= glypth$tx0 (* glypth$tx0 inv_width))
-		(= glypth$ty0 (* glypth$ty0 inv_height))
-		(= glypth$tx1 (* glypth$tx1 inv_width))
-		(= glypth$ty1 (* glypth$ty1 inv_height))
-		(= (: out$glypths i) glypth)
+		(= (: out$glypths i) (:: (: out$glypths i) font_glyph_type))
 		(++ i)
 	)
 	(@@ out)
@@ -77,7 +65,7 @@
 (= create_atlas (,,, ctx @@fonts@@
 	(? (! ctx) (@@ nil))
 	(= ctx (:: ctx gfx:context$gfx_context_type))
-	(= texture_buffer (<- gfx:buffer$create ctx gfx:buffer$TYPE_TEXTURE gfx:buffer$DATA_TYPE_UINT8 (:: (: (: @@fonts@@ 0) "_data") array_type) true))
+	(= texture_buffer (<- gfx:buffer$create ctx gfx:buffer$TYPE_TEXTURE gfx:buffer$DATA_TYPE_UINT8 [0 0x33 0x66 0x33 0x66 0x99 0x66 0x99 0xcc] true))
 	(= out (. font_atlas_type
 		ctx
 		(<- gfx:sampler$create ctx (. gfx:sampler$gfx_sampler_config_type
@@ -88,7 +76,7 @@
 			gfx:sampler$ADDRESS_MODE_TYPE_REPEAT
 		))
 		texture_buffer
-		(<- gfx:texture$create ctx [1024 1024] (| gfx:data_type$SIZE_8BIT gfx:data_type$COUNT_1 gfx:data_type$TYPE_COLOR_UNORM) texture_buffer)
+		(<- gfx:texture$create ctx [3 3] (| gfx:data_type$SIZE_8BIT gfx:data_type$COUNT_1 gfx:data_type$TYPE_COLOR_UNORM) texture_buffer)
 	))
 	(-> (= i 0) (< i ($ @@fonts@@))
 		(<- add_font out (: @@fonts@@ i))
