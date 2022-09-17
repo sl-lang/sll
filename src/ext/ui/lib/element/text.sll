@@ -1,4 +1,5 @@
 (---
+	"font/true_type.sll"
 	"string.sll"
 	"types.sll"
 	"ui/_util.sll"
@@ -8,7 +9,7 @@
 
 
 
-(# delete set_text set_parent)
+(# delete set_font set_text set_parent)
 
 
 
@@ -24,23 +25,32 @@
 	) @@delete@@
 	(~ ui:element$ui_element_type) base
 	string_type text
+	object_type _font
 ))
 
 (= ui_element_text_module_type (&:
 	(~ type_type) ui_text_element_type
 	(~ func_type) create
 	(~ func_type) delete
+	(~ func_type) set_font
 	(~ func_type) set_text
 	(~ func_type) set_parent
 ))
 
 
 
-(= _create_text (,,, ui base parent text
+(= _rebuild_verticies (,,, text
+	(? (! text$_font) (@@))
+	(:> "Rebuild\n")
+))
+
+(= _create_text (,,, ui base parent font text
 	(= out (. ui_text_element_type
 		base
 		""
+		nil
 	))
+	(? font (<- set_font out font))
 	(? text (<- set_text out text))
 	(? parent (<- set_parent out parent))
 	(<- ui:element$setup out)
@@ -48,19 +58,23 @@
 ))
 
 (= _deseralize_data (,,, ui base parent data
-	(@@ (<- _create_text ui base parent data))
+	(@@ (<- _create_text ui base parent (: data 0) (: data 1)))
 ))
 
 (= _seralize_data (,,, text
-	(@@ text$text)
+	(@@ [
+		text$_font$font
+		text$text
+	])
 ))
 
-(= create (,,, ui position_layout parent text
+(= create (,,, ui position_layout parent font text
 	(= ui (?: ui (:: ui ui:core$ui_type) nil))
 	(@@ (<- _create_text
 		ui
 		(<- ui:element$create ui position_layout)
 		parent
+		font
 		text
 	))
 ))
@@ -71,12 +85,20 @@
 	(<- ui:element$delete text)
 ))
 
+(= set_font (,,, text font
+	(? (! text) (@@))
+	(= text (:: text ui_text_element_type))
+	(= font (:: font font:true_type$font_type))
+	(= text$_font (<- font:true_type$add_font text$base$ui$_font_atlas font))
+	(<- _rebuild_verticies text)
+))
+
 (= set_text (,,, text content
 	(? (! text) (@@))
 	(= text (:: text ui_text_element_type))
 	(= content (: (:: content string_type)))
 	(= text$text content)
-	(? (! text$base$ui) (@@))
+	(<- _rebuild_verticies text)
 ))
 
 (= set_parent (,,, text parent

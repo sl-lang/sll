@@ -14,6 +14,10 @@
 
 
 
+(# create_font)
+
+
+
 (= font_glyph_type (&:
 	(,,, data
 		(@@ (<- string$format "(%c: %d %d %u %u | +%u)"
@@ -63,19 +67,19 @@
 ))
 
 (= font_texture_type (&:
-	(~ int_type) ascent
-	(~ int_type) descent
-	(~ int_type) line_gap
+	(~ font_type) font
 	(~ array_type) glyphs
 ))
 
 (= font_true_type_module_type (&:
 	(~ type_type) font_atlas_type
 	(~ type_type) font_glyph_type
+	(~ type_type) font_texture_type
 	(~ type_type) font_type
 	(~ func_type) add_font
 	(~ func_type) create
 	(~ func_type) create_atlas
+	(~ func_type) create_font
 	(~ func_type) find
 ))
 
@@ -153,27 +157,15 @@
 	(= atlas$texture (<- gfx:texture$create atlas$context [width height] (| gfx:data_type$SIZE_8BIT gfx:data_type$COUNT_1 gfx:data_type$TYPE_COLOR_UNORM) (<- gfx:buffer$create atlas$context gfx:buffer$TYPE_TEXTURE gfx:buffer$DATA_TYPE_UINT8 (:: texture_data array_type) true)))
 	(<- atlas$callback atlas)
 	(@@ (. font_texture_type
-		font$ascent
-		font$descent
-		font$line_gap
+		font
 		texture_glyphs
 	))
 ))
 
 (= create (,,, data
-	(= out (:: (<- (... "font:true_type_create")
+	(@@ (<-* create_font (<- (... "font:true_type_create")
 		(:: data string_type)
-	) font_type))
-	(= area 0)
-	(-> (= i 0) (< i ($ out$glyphs))
-		(= glyph (:: (: out$glyphs i) font_glyph_type))
-		(= glyph$_area (* glyph$width glyph$height))
-		(= area (+ area glyph$_area))
-		(= (: out$glyphs i) glyph)
-		(++ i)
-	)
-	(= out$_total_area area)
-	(@@ out)
+	)))
 ))
 
 (= create_atlas (,,, ctx callback
@@ -194,6 +186,25 @@
 	))
 ))
 
+(= create_font (,,, ascent descent line_gap glyphs
+	(= glyphs (:: glyphs array_type))
+	(= area 0)
+	(= out (. font_type
+		ascent
+		descent
+		line_gap
+		([> (= i 0) (< i ($ glyphs))
+			(= glyph (:: (: glyphs i) font_glyph_type))
+			(++ i)
+			(= glyph$_area (* glyph$width glyph$height))
+			(= area (+ area glyph$_area))
+			glyph
+		)
+	))
+	(= out$_total_area area)
+	(@@ out)
+))
+
 (= find (,,, @@names@@
 	(-> (= i 0) (< i ($ @@names@@))
 		(= out (<- (... "font:true_type_find")
@@ -210,10 +221,12 @@
 (= font:true_type (. font_true_type_module_type
 	font_atlas_type
 	font_glyph_type
+	font_texture_type
 	font_type
 	add_font
 	create
 	create_atlas
+	create_font
 	find
 ))
 (## font:true_type)

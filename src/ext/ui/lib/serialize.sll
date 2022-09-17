@@ -2,6 +2,7 @@
 	"array.sll"
 	"data_file.sll"
 	"file.sll"
+	"font/true_type.sll"
 	"gfx/buffer.sll"
 	"gfx/sampler.sll"
 	"gfx/texture.sll"
@@ -27,6 +28,7 @@
 	array_type element_types
 	array_type textures
 	array_type layouts
+	array_type fonts
 ))
 
 (= ui_serialize_module_type (&:
@@ -53,6 +55,7 @@
 (= DATA_TYPE_TEXTURE 14)
 (= DATA_TYPE_RGB 15)
 (= DATA_TYPE_POSITION 16)
+(= DATA_TYPE_FONT 17)
 
 (= LAYOUT_TYPE_MASK 63)
 
@@ -101,6 +104,28 @@
 		(<- data_file$write_word stream (| (<< value 1) 1))
 		(<- data_file$write_byte stream (<< value 1))
 	)
+))
+
+(= _decompress_sword (,,, stream
+	(= value (<- _decompress_word stream))
+	(= flag (& value 1))
+	(= value (>> value 1))
+	(? flag (= value (- 0 value)))
+	(@@ value)
+))
+
+(= _compress_sword (,,, stream value
+	(? (> value 0x3fff) (:> "Value too big to serialize: " value '\n'))
+	(? (< value -0x4000) (:> "Value too small to serialize: " value '\n'))
+	(= flag 0)
+	(? (< value 0) {
+		(= value (- 0 value))
+		(= flag 1)
+	})
+	(<- _compress_word stream (|
+		(<< value 1)
+		flag
+	))
 ))
 
 (= _deseralize_rgb (,,, stream
@@ -225,6 +250,7 @@
 			(<- _deserialize_layout_pointer data)
 			(<- _deserialize_layout_pointer data)
 		))
+		DATA_TYPE_FONT (@@ (: data$fonts (<- _decompress_word data$stream)))
 	)
 ))
 
@@ -310,7 +336,16 @@
 			(<- _serialize_layout_pointer data$width_layout out)
 			(<- _serialize_layout_pointer data$height_layout out)
 		}
-		(:> "Unable to serialize type: " (&:? (:? data)) '\n')
+		font:true_type$font_type {
+			(<- data_file$write_byte out$stream DATA_TYPE_FONT)
+			(= idx (<- array$index out$fonts data))
+			(? (=== idx -1) {
+				(= idx ($ out$fonts))
+				(<- array$push out$fonts data)
+			})
+			(<- _compress_word out$stream i)
+		}
+		(:> "Unable to serialize type: " [(&:? (:? data)) font:true_type$font_type] '\n')
 	)
 ))
 
@@ -419,6 +454,31 @@
 		(= (: layouts i) (<- _deserialize_layout stream))
 		(++ i)
 	)
+	(= fonts (<- array$create (<- _decompress_word stream)))
+	(-> (= i 0) (< i ($ fonts))
+		(= ascent (<- _decompress_word stream))
+		(= descent (<- _decompress_word stream))
+		(= line_gap (<- _decompress_word stream))
+		(= glyphs (<- array$create (<- _decompress_word stream)))
+		(-> (= j 0) (< j ($ glyphs))
+			(= (: glyphs j) (. font:true_type$font_glyph_type
+				(<- data_file$read_byte stream)
+				(<- _decompress_sword stream)
+				(<- _decompress_sword stream)
+				(<- _decompress_word stream)
+				(<- _decompress_word stream)
+				(<- _decompress_word stream)
+			))
+			(++ j)
+		)
+		(= (: fonts i) (<- font:true_type$create_font
+			ascent
+			descent
+			line_gap
+			glyphs
+		))
+		(++ i)
+	)
 	(= name_count (<- _decompress_word stream))
 	(-> (= i 0) (< i name_count)
 		(= name (<- file$read stream (<- data_file$read_byte stream)))
@@ -431,6 +491,7 @@
 		element_types
 		textures
 		layouts
+		fonts
 	) out nil))
 	(= id_list (:: out$_element_to_name map_key_type))
 	(-> (= i 0) (< i ($ id_list))
@@ -453,6 +514,7 @@
 	(<- _serialize_rgb ui$background_color out)
 	(= data (. ui_serializer_data_type
 		(<- file$from_data "" file$FLAG_WRITE)
+		[]
 		[]
 		[]
 		[]
@@ -490,6 +552,25 @@
 	(-> (= i 0) (< i ($ data$layouts))
 		(= layout (: data$layouts i))
 		(<- _serialize_layout layout out)
+		(++ i)
+	)
+	(<- _compress_word out ($ data$fonts))
+	(-> (= i 0) (< i ($ data$fonts))
+		(= font (: data$fonts i))
+		(<- _compress_word out font$ascent)
+		(<- _compress_word out font$descent)
+		(<- _compress_word out font$line_gap)
+		(<- _compress_word out ($ font$glyphs))
+		(-> (= j 0) (< j ($ font$glyphs))
+			(= glyph (: font$glyphs j))
+			(<- file$write out glyph$codepoint)
+			(<- _compress_sword out glyph$x)
+			(<- _compress_sword out glyph$y)
+			(<- _compress_word out glyph$width)
+			(<- _compress_word out glyph$height)
+			(<- _compress_word out glyph$ascent)
+			(++ j)
+		)
 		(++ i)
 	)
 	(= names (:: ui$_name_to_element map_key_type))
