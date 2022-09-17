@@ -49,13 +49,14 @@
 (= DATA_TYPE_FLOAT_ONE 8)
 (= DATA_TYPE_FLOAT_HALF 9)
 (= DATA_TYPE_STRING 10)
-(= DATA_TYPE_ARRAY 11)
-(= DATA_TYPE_MAP 12)
-(= DATA_TYPE_LAYOUT 13)
-(= DATA_TYPE_TEXTURE 14)
-(= DATA_TYPE_RGB 15)
-(= DATA_TYPE_POSITION 16)
-(= DATA_TYPE_FONT 17)
+(= DATA_TYPE_STRING_EMPTY 11)
+(= DATA_TYPE_ARRAY 12)
+(= DATA_TYPE_MAP 13)
+(= DATA_TYPE_LAYOUT 14)
+(= DATA_TYPE_TEXTURE 15)
+(= DATA_TYPE_RGB 16)
+(= DATA_TYPE_POSITION 17)
+(= DATA_TYPE_FONT 18)
 
 (= LAYOUT_TYPE_MASK 63)
 
@@ -223,6 +224,7 @@
 		DATA_TYPE_FLOAT_ONE (@@ 1.0)
 		DATA_TYPE_FLOAT_HALF (@@ 0.5)
 		DATA_TYPE_STRING (@@ (<- file$read data$stream (<- _decompress_word data$stream)))
+		DATA_TYPE_STRING_EMPTY (@@ "")
 		DATA_TYPE_ARRAY {
 			(= out (<- array$create (<- _decompress_word data$stream)))
 			(-> (= i 0) (< i ($ out))
@@ -290,9 +292,14 @@
 			)
 		}
 		string_type {
-			(<- data_file$write_byte out$stream DATA_TYPE_STRING)
-			(<- _compress_word out$stream ($ data))
-			(<- file$write out$stream data)
+			(? (! data)
+				(<- data_file$write_byte out$stream DATA_TYPE_STRING_EMPTY)
+				{
+					(<- data_file$write_byte out$stream DATA_TYPE_STRING)
+					(<- _compress_word out$stream ($ data))
+					(<- file$write out$stream data)
+				}
+			)
 		}
 		array_type {
 			(<- data_file$write_byte out$stream DATA_TYPE_ARRAY)
@@ -343,7 +350,7 @@
 				(= idx ($ out$fonts))
 				(<- array$push out$fonts data)
 			})
-			(<- _compress_word out$stream i)
+			(<- _compress_word out$stream idx)
 		}
 		(:> "Unable to serialize type: " [(&:? (:? data)) font:true_type$font_type] '\n')
 	)
@@ -461,7 +468,7 @@
 		(= line_gap (<- _decompress_word stream))
 		(= glyphs (<- array$create (<- _decompress_word stream)))
 		(-> (= j 0) (< j ($ glyphs))
-			(= (: glyphs j) (. font:true_type$font_glyph_type
+			(= glyph (. font:true_type$font_glyph_type
 				(<- data_file$read_byte stream)
 				(<- _decompress_sword stream)
 				(<- _decompress_sword stream)
@@ -469,6 +476,9 @@
 				(<- _decompress_word stream)
 				(<- _decompress_word stream)
 			))
+			(= area (* glyph$width glyph$height))
+			(? area (= glyph$_data (<- file$read stream area)))
+			(= (: glyphs j) glyph)
 			(++ j)
 		)
 		(= (: fonts i) (<- font:true_type$create_font
@@ -569,6 +579,7 @@
 			(<- _compress_word out glyph$width)
 			(<- _compress_word out glyph$height)
 			(<- _compress_word out glyph$ascent)
+			(<- file$write out glyph$_data)
 			(++ j)
 		)
 		(++ i)

@@ -181,7 +181,7 @@
 			gfx:sampler$ADDRESS_MODE_TYPE_CLAMP
 			gfx:sampler$ADDRESS_MODE_TYPE_CLAMP
 		))
-		(<- gfx:texture$create ctx [3 3] (| gfx:data_type$SIZE_8BIT gfx:data_type$COUNT_1 gfx:data_type$TYPE_COLOR_UNORM) (<- gfx:buffer$create ctx gfx:buffer$TYPE_TEXTURE gfx:buffer$DATA_TYPE_UINT8 [0 0x33 0x66 0x33 0x66 0x99 0x66 0x99 0xcc] true))
+		(<- gfx:texture$create ctx [1 1] (| gfx:data_type$SIZE_8BIT gfx:data_type$COUNT_1 gfx:data_type$TYPE_COLOR_UNORM) (<- gfx:buffer$create ctx gfx:buffer$TYPE_TEXTURE gfx:buffer$DATA_TYPE_UINT8 [0xff] true))
 		callback
 	))
 ))
