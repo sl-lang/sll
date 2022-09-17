@@ -163,8 +163,10 @@
 		(= glyph (: texture_glyphs i))
 		(++ i)
 		(? (! glyph) (<<<))
-		(= glyph$width (* glyph$width inv_width))
-		(= glyph$height (* glyph$height inv_height))
+		(= glyph$tx0 (* glyph$tx0 inv_width))
+		(= glyph$ty0 (* glyph$ty0 inv_height))
+		(= glyph$tx1 (* glyph$tx1 inv_width))
+		(= glyph$ty1 (* glyph$ty1 inv_height))
 	)
 	(= atlas$texture (<- gfx:texture$create atlas$context [width height] (| gfx:data_type$SIZE_8BIT gfx:data_type$COUNT_1 gfx:data_type$TYPE_COLOR_UNORM) (<- gfx:buffer$create atlas$context gfx:buffer$TYPE_TEXTURE gfx:buffer$DATA_TYPE_UINT8 (:: texture_data array_type) true)))
 	(<- atlas$callback atlas)
@@ -238,6 +240,9 @@
 (= draw_rendered_text (,,, rendered_text
 	(? (! rendered_text) (@@))
 	(= rendered_text (:: rendered_text font_rendered_text_type))
+	(<- gfx:buffer$use rendered_text$_vertex_buffer)
+	(<- gfx:buffer$use rendered_text$_index_buffer)
+	(<- gfx:buffer$draw rendered_text$_index_buffer)
 ))
 
 (= find (,,, @@names@@
@@ -256,12 +261,35 @@
 	(= rendered_text (:: rendered_text font_rendered_text_type))
 	(= text (:: text string_type))
 	(= rendered_text$text text)
+	(= rendered_text$_vertex_buffer$data (<- array$create (* ($ text) 24)))
+	(= rendered_text$_index_buffer$data (<- array$create (* ($ text) 6)))
+	(= x 0)
+	(= y 0)
+	(= scale 2)
+	(-> (= i 0) (< i ($ text))
+		(= glyph (: rendered_text$font$glyphs (:: (: text i) int_type)))
+		(? glyph {
+			(:> glyph '\n')
+		})
+		(= j (* i 6))
+		(= k (<< i 2))
+		(= (: rendered_text$_index_buffer$data j) (+ k 2))
+		(= (: rendered_text$_index_buffer$data (+ j 1)) (+ k 1))
+		(= (: rendered_text$_index_buffer$data (+ j 2)) k)
+		(= (: rendered_text$_index_buffer$data (+ j 3)) (+ k 3))
+		(= (: rendered_text$_index_buffer$data (+ j 4)) (+ k 2))
+		(= (: rendered_text$_index_buffer$data (+ j 5)) k)
+		(++ i)
+	)
+	(<- gfx:buffer$sync rendered_text$_vertex_buffer)
+	(<- gfx:buffer$sync rendered_text$_index_buffer)
 ))
 
 (= update_rendered_text_font (,,, rendered_text font
 	(? (! rendered_text) (@@))
 	(= rendered_text (:: rendered_text font_rendered_text_type))
 	(= font (:: font font_texture_type))
+	(= rendered_text$font font)
 ))
 
 
