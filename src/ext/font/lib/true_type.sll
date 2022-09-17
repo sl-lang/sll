@@ -140,7 +140,17 @@
 		(= x_offset (+ x_offset glyph$width))
 		(++ i)
 	)
-	(= atlas$texture (<- gfx:texture$create atlas$context [width (+ y_offset row_height)] (| gfx:data_type$SIZE_8BIT gfx:data_type$COUNT_1 gfx:data_type$TYPE_COLOR_UNORM) (<- gfx:buffer$create atlas$context gfx:buffer$TYPE_TEXTURE gfx:buffer$DATA_TYPE_UINT8 (:: texture_data array_type) true)))
+	(= height (+ y_offset row_height))
+	(= inv_width (/ 1.0 width))
+	(= inv_height (/ 1.0 height))
+	(-> (= i 0) (< i 256)
+		(= glyph (: texture_glyphs i))
+		(++ i)
+		(? (! glyph) (<<<))
+		(= glyph$width (* glyph$width inv_width))
+		(= glyph$height (* glyph$height inv_height))
+	)
+	(= atlas$texture (<- gfx:texture$create atlas$context [width height] (| gfx:data_type$SIZE_8BIT gfx:data_type$COUNT_1 gfx:data_type$TYPE_COLOR_UNORM) (<- gfx:buffer$create atlas$context gfx:buffer$TYPE_TEXTURE gfx:buffer$DATA_TYPE_UINT8 (:: texture_data array_type) true)))
 	(<- atlas$callback atlas)
 	(@@ (. font_texture_type
 		font$ascent
