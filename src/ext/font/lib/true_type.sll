@@ -1,5 +1,8 @@
 (---
 	"font/_load_library.sll"
+	"gfx/buffer.sll"
+	"gfx/context.sll"
+	"gfx/data_type.sll"
 	"gfx/sampler.sll"
 	"gfx/texture.sll"
 	"types.sll"
@@ -22,6 +25,7 @@
 (= font_atlas_type (&:
 	(~ gfx:context$gfx_context_type) context
 	(~ gfx:sampler$gfx_sampler_type) sampler
+	(~ gfx:buffer$gfx_buffer_type) buffer
 	(~ gfx:texture$gfx_texture_type) texture
 ))
 
@@ -73,16 +77,18 @@
 (= create_atlas (,,, ctx @@fonts@@
 	(? (! ctx) (@@ nil))
 	(= ctx (:: ctx gfx:context$gfx_context_type))
+	(= texture_buffer (<- gfx:buffer$create ctx gfx:buffer$TYPE_TEXTURE gfx:buffer$DATA_TYPE_UINT8 (:: (: (: @@fonts@@ 0) "_data") array_type) true))
 	(= out (. font_atlas_type
 		ctx
-		(<- gfx:sampler$create ui_window$context (. gfx:sampler$gfx_sampler_config_type
+		(<- gfx:sampler$create ctx (. gfx:sampler$gfx_sampler_config_type
 			gfx:sampler$FILTER_NEAREST
 			gfx:sampler$FILTER_NEAREST
 			gfx:sampler$ADDRESS_MODE_TYPE_REPEAT
 			gfx:sampler$ADDRESS_MODE_TYPE_CLAMP
 			gfx:sampler$ADDRESS_MODE_TYPE_REPEAT
-		)
-		nil
+		))
+		texture_buffer
+		(<- gfx:texture$create ctx [1024 1024] (| gfx:data_type$SIZE_8BIT gfx:data_type$COUNT_1 gfx:data_type$TYPE_COLOR_UNORM) texture_buffer)
 	))
 	(-> (= i 0) (< i ($ @@fonts@@))
 		(<- add_font out (: @@fonts@@ i))

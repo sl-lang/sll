@@ -560,10 +560,10 @@ __SLL_EXTERNAL sll_size_t sll_file_write(sll_file_t* file,const void* pointer,sl
 				sll_copy_data(pointer,size,c->data+file->data.file._write_buffer.dynamic.offset);
 				file->data.file._write_buffer.dynamic.size+=size;
 				file->data.file._write_buffer.dynamic.offset+=size;
-				UNLOCK;
-				return size;
 			}
-			SLL_UNIMPLEMENTED();
+			else{
+				SLL_UNIMPLEMENTED();
+			}
 			UNLOCK;
 			return size;
 		}

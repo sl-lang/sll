@@ -370,7 +370,6 @@ static void _end_frame(gfx_context_data_t* ctx){
 
 
 void _delete_context(gfx_context_data_t* ctx){
-	_end_frame(ctx);
 	SLL_HANDLE_CONTAINER_ITER_CLEAR(&(ctx->child_objects.buffers),gfx_buffer_data_t,buffer,{
 		_delete_buffer(ctx,buffer);
 	});
@@ -390,6 +389,8 @@ void _delete_context(gfx_context_data_t* ctx){
 	ctx->function_table.vkFreeCommandBuffers(ctx->device.logical,ctx->queue.transfer_command_pool,1,&(ctx->command_buffers.transfer));
 	ctx->function_table.vkDestroyFence(ctx->device.logical,ctx->command_buffers.fence,NULL);
 	ctx->function_table.vkDestroyCommandPool(ctx->device.logical,ctx->queue.transfer_command_pool,NULL);
+	sll_deallocate(ctx->write_descriptors.data);
+	sll_deallocate(ctx->write_descriptors.pointers);
 	_release_swapchain(ctx);
 	sll_deallocate(ctx->swapchain.image_views);
 	sll_deallocate(ctx->sync.fences);

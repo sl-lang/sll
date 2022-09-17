@@ -54,13 +54,14 @@
 		buffer$_handle
 	))
 	(<- (... "gfx:texture_sync") ctx$_handle handle)
-	(@@ (. gfx_texture_type
+	(= out (. gfx_texture_type
 		handle
 		size
 		data_type
 		buffer
 		ctx
 	))
+	(@@ out)
 ))
 
 (= delete (,,, texture
