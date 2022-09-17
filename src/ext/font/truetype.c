@@ -20,5 +20,5 @@ __FONT_API_CALL void font_api_true_type_create(const sll_string_t* data,sll_arra
 	stbtt_packedchar render_data[95];
 	stbtt_PackFontRange(&pack_ctx,data->data,0,64.0f,32,95,render_data);
 	stbtt_PackEnd(&pack_ctx);
-	sll_new_object_array(SLL_CHAR("uu{MMMMFFFFF}hhhl"),out,1024,1024,render_data,95ull,sizeof(stbtt_packedchar),SLL_OFFSETOF(stbtt_packedchar,x0),0xffffull,SLL_OFFSETOF(stbtt_packedchar,y0),0xffffull,SLL_OFFSETOF(stbtt_packedchar,x1),0xffffull,SLL_OFFSETOF(stbtt_packedchar,y1),0xffffull,SLL_OFFSETOF(stbtt_packedchar,xoff),SLL_OFFSETOF(stbtt_packedchar,yoff),SLL_OFFSETOF(stbtt_packedchar,xoff2),SLL_OFFSETOF(stbtt_packedchar,yoff2),SLL_OFFSETOF(stbtt_packedchar,xadvance),ascent,descent,line_gap,texture_data,1048576);
+	sll_new_object_array(SLL_CHAR("uul{MMMMFFFFF}hhh"),out,1024,1024,texture_data,1048576,render_data,95ull,sizeof(stbtt_packedchar),SLL_OFFSETOF(stbtt_packedchar,x0),0xffffull,SLL_OFFSETOF(stbtt_packedchar,y0),0xffffull,SLL_OFFSETOF(stbtt_packedchar,x1),0xffffull,SLL_OFFSETOF(stbtt_packedchar,y1),0xffffull,SLL_OFFSETOF(stbtt_packedchar,xoff),SLL_OFFSETOF(stbtt_packedchar,yoff),SLL_OFFSETOF(stbtt_packedchar,xoff2),SLL_OFFSETOF(stbtt_packedchar,yoff2),SLL_OFFSETOF(stbtt_packedchar,xadvance),ascent,descent,line_gap);
 }
