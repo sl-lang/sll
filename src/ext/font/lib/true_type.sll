@@ -12,6 +12,15 @@
 
 
 (= font_glyph_type (&:
+	(,,, data
+		(@@ (<- string$format "(%d %d %u %u | +%u)"
+			data$x
+			data$y
+			data$width
+			data$height
+			data$advance
+		))
+	) @@string@@
 	int_type x
 	int_type y
 	int_type width
@@ -59,6 +68,7 @@
 		(= (: out$glypths i) (:: (: out$glypths i) font_glyph_type))
 		(++ i)
 	)
+	(:> out '\n')
 	(@@ out)
 ))
 
@@ -69,11 +79,11 @@
 	(= out (. font_atlas_type
 		ctx
 		(<- gfx:sampler$create ctx (. gfx:sampler$gfx_sampler_config_type
-			gfx:sampler$FILTER_NEAREST
-			gfx:sampler$FILTER_NEAREST
-			gfx:sampler$ADDRESS_MODE_TYPE_REPEAT
+			gfx:sampler$FILTER_LINEAR
+			gfx:sampler$FILTER_LINEAR
 			gfx:sampler$ADDRESS_MODE_TYPE_CLAMP
-			gfx:sampler$ADDRESS_MODE_TYPE_REPEAT
+			gfx:sampler$ADDRESS_MODE_TYPE_CLAMP
+			gfx:sampler$ADDRESS_MODE_TYPE_CLAMP
 		))
 		texture_buffer
 		(<- gfx:texture$create ctx [3 3] (| gfx:data_type$SIZE_8BIT gfx:data_type$COUNT_1 gfx:data_type$TYPE_COLOR_UNORM) texture_buffer)
