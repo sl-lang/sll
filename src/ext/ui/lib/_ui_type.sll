@@ -1,4 +1,5 @@
 (---
+	"font/true_type.sll"
 	"gfx/buffer.sll"
 	"gfx/context.sll"
 	"gfx/pipeline.sll"
@@ -43,6 +44,7 @@
 	array_type _elements
 	map_type _name_to_element
 	map_type _element_to_name
+	font:true_type$font_atlas_type _font_atlas
 ))
 
 

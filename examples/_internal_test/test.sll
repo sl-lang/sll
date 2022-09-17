@@ -1080,10 +1080,8 @@ abc` '\n')
 (= font (<- font:true_type$create
 	(<- file$read (<- file$open font_file_path "r"))
 ))
-(= atlas (<- font:true_type$create_atlas
-	ui_window$context
-	font
-))
+(= atlas (<- font:true_type$create_atlas ui_window$context))
+(<- font:true_type$add_font atlas font)
 (<- ui:element:texture$create
 	ui_window
 	[

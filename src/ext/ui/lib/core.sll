@@ -77,6 +77,10 @@
 	(<- ui:element$update ui$root)
 ))
 
+(= _update_font_atlas (,,, atlas
+	(:> atlas '\n')
+))
+
 (= create (,,, window debug_mode?
 	(? (! window) (@@ nil))
 	(= window (:: window window_manager:window$window_manager_window_type))
@@ -164,6 +168,7 @@
 		[]
 		<>
 		<>
+		(<- font:true_type$create_atlas ctx _update_font_atlas)
 	))
 	(= out$root (<- ui:element:container$create
 		out

@@ -18,7 +18,7 @@ __FONT_API_CALL void font_api_true_type_create(const sll_string_t* data,sll_arra
 	for (int i=32;i<127;i++){
 		int glyph=stbtt_FindGlyphIndex(&font,i);
 		if (!glyph){
-			sll_array_push(NULL,sll_new_object(SLL_CHAR("00000Z")),&glyphs);
+			sll_array_push(NULL,sll_new_object(SLL_CHAR("c00000Z"),i),&glyphs);
 			continue;
 		}
 		int x0;
@@ -33,7 +33,7 @@ __FONT_API_CALL void font_api_true_type_create(const sll_string_t* data,sll_arra
 		sll_size_t size=((sll_size_t)width)*height;
 		uint8_t* bitmap=sll_allocate_stack(size);
 		stbtt_MakeGlyphBitmap(&font,bitmap,width,height,width,scale,scale,glyph);
-		sll_array_push(NULL,sll_new_object(SLL_CHAR("hhuuul"),x0,y0,width,height,(int)(advance*scale),bitmap,size),&glyphs);
+		sll_array_push(NULL,sll_new_object(SLL_CHAR("chhuuul"),i,x0,y0,width,height,(int)(advance*scale),bitmap,size),&glyphs);
 		sll_deallocate(bitmap);
 	}
 	sll_new_object_array(SLL_CHAR("hhha"),out,(int)(ascent*scale),(int)(descent*scale),(int)(line_gap*scale),&glyphs);
