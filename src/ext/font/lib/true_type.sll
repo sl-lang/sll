@@ -39,11 +39,18 @@
 	(~ type_type) font_atlas_type
 	(~ type_type) font_glyph_type
 	(~ type_type) font_type
+	(~ func_type) add_font
 	(~ func_type) create
+	(~ func_type) create_atlas
 	(~ func_type) find
 ))
 
 
+
+(= add_font (,,, atlas font
+	(? (! atlas) (@@))
+	(= atlas (:: atlas font_atlas_type))
+))
 
 (= create (,,, data
 	(= out (:: (<- (... "font:true_type_create")
@@ -58,6 +65,21 @@
 		(= glypth$tx1 (* glypth$tx1 inv_width))
 		(= glypth$ty1 (* glypth$ty1 inv_height))
 		(= (: out$glypths i) glypth)
+		(++ i)
+	)
+	(@@ out)
+))
+
+(= create_atlas (,,, ctx @@fonts@@
+	(? (! ctx) (@@ nil))
+	(= ctx (:: ctx gfx:context$gfx_context_type))
+	(= out (. font_atlas_type
+		ctx
+		nil
+		nil
+	))
+	(-> (= i 0) (< i ($ @@fonts@@))
+		(<- add_font out (: @@fonts@@ i))
 		(++ i)
 	)
 	(@@ out)
@@ -80,7 +102,9 @@
 	font_atlas_type
 	font_glyph_type
 	font_type
+	add_font
 	create
+	create_atlas
 	find
 ))
 (## font:true_type)
