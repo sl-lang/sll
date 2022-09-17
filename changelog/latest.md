@@ -13,6 +13,7 @@
 ## Changed
 
 - Fixed dynamic file buffers
+- Fixed GFX stale object references and danagling pointers
 - Fixed signed `dats_file` read functions
 - Fixed UI serialization of named elements
 - Fixed UI slider movement and resizing
