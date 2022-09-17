@@ -68,7 +68,6 @@
 		(= (: out$glypths i) (:: (: out$glypths i) font_glyph_type))
 		(++ i)
 	)
-	(:> out '\n')
 	(@@ out)
 ))
 
