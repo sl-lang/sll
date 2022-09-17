@@ -38,6 +38,7 @@
 	float_type delta_time
 	float_type _last_time
 	gfx_context_empty_objects_type _empty_objects
+	array_type _sync_objects
 ))
 
 (= gfx_context_module_type (&:
@@ -67,6 +68,7 @@
 		0
 		(<- time$time)
 		[nil nil nil]
+		[]
 	))
 	(= window$_gfx_context (<- weakref$ref out))
 	(@@ out)
@@ -89,6 +91,7 @@
 	(? (! ctx) (@@))
 	(= ctx (:: ctx gfx_context_type))
 	(<- (... "gfx:context_render") ctx$_handle)
+	(= ctx$_sync_objects [])
 	(= current (<- time$time))
 	(= ctx$delta_time (- current ctx$_last_time))
 	(= ctx$_last_time current)
