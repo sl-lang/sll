@@ -30,7 +30,7 @@ __FONT_API_CALL void font_api_true_type_create(const sll_string_t* data,sll_arra
 		stbtt_GetGlyphHMetrics(&font,glyph,&advance,NULL);
 		uint32_t width=x1-x0;
 		uint32_t height=y1-y0;
-		uint8_t* bitmap=sll_allocate_stack(width*height);
+		uint8_t* bitmap=sll_allocate_stack(((sll_size_t)width)*height);
 		stbtt_MakeGlyphBitmap(&font,bitmap,width,height,width,scale,scale,glyph);
 		sll_array_push(NULL,sll_new_object(SLL_CHAR("hhuuul"),x0,y0,width,height,(int)(advance*scale),bitmap,width*height),&glyphs);
 		sll_deallocate(bitmap);
