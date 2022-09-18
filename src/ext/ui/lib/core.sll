@@ -1,5 +1,5 @@
 (---
-	"font/true_type.sll"
+	"font/atlas.sll"
 	"gfx/buffer.sll"
 	"gfx/color.sll"
 	"gfx/context.sll"
@@ -182,7 +182,7 @@
 		[]
 		<>
 		<>
-		(<- font:true_type$create_atlas ctx _update_font_atlas)
+		(<- font:atlas$create ctx _update_font_atlas)
 	))
 	(= out$root (<- ui:element:container$create
 		out

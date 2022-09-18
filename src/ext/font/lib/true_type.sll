@@ -1,20 +1,12 @@
 (---
-	"array.sll"
 	"font/_load_library.sll"
-	"gfx/buffer.sll"
-	"gfx/context.sll"
-	"gfx/data_type.sll"
-	"gfx/sampler.sll"
-	"gfx/texture.sll"
-	"math.sll"
-	"sort.sll"
 	"string.sll"
 	"types.sll"
 )
 
 
 
-(# create_font update_rendered_text update_rendered_text_font)
+(# create_font)
 
 
 
@@ -39,25 +31,6 @@
 	int_type _area
 ))
 
-(= font_texture_glyph_type (&:
-	float_type tx0
-	float_type ty0
-	float_type tx1
-	float_type ty1
-	int_type x
-	int_type y
-	int_type width
-	int_type height
-	int_type advance
-))
-
-(= font_atlas_type (&:
-	(~ gfx:context$gfx_context_type) context
-	(~ gfx:sampler$gfx_sampler_type) sampler
-	gfx:texture$gfx_texture_type texture
-	func_type callback
-))
-
 (= font_type (&:
 	(~ int_type) ascent
 	(~ int_type) descent
@@ -66,128 +39,20 @@
 	int_type _total_area
 ))
 
-(= font_texture_type (&:
-	(~ font_type) font
-	(~ array_type) glyphs
-))
-
 (= font_true_type_module_type (&:
-	(~ type_type) font_atlas_type
 	(~ type_type) font_glyph_type
-	(~ type_type) font_texture_type
 	(~ type_type) font_type
-	(~ func_type) add_font
 	(~ func_type) create
-	(~ func_type) create_atlas
 	(~ func_type) create_font
 	(~ func_type) find
 ))
 
 
 
-(= _copy_image (,,, src dst width height x_offset y_offset stride
-	(= src_idx 0)
-	(= dst_idx (+
-		x_offset
-		(* y_offset stride)
-	))
-	(= stride (- stride width))
-	(-> (= y 0) (< y height)
-		(-> (= x 0) (< x width)
-			(= (: dst dst_idx) (: src src_idx))
-			(++ x)
-			(++ src_idx)
-			(++ dst_idx)
-		)
-		(= dst_idx (+ dst_idx stride))
-		(++ y)
-	)
-))
-
-(= add_font (,,, atlas font
-	(? (! atlas) (@@))
-	(= atlas (:: atlas font_atlas_type))
-	(= font (:: font font_type))
-	(= glyphs (<- sort$sort font$glyphs true false (,,, glyph
-		(@@ [glyph$height glyph$_area])
-	)))
-	(= texture_glyphs (<- array$create 256))
-	(= first_glyph (: glyphs 0))
-	(= row_height first_glyph$height)
-	(= width (<- math$int_sqrt font$_total_area))
-	(= texture_data (* "\x00" width row_height))
-	(= x_offset 0)
-	(= y_offset 0)
-	(-> (= i 0) (< i ($ glyphs))
-		(= glyph (: glyphs i))
-		(? (< (- width x_offset) glyph$width) {
-			(= x_offset 0)
-			(= y_offset (+ y_offset row_height))
-			(= row_height glyph$height)
-			(= texture_data (+
-				texture_data
-				(* "\x00" width row_height)
-			))
-		})
-		(<- _copy_image glyph$_data texture_data glyph$width glyph$height x_offset y_offset width)
-		(= (: texture_glyphs (:: glyph$codepoint int_type)) (. font_texture_glyph_type
-			x_offset
-			y_offset
-			(+ x_offset glyph$width)
-			(+ y_offset glyph$height)
-			glyph$x
-			glyph$y
-			glyph$width
-			glyph$height
-			glyph$advance
-		))
-		(= x_offset (+ x_offset glyph$width))
-		(++ i)
-	)
-	(= height (+ y_offset row_height))
-	(= inv_width (/ 1.0 width))
-	(= inv_height (/ 1.0 height))
-	(-> (= i 0) (< i 256)
-		(= glyph (: texture_glyphs i))
-		(++ i)
-		(? (! glyph) (<<<))
-		(= glyph$tx0 (* glyph$tx0 inv_width))
-		(= glyph$ty0 (* glyph$ty0 inv_height))
-		(= glyph$tx1 (* glyph$tx1 inv_width))
-		(= glyph$ty1 (* glyph$ty1 inv_height))
-	)
-	(= atlas$texture (<- gfx:texture$create atlas$context [width height] (| gfx:data_type$SIZE_8BIT gfx:data_type$COUNT_1 gfx:data_type$TYPE_COLOR_UNORM) (<- gfx:buffer$create atlas$context gfx:buffer$TYPE_TEXTURE gfx:buffer$DATA_TYPE_UINT8 (:: texture_data array_type) true)))
-	;;; FIXME: Currently due to an unknown bug the following line needs to be duplicated
-	(<- atlas$callback atlas)
-	(<- atlas$callback atlas)
-	(@@ (. font_texture_type
-		font
-		texture_glyphs
-	))
-))
-
 (= create (,,, data
 	(@@ (<-* create_font (<- (... "font:true_type_create")
 		(:: data string_type)
 	)))
-))
-
-(= create_atlas (,,, ctx callback
-	(? (! ctx) (@@ nil))
-	(= ctx (:: ctx gfx:context$gfx_context_type))
-	(= callback (:: callback func_type))
-	(@@ (. font_atlas_type
-		ctx
-		(<- gfx:sampler$create ctx (. gfx:sampler$gfx_sampler_config_type
-			gfx:sampler$FILTER_LINEAR
-			gfx:sampler$FILTER_LINEAR
-			gfx:sampler$ADDRESS_MODE_TYPE_CLAMP
-			gfx:sampler$ADDRESS_MODE_TYPE_CLAMP
-			gfx:sampler$ADDRESS_MODE_TYPE_CLAMP
-		))
-		(<- gfx:texture$create ctx [1 1] (| gfx:data_type$SIZE_8BIT gfx:data_type$COUNT_1 gfx:data_type$TYPE_COLOR_UNORM) (<- gfx:buffer$create ctx gfx:buffer$TYPE_TEXTURE gfx:buffer$DATA_TYPE_UINT8 [0xff] true))
-		callback
-	))
 ))
 
 (= create_font (,,, ascent descent line_gap glyphs
@@ -223,13 +88,9 @@
 
 
 (= font:true_type (. font_true_type_module_type
-	font_atlas_type
 	font_glyph_type
-	font_texture_type
 	font_type
-	add_font
 	create
-	create_atlas
 	create_font
 	find
 ))

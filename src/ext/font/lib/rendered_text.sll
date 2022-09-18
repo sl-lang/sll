@@ -1,6 +1,6 @@
 (---
 	"array.sll"
-	"font/true_type.sll"
+	"font/atlas.sll"
 	"gfx/buffer.sll"
 	"gfx/context.sll"
 	"types.sll"
@@ -9,7 +9,6 @@
 
 
 (# update update_font)
-
 
 
 
@@ -147,7 +146,7 @@
 (= update_font (,,, rendered_text font
 	(? (! rendered_text) (@@))
 	(= rendered_text (:: rendered_text font_rendered_text_type))
-	(= font (:: font font:true_type$font_texture_type))
+	(= font (:: font font:atlas$font_texture_type))
 	(? (=== rendered_text$font font) (@@))
 	(= rendered_text$font font)
 	(<- _render_entire_text rendered_text)

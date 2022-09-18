@@ -1,4 +1,5 @@
 (---
+	"font/atlas.sll"
 	"font/rendered_text.sll"
 	"font/true_type.sll"
 	"string.sll"
@@ -119,7 +120,7 @@
 	(? (! text) (@@))
 	(= text (:: text ui_text_element_type))
 	(= font (:: font font:true_type$font_type))
-	(= text$_font (<- font:true_type$add_font text$base$ui$_font_atlas font))
+	(= text$_font (<- font:atlas$add_font text$base$ui$_font_atlas font))
 	(<- font:rendered_text$update_font text$_rendered_text text$_font)
 ))
 
