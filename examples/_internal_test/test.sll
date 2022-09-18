@@ -1088,7 +1088,7 @@ abc` '\n')
 		(<- ui:layout$create_standard_layout 1 0)
 		(<- ui:layout$create_standard_layout 0 50)
 	]
-	rectangle6; ui_window$root
+	ui_window$root
 	font
 	"The quick brown fox jumps over the lazy dog"
 ))

@@ -8,7 +8,7 @@
 
 
 
-(# update_rendered_text update_rendered_text_font)
+(# update update_font)
 
 
 
@@ -24,15 +24,19 @@
 	float_type color_z_coord
 	gfx:buffer$gfx_buffer_type vertex_buffer
 	gfx:buffer$gfx_buffer_type index_buffer
+	float_type _last_x
+	float_type _last_y
 ))
 
 (= font_rendered_text_module_type (&:
 	(~ type_type) font_rendered_text_type
-	(~ func_type) create_rendered_text
-	(~ func_type) draw_rendered_text
-	(~ func_type) update_rendered_text
-	(~ func_type) update_rendered_text_font
-	(~ func_type) update_rendered_text_z_coords
+	(~ func_type) create
+	(~ func_type) draw
+	(~ func_type) update
+	(~ func_type) update_font
+	(~ func_type) update_position
+	(~ func_type) update_size
+	(~ func_type) update_z
 ))
 
 
@@ -98,7 +102,7 @@
 	(<- gfx:buffer$sync rendered_text$index_buffer)
 ))
 
-(= create_rendered_text (,,, ctx font text
+(= create (,,, ctx font text
 	(? (! ctx) (@@ nil))
 	(= ctx (:: ctx gfx:context$gfx_context_type))
 	(= vertex_buffer (<- gfx:buffer$create ctx gfx:buffer$TYPE_VERTEX gfx:buffer$DATA_TYPE_FLOAT32))
@@ -116,13 +120,15 @@
 		0.0
 		vertex_buffer
 		index_buffer
+		0.0
+		0.0
 	))
-	(? font (<- update_rendered_text_font out font))
-	(? text (<- update_rendered_text out text))
+	(? font (<- update_font out font))
+	(? text (<- update out text))
 	(@@ out)
 ))
 
-(= draw_rendered_text (,,, rendered_text
+(= draw (,,, rendered_text
 	(? (! rendered_text) (@@))
 	(= rendered_text (:: rendered_text font_rendered_text_type))
 	(<- gfx:buffer$use rendered_text$vertex_buffer)
@@ -130,7 +136,7 @@
 	(<- gfx:buffer$draw rendered_text$index_buffer)
 ))
 
-(= update_rendered_text (,,, rendered_text text
+(= update (,,, rendered_text text
 	(? (! rendered_text) (@@))
 	(= rendered_text (:: rendered_text font_rendered_text_type))
 	(= text (:: text string_type))
@@ -138,7 +144,37 @@
 	(<- _render_entire_text rendered_text)
 ))
 
-(= update_rendered_text_z_coords (,,, rendered_text
+(= update_font (,,, rendered_text font
+	(? (! rendered_text) (@@))
+	(= rendered_text (:: rendered_text font_rendered_text_type))
+	(= font (:: font font:true_type$font_texture_type))
+	(? (=== rendered_text$font font) (@@))
+	(= rendered_text$font font)
+	(<- _render_entire_text rendered_text)
+))
+
+(= update_position (,,, rendered_text
+	(? (! rendered_text) (@@))
+	(= rendered_text (:: rendered_text font_rendered_text_type))
+	(= x_offset (- rendered_text$x rendered_text$_last_x))
+	(= y_offset (- rendered_text$y rendered_text$_last_y))
+	(? (&& (! x_offset) (! y_offset)) (@@))
+	(= rendered_text$_last_x rendered_text$x)
+	(= rendered_text$_last_y rendered_text$y)
+	(-> (= i 0) (< i ($ rendered_text$vertex_buffer$data))
+		(= (: rendered_text$vertex_buffer$data i) (+ (: rendered_text$vertex_buffer$data i) x_offset))
+		(= (: rendered_text$vertex_buffer$data (+ i 1)) (+ (: rendered_text$vertex_buffer$data (+ i 1)) y_offset))
+		(= i (+ i 6))
+	)
+	(<- gfx:buffer$sync rendered_text$vertex_buffer)
+))
+
+(= update_size (,,, rendered_text
+	(? (! rendered_text) (@@))
+	(= rendered_text (:: rendered_text font_rendered_text_type))
+))
+
+(= update_z (,,, rendered_text
 	(? (! rendered_text) (@@))
 	(= rendered_text (:: rendered_text font_rendered_text_type))
 	(= z rendered_text$z_coord)
@@ -152,21 +188,16 @@
 	(<- gfx:buffer$sync rendered_text$vertex_buffer)
 ))
 
-(= update_rendered_text_font (,,, rendered_text font
-	(? (! rendered_text) (@@))
-	(= rendered_text (:: rendered_text font_rendered_text_type))
-	(= font (:: font font:true_type$font_texture_type))
-	(= rendered_text$font font)
-))
-
 
 
 (= font:rendered_text (. font_rendered_text_module_type
 	font_rendered_text_type
-	create_rendered_text
-	draw_rendered_text
-	update_rendered_text
-	update_rendered_text_font
-	update_rendered_text_z_coords
+	create
+	draw
+	update
+	update_font
+	update_position
+	update_size
+	update_z
 ))
 (## font:rendered_text)

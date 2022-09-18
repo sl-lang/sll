@@ -187,7 +187,7 @@
 		})
 	})
 	(? buffer$_is_default_frequency? (<- hint_update_frequency buffer FREQUENCY_LOW))
-	(<- (... "gfx:buffer_sync") buffer$ctx$_handle buffer$_handle buffer$data)
+	(<- (... "gfx:buffer_sync") buffer$ctx$_handle buffer$_handle (|| buffer$data [0]))
 	(<- array$push buffer$ctx$_sync_objects buffer)
 ))
 

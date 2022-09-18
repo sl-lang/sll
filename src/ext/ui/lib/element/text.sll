@@ -50,7 +50,7 @@
 		base
 		""
 		nil
-		(<- font:rendered_text$create_rendered_text ui$context)
+		(<- font:rendered_text$create ui$context)
 	))
 	(= out$_rendered_text$color_z_coord -1.0)
 	(? font (<- set_font out font))
@@ -69,7 +69,7 @@
 ))
 
 (= _render_text (,,, text
-	(<- font:rendered_text$draw_rendered_text text$_rendered_text)
+	(<- font:rendered_text$draw text$_rendered_text)
 ))
 
 (= _seralize_data (,,, text
@@ -87,11 +87,11 @@
 	(? (||
 		(!== text$_last_x text$base$position$x)
 		(!== text$_last_y text$base$position$y)
-	) (<- font:rendered_text$update_rendered_text_position text$_rendered_text))
+	) (<- font:rendered_text$update_position text$_rendered_text))
 	(? (||
 		(!== text$_last_width text$base$position$width)
 		(!== text$_last_height text$base$position$height)
-	) (<- font:rendered_text$update_rendered_text_size text$_rendered_text))
+	) (<- font:rendered_text$update_size text$_rendered_text))
 	(= text$_last_x text$base$position$x)
 	(= text$_last_y text$base$position$y)
 	(= text$_last_width text$base$position$width)
@@ -120,7 +120,7 @@
 	(= text (:: text ui_text_element_type))
 	(= font (:: font font:true_type$font_type))
 	(= text$_font (<- font:true_type$add_font text$base$ui$_font_atlas font))
-	(<- font:rendered_text$update_rendered_text_font text$_rendered_text text$_font)
+	(<- font:rendered_text$update_font text$_rendered_text text$_font)
 ))
 
 (= set_text (,,, text content
@@ -128,7 +128,7 @@
 	(= text (:: text ui_text_element_type))
 	(= content (: (:: content string_type)))
 	(= text$text content)
-	(<- font:rendered_text$update_rendered_text text$_rendered_text content)
+	(<- font:rendered_text$update text$_rendered_text content)
 ))
 
 (= set_parent (,,, text parent
@@ -136,7 +136,7 @@
 	(= text (:: text ui_text_element_type))
 	(? (! (<- ui:element$set_parent text parent)) (@@ false))
 	(= text$_rendered_text$z_coord text$base$z_index)
-	(<- font:rendered_text$update_rendered_text_z_coords text$_rendered_text)
+	(<- font:rendered_text$update_z text$_rendered_text)
 	(@@ true)
 ))
 

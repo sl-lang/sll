@@ -16,7 +16,7 @@ void main(void){
 		uint id=uint(-in_data.z-1);
 		out_color=texture(texture_sampler[id],in_data.xy);
 		if (id==0){
-			out_color=vec4(out_color.rrr,1.0);
+			out_color=out_color.rrrr;
 		}
 	}
 }
