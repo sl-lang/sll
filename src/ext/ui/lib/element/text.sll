@@ -27,6 +27,10 @@
 	string_type text
 	object_type _font
 	font:true_type$font_rendered_text_type _rendered_text
+	float_type _last_x
+	float_type _last_y
+	float_type _last_width
+	float_type _last_height
 ))
 
 (= ui_element_text_module_type (&:
@@ -51,6 +55,10 @@
 	(? font (<- set_font out font))
 	(? text (<- set_text out text))
 	(? parent (<- set_parent out parent))
+	(= out$_last_x out$base$position$x)
+	(= out$_last_y out$base$position$y)
+	(= out$_last_width out$base$position$width)
+	(= out$_last_height out$base$position$height)
 	(<- ui:element$setup out)
 	(@@ out)
 ))
@@ -68,6 +76,25 @@
 		text$_font$font
 		text$text
 	])
+))
+
+(= _update_position_and_size (,,, text
+	(= text$_rendered_text$x text$base$position$x)
+	(= text$_rendered_text$y text$base$position$y)
+	(= text$_rendered_text$width text$base$position$width)
+	(= text$_rendered_text$height text$base$position$height)
+	(? (||
+		(!== text$_last_x text$base$position$x)
+		(!== text$_last_y text$base$position$y)
+	) (<- font:true_type$update_rendered_text_position text$_rendered_text))
+	(? (||
+		(!== text$_last_width text$base$position$width)
+		(!== text$_last_height text$base$position$height)
+	) (<- font:true_type$update_rendered_text_size text$_rendered_text))
+	(= text$_last_x text$base$position$x)
+	(= text$_last_y text$base$position$y)
+	(= text$_last_width text$base$position$width)
+	(= text$_last_height text$base$position$height)
 ))
 
 (= create (,,, ui position_layout parent font text
@@ -121,7 +148,7 @@
 	nil
 	_render_text
 	_seralize_data
-	nil
+	_update_position_and_size
 ))
 
 
