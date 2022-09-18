@@ -1,0 +1,172 @@
+(---
+	"array.sll"
+	"font/true_type.sll"
+	"gfx/buffer.sll"
+	"gfx/context.sll"
+	"types.sll"
+)
+
+
+
+(# update_rendered_text update_rendered_text_font)
+
+
+
+
+(= font_rendered_text_type (&:
+	object_type font
+	string_type text
+	float_type x
+	float_type y
+	float_type width
+	float_type height
+	float_type z_coord
+	float_type color_z_coord
+	gfx:buffer$gfx_buffer_type vertex_buffer
+	gfx:buffer$gfx_buffer_type index_buffer
+))
+
+(= font_rendered_text_module_type (&:
+	(~ type_type) font_rendered_text_type
+	(~ func_type) create_rendered_text
+	(~ func_type) draw_rendered_text
+	(~ func_type) update_rendered_text
+	(~ func_type) update_rendered_text_font
+	(~ func_type) update_rendered_text_z_coords
+))
+
+
+
+(= _render_entire_text (,,, rendered_text
+	(= text rendered_text$text)
+	(= rendered_text$vertex_buffer$data (<- array$create (* ($ text) 24)))
+	(= rendered_text$index_buffer$data (<- array$create (* ($ text) 6)))
+	(= scale 0.5)
+	(= x rendered_text$x)
+	(= y (+ rendered_text$y (* rendered_text$font$font$ascent scale)))
+	(= z rendered_text$z_coord)
+	(= tz rendered_text$color_z_coord)
+	(-> (= i 0) (< i ($ text))
+		(= glyph (: rendered_text$font$glyphs (:: (: text i) int_type)))
+		(? glyph {
+			(= x0 (+ x (* glyph$x scale)))
+			(= y0 (+ y (* glyph$y scale)))
+			(= x1 (+ x0 (* glyph$width scale)))
+			(= y1 (+ y0 (* glyph$height scale)))
+			(= tx0 glyph$tx0)
+			(= ty0 glyph$ty0)
+			(= tx1 glyph$tx1)
+			(= ty1 glyph$ty1)
+			(= j (* i 24))
+			(= (: rendered_text$vertex_buffer$data j) x0)
+			(= (: rendered_text$vertex_buffer$data (+ j 1)) y0)
+			(= (: rendered_text$vertex_buffer$data (+ j 2)) z)
+			(= (: rendered_text$vertex_buffer$data (+ j 3)) tx0)
+			(= (: rendered_text$vertex_buffer$data (+ j 4)) ty0)
+			(= (: rendered_text$vertex_buffer$data (+ j 5)) tz)
+			(= (: rendered_text$vertex_buffer$data (+ j 6)) x1)
+			(= (: rendered_text$vertex_buffer$data (+ j 7)) y0)
+			(= (: rendered_text$vertex_buffer$data (+ j 8)) z)
+			(= (: rendered_text$vertex_buffer$data (+ j 9)) tx1)
+			(= (: rendered_text$vertex_buffer$data (+ j 10)) ty0)
+			(= (: rendered_text$vertex_buffer$data (+ j 11)) tz)
+			(= (: rendered_text$vertex_buffer$data (+ j 12)) x1)
+			(= (: rendered_text$vertex_buffer$data (+ j 13)) y1)
+			(= (: rendered_text$vertex_buffer$data (+ j 14)) z)
+			(= (: rendered_text$vertex_buffer$data (+ j 15)) tx1)
+			(= (: rendered_text$vertex_buffer$data (+ j 16)) ty1)
+			(= (: rendered_text$vertex_buffer$data (+ j 17)) tz)
+			(= (: rendered_text$vertex_buffer$data (+ j 18)) x0)
+			(= (: rendered_text$vertex_buffer$data (+ j 19)) y1)
+			(= (: rendered_text$vertex_buffer$data (+ j 20)) z)
+			(= (: rendered_text$vertex_buffer$data (+ j 21)) tx0)
+			(= (: rendered_text$vertex_buffer$data (+ j 22)) ty1)
+			(= (: rendered_text$vertex_buffer$data (+ j 23)) tz)
+			(= x (+ x (* glyph$advance scale)))
+		})
+		(= j (* i 6))
+		(= k (<< i 2))
+		(= (: rendered_text$index_buffer$data j) (+ k 2))
+		(= (: rendered_text$index_buffer$data (+ j 1)) (+ k 1))
+		(= (: rendered_text$index_buffer$data (+ j 2)) k)
+		(= (: rendered_text$index_buffer$data (+ j 3)) (+ k 3))
+		(= (: rendered_text$index_buffer$data (+ j 4)) (+ k 2))
+		(= (: rendered_text$index_buffer$data (+ j 5)) k)
+		(++ i)
+	)
+	(<- gfx:buffer$sync rendered_text$vertex_buffer)
+	(<- gfx:buffer$sync rendered_text$index_buffer)
+))
+
+(= create_rendered_text (,,, ctx font text
+	(? (! ctx) (@@ nil))
+	(= ctx (:: ctx gfx:context$gfx_context_type))
+	(= vertex_buffer (<- gfx:buffer$create ctx gfx:buffer$TYPE_VERTEX gfx:buffer$DATA_TYPE_FLOAT32))
+	(<- gfx:buffer$hint_update_frequency vertex_buffer gfx:buffer$FREQUENCY_MEDIUM)
+	(= index_buffer (<- gfx:buffer$create ctx gfx:buffer$TYPE_INDEX gfx:buffer$DATA_TYPE_UINT16))
+	(<- gfx:buffer$hint_update_frequency index_buffer gfx:buffer$FREQUENCY_MEDIUM)
+	(= out (. font_rendered_text_type
+		nil
+		""
+		0.0
+		0.0
+		0.0
+		0.0
+		0.0
+		0.0
+		vertex_buffer
+		index_buffer
+	))
+	(? font (<- update_rendered_text_font out font))
+	(? text (<- update_rendered_text out text))
+	(@@ out)
+))
+
+(= draw_rendered_text (,,, rendered_text
+	(? (! rendered_text) (@@))
+	(= rendered_text (:: rendered_text font_rendered_text_type))
+	(<- gfx:buffer$use rendered_text$vertex_buffer)
+	(<- gfx:buffer$use rendered_text$index_buffer)
+	(<- gfx:buffer$draw rendered_text$index_buffer)
+))
+
+(= update_rendered_text (,,, rendered_text text
+	(? (! rendered_text) (@@))
+	(= rendered_text (:: rendered_text font_rendered_text_type))
+	(= text (:: text string_type))
+	(= rendered_text$text text)
+	(<- _render_entire_text rendered_text)
+))
+
+(= update_rendered_text_z_coords (,,, rendered_text
+	(? (! rendered_text) (@@))
+	(= rendered_text (:: rendered_text font_rendered_text_type))
+	(= z rendered_text$z_coord)
+	(= tz rendered_text$color_z_coord)
+	(-> (= i 2) (< i ($ rendered_text$vertex_buffer$data))
+		(= (: rendered_text$vertex_buffer$data i) z)
+		(= i (+ i 3))
+		(= (: rendered_text$vertex_buffer$data i) tz)
+		(= i (+ i 3))
+	)
+	(<- gfx:buffer$sync rendered_text$vertex_buffer)
+))
+
+(= update_rendered_text_font (,,, rendered_text font
+	(? (! rendered_text) (@@))
+	(= rendered_text (:: rendered_text font_rendered_text_type))
+	(= font (:: font font:true_type$font_texture_type))
+	(= rendered_text$font font)
+))
+
+
+
+(= font:rendered_text (. font_rendered_text_module_type
+	font_rendered_text_type
+	create_rendered_text
+	draw_rendered_text
+	update_rendered_text
+	update_rendered_text_font
+	update_rendered_text_z_coords
+))
+(## font:rendered_text)
