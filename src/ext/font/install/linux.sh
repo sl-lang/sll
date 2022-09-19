@@ -1,5 +1,5 @@
 #!/bin/bash
-required_packages=( "libfontconfig" "libfontconfig-dev" )
+required_packages=( "libfontconfig1" "libfontconfig-dev" )
 packages_to_install=""
 for pkg in "${required_packages[@]}"; do
 	if [ "" = "$(dpkg-query -W --showformat='${Status}\n' $pkg|grep "install ok installed")" ]; then
