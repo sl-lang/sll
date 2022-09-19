@@ -148,11 +148,15 @@
 	(<- (... "gfx:buffer_delete") buffer$ctx$_handle buffer$_handle)
 ))
 
-(= draw (,,, buffer
+(= draw (,,, buffer count
 	(? (! buffer) (@@))
 	(= buffer (:: buffer gfx_buffer_type))
 	(? (! (& buffer$type TYPE_INDEX)) (@@))
-	(<- (... "gfx:buffer_draw") buffer$ctx$_handle buffer$_handle 0)
+	(<- (... "gfx:buffer_draw")
+		buffer$ctx$_handle
+		buffer$_handle
+		(:: count int_type)
+	)
 ))
 
 (= hint_update_frequency (,,, buffer frequency

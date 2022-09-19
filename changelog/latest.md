@@ -1,5 +1,9 @@
 # Sll [0.8.3] - Ongoing
 
+## Added
+
+- Ability to render only part of a GFX index buffer
+
 ## Changed
 
 - Fixed font atlas generaion

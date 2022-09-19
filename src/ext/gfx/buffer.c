@@ -107,7 +107,13 @@ __GFX_API_CALL void gfx_api_buffer_draw(gfx_context_t ctx_id,gfx_buffer_t buffer
 	if (!buffer||!(buffer->type&GFX_BUFFER_TYPE_INDEX)||!(buffer->flags&GFX_BUFFER_FLAG_HAS_DEVICE_BUFFER)){
 		return;
 	}
-	ctx->function_table.vkCmdDrawIndexed(ctx->frame.command_buffer,(count?count:(uint32_t)(buffer->length)),1,0,0,1);
+	if (!count){
+		count=(uint32_t)(buffer->length);
+	}
+	else if (count>buffer->length){
+		count=buffer->length;
+	}
+	ctx->function_table.vkCmdDrawIndexed(ctx->frame.command_buffer,count,1,0,0,1);
 }
 
 
