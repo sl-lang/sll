@@ -223,28 +223,28 @@ __GFX_API_CALL gfx_pipeline_t gfx_api_pipeline_create(gfx_context_t ctx_id,gfx_p
 		0
 	};
 	VkPipelineColorBlendAttachmentState color_blend_attachment_state={
-		VK_FALSE,
-		VK_BLEND_FACTOR_ZERO,
-		VK_BLEND_FACTOR_ZERO,
-		VK_BLEND_OP_ADD,
-		VK_BLEND_FACTOR_ZERO,
+		VK_TRUE,
+		VK_BLEND_FACTOR_ONE,
 		VK_BLEND_FACTOR_ZERO,
 		VK_BLEND_OP_ADD,
-		0x0f
+		VK_BLEND_FACTOR_ONE,
+		VK_BLEND_FACTOR_ZERO,
+		VK_BLEND_OP_SUBTRACT,
+		VK_COLOR_COMPONENT_R_BIT|VK_COLOR_COMPONENT_G_BIT|VK_COLOR_COMPONENT_B_BIT|VK_COLOR_COMPONENT_A_BIT
 	};
 	VkPipelineColorBlendStateCreateInfo color_blend_state={
 		VK_STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_STATE_CREATE_INFO,
 		NULL,
 		0,
 		VK_FALSE,
-		VK_LOGIC_OP_OR,
+		VK_LOGIC_OP_COPY,
 		1,
 		&color_blend_attachment_state,
 		{
-			0,
-			0,
-			0,
-			0
+			0.0f,
+			0.0f,
+			0.0f,
+			0.0f
 		}
 	};
 	VkDynamicState dynamic_states[2]={
