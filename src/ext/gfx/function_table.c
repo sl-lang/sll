@@ -25,7 +25,7 @@ static const sll_internal_function_descriptor_t _internal_function_table[]={
 	{
 		SLL_CHAR("gfx:buffer_draw"),
 		gfx_api_buffer_draw,
-		SLL_CHAR("QQ|")
+		SLL_CHAR("QQD|")
 	},
 	{
 		SLL_CHAR("gfx:buffer_hint_update_frequency"),

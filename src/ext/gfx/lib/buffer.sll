@@ -152,7 +152,7 @@
 	(? (! buffer) (@@))
 	(= buffer (:: buffer gfx_buffer_type))
 	(? (! (& buffer$type TYPE_INDEX)) (@@))
-	(<- (... "gfx:buffer_draw") buffer$ctx$_handle buffer$_handle)
+	(<- (... "gfx:buffer_draw") buffer$ctx$_handle buffer$_handle 0)
 ))
 
 (= hint_update_frequency (,,, buffer frequency

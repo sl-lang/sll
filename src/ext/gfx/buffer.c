@@ -98,7 +98,7 @@ __GFX_API_CALL void gfx_api_buffer_delete(gfx_context_t ctx_id,gfx_buffer_t buff
 
 
 
-__GFX_API_CALL void gfx_api_buffer_draw(gfx_context_t ctx_id,gfx_buffer_t buffer_id){
+__GFX_API_CALL void gfx_api_buffer_draw(gfx_context_t ctx_id,gfx_buffer_t buffer_id,uint32_t count){
 	gfx_context_data_t* ctx=SLL_HANDLE_CONTAINER_GET(&gfx_context_data,ctx_id);
 	if (!ctx){
 		return;
@@ -107,7 +107,7 @@ __GFX_API_CALL void gfx_api_buffer_draw(gfx_context_t ctx_id,gfx_buffer_t buffer
 	if (!buffer||!(buffer->type&GFX_BUFFER_TYPE_INDEX)||!(buffer->flags&GFX_BUFFER_FLAG_HAS_DEVICE_BUFFER)){
 		return;
 	}
-	ctx->function_table.vkCmdDrawIndexed(ctx->frame.command_buffer,(uint32_t)(buffer->length),1,0,0,1);
+	ctx->function_table.vkCmdDrawIndexed(ctx->frame.command_buffer,(count?count:(uint32_t)(buffer->length)),1,0,0,1);
 }
 
 
