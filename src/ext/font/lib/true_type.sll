@@ -12,7 +12,7 @@
 
 (= font_glyph_type (&:
 	(,,, data
-		(@@ (<- string$format "(%c: %d %d %u %u | +%u)"
+		(@@ (<- string$format "(%c: %f %f %f %f | %+f)"
 			data$codepoint
 			data$x
 			data$y
@@ -22,21 +22,22 @@
 		))
 	) @@string@@
 	char_type codepoint
-	int_type x
-	int_type y
-	int_type width
-	int_type height
-	int_type advance
+	float_type x
+	float_type y
+	float_type width
+	float_type height
+	float_type advance
 	string_type _data
-	int_type _area
+	int_type _data_width
+	float_type _area
 ))
 
 (= font_type (&:
-	(~ int_type) ascent
-	(~ int_type) descent
-	(~ int_type) line_gap
+	(~ float_type) ascent
+	(~ float_type) descent
+	(~ float_type) line_gap
 	(~ array_type) glyphs
-	int_type _total_area
+	float_type _total_area
 ))
 
 (= font_true_type_module_type (&:

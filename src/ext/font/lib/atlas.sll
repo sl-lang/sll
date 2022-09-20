@@ -18,11 +18,11 @@
 	float_type ty0
 	float_type tx1
 	float_type ty1
-	int_type x
-	int_type y
-	int_type width
-	int_type height
-	int_type advance
+	float_type x
+	float_type y
+	float_type width
+	float_type height
+	float_type advance
 ))
 
 (= font_atlas_type (&:
@@ -33,8 +33,11 @@
 ))
 
 (= font_texture_type (&:
-	(~ font:true_type$font_type) font
+	(~ float_type) ascent
+	(~ float_type) descent
+	(~ float_type) line_gap
 	(~ array_type) glyphs
+	(~ font:true_type$font_type) font
 ))
 
 (= font_atlas_module_type (&:
@@ -65,44 +68,52 @@
 	)
 ))
 
-(= add_font (,,, atlas font
+(= add_font (,,, atlas font scale
 	(? (! atlas) (@@))
 	(= atlas (:: atlas font_atlas_type))
 	(= font (:: font font:true_type$font_type))
+	(= scale (:: scale float_type))
+	(? (<= scale 0) (= scale 64.0))
 	(= glyphs (<- sort$sort font$glyphs true false (,,, glyph
 		(@@ [glyph$height glyph$_area])
 	)))
 	(= texture_glyphs (<- array$create 256))
 	(= first_glyph (: glyphs 0))
-	(= row_height first_glyph$height)
-	(= width (+ (<- math$int_sqrt font$_total_area) (// ($ glyphs) 2)))
+	(= row_height (:: (* first_glyph$height scale) int_type))
+	(= width (+ (<- math$int_sqrt (*
+		font$_total_area
+		scale
+		scale
+	) (// ($ glyphs) 2)))
 	(= texture_data (* "\x00" width row_height))
 	(= x_offset 0)
 	(= y_offset 0)
 	(-> (= i 0) (< i ($ glyphs))
 		(= glyph (: glyphs i))
-		(? (< (- width x_offset) glyph$width) {
+		(= bitmap_width glyph$_data_width)
+		(= bitmap_height (// ($ glyph$_data) bitmap_width))
+		(? (< (- width x_offset) bitmap_width) {
 			(= x_offset 0)
 			(= y_offset (+ y_offset row_height 1))
-			(= row_height glyph$height)
+			(= row_height bitmap_height)
 			(= texture_data (+
 				texture_data
 				(* "\x00" width (+ row_height 1))
 			))
 		})
-		(<- _copy_image glyph$_data texture_data glyph$width glyph$height x_offset y_offset width)
+		(<- _copy_image glyph$_data texture_data bitmap_width bitmap_height x_offset y_offset bitmap_width)
 		(= (: texture_glyphs (:: glyph$codepoint int_type)) (. font_texture_glyph_type
 			x_offset
 			y_offset
-			(+ x_offset glyph$width)
-			(+ y_offset glyph$height)
-			glyph$x
-			glyph$y
-			glyph$width
-			glyph$height
-			glyph$advance
+			(+ x_offset bitmap_width)
+			(+ y_offset bitmap_height)
+			(* glyph$x scale)
+			(* glyph$y scale)
+			(* glyph$width scale)
+			(* glyph$height scale)
+			(* glyph$advance scale)
 		))
-		(= x_offset (+ x_offset glyph$width 1))
+		(= x_offset (+ x_offset bitmap_width 1))
 		(++ i)
 	)
 	(= height (+ y_offset row_height))
@@ -122,8 +133,11 @@
 	(<- atlas$callback atlas)
 	(<- atlas$callback atlas)
 	(@@ (. font_texture_type
-		font
+		(* font$ascent scale)
+		(* font$descent scale)
+		(* font$line_gap scale)
 		texture_glyphs
+		font
 	))
 ))
 
