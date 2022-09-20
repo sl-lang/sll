@@ -79,7 +79,7 @@
 	)))
 	(= texture_glyphs (<- array$create 256))
 	(= first_glyph (: glyphs 0))
-	(= row_height (:: (* first_glyph$height scale) int_type))
+	(= row_height (// ($ first_glyph$_data) first_glyph$_data_width))
 	(= width (+ (<- math$int_sqrt (*
 		font$_total_area
 		scale
@@ -101,7 +101,7 @@
 				(* "\x00" width (+ row_height 1))
 			))
 		})
-		(<- _copy_image glyph$_data texture_data bitmap_width bitmap_height x_offset y_offset bitmap_width)
+		(<- _copy_image glyph$_data texture_data bitmap_width bitmap_height x_offset y_offset width)
 		(= (: texture_glyphs (:: glyph$codepoint int_type)) (. font_texture_glyph_type
 			x_offset
 			y_offset
