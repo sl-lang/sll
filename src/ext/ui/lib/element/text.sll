@@ -28,6 +28,7 @@
 	(~ ui:element$ui_element_type) base
 	string_type text
 	object_type _font
+	float_type _font_size
 	font:rendered_text$font_rendered_text_type _rendered_text
 	float_type _last_x
 	float_type _last_y
@@ -46,15 +47,16 @@
 
 
 
-(= _create_text (,,, ui base parent font text
+(= _create_text (,,, ui base parent font text font_size
 	(= out (. ui_text_element_type
 		base
 		""
 		nil
+		font_size
 		(<- font:rendered_text$create ui$context)
 	))
 	(= out$_rendered_text$color_z_coord -1.0)
-	(? font (<- set_font out font))
+	(? font (<- set_font out font font_size))
 	(? text (<- set_text out text))
 	(? parent (<- set_parent out parent))
 	(= out$_last_x out$base$position$x)
@@ -66,7 +68,7 @@
 ))
 
 (= _deseralize_data (,,, ui base parent data
-	(@@ (<- _create_text ui base parent (: data 0) (: data 1)))
+	(@@ (<- _create_text ui base parent (: data 0) (: data 1) (: data 2)))
 ))
 
 (= _render_text (,,, text
@@ -77,6 +79,7 @@
 	(@@ [
 		text$_font$font
 		text$text
+		text$_font_size
 	])
 ))
 
@@ -99,7 +102,7 @@
 	(= text$_last_height text$base$position$height)
 ))
 
-(= create (,,, ui position_layout parent font text
+(= create (,,, ui position_layout parent font text font_size
 	(= ui (?: ui (:: ui ui:core$ui_type) nil))
 	(@@ (<- _create_text
 		ui
@@ -107,6 +110,7 @@
 		parent
 		font
 		text
+		font_size
 	))
 ))
 
@@ -116,11 +120,13 @@
 	(<- ui:element$delete text)
 ))
 
-(= set_font (,,, text font
+(= set_font (,,, text font font_size
 	(? (! text) (@@))
 	(= text (:: text ui_text_element_type))
 	(= font (:: font font:true_type$font_type))
-	(= text$_font (<- font:atlas$add_font text$base$ui$_font_atlas font 32))
+	(= font_size (:: font_size float_type))
+	(? (<= font_size 0) (= font_size 32))
+	(= text$_font (<- font:atlas$add_font text$base$ui$_font_atlas font font_size))
 	(<- font:rendered_text$update_font text$_rendered_text text$_font)
 ))
 
