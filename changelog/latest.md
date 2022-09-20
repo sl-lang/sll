@@ -2,6 +2,7 @@
 
 ## Added
 
+- Ability to properly scale fonts
 - Ability to render only part of a GFX index buffer
 
 ## Changed

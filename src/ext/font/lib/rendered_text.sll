@@ -21,6 +21,7 @@
 	float_type height
 	float_type z_coord
 	float_type color_z_coord
+	float_type scale
 	gfx:buffer$gfx_buffer_type vertex_buffer
 	gfx:buffer$gfx_buffer_type index_buffer
 	float_type _last_x
@@ -34,6 +35,7 @@
 	(~ func_type) update
 	(~ func_type) update_font
 	(~ func_type) update_position
+	(~ func_type) update_scale
 	(~ func_type) update_size
 	(~ func_type) update_z
 ))
@@ -44,7 +46,7 @@
 	(= text rendered_text$text)
 	(= rendered_text$vertex_buffer$data (<- array$create (* ($ text) 24)))
 	(= rendered_text$index_buffer$data (<- array$create (* ($ text) 6)))
-	(= scale 1.0)
+	(= scale rendered_text$scale)
 	(= x rendered_text$x)
 	(= y (+ rendered_text$y (* rendered_text$font$ascent scale)))
 	(= z rendered_text$z_coord)
@@ -120,6 +122,7 @@
 		0.0
 		0.0
 		0.0
+		1.0
 		vertex_buffer
 		index_buffer
 		0.0
@@ -171,6 +174,12 @@
 	(<- gfx:buffer$sync rendered_text$vertex_buffer)
 ))
 
+(= update_scale (,,, rendered_text
+	(? (! rendered_text) (@@))
+	(= rendered_text (:: rendered_text font_rendered_text_type))
+	(<- _render_entire_text rendered_text)
+))
+
 (= update_size (,,, rendered_text
 	(? (! rendered_text) (@@))
 	(= rendered_text (:: rendered_text font_rendered_text_type))
@@ -199,6 +208,7 @@
 	update
 	update_font
 	update_position
+	update_scale
 	update_size
 	update_z
 ))
