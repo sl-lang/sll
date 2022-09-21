@@ -14,10 +14,6 @@
 
 
 
-static const float _default_queue_priority=0.0f;
-
-
-
 sll_handle_container_t gfx_context_data;
 
 
@@ -534,6 +530,7 @@ __GFX_API_CALL gfx_context_t gfx_api_context_create(void* handle,void* extra_dat
 	if (ctx->surface.color_format==VK_FORMAT_UNDEFINED){
 		ctx->surface.color_format=VK_FORMAT_B8G8R8A8_UNORM;
 	}
+	float default_queue_priority=0.0f;
 	VkDeviceQueueCreateInfo device_queue_info[2]={
 		{
 			VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO,
@@ -541,7 +538,7 @@ __GFX_API_CALL gfx_context_t gfx_api_context_create(void* handle,void* extra_dat
 			0,
 			ctx->queue.graphics_queue_index,
 			1,
-			&_default_queue_priority
+			&default_queue_priority
 		},
 		{
 			VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO,
@@ -549,7 +546,7 @@ __GFX_API_CALL gfx_context_t gfx_api_context_create(void* handle,void* extra_dat
 			0,
 			ctx->queue.transfer_queue_index,
 			1,
-			&_default_queue_priority
+			&default_queue_priority
 		}
 	};
 	const char* device_extensions[1]={
