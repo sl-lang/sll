@@ -13,7 +13,7 @@
 
 
 
-(= font_atlas_rendered_font_glyph_type (&:
+(= font_atlas_glyph_bbox_type (&:
 	float_type tx0
 	float_type ty0
 	float_type tx1
@@ -31,7 +31,6 @@
 	gfx:texture$gfx_texture_type texture
 	func_type callback
 	map_type _rendered_fonts
-	array_type _combined_glyphs
 ))
 
 (= font_texture_glyph_type (&:
@@ -52,6 +51,11 @@
 	(~ float_type) line_gap
 	(~ array_type) glyphs
 	(~ font:true_type$font_type) font
+))
+
+(= font_glyph_and_font_index_type (&:
+	int_type font_index
+	font:true_type$font_glyph_type glyph
 ))
 
 (= font_atlas_module_type (&:
@@ -88,75 +92,114 @@
 	(= font (:: font font:true_type$font_type))
 	(= scale (:: scale float_type))
 	(? (<= scale 0) (= scale 64.0))
-	(? (: atlas$_rendered_fonts font) {
-		(= rendered_font_data (: atlas$_rendered_fonts font))
-		(? (<= scale rendered_font_data$scale) {
-			; (:> "Generate\n")
-		})
-	})
-	(= glyphs (<- sort$sort font$glyphs true false (,,, glyph
-		(@@ [glyph$height glyph$_area])
-	)))
-	(= texture_glyphs (<- array$create 256))
-	(= first_glyph (: glyphs 0))
-	(= row_height (// ($ first_glyph$_data) first_glyph$_data_width))
-	(= width (+ (<- math$int_sqrt (*
-		font$_total_area
-		scale
-		scale
-	) (// ($ glyphs) 2)))
-	(= texture_data (* "\x00" width row_height))
-	(= x_offset 0)
-	(= y_offset 0)
-	(-> (= i 0) (< i ($ glyphs))
-		(= glyph (: glyphs i))
-		(= bitmap_width glyph$_data_width)
-		(= bitmap_height (// ($ glyph$_data) bitmap_width))
-		(? (< (- width x_offset) bitmap_width) {
-			(= x_offset 0)
-			(= y_offset (+ y_offset row_height 1))
-			(= row_height bitmap_height)
-			(= texture_data (+
-				texture_data
-				(* "\x00" width (+ row_height 1))
+	(= rendered_font_data (: atlas$_rendered_fonts font))
+	(? (||
+		(! rendered_font_data)
+		(< rendered_font_data$scale scale)
+	) {
+		(? (! rendered_font_data) {
+			(= rendered_font_data (. font_atlas_rendered_font_data_type
+				scale
+				(<- array$create 256)
 			))
+			(= (: atlas$_rendered_fonts font) rendered_font_data)
 		})
-		(<- _copy_image glyph$_data texture_data bitmap_width bitmap_height x_offset y_offset width)
-		(= (: texture_glyphs (:: glyph$codepoint int_type)) (. font_texture_glyph_type
-			x_offset
-			y_offset
-			(+ x_offset bitmap_width)
-			(+ y_offset bitmap_height)
+		(= fonts (:: atlas$_rendered_fonts map_key_type))
+		(= rendered_fonts (:: atlas$_rendered_fonts map_value_type))
+		(= glyphs [])
+		(= total_glyph_area 0.0)
+		(-> (= i 0) (< i ($ fonts))
+			(= embedded_font (: fonts i))
+			(= rendered_font_data (: atlas$_rendered_fonts embedded_font))
+			(= total_glyph_area (+ total_glyph_area (*
+				embedded_font$_total_area
+				rendered_font_data$scale
+				rendered_font_data$scale
+			)))
+			(-> (= j 0) (< j ($ embedded_font$glyphs))
+				(<- array$push glyphs (. font_glyph_and_font_index_type
+					i
+					(: embedded_font$glyphs j)
+				))
+				(++ j)
+			)
+			(++ i)
+		)
+		(<- sort$sort glyphs true true (,,, glyph
+			(@@ [glyph$glyph$height glyph$glyph$_area])
+		))
+		(= first_glyph (: glyphs 0))
+		(= row_height (// ($ first_glyph$glyph$_data) first_glyph$glyph$_data_width))
+		(= width (+ (<- math$int_sqrt total_glyph_area) (// ($ glyphs) 2)))
+		(= texture_data (* "\x00" width row_height))
+		(= x_offset 0)
+		(= y_offset 0)
+		(-> (= i 0) (< i ($ glyphs))
+			(= glyph (: glyphs i))
+			(= bitmap_width glyph$glyph$_data_width)
+			(= bitmap_height (// ($ glyph$glyph$_data) bitmap_width))
+			(? (< (- width x_offset) bitmap_width) {
+				(= x_offset 0)
+				(= y_offset (+ y_offset row_height 1))
+				(= row_height bitmap_height)
+				(= texture_data (+
+					texture_data
+					(* "\x00" width (+ row_height 1))
+				))
+			})
+			(<- _copy_image glyph$glyph$_data texture_data bitmap_width bitmap_height x_offset y_offset width)
+			(= rendered_font_data (: rendered_fonts glyph$font_index))
+			(= (: rendered_font_data$glyphs (:: glyph$glyph$codepoint int_type)) (. font_atlas_glyph_bbox_type
+				x_offset
+				y_offset
+				(+ x_offset bitmap_width)
+				(+ y_offset bitmap_height)
+			))
+			(= x_offset (+ x_offset bitmap_width 1))
+			(++ i)
+		)
+		(= height (+ y_offset row_height))
+		(= inv_width (/ 1.0 width))
+		(= inv_height (/ 1.0 height))
+		(-> (= i 0) (< i ($ glyphs))
+			(= glyph (: glyphs i))
+			(= rendered_font_data (: rendered_fonts glyph$font_index))
+			(= glyph_bbox (: rendered_font_data$glyphs (:: glyph$glyph$codepoint int_type)))
+			(++ i)
+			(? (! glyph_bbox) (<<<))
+			(= glyph_bbox$tx0 (* glyph_bbox$tx0 inv_width))
+			(= glyph_bbox$ty0 (* glyph_bbox$ty0 inv_height))
+			(= glyph_bbox$tx1 (* glyph_bbox$tx1 inv_width))
+			(= glyph_bbox$ty1 (* glyph_bbox$ty1 inv_height))
+		)
+		(= atlas$texture (<- gfx:texture$create atlas$context [width height] (| gfx:data_type$SIZE_8BIT gfx:data_type$COUNT_1 gfx:data_type$TYPE_COLOR_UNORM) (<- gfx:buffer$create atlas$context gfx:buffer$TYPE_TEXTURE gfx:buffer$DATA_TYPE_UINT8 (:: texture_data array_type) true)))
+		;;; FIXME: Currently due to an unknown bug the following line needs to be duplicated
+		(<- atlas$callback atlas)
+		(<- atlas$callback atlas)
+	})
+	(= rendered_font_data (: atlas$_rendered_fonts font))
+	(= texture_data (<- array$create 256))
+	(-> (= i 0) (< i ($ font$glyphs))
+		(= glyph (: font$glyphs i))
+		(= glyph_bbox (: rendered_font_data$glyphs (:: glyph$codepoint int_type)))
+		(= (: texture_data (:: glyph$codepoint int_type)) (. font_texture_glyph_type
+			glyph_bbox$tx0
+			glyph_bbox$ty0
+			glyph_bbox$tx1
+			glyph_bbox$ty1
 			(* glyph$x scale)
 			(* glyph$y scale)
 			(* glyph$width scale)
 			(* glyph$height scale)
 			(* glyph$advance scale)
 		))
-		(= x_offset (+ x_offset bitmap_width 1))
 		(++ i)
 	)
-	(= height (+ y_offset row_height))
-	(= inv_width (/ 1.0 width))
-	(= inv_height (/ 1.0 height))
-	(-> (= i 0) (< i 256)
-		(= glyph (: texture_glyphs i))
-		(++ i)
-		(? (! glyph) (<<<))
-		(= glyph$tx0 (* glyph$tx0 inv_width))
-		(= glyph$ty0 (* glyph$ty0 inv_height))
-		(= glyph$tx1 (* glyph$tx1 inv_width))
-		(= glyph$ty1 (* glyph$ty1 inv_height))
-	)
-	(= atlas$texture (<- gfx:texture$create atlas$context [width height] (| gfx:data_type$SIZE_8BIT gfx:data_type$COUNT_1 gfx:data_type$TYPE_COLOR_UNORM) (<- gfx:buffer$create atlas$context gfx:buffer$TYPE_TEXTURE gfx:buffer$DATA_TYPE_UINT8 (:: texture_data array_type) true)))
-	;;; FIXME: Currently due to an unknown bug the following line needs to be duplicated
-	(<- atlas$callback atlas)
-	(<- atlas$callback atlas)
 	(@@ (. font_texture_type
 		(* font$ascent scale)
 		(* font$descent scale)
 		(* font$line_gap scale)
-		texture_glyphs
+		texture_data
 		font
 	))
 ))
@@ -177,7 +220,6 @@
 		(<- gfx:texture$create ctx [1 1] (| gfx:data_type$SIZE_8BIT gfx:data_type$COUNT_1 gfx:data_type$TYPE_COLOR_UNORM) (<- gfx:buffer$create ctx gfx:buffer$TYPE_TEXTURE gfx:buffer$DATA_TYPE_UINT8 [0xff] true))
 		callback
 		<>
-		[]
 	))
 ))
 

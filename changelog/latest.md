@@ -9,7 +9,8 @@
 
 - Fixed font atlas generaion
 - Fixed transparent UI textures & fonts
-- Improved font load times by caching
+- Improved font atlas creation
+- Improved font load times
 - Internal font glyph representation is now independent of the font size
 - Restructured the `font` module
 
