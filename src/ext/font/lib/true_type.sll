@@ -1,6 +1,7 @@
 (---
 	"file.sll"
 	"font/_load_library.sll"
+	"path.sll"
 	"string.sll"
 	"types.sll"
 )
@@ -52,6 +53,10 @@
 
 
 
+(= _file_path_to_font <>)
+
+
+
 (= create (,,, data
 	(@@ (<-* create_font (<- (... "font:true_type_create")
 		(:: data string_type)
@@ -91,11 +96,12 @@
 (= load (,,, file_path
 	(? (! file_path) (@@ nil))
 	(= file_path (:: file_path string_type))
-	(= out (<- create
-		(<- file$read
-			(<- file$open file_path "r")
-		)
-	))
+	(= file_path (<- path$absolute file_path))
+	(? (: _file_path_to_font file_path) (@@ (: _file_path_to_font file_path)))
+	(= handle (<- file$open file_path "r"))
+	(? (!== (:? handle) file$file_type) (@@ handle))
+	(= out (<- create (<- file$read handle)))
+	(= (: _file_path_to_font file_path) out)
 	(@@ out)
 ))
 
