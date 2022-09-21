@@ -180,11 +180,7 @@
 (= update_scale (,,, rendered_text
 	(? (! rendered_text) (@@))
 	(= rendered_text (:: rendered_text font_rendered_text_type))
-	(-> (= i 0) (< i ($ rendered_text$vertex_buffer$data))
-		(= (: rendered_text$vertex_buffer$data i) (+ (: rendered_text$vertex_buffer$data i) x_offset))
-		(= (: rendered_text$vertex_buffer$data (+ i 1)) (+ (: rendered_text$vertex_buffer$data (+ i 1)) y_offset))
-		(= i (+ i 6))
-	)
+	(<- _render_entire_text rendered_text)
 ))
 
 (= update_size (,,, rendered_text
