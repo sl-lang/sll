@@ -1,6 +1,7 @@
 (---
 	"file.sll"
 	"font/_load_library.sll"
+	"map.sll"
 	"path.sll"
 	"string.sll"
 	"types.sll"
@@ -49,6 +50,7 @@
 	(~ func_type) create_font
 	(~ func_type) find
 	(~ func_type) load
+	(~ func_type) purge_cache
 ))
 
 
@@ -105,6 +107,13 @@
 	(@@ out)
 ))
 
+(= purge_cache (,,, file_path
+	(? (! file_path)
+		(= _file_path_to_font <>)
+		(<- map$remove _file_path_to_font (<- path$absolute file_path))
+	)
+))
+
 
 
 (= font:true_type (. font_true_type_module_type
@@ -114,5 +123,6 @@
 	create_font
 	find
 	load
+	purge_cache
 ))
 (## font:true_type)
