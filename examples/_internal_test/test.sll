@@ -1077,8 +1077,8 @@ abc` '\n')
 	[0.8 0.5 0.13]
 ))
 (= font_file_path (<- font:true_type$find "consolas" "monospace"))
-(= font (<- font:true_type$create
-	(<- file$read (<- file$open font_file_path "r"))
+(= font (<- font:true_type$load
+	font_file_path
 ))
 (= text (<- ui:element:text$create
 	ui_window

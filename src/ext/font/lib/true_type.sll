@@ -1,4 +1,5 @@
 (---
+	"file.sll"
 	"font/_load_library.sll"
 	"string.sll"
 	"types.sll"
@@ -46,6 +47,7 @@
 	(~ func_type) create
 	(~ func_type) create_font
 	(~ func_type) find
+	(~ func_type) load
 ))
 
 
@@ -86,6 +88,17 @@
 	(@@ nil)
 ))
 
+(= load (,,, file_path
+	(? (! file_path) (@@ nil))
+	(= file_path (:: file_path string_type))
+	(= out (<- create
+		(<- file$read
+			(<- file$open file_path "r")
+		)
+	))
+	(@@ out)
+))
+
 
 
 (= font:true_type (. font_true_type_module_type
@@ -94,5 +107,6 @@
 	create
 	create_font
 	find
+	load
 ))
 (## font:true_type)
