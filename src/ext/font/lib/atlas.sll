@@ -13,6 +13,27 @@
 
 
 
+(= font_atlas_rendered_font_glyph_type (&:
+	float_type tx0
+	float_type ty0
+	float_type tx1
+	float_type ty1
+))
+
+(= font_atlas_rendered_font_data_type (&:
+	float_type scale
+	array_type glyphs
+))
+
+(= font_atlas_type (&:
+	(~ gfx:context$gfx_context_type) context
+	(~ gfx:sampler$gfx_sampler_type) sampler
+	gfx:texture$gfx_texture_type texture
+	func_type callback
+	map_type _rendered_fonts
+	array_type _combined_glyphs
+))
+
 (= font_texture_glyph_type (&:
 	float_type tx0
 	float_type ty0
@@ -23,13 +44,6 @@
 	float_type width
 	float_type height
 	float_type advance
-))
-
-(= font_atlas_type (&:
-	(~ gfx:context$gfx_context_type) context
-	(~ gfx:sampler$gfx_sampler_type) sampler
-	gfx:texture$gfx_texture_type texture
-	func_type callback
 ))
 
 (= font_texture_type (&:
@@ -74,6 +88,12 @@
 	(= font (:: font font:true_type$font_type))
 	(= scale (:: scale float_type))
 	(? (<= scale 0) (= scale 64.0))
+	(? (: atlas$_rendered_fonts font) {
+		(= rendered_font_data (: atlas$_rendered_fonts font))
+		(? (<= scale rendered_font_data$scale) {
+			; (:> "Generate\n")
+		})
+	})
 	(= glyphs (<- sort$sort font$glyphs true false (,,, glyph
 		(@@ [glyph$height glyph$_area])
 	)))
@@ -156,6 +176,8 @@
 		))
 		(<- gfx:texture$create ctx [1 1] (| gfx:data_type$SIZE_8BIT gfx:data_type$COUNT_1 gfx:data_type$TYPE_COLOR_UNORM) (<- gfx:buffer$create ctx gfx:buffer$TYPE_TEXTURE gfx:buffer$DATA_TYPE_UINT8 [0xff] true))
 		callback
+		<>
+		[]
 	))
 ))
 
