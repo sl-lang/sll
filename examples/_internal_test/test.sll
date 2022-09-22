@@ -1076,7 +1076,6 @@ abc` '\n')
 	handle2
 	[0.8 0.5 0.13]
 ))
-(= font (<- font:true_type$load (<- font:true_type$find "consolas" "monospace")))
 (= text (<- ui:element:text$create
 	ui_window
 	[
@@ -1086,24 +1085,23 @@ abc` '\n')
 		(<- ui:layout$create_standard_layout 0 50)
 	]
 	ui_window$root
-	font
+	(<- font:true_type$load (<- font:true_type$find "consolas" "monospace"))
 	"The quick brown fox jumps over the lazy dog."
 	36
 ))
-(= font (<- font:true_type$load (<- font:true_type$find "times")))
-(= text (<- ui:element:text$create
-	ui_window
-	[
-		(<- ui:layout$create_standard_layout 0 0)
-		(<- ui:layout$create_standard_layout 1 -100)
-		(<- ui:layout$create_standard_layout 1 0)
-		(<- ui:layout$create_standard_layout 0 50)
-	]
-	ui_window$root
-	font
-	"AV fi"
-	36
-))
+; (= text (<- ui:element:text$create
+; 	ui_window
+; 	[
+; 		(<- ui:layout$create_standard_layout 0 0)
+; 		(<- ui:layout$create_standard_layout 1 -100)
+; 		(<- ui:layout$create_standard_layout 1 0)
+; 		(<- ui:layout$create_standard_layout 0 50)
+; 	]
+; 	ui_window$root
+; 	(<- font:true_type$load (<- font:true_type$find "times"))
+; 	"AV fi"
+; 	36
+; ))
 (<- ui:element:slider$set_slider_element slider2 handle2)
 (<- ui:element$set_name button "left-button")
 (<- ui:element$set_name rectangle2 "left-button-color")

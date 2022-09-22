@@ -164,7 +164,8 @@
 		(-> (= i 0) (< i ($ glyphs))
 			(= glyph (: glyphs i))
 			(= rendered_font_data (: rendered_fonts glyph$font_index))
-			(= glyph_bbox (: rendered_font_data$glyphs (:: glyph$glyph$codepoint int_type)))
+			(= idx (:: glyph$glyph$codepoint int_type))
+			(= glyph_bbox (: rendered_font_data$glyphs idx))
 			(++ i)
 			(? (! glyph_bbox) (<<<))
 			(= glyph_bbox$tx0 (* glyph_bbox$tx0 inv_width))
@@ -195,13 +196,15 @@
 		))
 		(++ i)
 	)
-	(@@ (. font_texture_type
+	(= out (. font_texture_type
 		(* font$ascent scale)
 		(* font$descent scale)
 		(* font$line_gap scale)
 		texture_data
 		font
 	))
+	(<- array$push rendered_font_data$texture_fonts out)
+	(@@ out)
 ))
 
 (= create (,,, ctx callback
