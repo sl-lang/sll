@@ -1089,19 +1089,19 @@ abc` '\n')
 	"The quick brown fox jumps over the lazy dog."
 	36
 ))
-(= text (<- ui:element:text$create
-	ui_window
-	[
-		(<- ui:layout$create_standard_layout 0 0)
-		(<- ui:layout$create_standard_layout 1 -100)
-		(<- ui:layout$create_standard_layout 1 0)
-		(<- ui:layout$create_standard_layout 0 50)
-	]
-	ui_window$root
-	(<- font:true_type$load (<- font:true_type$find "times"))
-	"AV fi"
-	36
-))
+; (= text (<- ui:element:text$create
+; 	ui_window
+; 	[
+; 		(<- ui:layout$create_standard_layout 0 0)
+; 		(<- ui:layout$create_standard_layout 1 -100)
+; 		(<- ui:layout$create_standard_layout 1 0)
+; 		(<- ui:layout$create_standard_layout 0 50)
+; 	]
+; 	ui_window$root
+; 	(<- font:true_type$load (<- font:true_type$find "times"))
+; 	"AV fi"
+; 	36
+; ))
 (<- ui:element:slider$set_slider_element slider2 handle2)
 (<- ui:element$set_name button "left-button")
 (<- ui:element$set_name rectangle2 "left-button-color")
