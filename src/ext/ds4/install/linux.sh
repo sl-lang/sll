@@ -1,5 +1,4 @@
 #!/bin/bash
-echo "Setting up DS4..."
 required_packages=( "udev" "libudev-dev" )
 packages_to_install=""
 for pkg in "${required_packages[@]}"; do
@@ -8,5 +7,6 @@ for pkg in "${required_packages[@]}"; do
 	fi
 done
 if [ "" != "$packages_to_install" ]; then
+	sudo apt update
 	eval "sudo apt install$packages_to_install"
 fi

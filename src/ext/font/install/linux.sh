@@ -7,6 +7,7 @@ for pkg in "${required_packages[@]}"; do
 	fi
 done
 if [ "" != "$packages_to_install" ]; then
+	sudo apt update
 	eval "sudo apt install$packages_to_install"
 fi
 mkdir "build/ext/font_linux/stb_libraries"
