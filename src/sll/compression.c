@@ -11,24 +11,24 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_compressed_integer_t sll_compress_integer(
 	if (int_<128){
 		return int_;
 	}
-	sll_size_t off=0;
+	sll_size_t offset=0;
 	__SLL_U32 shift=FIND_LAST_SET_BIT(int_);
 	SLL_ASSERT(shift>=7);
 	if (int_&(int_-1)){
 		__SLL_U32 new_shift=shift-1;
-		sll_size_t n=1ull<<shift;
+		sll_size_t exp=1ull<<shift;
 		if ((3ull<<new_shift)<int_){
 			shift++;
-			off=(((n<<1)-int_)<<1)-1;
+			offset=(((exp<<1)-int_)<<1)-1;
 		}
 		else{
-			off=(int_-n)<<1;
+			offset=(int_-exp)<<1;
 		}
-		if (off>>58||FIND_LAST_SET_BIT(off)>=new_shift-5){
+		if (offset>>58||FIND_LAST_SET_BIT(offset)>=new_shift-5){
 			return int_;
 		}
 	}
-	return (shift==64?0:shift-6)|(off<<6);
+	return (shift==64?0:shift-6)|(offset<<6);
 }
 
 
