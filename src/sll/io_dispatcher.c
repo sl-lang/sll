@@ -114,7 +114,7 @@ void _io_dispatcher_init(void){
 
 
 
-void _io_dispatcher_queue(sll_file_t* file,sll_string_length_t sz){
+void _io_dispatcher_queue(sll_file_t* file,sll_string_length_t size){
 	_platform_poll_stop(_io_dispatcher_raw_event,&_io_dispatcher_wait_handle);
 	event_list_length_t i=_io_dispatcher_event_len;
 	_io_dispatcher_event_len++;
@@ -122,7 +122,7 @@ void _io_dispatcher_queue(sll_file_t* file,sll_string_length_t sz){
 	_io_dispatcher_raw_event=sll_reallocate(_io_dispatcher_raw_event,(_io_dispatcher_event_len+1)*sizeof(raw_event_data_t));
 	(_io_dispatcher_event+i)->file=file;
 	(_io_dispatcher_event+i)->thread_index=_scheduler_current_thread_index;
-	(_io_dispatcher_event+i)->size=sz;
+	(_io_dispatcher_event+i)->size=size;
 	INIT_RAW_EVENT(_io_dispatcher_raw_event+i+1,file->data.file.source.file.fd);
 	_platform_poll_start(_io_dispatcher_raw_event);
 	_scheduler_current_thread->state=THREAD_STATE_WAIT_IO;
