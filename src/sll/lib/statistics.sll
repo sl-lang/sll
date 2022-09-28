@@ -15,7 +15,7 @@
 
 (= linear_regression_type (&:
 	(,,, data
-		(@@ (<- string$format "y=x*%f+%f" data$slope data$intercept))
+		(@@ (<- string$format "y=x*%f%+f" data$slope data$intercept))
 	) @@string@@
 	float_type slope
 	float_type intercept
