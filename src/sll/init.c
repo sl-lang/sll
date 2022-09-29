@@ -58,7 +58,7 @@ static void _write_stack_frame(sll_file_descriptor_t fd,sll_instruction_index_t 
 	sll_platform_file_write(fd,"at ",3,NULL);
 	sll_string_index_t fp_i;
 	sll_string_index_t fn_i;
-	sll_file_offset_t ln=sll_get_location(sll_current_runtime_data->assembly_data,ii,&fp_i,&fn_i);
+	sll_file_offset_t line=sll_get_location(sll_current_runtime_data->assembly_data,ii,&fp_i,&fn_i);
 	if (fp_i!=SLL_MAX_STRING_INDEX){
 		const sll_string_t* str=sll_current_runtime_data->assembly_data->string_table.data+fp_i;
 		sll_platform_file_write(fd,str->data,str->length,NULL);
@@ -67,7 +67,7 @@ static void _write_stack_frame(sll_file_descriptor_t fd,sll_instruction_index_t 
 	else{
 		sll_platform_file_write(fd,"@console:",9,NULL);
 	}
-	_write_number(fd,ln);
+	_write_number(fd,line);
 	sll_platform_file_write(fd," (",2,NULL);
 	if (fn_i==SLL_MAX_STRING_INDEX){
 		sll_platform_file_write(fd,"@code)\n",7,NULL);
