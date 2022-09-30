@@ -37,17 +37,17 @@ static sll_bool_t _init_init=0;
 
 
 
-static void _write_number(sll_file_descriptor_t fd,sll_file_offset_t n){
-	if (!n){
+static void _write_number(sll_file_descriptor_t fd,sll_file_offset_t v){
+	if (!v){
 		sll_platform_file_write(fd,"0",1,NULL);
 		return;
 	}
 	sll_char_t buffer[20];
 	sll_string_length_t i=20;
-	while (n){
+	while (v){
 		i--;
-		buffer[i]=(n%10)+48;
-		n/=10;
+		buffer[i]=(v%10)+48;
+		v/=10;
 	}
 	sll_platform_file_write(fd,buffer+i,20-i,NULL);
 }
