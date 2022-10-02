@@ -74,29 +74,29 @@ sll_thread_index_t _thread_new(void){
 	else{
 		ptr=sll_platform_allocate_page(THREAD_SIZE,0,NULL);
 	}
-	thread_data_t* n=ptr;
-	n->stack=PTR(ADDR(ptr)+sizeof(thread_data_t)+sll_current_vm_config->call_stack_size*sizeof(sll_call_stack_frame_t)+sll_current_runtime_data->assembly_data->tls_variable_count*sizeof(sll_object_t));
-	n->stack[0]=NULL;
-	sll_gc_add_roots(n->stack,sll_current_vm_config->stack_size);
-	n->tls=PTR(ADDR(ptr)+sizeof(thread_data_t)+sll_current_vm_config->call_stack_size*sizeof(sll_call_stack_frame_t));
+	thread_data_t* new_thr=ptr;
+	new_thr->stack=PTR(ADDR(ptr)+sizeof(thread_data_t)+sll_current_vm_config->call_stack_size*sizeof(sll_call_stack_frame_t)+sll_current_runtime_data->assembly_data->tls_variable_count*sizeof(sll_object_t));
+	new_thr->stack[0]=NULL;
+	sll_gc_add_roots(new_thr->stack,sll_current_vm_config->stack_size);
+	new_thr->tls=PTR(ADDR(ptr)+sizeof(thread_data_t)+sll_current_vm_config->call_stack_size*sizeof(sll_call_stack_frame_t));
 	sll_static_int[0]->reference_count+=sll_current_runtime_data->assembly_data->tls_variable_count;
 	for (sll_variable_index_t i=0;i<sll_current_runtime_data->assembly_data->tls_variable_count;i++){
-		*(n->tls+i)=sll_static_int[0];
+		*(new_thr->tls+i)=sll_static_int[0];
 	}
-	sll_gc_add_roots(n->tls,sll_current_runtime_data->assembly_data->tls_variable_count);
-	n->instruction_index=0;
-	n->stack_index=0;
-	n->wait=SLL_UNKNOWN_THREAD_INDEX;
-	n->return_value=NULL;
-	sll_gc_add_roots(&(n->return_value),1);
-	n->call_stack.data=PTR(ADDR(ptr)+sizeof(thread_data_t));
-	n->call_stack.length=0;
-	n->sandbox=(_scheduler_current_thread_index==SLL_UNKNOWN_THREAD_INDEX?_sandbox_flags:_scheduler_current_thread->sandbox);
-	n->time_quantum=THREAD_SCHEDULER_INSTRUCTION_COUNT;
-	n->state=THREAD_STATE_INITIALIZED;
-	n->flags=0;
-	n->_last_instruction=NULL;
-	*(_thread_data.data+out)=n;
+	sll_gc_add_roots(new_thr->tls,sll_current_runtime_data->assembly_data->tls_variable_count);
+	new_thr->instruction_index=0;
+	new_thr->stack_index=0;
+	new_thr->wait=SLL_UNKNOWN_THREAD_INDEX;
+	new_thr->return_value=NULL;
+	sll_gc_add_roots(&(new_thr->return_value),1);
+	new_thr->call_stack.data=PTR(ADDR(ptr)+sizeof(thread_data_t));
+	new_thr->call_stack.length=0;
+	new_thr->sandbox=(_scheduler_current_thread_index==SLL_UNKNOWN_THREAD_INDEX?_sandbox_flags:_scheduler_current_thread->sandbox);
+	new_thr->time_quantum=THREAD_SCHEDULER_INSTRUCTION_COUNT;
+	new_thr->state=THREAD_STATE_INITIALIZED;
+	new_thr->flags=0;
+	new_thr->_last_instruction=NULL;
+	*(_thread_data.data+out)=new_thr;
 	_thread_active_count++;
 	SLL_CRITICAL(sll_platform_lock_release(_thread_lock));
 	return (sll_thread_index_t)out;
