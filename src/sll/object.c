@@ -215,17 +215,17 @@ _skip_next:;
 		if (!(n->_rng>>6)){
 			n->_rng|=64;
 		}
-		sll_bool_t extra=0;
+		sll_bool_t has_overlapping_entries=0;
 		for (i=0;i<field_count;i++){
 			sll_arg_count_t j=GET_HASH_TABLE_OFFSET(n,&(n->fields[i].name));
 			if (n->_hash_table[j]==SLL_MAX_ARG_COUNT){
 				n->_hash_table[j]=i;
 			}
 			else{
-				extra=1;
+				has_overlapping_entries=1;
 			}
 		}
-		if (extra){
+		if (has_overlapping_entries){
 			for (i=0;i<field_count;i++){
 				sll_arg_count_t j=GET_HASH_TABLE_OFFSET(n,&(n->fields[i].name));
 				if (n->_hash_table[j]==i){
