@@ -177,15 +177,15 @@ __SLL_EXTERNAL void sll_string_and_char(const sll_string_t* string,sll_char_t ch
 	STRING_DATA_PTR(a);
 	wide_data_t v64=0x101010101010101ull*char_;
 	wide_data_t c=0;
-	sll_string_length_t l=string->length;
-	while (l>7){
+	sll_string_length_t length=string->length;
+	while (length>7){
 		*b=(*a)&v64;
 		c^=*b;
 		a++;
 		b++;
-		l-=8;
+		length-=8;
 	}
-	*b=(*a)&v64&((1ull<<(l<<3))-1);
+	*b=(*a)&v64&((1ull<<(length<<3))-1);
 	c^=*b;
 	out->checksum=(sll_string_length_t)(c^(c>>32));
 }
