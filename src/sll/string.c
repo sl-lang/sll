@@ -138,15 +138,15 @@ __SLL_EXTERNAL void sll_string_and(const sll_string_t* a,const sll_string_t* b,s
 	INIT_PADDING(out->data,b->length);
 	const wide_data_t* ap=(const wide_data_t*)(a->data);
 	const wide_data_t* bp=(const wide_data_t*)(b->data);
-	wide_data_t* op=(wide_data_t*)(out->data);
+	wide_data_t* out_data=(wide_data_t*)(out->data);
 	STRING_DATA_PTR(ap);
 	STRING_DATA_PTR(bp);
-	STRING_DATA_PTR(op);
+	STRING_DATA_PTR(out_data);
 	sll_string_length_t i=0;
 	wide_data_t c=0;
 	for (;i<((b->length+7)>>3);i++){
-		*(op+i)=(*(ap+i))&(*(bp+i));
-		c^=*(op+i);
+		*(out_data+i)=(*(ap+i))&(*(bp+i));
+		c^=*(out_data+i);
 	}
 	out->checksum=(sll_string_length_t)(c^(c>>32));
 }
@@ -177,15 +177,15 @@ __SLL_EXTERNAL void sll_string_and_char(const sll_string_t* string,sll_char_t ch
 	STRING_DATA_PTR(a);
 	wide_data_t v64=0x101010101010101ull*char_;
 	wide_data_t c=0;
-	sll_string_length_t l=string->length;
-	while (l>7){
+	sll_string_length_t length=string->length;
+	while (length>7){
 		*b=(*a)&v64;
 		c^=*b;
 		a++;
 		b++;
-		l-=8;
+		length-=8;
 	}
-	*b=(*a)&v64&((1ull<<(l<<3))-1);
+	*b=(*a)&v64&((1ull<<(length<<3))-1);
 	c^=*b;
 	out->checksum=(sll_string_length_t)(c^(c>>32));
 }
