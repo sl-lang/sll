@@ -138,14 +138,14 @@
 			(=== (:? mode) int_type) (= flags (& mode FLAG_MASK))
 			{
 				(= mode (<- string$lower_case (:: mode string_type)))
-				(-> (= i 0) (< i ($ mode)) {
+				(-> (= i 0) (< i ($ mode))
 					(?? (: mode i)
 						'a' (= flags (| FLAG_WRITE FLAG_APPEND FLAG_FLUSH_ON_NEWLINE))
 						'r' (= flags FLAG_READ)
 						'w' (= flags (| FLAG_WRITE FLAG_FLUSH_ON_NEWLINE))
 					)
 					(++ i)
-				})
+				)
 			}
 		)
 	})
