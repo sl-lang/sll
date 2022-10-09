@@ -10,7 +10,7 @@
 
 
 
-static sll_node_t _mark(sll_node_t node,bitmap_t* bitmap){
+static sll_node_t _mark_strings(sll_node_t node,bitmap_t* bitmap){
 	while (node->type==SLL_NODE_TYPE_NOP||node->type==SLL_NODE_TYPE_DBG||node->type==SLL_NODE_TYPE_CHANGE_STACK){
 		if (node->type==SLL_NODE_TYPE_CHANGE_STACK){
 			node=node->data._next_node;
@@ -45,7 +45,7 @@ static sll_node_t _mark(sll_node_t node,bitmap_t* bitmap){
 	node++;
 	while (arg_count){
 		arg_count--;
-		node=_mark(node,bitmap);
+		node=_mark_strings(node,bitmap);
 	}
 	return node;
 }
@@ -75,7 +75,7 @@ __SLL_EXTERNAL void sll_optimize_metadata(sll_compilation_data_t* compilation_da
 			}
 		}
 		if (source_file->first_node){
-			_mark(source_file->first_node,m);
+			_mark_strings(source_file->first_node,m);
 		}
 		sll_string_index_t* string_map=sll_allocate_stack(source_file->string_table.length*sizeof(sll_string_index_t));
 		sll_string_index_t k=0;
