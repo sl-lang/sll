@@ -113,12 +113,12 @@ __SLL_EXTERNAL void sll_remove_environment_variable(const sll_string_t* key){
 	LOCK_ENV;
 	sll_environment_length_t i=0;
 	while (i<sll_environment->length){
-		sll_environment_variable_t* key_value=(sll_environment_variable_t*)(*(sll_environment->data+i));
-		if (STRING_EQUAL(&lowercase_key,&(key_value->key))){
+		sll_environment_variable_t* key_value_pair=(sll_environment_variable_t*)(*(sll_environment->data+i));
+		if (STRING_EQUAL(&lowercase_key,&(key_value_pair->key))){
 			sll_platform_remove_environment_variable(key->data);
-			sll_free_string((sll_string_t*)(&(key_value->key)));
-			sll_free_string((sll_string_t*)(&(key_value->value)));
-			sll_deallocate(key_value);
+			sll_free_string((sll_string_t*)(&(key_value_pair->key)));
+			sll_free_string((sll_string_t*)(&(key_value_pair->value)));
+			sll_deallocate(key_value_pair);
 			i++;
 			while (i<sll_environment->length){
 				*(((const sll_environment_variable_t**)(sll_environment->data))+i-1)=*(sll_environment->data+i);
