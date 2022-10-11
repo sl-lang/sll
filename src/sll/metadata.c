@@ -58,8 +58,8 @@ __SLL_EXTERNAL void sll_optimize_metadata(sll_compilation_data_t* compilation_da
 		if (!source_file->string_table.length){
 			continue;
 		}
-		sll_string_index_t ml=(source_file->string_table.length>>6)+1;
-		bitmap_t* m=sll_zero_allocate_stack(ml*sizeof(bitmap_t));
+		sll_string_index_t bitmap_length=(source_file->string_table.length>>6)+1;
+		bitmap_t* m=sll_zero_allocate_stack(bitmap_length*sizeof(bitmap_t));
 		*(m+(source_file->file_path_string_index>>6))|=1ull<<(source_file->file_path_string_index&63);
 		for (sll_identifier_table_length_t i=0;i<source_file->identifier_table.length;i++){
 			*(m+(SLL_IDENTIFIER_GET_STRING_INDEX(source_file->identifier_table.data+i)>>6))|=1ull<<(SLL_IDENTIFIER_GET_STRING_INDEX(source_file->identifier_table.data+i)&63);
@@ -80,7 +80,7 @@ __SLL_EXTERNAL void sll_optimize_metadata(sll_compilation_data_t* compilation_da
 		sll_string_index_t* string_map=sll_allocate_stack(source_file->string_table.length*sizeof(sll_string_index_t));
 		sll_string_index_t k=0;
 		sll_string_index_t l=0;
-		for (sll_string_index_t i=0;i<ml;i++){
+		for (sll_string_index_t i=0;i<bitmap_length;i++){
 			bitmap_t v=~(*(m+i));
 			while (v){
 				sll_string_index_t j=FIND_FIRST_SET_BIT(v)|(i<<6);
