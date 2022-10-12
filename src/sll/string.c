@@ -164,13 +164,10 @@ __SLL_EXTERNAL void sll_string_and_char(const sll_string_t* string,sll_char_t ch
 	}
 	out->length=string->length;
 	out->data=sll_allocator_init(SLL_STRING_ALIGN_LENGTH(string->length)*sizeof(sll_char_t));
-	wide_data_t* b=(wide_data_t*)(out->data);
-	STRING_DATA_PTR(b);
+	wide_data_t* out_data=(wide_data_t*)(out->data);
+	STRING_DATA_PTR(out_data);
 	if (!char_){
-		for (sll_string_length_t i=0;i<((string->length+7)>>3);i++){
-			*b=0;
-			b++;
-		}
+		sll_zero_memory(out_data,(string->length+7)&0xfffffff8);
 		return;
 	}
 	const wide_data_t* a=(const wide_data_t*)(string->data);
@@ -179,14 +176,14 @@ __SLL_EXTERNAL void sll_string_and_char(const sll_string_t* string,sll_char_t ch
 	wide_data_t c=0;
 	sll_string_length_t length=string->length;
 	while (length>7){
-		*b=(*a)&v64;
-		c^=*b;
+		*out_data=(*a)&v64;
+		c^=*out_data;
 		a++;
-		b++;
+		out_data++;
 		length-=8;
 	}
-	*b=(*a)&v64&((1ull<<(length<<3))-1);
-	c^=*b;
+	*out_data=(*a)&v64&((1ull<<(length<<3))-1);
+	c^=*out_data;
 	out->checksum=(sll_string_length_t)(c^(c>>32));
 }
 
