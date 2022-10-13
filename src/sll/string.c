@@ -407,12 +407,12 @@ __SLL_EXTERNAL void sll_string_concat(const sll_string_t* a,const sll_string_t* 
 	out->data=sll_allocator_init(SLL_STRING_ALIGN_LENGTH(out->length)*sizeof(sll_char_t));
 	INIT_PADDING(out->data,out->length);
 	const wide_data_t* ap=(const wide_data_t*)(a->data);
-	wide_data_t* op=(wide_data_t*)(out->data);
+	wide_data_t* out_data=(wide_data_t*)(out->data);
 	STRING_DATA_PTR(ap);
-	STRING_DATA_PTR(op);
+	STRING_DATA_PTR(out_data);
 	sll_string_length_t i=0;
 	for (;i<((a->length+7)>>3);i++){
-		*(op+i)=*(ap+i);
+		*(out_data+i)=*(ap+i);
 	}
 	const sll_char_t* s=b->data;
 	if (a->length&7){
@@ -429,7 +429,7 @@ __SLL_EXTERNAL void sll_string_concat(const sll_string_t* a,const sll_string_t* 
 		const wide_data_t* bp=(const wide_data_t*)s;
 		sll_string_length_t k=0;
 		while (i<j){
-			*(op+i)=*(bp+k);
+			*(out_data+i)=*(bp+k);
 			i++;
 			k++;
 		};
