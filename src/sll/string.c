@@ -970,7 +970,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_length_t sll_string_index(const sll
 	if (substring->length&7){
 		c64^=(*(p-1))&(0xffffffffffffffffull<<((substring->length&7)<<3));
 	}
-	sll_string_checksum_t c=(sll_string_checksum_t)(c64^(c64>>32));
+	sll_string_checksum_t s=(sll_string_checksum_t)(c64^(c64>>32));
 	unsigned int shift=(substring->length&3)<<3;
 	const sll_char_t* ptr=string->data+start_index;
 	for (;start_index<string->length-substring->length;start_index++){
@@ -1238,15 +1238,15 @@ __SLL_EXTERNAL sll_string_length_t sll_string_insert_pointer_length(const sll_ch
 	SLL_ASSERT(!(index&7));
 	const wide_data_t* ap=(const wide_data_t*)pointer;
 	STRING_DATA_PTR(out->data);
-	wide_data_t* op=(wide_data_t*)(out->data+index);
+	wide_data_t* out_data=(wide_data_t*)(out->data+index);
 	sll_string_length_t j=0;
 	for (;j<(length>>3);j++){
-		*(op+j)=*(ap+j);
+		*(out_data+j)=*(ap+j);
 	}
 	index+=length;
 	if (length&7){
 		length=(length&7)<<3;
-		*(op+j)=((*(op+j))&(0xffffffffffffffffull<<length))|((*(ap+j))&((1ull<<length)-1));
+		*(out_data+j)=((*(out_data+j))&(0xffffffffffffffffull<<length))|((*(ap+j))&((1ull<<length)-1));
 	}
 	return index;
 }
