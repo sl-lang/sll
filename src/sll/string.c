@@ -970,7 +970,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_length_t sll_string_index(const sll
 	if (substring->length&7){
 		c64^=(*(p-1))&(0xffffffffffffffffull<<((substring->length&7)<<3));
 	}
-	sll_string_checksum_t s=(sll_string_checksum_t)(c64^(c64>>32));
+	sll_string_checksum_t c=(sll_string_checksum_t)(c64^(c64>>32));
 	unsigned int shift=(substring->length&3)<<3;
 	const sll_char_t* ptr=string->data+start_index;
 	for (;start_index<string->length-substring->length;start_index++){
