@@ -617,8 +617,8 @@ __SLL_EXTERNAL void sll_string_duplicate(const sll_string_t* string,sll_integer_
 	SLL_ASSERT(count<SLL_MAX_STRING_LENGTH);
 	out->length=((sll_string_length_t)count)+extra;
 	out->data=sll_allocator_init(SLL_STRING_ALIGN_LENGTH(out->length)*sizeof(sll_char_t));
-	wide_data_t* op=(wide_data_t*)(out->data);
-	STRING_DATA_PTR(op);
+	wide_data_t* out_data=(wide_data_t*)(out->data);
+	STRING_DATA_PTR(out_data);
 	if (r){
 		sll_string_length_t i=string->length-1;
 		for (sll_string_length_t j=0;j<i;j++){
@@ -634,7 +634,7 @@ __SLL_EXTERNAL void sll_string_duplicate(const sll_string_t* string,sll_integer_
 		const wide_data_t* ap=(const wide_data_t*)(string->data);
 		STRING_DATA_PTR(ap);
 		for (sll_string_length_t i=0;i<((string->length+7)>>3);i++){
-			*(op+i)=*(ap+i);
+			*(out_data+i)=*(ap+i);
 		}
 	}
 	sll_string_length_t i=string->length;
@@ -651,7 +651,7 @@ __SLL_EXTERNAL void sll_string_duplicate(const sll_string_t* string,sll_integer_
 		i>>=3;
 		wide_data_t c=0;
 		for (sll_string_length_t j=0;j<i;j++){
-			c^=*(op+j);
+			c^=*(out_data+j);
 		}
 		count=(count+7)>>3;
 		if (string->length&7){
@@ -659,13 +659,13 @@ __SLL_EXTERNAL void sll_string_duplicate(const sll_string_t* string,sll_integer_
 		}
 		sll_string_length_t j=0;
 		while (i<count){
-			*(op+i)=*(ap+j);
-			c^=*(op+i);
+			*(out_data+i)=*(ap+j);
+			c^=*(out_data+i);
 			i++;
 			j++;
 		}
-		*(op+i)=(*(ap+j))&((1ull<<((out->length&7)<<3))-1);
-		c^=*(op+i);
+		*(out_data+i)=(*(ap+j))&((1ull<<((out->length&7)<<3))-1);
+		c^=*(out_data+i);
 		out->checksum=(sll_string_length_t)(c^(c>>32));
 	}
 	else{
@@ -1469,19 +1469,19 @@ __SLL_EXTERNAL void sll_string_or(const sll_string_t* a,const sll_string_t* b,sl
 	out->data=sll_allocator_init(SLL_STRING_ALIGN_LENGTH(a->length)*sizeof(sll_char_t));
 	const wide_data_t* ap=(const wide_data_t*)(a->data);
 	const wide_data_t* bp=(const wide_data_t*)(b->data);
-	wide_data_t* op=(wide_data_t*)(out->data);
+	wide_data_t* out_data=(wide_data_t*)(out->data);
 	STRING_DATA_PTR(ap);
 	STRING_DATA_PTR(bp);
-	STRING_DATA_PTR(op);
+	STRING_DATA_PTR(out_data);
 	wide_data_t c=0;
 	sll_string_length_t i=0;
 	for (;i<((b->length+7)>>3);i++){
-		*(op+i)=(*(ap+i))|(*(bp+i));
-		c^=*(op+i);
+		*(out_data+i)=(*(ap+i))|(*(bp+i));
+		c^=*(out_data+i);
 	}
 	for (;i<((a->length+7)>>3);i++){
-		*(op+i)=*(ap+i);
-		c^=*(op+i);
+		*(out_data+i)=*(ap+i);
+		c^=*(out_data+i);
 	}
 	out->checksum=(sll_string_length_t)(c^(c>>32));
 }
@@ -2191,19 +2191,19 @@ __SLL_EXTERNAL void sll_string_xor(const sll_string_t* a,const sll_string_t* b,s
 	INIT_PADDING(out->data,out->length);
 	const wide_data_t* ap=(const wide_data_t*)(a->data);
 	const wide_data_t* bp=(const wide_data_t*)(b->data);
-	wide_data_t* op=(wide_data_t*)(out->data);
+	wide_data_t* out_data=(wide_data_t*)(out->data);
 	STRING_DATA_PTR(ap);
 	STRING_DATA_PTR(bp);
-	STRING_DATA_PTR(op);
+	STRING_DATA_PTR(out_data);
 	wide_data_t c=0;
 	sll_string_length_t i=0;
 	for (;i<((b->length+7)>>3);i++){
-		*(op+i)=(*(ap+i))^(*(bp+i));
-		c^=*(op+i);
+		*(out_data+i)=(*(ap+i))^(*(bp+i));
+		c^=*(out_data+i);
 	}
 	for (;i<((a->length+7)>>3);i++){
-		*(op+i)=*(ap+i);
-		c^=*(op+i);
+		*(out_data+i)=*(ap+i);
+		c^=*(out_data+i);
 	}
 	out->checksum=(sll_string_length_t)(c^(c>>32));
 }
