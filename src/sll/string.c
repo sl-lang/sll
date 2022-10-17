@@ -1101,12 +1101,12 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_length_t sll_string_index_reverse_c
 		return SLL_MAX_STRING_LENGTH;
 	}
 	sll_string_length_t l=(string->length+7)>>3;
-	const wide_data_t* p=((const wide_data_t*)(string->data))+l;
+	const wide_data_t* ptr=((const wide_data_t*)(string->data))+l;
 	wide_data_t m=0x101010101010101ull*char_;
 	wide_data_t n=0x8080808080808080ull*inv;
 	for (sll_string_length_t i=0;i<l;i++){
-		p--;
-		wide_data_t v=(*p)^m;
+		ptr--;
+		wide_data_t v=(*ptr)^m;
 		v=((v-0x101010101010101ull)&(~v)&0x8080808080808080ull)^n;
 		if (v){
 			if (!i&&(string->length&7)){
