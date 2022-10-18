@@ -1160,17 +1160,17 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_length_t sll_string_index_reverse_m
 	}
 	sll_deallocate(ml);
 #else
-	sll_string_length_t ln=(char_count+3)&0xfffffffc;
-	wide_data_t* ml=sll_allocate_stack(ln*sizeof(wide_data_t));
+	sll_string_length_t length=(char_count+3)&0xfffffffc;
+	wide_data_t* ml=sll_allocate_stack(length*sizeof(wide_data_t));
 	sll_string_length_t i=0;
 	for (;i<char_count-1;i++){
 		*(ml+i)=0x101010101010101ull*(*(char_data+i));
 	}
 	wide_data_t any=0x101010101010101ull*(*(char_data+i));
-	for (;i<ln;i++){
+	for (;i<length;i++){
 		*(ml+i)=any;
 	}
-	ln>>=2;
+	length>>=2;
 	wide_data_t n=0x8080808080808080ull*inv;
 	__m256i sub=_mm256_set1_epi8(1);
 	for (i=0;i<l;i++){
@@ -1178,7 +1178,7 @@ __SLL_EXTERNAL __SLL_CHECK_OUTPUT sll_string_length_t sll_string_index_reverse_m
 		__m256i k=_mm256_set1_epi64x(*p);
 		__m256i v256=_mm256_setzero_si256();
 		const __m256i* m=(const __m256i*)ml;
-		for (sll_string_length_t j=0;j<ln;j++){
+		for (sll_string_length_t j=0;j<length;j++){
 			__m256i e=_mm256_xor_si256(k,_mm256_lddqu_si256(m));
 			m++;
 			v256=_mm256_or_si256(v256,_mm256_andnot_si256(e,_mm256_sub_epi64(e,sub)));
