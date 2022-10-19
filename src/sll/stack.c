@@ -37,16 +37,16 @@ sll_assembly_instruction_t _acquire_next_instruction(sll_assembly_data_t* assemb
 		assembly_stack_page_t* n=sll_platform_allocate_page(SLL_ROUND_PAGE(ASSEMBLY_INSTRUCTION_STACK_ALLOC_SIZE),0,NULL);
 		((assembly_stack_page_t*)(assembly_data->_instruction_stack.end))->next=n;
 		n->next=NULL;
-		sll_assembly_instruction_t s=PTR(ADDR(n)+sizeof(assembly_stack_page_t));
-		s->type=SLL_ASSEMBLY_INSTRUCTION_TYPE_CHANGE_STACK;
-		s->data._next_instruction=assembly_data->_instruction_stack.next_instruction-1;
+		sll_assembly_instruction_t change_stack_instruction=PTR(ADDR(n)+sizeof(assembly_stack_page_t));
+		change_stack_instruction->type=SLL_ASSEMBLY_INSTRUCTION_TYPE_CHANGE_STACK;
+		change_stack_instruction->data._next_instruction=assembly_data->_instruction_stack.next_instruction-1;
 		SLL_ASSERT(assembly_data->_instruction_stack.next_instruction->type==SLL_ASSEMBLY_INSTRUCTION_TYPE_CHANGE_STACK);
-		assembly_data->_instruction_stack.next_instruction->data._next_instruction=s+1;
+		assembly_data->_instruction_stack.next_instruction->data._next_instruction=change_stack_instruction+1;
 		assembly_data->_instruction_stack.count=((SLL_ROUND_PAGE(ASSEMBLY_INSTRUCTION_STACK_ALLOC_SIZE)-sizeof(assembly_stack_page_t)-sizeof(struct _SLL_ASSEMBLY_INSTRUCTION)*2)/sizeof(struct _SLL_ASSEMBLY_INSTRUCTION));
-		assembly_data->_instruction_stack.next_instruction=s+1;
-		s+=assembly_data->_instruction_stack.count+1;
-		s->type=SLL_ASSEMBLY_INSTRUCTION_TYPE_CHANGE_STACK;
-		s->data._next_instruction=NULL;
+		assembly_data->_instruction_stack.next_instruction=change_stack_instruction+1;
+		change_stack_instruction+=assembly_data->_instruction_stack.count+1;
+		change_stack_instruction->type=SLL_ASSEMBLY_INSTRUCTION_TYPE_CHANGE_STACK;
+		change_stack_instruction->data._next_instruction=NULL;
 		assembly_data->_instruction_stack.end=n;
 	}
 	return out;
