@@ -11,6 +11,7 @@
 		"git": "latest"
 	},
 	"mounts": [
-		"source=projectname-bashhistory,target=/commandhistory,type=volume"
-	]
+		"source=sll-bashhistory,target=/commandhistory,type=volume"
+	],
+	"onCreateCommand": "[ -d build/ext ]&&rm -rf build/ext"
 }
