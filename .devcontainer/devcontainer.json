@@ -9,5 +9,8 @@
 	"remoteUser": "vscode",
 	"features": {
 		"git": "latest"
-	}
+	},
+	"mounts": [
+		"source=projectname-bashhistory,target=/commandhistory,type=volume"
+	]
 }
