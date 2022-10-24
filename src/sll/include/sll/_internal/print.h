@@ -6,7 +6,7 @@
 
 
 #define STATIC_STRING_LEN(s) (sizeof(s)/sizeof(char)-1)
-#define PRINT_STATIC_STRING(s,wf) sll_file_write((wf),(s),STATIC_STRING_LEN(s),NULL)
+#define PRINT_STATIC_STRING(s,f) sll_file_write((f),(s),STATIC_STRING_LEN(s),NULL)
 
 
 
