@@ -4,4 +4,5 @@ curl -s "https://sl-lang.github.io/pkg/apt/key.asc" > /usr/local/share/keyrings/
 rm -f /tmp/sll-keyring.gpg
 echo "deb [signed-by=/usr/local/share/keyrings/sll.asc] https://sl-lang.github.io/ pkg/apt/unstable/" > /etc/apt/sources.list.d/sll.list
 apt update
-apt install sll
+export DEBIAN_FRONTEND=noninteractive
+sudo apt -y install --no-install-recommends sll
