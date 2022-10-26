@@ -105,7 +105,7 @@ static sll_identifier_index_t _get_var_index(sll_source_file_t* source_file,cons
 _check_new_var:;
 	sll_free_string(name);
 	for (sll_arg_count_t i=0;i<extra_compilation_data->new_variable_data->length;i++){
-		if ((*(extra_compilation_data->new_variable_data->data+i))->data.identifier_index==o){
+		if ((*(extra_compilation_data->new_variable_data->data+i))->data.identifier_index==out){
 			return SLL_MAX_IDENTIFIER_INDEX;
 		}
 	}
