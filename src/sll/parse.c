@@ -64,7 +64,7 @@ static __STATIC_STRING(_parse_false_str,"false");
 
 static sll_identifier_index_t _get_var_index(sll_source_file_t* source_file,const extra_compilation_data_t* extra_compilation_data,const scope_data_t* scope_data,sll_string_t* name,void* arg,unsigned int flags){
 	SLL_ASSERT(name->length);
-	sll_identifier_index_t o=SLL_MAX_IDENTIFIER_INDEX;
+	sll_identifier_index_t out=SLL_MAX_IDENTIFIER_INDEX;
 	sll_scope_t mx_sc=SLL_MAX_SCOPE;
 	sll_identifier_index_t mx_i=0;
 	if (!(flags&GET_VAR_INDEX_FLAG_FUNC)){
@@ -74,7 +74,7 @@ static sll_identifier_index_t _get_var_index(sll_source_file_t* source_file,cons
 				continue;
 			}
 			if (k->scope==scope_data->scope){
-				o=i;
+				out=i;
 				goto _check_new_var;
 			}
 			else if ((mx_sc==SLL_MAX_SCOPE||k->scope>mx_sc)&&(scope_data->data[k->scope>>6]&(1ull<<(k->scope&0x3f)))){
@@ -83,7 +83,7 @@ static sll_identifier_index_t _get_var_index(sll_source_file_t* source_file,cons
 			}
 		}
 		if (mx_sc!=SLL_MAX_SCOPE){
-			o=mx_i;
+			out=mx_i;
 			goto _check_new_var;
 		}
 		if (flags&GET_VAR_INDEX_FLAG_UNKNOWN){
@@ -93,7 +93,7 @@ static sll_identifier_index_t _get_var_index(sll_source_file_t* source_file,cons
 	}
 	source_file->identifier_table.length++;
 	source_file->identifier_table.data=sll_reallocate(source_file->identifier_table.data,source_file->identifier_table.length*sizeof(sll_identifier_t));
-	o=source_file->identifier_table.length-1;
+	out=source_file->identifier_table.length-1;
 	(source_file->identifier_table.data+source_file->identifier_table.length-1)->scope=scope_data->scope;
 	SLL_IDENTIFIER_SET_STRING_INDEX(source_file->identifier_table.data+source_file->identifier_table.length-1,sll_add_string(&(source_file->string_table),name),flags&GET_VAR_INDEX_FLAG_TLS);
 	if ((flags&GET_VAR_INDEX_FLAG_ASSIGN)&&arg){
@@ -101,7 +101,7 @@ static sll_identifier_index_t _get_var_index(sll_source_file_t* source_file,cons
 		extra_compilation_data->new_variable_data->data=sll_reallocate(extra_compilation_data->new_variable_data->data,extra_compilation_data->new_variable_data->length*sizeof(sll_node_t));
 		*(extra_compilation_data->new_variable_data->data+extra_compilation_data->new_variable_data->length-1)=arg;
 	}
-	return o;
+	return out;
 _check_new_var:;
 	sll_free_string(name);
 	for (sll_arg_count_t i=0;i<extra_compilation_data->new_variable_data->length;i++){
@@ -109,7 +109,7 @@ _check_new_var:;
 			return SLL_MAX_IDENTIFIER_INDEX;
 		}
 	}
-	return o;
+	return out;
 }
 
 
