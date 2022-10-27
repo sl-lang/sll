@@ -124,16 +124,16 @@ sll_thread_index_t _scheduler_queue_pop(void){
 void _scheduler_queue_thread(sll_thread_index_t t){
 	SLL_CRITICAL_ERROR(sll_platform_lock_acquire(_scheduler_load_balancer.lock));
 	_scheduler_load_balancer.index=0/*(!_scheduler_load_balancer.brk?_scheduler_load_balancer.len:_scheduler_load_balancer.brk)-1*/;
-	scheduler_cpu_data_t* cpu_dt=_scheduler_data_base+_scheduler_load_balancer.index;
-	SLL_CRITICAL_ERROR(sll_platform_lock_acquire(cpu_dt->lock));
-	cpu_dt->queue_len++;
-	*(cpu_dt->queue+cpu_dt->queue_len-1)=t;
+	scheduler_cpu_data_t* cpu_data=_scheduler_data_base+_scheduler_load_balancer.index;
+	SLL_CRITICAL_ERROR(sll_platform_lock_acquire(cpu_data->lock));
+	cpu_data->queue_len++;
+	*(cpu_data->queue+cpu_data->queue_len-1)=t;
 	thread_data_t* thr=*(_thread_data.data+t);
 	thr->state=THREAD_STATE_QUEUED;
-	if (cpu_dt->wait&&cpu_dt->queue_len==1){
-		SLL_CRITICAL_ERROR(sll_platform_event_set(cpu_dt->signal_event));
+	if (cpu_data->wait&&cpu_data->queue_len==1){
+		SLL_CRITICAL_ERROR(sll_platform_event_set(cpu_data->signal_event));
 	}
-	SLL_CRITICAL(sll_platform_lock_release(cpu_dt->lock));
+	SLL_CRITICAL(sll_platform_lock_release(cpu_data->lock));
 	SLL_CRITICAL(sll_platform_lock_release(_scheduler_load_balancer.lock));
 }
 
