@@ -173,9 +173,9 @@ sll_return_code_t _scheduler_run(void){
 		cpu_data++;
 	}
 	_cpu_core_worker(NULL);
-	sll_object_t rc_o=sll_operator_cast(_thread_get(0)->return_value,sll_static_int[SLL_OBJECT_TYPE_INT]);
-	sll_return_code_t out=(sll_return_code_t)(rc_o->data.int_);
-	SLL_RELEASE(rc_o);
+	sll_object_t rc_object=sll_operator_cast(_thread_get(0)->return_value,sll_static_int[SLL_OBJECT_TYPE_INT]);
+	sll_return_code_t out=(sll_return_code_t)(rc_object->data.int_);
+	SLL_RELEASE(rc_object);
 	sll_gc_collect();
 	_cleanup_vm_exit_tables();
 	_release_var_data();
