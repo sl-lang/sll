@@ -1,6 +1,6 @@
-# Sll [0.8.8] - 2022-10-30
+# Sll [0.8.9] - Ongoing
 
 *Nothing*
 
-[0.8.8]: https://github.com/sl-lang/sll/compare/sll-v0.8.7...sll-v0.8.8
+[0.8.9]: https://github.com/sl-lang/sll/compare/sll-v0.8.8...main
 
