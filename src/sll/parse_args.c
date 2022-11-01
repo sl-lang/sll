@@ -560,12 +560,12 @@ sll_arg_state_t _parse_args_raw(const sll_char_t* format,const sll_object_t* arg
 					SLL_UNIMPLEMENTED();
 				case 'o':
 					{
-						sll_object_t* dt=sll_allocate(arg_count*sizeof(sll_object_t));
-						*GET_PTR(sll_object_t*)=dt;
+						sll_object_t* data=sll_allocate(arg_count*sizeof(sll_object_t));
+						*GET_PTR(sll_object_t*)=data;
 						*GET_PTR(sll_arg_count_t)=arg_count;
 						while (arg_count){
 							arg_count--;
-							*(dt+arg_count)=*(args+arg_count);
+							*(data+arg_count)=*(args+arg_count);
 						}
 						break;
 					}
