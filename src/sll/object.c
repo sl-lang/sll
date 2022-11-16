@@ -137,20 +137,20 @@ static void _set_field(const sll_object_type_table_t* type_table,sll_object_fiel
 
 static void _init_struct(const sll_object_type_table_t* type_table,sll_object_t object,const sll_object_t* object_data,sll_arg_count_t object_count){
 	SLL_ASSERT(object->type>SLL_MAX_OBJECT_TYPE);
-	const sll_object_type_data_t* dt=*(type_table->data+object->type-SLL_MAX_OBJECT_TYPE-1);
+	const sll_object_type_data_t* data=*(type_table->data+object->type-SLL_MAX_OBJECT_TYPE-1);
 	sll_object_field_t* field=object->data.fields;
-	for (sll_arg_count_t i=0;i<dt->field_count;i++){
+	for (sll_arg_count_t i=0;i<data->field_count;i++){
 		if (!object_count){
-			_zero_struct(type_table,dt,field,i);
+			_zero_struct(type_table,data,field,i);
 			break;
 		}
-		_set_field(type_table,field,dt->fields[i].type,*object_data);
+		_set_field(type_table,field,data->fields[i].type,*object_data);
 		object_count--;
 		object_data++;
 		field++;
 	}
-	if (dt->functions[SLL_OBJECT_FUNC_INIT]){
-		SLL_RELEASE(sll_execute_function(dt->functions[SLL_OBJECT_FUNC_INIT],&object,1,0));
+	if (data->functions[SLL_OBJECT_FUNC_INIT]){
+		SLL_RELEASE(sll_execute_function(data->functions[SLL_OBJECT_FUNC_INIT],&object,1,0));
 	}
 }
 
