@@ -4,6 +4,7 @@
 %include "sll/_internal/common.inc"
 
 
+
 __SLL_EXPORT _call_api_func_assembly
 	; rcx - Return value pointer
 	; rdx - Argument bitmap pointer
