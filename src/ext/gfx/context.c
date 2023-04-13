@@ -731,7 +731,6 @@ __GFX_API_CALL void gfx_api_context_render(gfx_context_t ctx_id){
 
 
 
-
 __GFX_API_CALL void gfx_api_context_resize(gfx_context_t ctx_id){
 	gfx_context_data_t* ctx=SLL_HANDLE_CONTAINER_GET(&gfx_context_data,ctx_id);
 	if (!ctx){
