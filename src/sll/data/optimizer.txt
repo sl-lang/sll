@@ -15,7 +15,6 @@ $true = {int<int_=!0>|float<float_=!0>|char<char_=!0>}
 
 
 
-
 $optional_fields.{int|float|char|complex|string|identifier|field|function_id} -> #1
 $optional_fields.{array|map|operation_list|comma} -> *1
 $optional_fields.inline_if -> 1=if
