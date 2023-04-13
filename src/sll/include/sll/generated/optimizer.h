@@ -9,7 +9,6 @@
 
 
 
-
 #define OPTIMIZER_DATA_NODE_TYPE_SHIFT 7
 
 
