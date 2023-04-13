@@ -17,6 +17,5 @@ __WINDOW_MANAGER_API_CALL void window_api_cursor_get_position(sll_array_t* out){
 
 
 
-
 __WINDOW_MANAGER_API_CALL void window_api_cursor_set_position(int32_t x,int32_t y){
 }
