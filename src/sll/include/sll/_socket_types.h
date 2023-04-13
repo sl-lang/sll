@@ -164,7 +164,6 @@ typedef union _SLL_ADDRESS_DATA{
 
 
 
-
 /**
  * \flags type
  * \name sll_address_t
