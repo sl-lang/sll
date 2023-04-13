@@ -28,4 +28,5 @@
 	h=t+(ROTATE_BITS_RIGHT64(a,28)^ROTATE_BITS_RIGHT64(a,34)^ROTATE_BITS_RIGHT64(a,39))+((a&b)|((a|b)&c));
 
 
+
 #endif
