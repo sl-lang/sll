@@ -9,6 +9,7 @@ extern void* _winapi_hinstance;
 extern sll_map_container_t _window_size_constraints;
 
 
+
 typedef struct _WINDOW_SIZE_CONSTRAINTS{
 	uint32_t min_w;
 	uint32_t min_h;
