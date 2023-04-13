@@ -99,7 +99,6 @@
 
 
 
-
 (= AF_INET 1)
 (= AF_INET6 2)
 
