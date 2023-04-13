@@ -112,6 +112,7 @@
 ))
 
 
+
 (= gfx:sampler (. gfx_sampler_module_type
 	ADDRESS_MODE_FLAG_MIRROR
 	ADDRESS_MODE_TYPE_CLAMP
