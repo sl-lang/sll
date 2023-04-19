@@ -148,7 +148,7 @@ jobs:
           lcov -c -d build/objects -o coverage.info
           lcov -r coverage.info -o coverage.info "/usr/*"
       - name: Upload coverage
-        uses: coverallsapp/github-action@v1.2.4
+        uses: coverallsapp/github-action@v2.1.1
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
           path-to-lcov: coverage.info
