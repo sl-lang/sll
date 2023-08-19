@@ -151,7 +151,7 @@ jobs:
         uses: coverallsapp/github-action@v1.2.4
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
-          path-to-lcov: coverage.info
+          file: coverage.info
   nightly-release:
     name: Create nighly release
     needs:
